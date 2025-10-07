@@ -32,7 +32,7 @@ else
     echo "Working directory: $(pwd)" >> "$_logs_file"
     source $DJANGO_DIR/.venv/bin/activate
     echo "Using python from: $(which python)" >> "$_logs_file"
-    python worker.py "$@" >> "$_logs_file"
+    python scraper/worker.py "$@" >> "$_logs_file"
     deactivate
     echo "Script finished executing. See logs and system journal for details." >> "$_logs_file"
     if test -e "$_lock_file"; then
