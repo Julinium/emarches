@@ -26,9 +26,11 @@ if test -e "$_lock_file"; then
 else
     echo "Lock file $_lock_file was not found." >> "$_logs_file"
     touch $_lock_file
-    cd $SCRIPT_DIR
+    DJANGO_DIR="$SCRIPT_DIR/../"
+
+    cd $DJANGO_DIR
     echo "Working directory: $(pwd)" >> "$_logs_file"
-    source $SCRIPT_DIR/.venv/bin/activate
+    source $DJANGO_DIR/.venv/bin/activate
     echo "Using python from: $(which python)" >> "$_logs_file"
     python worker.py "$@" >> "$_logs_file"
     deactivate
