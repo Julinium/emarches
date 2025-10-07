@@ -12,6 +12,7 @@ scraper/.env.*
 scraper/exports
 scraper/logs
 scraper/crony/.lock
+scraper/__pycache__/
 
 base/__pycache__/
 base/migrations
