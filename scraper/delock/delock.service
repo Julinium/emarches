@@ -1,0 +1,16 @@
+# This is a Service file that removes the scraper lock file at boot.
+# Put this file in "/etc/systemd/system/delock.service" and enable delock service
+
+[Unit]
+Description=Scrpaer-Lock-Remover
+After=network.target
+
+[Service]
+Type=oneshot
+User=insino
+Group=insino
+
+ExecStart=/var/opt/mppp/crony/delock.sh
+
+[Install]
+WantedBy=multi-user.target
