@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env_path = BASE_DIR / 'scraper/.env'
+env_path = BASE_DIR / '.env'
 load_dotenv(dotenv_path=env_path)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -56,18 +56,18 @@ WSGI_APPLICATION = 'emarches.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
     # 'default': {
-    #     'ENGINE':   'django.db.backends.postgresql',
-    #     'HOST':     os.getenv("DB_HOST"),
-    #     'PORT':     os.getenv("DB_PORT"),
-    #     'NAME':     os.getenv("DB_NAME"),
-    #     'USER':     os.getenv("DB_USER"),
-    #     'PASSWORD': os.getenv("DB_PASS"),
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    'default': {
+        'ENGINE':   'django.db.backends.postgresql',
+        'HOST':     os.getenv("DB_HOST"),
+        'PORT':     os.getenv("DB_PORT"),
+        'NAME':     os.getenv("DB_NAME"),
+        'USER':     os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASS"),
+    }
 }
 
 
