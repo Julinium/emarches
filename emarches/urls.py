@@ -10,14 +10,14 @@ from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.conf import settings
-from django.conf.urls import handler400, handler403, handler404, handler500
+# from django.conf.urls import handler400, handler403, handler404, handler500
 
 from base import views
 
-handler400 = "base.views.custom_400_view" # Bad request
-handler403 = "base.views.custom_403_view" # Forbidden
-handler404 = "base.views.custom_404_view" # Not found
-handler500 = "base.views.custom_500_view" # Internal server error
+# handler400 = "base.views.custom_400_view" # Bad request
+# handler403 = "base.views.custom_403_view" # Forbidden
+# handler404 = "base.views.custom_404_view" # Not found
+# handler500 = "base.views.custom_500_view" # Internal server error
 
 urlpatterns = []
 
