@@ -18,7 +18,7 @@ def main():
     started_time = datetime.now()
 
     helper.printBanner()
-    helper.printMessage('===', 'worker', "========== The unlazy worker started working ==========", 1, 1)
+    helper.printMessage('===', 'worker', "▶▷▶▷▶▷▶▷▶▷ The unlazy worker started working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
     helper.printMessage('===', 'worker', f"Args: VERBOSITY={C.VERBOSITY}, IMPORT_LINKS={C.IMPORT_LINKS}, SKIP_DCE={C.SKIP_DCE}", 0, 3)
 
     links = []
@@ -92,7 +92,7 @@ def main():
 
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {created}, updated {updated} Tenders. Downloaded {dceed} DCE files, {fceed} downloads failed.", 2)
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { it_took }.")
-    helper.printMessage('===', 'worker', f"============ The unlazy worker is done working ============", 1, 1)
+    helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
 
 
 if __name__ == '__main__':
