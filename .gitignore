@@ -1,0 +1,16 @@
+.venv/
+.env
+.env.*
+*.sqlite3
+
+emarches/__pycache__/
+emarches/migrations
+
+scraper/.env
+scraper/.env.*
+scraper/exports
+scraper/logs
+scraper/crony/.lock
+
+base/__pycache__/
+base/migrations
