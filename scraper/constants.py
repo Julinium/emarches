@@ -32,7 +32,7 @@ if args.links: IMPORT_LINKS = args.links.lower() == "import"
 if args.found: REFRESH_EXISTING = args.found.lower() == "refresh"
 if args.dce: SKIP_DCE = args.dce.lower() != "download"
 
-HEADLESS_MODE = False
+HEADLESS_MODE = True
 
 SITE_ROOT = os.getenv("SITE_ROOT")
 SITE_INDEX = os.getenv("SITE_INDEX")
