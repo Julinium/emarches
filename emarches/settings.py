@@ -10,7 +10,7 @@ load_dotenv(dotenv_path=env_path)
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = ['0.0.0.0', '94.72.98.224']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '94.72.98.224']
 
 
 INSTALLED_APPS = [
@@ -88,3 +88,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+env_scraper_path = BASE_DIR / 'scraper/.env'
+load_dotenv(dotenv_path=env_scraper_path)
+
+MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+# DEBUG = os.getenv("DEBUG") == "True"
