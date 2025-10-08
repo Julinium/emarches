@@ -25,11 +25,17 @@ def printMessage(level='---', raiser='---', message='!!! Empty Message !!!', bef
     # Return: nothing
     """
 
+    prefix = f'{before * "\n"}' if before > 0 else ""
+    suffix = f'{after * "\n"}' if after > 0 else ""
+    printout = False
     if level in C.LOGS_LEVELS: 
         if C.LOGS_LEVELS[level] >= C.VERBOSITY:
-            print(f'{before * "\n"}[{datetime.now(timezone.utc).strftime(C.LOG_TIME_FORMAT)}][{level}][{raiser}] {message}{after * "\n"}')
+            printout = True
     else:
-        print(f'{before * "\n"}[{datetime.now(timezone.utc).strftime(C.LOG_TIME_FORMAT)}][{level}][{raiser}] {message}{after * "\n"}')
+        printout = True
+
+    if printout:
+        print(f'{prefix}[{datetime.now(timezone.utc).strftime(C.LOG_TIME_FORMAT)}][{level}][{raiser}] {message}{suffix}')
 
 
 def getAmount(texte: str) -> Decimal:
