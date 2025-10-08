@@ -15,6 +15,8 @@ class Agrement(models.Model):
     class Meta:
         db_table = 'base_agrement'
         ordering = ['name']
+        verbose_name = _("")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -36,6 +38,8 @@ class Category(models.Model):
     class Meta:
         db_table = 'base_category'
         ordering = ['label']
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
     
     def __str__(self):
         return self.label
@@ -50,6 +54,8 @@ class Change(models.Model):
     class Meta:
         db_table = 'base_change'
         ordering = ['-reported', 'tender']
+        verbose_name = _("Change")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{self.tender.chrono} - {self.reported}"
@@ -64,6 +70,8 @@ class Client(models.Model):
     class Meta:
         db_table = 'base_client'
         ordering = ['ministery', 'name']
+        verbose_name = _("Client")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -129,6 +137,8 @@ class Domain(models.Model):
     class Meta:
         db_table = 'base_domain'
         ordering = ['name']
+        verbose_name = _("Domain")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -186,6 +196,8 @@ class Kind(models.Model):
     class Meta:
         db_table = 'base_kind'
         ordering = ['name']
+        verbose_name = _("Kind")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -200,6 +212,8 @@ class Meeting(models.Model):
     class Meta:
         db_table = 'base_meeting'
         ordering = ['-when']
+        verbose_name = _("Meeting")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
@@ -213,6 +227,8 @@ class Mode(models.Model):
     class Meta:
         db_table = 'base_mode'
         ordering = ['name']
+        verbose_name = _("Mode")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -226,6 +242,8 @@ class Procedure(models.Model):
     class Meta:
         db_table = 'base_procedure'
         ordering = ['name']
+        verbose_name = _("Procedure")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -241,6 +259,8 @@ class Qualif(models.Model):
     class Meta:
         db_table = 'base_qualif'
         ordering = ['name']
+        verbose_name = _("Qualification")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
@@ -336,6 +356,8 @@ class Tender(models.Model):
 
     class Meta:
         db_table = 'base_tender'
+        verbose_name = _("Tender")
+        # verbose_name_plural = _("")
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
@@ -367,6 +389,8 @@ class Lot(models.Model):
     class Meta:
         db_table = 'base_lot'
         ordering = ['number']
+        verbose_name = _("Lot")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.tender.chrono } - { self.number } - { self.title }"
@@ -415,6 +439,8 @@ class Sample(models.Model):
     class Meta:
         db_table = 'base_sample'
         ordering = ['-when']
+        verbose_name = _("Sample")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
@@ -442,6 +468,8 @@ class Visit(models.Model):
     class Meta:
         db_table = 'base_visit'
         ordering = ['-when']
+        verbose_name = _("Visit")
+        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
