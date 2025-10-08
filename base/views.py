@@ -1,16 +1,16 @@
 # from django.shortcuts import render
 from django.http import HttpResponse
-from base.models import Client
+# from base.models import Client
 
 def home(request):
-    clients = Client.objects.filter(short=None)
+    # clients = Client.objects.filter(short__contains='/')
 
-    str = ""
-    i = 0
-    for c in clients:
-        str += f"=== c.name\n"
-        c.save()
-        i += 1
+    # i = 0
+    # for c in clients:
+    #     c.short = c.short.replace("/", "").strip()
+    #     c.save()
+    #     i += 1
 
 
-    return HttpResponse(f"============ {i} / { clients.count() } ============")
+    # return HttpResponse(f"============ {i} / { clients.count() } ============")
+    return HttpResponse(f"========================")
