@@ -22,11 +22,10 @@ from base import views
 urlpatterns = []
 
 urlpatterns += i18n_patterns(
-    path('jwt-allauth/', include('jwt_allauth.urls')),
     path('', include('base.urls')),
     # path('crm/', include('crm.urls')),
     path('admin/', admin.site.urls),
-    # path('accounts/', include('allauth.urls')),
+    path('accounts/', include('allauth.urls')),
     # path('cons/', include('portal.urls')),
 )
 

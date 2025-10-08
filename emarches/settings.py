@@ -1,6 +1,13 @@
-import os
+# import os
+# from pathlib import Path
+# from dotenv import load_dotenv
+import os, django.conf.locale
 from pathlib import Path
+# from django.conf import global_settings
+# from django.contrib.messages import constants as messages
+from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,11 +31,18 @@ INSTALLED_APPS = [
     'emarches',
     'base',
 
-    'jwt_allauth',
-    'rest_framework',
-    'rest_framework.authtoken',
     'allauth',
     'allauth.account',
+
+    # 'allauth.socialaccount.providers.apple',
+    # 'allauth.socialaccount.providers.discord',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.linkedin',
+    # 'allauth.socialaccount.providers.microsoft',
+    # 'allauth.socialaccount.providers.telegram',
+    # 'allauth.socialaccount.providers.twitter',
 ]
 
 MIDDLEWARE = [
@@ -39,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
     'allauth.account.middleware.AccountMiddleware',
 ]
 
@@ -54,6 +69,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -91,6 +108,33 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# Add support for non-standardized language
+EXTRA_LANG_INFO = {
+    'zg': {
+        'bidi': False, # right-to-left ?
+        'code': 'zg',
+        'name': 'Tamazight',
+        'name_local': 'ⵜⴰⵎⴰⵣⵉⵖⵜ', #unicode codepoints
+    },
+}
+
+LANG_INFO = {**django.conf.locale.LANG_INFO, **EXTRA_LANG_INFO}
+django.conf.locale.LANG_INFO = LANG_INFO
+
+LANGUAGES = [
+    ("en", _("English")),
+    ("zg", _("Amazigh")),
+    ("ar", _("Arabic")),
+    ("fr", _("French")),
+    ("es", _("Spanish")),
+    ("de", _("German")),
+    ]
+
+LOCALE_PATHS = [BASE_DIR / "locale", ]
+USE_THOUSAND_SEPARATOR = True
+
+
+
 
 STATIC_URL = 'static/'
 
@@ -101,10 +145,18 @@ load_dotenv(dotenv_path=env_scraper_path)
 
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 
-AUTH_USER_MODEL = 'jwt_allauth.JAUser'
 
-AUTHENTICATION_BACKENDS = (
-    "django.contrib.auth.backends.ModelBackend",    # Needed to login by username in Django admin, regardless of `allauth`
-    "allauth.account.auth_backends.AuthenticationBackend"    # `allauth` specific authentication methods, such as login by e-mail
-)
+# Email backend parameters
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
+EMAIL_HOST          = os.getenv("EMAIL_HOST")
+EMAIL_PORT          = os.getenv("EMAIL_PORT")
+EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL")
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
