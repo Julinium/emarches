@@ -74,12 +74,13 @@ class Client(models.Model):
         except Exception as x:
             traceback.print_exc()
         try:
+            slash = ' / '
             s = self.name
-            slash = s.rfind(' / ')
-            if slash != -1:
-                dash = s.find(' - ', slash + 1)
+            last_slash = s.rfind(slash)
+            if last_slash != -1:
+                dash = s.find(' - ', last_slash + len(slash))
                 if dash != -1:
-                    self.short = s[slash + 1:dash]
+                    self.short = s[last_slash + len(slash):dash]
         except Exception as x:
             traceback.print_exc()
 
