@@ -34,7 +34,7 @@ def main():
     created, updated = 0 , 0
     if ll > 0:
         i = 0
-        helper.printMessage('INFO', 'worker', f"▶▶▶ Getting Data for {ll} links ... ", 1)
+        helper.printMessage('INFO', 'worker', f"▶▶▶ Getting Data for {ll} links ... ", 2)
         for l in links:
             handled = created + updated
             i += 1
