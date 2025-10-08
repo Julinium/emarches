@@ -74,12 +74,22 @@ class Client(models.Model):
         except Exception as x:
             traceback.print_exc()
         try:
-            if self.name.find("/") > -1:
-                r = self.name.split("/")[1].strip()
-                if r.find("-") > -1:
-                    self.short = r.split("-")[0].strip()
+            s = self.name
+            slash = s.rfind(' / ')
+            if slash != -1:
+                dash = s.find(' - ', slash + 1)
+                if dash != -1:
+                    self.short = s[slash + 1:dash]
         except Exception as x:
             traceback.print_exc()
+
+        # try:
+        #     if self.name.find("/") > -1:
+        #         r = self.name.split("/")[1].strip()
+        #         if r.find("-") > -1:
+        #             self.short = r.split("-")[0].strip()
+        # except Exception as x:
+        #     traceback.print_exc()
         
         return super().save(*args, **kwargs)
 
