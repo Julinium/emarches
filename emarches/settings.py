@@ -23,6 +23,12 @@ INSTALLED_APPS = [
 
     'emarches',
     'base',
+
+    'jwt_allauth',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'allauth',
+    'allauth.account',
 ]
 
 MIDDLEWARE = [
@@ -33,6 +39,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'emarches.urls'
@@ -93,4 +100,11 @@ env_scraper_path = BASE_DIR / 'scraper/.env'
 load_dotenv(dotenv_path=env_scraper_path)
 
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
-# DEBUG = os.getenv("DEBUG") == "True"
+
+AUTH_USER_MODEL = 'jwt_allauth.JAUser'
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",    # Needed to login by username in Django admin, regardless of `allauth`
+    "allauth.account.auth_backends.AuthenticationBackend"    # `allauth` specific authentication methods, such as login by e-mail
+)
+

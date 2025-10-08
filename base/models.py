@@ -12,7 +12,7 @@ class Agrement(models.Model):
     name = models.CharField(max_length=2048, blank=True, null=True)
 
     class Meta:
-        db_table = 'agrement'
+        db_table = 'base_agrement'
         ordering = ['name']
     
     def __str__(self):
@@ -33,7 +33,7 @@ class Category(models.Model):
     label = models.CharField(max_length=128, blank=True, null=True)
 
     class Meta:
-        db_table = 'category'
+        db_table = 'base_category'
         ordering = ['label']
     
     def __str__(self):
@@ -47,7 +47,7 @@ class Change(models.Model):
     changes = models.CharField(max_length=4096, blank=True, null=True)
 
     class Meta:
-        db_table = 'change'
+        db_table = 'base_change'
         ordering = ['-reported', 'tender']
     
     def __str__(self):
@@ -61,7 +61,7 @@ class Client(models.Model):
     ministery = models.CharField(max_length=16, blank=True, null=True)
 
     class Meta:
-        db_table = 'client'
+        db_table = 'base_client'
         ordering = ['ministery', 'name']
     
     def __str__(self):
@@ -113,7 +113,7 @@ class Client(models.Model):
 #     utilizer = models.ForeignKey('Utilizer', on_delete=models.DO_NOTHING, related_name="contacts", db_column='utilizer', blank=True, null=True)
 
 #     class Meta:
-#         db_table = 'contact'
+#         db_table = 'base_contact'
 #         ordering = ['-when']
     
 #     def __str__(self):
@@ -126,7 +126,7 @@ class Domain(models.Model):
     name = models.CharField(max_length=2048, blank=True, null=True)
 
     class Meta:
-        db_table = 'domain'
+        db_table = 'base_domain'
         ordering = ['name']
     
     def __str__(self):
@@ -153,7 +153,7 @@ class Domain(models.Model):
 #     utilizer = models.ForeignKey('Utilizer', on_delete=models.DO_NOTHING, related_name="downloads", db_column='utilizer', blank=True, null=True)
 
 #     class Meta:
-#         db_table = 'download'
+#         db_table = 'base_download'
 #         ordering = ['-when']
     
 #     def __str__(self):
@@ -170,7 +170,7 @@ class Domain(models.Model):
 #     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="favos", db_column='tender', blank=True, null=True)
 
 #     class Meta:
-#         db_table = 'favo'
+#         db_table = 'base_favo'
 #         ordering = ['-when']
     
 #     def __str__(self):
@@ -183,7 +183,7 @@ class Kind(models.Model):
     name = models.CharField(max_length=1024, blank=True, null=True)
 
     class Meta:
-        db_table = 'kind'
+        db_table = 'base_kind'
         ordering = ['name']
     
     def __str__(self):
@@ -197,7 +197,7 @@ class Meeting(models.Model):
     lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="meetings", db_column='lot', blank=True, null=True)
 
     class Meta:
-        db_table = 'meeting'
+        db_table = 'base_meeting'
         ordering = ['-when']
     
     def __str__(self):
@@ -210,7 +210,7 @@ class Mode(models.Model):
     name = models.CharField(max_length=2048, blank=True, null=True)
 
     class Meta:
-        db_table = 'mode'
+        db_table = 'base_mode'
         ordering = ['name']
     
     def __str__(self):
@@ -223,7 +223,7 @@ class Procedure(models.Model):
     name = models.CharField(max_length=2048, blank=True, null=True)
 
     class Meta:
-        db_table = 'procedure'
+        db_table = 'base_procedure'
         ordering = ['name']
     
     def __str__(self):
@@ -238,7 +238,7 @@ class Qualif(models.Model):
     classe = models.CharField(max_length=16, blank=True, null=True)
 
     class Meta:
-        db_table = 'qualif'
+        db_table = 'base_qualif'
         ordering = ['name']
     
     def __str__(self):
@@ -334,7 +334,7 @@ class Tender(models.Model):
     domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders')
 
     class Meta:
-        db_table = 'tender'
+        db_table = 'base_tender'
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
@@ -364,7 +364,7 @@ class Lot(models.Model):
     qualifs = models.ManyToManyField(Qualif, through='RelQualifLot', related_name='lots')
 
     class Meta:
-        db_table = 'lot'
+        db_table = 'base_lot'
         ordering = ['number']
     
     def __str__(self):
@@ -377,7 +377,7 @@ class RelAgrementLot(models.Model):
     lot = models.ForeignKey('Lot', on_delete=models.CASCADE, db_column='lot')
 
     class Meta:
-        db_table = 'rel_agrement_lot'
+        db_table = 'base_rel_agrement_lot'
         unique_together = ('agrement', 'lot')
 
 
@@ -391,7 +391,7 @@ class RelDomainTender(models.Model):
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, db_column='domain')
 
     class Meta:
-        db_table = 'rel_domain_tender'
+        db_table = 'base_rel_domain_tender'
         unique_together = ('domain', 'tender')
 
 
@@ -401,7 +401,7 @@ class RelQualifLot(models.Model):
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE, db_column='lot')
 
     class Meta:
-        db_table = 'rel_qualif_lot'
+        db_table = 'base_rel_qualif_lot'
         unique_together = ('qualif', 'lot')
 
 
@@ -412,7 +412,7 @@ class Sample(models.Model):
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE, related_name="samples", db_column='lot', blank=True, null=True)
 
     class Meta:
-        db_table = 'sample'
+        db_table = 'base_sample'
         ordering = ['-when']
     
     def __str__(self):
@@ -425,7 +425,7 @@ class Sample(models.Model):
 #     email = models.CharField(blank=True, null=True)
 
 #     class Meta:
-#         db_table = 'utilizer'
+#         db_table = 'base_utilizer'
 #         ordering = ['username']
     
 #     def __str__(self):
@@ -439,7 +439,7 @@ class Visit(models.Model):
     lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="visits", db_column='lot', blank=True, null=True)
 
     class Meta:
-        db_table = 'visit'
+        db_table = 'base_visit'
         ordering = ['-when']
     
     def __str__(self):
@@ -455,7 +455,7 @@ class FileToGet(models.Model):
     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="files_to_get", db_column='tender', blank=True, null=True)
     
     class Meta:
-        db_table = 'file_to_get'
+        db_table = 'base_file_to_get'
         ordering = ['-closed', 'created']
 
     def save(self, *args, **kwargs):
