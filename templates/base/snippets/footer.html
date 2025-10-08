@@ -17,9 +17,10 @@
     })();
 
     // Password visibility toggle
-    document.getElementById('togglePassword').addEventListener('click', function () {
+    document.getElementById('togglePasswordButton').addEventListener('click', function () {
+        const icon = document.getElementById('togglePasswordIcon');
         const passwordInput = document.getElementById('{{ form.password.id_for_label }}');
-        const icon = this;
+        // const icon = this;
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
             icon.classList.remove('bi-eye');
