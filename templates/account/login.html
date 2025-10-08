@@ -1,0 +1,79 @@
+{% extends 'authy/base_authy.html' %}
+
+    {% block content %}
+    <title>Login nit is a title</title>
+        <!-- <div class="row justify-content-center mt-5">
+            <div class="col-md-6 col-lg-4"> -->
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h2 class="card-title text-center mb-4">Sign In</h2>
+                        {% if form.errors %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ form.non_field_errors }}
+                                {% for field in form %}
+                                    {% if field.errors %}
+                                        {{ field.errors }}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <form method="post" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            <!-- CSRF token is required for secure POST requests in Django.
+                                 It protects against Cross-Site Request Forgery attacks by
+                                 generating a unique token for each session, validated by
+                                 Django's CSRF middleware (CsrfViewMiddleware) on form submission. -->
+                            <div class="mb-3">
+                                <label for="{{ form.login.id_for_label }}" class="form-label">{{ form.login.label }}</label>
+                                <input type="{% if form.login.field.widget.input_type %}{{ form.login.field.widget.input_type }}{% else %}text{% endif %}" 
+                                       name="{{ form.login.name }}" 
+                                       id="{{ form.login.id_for_label }}" 
+                                       class="form-control" 
+                                       value="{{ form.login.value|default:'' }}" 
+                                       {% if form.login.field.required %}required{% endif %}>
+                                <div class="invalid-feedback">
+                                    Please enter your username or email.
+                                </div>
+                            </div>
+                            <div class="mb-3 position-relative">
+                                <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                                <div class="input-group mb-3">
+                                    <input type="password" 
+                                       name="{{ form.password.name }}" 
+                                       id="{{ form.password.id_for_label }}" 
+                                       class="form-control" 
+                                       {% if form.password.field.required %}required{% endif %}>
+                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"><i class="bi bi-eye" id="togglePassword"></i></button>
+                                </div>
+                                <!-- <input type="password" 
+                                       name="{{ form.password.name }}" 
+                                       id="{{ form.password.id_for_label }}" 
+                                       class="form-control" 
+                                       {% if form.password.field.required %}required{% endif %}>
+                                <i class="bi bi-eye" id="togglePassword"></i> -->
+                                <div class="invalid-feedback">
+                                    Please enter your password.
+                                </div>
+                            </div>
+                            {% if form.remember %}
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" 
+                                           name="{{ form.remember.name }}" 
+                                           id="{{ form.remember.id_for_label }}" 
+                                           class="form-check-input" 
+                                           {% if form.remember.value %}checked{% endif %}>
+                                    <label for="{{ form.remember.id_for_label }}" class="form-check-label">{{ form.remember.label }}</label>
+                                </div>
+                            {% endif %}
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-3">
+                            <a href="{% url 'account_reset_password' %}" class="text-muted">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            <!-- </div>
+        </div> -->
+    {% endblock content %}
