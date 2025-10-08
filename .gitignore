@@ -16,3 +16,6 @@ scraper/__pycache__/
 
 base/__pycache__/
 base/migrations
+
+authy/__pycache__/
+authy/migrations
