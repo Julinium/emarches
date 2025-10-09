@@ -138,9 +138,13 @@ LOCALE_PATHS = [BASE_DIR / "locale", ]
 USE_THOUSAND_SEPARATOR = True
 
 
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'static'
+# ]
 
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
-STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

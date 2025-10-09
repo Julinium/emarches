@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-body">
+        <h2>{% trans "Home sweet home" %}</h2>
+        <p>{% trans "A warning once complained. WARNING: This is a development server" %} </p>
+        <p>{% trans "Do not use it in a production setting. Use a production WSGI or ASGI server instead" %}</p>
+    </div>
+</div>
+{% endblock %}

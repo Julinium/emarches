@@ -1,0 +1,27 @@
+{% load i18n %}
+{% load static %}
+
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+{% get_current_language as current_language %}
+{% get_language_info for current_language as lang_info %}
+
+
+<div class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span><img height="20" src="{% static 'flags/' %}{{ lang_info.code }}.svg" alt="{{ lang_info.code|upper }}"></span>
+        <!-- <span>{{ lang_info.code|upper }}</span> -->
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+        {% for lang in languages %}
+        <li>
+            <a class="px-2 dropdown-item{% if lang.code != current_language.code %} btn-preload{% else %} fw-bold disabled{% endif %}"
+                href="{% if lang.code != current_language.code %}/{{ lang.code }}{{ request.path|slice:'3:'|add:request.GET.urlencode }}{% endif %}"
+                data-bs-toggle="tooltip" title="{{ lang.name_translated|capfirst }}" type="button">
+                <span><img height="20" src="{% static 'flags/' %}{{ lang.code }}.svg" alt="{{ lang.code|upper }}"></span>
+                <span class="ms-1">{{ lang.name_local|capfirst }}</span>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
