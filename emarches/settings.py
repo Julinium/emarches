@@ -127,9 +127,9 @@ django.conf.locale.LANG_INFO = LANG_INFO
 
 LANGUAGES = [
     ("en", _("English")),
-    ("zg", _("Amazigh")),
-    ("ar", _("Arabic")),
     ("fr", _("French")),
+    ("ar", _("Arabic")),
+    ("zg", _("Amazigh")),
     ("es", _("Spanish")),
     ("de", _("German")),
     ]
@@ -138,12 +138,12 @@ LOCALE_PATHS = [BASE_DIR / "locale", ]
 USE_THOUSAND_SEPARATOR = True
 
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static'
-# ]
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+# STATIC_ROOT = BASE_DIR / 'static'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -184,7 +184,7 @@ SOCIALACCOUNT_PROVIDERS = {
             {
                 "client_id": os.getenv("ALLAUTH_GOOGLE_CLIENT_ID"),
                 "secret": os.getenv("ALLAUTH_GOOGLE_SECRET"),
-                # "key": "",
+                # "key": '',
                 # "settings": {
                 #     # You can fine tune these settings per app:
                 #     "scope": [
@@ -209,3 +209,15 @@ SOCIALACCOUNT_PROVIDERS = {
         'EMAIL_AUTHENTICATION': True
     }
 }
+
+LOGIN_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
+ACCOUNT_UNIQUE_EMAIL = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
+
+ACCOUNT_ADAPTER = "authy.adapters.CustomAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "authy.adapters.SocialAccountAdapter"

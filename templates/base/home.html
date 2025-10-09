@@ -2,11 +2,18 @@
 {% load i18n %}
 
 {% block content %}
-<div class="card shadow">
-    <div class="card-body">
-        <h2>{% trans "Home sweet home" %}</h2>
-        <p>{% trans "A warning once complained. WARNING: This is a development server" %} </p>
-        <p>{% trans "Do not use it in a production setting. Use a production WSGI or ASGI server instead" %}</p>
+    <div class="card shadow">
+        <div class="card-body">
+            <dv class="mb-2">
+                {% if request.user.is_authenticated %}
+                    Welcome, {{ request.user.username }}
+                {% else %}
+                    Welcome, Guest!
+                {% endif %}
+            </dv>
+            <h2>{% trans "Home sweet home" %}</h2>
+            <p>{% trans "A warning once complained. WARNING: This is a development server" %} </p>
+            <p>{% trans "Do not use it in a production setting. Use a production WSGI or ASGI server instead" %}</p>
+        </div>
     </div>
-</div>
 {% endblock %}

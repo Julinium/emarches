@@ -1,6 +1,6 @@
 {% extends 'authy/base-authy.html' %}
 {% load i18n %}
-{% load socialaccount %}
+
 
 {% block content %}
     <title>{% trans "Sign In" %}</title>
@@ -59,14 +59,13 @@
                     <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
                 </div>
             </form>
-            <div class="mt-2 text-center">
-                <div class="btn btn-outline-success"><a href="{% provider_login_url 'google' %}">Google</a></div>
-            </div>
-
-
             <div class="text-center mt-3">
                 <a href="{% url 'account_reset_password' %}" class="text-muted">{% trans "Forgot Password?" %}</a>
             </div>
+
+            {% include 'authy/snippets/socials.html' %}
+
+
         </div>
     </div>
 

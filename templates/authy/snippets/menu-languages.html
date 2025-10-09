@@ -15,8 +15,8 @@
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
         {% for lang in languages %}
         <li>
-            <a class="px-2 dropdown-item{% if lang.code != current_language.code %} btn-preload{% else %} fw-bold disabled{% endif %}"
-                href="{% if lang.code != current_language.code %}/{{ lang.code }}{{ request.path|slice:'3:'|add:request.GET.urlencode }}{% endif %}"
+            <a class="p-2 dropdown-item{% if lang.code != lang_info.code %}{% else %} fw-bold disabled{% endif %}"
+                href="{% if lang.code != lang_info.code %}/{{ lang.code }}{{ request.path|slice:'3:'|add:request.GET.urlencode }}{% endif %}"
                 data-bs-toggle="tooltip" title="{{ lang.name_translated|capfirst }}" type="button">
                 <span><img height="20" src="{% static 'flags/' %}{{ lang.code }}.svg" alt="{{ lang.code|upper }}"></span>
                 <span class="ms-1">{{ lang.name_local|capfirst }}</span>

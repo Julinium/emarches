@@ -1,0 +1,46 @@
+{% load static %}
+{% load i18n %}
+
+{% get_available_languages as LANGUAGES %}
+{% get_current_language_bidi as LB %}
+{% get_current_language as LANGUAGE_CODE %}
+<head>
+    {% block title %}{% endblock title %}
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="icon" type="image/png" href="{% static 'img/insi-square.svg' %}"> -->
+
+    <!-- {% if con %}
+        <meta name="description" content="{{ con.objet }}">
+        <meta name="keywords" content="{{ con.acheteur_public }} {{ con.lieu_execution }} {{ con.objet }}">
+        <meta property="og:title" content="{{ con.objet }}">
+        <meta property="og:description" content="{{ con.objet }}">
+    {% else %}
+        <meta name="description" content="{% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}">
+        <meta name="keywords" content="{% translate 'PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free Listing Files Download' %}">
+        <meta property="og:title" content="{% translate 'eMarches.com' %}">
+        <meta property="og:description" content="{% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}">
+    {% endif %}
+        <meta property="og:image" content="https://www.emarches.com/static/img/success.webp">
+        <meta property="og:type" content="website"> -->
+
+
+    <meta name="author" content="eMarches.com">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    {% if LB %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.rtl.min.css" integrity="sha512-4W9f7EnJgM33kD11Ux2XNF9DSpJ7LoQXCvBNhzKTorRSyjPHmjXhHMZMafIYqYvTNWahUk2ulNsarMMLDEv4zA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% else %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css" integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% endif %}
+
+    {% for lang_code, lang_name in LANGUAGES %}
+    <link rel="alternate" hreflang="{{ lang_code }}" href="{{ request.get_host }}/{{ lang_code }}/" />
+    {% endfor %}
+    <link rel="alternate" hreflang="x-default" href="{{ request.get_host }}/en/" />
+
+
+    <!-- <link rel="stylesheet" href="{% static 'css/custom.css' %}"> -->
+</head>

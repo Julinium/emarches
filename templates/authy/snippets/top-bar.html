@@ -1,12 +1,13 @@
-
+{% load static %}
+<div class="mt-2 px-2">
     <div class="clearfix">
-        <div class="float-start">
-            <span class="fw-bold fs-3 text-primary">Brand</span>
-            <span class="fw-light">Title</span>
+        <div class="float-start my-1">
+            <a href="/">
+                <span><img height="32" src="{% static 'brand/emarches.svg' %}" alt="eMarches"></span>
+            </a>
         </div>
-        <div class="float-end">
+        <div class="float-end my-2">
             {% include 'authy/snippets/menu-languages.html' %}
         </div>
     </div>
-<!-- <nav class="navbar navbar-expand-md">
-</nav> -->
+</div>
