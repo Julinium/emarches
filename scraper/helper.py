@@ -143,49 +143,6 @@ def getDateTime(datetime_str):
     return None
 
 
-# def reading2LocalTime(reading, zonens="Africa/Casablanca"):
-#     if reading == None: return datetime.now()
-#     naive_datetime = getDateTime(reading) if reading != None else None
-#     local_tz = pytz.timezone(zonens)
-#     localized_datetime = local_tz.localize(naive_datetime)
-#     return localized_datetime.astimezone(pytz.UTC)
-
-
-# def get_total_folder_size(folder_path):
-#     total_size_bytes = 0
-#     for dirpath, dirnames, filenames in os.walk(folder_path):
-#         for filename in filenames:
-#             file_path = os.path.join(dirpath, filename)
-#             try:
-#                 if os.path.isfile(file_path):
-#                     total_size_bytes += os.path.getsize(file_path)
-#             except (OSError, PermissionError):
-#                 pass  # Skip files that can't be accessed
-
-#     return total_size_bytes
-
-
-# def parseSize(size_str):
-#     mille = 1024
-#     # Replace comma with dot for decimal conversion
-#     size_str = size_str.replace(',', '.').strip()
-    
-#     # Separate the number and unit
-#     parts = size_str.split()
-#     if len(parts) != 2: raise ValueError(f"Invalid format: {size_str}")
-    
-#     number, unit = parts
-#     number = float(number)
-    
-#     # Convert to bytes
-#     if unit.upper() == 'K':
-#         return int(number * mille)
-#     elif unit.upper() == 'M':
-#         return int(number * mille * mille)
-#     else:
-#         raise ValueError(f"Unknown unit: {unit}")
-
-
 def getDriver(url=''):
     """
     # Synopsis:
@@ -205,13 +162,10 @@ def getDriver(url=''):
     options.add_argument("--window-size=1920,1080")
     printMessage('DEBUG', 'h.getDriver', 'Launching instance of Chromium browser ...\n')
     driver = webdriver.Chrome(options=options)
-    # if not C.HEADLESS_MODE:
-        # driver.maximize_window()
     if url == '' or url == None:
         printMessage('DEBUG', 'h.getDriver', 'Returning a driver with an empty url.\n')
         return driver
     printMessage('DEBUG', 'h.getDriver', f'Loading web address to driver: {url.replace(C.SITE_INDEX, "[held]")}')
-    # printMessage('DEBUG', 'h.getDriver', f'Loading web address to driver: {url}')
     try:
         driver.get(url)
         printMessage('DEBUG', 'h.getDriver', 'Chromium driver instance is setup and ready.')
@@ -220,45 +174,6 @@ def getDriver(url=''):
         traceback.print_exc()
     return driver
 
-
-# def getEngine_Local():
-    """
-    # Synopsis:
-        Connects to local database engine.
-    # Params:
-        None.
-    # Return:
-        Engine: Instance of SQLAlchemy databse engine, which can receive connexions.
-    """
-    # engine = None
-    # try:
-    #     printMessage('DEBUG', 'h.getEngine_Local', f'Connecting to loacl database engine {C.DB_NAME}... ')
-    #     engine = create_engine(f'postgresql://{C.DB_USER}:{C.DB_PASS}@{C.DB_SERVER}:{C.DB_PORT}/{C.DB_NAME}')
-    #     printMessage('INFO', 'h.getEngine_Local', f'=== Connected to local database {C.DB_NAME}\n\n')
-    # except Exception as x:
-    #     printMessage('ERROR', 'getEngine_Local', f'Exception while connecting to local database engine: {str(x)}\n\n')
-    # return engine
-
-
-# def getSession(engine=None):
-    """
-    # Synopsis:
-        Opens a database session on a database engine.
-    # Params:
-        engine: Database engine to use for connexion. Created by function getEngine_Local()
-    # Return:
-        Session: an instance of a database session on the given engine.
-    """
-    # if engine == None: engine = getEngine_Local()
-    # session = None
-    # try:
-    #     printMessage('DEBUG', 'h.getSession', 'Opening a session on database engine ... ')
-    #     Session = sessionmaker(bind=engine)
-    #     session = Session()
-    #     printMessage('INFO', 'h.getSession', '=== Opened a session on database engine.')
-    # except Exception as x:
-    #     printMessage('ERROR', 'getSession', f'Exception while opening a session on database engine: {str(x)}')
-    # return session
 
 
 def importLinks(file=f'{C.SELENO_DIR}/exports/links.csv'):
@@ -286,31 +201,19 @@ def importLinks(file=f'{C.SELENO_DIR}/exports/links.csv'):
 
 
 def printBanner():
-    print("""
-    #############################################################
-    #############################################################
-    ##                                                         ##
-    ##   ##     ##   ####   ####    #####  ##### ##### #####   ##
-    ##   ###   ###  ##  ##  ##  ##  ##        ##    ##    ##   ##
-    ##   ## ### ##  ##  ##  ##  ##  ####     ##    ##    ##    ##
-    ##   ##  #  ##  ##  ##  ##  ##  ##      ##    ##    ##     ##
-    ##   ##     ##   ####   ####    #####   ##    ##    ##     ##
-    ##                                                         ##
-    ########################  (C)2024-2025 - WWW.MODE-777.COM  ##
-    #############################################################
-    """)
-
-
-def getDcePath(link_item):
+    aski = """
+    ###################################
+    #    ███████╗ ███████╗ ███████╗   #
+    #    ╚════██║ ╚════██║ ╚════██║   #
+    #       ██╔╝     ██╔╝     ██╔╝    #
+    #      ██╔╝     ██╔╝     ██╔╝     #
+    #     ██║      ██║      ██║       #
+    #     ╚═╝      ╚═╝      ╚═╝       #
+    ###################################
+    ###  ©2024-2025 - MODE-777.COM  ###
+    ###################################
     """
-    # Synopsys:
-        Construct a canonical path for a given Consultation. No files or folders are created.
-    # Params:
-        - link_item: An item representing a Consultation instance. It's a list of 3 values : [ID, ORG, PUB_DATE]
-    # Reurn:
-        String representing the full path of the directory for the Consultation.
-    """
-    return os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}{link_item[0]}')
+    print(aski)
 
 
 def getUa():
@@ -319,39 +222,11 @@ def getUa():
     return rua
 
 
-def sleepRandom(Fm=55, To=115):
+def sleepRandom(Fm=35, To=65):
     rint = random.randint(Fm, To)
-    printMessage('DEBUG', 'h.sleepRandom', f'ZZZZZZZZZZZZZZZZZZZZZZZZZZZ. Sleeping for a ({rint}s) while.\n\n')
+    printMessage('DEBUG', 'h.sleepRandom', f'zzzzzzzzzzzz Sleeping for a ({rint}s) while zzzzzzzzzzzz')
     time.sleep(1)
     time.sleep(rint)
     return 0
 
 
-# def cleanEmptyDceFiles(dry_run=True, base_folder=''):
-#     if base_folder == '': base_folder = f'{C.MEDIA_ROOT}/dce'
-
-#     nf, nd = 0, 0
-#     printMessage('INFO', 'h.cleanEmptyDceFiles', f"Deleting empty files from: {base_folder}")
-#     # Iterate through all items in the base folder
-#     for subfolder in os.listdir(base_folder):
-#         subfolder_path = os.path.join(base_folder, subfolder)
-
-#         # Check if the item is a subfolder and matches the pattern "DCE-{id}"
-#         if os.path.isdir(subfolder_path) and subfolder.startswith("DCE-"):
-#             nd += 1
-#             # printMessage('DEBUG', 'h.cleanEmptyDceFiles', f"Browsing folder: {subfolder_path}")
-
-#             # Iterate through files in the subfolder
-#             for file_name in os.listdir(subfolder_path):
-#                 file_path = os.path.join(subfolder_path, file_name)
-
-#                 # Check if the item is a file and its size is 0 bytes
-#                 if os.path.isfile(file_path) and os.path.getsize(file_path) == 0:
-#                     # print(f"Deleting empty file: {file_path}")
-#                     if dry_run: 
-#                         printMessage('DEBUG', 'h.cleanEmptyDceFiles', f"DRY-RUN = empty file: {file_path}")
-#                     else:   
-#                         printMessage('DEBUG', 'h.cleanEmptyDceFiles', f"Deleting empty file: {file_path}")
-#                         os.remove(file_path)
-#                     nf += 1
-#     printMessage('INFO', 'h.cleanEmptyDceFiles', f"Subfolders scanned: {nd}, Files affected: {nf}")

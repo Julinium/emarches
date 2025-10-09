@@ -38,7 +38,7 @@ def main():
         for l in links:
             handled = created + updated
             i += 1
-            helper.printMessage('DEBUG', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}",)
+            helper.printMessage('DEBUG', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
             jsono = getter.getJson(l, not C.REFRESH_EXISTING)
             if jsono:
                 tender, creation_mode = merger.save(jsono)
