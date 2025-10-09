@@ -1,5 +1,6 @@
 {% extends 'authy/base_authy.html' %}
 {% load i18n %}
+{% load socialaccount %}
 
 {% block content %}
     <title>{% trans "Sign In" %}</title>
@@ -40,12 +41,6 @@
                             {% if form.password.field.required %}required{% endif %}>
                         <div class="btn btn-outline-secondary" id="togglePasswordButton"><i class="bi bi-eye" id="togglePasswordIcon"></i></div>
                     </div>
-                    <!-- <input type="password" 
-                            name="{{ form.password.name }}" 
-                            id="{{ form.password.id_for_label }}" 
-                            class="form-control" 
-                            {% if form.password.field.required %}required{% endif %}>
-                    <i class="bi bi-eye" id="togglePassword"></i> -->
                     <div class="invalid-feedback">
                         {% trans "Please enter your password" %}
                     </div>
@@ -64,9 +59,20 @@
                     <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
                 </div>
             </form>
+            <div class="mt-2 text-center">
+                <div class="btn btn-outline-success"><a href="{% provider_login_url 'google' %}">Google</a></div>
+            </div>
+
+
             <div class="text-center mt-3">
                 <a href="{% url 'account_reset_password' %}" class="text-muted">{% trans "Forgot Password?" %}</a>
             </div>
         </div>
     </div>
+
+    <!-- <script src="//accounts.google.com/gsi/client" async></script>
+    <div id="g_id_onload"
+        data-client_id="123-secret.apps.googleusercontent.com"
+        data-login_uri="{% url 'google_login_by_token' %}">
+    </div> -->
 {% endblock content %}

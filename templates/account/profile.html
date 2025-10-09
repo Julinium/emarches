@@ -1,0 +1,6 @@
+<h1>User profile</h1>
+{% if request.user.is_authenticated %}
+    <p>{{ user.username }}</p>
+{% else %}
+    <p>No authenticated user</p>
+{% endif %}

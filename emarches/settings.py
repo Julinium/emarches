@@ -33,12 +33,13 @@ INSTALLED_APPS = [
 
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
 
     # 'allauth.socialaccount.providers.apple',
     # 'allauth.socialaccount.providers.discord',
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.github',
-    # 'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.google',
     # 'allauth.socialaccount.providers.linkedin',
     # 'allauth.socialaccount.providers.microsoft',
     # 'allauth.socialaccount.providers.telegram',
@@ -143,10 +144,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-env_scraper_path = BASE_DIR / 'scraper/.env'
-load_dotenv(dotenv_path=env_scraper_path)
+# env_scraper_path = BASE_DIR / 'scraper/.env'
+# load_dotenv(dotenv_path=env_scraper_path)
 
-MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+# MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 
 
 # Email backend parameters
@@ -163,3 +164,44 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    # "github": {
+    #     # For each provider, you can choose whether or not the
+    #     # email address(es) retrieved from the provider are to be
+    #     # interpreted as verified.
+    #     "VERIFIED_EMAIL": True
+    # },
+    "google": {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        "APPS": [
+            {
+                "client_id": os.getenv("ALLAUTH_GOOGLE_CLIENT_ID"),
+                "secret": os.getenv("ALLAUTH_GOOGLE_SECRET"),
+                # "key": "",
+                # "settings": {
+                #     # You can fine tune these settings per app:
+                #     "scope": [
+                #         "profile",
+                #         "email",
+                #     ],
+                #     "auth_params": {
+                #         "access_type": "online",
+                #     },
+                # },
+            },
+        ],
+        # The following provider-specific settings will be used for all apps:
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "VERIFIED_EMAIL": True,
+        'EMAIL_AUTHENTICATION': True
+    }
+}
