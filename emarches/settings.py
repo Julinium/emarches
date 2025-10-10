@@ -4,7 +4,7 @@
 import os, django.conf.locale
 from pathlib import Path
 # from django.conf import global_settings
-# from django.contrib.messages import constants as messages
+from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
 
@@ -100,10 +100,10 @@ DATABASES = {
 
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    # {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    # {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    # {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    # {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 
@@ -217,3 +217,11 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 ACCOUNT_ADAPTER = "authy.adapters.CustomAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "authy.adapters.SocialAccountAdapter"
+
+
+
+
+MESSAGE_TAGS = {
+        messages.DEBUG: 'secondary',
+        messages.ERROR: 'danger',
+ }

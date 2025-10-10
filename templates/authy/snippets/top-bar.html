@@ -6,8 +6,11 @@
                 <span><img height="32" src="{% static 'brand/emarches.svg' %}" alt="eMarches"></span>
             </a>
         </div>
-        <div class="float-end my-2">
-            {% include 'authy/snippets/menu-languages.html' %}
+        <div class="float-end">
+            <div class="d-flex">
+                <div class="me-3">{% include 'authy/snippets/menu-user.html' %}</div>
+                <div class="pt-2">{% include 'authy/snippets/menu-languages.html' %}</div>                
+            </div>
         </div>
     </div>
 </div>

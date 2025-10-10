@@ -1,3 +1,19 @@
-{% for message in messages %}
-    {{ message }}
-{% endfor %}
+
+<div id="tosts-msg-container" class="toast-container bottom-0 start-50 translate-middle-x p-5" style="position: fixed; z-index: 99;">  
+	{% for message in messages %}
+		{% include 'base/snippets/message.html' with message=message teint=message.tags extra='msg-toast' %}
+	{% endfor %}
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+	  var toastElements = document.querySelectorAll('.msg-toast');
+	  toastElements.forEach(function (toastElement) {
+		if (!toastElement.classList.contains('bg-danger-subtle')) {
+			new bootstrap.Toast(toastElement, { autohide: true, delay: 5000 }).show();
+		}else{
+			new bootstrap.Toast(toastElement, { autohide: true, delay: 600000 }).show();
+		}
+	  });
+	});
+</script>

@@ -12,7 +12,7 @@
         <span><img height="20" src="{% static 'flags/' %}{{ lang_info.code }}.svg" alt="{{ lang_info.code|upper }}"></span>
         <!-- <span>{{ lang_info.code|upper }}</span> -->
     </a>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="languageDropdown">
         {% for lang in languages %}
         <li>
             <a class="p-2 dropdown-item{% if lang.code != lang_info.code %}{% else %} fw-bold disabled{% endif %}"
