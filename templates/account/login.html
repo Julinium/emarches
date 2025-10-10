@@ -1,77 +1,61 @@
-{% extends 'authy/base-authy.html' %}
+{% extends "account/base_entrance.html" %}
 {% load i18n %}
-
-
+{% load allauth account %}
+{% block head_title %}
+    {% trans "Sign In" %}
+{% endblock head_title %}
 {% block content %}
-    <title>{% trans "Sign In" %}</title>
-    <div class="card shadow">
-        <div class="card-body">
-            <h2 class="card-title text-center mb-4">{% trans "Sign In" %}</h2>
-            {% if form.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ form.non_field_errors }}
-                    {% for field in form %}
-                        {% if field.errors %}
-                            {{ field.errors }}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-            <form method="post" class="needs-validation" novalidate>
+    {% element h1 %}
+        {% trans "Sign In" %}
+    {% endelement %}
+    {% if not SOCIALACCOUNT_ONLY %}
+        {% setvar link %}
+            <a href="{{ signup_url }}">
+            {% endsetvar %}
+            {% setvar end_link %}
+            </a>
+        {% endsetvar %}
+        {% element p %}
+            {% blocktranslate %}If you have not created an account yet, then please {{ link }}sign up{{ end_link }} first.{% endblocktranslate %}
+        {% endelement %}
+        {% url 'account_login' as login_url %}
+        {% element form form=form method="post" action=login_url tags="entrance,login" %}
+            {% slot body %}
                 {% csrf_token %}
-                <div class="mb-3">
-                    <label for="{{ form.login.id_for_label }}" class="form-label">{{ form.login.label }}</label>
-                    <input type="{% if form.login.field.widget.input_type %}{{ form.login.field.widget.input_type }}{% else %}text{% endif %}" 
-                            name="{{ form.login.name }}" 
-                            id="{{ form.login.id_for_label }}" 
-                            class="form-control" 
-                            value="{{ form.login.value|default:'' }}" 
-                            {% if form.login.field.required %}required{% endif %}>
-                    <div class="invalid-feedback">
-                        {% trans "Please enter your username or email" %}
-                    </div>
-                </div>
-                <div class="mb-3 position-relative">
-                    <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
-                    <div class="input-group mb-3">
-                        <input type="password" 
-                            name="{{ form.password.name }}" 
-                            id="{{ form.password.id_for_label }}" 
-                            class="form-control" 
-                            {% if form.password.field.required %}required{% endif %}>
-                        <div class="btn btn-outline-secondary" id="togglePasswordButton"><i class="bi bi-eye" id="togglePasswordIcon"></i></div>
-                    </div>
-                    <div class="invalid-feedback">
-                        {% trans "Please enter your password" %}
-                    </div>
-                </div>
-                {% if form.remember %}
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" 
-                                name="{{ form.remember.name }}" 
-                                id="{{ form.remember.id_for_label }}" 
-                                class="form-check-input" 
-                                {% if form.remember.value %}checked{% endif %}>
-                        <label for="{{ form.remember.id_for_label }}" class="form-check-label">{{ form.remember.label }}</label>
-                    </div>
-                {% endif %}
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
-                </div>
-            </form>
-            <div class="text-center mt-3">
-                <a href="{% url 'account_reset_password' %}" class="text-muted">{% trans "Forgot Password?" %}</a>
-            </div>
-
-            {% include 'authy/snippets/socials.html' %}
-
-
-        </div>
-    </div>
-
-    <!-- <script src="//accounts.google.com/gsi/client" async></script>
-    <div id="g_id_onload"
-        data-client_id="123-secret.apps.googleusercontent.com"
-        data-login_uri="{% url 'google_login_by_token' %}">
-    </div> -->
+                {% element fields form=form unlabeled=False %}
+                {% endelement %}
+                {{ redirect_field }}
+            {% endslot %}
+            {% slot actions %}
+                {% element button type="submit" tags="prominent,login" %}
+                    {% trans "Sign In" %}
+                {% endelement %}
+            {% endslot %}
+        {% endelement %}
+    {% endif %}
+    {% if LOGIN_BY_CODE_ENABLED or PASSKEY_LOGIN_ENABLED %}
+        {% element hr %}
+        {% endelement %}
+        {% element button_group vertical=True %}
+            {% if PASSKEY_LOGIN_ENABLED %}
+                {% element button type="submit" form="mfa_login" id="passkey_login" tags="prominent,login,outline,primary" %}
+                    {% trans "Sign in with a passkey" %}
+                {% endelement %}
+            {% endif %}
+            {% if LOGIN_BY_CODE_ENABLED %}
+                {% element button href=request_login_code_url tags="prominent,login,outline,primary" %}
+                    {% trans "Send me a sign-in code" %}
+                {% endelement %}
+            {% endif %}
+        {% endelement %}
+    {% endif %}
+    {% if SOCIALACCOUNT_ENABLED %}
+        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+    {% endif %}
 {% endblock content %}
+{% block extra_body %}
+    {{ block.super }}
+    {% if PASSKEY_LOGIN_ENABLED %}
+        {% include "mfa/webauthn/snippets/login_script.html" with button_id="passkey_login" %}
+    {% endif %}
+{% endblock %}

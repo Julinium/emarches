@@ -1,0 +1,12 @@
+{% load static %}
+<div class="m-1 p-1">
+    <a class="btn btn-outline-secondary" title="{{ attrs.name }}" href="{{ attrs.href }}">
+        <span>
+            <img 
+                class="img-flex" width="24" 
+                src="{% static 'socials/' %}{{ attrs.name }}.png"
+                alt="{{ attrs.name }}">
+        </span>
+        <span>{{ attrs.name }}</span>
+    </a>
+</div>

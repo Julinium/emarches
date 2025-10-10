@@ -35,15 +35,15 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
-    # 'allauth.socialaccount.providers.apple',
     # 'allauth.socialaccount.providers.discord',
-    # 'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.github',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.apple',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.github',
     # 'allauth.socialaccount.providers.linkedin',
     # 'allauth.socialaccount.providers.microsoft',
-    # 'allauth.socialaccount.providers.telegram',
-    # 'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.telegram',
+    'allauth.socialaccount.providers.twitter',
 ]
 
 MIDDLEWARE = [
@@ -170,34 +170,30 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
-    # "github": {
-    #     # For each provider, you can choose whether or not the
-    #     # email address(es) retrieved from the provider are to be
-    #     # interpreted as verified.
-    #     "VERIFIED_EMAIL": True
-    # },
     "google": {
-        # For each OAuth based provider, either add a ``SocialApp``
-        # (``socialaccount`` app) containing the required client
-        # credentials, or list them here:
         "APPS": [
             {
                 "client_id": os.getenv("ALLAUTH_GOOGLE_CLIENT_ID"),
                 "secret": os.getenv("ALLAUTH_GOOGLE_SECRET"),
-                # "key": '',
-                # "settings": {
-                #     # You can fine tune these settings per app:
-                #     "scope": [
-                #         "profile",
-                #         "email",
-                #     ],
-                #     "auth_params": {
-                #         "access_type": "online",
-                #     },
-                # },
             },
         ],
-        # The following provider-specific settings will be used for all apps:
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+        "VERIFIED_EMAIL": True,
+        'EMAIL_AUTHENTICATION': True
+    },
+    "apple": {
+        "APPS": [
+            {
+                "client_id": os.getenv("ALLAUTH_APPLE_CLIENT_ID"),
+                "secret": os.getenv("ALLAUTH_APPLE_SECRET"),
+            },
+        ],
         "SCOPE": [
             "profile",
             "email",

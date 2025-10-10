@@ -1,0 +1,77 @@
+{% extends 'authy/base-authy.html' %}
+{% load i18n %}
+
+
+{% block content %}
+    <title>{% trans "Sign In" %}</title>
+    <div class="card shadow">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4">{% trans "Sign In" %}</h2>
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ form.non_field_errors }}
+                    {% for field in form %}
+                        {% if field.errors %}
+                            {{ field.errors }}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="{{ form.login.id_for_label }}" class="form-label">{{ form.login.label }}</label>
+                    <input type="{% if form.login.field.widget.input_type %}{{ form.login.field.widget.input_type }}{% else %}text{% endif %}" 
+                            name="{{ form.login.name }}" 
+                            id="{{ form.login.id_for_label }}" 
+                            class="form-control" 
+                            value="{{ form.login.value|default:'' }}" 
+                            {% if form.login.field.required %}required{% endif %}>
+                    <div class="invalid-feedback">
+                        {% trans "Please enter your username or email" %}
+                    </div>
+                </div>
+                <div class="mb-3 position-relative">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                    <div class="input-group mb-3">
+                        <input type="password" 
+                            name="{{ form.password.name }}" 
+                            id="{{ form.password.id_for_label }}" 
+                            class="form-control" 
+                            {% if form.password.field.required %}required{% endif %}>
+                        <div class="btn btn-outline-secondary" id="togglePasswordButton"><i class="bi bi-eye" id="togglePasswordIcon"></i></div>
+                    </div>
+                    <div class="invalid-feedback">
+                        {% trans "Please enter your password" %}
+                    </div>
+                </div>
+                {% if form.remember %}
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" 
+                                name="{{ form.remember.name }}" 
+                                id="{{ form.remember.id_for_label }}" 
+                                class="form-check-input" 
+                                {% if form.remember.value %}checked{% endif %}>
+                        <label for="{{ form.remember.id_for_label }}" class="form-check-label">{{ form.remember.label }}</label>
+                    </div>
+                {% endif %}
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <a href="{% url 'account_reset_password' %}" class="text-muted">{% trans "Forgot Password?" %}</a>
+            </div>
+
+            {% include 'authy/snippets/socials.html' %}
+
+
+        </div>
+    </div>
+
+    <!-- <script src="//accounts.google.com/gsi/client" async></script>
+    <div id="g_id_onload"
+        data-client_id="123-secret.apps.googleusercontent.com"
+        data-login_uri="{% url 'google_login_by_token' %}">
+    </div> -->
+{% endblock content %}
