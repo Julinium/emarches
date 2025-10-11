@@ -1,15 +1,16 @@
 {% load i18n %}
+{% load static %}
 
 
 <div class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <span><i class="bi bi-person-circle fw-bold fs-3"></i></span>
+    <a class="btn btn-light p-1 nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <span><img height="20" src="{% static 'users/person.svg' %}" alt="{{ lang.code|upper }}"></span>
     </a>
     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
         {% if user.is_authenticated %}
             <li>
                 <a href="{% url 'authy_profile' %}" class="p-2 dropdown-item" type="button">
-                    <span><i class="bi bi-person"></i></span>
+                    <span><i class="bi bi-person-vcard"></i></span>
                     <span class="ms-1">{% trans "Profile" %}</span>
                 </a>
             </li>
@@ -17,7 +18,7 @@
             {% if email_url_ %}
                 <li>
                     <a href="{{ email_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-envelope"></i></span>
+                        <span><i class="bi bi-envelope-check"></i></span>
                         <span class="ms-1">{% trans "Change Email" %}</span>
                     </a>
                 </li>
@@ -26,7 +27,7 @@
             {% if change_password_url_ %}
                 <li>
                     <a href="{{ change_password_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-key"></i></span>
+                        <span><i class="bi bi-person-lock"></i></span>
                         <span class="ms-1">{% trans "Change Password" %}</span>
                     </a>
                 </li>
@@ -35,7 +36,7 @@
             {% if connections_url_ %}
                 <li>
                     <a href="{{ connections_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-key"></i></span>
+                        <span><i class="bi bi-plug"></i></span>
                         <span class="ms-1">{% trans "Account Connections" %}</span>
                     </a>
                 </li>
@@ -44,7 +45,7 @@
             {% if mfa_url_ %}
                 <li>
                     <a href="{{ mfa_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-key"></i></span>
+                        <span><i class="bi bi-fingerprint"></i></span>
                         <span class="ms-1">{% trans "Two-Factor Authentication" %}</span>
                     </a>
                 </li>
@@ -53,7 +54,7 @@
             {% if usersessions_list_url_ %}
                 <li>
                     <a href="{{ usersessions_list_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-key"></i></span>
+                        <span><i class="bi bi-database-lock"></i></span>
                         <span class="ms-1">{% trans "Sessions" %}</span>
                     </a>
                 </li>
@@ -61,8 +62,8 @@
             {% url 'account_logout' as logout_url_ %}
             {% if logout_url_ %}
                 <li>
-                    <a href="{{ logout_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-key"></i></span>
+                    <a href="{{ logout_url_ }}" class="p-2 dropdown-item text-danger fw-bold" type="button">
+                        <span><i class="bi bi-door-open"></i></span>
                         <span class="ms-1">{% trans "Sign Out" %}</span>
                     </a>
                 </li>
@@ -72,7 +73,7 @@
             {% if login_url_ %}
                 <li>
                     <a href="{{ login_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-unlock"></i></span>
+                        <span><i class="bi bi-box-arrow-in-right"></i></span>
                         <span class="ms-1">{% trans "Sign In" %}</span>
                     </a>
                 </li>

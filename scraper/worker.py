@@ -18,8 +18,12 @@ def main():
     started_time = datetime.now()
 
     helper.printBanner()
-    helper.printMessage('===', 'worker', "▶▷▶▷▶▷▶▷▶▷ The unlazy worker started working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
-    helper.printMessage('===', 'worker', f"Args: VERBOSITY={C.VERBOSITY}, IMPORT_LINKS={C.IMPORT_LINKS}, SKIP_DCE={C.SKIP_DCE}", 0, 3)
+    helper.printMessage('===', 'worker', "▶▷▶▷ The unlazy worker started working ◁◀◁◀◁", 1, 1)
+    # av = C.VERBOSITY
+    av = next((key for key, val in C.LOGS_LEVELS.items() if val == C.VERBOSITY), "None")
+    al = 'Import' if C.IMPORT_LINKS else 'Crawl'
+    af = 'Skip' if C.SKIP_DCE else 'Download'
+    helper.printMessage('===', 'worker', f"Received arguments: Logs:{ av }, Links:{ al }, Files={ af }", 0, 3)
 
     links = []
     if not C.IMPORT_LINKS:

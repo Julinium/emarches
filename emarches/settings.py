@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.microsoft',
     'allauth.socialaccount.providers.telegram',
     'allauth.socialaccount.providers.twitter',
+
+    'crispy_forms',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -100,10 +103,10 @@ DATABASES = {
 
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    # {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    # {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    # {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 
@@ -187,23 +190,23 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL": True,
         'EMAIL_AUTHENTICATION': True
     },
-    "apple": {
-        "APPS": [
-            {
-                "client_id": os.getenv("ALLAUTH_APPLE_CLIENT_ID"),
-                "secret": os.getenv("ALLAUTH_APPLE_SECRET"),
-            },
-        ],
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
-        "AUTH_PARAMS": {
-            "access_type": "online",
-        },
-        "VERIFIED_EMAIL": True,
-        'EMAIL_AUTHENTICATION': True
-    }
+    # "apple": {
+    #     "APPS": [
+    #         {
+    #             "client_id": os.getenv("ALLAUTH_APPLE_CLIENT_ID"),
+    #             "secret": os.getenv("ALLAUTH_APPLE_SECRET"),
+    #         },
+    #     ],
+    #     "SCOPE": [
+    #         "profile",
+    #         "email",
+    #     ],
+    #     "AUTH_PARAMS": {
+    #         "access_type": "online",
+    #     },
+    #     "VERIFIED_EMAIL": True,
+    #     'EMAIL_AUTHENTICATION': True
+    # }
 }
 
 LOGIN_REDIRECT_URL = '/'
@@ -225,3 +228,6 @@ MESSAGE_TAGS = {
         messages.DEBUG: 'secondary',
         messages.ERROR: 'danger',
  }
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

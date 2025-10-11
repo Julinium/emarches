@@ -20,9 +20,9 @@ if ! test -e "$_logs_file"; then
 fi
 
 if test -e "$_lock_file"; then
-    echo "Execution prevented by a Lock file: $_lock_file" >> "$_logs_file"
-    echo "Another script is probably running or did not finish as expected." >> "$_logs_file"
-    echo "The lock file will be removed on next boot. It can also be removed manually." >> "$_logs_file"
+    echo "Execution prevented by a Lock file: $_lock_file" # >> "$_logs_file"
+    echo "Another script is probably running or did not finish as expected." # >> "$_logs_file"
+    echo "The lock file will be removed on next boot. It can also be removed manually." # >> "$_logs_file"
 else
     echo "Lock file $_lock_file was not found." >> "$_logs_file"
     touch $_lock_file
