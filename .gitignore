@@ -19,3 +19,4 @@ base/migrations
 
 authy/__pycache__/
 authy/migrations
+db.sqlite3

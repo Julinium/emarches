@@ -90,7 +90,7 @@ DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
+    # },
     'default': {
         'ENGINE':   'django.db.backends.postgresql',
         'HOST':     os.getenv("DB_HOST"),
@@ -153,11 +153,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # env_scraper_path = BASE_DIR / 'scraper/.env'
 # load_dotenv(dotenv_path=env_scraper_path)
-
 # MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 
 
-# Email backend parameters
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_SSL = False
 EMAIL_USE_TLS = True
