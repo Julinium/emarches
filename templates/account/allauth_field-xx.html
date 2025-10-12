@@ -5,15 +5,13 @@
     {{ field }}
 {% else %}
     <div class="mb-3{% if field.errors %} has-error{% endif %}{% if field.help_text %} has-help{% endif %}"{% if field.id_for_label %} id="{{ field.id_for_label }}-group"{% endif %}>
-        <!-- {% if field.label and field.field.widget.input_type != 'checkbox' %}
+        {% if field.label and field.field.widget.input_type != 'checkbox' %}
             <label for="{{ field.id_for_label }}" 
-                   class="form-label{% if field.field.required %} required{% endif %} small text-muted">
-                   {{ field.label }}
-                   {% if field.field.required %} 
-                   <span class="text-danger">*</span>
-                   {% endif %}
-            </label>
-        {% endif %} -->
+                   class="form-label{% if field.field.required %} required{% endif %}">
+                   {{ field.label }}{% if field.field.required %} 
+                   <span class="text-danger">*</span>{% endif %}
+                </label>
+        {% endif %}
         
         {% if field.field.widget.input_type == 'checkbox' %}
             <div class="form-check">
@@ -25,7 +23,6 @@
                 {% endif %}
             </div>
         {% elif field.field.widget.input_type == 'radio' %}
-            <p>This is a radio group </p>
             <div class="form-check">
                 {% for choice in field %}
                     <div class="form-check">
@@ -39,9 +36,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <div class="">
-                {{ field|add_class:"form-control" }}
-            </div>
+            {{ field|add_class:"form-control" }}
         {% endif %}
         
         {% if field.errors %}
@@ -53,7 +48,7 @@
         {% endif %}
         
         {% if field.help_text %}
-            <div class="form-text small text-muted">{{ field.help_text|safe }}</div>
+            <div class="form-text">{{ field.help_text|safe }}</div>
         {% endif %}
     </div>
 {% endif %}

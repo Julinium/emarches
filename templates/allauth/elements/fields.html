@@ -1,5 +1,6 @@
 
-{% load crispy_forms_tags %}
+<!-- {% load crispy_forms_tags %} -->
+
 {% for field in attrs.form %}
-    <div class="my-3">{{ field|as_crispy_field }}</div>
+    {% include 'allauth/elements/field.html'  with field=field  %}
 {% endfor %}
