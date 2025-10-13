@@ -200,7 +200,6 @@ def save(tender_data):
 
 
     # Step x: Create or update Tender
-    
     chrono = validated_data.get('chrono')
     tender = None
     tender_create = False
@@ -211,7 +210,7 @@ def save(tender_data):
         for field, new_value in validated_data.items():
             current_value = getattr(tender, field)
             if current_value != new_value:
-                if field != 'size_bytes' or new_value != None:
+                if field != 'size_bytes':
                     change = { "field": field , "old_value": str(current_value), "new_value": str(new_value)}
                     changed_fields.append(change)
         helper.printMessage('INFO', 'm.save', "+++ Tender already exists. Updating.")
