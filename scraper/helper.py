@@ -3,12 +3,8 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 
 from selenium import webdriver
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import sessionmaker
 
 from scraper import constants as C
-# import helper
-
 
 def printMessage(level='---', raiser='---', message='!!! Empty Message !!!', before=0, after=0):
     """
@@ -56,31 +52,24 @@ def getAmount(texte: str) -> Decimal:
         return Decimal('0')
 
     try:
-        # Normalize input
         f = texte.strip().replace("\u202f", "").replace("\u00a0", "").replace(" ", "")
         f = f.replace("DH", "").replace("MAD", "").replace("TTC", "")
 
-        # Handle fractions
         if "/" in f:
             f = f.split("/")[0]
         if "par" in f:
             f = f.split("par")[0]
 
-        # Normalize separators
         if "," in f and "." in f:
-            # Assume last ',' or '.' is decimal separator
             parts = f.rsplit(",", 1) if f.rfind(",") > f.rfind(".") else f.rsplit(".", 1)
             f = "".join(parts[0].replace(",", "").replace(".", "") + "." + parts[1])
         elif "," in f:
-            # Handle multiple commas (e.g., "123,123,45" → "123123.45")
             parts = f.rsplit(",", 1)
             f = parts[0].replace(",", "") + "." + parts[1] if len(parts) == 2 else f.replace(",", ".")
         elif "." in f:
-            # Handle multiple periods (e.g., "123.567.00" → "123567.00")
             parts = f.rsplit(".", 1)
             f = parts[0].replace(".", "") + "." + parts[1] if len(parts) == 2 else f
 
-        # Convert to Decimal
         return Decimal(f.strip())
     except (InvalidOperation, ValueError):
         printMessage('ERROR', 'h.getAmount', f'Could not get Amount from "{texte}". Set to 0')
@@ -89,26 +78,13 @@ def getAmount(texte: str) -> Decimal:
 
 
 def text2Alphanum(text, allCapps=True, dash='-', minLen=8, firstAlpha='M', fillerChar='0'):
-    # Normalize unicode to closest ASCII
     normalized = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode()
-
-    # Replace anything that's not A-Z, a-z, or 0-9 with a dash
     cleaned = re.sub(r'[^A-Za-z0-9]', '-', normalized)
-
-    # Collapse multiple dashes into one
     cleaned = re.sub(r'-+', '-', cleaned)
-
-    # Remove leading/trailing dashes
     cleaned = cleaned.strip('-')
-
-    # Uppercase everything
     cleaned = cleaned.upper()
-
-    # Ensure at least minLen characters, padding with 'fillerChar' if necessary
     if len(cleaned) < minLen:
         cleaned = cleaned.ljust(minLen, fillerChar)
-
-    # Ensure the first character is [A-Z]
     if not cleaned[0].isalpha():
         cleaned = firstAlpha + cleaned[1:]
 
@@ -130,7 +106,6 @@ def getDateTime(datetime_str):
 
 
     rabat_tz = pytz.timezone("Africa/Casablanca")
-    # rabat_dt = rabat_tz.localize(naive_dt)
 
     if len(datetime_str) == 16:
         naive_dt = datetime.strptime(datetime_str, '%d/%m/%Y %H:%M')
@@ -138,7 +113,6 @@ def getDateTime(datetime_str):
         return rabat_dt
     if len(datetime_str) == 10:
         naive_dt = datetime.strptime(datetime_str, '%d/%m/%Y').date()
-        # rabat_dt = rabat_tz.localize(naive_dt)
         return naive_dt
     return None
 
