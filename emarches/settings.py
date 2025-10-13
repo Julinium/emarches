@@ -211,10 +211,6 @@ SOCIALACCOUNT_PROVIDERS = {
 
     'telegram': {
         'APP': {
-            # 'client_id': os.getenv("ALLAUTH_TELEGRAM_ID", '7866973454'),
-            # 'secret': os.getenv("ALLAUTH_TELEGRAM_KEY"),
-            # 'client_id': '7866973454',
-            # 'secret': '7866973454:AAETB_IKA4t_B3gE4_TXP_RmN2EGDRLNzww',
                 "client_id": os.getenv("ALLAUTH_TELEGRAM_ID"),
                 "secret": os.getenv("ALLAUTH_TELEGRAM_KEY"),
         },
