@@ -218,14 +218,12 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 
 ACCOUNT_ADAPTER = "authy.adapters.CustomAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "authy.adapters.SocialAccountAdapter"
-
-
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Requires email verification before login
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 
 
 MESSAGE_TAGS = {
         messages.DEBUG: 'secondary',
         messages.ERROR: 'danger',
  }
-
-
-# CRISPY_TEMPLATE_PACK = 'bootstrap4'

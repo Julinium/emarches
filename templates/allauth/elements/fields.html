@@ -3,6 +3,6 @@
 {% get_current_language_bidi as LB %}
 <div class="mt-2">
     {% for field in attrs.form %}
-        {% include 'allauth/elements/field.html'  with field=field  %}
+        {% include 'authy/snippets/field.html'  with field=field  %}
     {% endfor %}
 </div>

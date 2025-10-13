@@ -1,0 +1,115 @@
+<!-- {% load i18n %} -->
+{% load form_filters %}
+
+{% if field.is_hidden %}
+    {{ field }}
+{% else %}
+    <div class="mb-3{% if field.errors %} has-error{% endif %}{% if field.help_text %} has-help{% endif %}"{% if field.id_for_label %} id="{{ field.id_for_label }}-group"{% endif %}>
+        <!-- {% if field.label and field.field.widget.input_type != 'checkbox' %}
+            <label for="{{ field.id_for_label }}" 
+                   class="form-label{% if field.field.required %} required{% endif %} small text-muted">
+                   {{ field.label }}
+                   {% if field.field.required %} 
+                   <span class="text-danger">*</span>
+                   {% endif %}
+            </label>
+        {% endif %} -->
+        
+        {% if field.field.widget.input_type == 'checkbox' %}
+            <div class="form-check">
+                {{ field }}
+                {% if field.label %}
+                    <label for="{{ field.id_for_label }}" 
+                           class="form-check-label">{{ field.label }}
+                    </label>
+                {% endif %}
+            </div>
+        {% elif field.field.widget.input_type == 'radio' %}
+            <p>This is a radio group </p>
+            <div class="form-check">
+                {% for choice in field %}
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" 
+                               name="{{ field.name }}" value="{{ choice.data.value }}"{% if choice.data.id %} 
+                               id="{{ choice.data.id }}"{% endif %}{% if choice.data.selected %} checked{% endif %}>
+                        <label class="form-check-label"{% if choice.data.id %} 
+                               for="{{ choice.data.id }}"{% endif %}>{{ choice.data.label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% elif field.field.widget.input_type == 'password' %}
+            <div class="position-relative">
+                {% if field.help_text %}
+                    {% if field.field.required %}
+                        {{ field|add_class:"form-control pe-5 bg-warning-subtle" }}
+                    {% else %}
+                        {{ field|add_class:"form-control pe-5" }}
+                    {% endif %}
+                {% else %}                    
+                    {% if field.field.required %}
+                        {{ field|add_class:"form-control pe-4 bg-warning-subtle" }}
+                    {% else %}
+                        {{ field|add_class:"form-control pe-4" }}
+                    {% endif %}
+                {% endif %}
+                <span class="position-absolute top-50 translate-middle-y" style="{% if LB %}left: {% if field.help_text %}2.5rem{% else %}0.5rem{% endif %};{% else %}right: {% if field.help_text %}2.5rem{% else %}0.5rem{% endif %};{% endif %} cursor: pointer;">
+                    <i class="bi bi-eye" onclick="togglePasswordVisibility('{{ field.id_for_label }}', this)"></i>
+                </span>
+                {% if field.help_text %}
+                    <span class="position-absolute top-50 translate-middle-y" style="{% if LB %}left: 0.5rem;{% else %}right: 0.5rem;{% endif %} cursor: pointer;">
+                        <i class="bi bi-info-circle" onclick="toggleHelpText('{{ field.id_for_label }}-help', this)"></i>
+                    </span>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="">
+                {% if field.field.required %}
+                    {{ field|add_class:"form-control bg-warning-subtle" }}
+                {% else %}
+                    {{ field|add_class:"form-control" }}
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        {% if field.errors %}
+            <div class="invalid-feedback d-block">
+                {% for error in field.errors %}
+                    <div class="text-danger">{{ error }}</div><br>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if field.help_text %}
+            <div id="{{ field.id_for_label }}-help"  class="form-text small text-muted d-none">{{ field.help_text|safe }}</div>
+        {% endif %}
+    </div>
+{% endif %}
+
+<script>
+    function togglePasswordVisibility(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    }
+    function toggleHelpText(helpId, icon) {
+        const helpText = document.getElementById(helpId);
+        if (helpText.classList.contains('d-none')) {
+            helpText.classList.remove('d-none');
+            icon.classList.remove('bi-info-circle');
+            icon.classList.add('bi-info-circle-fill');
+        } else {
+            helpText.classList.add('d-none');
+            icon.classList.remove('bi-info-circle-fill');
+            icon.classList.add('bi-info-circle');
+        }
+    }
+</script>

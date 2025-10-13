@@ -1,5 +1,8 @@
 {% load allauth %}
-<strong {% if attrs.title %}title="{{ attrs.title }}"{% endif %}>
+<strong {% if attrs.title %}title="{{ attrs.title }}"{% endif %} 
+        class="badge {% if 'success' in attrs.tags %}bg-success
+        {% elif 'warning' in attrs.tags %}bg-warning
+        {% else %}bg-primary{% endif %}">
     {% slot %}
     {% endslot %}
 </strong>
