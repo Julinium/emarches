@@ -18,7 +18,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', '94.72.98.224']
-
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,10 +37,11 @@ INSTALLED_APPS = [
 
     # 'allauth.socialaccount.providers.discord',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.apple',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
+    # 'allauth.socialaccount.providers.apple',
+    # 'allauth.socialaccount.providers.facebook',
+    # 'allauth.socialaccount.providers.github',
     # 'allauth.socialaccount.providers.linkedin',
+    'allauth.socialaccount.providers.openid_connect',
     # 'allauth.socialaccount.providers.microsoft',
     'allauth.socialaccount.providers.telegram',
     'allauth.socialaccount.providers.twitter',
@@ -170,6 +171,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
+
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APPS": [
@@ -188,6 +190,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL": True,
         'EMAIL_AUTHENTICATION': True
     },
+
     # "apple": {
     #     "APPS": [
     #         {
@@ -204,7 +207,32 @@ SOCIALACCOUNT_PROVIDERS = {
     #     },
     #     "VERIFIED_EMAIL": True,
     #     'EMAIL_AUTHENTICATION': True
-    # }
+    # },
+
+    'telegram': {
+        'APP': {
+            # 'client_id': os.getenv("ALLAUTH_TELEGRAM_ID", '7866973454'),
+            # 'secret': os.getenv("ALLAUTH_TELEGRAM_KEY"),
+            # 'client_id': '7866973454',
+            # 'secret': '7866973454:AAETB_IKA4t_B3gE4_TXP_RmN2EGDRLNzww',
+                "client_id": os.getenv("ALLAUTH_TELEGRAM_ID"),
+                "secret": os.getenv("ALLAUTH_TELEGRAM_KEY"),
+        },
+    },
+
+    'openid_connect': {
+        'APPS': [
+            {
+                'provider_id': 'linkedin',  # This is the OIDC issuer identifier for LinkedIn
+                'name': 'LinkedIn',
+                'client_id': os.getenv("ALLAUTH_LINKEDIN_CLIENT_ID"),  # From Step 1
+                'secret': os.getenv("ALLAUTH_LINKEDIN_SECRET"),  # From Step 1
+                'settings': {
+                    'server_url': 'https://www.linkedin.com/oauth',
+                },
+            },
+        ],
+    },
 }
 
 LOGIN_REDIRECT_URL = '/'

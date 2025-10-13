@@ -210,7 +210,11 @@ def save(tender_data):
         for field, new_value in validated_data.items():
             current_value = getattr(tender, field)
             if current_value != new_value:
-                if field != 'size_bytes':
+                keep_change = True
+                if field == 'size_bytes':
+                    if old_value == None or new_value == None:
+                        keep_change = False
+                if keep_change:
                     change = { "field": field , "old_value": str(current_value), "new_value": str(new_value)}
                     changed_fields.append(change)
         helper.printMessage('INFO', 'm.save', "+++ Tender already exists. Updating.")
