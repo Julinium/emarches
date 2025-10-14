@@ -19,6 +19,7 @@ urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('accounts/', include('authy.urls')),
     path('accounts/', include('allauth.urls')),
+    path('users/', include('nas.urls')),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

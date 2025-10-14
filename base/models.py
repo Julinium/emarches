@@ -104,31 +104,6 @@ class Client(models.Model):
         return super().save(*args, **kwargs)
 
 
-# class Contact(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     when = models.DateTimeField(blank=True, null=True)
-#     ua = models.CharField(max_length=512, blank=True, null=True)
-#     ip = models.CharField(max_length=64, blank=True, null=True)
-#     email = models.CharField(max_length=128, blank=True, null=True)
-#     phone = models.CharField(max_length=64, blank=True, null=True)
-#     title = models.CharField(max_length=256, blank=True, null=True)
-#     message = models.TextField(blank=True, null=True)
-#     method = models.CharField(max_length=8, blank=True, null=True)
-#     newsletter = models.BooleanField(blank=True, null=True)
-#     promos = models.BooleanField(blank=True, null=True)
-#     comment = models.TextField(blank=True, null=True)
-#     actions = models.TextField(blank=True, null=True)
-#     solved = models.BooleanField(blank=True, null=True)
-#     utilizer = models.ForeignKey('Utilizer', on_delete=models.DO_NOTHING, related_name="contacts", db_column='utilizer', blank=True, null=True)
-
-#     class Meta:
-#         db_table = 'base_contact'
-#         ordering = ['-when']
-    
-#     def __str__(self):
-#         return self.title
-
-
 class Domain(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     short = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Acronym"))
@@ -152,40 +127,6 @@ class Domain(models.Model):
             traceback.print_exc()
         
         return super().save(*args, **kwargs)
-
-
-# class Download(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     when = models.DateTimeField(blank=True, null=True)
-#     bytes_media = models.BigIntegerField(blank=True, null=True)
-#     ua = models.CharField(max_length=512, blank=True, null=True)
-#     ip = models.CharField(max_length=64, blank=True, null=True)
-#     tender = models.ForeignKey('Tender', on_delete=models.DO_NOTHING, related_name="downloads", db_column='tender', blank=True, null=True)
-#     utilizer = models.ForeignKey('Utilizer', on_delete=models.DO_NOTHING, related_name="downloads", db_column='utilizer', blank=True, null=True)
-
-#     class Meta:
-#         db_table = 'base_download'
-#         ordering = ['-when']
-    
-#     def __str__(self):
-#         return f"{ self.tender.chrono } - { self.utilizer.username }"
-
-
-# class Favo(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     when = models.DateTimeField(blank=True, null=True)
-#     comment = models.TextField(blank=True, null=True)
-#     ua = models.CharField(max_length=512, blank=True, null=True)
-#     ip = models.CharField(max_length=64, blank=True, null=True)
-#     utilizer = models.ForeignKey('Utilizer', on_delete=models.DO_NOTHING, related_name="favos", db_column='utilizer', blank=True, null=True)
-#     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="favos", db_column='tender', blank=True, null=True)
-
-#     class Meta:
-#         db_table = 'base_favo'
-#         ordering = ['-when']
-    
-#     def __str__(self):
-#         return f"{ self.tender.chrono } { self.utilizer.username }"
 
 
 class Kind(models.Model):
@@ -444,19 +385,6 @@ class Sample(models.Model):
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
-
-
-# class Utilizer(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     username = models.CharField(max_length=64)
-#     email = models.CharField(blank=True, null=True)
-
-#     class Meta:
-#         db_table = 'base_utilizer'
-#         ordering = ['username']
-    
-#     def __str__(self):
-#         return self.username
 
 
 class Visit(models.Model):
