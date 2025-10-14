@@ -212,7 +212,7 @@ def save(tender_data):
             if current_value != new_value:
                 keep_change = True
                 if field == 'size_bytes':
-                    if old_value == None or new_value == None:
+                    if current_value == None or new_value == None:
                         keep_change = False
                 if keep_change:
                     change = { "field": field , "old_value": str(current_value), "new_value": str(new_value)}
