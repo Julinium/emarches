@@ -14,12 +14,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env_path = BASE_DIR / '.env'
 load_dotenv(dotenv_path=env_path)
 
-ENVIRONMENT = os.getenv('ENVIRONMENT', 'prod')
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', os.getenv("IP_ADDRESS")]
 
 SITE_ID = 1
 
@@ -48,9 +48,6 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.facebook',
     # 'allauth.socialaccount.providers.github',
     # 'allauth.socialaccount.providers.twitter',
-
-    # 'crispy_forms',
-    # 'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'emarches.wsgi.application'
 
-if ENVIRONMENT == 'prod':
+if ENVIRONMENT == 'production':
     DATABASES = {
         'default': {
             'ENGINE':   'django.db.backends.postgresql',
@@ -115,7 +112,6 @@ else:
         }
     }
     AUTH_PASSWORD_VALIDATORS = []
-
 
 
 LANGUAGE_CODE = 'en'
@@ -161,14 +157,16 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_USE_SSL = False
-EMAIL_USE_TLS = True
-EMAIL_HOST          = os.getenv("EMAIL_HOST")
-EMAIL_PORT          = os.getenv("EMAIL_PORT")
-EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL")
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_USE_SSL = False
+# EMAIL_USE_TLS = True
+# EMAIL_HOST          = os.getenv("EMAIL_HOST")
+# EMAIL_PORT          = os.getenv("EMAIL_PORT")
+# EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+# DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL")
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -235,7 +233,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'base_home'
+# LOGOUT_REDIRECT_URL = 'base_home'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
@@ -249,6 +248,8 @@ SOCIALACCOUNT_ADAPTER = "authy.adapters.SocialAccountAdapter"
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Requires email verification before login
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+
+
 
 
 MESSAGE_TAGS = {

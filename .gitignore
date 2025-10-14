@@ -19,4 +19,8 @@ base/migrations
 
 authy/__pycache__/
 authy/migrations
+
+nas/__pycache__/
+nas/migrations
+
 db.sqlite3

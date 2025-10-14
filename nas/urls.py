@@ -1,9 +1,10 @@
+
 from django.urls import path, include
 
-from base import views
+from . import views
 
 urlpatterns = [
-    path('', views.home, name='base_home'),
+    # path('', views.home, name='base_home'),
     # path('about', views.about, name='base_about'),
     # path('legal', views.legal, name='base_legal'),
     # path('faqs', views.faqs, name='base_faqs'),

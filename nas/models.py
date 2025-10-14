@@ -1,4 +1,5 @@
 
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.templatetags.static import static
@@ -63,8 +64,8 @@ class Company(models.Model):
     sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
     note      = models.CharField(max_length=1024, blank=True, verbose_name=_('Descritpion'))
     image     = models.ImageField(upload_to='companies/', null=True, blank=True, verbose_name=_('Image'))
-    agrements = models.ManyToManyField(Agrement, on_delete=models.DO_NOTHING, related_name='companies', verbose_name=_('Agrements'))
-    qualifs   = models.ManyToManyField(Qualif, on_delete=models.DO_NOTHING, related_name='companies', verbose_name=_('Qualifications'))
+    agrements = models.ManyToManyField(Agrement, related_name='companies', verbose_name=_('Agrements'))
+    qualifs   = models.ManyToManyField(Qualif, related_name='companies', verbose_name=_('Qualifications'))
 
     created  = models.DateTimeField(auto_now_add=True, editable=False)
     updated  = models.DateTimeField(auto_now=True, editable=False)
@@ -84,24 +85,6 @@ class Company(models.Model):
             logo = static('companies/default.png')
         return logo
 
-
-class Favorite(models.Model):
-    id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', editable=False)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='favorites', verbose_name=_('Company'))
-    tender  = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='favorites', editable=False, verbose_name=_('Tender'))
-    folders = models.ManyToManyField(Folder, on_delete=models.DO_NOTHING, related_name='favorites', verbose_name=_('Folders'))
-    active  = models.BooleanField(null=True, default=True, editable=False)
-    when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
-    tags    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Tags'))
-    comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
-
-    class Meta:
-        db_table = 'nas_favorite'
-        ordering = ['-when']
-    
-    def __str__(self):
-        return f"{ self.tender.chrono }@{ self.user.username }"
 
 class Folder(models.Model):
     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -125,6 +108,25 @@ class Folder(models.Model):
         except:
             icon = static('folders/default.png')
         return icon
+
+
+class Favorite(models.Model):
+    id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', editable=False)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='favorites', verbose_name=_('Company'))
+    tender  = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='favorites', editable=False, verbose_name=_('Tender'))
+    folders = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
+    active  = models.BooleanField(null=True, default=True, editable=False)
+    when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
+    tags    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Tags'))
+    comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
+
+    class Meta:
+        db_table = 'nas_favorite'
+        ordering = ['-when']
+    
+    def __str__(self):
+        return f"{ self.tender.chrono }@{ self.user.username }"
 
 
 class Download(models.Model):
