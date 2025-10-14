@@ -9,16 +9,16 @@ from base.models import Agrement, Tender, Qualif
 
 
 class Profile(models.Model):
-    id       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user     = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
-    active   = models.BooleanField(null=True, default=True, editable=False)
-    image    = models.ImageField(upload_to='avatars/', null=True, blank=True, verbose_name=_('Avatar'))
-    phone    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Telephone'))
-    whatsapp = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Whatsapp'))
-    about    = models.CharField(max_length=1024, blank=True, default='', verbose_name=_('A Propos'))
-    onborded = models.BooleanField(null=True, default=False, editable=False)
-    created  = models.DateTimeField(auto_now_add=True, editable=False)
-    updated  = models.DateTimeField(auto_now=True, editable=False)
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user      = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
+    active    = models.BooleanField(null=True, default=True, editable=False)
+    image     = models.ImageField(upload_to='avatars/', null=True, blank=True, verbose_name=_('Avatar'))
+    phone     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Telephone'))
+    whatsapp  = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Whatsapp'))
+    about     = models.CharField(max_length=1024, blank=True, default='', verbose_name=_('A Propos'))
+    onboarded = models.BooleanField(null=True, default=False, editable=False)
+    created   = models.DateTimeField(auto_now_add=True, editable=False)
+    updated   = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         db_table = 'nas_profile'

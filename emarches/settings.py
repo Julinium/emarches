@@ -98,6 +98,15 @@ if ENVIRONMENT == 'production':
         }
     }
 
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_USE_SSL = False
+    EMAIL_USE_TLS = True
+    EMAIL_HOST          = os.getenv("EMAIL_HOST")
+    EMAIL_PORT          = os.getenv("EMAIL_PORT")
+    EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+    DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL")
+
     AUTH_PASSWORD_VALIDATORS = [
         {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
         {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -112,6 +121,8 @@ else:
         }
     }
     AUTH_PASSWORD_VALIDATORS = []
+
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 LANGUAGE_CODE = 'en'
@@ -156,17 +167,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-# EMAIL_USE_SSL = False
-# EMAIL_USE_TLS = True
-# EMAIL_HOST          = os.getenv("EMAIL_HOST")
-# EMAIL_PORT          = os.getenv("EMAIL_PORT")
-# EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-# DEFAULT_FROM_EMAIL  = os.getenv("DEFAULT_FROM_EMAIL")
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -233,8 +233,8 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-LOGIN_REDIRECT_URL = 'base_home'
-# LOGOUT_REDIRECT_URL = 'base_home'
+LOGIN_REDIRECT_URL = 'nas_profile'
+LOGOUT_REDIRECT_URL = 'account_login'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True

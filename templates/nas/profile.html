@@ -1,0 +1,12 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+    <div class="text-center">
+        <div class="h3">User Profile</div>
+        <img class="rounded-circle img-fluid" width="96" src="{{ profile.avatar }}" alt="No-Image">
+        <div class="mt-2">@{{ user.username }}</div>
+        <div class="mt-2"><span class="small fw-light me-1">First Name</span>{{ user.first_name }}</div>
+        <div class="mt-2"><span class="small fw-light me-1">Last Name</span>{{ user.last_name }}</div>
+        <div class="mt-2"><span class="small fw-light me-1">About</span>{{ profile.about }}</div>
+    </div>
+{% endblock content %}

@@ -6,6 +6,7 @@ from django.conf import settings
 # from django.conf.urls import handler400, handler403, handler404, handler500
 
 from base import views
+from nas.views import profile
 
 # handler400 = "base.views.custom_400_view" # Bad request
 # handler403 = "base.views.custom_403_view" # Forbidden
@@ -20,6 +21,8 @@ urlpatterns += i18n_patterns(
     path('accounts/', include('authy.urls')),
     path('accounts/', include('allauth.urls')),
     path('users/', include('nas.urls')),
+    path('users/', include('nas.urls')),
+
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
