@@ -292,3 +292,53 @@ class NotificationSent(models.Model):
 
     def __str__(self):
         return f'{self.title}_{self.user}_{self.when}'
+
+    
+
+class Comment(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', editable=False, verbose_name=_('User'))
+    tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='comments', editable=False, verbose_name=_('Tender'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
+    title      = models.CharField(max_length=256, blank=True, null=True, editable=False, verbose_name=_('Title'))
+    content    = models.TextField(blank=True, null=True, editable=False, verbose_name=_('Content'))
+
+    class Meta:
+        db_table = 'nas_comment'
+        ordering = ['-when']
+
+    @property
+    def likes(self):
+        return self.reactions.filter(reaction='like').count()
+
+    @property
+    def dislikes(self):
+        return self.reactions.filter(reaction='dislike').count()
+
+    @property
+    def score(self):
+        return self.likes - self.dislikes
+
+    def __str__(self):
+        return f"{ self.user.username }-on-{ self.tender.chrono }"
+
+
+
+class Reaction(models.Model):
+    LIKE_CHOICES = [
+        ('like', _('Like')),
+        ('dislike', _('Dislike')),
+    ]
+
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reactions', editable=False, verbose_name=_('User'))
+    comment    = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='reactions', editable=False, verbose_name=_('Comment'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
+    reaction   = models.CharField(max_length=10, choices=LIKE_CHOICES, default='like', verbose_name=_('Reaction'))
+
+    class Meta:
+        db_table = 'nas_reaction'
+        ordering = ['-when']
+
+    def __str__(self):
+        return f"{ self.user.username }-{ self.reaction }-{ self.comment }"
