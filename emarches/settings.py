@@ -233,7 +233,7 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-LOGIN_REDIRECT_URL = 'nas_profile'
+LOGIN_REDIRECT_URL = 'nas_profile_view'
 LOGOUT_REDIRECT_URL = 'account_login'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True

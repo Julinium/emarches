@@ -2,7 +2,8 @@
 .venv/
 .env
 .env.*
-*.sqlite3
+db.sqlite3
+media/
 
 emarches/__pycache__/
 emarches/migrations
@@ -23,4 +24,3 @@ authy/migrations
 nas/__pycache__/
 nas/migrations
 
-db.sqlite3

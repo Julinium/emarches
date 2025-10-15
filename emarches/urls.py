@@ -6,7 +6,6 @@ from django.conf import settings
 # from django.conf.urls import handler400, handler403, handler404, handler500
 
 from base import views
-from nas.views import profile
 
 # handler400 = "base.views.custom_400_view" # Bad request
 # handler403 = "base.views.custom_403_view" # Forbidden
