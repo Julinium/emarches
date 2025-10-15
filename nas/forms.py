@@ -6,18 +6,18 @@ from django.utils.translation import gettext_lazy as _
 class UserProfileForm(forms.ModelForm):
     # User model fields
     username = forms.CharField(max_length=150, required=True, label=_('Username'))
-    email = forms.EmailField(required=True, label=_('Email'))
     first_name = forms.CharField(max_length=150, required=False, label=_('First Name'))
     last_name = forms.CharField(max_length=150, required=False, label=_('Last Name'))
+    clear_image = forms.BooleanField(required=False, widget=forms.HiddenInput)
 
     class Meta:
         model = Profile
-        fields = ['username', 'email', 'first_name', 'last_name', 'image', 'phone', 'whatsapp', 'about']
+        fields = ['username', 'first_name', 'last_name', 'image', 'phone', 'whatsapp', 'about', 'clear_image']
         labels = {
             'image': _('Avatar'),
-            'phone': _('Telephone'),
+            'phone': _('Phone'),
             'whatsapp': _('Whatsapp'),
-            'about': _('A Propos'),
+            'about': _('About'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -25,20 +25,37 @@ class UserProfileForm(forms.ModelForm):
         # Populate User fields if instance exists
         if self.instance and self.instance.pk and self.instance.user:
             self.fields['username'].initial = self.instance.user.username
-            self.fields['email'].initial = self.instance.user.email
             self.fields['first_name'].initial = self.instance.user.first_name
             self.fields['last_name'].initial = self.instance.user.last_name
 
+    def clean(self):
+        cleaned_data = super().clean()
+        image = cleaned_data.get('image')
+        clear_image = cleaned_data.get('clear_image')
+
+        if clear_image:
+            cleaned_data['image'] = None
+        return cleaned_data
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image:
+            if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
+                print("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed.")
+            if image.size > 5 * 1024 * 1024:
+                print("Image file size must be under 5MB.")
+        return image
+
     def save(self, commit=True):
-        # Save Profile instance
         profile = super().save(commit=False)
         if commit:
-            # Update or create associated User instance
             user = profile.user
-            user.username = self.cleaned_data['username']
-            user.email = self.cleaned_data['email']
+            # user.username = self.cleaned_data['username']
             user.first_name = self.cleaned_data['first_name']
             user.last_name = self.cleaned_data['last_name']
             user.save()
+            # Handle image clearing
+            if self.cleaned_data.get('clear_image'):
+                profile.image = None
             profile.save()
         return profile

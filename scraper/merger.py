@@ -50,8 +50,8 @@ def format(tender_json):
         ll = j["lots"]
         reserved_t, variant_t = False, False
         estimate_t, bond_t = 0, 0
-
-        if len(ll) > 0:
+        jl = len(ll) if ll else 0
+        if jl > 0:
             reserved_t = ll[0]["reserved"] == "Oui"
             variant_t = ll[0]["variant"] == "Oui"
             for l in ll:                
@@ -62,17 +62,20 @@ def format(tender_json):
                 l["variant"] = l["variant"] == "Oui"
                 l["reserved"] = l["reserved"] == "Oui"
                 ss = l["samples"]
-                if len(ss) > 0:
+                sl = len(ss) if ss else 0
+                if sl > 0:
                     for s in ss:
                         s["when"] = helper.getDateTime(s["when"])
                     l["samples"] = ss
                 mm = l["meetings"]
-                if len(mm) > 0:
+                ml = len(mm) if mm else 0
+                if ml > 0:
                     for m in mm:
                         m["when"] = helper.getDateTime(m["when"])
                     l["meetings"] = mm
                 vv = l["visits"]
-                if len(vv) > 0:
+                vl = len(vv) if vv else 0
+                if vl > 0:
                     for v in vv:
                         v["when"] = helper.getDateTime(v["when"])
                     l["visits"] = vv
@@ -274,7 +277,7 @@ def save(tender_data):
 
     estimate_total, bond_total = 0, 0
     reserved_tender, variant_tender = False, False
-    ll = len(lots_data)
+    ll = len(lots_data) if lots_data else 0
     if ll > 0:
         helper.printMessage('TRACE', 'm.save', f"#### Got data for {ll} Lots. ")
         i = 0

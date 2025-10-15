@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'authy',
     'nas',
 
+    # 'private_storage',
+    'django_cleanup',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -156,13 +159,14 @@ LOCALE_PATHS = [BASE_DIR / "locale", ]
 USE_THOUSAND_SEPARATOR = True
 
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static'
-]
-
+STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+# PRIVATE_STORAGE_ROOT = BASE_DIR / 'media/private'
+# PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated'
+# PRIVATE_STORAGE_AUTH_FUNCTION = 'nas.permissions.allow_profile_owner'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

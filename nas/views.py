@@ -19,8 +19,8 @@ def profile_view(request):
         'profile': user.profile,
     }
 
-    if not user.profile.onboarded:
-        return redirect('nas_profile_edit')
+    # if not user.profile.onboarded:
+    #     return redirect('nas_profile_edit')
 
     return render(request, 'nas/profile-view.html', context)
 
@@ -33,6 +33,7 @@ def profile_edit(request):
     except:
         profile = Profile(user=user)
         profile.save()
+    # referer = request.META.get('HTTP_REFERER', None)
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
