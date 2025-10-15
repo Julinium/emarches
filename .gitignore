@@ -24,3 +24,4 @@ authy/migrations
 nas/__pycache__/
 nas/migrations
 
+db.sqlite3

@@ -1,12 +1,14 @@
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
 
 from nas.models import Profile
 from nas.forms import UserProfileForm
 
 @login_required
-def profile_view(request):
+def profile_view(request):    
     user = request.user
     try:
         profile = user.profile
@@ -40,6 +42,10 @@ def profile_edit(request):
         if form.is_valid():
             form.save()
             return redirect('nas_profile_view')
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{error}")
     else:
         form = UserProfileForm(instance=profile)
     return render(request, 'nas/profile-edit.html', {'form': form})

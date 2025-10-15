@@ -6,7 +6,7 @@ from django.conf import settings
 # from django.conf.urls import handler400, handler403, handler404, handler500
 
 # from private_storage import views as pv_views
-from private_storage.views import PrivateStorageView
+# from private_storage.views import PrivateStorageView
 
 from base import views as base_views
 
@@ -25,7 +25,7 @@ urlpatterns += i18n_patterns(
     path('users/', include('nas.urls')),
     path('users/', include('nas.urls')),
 
-    path('private/<path:path>', PrivateStorageView.as_view(), name='serve_private_file'),
+    # path('private/<path:path>', PrivateStorageView.as_view(), name='serve_private_file'),
 
 )
 

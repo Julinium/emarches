@@ -1,7 +1,9 @@
 from django import forms
-from django.contrib.auth.models import User
-from .models import Profile
+from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
+
+from .models import Profile
 
 class UserProfileForm(forms.ModelForm):
     # User model fields
@@ -41,9 +43,11 @@ class UserProfileForm(forms.ModelForm):
         image = self.cleaned_data.get('image')
         if image:
             if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
-                print("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed.")
+                # print("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed.")
+                messages.error(request, _("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed."))
             if image.size > 5 * 1024 * 1024:
-                print("Image file size must be under 5MB.")
+                # print("Image file size must be under 5MB.")
+                messages.error(request, _("Image file size must be under 5MB."))
         return image
 
     def save(self, commit=True):
