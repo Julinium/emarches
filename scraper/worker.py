@@ -85,16 +85,18 @@ def main():
             hceed = dceed + fceed
             if hceed > 0:
                 if hceed % C.BURST_LENGTH == 0:
+                    helper.printMessage('DEBUG', 'worker', f"Sleeping DCE << { dceed } success + { fceed } fails = { hceed }. Burst is { C.BURST_LENGTH }.", 1)
                     helper.printMessage('INFO', 'worker', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
                     helper.sleepRandom(10, 30)
         helper.printMessage('INFO', 'worker', f"◀◀◀ Downloaded DCE files for {dceed} items", 2)
-        helper.printMessage('INFO', 'worker', f"⬢⬢⬢ Failed to downloaded DCE files for {fceed} items")
-
+        if fceed > 0:
+            helper.printMessage('INFO', 'worker', f"⬢⬢⬢ Failed to download DCE files for {fceed} items ⬢⬢⬢")
 
     finished_time = datetime.now()
     it_took = finished_time - started_time
 
-    helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {created}, updated {updated} Tenders. Downloaded {dceed} DCE files, {fceed} downloads failed.", 2)
+    helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {created}, updated {updated} Tenders.", 2)
+    helper.printMessage('===', 'worker', f"⇉⇉⇉ Downloaded {dceed} DCE files, {fceed} downloads failed.", 2)
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { it_took }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
 
