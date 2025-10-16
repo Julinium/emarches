@@ -23,7 +23,9 @@ class UserProfileForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
+        self.request = request
         # Populate User fields if instance exists
         if self.instance and self.instance.pk and self.instance.user:
             self.fields['username'].initial = self.instance.user.username
@@ -43,11 +45,17 @@ class UserProfileForm(forms.ModelForm):
         image = self.cleaned_data.get('image')
         if image:
             if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
-                # print("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed.")
-                messages.error(request, _("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed."))
+                pass
+                # TODO: Log
+                # print(_("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed."))
+                # if self.request:
+                #     messages.error(self.request, _("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed."))
             if image.size > 5 * 1024 * 1024:
-                # print("Image file size must be under 5MB.")
-                messages.error(request, _("Image file size must be under 5MB."))
+                pass
+                # TODO: Log
+                # print(_("Image file size must be under 5MB."))
+                # if self.request:
+                #     messages.error(self.request, _("Image file size must be under 5MB."))
         return image
 
     def save(self, commit=True):

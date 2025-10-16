@@ -38,7 +38,7 @@ def profile_edit(request):
     # referer = request.META.get('HTTP_REFERER', None)
 
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        form = UserProfileForm(request.POST, request.FILES, instance=profile, request=request)
         if form.is_valid():
             form.save()
             return redirect('nas_profile_view')
@@ -47,7 +47,7 @@ def profile_edit(request):
                 for error in errors:
                     messages.error(request, f"{error}")
     else:
-        form = UserProfileForm(instance=profile)
+        form = UserProfileForm(instance=profile, request=request)
     return render(request, 'nas/profile-edit.html', {'form': form})
 
 
