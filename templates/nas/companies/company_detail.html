@@ -18,7 +18,8 @@
     <li class="list-group-item"><strong>Phone:</strong> {{ company.phone }}</li>
   </ul>
 
-  <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-primary">Edit</a>
-  <a href="{% url 'nas_company_list' %}" class="btn btn-secondary">Back</a>
+  <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-outline-primary">Edit</a>
+  <a href="{% url 'nas_company_list' %}" class="btn btn-outline-secondary">Companies List</a>
+  <a href="{% url 'nas_profile_view' %}" class="btn btn-outline-secondary">Profile</a>
 </div>
 {% endblock %}

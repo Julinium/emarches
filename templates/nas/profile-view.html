@@ -43,7 +43,7 @@
                         <div class="d-flex align-items-center">
                             <div class="h3 pb-0">{% trans "Companies" %}</div>
                             {% if companies.all|length != 0 %}
-                            <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_list' %}"><i class="bi bi-pencil me-2"></i>{% trans "Manage" %}</a></div>
+                                <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_list' %}"><i class="bi bi-pencil me-2"></i>{% trans "Manage" %}</a></div>
                             {% endif %}
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                         <div class="mt-2">
                             {% for company in companies.all %}
                                 <div class="py-2 border border-bottom border-0">
-                                    <div id="{{ company.id }}" class="d-flex align-items-center">
+                                    <a href="{% url 'nas_company_detail' company.id %}" id="{{ company.id }}" class="d-flex align-items-center text-decoration-none">
                                         <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 2.5rem;">
                                             <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                                         </div>
@@ -62,7 +62,7 @@
                                             <div class="mt-0 fw-bold">{{ company.name }}</div>
                                             <div class="mt-0 small text-muted">{{ company.ice }}</div>
                                         </div>
-                                    </div>
+                                    </a>
                                 </div>
                             {% endfor %}
                         </div>
