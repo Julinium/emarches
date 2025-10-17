@@ -46,7 +46,7 @@ def username_view(request, username):
         'profile': user.profile,
         'companies': companies
     }
-    messages.success(request, "Your personal data is kept private.")
+    # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
     return render(request, 'nas/profile-view.html', context)
 
@@ -71,7 +71,7 @@ def profile_edit(request):
                     messages.error(request, f"{error}")
     else:
         form = UserProfileForm(instance=profile, request=request)
-    messages.success(request, "Your personal data is kept private.")
+    # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
     return render(request, 'nas/profile-edit.html', {'form': form})
 

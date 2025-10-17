@@ -1,4 +1,29 @@
-<!-- <hr class="mt-5"> -->
-<div class="text-center my-4">
-    <p>Some copy right, some copy left</p>
+{% load static i18n %}
+
+
+<hr class="mt-5">
+<div id="links-bottom" class="mt-5">
+    <div class="text-center">
+        <a href="#" class="mx-2">About us</a>
+        <a href="#" class="mx-2">Contact us</a>
+        <a href="#" class="mx-2">Privacy policy</a>
+        <a href="#" class="mx-2">Terms of use</a>
+    </div>
+</div>
+<div class="text-center my-5">    
+    <div>
+        <span><i class="bi bi-c-circle fw-bold"></i></span>
+        <span class="">2024-{% now "Y" %}</span>
+        <span class="ms-1"><img class="img-fluid rounded-circle mb-1" style="max-width: 1rem; max-height: 1rem;" src="{% static 'brand/m777.png' %}" alt="M-777"></span>
+        <span class="fw-bold">MODE 777</span>
+    </div>
+    <div class="text-muted small">
+        {% trans 'All rights reserved' %}
+    </div>
+</div>
+
+<div class="text-center mt-5">
+    <a href="#">
+        <img class="img-fluid mb-2" style="max-width: 16rem; max-height: 3rem;" src="{% static 'graphics/top-arrows.png' %}" alt="TOP">
+    </a>
 </div>

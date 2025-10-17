@@ -295,7 +295,6 @@ class NotificationSent(models.Model):
     def __str__(self):
         return f'{self.title}_{self.user}_{self.when}'
 
-    
 
 class Comment(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -323,7 +322,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{ self.user.username }-on-{ self.tender.chrono }"
-
 
 
 class Reaction(models.Model):

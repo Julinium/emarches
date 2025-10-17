@@ -20,6 +20,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "True"
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', os.getenv("IP_ADDRESS")]
+if ENVIRONMENT != 'production':
+    ALLOWED_HOSTS.append('*')
 
 SITE_ID = 1
 
