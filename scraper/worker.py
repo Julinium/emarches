@@ -93,14 +93,15 @@ def main():
                     helper.sleepRandom(10, 30)
         helper.printMessage('INFO', 'worker', f"◀◀◀ Downloaded DCE files for {dceed} items", 2)
         if fceed > 0:
-            helper.printMessage('INFO', 'worker', f"⬢⬢⬢ Failed to download DCE files for {fceed} items ⬢⬢⬢")
+            helper.printMessage('INFO', 'worker', f"⬢⬢⬢ Failed to download DCE files for {fceed} items")
 
     finished_time = datetime.now()
-    it_took = finished_time - started_time
+    work_duration = finished_time - started_time
 
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {created}, updated {updated} Tenders.", 2)
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Downloaded {dceed} DCE files, {fceed} downloads failed.", 2)
-    helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { it_took }.")
+    formatted_duration = f"{work_duration.hours}:{work_duration.minutes:02d}:{int(work_duration.seconds):02d}"
+    helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { formatted_duration }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
 
 
