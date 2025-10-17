@@ -4,7 +4,7 @@
 {% block content %}
   <div class="container mt-4">
     <h2>Your Companies</h2>
-    <a href="{% url 'nas_company_create' %}" class="btn btn-primary mb-3">+ Add Company</a>
+    <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus me-2"></i>{% trans "Add Company" %}</a>
 
     {% if companies %}
     <table class="table table-striped">

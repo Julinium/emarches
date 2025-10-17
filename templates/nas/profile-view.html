@@ -54,7 +54,7 @@
                         <div class="mt-2">
                             {% for company in companies.all %}
                                 <div class="py-2 border border-bottom border-0">
-                                    <a href="{% url 'nas_company_detail' company.id %}" id="{{ company.id }}" class="d-flex align-items-center text-decoration-none">
+                                    <a href="{% url 'nas_company_detail' company.id %}" id="{{ company.id }}" class="btn d-flex align-items-center text-start">
                                         <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 2.5rem;">
                                             <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                                         </div>
