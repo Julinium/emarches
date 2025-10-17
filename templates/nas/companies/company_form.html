@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>{% if form.instance.pk %}Edit Company{% else %}Add Company{% endif %}</h2>
+  <form method="post" enctype="multipart/form-data" class="mt-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="{% url 'nas_company_list' %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

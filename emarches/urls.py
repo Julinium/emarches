@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
+
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.conf import settings
@@ -9,6 +10,7 @@ from django.conf import settings
 # from private_storage.views import PrivateStorageView
 
 from base import views as base_views
+from nas import views as nas_views
 
 # handler400 = "base_views.custom_400_view" # Bad request
 # handler403 = "base_views.custom_403_view" # Forbidden
@@ -18,15 +20,13 @@ from base import views as base_views
 urlpatterns = []
 
 urlpatterns += i18n_patterns(
+
     path('', include('base.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('authy.urls')),
     path('accounts/', include('allauth.urls')),
-    path('users/', include('nas.urls')),
-    path('users/', include('nas.urls')),
-
-    # path('private/<path:path>', PrivateStorageView.as_view(), name='serve_private_file'),
-
+    path('user/', include('nas.urls')),
+    path('@<str:username>', nas_views.username_view, name='nas_at_username'),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

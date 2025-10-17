@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
-from .models import Profile
+from .models import Profile, Company
 
 class UserProfileForm(forms.ModelForm):
     # User model fields
@@ -71,3 +71,13 @@ class UserProfileForm(forms.ModelForm):
                 profile.image = None
             profile.save()
         return profile
+
+
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        exclude = ('id', 'user', 'active', 'created', 'updated',)
+        widgets = {
+            'date_est': forms.DateInput(attrs={'type': 'date'}),
+            'note': forms.Textarea(attrs={'rows': 5}),
+        }

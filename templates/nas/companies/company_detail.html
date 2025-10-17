@@ -1,0 +1,24 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ company.name }}</h2>
+  {% if company.image %}
+    <img src="{{ company.image.url }}" alt="{{ company.name }}" class="img-thumbnail mb-3" style="max-width: 200px;">
+  {% endif %}
+
+  <ul class="list-group mb-3">
+    <li class="list-group-item"><strong>Form:</strong> {{ company.forme }}</li>
+    <li class="list-group-item"><strong>ICE:</strong> {{ company.ice }}</li>
+    <li class="list-group-item"><strong>City:</strong> {{ company.city }}</li>
+    <li class="list-group-item"><strong>Address:</strong> {{ company.address }}</li>
+    <li class="list-group-item"><strong>Activity:</strong> {{ company.activity }}</li>
+    <li class="list-group-item"><strong>Email:</strong> {{ company.email }}</li>
+    <li class="list-group-item"><strong>Phone:</strong> {{ company.phone }}</li>
+  </ul>
+
+  <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-primary">Edit</a>
+  <a href="{% url 'nas_company_list' %}" class="btn btn-secondary">Back</a>
+</div>
+{% endblock %}

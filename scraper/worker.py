@@ -38,13 +38,14 @@ def main():
     created, updated = 0 , 0
     if ll > 0:
         i = 0
+        handled = 0
         helper.printMessage('INFO', 'worker', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
         for l in links:
-            handled = created + updated
             i += 1
             helper.printMessage('DEBUG', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
-            jsono = getter.getJson(l, not C.REFRESH_EXISTING)
+            jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
             if jsono:
+                handled += 1
                 tender, creation_mode = merger.save(jsono)
                 if creation_mode == True:
                     created += 1
@@ -52,12 +53,13 @@ def main():
                 elif creation_mode == False: 
                     updated += 1
                     helper.printMessage('INFO', 'worker', f"◁◁ Updated Tender {tender.chrono}")
-            
+
             if handled > 0:
                 if handled % C.BURST_LENGTH == 0:
-                    helper.printMessage('DEBUG', 'worker', f"Sleeping << Tenders: { created } created + { updated } updated = { handled }. Burst is { C.BURST_LENGTH }.", 1)
-                    helper.printMessage('INFO', 'worker', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
+                    helper.printMessage('DEBUG', 'worker', f"Sleeping << { handled } Tenders handled. Burst is { C.BURST_LENGTH }.", 1)
+                    helper.printMessage('INFO', 'worker', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
                     helper.sleepRandom(10, 30)
+                    handled = 0
     else:
         helper.printMessage('ERROR', 'worker', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
 

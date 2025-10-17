@@ -1,26 +1,69 @@
-{% extends 'authy/base-authy.html' %}
+{% extends 'base/base.html' %}
+{% load i18n %}
 
 {% block content %}
-    <div class="text-center">
-        <div class="h3">User Profile</div>
-        <div id="headup">
-            <div id="img-preview" class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 10rem;">
-                <img id="image-preview" src="{{ profile.avatar }}" alt="Avatar" class="img-fluid border border-warning border-2 p-1 shadow rounded-circle object-fit-cover">
+    <div>
+        <div class="mt-5">
+            <div id="headup" class="text-center">
+                <div id="img-preview" class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 10rem;">
+                    <img id="image-preview" src="{{ profile.avatar }}" alt="Avatar" class="img-fluid border border-warning border-2 p-1 shadow rounded-circle object-fit-cover">
+                </div>
+                <div class="mt-1 fw-bold fs-5">@{{ user.username }}</div>
             </div>
-            <div class="mt-2">@{{ user.username }}</div>
-            {% if profile.about %}<div class="mt-1"><span class="text-muted small">{{ profile.about }}</span></div>{% endif %}
         </div>
-        <div id="details" class="mt-3">
-            {% if user.first_name %}<div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">First Name</span>{{ user.first_name }}</div>{% endif %}
-            {% if user.last_name %}<div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Last Name</span>{{ user.last_name }}</div>{% endif %}
-            {% if user.email %}<div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Email</span> {{ user.email }} </div>{% endif %}
-            <!-- <span class="ms-2"><a href="{% url 'account_email' %}"><span class="small">Manage</span></a></span> -->
-            {% if profile.phone %}<div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Phone</span>{{ profile.phone }}</div>{% endif %}
-            {% if profile.whatsapp %}<div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Whatsapp</span>{{ profile.whatsapp }}</div>{% endif %}
+        <div class="row g-5">
+            <div class="col-md-6 col-12">
+                <div class="mt-4">
+                    <div class="border border-0 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div class="h3 pb-0">{% trans "User Details" %}</div>
+                            <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_profile_edit' %}"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a></div>
+                        </div>
+                    </div>
+                    <div id="details" class="mt-3">
+                        <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">First Name</span>{{ user.first_name|default:'--' }}</div>
+                        <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Last Name</span>{{ user.last_name|default:'--' }}</div>
+                        <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Email</span> {{ user.email |default:'--'}} </div>
+                        <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Phone</span>{{ profile.phone|default:'--' }}</div>
+                        <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">Whatsapp</span>{{ profile.whatsapp|default:'--' }}</div>
+                        <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">About</span>{{ profile.about|default:'--' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12">
+                <div class="mt-4">
+                    <div class="border border-0 border-bottom mt-0">
+                        <div class="d-flex align-items-center">
+                            <div class="h3 pb-0">{% trans "Companies" %}: {{ companies|length }}</div>
+                            <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_list' %}"><i class="bi bi-pencil me-2"></i>{% trans "Manage" %}</a></div>
+                        </div>
+                    </div>
+
+                    {% if companies|length == 0 %}
+                        <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus me-2"></i>{% trans "Add Company" %}</a>
+                    {% else %}
+                        <div class="card mt-2">
+                            <ul class="list-group list-group-flush">
+                                {% for company in companies.all %}
+                                    <li class="list-group-item">
+                                        <div id="{{ company.id }}" class="">
+                                            <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 3rem;">
+                                                <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
+                                            </div>
+                                            <span>
+                                                <div class="mt-0">{{ company.name }}</div>
+                                                <div class="mt-0">{{ company.ice }}</div>
+                                            </span>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-        <div class="mt-3">
-            <a class="btn btn-outline-secondary" href="{% url 'nas_profile_edit' %}">Edit</a>
-        </div>
-        
+
     </div>
 {% endblock content %}

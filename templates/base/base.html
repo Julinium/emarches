@@ -7,19 +7,15 @@
     {% include 'base/includes/head.html' %}
 	<body>
 		<div id="main-content">
-            {% if messages %}
-                {% include 'base/snippets/messages.html' %}
-            {% endif %}
-            <div>
-                <div class="row justify-content-center">
-                    <div class="col-12 col-md-12 col-lg-8 col-xl-8">
-                    </div>
-                </div>
-            </div>
 			<div class="container mt-4">
 				<div class="row justify-content-center">
 					<div class="col-12 col-md-12 col-lg-8 col-xl-8">
+						{% include 'authy/snippets/top-bar.html' %}
+                        {% if messages %}
+                            {% include 'base/snippets/messages.html' %}
+                        {% endif %}
 						{% block content %}{% endblock %}
+						{% include 'authy/snippets/bottom-bar.html' %}
 					</div>
 				</div>
 			</div>
@@ -32,4 +28,5 @@
 		</div>
 		
 	</body>
+	{% include 'authy/includes/footer.html' %}
 </html>

@@ -64,8 +64,8 @@ class Company(models.Model):
     sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
     note      = models.CharField(max_length=1024, blank=True, verbose_name=_('Descritpion'))
     image     = models.ImageField(upload_to='companies/', null=True, blank=True, verbose_name=_('Image'))
-    agrements = models.ManyToManyField(Agrement, related_name='companies', verbose_name=_('Agrements'))
-    qualifs   = models.ManyToManyField(Qualif, related_name='companies', verbose_name=_('Qualifications'))
+    agrements = models.ManyToManyField(Agrement, blank=True, related_name='companies', verbose_name=_('Agrements'))
+    qualifs   = models.ManyToManyField(Qualif, blank=True, related_name='companies', verbose_name=_('Qualifications'))
 
     created  = models.DateTimeField(auto_now_add=True, editable=False)
     updated  = models.DateTimeField(auto_now=True, editable=False)

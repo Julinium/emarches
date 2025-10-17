@@ -1,0 +1,39 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Your Companies</h2>
+    <a href="{% url 'nas_company_create' %}" class="btn btn-primary mb-3">+ Add Company</a>
+
+    {% if companies %}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ICE</th>
+          <!-- <th>City</th> -->
+          <th>Activity</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for company in companies %}
+        <tr>
+          <td><a href="{% url 'nas_company_detail' company.pk %}">{{ company.name }}</a></td>
+          <td>{{ company.ice }}</td>
+          <!-- <td>{{ company.city }}</td> -->
+          <td>{{ company.activity }}</td>
+          <td class="text-end">
+            <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No companies found. <a href="{% url 'nas_company_create' %}">Create one now</a>.</p>
+    {% endif %}
+  </div>
+{% endblock %}
