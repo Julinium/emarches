@@ -91,9 +91,9 @@ def main():
                     helper.printMessage('DEBUG', 'worker', f"Sleeping << DCE: { dceed } success + { fceed } fails = { hceed }. Burst is { C.BURST_LENGTH }.", 1)
                     helper.printMessage('INFO', 'worker', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
                     helper.sleepRandom(10, 30)
-        helper.printMessage('INFO', 'worker', f"◀◀◀ Downloaded DCE files for {dceed} items", 2)
-        if fceed > 0:
-            helper.printMessage('INFO', 'worker', f"⬢⬢⬢ Failed to download DCE files for {fceed} items")
+        # helper.printMessage('INFO', 'worker', f"◀◀◀ Downloaded DCE files for {dceed} items", 2)
+        # if fceed > 0:
+        #     helper.printMessage('INFO', 'worker', f"⬢⬢⬢ Failed to download DCE files for {fceed} items")
 
     finished_time = datetime.now()
     work_duration = finished_time - started_time
