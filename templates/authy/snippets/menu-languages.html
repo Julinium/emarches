@@ -1,5 +1,6 @@
 {% load i18n %}
 {% load static %}
+{% load languify %}
 
 {% get_available_languages as LANGUAGES %}
 {% get_language_info_list for LANGUAGES as languages %}
@@ -16,11 +17,17 @@
         {% for lang in languages %}
         <li>
             <a class="p-2 dropdown-item{% if lang.code != lang_info.code %}{% else %} fw-bold disabled{% endif %}"
-                href="{% if lang.code != lang_info.code %}/{{ lang.code }}{{ request.path|slice:'3:'|add:request.GET.urlencode }}{% endif %}"
+                href="{% if lang.code != lang_info.code %}{% switch_language lang.code%}{% endif %}"
                 data-bs-toggle="tooltip" title="{{ lang.name_translated|capfirst }}" type="button">
                 <span><img height="20" src="{% static 'flags/' %}{{ lang.code }}.svg" alt="{{ lang.code|upper }}"></span>
                 <span class="ms-1">{{ lang.name_local|capfirst }}</span>
             </a>
+            <!-- <a class="p-2 dropdown-item{% if lang.code != lang_info.code %}{% else %} fw-bold disabled{% endif %}"
+                href="{% if lang.code != lang_info.code %}/{{ lang.code }}{{ request.path|slice:'3:'|add:request.GET.urlencode }}{% endif %}"
+                data-bs-toggle="tooltip" title="{{ lang.name_translated|capfirst }}" type="button">
+                <span><img height="20" src="{% static 'flags/' %}{{ lang.code }}.svg" alt="{{ lang.code|upper }}"></span>
+                <span class="ms-1">{{ lang.name_local|capfirst }}</span>
+            </a> -->
         </li>
         {% endfor %}
     </ul>

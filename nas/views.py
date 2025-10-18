@@ -15,6 +15,9 @@ from nas.models import Profile, Company
 from nas.forms import UserProfileForm, CompanyForm
 
 
+COMPANIES_ITEMS_PER_PAGE = 10
+
+
 @login_required
 def profile_view(request):
     return redirect('nas_at_username', request.user.username)
@@ -91,9 +94,10 @@ class CompanyListView(ListView):
     model = Company
     template_name = 'nas/companies/company_list.html'
     context_object_name = 'companies'
+    paginate_by = COMPANIES_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        return Company.objects.filter(user=self.request.user)
+        return Company.objects.filter(user=self.request.user, active=True)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -103,7 +107,7 @@ class CompanyDetailView(DetailView):
     context_object_name = 'company'
 
     def get_queryset(self):
-        return Company.objects.filter(user=self.request.user)
+        return Company.objects.filter(user=self.request.user, active=True)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -126,7 +130,7 @@ class CompanyUpdateView(UpdateView):
     success_url = reverse_lazy('nas_company_list')
 
     def get_queryset(self):
-        return Company.objects.filter(user=self.request.user)
+        return Company.objects.filter(user=self.request.user, active=True)
 
 
 @method_decorator(login_required, name='dispatch')

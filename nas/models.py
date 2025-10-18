@@ -67,8 +67,8 @@ class Company(models.Model):
     agrements = models.ManyToManyField(Agrement, blank=True, related_name='companies', verbose_name=_('Agrements'))
     qualifs   = models.ManyToManyField(Qualif, blank=True, related_name='companies', verbose_name=_('Qualifications'))
 
-    created  = models.DateTimeField(auto_now_add=True, editable=False)
-    updated  = models.DateTimeField(auto_now=True, editable=False)
+    created   = models.DateTimeField(auto_now_add=True, editable=False)
+    updated   = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         db_table = 'nas_company'

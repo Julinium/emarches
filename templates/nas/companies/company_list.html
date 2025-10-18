@@ -4,59 +4,26 @@
 {% block content %}
   <div class="container mt-4">
     <h2>{% trans "Your Companies" %}</h2>
-    <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus me-2"></i>{% trans "Add Company" %}</a>
+    <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Add Company" %}</a>
 
     {% if companies %}
       {% for company in companies %}
-        <!-- <div class="accordion mt-3 shadow-sm" id="accordionExample"> -->
-          <div class="accordion-item mt-3 shadow rounded border p-3">
-            <div class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#company-{{ forloop.counter }}" aria-expanded="false" aria-controls="company-{{ forloop.counter }}">
-                <div class="d-flex align-items-center text-start text-decoration-none">
-                  <!-- <div class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 4rem;">
-                    <img src="{{ company.logo }}" alt="Logo" class="img-fluid rounded-circle object-fit-cover" style="max-height: 2.5rem; max-width: 2.5rem;">
-                  </div> -->
-                  <div class="position-relative d-inline-block">
-                    <img src="{{ company.logo }}" alt="Logo" class="img-fluid rounded-circle object-fit-cover ratio ratio-1x1" style="max-height: 2.5rem; max-width: 2.5rem;">
+        <div class="mt-3 shadow-sm">
+          <a href="{% url 'nas_company_detail' company.id %}" id="{{ company.id }}" class="btn btn-light w-100 p-2 text-start">
+              <div class="d-flex align-items-center">
+                  <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 2.5rem;">
+                      <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                   </div>
                   <div class="ms-2">
-                      <div class="mt-0">
-                        <span class="fw-bold">{{ company.name|default:'-----' }}</span>
-                        <span class="small fw-light fs-7 text-muted">{{ company.forme|default:'sarl' }}</span>
-                      </div>
-                      <div class="mt-0 small text-muted">
-                        <span class="small fw-light fs-7 text-muted">{% trans "ICE" %} :</span>
-                        <span>{{ company.ice|default:'-' }}</span>
-                      </div>
+                      <div class="mt-0 fw-bold oneline">{{ company.name }}</div>
+                      <div class="mt-0 small text-muted oneline">{{ company.ice }}</div>
                   </div>
-                </div>
-              </button>
-            </div>
-            <div id="company-{{ forloop.counter }}" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                <div class="row gx-4 mt-1">
-                  <div class="col-md-6 col-12">
-                    <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">{% trans "Address" %}:</span>{{ company.address|default:'-' }}</div>
-                    <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">{% trans "City" %}:</span>{{ company.city|default:'-' }}</div>
-                    <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">{% trans "Phone" %}:</span>{{ company.phone|default:'-' }}</div>
-                    <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">{% trans "Email" %}:</span>{{ company.email|default:'-' }}</div>
-                  </div>
-                  <div class="col-md-6 col-12">
-                    <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">{% trans "Activity" %}:</span>{{ company.activity|default:'-' }}</div>
-                    <div class="mt-2 border border-bottom border-0"><span class="small text-muted fw-light me-2">{% trans "Sector" %}:</span>{{ company.sector|default:'-' }}</div>
-                  </div>
-                </div>
-                
-                <div id="company-{{ forloop }}-actions" class="mt-3 text-center">
-                  <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-outline-secondary">Edit</a>
-                  <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-outline-danger">Delete</a>
-                </div>
-
               </div>
-            </div>
-          </div>
-        <!-- </div> -->
+          </a>
+        </div>
+      
       {% endfor %}
+        {% include 'base/snippets/paginator.html' %}
     {% else %}
       <div class="text-muted fw-light">
         {% trans "No company found" %}

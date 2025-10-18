@@ -2,24 +2,25 @@
 {% load static i18n %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2>{{ company.name }}</h2>
-  {% if company.image %}
-    <img src="{{ company.image.url }}" alt="{{ company.name }}" class="img-thumbnail mb-3" style="max-width: 200px;">
-  {% endif %}
+    <div class="mt-5">
+        <div id="headup" class="text-center">
+            <div id="img-preview" class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 10rem;">
+                <img id="image-preview" src="{{ company.logo }}" alt="Logo" class="img-fluid border border-warning border-2 p-1 shadow rounded-circle object-fit-cover">
+            </div>
+            <div class="mt-1 fw-bold fs-5">{{ company.name }}</div>
+        </div>
+    </div>
+    
+    <div class="my-4">
+      {% include 'nas/companies/snippets/company_details.html' with company=company %}
+    </div>
 
-  <ul class="list-group mb-3">
-    <li class="list-group-item"><strong>Form:</strong> {{ company.forme }}</li>
-    <li class="list-group-item"><strong>ICE:</strong> {{ company.ice }}</li>
-    <li class="list-group-item"><strong>City:</strong> {{ company.city }}</li>
-    <li class="list-group-item"><strong>Address:</strong> {{ company.address }}</li>
-    <li class="list-group-item"><strong>Activity:</strong> {{ company.activity }}</li>
-    <li class="list-group-item"><strong>Email:</strong> {{ company.email }}</li>
-    <li class="list-group-item"><strong>Phone:</strong> {{ company.phone }}</li>
-  </ul>
-
-  <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-outline-primary">Edit</a>
-  <a href="{% url 'nas_company_list' %}" class="btn btn-outline-secondary">Companies List</a>
-  <a href="{% url 'nas_profile_view' %}" class="btn btn-outline-secondary">Profile</a>
-</div>
+    <div id="company-{{ forloop }}-actions" class="mt-3 text-center">
+      <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a>
+      <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-share me-2"></i>{% trans "Share" %}</a>
+      <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-printer me-2"></i>{% trans "Print" %}</a>
+      <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-outline-danger m-1"><i class="bi bi-trash me-2"></i>{% trans "Delete" %}</a>
+      <!-- <a href="{% url 'nas_company_list' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>{% trans "Companies" %}</a>
+      <a href="{% url 'nas_profile_view' %}" class="btn btn-outline-secondary"><i class="bi bi-arrow-up-left me-2"></i>{% trans "Profile" %}</a> -->
+    </div>
 {% endblock %}
