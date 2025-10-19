@@ -82,7 +82,7 @@ class Company(models.Model):
         try:
             logo = self.image.url
         except:
-            logo = static('companies/default.png')
+            logo = static('companies/default.svg')
         return logo
 
 

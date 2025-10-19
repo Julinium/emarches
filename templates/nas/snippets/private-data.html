@@ -1,15 +1,14 @@
 {% load i18n %}
 
 <div class="card mt-4 shadow">
-    <!-- <button type="button" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close" onclick="this.closest('.card').style.display='none'"></button> -->
     <ul class="list-group list-group-flush p-0">
         <li class="list-group-item text-success">
             <div >
                 <span><i class="bi bi-check-circle me-1"></i></span>
-                <span class="small fw-bold">{% trans "Your personal data is kept private." %}</span>
-                <span class="small fw-light">{% trans "Only your username and avatar may be seen by other users." %}</span>
-                <span class="small fw-light ms-2"><a href="#"><i class="bi bi-cursor me-1"></i>{% trans "Privacy policy" %}</a></span>
-                <!-- <span class="small fw-light ms-2"><a href="#" onclick="this.closest('.card').style.display='none'"><i class="bi bi-x-lg me-1"></i>{% trans "Dismiss" %}</a></span> -->
+                <span class="small fw-bold">{% trans "Your data is kept private." %}</span>
+                <span class="small fw-light me-2">{% trans "Only your username and avatar may be visible." %}</span>
+                <span class="d-inline-block small fw-light me-2"><a href="#"><i class="bi bi-cursor me-1"></i>{% trans "Privacy policy" %}</a></span>
+                <span class="d-inline-block small fw-light"><a href="javascript:" class="text-danger" onclick="this.closest('.card').style.display='none'"><i class="bi bi-x-lg me-1"></i>{% trans "Close" %}</a></span>
             </div>
             <div class="text-end">
             </div>
