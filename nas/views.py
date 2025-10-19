@@ -11,7 +11,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 
 from django.contrib.auth.models import User
 
-from nas.models import Profile, Company
+from nas.models import Profile, Company, Notification, NotificationSubscription
 from nas.forms import UserProfileForm, CompanyForm
 
 
@@ -44,10 +44,20 @@ def username_view(request, username):
         profile.save()
     companies = user.companies
 
+    noti_subs = user.notifications.all()
+
+    ######################
+    # for notif in noti_subs:
+    #     notif.rank = notif.notification.rank
+    #     notif.save()
+    ######################
+    
+
     context = {
         'user': user,
         'profile': user.profile,
-        'companies': companies
+        'companies': companies,
+        'notifications': noti_subs
     }
     # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
@@ -64,7 +74,7 @@ def profile_edit(request):
         profile.save()
 
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile, request=request)
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
             return redirect('nas_profile_view')
@@ -73,7 +83,7 @@ def profile_edit(request):
                 for error in errors:
                     messages.error(request, f"{error}")
     else:
-        form = UserProfileForm(instance=profile, request=request)
+        form = UserProfileForm(instance=profile)
     # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
     return render(request, 'nas/profile-edit.html', {'form': form})
@@ -131,6 +141,14 @@ class CompanyUpdateView(UpdateView):
 
     def get_queryset(self):
         return Company.objects.filter(user=self.request.user, active=True)
+
+    def form_invalid(self, form):
+        error_messages = []
+        for field, errors in form.errors.items():
+            for error in errors:
+                error_messages.append(f"{field}: {error}")
+        messages.error(self.request, f"Form submission failed: {', '.join(error_messages)}")
+        return super().form_invalid(form)
 
 
 @method_decorator(login_required, name='dispatch')

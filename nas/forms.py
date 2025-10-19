@@ -23,9 +23,9 @@ class UserProfileForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        request = kwargs.pop('request', None)
+        # request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        self.request = request
+        # self.request = request
         # Populate User fields if instance exists
         if self.instance and self.instance.pk and self.instance.user:
             self.fields['username'].initial = self.instance.user.username
@@ -43,19 +43,13 @@ class UserProfileForm(forms.ModelForm):
 
     def clean_image(self):
         image = self.cleaned_data.get('image')
-        if image:
-            if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
-                pass
-                # TODO: Log
-                # print(_("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed."))
-                # if self.request:
-                #     messages.error(self.request, _("Only image files (PNG, JPG, JPEG, GIF, WEBP) are allowed."))
-            if image.size > 5 * 1024 * 1024:
-                pass
-                # TODO: Log
-                # print(_("Image file size must be under 5MB."))
-                # if self.request:
-                #     messages.error(self.request, _("Image file size must be under 5MB."))
+        # if image:
+        #     if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
+        #         pass
+        #         # TODO: Log
+        #     if image.size > 5 * 1024 * 1024:
+        #         pass
+        #         # TODO: Log
         return image
 
     def save(self, commit=True):
@@ -74,10 +68,48 @@ class UserProfileForm(forms.ModelForm):
 
 
 class CompanyForm(forms.ModelForm):
+    clear_image = forms.BooleanField(required=False, widget=forms.HiddenInput)
     class Meta:
         model = Company
-        exclude = ('id', 'user', 'active', 'created', 'updated',)
+        # exclude = ('id', 'user', 'active', 'created', 'updated',)
+        fields = [
+            'name', 'forme', 'ice', 'tp', 'rc', 'cnss', 'address', 'city', 'zip_code',
+            'state', 'country', 'date_est', 'phone', 'mobile', 'email', 'whatsapp', 'faximili',
+            'website', 'activity', 'sector', 'note', 'image', 'clear_image']
+
         widgets = {
-            'date_est': forms.DateInput(attrs={'type': 'date'}),
+            'date_est': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
             'note': forms.Textarea(attrs={'rows': 5}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        image = cleaned_data.get('image')
+        clear_image = cleaned_data.get('clear_image')
+
+        if clear_image:
+            cleaned_data['image'] = None
+        return cleaned_data
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        # if image:
+        #     if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif')):
+        #         pass
+        #         # TODO: Log
+        #     if image.size > 5 * 1024 * 1024:
+        #         pass
+        #         # TODO: Log
+        return image
+
+    def save(self, commit=True):
+        # if self.is_valid():
+        #     print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
+        # else:
+        #     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        company = super().save(commit=False)
+        if commit:
+            if self.cleaned_data.get('clear_image'):
+                company.image = None
+            company.save()
+        return company

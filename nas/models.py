@@ -43,19 +43,20 @@ class Company(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user      = models.ForeignKey(User, on_delete=models.CASCADE, related_name='companies', editable=False)
     active    = models.BooleanField(null=True, default=True, editable=False)
-    name      = models.CharField(max_length=255, blank=True, verbose_name=_('Name'))
+    name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
     forme     = models.CharField(max_length=255, blank=True, default='SARL', verbose_name=_('Juridic form'))
     ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="ICE")
     tp        = models.CharField(max_length=64, blank=True, default='7777777', verbose_name=_('Tax Pro'))
     rc        = models.CharField(max_length=64, blank=True, default='7777777', verbose_name=_('Num. RC'))
     cnss      = models.CharField(max_length=64, blank=True, default='7777777', verbose_name=_('CNSS'))
-    date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
     address   = models.CharField(max_length=512, blank=True, verbose_name=_('Street Address'))
     city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
     zip_code  = models.CharField(max_length=8, blank=True, verbose_name=_('ZIP Code'))
     state     = models.CharField(max_length=64, blank=True, verbose_name=_('Region, State'))
     country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
+    date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
     phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
+    mobile    = models.CharField(max_length=255, blank=True, verbose_name=_('Mobile'))
     email     = models.EmailField(blank=True, verbose_name=_('Email'))
     whatsapp  = models.CharField(max_length=255, blank=True, verbose_name=_('Whatsapp'))
     faximili  = models.CharField(max_length=255, blank=True, verbose_name=_('Fax'))
@@ -63,7 +64,7 @@ class Company(models.Model):
     activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
     sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
     note      = models.CharField(max_length=1024, blank=True, verbose_name=_('Descritpion'))
-    image     = models.ImageField(upload_to='companies/', null=True, blank=True, verbose_name=_('Image'))
+    image     = models.ImageField(upload_to='companies/', null=True, blank=True, verbose_name=_('Logo'))
     agrements = models.ManyToManyField(Agrement, blank=True, related_name='companies', verbose_name=_('Agrements'))
     qualifs   = models.ManyToManyField(Qualif, blank=True, related_name='companies', verbose_name=_('Qualifications'))
 
@@ -217,6 +218,7 @@ class Notification(models.Model):
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     active      = models.BooleanField(null=True, default=True)
+    rank        = models.SmallIntegerField(default=0, verbose_name=_('Rank'))
     name        = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))
     event       = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Event'))
     description = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Description'))
@@ -224,7 +226,7 @@ class Notification(models.Model):
 
     class Meta:
         db_table = 'nas_notification'
-        ordering = ['name']
+        ordering = ['rank', 'name']
 
     def __str__(self):
         return self.name
@@ -246,12 +248,13 @@ class NotificationSubscription(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     active       = models.BooleanField(null=True, default=True)
     user         = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='notifications', editable=False)
+    rank         = models.SmallIntegerField(default=0, verbose_name=_('Rank'))
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, blank=True, null=True, related_name='notifications', editable=False)
-    when         = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Last subscribed'))
+    when         = models.DateTimeField(blank=True, null=True, auto_now=True, editable=False, verbose_name=_('Last subscribed'))
 
     class Meta:
         db_table = 'nas_notification_subscription'
-        ordering = ['-when']
+        ordering = ['rank', '-when']
 
 
 class LetterSent(models.Model):
