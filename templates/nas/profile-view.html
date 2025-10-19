@@ -15,15 +15,16 @@
                 <div class="mt-1 fw-bold fs-5">@{{ user.username }}</div>
             </div>
         </div>
+
         {% include 'nas/snippets/private-data.html' %}
 
         <div class="row g-4 mt-1">
             <div class="col-md-6 col-12">
-                <div class="mt-4">
+                <div class="mt-5">
                     <div class="mt-0">
                         <div class="d-flex align-items-center">
-                            <div class="h3 pb-0">
-                                <span><i class="bi bi-person me-1"></i></span>
+                            <div class="h4 pb-0">
+                                <span class=""><i class="bi bi-person me-1"></i></span>
                                 <span>{% trans "User Details" %}</span>
                             </div>
                             <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_profile_edit' %}"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a></div>
@@ -61,11 +62,11 @@
             </div>
 
             <div class="col-md-6 col-12">
-                <div class="mt-4">
+                <div class="mt-5">
                     <div class="mt-0">
                         <div class="d-flex align-items-center">
-                            <div class="h3 pb-0">
-                                <span><i class="bi bi-buildings me-1"></i></span>
+                            <div class="h4 pb-0">
+                                <span class=""><i class="bi bi-buildings me-1"></i></span>
                                 <span>{% trans "Companies" %}</span>
                             </div>
                             {% if companies.all|length != 0 %}
@@ -75,7 +76,9 @@
                     </div>
                     <div class="ms-4">
                         {% if companies.all|length == 0 %}
-                            <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Add Company" %}</a>
+                            <div class="my-3">
+                                <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Add Company" %}</a>
+                            </div>
                         {% else %}
                             <div class="mt-3">
                                 {% for company in companies.all %}
@@ -104,22 +107,24 @@
             </div>
 
             <div class="col-md-6 col-12">
-                <div class="mt-4">
+                <div class="mt-5">
                     <div class="mt-0">
                         <div class="d-flex align-items-center">
-                            <div class="h3 pb-0">
-                                <span><i class="bi bi-app-indicator me-1"></i></span>
+                            <div class="h4 pb-0">
+                                <span class=""><i class="bi bi-app-indicator me-1"></i></span>
                                 <span>{% trans "Notifications" %}</span>
                             </div>
-                            {% if notifications.all|length != 0 %}
-                                <div><a class="btn btn-sm btn-light mb-1 ms-2" href="javascript:"><i class="bi bi-pencil me-2"></i>{% trans "Tune" %}</a></div>
-                            {% endif %}
+                            <div>
+                                <a class="btn btn-sm btn-light mb-1 ms-2" href="javascript:"><i class="bi bi-pencil me-2"></i>{% trans "Tune" %}</a>
+                            </div>
                         </div>
                     </div>
 
                     <div class="ms-4">
                         {% if notifications.all|length == 0 %}
-                            <h2 class="text-danger">{% trans "No Notification found" %}</h2>
+                            <div class="my-3">
+                                <div class="text-danger">{% trans "No Notification found" %}</div>
+                            </div>
                         {% else %}
                             <div class="mt-3">
                                 {% for notif in notifications.all %}
@@ -130,14 +135,61 @@
                                                 {% if notif.active %}
                                                     <i class="bi bi-check-square text-success"></i>
                                                 {% else %}
-                                                    <i class="bi bi-square text-secondary"></i>
+                                                    <i class="bi bi-x-square text-secondary text-danger"></i>
                                                 {% endif %}
                                             </div>
                                             <div class="ms-2">
                                                 <div class="my-0 twoline" data-bs-toggle="tooltip" title="{{ notif.notification.description }}">
                                                     <span class="me-1 text-muted">{{ notif.notification.channel|title }}:</span>
-                                                    <span class="me-1">{{ notif.notification.name }}</span>
-                                                    <!-- <span class="text-muted"><i clas="bi bi-app"></i></span> -->
+                                                    <span class="me-1 small">{{ notif.notification.name }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-12">
+                <div class="mt-5">
+                    <div class="mt-0">
+                        <div class="d-flex align-items-center">
+                            <div class="h4 pb-0">
+                                <span class=""><i class="bi bi-envelope-arrow-up me-1"></i></span>
+                                <span>{% trans "Newsletters" %}</span>
+                            </div>
+                            <div>
+                                <a class="btn btn-sm btn-light mb-1 ms-2" href="javascript:"><i class="bi bi-pencil me-2"></i>{% trans "Tune" %}</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ms-4">
+                        {% if subscriptions.all|length == 0 %}
+                            <div class="my-3">
+                                <div class="text-danger">{% trans "No Subscription found" %}</div>
+                            </div>
+                        {% else %}
+                            <div class="mt-3">
+                                {% for sub in subscriptions.all %}
+
+                                    <div class="mt-3 border border-bottom border-0">
+                                        <div class="d-flex align-items-center">
+                                            <div class="fw-bold">
+                                                {% if sub.active %}
+                                                    <i class="bi bi-check-square text-success"></i>
+                                                {% else %}
+                                                    <i class="bi bi-x-square text-secondary text-danger"></i>
+                                                {% endif %}
+                                            </div>
+                                            <div class="ms-2">
+                                                <div class="my-0 twoline" data-bs-toggle="tooltip" title="{{ sub.newsletter.description }}">
+                                                    <span class="me-1 text-muted">{{ sub.newsletter.channel|title }}:</span>
+                                                    <span class="me-1 small">{{ sub.newsletter.name }}</span>
+                                                    <span class="me-1 small text-muted fw-light">{{ sub.newsletter.frequency }}</span>
                                                 </div>
                                             </div>
                                         </div>

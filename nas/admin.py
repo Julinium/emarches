@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Company, Notification
+from .models import Company, Notification, Newsletter, NotificationSubscription, NewsletterSubscription
+
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
@@ -13,4 +14,25 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ('name', 'active', 'event', 'channel')
     list_filter = ('channel', 'active')
     search_fields = ('name', 'event', 'description')
+
+
+@admin.register(NotificationSubscription)
+class NotificationSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('notification', 'user', 'active')
+    list_filter = ('active',)
+    search_fields = ('user','notification')
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('name', 'active', 'monthly', 'channel')
+    list_filter = ('channel', 'active')
+    search_fields = ('name', 'description')
+
+
+@admin.register(NewsletterSubscription)
+class NewsletterSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('newsletter', 'user', 'active')
+    list_filter = ('active',)
+    search_fields = ('user', 'newsletter')
 

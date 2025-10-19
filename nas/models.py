@@ -179,17 +179,19 @@ class Newsletter(models.Model):
     ]
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active      = models.BooleanField(null=True, default=True)
+    active      = models.BooleanField(null=True, default=False)
     name        = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))
+    rank        = models.SmallIntegerField(default=0, verbose_name=_('Rank'))
     description = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Description'))
     channel     = models.CharField(max_length=10, choices=CHANNEL_CHOICES, default='email', verbose_name=_('Channel'))
     monthly     = models.SmallIntegerField(blank=True, null=True, default=4, verbose_name=_('Messages per month'))
+    # daily       = models.SmallIntegerField(blank=True, null=True, default=1, verbose_name=_('Messages per day'))
 
     @property
     def frequency(self):
         m = self.monthly
         freq = m
-        unit = _('Message')
+        # unit = _('Message')
         slot = _('Month')
         if m >= 7 and m <= 30:
             slot = _('Week')
@@ -198,11 +200,12 @@ class Newsletter(models.Model):
             slot = _('Day')
             freq = int(m / 30)
 
-        return f'~{freq} {unit} / {slot}'
+        # return f'~{freq} {unit} / {slot}'
+        return f'~{freq} / {slot}'
 
     class Meta:
         db_table = 'nas_newsletter'
-        ordering = ['name']
+        ordering = ['rank', 'name']
     
     def __str__(self):
         return self.name
@@ -217,7 +220,7 @@ class Notification(models.Model):
     ]
 
     id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active      = models.BooleanField(null=True, default=True)
+    active      = models.BooleanField(null=True, default=False)
     rank        = models.SmallIntegerField(default=0, verbose_name=_('Rank'))
     name        = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))
     event       = models.CharField(max_length=256, blank=True, null=True, verbose_name=_('Event'))
@@ -234,27 +237,34 @@ class Notification(models.Model):
 
 class NewsletterSubscription(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active     = models.BooleanField(null=True, default=True)
+    active     = models.BooleanField(null=True, default=False)
     user       = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='newsletters', editable=False)
+    rank       = models.SmallIntegerField(default=0, verbose_name=_('Rank'), editable=False)
     newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, blank=True, null=True, related_name='subscriptions', editable=False)
-    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Last subscribed'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now=True, editable=False, verbose_name=_('Last subscribed'))
 
     class Meta:
         db_table = 'nas_newsletter_subscription'
-        ordering = ['-when']
+        ordering = ['rank', '-when']
+    
+    def __str__(self):
+        return f"{ self.user }@{ self.newsletter }"
 
 
 class NotificationSubscription(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     active       = models.BooleanField(null=True, default=True)
     user         = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='notifications', editable=False)
-    rank         = models.SmallIntegerField(default=0, verbose_name=_('Rank'))
+    rank         = models.SmallIntegerField(default=0, verbose_name=_('Rank'), editable=False)
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, blank=True, null=True, related_name='notifications', editable=False)
     when         = models.DateTimeField(blank=True, null=True, auto_now=True, editable=False, verbose_name=_('Last subscribed'))
 
     class Meta:
         db_table = 'nas_notification_subscription'
         ordering = ['rank', '-when']
+    
+    def __str__(self):
+        return f"{ self.user }@{ self.notification }"
 
 
 class LetterSent(models.Model):
@@ -345,3 +355,4 @@ class Reaction(models.Model):
 
     def __str__(self):
         return f"{ self.user.username }-{ self.reaction }-{ self.comment }"
+

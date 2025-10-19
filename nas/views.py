@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 
 from nas.models import Profile, Company, Notification, NotificationSubscription
 from nas.forms import UserProfileForm, CompanyForm
+from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
 
 COMPANIES_ITEMS_PER_PAGE = 10
@@ -44,20 +45,18 @@ def username_view(request, username):
         profile.save()
     companies = user.companies
 
-    noti_subs = user.notifications.all()
+    subscribeUserToNotifications(user)
+    subscribeUserToNewsletters(user)
 
-    ######################
-    # for notif in noti_subs:
-    #     notif.rank = notif.notification.rank
-    #     notif.save()
-    ######################
-    
+    noti_subs = user.notifications.all()
+    newsletters_subs = user.newsletters.all()
 
     context = {
         'user': user,
         'profile': user.profile,
         'companies': companies,
-        'notifications': noti_subs
+        'notifications': noti_subs,
+        'subscriptions': newsletters_subs
     }
     # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
