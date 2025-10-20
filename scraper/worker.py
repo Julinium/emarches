@@ -27,10 +27,15 @@ def main():
 
     links = []
     if not C.IMPORT_LINKS:
-        links = linker.getLinks()
+        links_live = linker.getlinks_live()
+        links_saved = linker.getSavedLinks()
+        links = list(set(links_live + links_saved))
+        
         linker.exportLinks(links)
     else:
         links = helper.importLinks()
+
+
 
     ll = len(links)
     helper.printMessage('DEBUG', 'worker', f"Count of links to handle: {ll} ...", 1)

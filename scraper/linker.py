@@ -110,14 +110,17 @@ def exportLinks(links):
 
 
 def getSavedLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
+    helper.printMessage('INFO', 'l.getSavedLinks', f'Getting links for saved items, deadline from { back_days } days back ...', 1)
     assa = date.today()
     dt_ddl_start = assa - timedelta(days=back_days)
     saved_tenders = Tender.object.filter(deadline__gte=dt_ddl_start)
+    helper.printMessage('DEBUG', 'l.getSavedLinks', f'Found { saved_tenders.count() } eligible saved items', 1)
     links = []
     for tender in saved_tenders:
         item = [tender.chrono, tender.organism, tender.deadline.strftime("%d/%m/%Y")]
         links.append(item)
-
+    helper.printMessage('DEBUG', 'l.getSavedLinks', f'AdConstructed { len(links) } link items', 1)
+    
     return links
 
 
@@ -196,10 +199,5 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     
     if len(links) != int(count):
         helper.printMessage('ERROR', 'l.getLinks', f'Discrepancy between links count {len(links):04} and items number {count:04}.', 2, 2)
-
-    if REFRESH_SAVED:
-        links_saved = getSavedLinks()
-        links_all = list(set(links_saved + links))
-        return links_all
 
     return links
