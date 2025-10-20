@@ -14,7 +14,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.models import User
 
 from nas.models import Profile, Company, Notification, NotificationSubscription, Newsletter, NewsletterSubscription
-from nas.forms import UserProfileForm, CompanyForm
+from nas.forms import UserProfileForm, CompanyForm, NotificationSubscriptionForm, NewsletterSubscriptionForm
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
 
@@ -128,6 +128,53 @@ def enableAllNewsletters(request):
     else:
         return HttpResponse(content=json.dumps({'error': "Method Not Allowed"}), content_type='application/json', status=405)
 
+
+@login_required
+def tuneNotifications(request):
+    if request.method == 'POST':
+        form = NotificationSubscriptionForm(request.POST, user=request.user)
+        if form.is_valid():
+            # Get all subscriptions for the user
+            subscriptions = NotificationSubscription.objects.filter(user=request.user)
+            # Update active status based on form input
+            selected_subscriptions = form.cleaned_data['subscriptions']
+            for subscription in subscriptions:
+                subscription.active = str(subscription.id) in selected_subscriptions
+                subscription.save()
+            return redirect('nas_profile_view')
+    else:
+        form = NotificationSubscriptionForm(user=request.user)
+    
+    subscriptions = NotificationSubscription.objects.filter(user=request.user).select_related('notification')
+
+    return render(request, 'nas/profile/notifications-form.html', {
+        'form': form,
+        'subscriptions': subscriptions
+    })
+
+
+@login_required
+def tuneNewsletters(request):
+    if request.method == 'POST':
+        form = NewsletterSubscriptionForm(request.POST, user=request.user)
+        if form.is_valid():
+            # Get all subscriptions for the user
+            subscriptions = NewsletterSubscription.objects.filter(user=request.user)
+            # Update active status based on form input
+            selected_subscriptions = form.cleaned_data['subscriptions']
+            for subscription in subscriptions:
+                subscription.active = str(subscription.id) in selected_subscriptions
+                subscription.save()
+            return redirect('nas_profile_view')
+    else:
+        form = NewsletterSubscriptionForm(user=request.user)
+    
+    subscriptions = NewsletterSubscription.objects.filter(user=request.user).select_related('newsletter')
+
+    return render(request, 'nas/profile/newsletters-form.html', {
+        'form': form,
+        'subscriptions': subscriptions
+    })
 
 
 @login_required

@@ -3,7 +3,9 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 
-from .models import Profile, Company
+from .models import Profile, Company, NotificationSubscription
+
+
 
 class UserProfileForm(forms.ModelForm):
     # User model fields
@@ -23,10 +25,7 @@ class UserProfileForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        # request = kwargs.pop('request', None)
         super().__init__(*args, **kwargs)
-        # self.request = request
-        # Populate User fields if instance exists
         if self.instance and self.instance.pk and self.instance.user:
             self.fields['username'].initial = self.instance.user.username
             self.fields['first_name'].initial = self.instance.user.first_name
@@ -43,13 +42,6 @@ class UserProfileForm(forms.ModelForm):
 
     def clean_image(self):
         image = self.cleaned_data.get('image')
-        # if image:
-        #     if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
-        #         pass
-        #         # TODO: Log
-        #     if image.size > 5 * 1024 * 1024:
-        #         pass
-        #         # TODO: Log
         return image
 
     def save(self, commit=True):
@@ -67,11 +59,11 @@ class UserProfileForm(forms.ModelForm):
         return profile
 
 
+
 class CompanyForm(forms.ModelForm):
     clear_image = forms.BooleanField(required=False, widget=forms.HiddenInput)
     class Meta:
         model = Company
-        # exclude = ('id', 'user', 'active', 'created', 'updated',)
         fields = [
             'name', 'forme', 'ice', 'tp', 'rc', 'cnss', 'address', 'city', 'zip_code',
             'state', 'country', 'date_est', 'phone', 'mobile', 'email', 'whatsapp', 'faximili',
@@ -93,23 +85,55 @@ class CompanyForm(forms.ModelForm):
 
     def clean_image(self):
         image = self.cleaned_data.get('image')
-        # if image:
-        #     if not image.name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.avif')):
-        #         pass
-        #         # TODO: Log
-        #     if image.size > 5 * 1024 * 1024:
-        #         pass
-        #         # TODO: Log
         return image
 
     def save(self, commit=True):
-        # if self.is_valid():
-        #     print("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV")
-        # else:
-        #     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
         company = super().save(commit=False)
         if commit:
             if self.cleaned_data.get('clear_image'):
                 company.image = None
             company.save()
         return company
+
+
+
+class NotificationSubscriptionForm(forms.Form):
+    subscriptions = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            # Populate choices with all subscription IDs for the user
+            subscriptions = user.notifications.all()
+            self.fields['subscriptions'].choices = [
+                (sub.id, sub.notification.name) for sub in subscriptions
+            ]
+            # Set initial values based on active subscriptions
+            self.fields['subscriptions'].initial = [
+                sub.id for sub in subscriptions if sub.active
+            ]
+
+
+class NewsletterSubscriptionForm(forms.Form):
+    subscriptions = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            # Populate choices with all subscription IDs for the user
+            subscriptions = user.newsletters.all()
+            self.fields['subscriptions'].choices = [
+                (sub.id, sub.newsletter.name) for sub in subscriptions
+            ]
+            # Set initial values based on active subscriptions
+            self.fields['subscriptions'].initial = [
+                sub.id for sub in subscriptions if sub.active
+            ]
+
+

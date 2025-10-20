@@ -1,0 +1,62 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block content %}
+    <div class="container">
+        <h2>{% trans "Manage Notifications" %}</h2>
+        {% if subscriptions %}
+            <div class="form-check my-3 border-0 border-bottom pb-1">
+                <input class="form-check-input" type="checkbox" 
+                    id="toggle_all" 
+                    onchange="toggleAllCheckboxes(this)">
+                <label class="form-check-label" for="toggle_all">
+                    {% trans "Toggle All" %}
+                </label>
+            </div>
+        {% endif %}
+        
+        <form method="post" action="{% url 'nas_tune_notifications' %}">
+            {% csrf_token %}
+            <div class="">
+                {% for subscription in subscriptions %}
+                <div class="form-check mb-3 border-0 border-bottom pb-1">
+                    <input class="form-check-input subscription-checkbox" type="checkbox" 
+                        name="subscriptions" 
+                        value="{{ subscription.id }}"
+                        id="subscription_{{ subscription.id }}"
+                        {% if subscription.active %}checked{% endif %}>
+                    <label class="form-check-label" for="subscription_{{ subscription.id }}">
+                        <div class="my-0">
+                            <span class="me-1 small text-muted">{{ subscription.notification.channel|title }}:</span>
+                            <span class="me-1 small">{{ subscription.notification.name }}</span>
+                        </div>
+                        <div class="my-0">
+                            <span class="small text-muted fw-light">{{ subscription.notification.description }}</span>
+                        </div>
+                    </label>
+                </div>
+                {% empty %}
+                <div>
+                    <div class="p small text-danger">{% trans "No notification subscriptions available" %}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if subscriptions %}
+                <div class="mt-3 text-center">
+                    <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
+                    <a class="m-1 btn btn-outline-secondary" href="{% url 'nas_profile_view' %}"><i class="me-2 bi bi-x-lg"></i>Cancel</a>
+                </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <script>
+        function toggleAllCheckboxes(source) {
+            const checkboxes = document.querySelectorAll('.subscription-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = source.checked;
+            });
+        }
+    </script>
+{% endblock content %}
