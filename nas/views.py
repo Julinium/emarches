@@ -85,9 +85,10 @@ def profile_edit(request):
             form.save()
             return redirect('nas_profile_view')
         else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{error}")
+            show_form_errors(form, request)
+            # for field, errors in form.errors.items():
+            #     for error in errors:
+            #         messages.error(request, f"{field}: {error}")
     else:
         form = UserProfileForm(instance=profile)
     # messages.success(request, "Your personal data is kept private.")
@@ -239,11 +240,12 @@ class CompanyUpdateView(UpdateView):
         return Company.objects.filter(user=self.request.user, active=True)
 
     def form_invalid(self, form):
-        error_messages = []
-        for field, errors in form.errors.items():
-            for error in errors:
-                error_messages.append(f"{field}: {error}")
-        messages.error(self.request, f"Form submission failed: {', '.join(error_messages)}")
+        show_form_errors(form, self.request)
+        # error_messages = []
+        # for field, errors in form.errors.items():
+        #     for error in errors:
+        #         error_messages.append(f"{field}: {error}")
+        # messages.error(self.request, f"Form submission failed: {', '.join(error_messages)}")
         return super().form_invalid(form)
 
 
@@ -255,3 +257,19 @@ class CompanyDeleteView(DeleteView):
 
     def get_queryset(self):
         return Company.objects.filter(user=self.request.user)
+
+
+def show_form_errors(form, request):
+    error_messages = []
+    imagine = False
+    for field, errors in form.errors.items():
+        if not imagine:
+            if field == 'image':
+                imagine = True
+        if field != 'image':
+            for error in errors:
+                error_messages.append(f"{field}: {error}")
+    if error_messages != []:
+        messages.error(request, '\n. '.join(error_messages))
+    if imagine:
+        messages.error(request, _("Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, AVIF, or GIF."))

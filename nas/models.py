@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
-from base.models import Agrement, Tender, Qualif
+from base.models import Agrement, Tender, Qualif, Change
 
 
 class Profile(models.Model):
@@ -292,6 +292,7 @@ class NotificationSent(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user         = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='sent_notifications', editable=False, verbose_name=_('User'))
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE, blank=True, null=True, related_name='sent_notifications', editable=False, verbose_name=_('Notification'))
+    change       = models.ForeignKey(Change, on_delete=models.CASCADE, blank=True, null=True, related_name='sent_notifications', editable=False, verbose_name=_('Change'))
     when         = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date sent'))
     sender       = models.CharField(max_length=256, blank=True, null=True, editable=False, verbose_name=_('Sender'))
     destination  = models.CharField(max_length=256, blank=True, null=True, editable=False, verbose_name=_('Destination'))

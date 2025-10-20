@@ -16,12 +16,8 @@
             <div class="mx-3">{{ user.email |default:'-' }}</div>
         </div>
         <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "First Name" %}</div>
-            <div class="mx-3">{{ user.first_name|default:'-' }}</div>
-        </div>
-        <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Last Name" %}</div>
-            <div class="mx-3">{{ user.last_name|default:'-' }}</div>
+            <div class="small text-muted fw-light me-2">{% trans "Full Name" %}</div>
+            <div class="mx-3">{{ user.first_name|default:'-' }} {{ user.last_name|upper|default:'-' }}</div>
         </div>
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "Phone" %}</div>
