@@ -27,10 +27,10 @@ def main():
 
     links = []
     if not C.IMPORT_LINKS:
-        links_live = linker.getlinks_live()
+        links_live = linker.getLinks()
         links_saved = linker.getSavedLinks()
         links = list(set(links_live + links_saved))
-        
+
         linker.exportLinks(links)
     else:
         links = helper.importLinks()
