@@ -18,9 +18,9 @@ class NotificationAdmin(admin.ModelAdmin):
 
 @admin.register(NotificationSubscription)
 class NotificationSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('notification', 'user', 'active')
+    list_display = ('notification', 'user', 'active', 'when')
     list_filter = ('active',)
-    search_fields = ('user','notification')
+    # search_fields = ('user','notification')
 
 
 @admin.register(Newsletter)
@@ -32,7 +32,7 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(NewsletterSubscription)
 class NewsletterSubscriptionAdmin(admin.ModelAdmin):
-    list_display = ('newsletter', 'user', 'active')
+    list_display = ('newsletter', 'user', 'active', 'when')
     list_filter = ('active',)
-    search_fields = ('user', 'newsletter')
+    # search_fields = ('user', 'newsletter')
 

@@ -273,3 +273,4 @@ def show_form_errors(form, request):
         messages.error(request, '\n. '.join(error_messages))
     if imagine:
         messages.error(request, _("Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, AVIF, or GIF."))
+        messages.warning(request, _("SVG files are not allowed, for security reasons."))

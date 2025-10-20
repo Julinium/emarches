@@ -7,10 +7,13 @@
     <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Add Company" %}</a>
 
     {% if companies %}
-      {% for company in companies %}
-        <div class="mt-3 shadow-sm">
-          <a href="{% url 'nas_company_detail' company.id %}" id="{{ company.id }}" class="btn btn-light w-100 p-2 text-start">
-              <div class="d-flex align-items-center">
+
+      <div class="row g-4 mt-1">
+        {% for company in companies %}
+          <div class="col-md-6 col-12">
+            <div class="card shadow-sm">
+              <a href="{% url 'nas_company_detail' company.id %}" id="{{ company.id }}" class="btn btn-light w-100 p-2 text-start">
+                <div class="d-flex align-items-center">
                   <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 2.5rem;">
                       <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                   </div>
@@ -18,11 +21,12 @@
                       <div class="mt-0 fw-bold oneline">{{ company.name }}</div>
                       <div class="mt-0 small text-muted oneline">{{ company.ice }}</div>
                   </div>
-              </div>
-          </a>
-        </div>
-      
-      {% endfor %}
+                </div>
+              </a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
         {% include 'base/snippets/paginator.html' %}
     {% else %}
       <div class="text-muted fw-light">

@@ -6,6 +6,7 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
 from base.models import Agrement, Tender, Qualif, Change
+from . imaging import squarify_image
 
 
 class Profile(models.Model):
@@ -33,10 +34,16 @@ class Profile(models.Model):
         except:
             avatar = static('avatars/default.png')
         return avatar
+    
+    def save(self, *args, **kwargs):
+        if self.image:
+            # Process the image before saving
+            self.image = squarify_image(self.image, str(self.id).split('-')[0])
+        super().save(*args, **kwargs)
 
-    @property
-    def companies(self):
-        return self.user.companies
+    # @property
+    # def companies(self):
+    #     return self.user.companies
 
 
 class Company(models.Model):
@@ -84,7 +91,13 @@ class Company(models.Model):
             logo = self.image.url
         except:
             logo = static('companies/default.svg')
-        return logo
+        return logo    
+    
+    def save(self, *args, **kwargs):
+        if self.image:
+            # Process the image before saving
+            self.image = squarify_image(self.image, str(self.id).split('-')[0])
+        super().save(*args, **kwargs)
 
 
 class Folder(models.Model):

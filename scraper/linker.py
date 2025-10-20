@@ -8,6 +8,11 @@ from selenium.webdriver.support.ui import Select
 from scraper import constants as C
 from scraper import helper
 
+from base.models import Tender
+
+
+REFRESH_SAVED = True
+
 
 def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
     assa = date.today()
@@ -104,6 +109,18 @@ def exportLinks(links):
     return file
 
 
+def getSavedLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
+    assa = date.today()
+    dt_ddl_start = assa - timedelta(days=back_days)
+    saved_tenders = Tender.object.filter(deadline__gte=dt_ddl_start)
+    links = []
+    for tender in saved_tenders:
+        item = [tender.chrono, tender.organism, tender.deadline.strftime("%d/%m/%Y")]
+        links.append(item)
+
+    return links
+
+
 def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     """
     # Synopsis:
@@ -179,6 +196,10 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     
     if len(links) != int(count):
         helper.printMessage('ERROR', 'l.getLinks', f'Discrepancy between links count {len(links):04} and items number {count:04}.', 2, 2)
-        # links = []
-    
+
+    if REFRESH_SAVED:
+        links_saved = getSavedLinks()
+        links_all = list(set(links_saved + links))
+        return links_all
+
     return links
