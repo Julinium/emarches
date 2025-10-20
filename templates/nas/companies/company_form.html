@@ -42,91 +42,91 @@
         <div class="row gx-4 mt-1">
             <div class="col-md-6 col-12">
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ form.name.value }}">
+                    <input type="text" class="form-control {% if form.name.errors %}border-2 border-danger{% endif %}" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ form.name.value }}">
                     <label class="text-muted small fw-light" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.forme.id_for_label }}" name="{{ form.forme.name }}" value="{{ form.forme.value }}">
+                    <input type="text" class="form-control {% if form.forme.errors %}border-2 border-danger{% endif %}" id="{{ form.forme.id_for_label }}" name="{{ form.forme.name }}" value="{{ form.forme.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.forme.id_for_label }}">{{ form.forme.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="date" class="form-control" id="{{ form.date_est.id_for_label }}" name="{{ form.date_est.name }}" value="{{ form.date_est.value|date:'Y-m-d' }}">
+                    <input type="date" class="form-control {% if form.date_est.errors %}border-2 border-danger{% endif %}" id="{{ form.date_est.id_for_label }}" name="{{ form.date_est.name }}" value="{{ form.date_est.value|date:'Y-m-d' }}">
                     <label class="text-muted small fw-light" for="{{ form.date_est.id_for_label }}">{{ form.date_est.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.activity.id_for_label }}" name="{{ form.activity.name }}" value="{{ form.activity.value }}">
+                    <input type="text" class="form-control {% if form.activity.errors %}border-2 border-danger{% endif %}" id="{{ form.activity.id_for_label }}" name="{{ form.activity.name }}" value="{{ form.activity.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.activity.id_for_label }}">{{ form.activity.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.sector.id_for_label }}" name="{{ form.sector.name }}" value="{{ form.sector.value }}">
+                    <input type="text" class="form-control {% if form.sector.errors %}border-2 border-danger{% endif %}" id="{{ form.sector.id_for_label }}" name="{{ form.sector.name }}" value="{{ form.sector.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.ice.id_for_label }}" name="{{ form.ice.name }}" value="{{ form.ice.value }}">
+                    <input type="text" class="form-control {% if form.ice.errors %}border-2 border-danger{% endif %}" id="{{ form.ice.id_for_label }}" name="{{ form.ice.name }}" value="{{ form.ice.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.ice.id_for_label }}">{{ form.ice.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.tp.id_for_label }}" name="{{ form.tp.name }}" value="{{ form.tp.value }}">
+                    <input type="text" class="form-control {% if form.tp.errors %}border-2 border-danger{% endif %}" id="{{ form.tp.id_for_label }}" name="{{ form.tp.name }}" value="{{ form.tp.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.tp.id_for_label }}">{{ form.tp.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.rc.id_for_label }}" name="{{ form.rc.name }}" value="{{ form.rc.value }}">
+                    <input type="text" class="form-control {% if form.rc.errors %}border-2 border-danger{% endif %}" id="{{ form.rc.id_for_label }}" name="{{ form.rc.name }}" value="{{ form.rc.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.rc.id_for_label }}">{{ form.rc.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.cnss.id_for_label }}" name="{{ form.cnss.name }}" value="{{ form.cnss.value }}">
+                    <input type="text" class="form-control {% if form.cnss.errors %}border-2 border-danger{% endif %}" id="{{ form.cnss.id_for_label }}" name="{{ form.cnss.name }}" value="{{ form.cnss.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.cnss.id_for_label }}">{{ form.cnss.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.website.id_for_label }}" name="{{ form.website.name }}" value="{{ form.website.value }}">
+                    <input type="text" class="form-control {% if form.website.errors %}border-2 border-danger{% endif %}" id="{{ form.website.id_for_label }}" name="{{ form.website.name }}" value="{{ form.website.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.website.id_for_label }}">{{ form.website.label }}</label>
                 </div>
             </div>
             <div class="col-md-6 col-12">
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value }}">
+                    <input type="text" class="form-control {% if form.phone.errors %}border-2 border-danger{% endif %}" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" value="{{ form.email.value }}">
+                    <input type="text" class="form-control {% if form.email.errors %}border-2 border-danger{% endif %}" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" value="{{ form.email.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.mobile.id_for_label }}" name="{{ form.mobile.name }}" value="{{ form.mobile.value }}">
+                    <input type="text" class="form-control {% if form.mobile.errors %}border-2 border-danger{% endif %}" id="{{ form.mobile.id_for_label }}" name="{{ form.mobile.name }}" value="{{ form.mobile.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.mobile.id_for_label }}">{{ form.mobile.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.whatsapp.id_for_label }}" name="{{ form.whatsapp.name }}" value="{{ form.whatsapp.value }}">
+                    <input type="text" class="form-control {% if form.whatsapp.errors %}border-2 border-danger{% endif %}" id="{{ form.whatsapp.id_for_label }}" name="{{ form.whatsapp.name }}" value="{{ form.whatsapp.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.whatsapp.id_for_label }}">{{ form.whatsapp.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.faximili.id_for_label }}" name="{{ form.faximili.name }}" value="{{ form.faximili.value }}">
+                    <input type="text" class="form-control {% if form.faximili.errors %}border-2 border-danger{% endif %}" id="{{ form.faximili.id_for_label }}" name="{{ form.faximili.name }}" value="{{ form.faximili.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.faximili.id_for_label }}">{{ form.faximili.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.address.id_for_label }}" name="{{ form.address.name }}" value="{{ form.address.value }}">
+                    <input type="text" class="form-control {% if form.address.errors %}border-2 border-danger{% endif %}" id="{{ form.address.id_for_label }}" name="{{ form.address.name }}" value="{{ form.address.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.city.id_for_label }}" name="{{ form.city.name }}" value="{{ form.city.value }}">
+                    <input type="text" class="form-control {% if form.city.errors %}border-2 border-danger{% endif %}" id="{{ form.city.id_for_label }}" name="{{ form.city.name }}" value="{{ form.city.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.zip_code.id_for_label }}" name="{{ form.zip_code.name }}" value="{{ form.zip_code.value }}">
+                    <input type="text" class="form-control {% if form.zip_code.errors %}border-2 border-danger{% endif %}" id="{{ form.zip_code.id_for_label }}" name="{{ form.zip_code.name }}" value="{{ form.zip_code.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.zip_code.id_for_label }}">{{ form.zip_code.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.state.id_for_label }}" name="{{ form.state.name }}" value="{{ form.state.value }}">
+                    <input type="text" class="form-control {% if form.state.errors %}border-2 border-danger{% endif %}" id="{{ form.state.id_for_label }}" name="{{ form.state.name }}" value="{{ form.state.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.state.id_for_label }}">{{ form.state.label }}</label>
                 </div>
                 <div class="form-floating mt-3">
-                    <input type="text" class="form-control" id="{{ form.country.id_for_label }}" name="{{ form.country.name }}" value="{{ form.country.value }}">
+                    <input type="text" class="form-control {% if form.country.errors %}border-2 border-danger{% endif %}" id="{{ form.country.id_for_label }}" name="{{ form.country.name }}" value="{{ form.country.value|default:'' }}">
                     <label class="text-muted small fw-light" for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
                 </div>
             </div>
         </div>
         <div class="form-floating mt-3">
-            <textarea class="form-control" id="{{ form.note.id_for_label }}" name="{{ form.note.name }}" style="height: 5rem;">{{ form.note.value }}</textarea>
+            <textarea class="form-control {% if form.note.errors %}border-2 border-danger{% endif %}" id="{{ form.note.id_for_label }}" name="{{ form.note.name }}" style="height: 5rem;">{{ form.note.value|default:'' }}</textarea>
             <label class="text-muted small fw-light" for="{{ form.note.id_for_label }}">{{ form.note.label }}</label>
         </div>
 

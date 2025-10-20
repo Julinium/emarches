@@ -6,12 +6,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse
+from django.core import serializers
+import json
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.models import User
 
-from nas.models import Profile, Company, Notification, NotificationSubscription
+from nas.models import Profile, Company, Notification, NotificationSubscription, Newsletter, NewsletterSubscription
 from nas.forms import UserProfileForm, CompanyForm
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
@@ -43,20 +45,25 @@ def username_view(request, username):
     except:
         profile = Profile(user=user)
         profile.save()
-    companies = user.companies
 
+    companies = user.companies
     subscribeUserToNotifications(user)
     subscribeUserToNewsletters(user)
-
     noti_subs = user.notifications.all()
-    newsletters_subs = user.newsletters.all()
+    newl_subs = user.newsletters.all()
+
+    nofif_disabled = noti_subs.filter(active=False).first() != None
+    newsl_disabled = newl_subs.filter(active=False).first() != None
+
 
     context = {
         'user': user,
         'profile': user.profile,
         'companies': companies,
         'notifications': noti_subs,
-        'subscriptions': newsletters_subs
+        'notif_disabled': nofif_disabled,
+        'newsl_disabled': newsl_disabled,
+        'newsletters': newl_subs
     }
     # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
@@ -86,6 +93,41 @@ def profile_edit(request):
     # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")
     return render(request, 'nas/profile-edit.html', {'form': form})
+
+
+@login_required
+def enableAllNotifications(request):
+    if request.method == "POST":
+        user = request.user
+        notifs = user.notifications.all()
+
+        try:
+            notifs.update(active=True)
+            # data = serializers.serialize('json', notifs, fields=('id', 'active', 'notification'))
+            return HttpResponse(status=200)
+        except Exception as e:
+            return HttpResponse(content=json.dumps({'error': str(e)}), content_type='application/json', status=500)
+
+    else:
+        return HttpResponse(content=json.dumps({'error': "Method Not Allowed"}), content_type='application/json', status=405)
+
+
+@login_required
+def enableAllNewsletters(request):
+    if request.method == "POST":
+        user = request.user
+        newsls = user.newsletters.all()
+
+        try:
+            newsls.update(active=True)
+            # data = serializers.serialize('json', newsls, fields=('id', 'active', 'newsletter'))
+            return HttpResponse(status=200)
+        except Exception as e:
+            return HttpResponse(content=json.dumps({'error': str(e)}), content_type='application/json', status=500)
+
+    else:
+        return HttpResponse(content=json.dumps({'error': "Method Not Allowed"}), content_type='application/json', status=405)
+
 
 
 @login_required
@@ -129,6 +171,14 @@ class CompanyCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        error_messages = []
+        for field, errors in form.errors.items():
+            for error in errors:
+                error_messages.append(f"{field}: {error}")
+        messages.error(self.request, f"Form submission failed: {', '.join(error_messages)}")
+        return super().form_invalid(form)
 
 
 @method_decorator(login_required, name='dispatch')

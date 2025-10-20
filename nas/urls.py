@@ -14,7 +14,9 @@ urlpatterns = [
     path('profile', views.profile_view, name='nas_profile_view'),
     path('profile/edit', views.profile_edit, name='nas_profile_edit'),
     path('onboard', views.onboard, name='nas_onboard'),
-
+    path('notifications-all-on', views.enableAllNotifications, name='nas_enable_all_notifications'),
+    path('newsletters-all-on', views.enableAllNewsletters, name='nas_enable_all_newsletters'),
+    
     path('company/', CompanyListView.as_view(), name='nas_company_list'),
     path('company/new/', CompanyCreateView.as_view(), name='nas_company_create'),
     path('company/<uuid:pk>/', CompanyDetailView.as_view(), name='nas_company_detail'),
