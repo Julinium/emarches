@@ -67,7 +67,7 @@ class Company(models.Model):
     email     = models.EmailField(blank=True, verbose_name=_('Email'))
     whatsapp  = models.CharField(max_length=255, blank=True, verbose_name=_('Whatsapp'))
     faximili  = models.CharField(max_length=255, blank=True, verbose_name=_('Fax'))
-    website   = models.CharField(max_length=128, blank=True, verbose_name=_('Website'))
+    website   = models.CharField(max_length=128, blank=True, default='www.mode-777.com', verbose_name=_('Website'))
     activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
     sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
     note      = models.CharField(max_length=1024, blank=True, verbose_name=_('Descritpion'))
