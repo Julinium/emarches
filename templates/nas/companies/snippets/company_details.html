@@ -1,30 +1,82 @@
 {% load i18n %}
+<div class="mt-0">
+    <div class="d-flex align-items-center">
+        <div class="h4 pb-0">
+            <span class=""><i class="bi bi-postcard-fill me-1"></i></span>
+            <span>{% trans "Company details" %}</span>
+        </div>
+        <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_edit' company.pk %}"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a></div>
+    </div>
+</div>
 
-<div class="row gx-4 mt-1">
+<div class="row gx-4 mt-1 ms-4">
     <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Name" %}</div>
-            <div class="mx-3">{{ company.name|default:'-' }}</div>
+            <div class="small text-muted fw-light me-2">{% trans "Name" %} - {% trans "Type" %}</div>
+            <div class="mx-3">
+                <span class="me-1">{{ company.name|default:'-' }}</span>
+                <span class="small text-muted fw-light">{{ company.forme|default:'-' }}</span>
+            </div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "ICE" %}</div>
             <div class="mx-3">{{ company.ice|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "Tax ID" %}</div>
             <div class="mx-3">{{ company.tp|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "Commerce Register ID" %}</div>
             <div class="mx-3">{{ company.rc|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "Social Security ID" %}</div>
             <div class="mx-3">{{ company.cnss|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Date Established" %}</div>
-            <div class="mx-3">{{ company.date_est|default:'-' }}</div>
+            <div class="small text-muted fw-light me-2">{% trans "Phone" %}</div>
+            <div class="mx-3">{{ company.phone|default:'-' }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Mobile" %}</div>
+            <div class="mx-3">{{ company.mobile|default:'-' }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Whatsapp" %}</div>
+            <div class="mx-3">{{ company.whatsapp|default:'-' }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Email" %}</div>
+            <div class="mx-3">{{ company.email|default:'-' }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Fax" %}</div>
+            <div class="mx-3">{{ company.faximili|default:'-' }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Website" %}</div>
+            <div class="mx-3">{{ company.website|default:'-' }}</div>
         </div>
     </div>
     <div class="col-md-6 col-12">
@@ -32,54 +84,52 @@
             <div class="small text-muted fw-light me-2">{% trans "Address" %}</div>
             <div class="mx-3">{{ company.address|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "City, ZIP Code" %}</div>
             <div class="mx-3">{{ company.city|default:'-' }} {{ company.zip_code }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Phone" %}</div>
-            <div class="mx-3">{{ company.phone|default:'-' }}</div>
+            <div class="small text-muted fw-light me-2">{% trans "State/Region" %}</div>
+            <div class="mx-3">{{ company.state|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Email" %}</div>
-            <div class="mx-3">{{ company.email|default:'-' }}</div>
+            <div class="small text-muted fw-light me-2">{% trans "Country" %}</div>
+            <div class="mx-3">{{ company.country|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Date Established" %}</div>
+            <div class="mx-3">{{ company.date_est|default:'-' }}</div>
+        </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "Activity" %}</div>
             <div class="mx-3">{{ company.activity|default:'-' }}</div>
         </div>
+    </div>
+    <div class="col-md-6 col-12">
         <div class="mt-3 border border-bottom border-0">
             <div class="small text-muted fw-light me-2">{% trans "Sector" %}</div>
             <div class="mx-3">{{ company.sector|default:'-' }}</div>
         </div>
     </div>
+    <div class="col">
+        <div class="mt-3 border border-bottom border-0">
+            <div class="small text-muted fw-light me-2">{% trans "Note" %}</div>
+            <div class="mx-3">{{ company.note|default:'-' }}</div>
+        </div>
+    </div>
 </div>
 
-
-
-    <!-- id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) -->
-    <!-- user      = models.ForeignKey(User, on_delete=models.CASCADE, related_name='companies', editable=False) -->
-    <!-- active    = models.BooleanField(null=True, default=True, editable=False) -->
-    <!-- name      = models.CharField(max_length=255, blank=True, verbose_name=_('Name')) -->
-    <!-- forme     = models.CharField(max_length=255, blank=True, default='SARL', verbose_name=_('Juridic form')) -->
-    <!-- ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="ICE") -->
-    <!-- tp        = models.CharField(max_length=64, blank=True, default='7777777', verbose_name=_('Tax Pro')) -->
-    <!-- rc        = models.CharField(max_length=64, blank=True, default='7777777', verbose_name=_('Num. RC')) -->
-    <!-- cnss      = models.CharField(max_length=64, blank=True, default='7777777', verbose_name=_('CNSS')) -->
-    <!-- address   = models.CharField(max_length=512, blank=True, verbose_name=_('Street Address'))
-    city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
-    zip_code  = models.CharField(max_length=8, blank=True, verbose_name=_('ZIP Code'))
-    state     = models.CharField(max_length=64, blank=True, verbose_name=_('Region, State'))
-    country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
-    phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
-    email     = models.EmailField(blank=True, verbose_name=_('Email'))
-    whatsapp  = models.CharField(max_length=255, blank=True, verbose_name=_('Whatsapp'))
-    faximili  = models.CharField(max_length=255, blank=True, verbose_name=_('Fax'))
-    website   = models.CharField(max_length=128, blank=True, verbose_name=_('Website'))
-    activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
-    sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
-    note      = models.CharField(max_length=1024, blank=True, verbose_name=_('Descritpion'))
-    image     = models.ImageField(upload_to='companies/', null=True, blank=True, verbose_name=_('Image'))
+    <!-- 
     agrements = models.ManyToManyField(Agrement, blank=True, related_name='companies', verbose_name=_('Agrements'))
     qualifs   = models.ManyToManyField(Qualif, blank=True, related_name='companies', verbose_name=_('Qualifications'))
 

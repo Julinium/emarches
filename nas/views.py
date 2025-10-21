@@ -8,11 +8,13 @@ from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse
 from django.core import serializers
 import json
+
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from django.contrib.auth.models import User
 
+from base.models import Agrement, Qualif
 from nas.models import Profile, Company, Notification, NotificationSubscription, Newsletter, NewsletterSubscription
 from nas.forms import UserProfileForm, CompanyForm, NotificationSubscriptionForm, NewsletterSubscriptionForm
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
@@ -257,6 +259,43 @@ class CompanyDeleteView(DeleteView):
 
     def get_queryset(self):
         return Company.objects.filter(user=self.request.user)
+
+
+
+@login_required
+def manageCompanyQualifs(request, pk):
+    company = get_object_or_404(Company, id=pk)
+    all_qualifs = Qualif.objects.all()
+
+    if request.method == "POST":
+        # Get the list of selected agreement IDs from the form
+        selected_qualif_ids = request.POST.getlist('qualifs')
+        # Update the company's agreements
+        company.qualifs.set(selected_qualif_ids)
+        messages.success(request, _("Qualifs updated successfully."))
+        
+        return redirect('nas_company_detail', pk=company.id)
+    context = {'company': company, 'all_qualifs': all_qualifs,}
+    return render(request, 'nas/companies/qualifs_form.html', context)
+
+
+
+@login_required
+def manageCompanyAgrements(request, pk):
+    company = get_object_or_404(Company, id=pk)
+    all_agrements = Agrement.objects.all()
+
+    if request.method == "POST":
+        # Get the list of selected agreement IDs from the form
+        selected_agrement_ids = request.POST.getlist('agrements')
+        # Update the company's agreements
+        company.agrements.set(selected_agrement_ids)
+        messages.success(request, _("Agreements updated successfully."))
+        
+        return redirect('nas_company_detail', pk=company.id)
+    context = {'company': company, 'all_agrements': all_agrements,}
+    return render(request, 'nas/companies/agrements_form.html', context)
+
 
 
 def show_form_errors(form, request):

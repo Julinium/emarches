@@ -18,6 +18,9 @@ urlpatterns = [
     path('newsletters/all-on', views.enableAllNewsletters, name='nas_enable_all_newsletters'),
     path('notifications/tune', views.tuneNotifications, name='nas_tune_notifications'),
     path('newsletters/tune', views.tuneNewsletters, name='nas_tune_newsletters'),
+
+    path('company/<uuid:pk>/agrements/', views.manageCompanyAgrements, name='nas_company_agrements'),
+    path('company/<uuid:pk>/qualifs/', views.manageCompanyQualifs, name='nas_company_qualifs'),
     
     path('company/', views.CompanyListView.as_view(), name='nas_company_list'),
     path('company/new/', views.CompanyCreateView.as_view(), name='nas_company_create'),

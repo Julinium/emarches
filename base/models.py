@@ -16,7 +16,6 @@ class Agrement(models.Model):
         db_table = 'base_agrement'
         ordering = ['name']
         verbose_name = _("")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
