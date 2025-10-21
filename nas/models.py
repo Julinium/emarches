@@ -81,7 +81,13 @@ class Company(models.Model):
     class Meta:
         db_table = 'nas_company'
         ordering = ['name']
-
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'name'],
+                name='unique_company_per_user'  # Optional but recommended: gives the constraint a name
+            )
+        ]
+        
     def __str__(self):
         return f'{self.name}'
     

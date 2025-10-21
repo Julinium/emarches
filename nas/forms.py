@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 from .models import Profile, Company, NotificationSubscription
@@ -61,7 +62,9 @@ class UserProfileForm(forms.ModelForm):
 
 
 class CompanyForm(forms.ModelForm):
+
     clear_image = forms.BooleanField(required=False, widget=forms.HiddenInput)
+
     class Meta:
         model = Company
         fields = [
@@ -73,7 +76,10 @@ class CompanyForm(forms.ModelForm):
             'date_est': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
             'note': forms.Textarea(attrs={'rows': 5}),
         }
-
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+    
     def clean(self):
         cleaned_data = super().clean()
         image = cleaned_data.get('image')
@@ -81,6 +87,16 @@ class CompanyForm(forms.ModelForm):
 
         if clear_image:
             cleaned_data['image'] = None
+
+        name = cleaned_data.get('name')
+        if name and self.user:
+            existing_company = Company.objects.filter(user=self.user, name=name).exclude(
+                pk=self.instance.pk if self.instance else None).exists()
+            if existing_company:
+                raise ValidationError({
+                    'name': _('The name is already taken.')
+                })
+
         return cleaned_data
 
     def clean_image(self):
@@ -94,6 +110,34 @@ class CompanyForm(forms.ModelForm):
                 company.image = None
             company.save()
         return company
+
+
+
+#################
+    # class Meta:
+    #     model = Company
+    #     fields = ['name', 'user']  # Include fields you want in the form
+
+    # def clean(self):
+    #     cleaned_data = super().clean()  # Get cleaned data from form
+    #     name = cleaned_data.get('name')
+    #     user = cleaned_data.get('user')
+
+    #     if name and user:  # Ensure both fields are present
+    #         # Check for existing Company with same name and user
+    #         existing_company = Company.objects.filter(user=user, name=name).exclude(
+    #             pk=self.instance.pk if self.instance else None
+    #         ).exists()
+
+    #         if existing_company:
+    #             raise ValidationError({
+    #                 'name': 'A company with this name already exists for this user.'
+    #             })
+
+    #     return cleaned_data
+#################
+
+
 
 
 

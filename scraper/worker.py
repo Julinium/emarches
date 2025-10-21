@@ -25,17 +25,16 @@ def main():
 
     links = []
     if not C.IMPORT_LINKS:
-        links = linker.getLinks()
-        links = helper.importLinks()
+        links = linker.getLinks() # links = helper.importLinks()
         links_saved = linker.getSavedLinks()
+        helper.printMessage('INFO', 'worker', f"Merging links:{ len(links) } live and { len(links_saved) } saved")
+        ml = 0
         for l in links_saved:
-            if not l in links:
+            if l not in links:
+                ml += 1
                 links.append(l)
+        helper.printMessage('INFO', 'worker', f"+++ Merged { ml } saved links to live")
 
-        # links_live_tuples = [tuple(link) for link in links_live]
-        # links_saved_tuples = [tuple(link) for link in links_saved]
-        # combined_tuples = list(set(links_live_tuples + links_saved_tuples))
-        # links = [list(link) for link in combined_tuples]
 
         linker.exportLinks(links)
     else:
