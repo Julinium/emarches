@@ -113,7 +113,7 @@ def getSavedLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     helper.printMessage('INFO', 'l.getSavedLinks', f'Getting links for saved items, deadline from { back_days } days back ...', 1)
     assa = date.today()
     dt_ddl_start = assa - timedelta(days=back_days)
-    saved_tenders = Tender.object.filter(deadline__gte=dt_ddl_start)
+    saved_tenders = Tender.objects.filter(deadline__gte=dt_ddl_start)
     helper.printMessage('DEBUG', 'l.getSavedLinks', f'Found { saved_tenders.count() } eligible saved items', 1)
     links = []
     for tender in saved_tenders:
