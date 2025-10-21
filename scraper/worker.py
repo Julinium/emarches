@@ -19,7 +19,7 @@ def main():
 
     helper.printBanner()
     helper.printMessage('===', 'worker', "▶▷▶▷ The unlazy worker started working ◁◀◁◀◁", 1, 1)
-    # av = C.VERBOSITY
+
     av = next((key for key, val in C.LOGS_LEVELS.items() if val == C.VERBOSITY), "None")
     al = 'Import' if C.IMPORT_LINKS else 'Crawl'
     af = 'Skip' if C.SKIP_DCE else 'Download'
@@ -29,15 +29,10 @@ def main():
     if not C.IMPORT_LINKS:
         links_live = linker.getLinks()
         links_saved = linker.getSavedLinks()
-        # links = list(set(links_live + links_saved))
-        
-        ##############
         links_live_tuples = [tuple(link) for link in links_live]
         links_saved_tuples = [tuple(link) for link in links_saved]
         combined_tuples = list(set(links_live_tuples + links_saved_tuples))
         links = [list(link) for link in combined_tuples]
-        ##############
-
         linker.exportLinks(links)
     else:
         links = helper.importLinks()
