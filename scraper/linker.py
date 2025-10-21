@@ -119,7 +119,7 @@ def getSavedLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     for tender in saved_tenders:
         item = [tender.chrono, tender.acronym, tender.deadline.strftime("%d/%m/%Y")]
         links.append(item)
-    helper.printMessage('DEBUG', 'l.getSavedLinks', f'AdConstructed { len(links) } link items', 1)
+    helper.printMessage('DEBUG', 'l.getSavedLinks', f'Constructed { len(links) } link items', 1)
     
     return links
 
