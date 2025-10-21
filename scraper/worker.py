@@ -25,12 +25,18 @@ def main():
 
     links = []
     if not C.IMPORT_LINKS:
-        links_live = linker.getLinks()
+        links = linker.getLinks()
+        links = helper.importLinks()
         links_saved = linker.getSavedLinks()
-        links_live_tuples = [tuple(link) for link in links_live]
-        links_saved_tuples = [tuple(link) for link in links_saved]
-        combined_tuples = list(set(links_live_tuples + links_saved_tuples))
-        links = [list(link) for link in combined_tuples]
+        for l in links_saved:
+            if not l in links:
+                links.append(l)
+
+        # links_live_tuples = [tuple(link) for link in links_live]
+        # links_saved_tuples = [tuple(link) for link in links_saved]
+        # combined_tuples = list(set(links_live_tuples + links_saved_tuples))
+        # links = [list(link) for link in combined_tuples]
+
         linker.exportLinks(links)
     else:
         links = helper.importLinks()
