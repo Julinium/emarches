@@ -189,7 +189,6 @@ def onboard(request):
     return render(request, 'nas/onboard.html', context)
 
 
-
 @method_decorator(login_required, name='dispatch')
 class CompanyListView(ListView):
     model = Company
@@ -259,7 +258,6 @@ class CompanyDeleteView(DeleteView):
 
     def get_queryset(self):
         return Company.objects.filter(user=self.request.user)
-
 
 
 @login_required

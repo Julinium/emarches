@@ -6,8 +6,6 @@ sys.path.append(project_root)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
-# from base.models import Kind  # Replace with your actual models
-# ⸻⸺—⇉→←⇇⇾⇽▶▷◆◀◁⚌➣⟼⟻⧎⬢
 
 def main():
     from datetime import datetime, timedelta
@@ -36,7 +34,6 @@ def main():
         linker.exportLinks(links)
     else:
         links = helper.importLinks()
-
 
 
     ll = len(links)
