@@ -105,8 +105,8 @@ def main():
 
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {created}, updated {updated} Tenders.", 2)
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Downloaded {dceed} DCE files, {fceed} downloads failed.", 2)
-    formatted_duration = f"{work_duration.hours}:{work_duration.minutes:02d}:{int(work_duration.seconds):02d}"
-    helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { formatted_duration }.")
+    # formatted_duration = f"{work_duration}:{work_duration.minutes:02d}:{int(work_duration.seconds):02d}"
+    helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
 
 
