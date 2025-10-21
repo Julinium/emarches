@@ -8,7 +8,6 @@ from nas.models import Profile, Notification, Newsletter, NotificationSubscripti
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
 
-
 @receiver(post_save, sender=User)
 def createProfile(sender, instance, created, **kwargs):
     if created:
@@ -18,17 +17,4 @@ def createProfile(sender, instance, created, **kwargs):
         try : profile.save()
         except Exception as xc : print('xxxxxxxxxxxxxxxxxxx Exception raised when creating Profile instance:', str(xc))
 
-
-
-# @receiver(post_save, sender=User)
-# def subscribeToNotifications(sender, instance, created, **kwargs):
-#     if created:
-#         subscribeUserToNotifications(instance)
-
-
-
-# @receiver(post_save, sender=User)
-# def subscribeToNewsletters(sender, instance, created, **kwargs):
-#     if created:
-#         subscribeUserToNewsletters(instance)
 
