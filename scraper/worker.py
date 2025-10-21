@@ -29,7 +29,14 @@ def main():
     if not C.IMPORT_LINKS:
         links_live = linker.getLinks()
         links_saved = linker.getSavedLinks()
-        links = list(set(links_live + links_saved))
+        # links = list(set(links_live + links_saved))
+        
+        ##############
+        links_live_tuples = [tuple(link) for link in links_live]
+        links_saved_tuples = [tuple(link) for link in links_saved]
+        combined_tuples = list(set(links_live_tuples + links_saved_tuples))
+        links = [list(link) for link in combined_tuples]
+        ##############
 
         linker.exportLinks(links)
     else:
