@@ -5,8 +5,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
 from .models import Profile, Company, NotificationSubscription
+from .iceberg import get_ice_checkup
 
-
+ALLOW_INVALID_ICE = True
 
 class UserProfileForm(forms.ModelForm):
     # User model fields
@@ -82,13 +83,14 @@ class CompanyForm(forms.ModelForm):
     
     def clean(self):
         cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        ice = cleaned_data.get('ice')
         image = cleaned_data.get('image')
         clear_image = cleaned_data.get('clear_image')
 
         if clear_image:
             cleaned_data['image'] = None
 
-        name = cleaned_data.get('name')
         if name and self.user:
             existing_company = Company.objects.filter(user=self.user, name=name).exclude(
                 pk=self.instance.pk if self.instance else None).exists()
@@ -96,12 +98,14 @@ class CompanyForm(forms.ModelForm):
                 raise ValidationError({
                     'name': _('The name is already taken.')
                 })
+                
+        if not ALLOW_INVALID_ICE:
+            if not self.ice_checkup_valid():
+                raise ValidationError({
+                    'ice': _('The ICE is not valid.')
+                })
 
         return cleaned_data
-
-    def clean_image(self):
-        image = self.cleaned_data.get('image')
-        return image
 
     def save(self, commit=True):
         company = super().save(commit=False)
@@ -111,34 +115,25 @@ class CompanyForm(forms.ModelForm):
             company.save()
         return company
 
-
-
-#################
-    # class Meta:
-    #     model = Company
-    #     fields = ['name', 'user']  # Include fields you want in the form
-
-    # def clean(self):
-    #     cleaned_data = super().clean()  # Get cleaned data from form
-    #     name = cleaned_data.get('name')
-    #     user = cleaned_data.get('user')
-
-    #     if name and user:  # Ensure both fields are present
-    #         # Check for existing Company with same name and user
-    #         existing_company = Company.objects.filter(user=user, name=name).exclude(
-    #             pk=self.instance.pk if self.instance else None
-    #         ).exists()
-
-    #         if existing_company:
-    #             raise ValidationError({
-    #                 'name': 'A company with this name already exists for this user.'
-    #             })
-
-    #     return cleaned_data
-#################
-
-
-
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        return image
+    
+    def ice_checkup_valid(self):
+        ice = self.cleaned_data.get('ice')
+        if not ice: return False
+        cj = get_ice_checkup(ice)
+        if not cj: return False
+        return cj.get('n2') == cj.get('cs')
+        
+        # if len(ice) != 15: return False
+        # p1, p2 = ice[0:12], ice[13:14]
+        # try:
+        #     n1, n2 = int(p1), int(p2)
+        #     cs = 97 - ((n1 * 1000) % 97)
+        #     return n2 == cs
+        # except:
+        #     return False
 
 
 class NotificationSubscriptionForm(forms.Form):

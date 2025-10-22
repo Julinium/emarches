@@ -7,16 +7,37 @@
             <div id="img-preview" class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 10rem;">
                 <img id="image-preview" src="{{ company.logo }}" alt="Logo" class="img-fluid border border-warning border-2 p-1 shadow rounded-circle object-fit-cover">
             </div>
-            <div class="mt-1 fw-bold fs-5">{{ company.name }}</div>
+            <div class="mt-1 fw-bold fs-5">
+                <span>{{ company.name }}</span>
+                {% if company.verified %}
+                    <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID look fine' %}">
+                        <i class="small bi bi-patch-check-fill text-primary"></i>
+                    </span>
+                {% else %}
+                    <!-- <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID could not be verified' %}">
+                        <i class="small bi bi-patch-exclamation-fill text-danger"></i>
+                    </span>             -->
+                    <span>
+                        <a href="javascript:" type="button" class="btn btn-sm btn-outline-primary m-1 p-1 pb-0" data-bs-toggle="modal" data-bs-target="#iceModal">
+                            <i class="bi bi-patch-question me-2"></i>{% trans "Verify" %}
+                        </a>
+                    </span>
+         
+                {% endif %}
+            </div>
         </div>
 
       <div id="company-{{ forloop }}-actions" class="mt-3 text-center">
         <!-- <a href="{% url 'nas_company_edit' company.pk %}" class="btn btn-outline-primary"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a> -->
         <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-share me-2"></i>{% trans "Share" %}</a>
-        <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-printer me-2"></i>{% trans "Print" %}</a>
+        <!-- <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-printer me-2"></i>{% trans "Print" %}</a> -->
+        <!-- {% if not company.verified %}
+            <a href="javascript:" type="button" class="btn btn-outline-primary m-1" data-bs-toggle="modal" data-bs-target="#iceModal"><i class="bi bi-patch-question me-2"></i>{% trans "Verify" %}</a>
+         {% endif %} -->
         <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-outline-danger m-1"><i class="bi bi-trash me-2"></i>{% trans "Delete" %}</a>
       </div>
     </div>
+
     
     <div class="mt-5">
         {% include 'nas/companies/snippets/company_details.html' with company=company %}
@@ -26,6 +47,42 @@
     </div>
     <div class="mt-5">
         {% include 'nas/companies/snippets/qualif_list.html' with company=company %}
+    </div>
+
+
+    <div class="modal fade" id="iceModal" tabindex="-1" aria-labelledby="iceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header p-3">
+                    <h1 class="modal-title fs-5" id="iceModalLabel">{% trans 'ICE checkup' %}</h1>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                </div>
+                <div class="modal-body p-3">            
+                    <div class="list-group">
+                        {% if company.iceberg %}
+                            {% if company.iced_company %}
+                                {% for key, value in company.iced_company.items %}
+                                    <div class="list-group-item">
+                                        <span class="small text-muted me-1">{{ key }}:</span>
+                                        <span class="">{{ value }}</span>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-danger">{% trans 'Checkup failed' %}</div>
+                            {% endif %}
+                        {% else %}
+                            <div class="text-danger">{% trans 'Please check your ICE' %}</div>
+                        {% endif %}  
+                    </div>
+                </div>
+                <div class="modal-footer p-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {% if company.iced_company %}
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

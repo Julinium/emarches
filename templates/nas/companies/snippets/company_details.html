@@ -3,9 +3,14 @@
     <div class="d-flex align-items-center">
         <div class="h4 pb-0">
             <span class=""><i class="bi bi-postcard-fill me-1"></i></span>
-            <span>{% trans "Company details" %}</span>
+            <span class="me-2">{% trans "Company details" %}</span>
         </div>
-        <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_edit' company.pk %}"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a></div>
+        <div>
+            <a class="btn btn-sm btn-light mb-1 me-2" href="{% url 'nas_company_edit' company.pk %}"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a>
+            <!-- {% if not company.verified %}
+                <a href="javascript:" type="button" class="btn btn-sm btn-light mb-1 me-2" data-bs-toggle="modal" data-bs-target="#iceModal"><i class="bi bi-patch-question me-2"></i>{% trans "Verify" %}</a>
+            {% endif %} -->
+        </div>
     </div>
 </div>
 

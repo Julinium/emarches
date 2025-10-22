@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models import Agrement, Tender, Qualif, Change
 from . imaging import squarify_image
+from . iceberg import get_ice_checkup
 
 
 class Profile(models.Model):
@@ -84,10 +85,10 @@ class Company(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'name'],
-                name='unique_company_per_user'  # Optional but recommended: gives the constraint a name
+                name='unique_company_per_user'
             )
         ]
-        
+
     def __str__(self):
         return f'{self.name}'
     
@@ -97,11 +98,41 @@ class Company(models.Model):
             logo = self.image.url
         except:
             logo = static('companies/default.svg')
-        return logo    
+        return logo
+
+    @property
+    def iceberg(self):
+        ice = self.ice
+        if not ice: return False
+        cj = get_ice_checkup(ice)
+        if not cj: return False
+        return cj.get('n2') == cj.get('cs')
+
+
+    @property
+    def iced_company(self):
+        from nas.iceberg import get_company
+        return get_company(self.ice)
+
+    @property
+    def verified(self):
+        iced_company = self.iced_company
+        if len(iced_company) == 0 : return False
+
+        name = iced_company.get('name')
+        if name.replace(' ', '').lower() != self.name.replace(' ', '').lower() : return False
+
+        ice = iced_company.get('ice')
+        if ice.replace(' ', '').lower() != self.ice.replace(' ', '').lower() : return False
+
+        rc = str(iced_company.get('rc'))
+        if rc.replace(' ', '').lower() != self.rc.replace(' ', '').lower() : return False
+
+        return True
+
     
     def save(self, *args, **kwargs):
         if self.image:
-            # Process the image before saving
             self.image = squarify_image(self.image, str(self.id).split('-')[0])
         super().save(*args, **kwargs)
 

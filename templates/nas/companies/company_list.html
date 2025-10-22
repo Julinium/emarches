@@ -18,8 +18,23 @@
                       <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                   </div>
                   <div class="ms-2">
-                      <div class="mt-0 fw-bold oneline">{{ company.name }}</div>
-                      <div class="mt-0 small text-muted oneline">{{ company.ice }}</div>
+                      <div class="mt-0 fw-bold">
+                        <span class="me-1">{{ company.name|default:'-' }}</span>
+                          {% if company.verified %}
+                              <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID look fine' %}">
+                                  <i class="small bi bi-patch-check-fill text-primary"></i>
+                              </span>
+                          {% else %}
+                              <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID could not be verified' %}">
+                                  <i class="small bi bi-patch-exclamation-fill text-danger"></i>
+                              </span>
+                          {% endif %}
+                      </div>
+                      <!-- <div class="mt-0 small text-muted">{{ company.ice }}</div> -->
+                      <div class="mt-0 small {% if company.iceberg %}text-muted{% else %}text-danger{% endif %}">                              
+                          <span class="me-1">{{ company.ice|default:'-' }}</span>
+                      </div>
+                      <!-- <div class="mt-0 small text-danger">{{ company.iced_company }}</div> -->
                   </div>
                 </div>
               </a>

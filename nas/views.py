@@ -19,6 +19,8 @@ from nas.models import Profile, Company, Notification, NotificationSubscription,
 from nas.forms import UserProfileForm, CompanyForm, NotificationSubscriptionForm, NewsletterSubscriptionForm
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
+# from nas.iceberg import get_company
+
 
 COMPANIES_ITEMS_PER_PAGE = 10
 
@@ -209,6 +211,15 @@ class CompanyDetailView(DetailView):
     def get_queryset(self):
         return Company.objects.filter(user=self.request.user, active=True)
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    
+    #     iced_company = get_company(self.ice)
+    #     if len(iced_company) > 0:
+    #         context['iced_company'] = iced_company
+
+    #     return context
+
 
 @method_decorator(login_required, name='dispatch')
 class CompanyCreateView(CreateView):
@@ -227,11 +238,7 @@ class CompanyCreateView(CreateView):
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        error_messages = []
-        for field, errors in form.errors.items():
-            for error in errors:
-                error_messages.append(f"{field}: {error}")
-        messages.error(self.request, f"Form submission failed: {', '.join(error_messages)}")
+        show_form_errors(form, self.request)
         return super().form_invalid(form)
 
 
@@ -252,11 +259,6 @@ class CompanyUpdateView(UpdateView):
 
     def form_invalid(self, form):
         show_form_errors(form, self.request)
-        # error_messages = []
-        # for field, errors in form.errors.items():
-        #     for error in errors:
-        #         error_messages.append(f"{field}: {error}")
-        # messages.error(self.request, f"Form submission failed: {', '.join(error_messages)}")
         return super().form_invalid(form)
 
 
