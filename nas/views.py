@@ -308,21 +308,40 @@ def accept_iced_company(request, pk):
     # all_qualifs = Qualif.objects.all()
     if company.iced_company:
         if request.method == "POST":
-            try: 
-                rc = company.iced_company.get('rc', None)
-                name = company.iced_company.get('name', None)
-                if rc and name:
+            try:
+                bemol = False
+                rc = company.iced_company.get('rc', None)                
+                if rc: 
                     company.rc = rc
-                    company.name = name
+                else: 
+                    bemol = True 
+
+                if not bemol:
+                    name = company.iced_company.get('name', None)
+                    if name:
+                        company.name = name
+                    else: 
+                        bemol = True
+
+                if not bemol:
+                    city = company.iced_company.get('city', None)
+                    if city: company.city = city
+                    activity = company.iced_company.get('activity', None)
+                    if activity: company.activity = activity
+                    established = company.iced_company.get('established', None)
+                    if established: company.date_est = established
+                    forme = company.iced_company.get('type', None)
+                    if forme: company.forme = forme
+
                     company.save()
-                    messages.success(request, _("Verification completed successfully"))
+                    messages.success(request, _("Data saved successfully"))
                 else:
-                    messages.error(request, _("Verification process failed") + " Got no name or no RC" + f' \n{ company.iced_company }')
+                    messages.error(request, _("Errors occurred while saving data"))
             except Exception as xc:
                 messages.error(request, str(xc))
-                messages.error(request, _("Verification process failed") + " Exception raised" + f' \n{ company.iced_company }')
+                messages.error(request, _("Verification process failed") + ": Exception raised")
     else:
-        messages.error(request, _("Verification process failed") + " Got empty or no Iced" + f' \n{ company.iced_company }')
+        messages.error(request, _("Verification process failed") + ": Got empty or no Iced")
         
     return redirect('nas_company_detail', pk=company.id)
 
@@ -342,3 +361,22 @@ def show_form_errors(form, request):
     if imagine:
         messages.error(request, _("Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, AVIF, or GIF."))
         messages.warning(request, _("SVG files are not allowed for security reasons."))
+
+
+
+
+# [
+#     {
+#         "raison_sociale": "AS VIP TRAVEL",
+#         "statut": "EN ACTIVITE",
+#         "pm": 1,
+#         "sigle": "",
+#         "capital": "500000",
+#         "dateCreation": "2011-05-26",
+#         "ice": "000077777000071",
+#         "forme": "SARL A ASSOCIE UNIQUE",
+#         "num_rc": 16299,
+#         "ville_rc": "SALE",
+#         "activite": "LOCATION DE VOITURE SANS CHAUFFEUR"
+#     }
+# ]

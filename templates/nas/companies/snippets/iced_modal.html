@@ -12,8 +12,8 @@
                     {% if company.iceberg %}
                         {% if company.iced_company %}
                             <div class="d-flex border-0 border-bottom mb-2">
-                                <div class="fw-bold small me-auto">{% trans 'ICE' %}</div>
-                                <div class="fw-bold me-2">{{ company.iced_company.ice }}</div>
+                                <div class="fw-light small me-auto">{% trans 'ICE' %}</div>
+                                <div class="fw-bold mx-2">{{ company.iced_company.ice }}</div>
                                 {% if company.ice == company.iced_company.ice %}
                                     <i class="bi bi-patch-check-fill text-success me-2"></i>
                                 {% else %}
@@ -22,37 +22,57 @@
                                     <i class="bi bi-patch-exclamation-fill text-danger me-2"></i>
                                 {% endif %}
                             </div>
-                            <div class="d-flex border-0 border-bottom mb-2">
-                                <div class="fw-bold small me-auto">{% trans 'RC' %}</div>
-                                <div class="fw-bold me-2">{{ company.iced_company.rc }}</div>
-                                {% if company.rc == company.iced_company.rc %}
-                                    <i class="bi bi-patch-check-fill text-success me-2"></i>
-                                {% else %}
-                                    <span><i class="bi bi-code text-danger me-2"></i></span>
-                                    <span class="small text-muted me-2">{{ company.rc|default:'--' }}</span>
-                                    <i class="bi bi-patch-exclamation-fill text-danger me-2"></i>
-                                {% endif %}
-                            </div>
-                            <div class="d-flex border-0 border-bottom mb-2">
-                                <div class="fw-bold small me-auto">{% trans 'Name' %}</div>
-                                <div class="fw-bold me-2">{{ company.iced_company.name }}</div>
-                                {% if company.name|lower|cut:" " == company.iced_company.name|lower|cut:" " %}
-                                    <span><i class="bi bi-three-dots text-success me-2"></i></span>
-                                    <span class="small text-muted me-2">{{ company.name|default:'--' }}</span>
-                                    <span><i class="bi bi-patch-check-fill text-success me-2"></i></span>
-                                {% else %}
-                                    <span><i class="bi bi-code text-danger me-2"></i></span>
-                                    <span class="small text-muted me-2">{{ company.name|default:'--' }}</span>
-                                    <span><i class="bi bi-patch-exclamation-fill text-danger me-2"></i></span>
-                                {% endif %}
+
+                            <div class="d-flex justify-content-between border-0 border-bottom mb-2">
+                                <div class="fw-light small me-auto">{% trans 'RC' %}</div>
+                                <div class="mx-2">
+                                    <div class="d-flex justify-content-end {% if company.rc == company.iced_company.rc %}d-none{% endif %}">
+                                        <span class="me-2 text-end">{{ company.rc|default:'--' }}</span>
+                                        {% if company.rc == company.iced_company.rc %}
+                                            <span><i class="bi bi-patch-check text-success"></i></span>
+                                        {% else %}
+                                            <span><i class="bi bi-patch-exclamation-fill text-danger"></i></span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <span class="fw-bold me-2 text-end">{{ company.iced_company.rc }}</span>
+                                        <span><i class="bi bi-patch-check{% if company.rc == company.iced_company.rc %}-fill{% endif %} text-success"></i></span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <!-- <hr>{% for key, value in company.iced_company.items %}
-                                <div class="list-group-item">
-                                    <span class="small text-muted me-1">{{ key }}:</span>
-                                    <span class="">{{ value }}</span>
+                            <div class="d-flex border-0 border-bottom mb-2">
+                                <div class="fw-light small me-auto">{% trans 'Name' %}</div>
+                                <div class="mx-2">
+                                    <div class='d-flex justify-content-end {% if company.name|lower|cut:" " == company.iced_company.name|lower|cut:" " %}d-none{% endif %}'>
+                                        <span class="me-2 text-end">{{ company.name|default:'--' }}</span>
+                                        {% if company.name|lower|cut:" " == company.iced_company.name|lower|cut:" " %}
+                                            <span><i class="bi bi-patch-check-fill text-success"></i></span>
+                                        {% else %}
+                                            <span><i class="bi bi-patch-exclamation-fill text-danger"></i></span>
+                                        {% endif %}
+                                    </div>
+                                    {% if company.iced_company.name %}
+                                        <div class="d-flex justify-content-end">
+                                            <span class="fw-bold me-2 text-end">{{ company.iced_company.name|default:'--' }}</span>
+                                            <span><i class='bi bi-patch-check{% if company.name|lower|cut:" " == company.iced_company.name|lower|cut:" " %}-fill{% endif %} text-success'></i></span>
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex justify-content-end text-danger">
+                                            <span class="fw-bold me-2 text-end">{% trans "Name not found" %}</span>
+                                            <span><i class='bi bi-patch-exclamation-fill'></i></span>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                            {% endfor %} -->
+                            </div>
+
+                            <div class="my-2 mt-3">
+                                <div class="text-muted small">
+                                    <i class="bi bi-patch-exclamation me-1"></i>
+                                    {% trans "Other fields may be updated as well" %}
+                                </div>
+                            </div>
+
                         {% else %}
                             <div class="text-danger">
                                 <span><i class="bi bi-exclamation-octagon-fill fs-4 me-2"></i></span>
@@ -70,10 +90,12 @@
             <div class="modal-footer p-2">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 {% if company.iced_company %}
-                    <form action="{% url 'nas_company_icify' company.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary">Accept changes</button>
-                    </form>
+                    {% if company.iced_company.name and company.iced_company.rc %}
+                        <form action="{% url 'nas_company_icify' company.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Accept all changes</button>
+                        </form>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

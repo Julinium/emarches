@@ -23,11 +23,6 @@
                 {% endif %}
             </div>
         </div>
-
-      <!-- <div id="company-{{ forloop }}-actions" class="mt-3 text-center">
-        <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-share me-2"></i>{% trans "Share" %}</a>
-        <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-outline-danger m-1"><i class="bi bi-trash me-2"></i>{% trans "Delete" %}</a>
-      </div> -->
     </div>
 
     
@@ -35,14 +30,15 @@
         {% include 'nas/companies/snippets/company_details.html' with company=company %}
     </div>
     <div class="mt-5">
-        {% include 'nas/companies/snippets/agrement_list.html' with company=company %}
+        {% include 'nas/companies/snippets/qualif_list.html' with company=company %}
     </div>
     <div class="mt-5">
-        {% include 'nas/companies/snippets/qualif_list.html' with company=company %}
+        {% include 'nas/companies/snippets/agrement_list.html' with company=company %}
     </div>
 
     <div id="company-actions" class="mt-5 text-center">
-        <!-- <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-share me-2"></i>{% trans "Share" %}</a> -->
+        <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-share me-2"></i>{% trans "Share" %}</a>
+        <a href="" class="btn btn-outline-secondary m-1 disabled"><i class="bi bi-printer me-2"></i>{% trans "Print" %}</a>
         <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-danger m-1"><i class="bi bi-trash me-2"></i>{% trans "Delete Company" %}</a>
     </div>
 

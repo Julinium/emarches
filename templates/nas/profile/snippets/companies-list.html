@@ -18,13 +18,30 @@
         </div>
     {% else %}
         <div class="mt-3">
-            {% for company in companies.all %}
+            {% for company in companies.all|slice:":4" %}
                 <div class="mt-3 border border-bottom border-0">
                     <div class="d-flex">
                         <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 1.5rem; max-height: 1.5rem;">
                             <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                         </div>
                         <div class="ms-2">
+                            <div class="mt-0 fw-bold oneline">
+                                {% if company.verified %}
+                                    <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID look fine' %}">
+                                        <i class="small bi bi-patch-check-fill text-primary"></i>
+                                    </span>
+                                {% else %}
+                                    <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID could not be verified' %}">
+                                        <i class="small bi bi-patch-exclamation-fill text-danger"></i>
+                                    </span>
+                                {% endif %}
+                                <span class="me-1">{{ company.name|default:'--' }}</span>
+                            </div>
+                            <div class="mt-0 small {% if company.iceberg %}text-muted{% else %}text-danger{% endif %}">                              
+                                <span class="me-1">{{ company.ice|default:'--' }}</span>
+                            </div>
+                        </div>
+                        <!-- <div class="ms-2">
                             <div class="my-0">
                                 <span class="me-1">{{ company.name|default:'--' }}</span>
                                 {% if company.verified %}
@@ -40,10 +57,19 @@
                             <div class="small fw-light {% if company.iceberg %}text-muted{% else %}text-danger{% endif %}">                              
                                 <span class="me-1">{{ company.ice|default:'--' }}</span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             {% endfor %}
+            {% if companies.all|length > 4 %}
+                <div class="my-3 ms-3">
+                    <span class="me-1"><i class="bi bi-three-dots"></i></span>
+                    <span class="fw-bold me-1">+{{ companies.all|length|add:"-4" }}</span>
+                    <span>{% trans 'more' %}</span>
+                </div>
+                
+            {% endif %}
+
         </div>
     {% endif %}
 </div>
