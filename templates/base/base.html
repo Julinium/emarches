@@ -3,35 +3,32 @@
 {% load i18n %}
 {% get_current_language_bidi as LB %}
 
+
 <html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
-    {% include 'base/includes/head.html' %}
+	<head>
+		<title>eMarches | {% block title %}{% endblock title %}</title>
+		{% include 'base/includes/head.html' %}
+	</head>
+
 	<body>
-		<div id="main-content">
-            <div class="container mt-0">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-md-12 col-lg-8 col-xl-8">
-						{% include 'authy/snippets/top-bar.html' %}
-                    </div>
-                </div>
-            </div>
+
+		{% include 'base/includes/navbar.html' %}
+		
+		{% if not request.user.is_authenticated %}
+			{% include 'base/includes/anonymous.html' %}
+		{% endif %}
+
+		<div id="main-content" style="display:;">
 			<div class="container mt-4">
 				<div class="row justify-content-center">
-					<div class="col-12 col-md-12 col-lg-8 col-xl-8">
-                        {% if messages %}
-                            {% include 'base/snippets/messages.html' %}
-                        {% endif %}
+					<div class="col-12 col-md-11 col-lg-10 col-xl-8">
+						{% if messages %}{% include 'base/snippets/messages.html' %}{% endif %}
 						{% block content %}{% endblock %}
 					</div>
 				</div>
 			</div>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-md-12 col-lg-8 col-xl-8">
-						{% include 'authy/snippets/bottom-bar.html' %}
-                    </div>
-                </div>
-            </div>
 		</div>
+
+		{% include 'base/includes/knee.html' %}
 	</body>
-	{% include 'base/includes/footer.html' %}
 </html>

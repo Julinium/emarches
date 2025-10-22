@@ -4,44 +4,56 @@
 {% get_available_languages as LANGUAGES %}
 {% get_current_language_bidi as LB %}
 {% get_current_language as LANGUAGE_CODE %}
-<head>
-    {% block title %}{% endblock title %}
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{% static 'img/insi.svg' %}">
-
-    <!-- {% if con %}
-        <meta name="description" content="{{ con.objet }}">
-        <meta name="keywords" content="{{ con.acheteur_public }} {{ con.lieu_execution }} {{ con.objet }}">
-        <meta property="og:title" content="{{ con.objet }}">
-        <meta property="og:description" content="{{ con.objet }}">
-    {% else %}
-        <meta name="description" content="{% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}">
-        <meta name="keywords" content="{% translate 'PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free Listing Files Download' %}">
-        <meta property="og:title" content="{% translate 'eMarches.com' %}">
-        <meta property="og:description" content="{% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}">
-    {% endif %}
-        <meta property="og:image" content="https://www.emarches.com/static/img/success.webp">
-        <meta property="og:type" content="website"> -->
 
 
-    <meta name="author" content="eMarches.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/png" href="{% static 'img/insi-square.svg' %}">
 
-    <link href="{% static 'styles/bootstrap-icons.min.css' %}" rel="stylesheet" />
-    <link href="{% static 'styles/custom.css' %}" rel="stylesheet" />
+{% if con %}
+    <meta name="description" content="{{ con.objet }}">
+    <meta name="keywords" content="{{ con.acheteur_public }} {{ con.lieu_execution }} {{ con.objet }}">
+    <meta property="og:title" content="{{ con.objet }}">
+    <meta property="og:description" content="{{ con.objet }}">
+{% else %}
+    <meta name="description" content="{% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}">
+    <meta name="keywords" content="{% translate 'PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free Listing Files Download' %}">
+    <meta property="og:title" content="{% translate 'eMarches.com' %}">
+    <meta property="og:description" content="{% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}">
+{% endif %}
 
-    {% if LB %}
-        <link rel="stylesheet" href="{% static 'styles/bootstrap.rtl.min.css' %}" />
-    {% else %}
-        <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}" />
-    {% endif %}
+<meta property="og:image" content="https://www.emarches.com/static/img/success.webp">
+<meta property="og:type" content="website">
 
-    {% for lang_code, lang_name in LANGUAGES %}
+
+<meta name="author" content="eMarches.com">
+
+<link href="{% static 'styles/bootstrap-icons.min.css' %}" rel="stylesheet" />
+<link href="{% static 'styles/custom.css' %}" rel="stylesheet" />
+
+{% if LB %}
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.rtl.min.css' %}" />
+{% else %}
+    <link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}" />
+{% endif %}
+
+{% for lang_code, lang_name in LANGUAGES %}
     <link rel="alternate" hreflang="{{ lang_code }}" href="{{ request.get_host }}/{{ lang_code }}/" />
-    {% endfor %}
-    <link rel="alternate" hreflang="x-default" href="{{ request.get_host }}/en/" />
+{% endfor %}
+
+<link rel="alternate" hreflang="x-default" href="{{ request.get_host }}/en/" />
+
+<!-- <link rel="stylesheet" href="{% static 'bcons/bootstrap-icons.css' %}">
+{% if LB %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
+{% else %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endif %}
+
+{% for lang_code, lang_name in LANGUAGES %}
+<link rel="alternate" hreflang="{{ lang_code }}" href="{{ request.get_host }}/{{ lang_code }}/" />
+{% endfor %}
+<link rel="alternate" hreflang="x-default" href="{{ request.get_host }}/en/" />
 
 
-    <!-- <link rel="stylesheet" href="{% static 'css/custom.css' %}"> -->
-</head>
+<link rel="stylesheet" href="{% static 'css/custom.css' %}"> -->

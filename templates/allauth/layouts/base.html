@@ -1,40 +1,7 @@
-{% load i18n %}
-{% get_current_language_bidi as LB %}
+{% extends 'base/base.html' %}
+<div class="">
+    <h1>HHHHHHHHHHHHHHHHHHHHHHH</h1>
+    {% block content %}
+    {% endblock %}
+</div>
 
-<!DOCTYPE html>
-<html  dir="{% if LB %}rtl{% else %}ltr{% endif %}">
-    <head>
-        {% include 'authy/includes/head.html' %}
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>
-            {% block head_title %}
-            {% endblock head_title %}
-        </title>
-        {% block extra_head %}
-        {% endblock extra_head %}
-    </head>
-    <body>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="p-2">
-                        {% block body %}
-                            {% if messages %}
-                                {% include 'base/snippets/messages.html' %}
-                            {% endif %}
-                            <div class="mb-4">{% include 'authy/snippets/top-bar.html' %}</div>
-                            
-                            {% block content %}
-                            {% endblock content %}
-                        {% endblock body %}
-                        {% block extra_body %}
-                        {% endblock extra_body %}
-                    </div>
-                    <div class="mb-5"></div>
-                </div>
-            </div>
-        </div>
-        {% include 'authy/includes/footer.html' %}
-    </body>
-</html>

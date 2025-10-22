@@ -1,0 +1,66 @@
+{% load static %}
+{% load i18n %}
+<!-- load taginos -->
+ {% load languify %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+
+<nav class="navbar navbar-expand-lg pt-3 pb-4 navbar-light sticky-top">
+  <div class="container container-fluid">
+    <a class="navbar-brand btn-preload" href="{% url 'base_home' %}">      
+      <img class="img-fluid brandino" src="{% if LANGUAGE_CODE == 'ar' %}{% static 'img/insi-brand-ar.svg' %}{% else %}{% static 'img/insi-brand.svg' %}{% endif %}" alt="eMarches">
+    </a>
+    <button class="navbar-toggler border-0 px-1" type="button" 
+        data-bs-toggle="collapse" data-bs-target="#navbarToggler"
+        aria-controls="navbarToggler" aria-expanded="false" 
+        style="outline: none; box-shadow: none;"
+        aria-label="Toggle navigation">
+        {% if request.user.is_authenticated %}
+        <img class="img-fluid border rounded-circle" src="{% if request.user.profile.avatar %}{{ MEDIA_URL }}{{ request.user.profile.avatar }}{% else %}/static/media/users/avatars/default.png{% endif %}" alt="" style="width: 1.5rem; height: 1.5rem; object-fit: cover;">
+        {% endif %}
+        <span class="navbar-toggler-icon"></span>
+        {% if new_contactings %}
+          <span class="badge mb-2 px-1 bg-danger text-white"> </span>
+        {% else %}
+          {% if user_favs %}<span class="badge mb-2 px-1 bg-primary text-white "> </span>{% endif %}
+        {% endif %}
+    </button>
+      
+    <div class="collapse navbar-collapse" id="navbarToggler">
+      
+          <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="portalScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-search"></i> {% translate 'Tenders' %}
+                {% if user_favs %}
+                  <span class="badge mb-2 px-1 text-white bg-primary"> </span>
+                {% endif %}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
+                <li><a class="dropdown-item btn-preload" href="/"><i class="bi bi-hourglass-split"></i> {% translate 'Expiring' %}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item btn-preload" href="/"><i class="bi bi-menu-app-fill"></i> {% translate 'Newest' %}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item btn-preload" href="/"><i class="bi bi-bookmark-heart-fill"></i> {% translate 'My Favourites' %}{% if user_favs %}<span class="badge bg-primary text-white mx-1">{{ user_favs.count }}</span>{% endif %}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item btn-preload" aria-disabled="true" href="/"><i class="bi bi-opencollective"></i> {% translate 'Insights' %}</a></li><li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item btn-preload" aria-disabled="true" href="/"><i class="bi bi-cart4"></i> {% translate 'Purchase Orders' %}</a></li>
+              </ul>
+            </li>
+            <li class="nav-item"><a class="nav-link nav-section" tabindex="-1" aria-disabled="true" href="{% if request.path != '/'|add:request.LANGUAGE_CODE|add:'/' %}/{{ request.LANGUAGE_CODE }}/{% endif %}#our-services"><i class="bi bi-rocket-takeoff-fill"></i> {% translate 'Services' %}</a></li>
+            <li class="nav-item"><a class="nav-link btn-preload" tabindex="-1" aria-disabled="true" href="/"><i class="bi bi-chat-text-fill"></i> {% translate 'Contact' %}</a></li>
+          </ul>
+
+          <span>
+              <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll text-end">
+                {% include 'base/snippets/menu-languages.html' %}
+                {% include 'base/snippets/menu-user.html' %}
+              </ul>
+          </span>
+      
+    </div>
+  </div>
+</nav>
+
+		

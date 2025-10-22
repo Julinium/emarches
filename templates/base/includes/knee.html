@@ -1,0 +1,18 @@
+{% load static %}
+
+<footer>
+    <div class="text-center py-3 mt-2">
+    <hr>
+    {% include 'base/includes/footer.html' %}
+    </div>
+    <script src="{% static 'scripts/popper.min.js' %}"></script>
+    <script src="{% static 'scripts/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    </script>
+</footer>
+
+<!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/messages.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script> -->

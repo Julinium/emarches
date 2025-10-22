@@ -26,3 +26,6 @@ scraper/exports
 scraper/logs
 scraper/crony/.lock
 scraper/__pycache__/
+
+
+templates/base-x/
