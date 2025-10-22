@@ -61,7 +61,6 @@ class UserProfileForm(forms.ModelForm):
         return profile
 
 
-
 class CompanyForm(forms.ModelForm):
 
     clear_image = forms.BooleanField(required=False, widget=forms.HiddenInput)
@@ -75,7 +74,7 @@ class CompanyForm(forms.ModelForm):
 
         widgets = {
             'date_est': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note': forms.Textarea(attrs={'rows': 5}),
+            'note': forms.Textarea(attrs={'rows': 8}),
         }
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
