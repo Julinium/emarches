@@ -273,14 +273,12 @@ class CompanyDeleteView(DeleteView):
 
 
 @login_required
-def manageCompanyQualifs(request, pk):
+def manage_company_qualifs(request, pk):
     company = get_object_or_404(Company, id=pk)
     all_qualifs = Qualif.objects.all()
 
     if request.method == "POST":
-        # Get the list of selected agreement IDs from the form
         selected_qualif_ids = request.POST.getlist('qualifs')
-        # Update the company's agreements
         company.qualifs.set(selected_qualif_ids)
         messages.success(request, _("Qualifs updated successfully."))
         
@@ -289,16 +287,13 @@ def manageCompanyQualifs(request, pk):
     return render(request, 'nas/companies/qualifs_form.html', context)
 
 
-
 @login_required
-def manageCompanyAgrements(request, pk):
+def manage_company_agrements(request, pk):
     company = get_object_or_404(Company, id=pk)
     all_agrements = Agrement.objects.all()
 
     if request.method == "POST":
-        # Get the list of selected agreement IDs from the form
         selected_agrement_ids = request.POST.getlist('agrements')
-        # Update the company's agreements
         company.agrements.set(selected_agrement_ids)
         messages.success(request, _("Agreements updated successfully."))
         
@@ -306,6 +301,30 @@ def manageCompanyAgrements(request, pk):
     context = {'company': company, 'all_agrements': all_agrements,}
     return render(request, 'nas/companies/agrements_form.html', context)
 
+
+@login_required
+def accept_iced_company(request, pk):
+    company = get_object_or_404(Company, id=pk)
+    # all_qualifs = Qualif.objects.all()
+    if company.iced_company:
+        if request.method == "POST":
+            try: 
+                rc = company.iced_company.get('rc', None)
+                name = company.iced_company.get('name', None)
+                if rc and name:
+                    company.rc = rc
+                    company.name = name
+                    company.save()
+                    messages.success(request, _("Verification completed successfully"))
+                else:
+                    messages.error(request, _("Verification process failed") + " Got no name or no RC" + f' \n{ company.iced_company }')
+            except Exception as xc:
+                messages.error(request, str(xc))
+                messages.error(request, _("Verification process failed") + " Exception raised" + f' \n{ company.iced_company }')
+    else:
+        messages.error(request, _("Verification process failed") + " Got empty or no Iced" + f' \n{ company.iced_company }')
+        
+    return redirect('nas_company_detail', pk=company.id)
 
 
 def show_form_errors(form, request):
@@ -322,4 +341,4 @@ def show_form_errors(form, request):
         messages.error(request, '\n. '.join(error_messages))
     if imagine:
         messages.error(request, _("Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, AVIF, or GIF."))
-        messages.warning(request, _("SVG files are not allowed, for security reasons."))
+        messages.warning(request, _("SVG files are not allowed for security reasons."))

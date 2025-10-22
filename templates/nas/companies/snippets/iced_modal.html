@@ -1,0 +1,81 @@
+{% load i18n %}
+
+<div class="modal fade" id="icedModal" tabindex="-1" aria-labelledby="icedModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header justify-content-center px-3 py-2">
+                <h4 class="mt-2" id="icedModalLabel">{% trans 'ICE Checkup' %}</h4>
+                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+            </div>
+            <div class="modal-body p-3">
+                <div class="list-group">
+                    {% if company.iceberg %}
+                        {% if company.iced_company %}
+                            <div class="d-flex border-0 border-bottom mb-2">
+                                <div class="fw-bold small me-auto">{% trans 'ICE' %}</div>
+                                <div class="fw-bold me-2">{{ company.iced_company.ice }}</div>
+                                {% if company.ice == company.iced_company.ice %}
+                                    <i class="bi bi-patch-check-fill text-success me-2"></i>
+                                {% else %}
+                                    <span><i class="bi bi-code text-danger me-2"></i></span>
+                                    <span class="small text-muted me-2">{{ company.ice|default:'--' }}</span>
+                                    <i class="bi bi-patch-exclamation-fill text-danger me-2"></i>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex border-0 border-bottom mb-2">
+                                <div class="fw-bold small me-auto">{% trans 'RC' %}</div>
+                                <div class="fw-bold me-2">{{ company.iced_company.rc }}</div>
+                                {% if company.rc == company.iced_company.rc %}
+                                    <i class="bi bi-patch-check-fill text-success me-2"></i>
+                                {% else %}
+                                    <span><i class="bi bi-code text-danger me-2"></i></span>
+                                    <span class="small text-muted me-2">{{ company.rc|default:'--' }}</span>
+                                    <i class="bi bi-patch-exclamation-fill text-danger me-2"></i>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex border-0 border-bottom mb-2">
+                                <div class="fw-bold small me-auto">{% trans 'Name' %}</div>
+                                <div class="fw-bold me-2">{{ company.iced_company.name }}</div>
+                                {% if company.name|lower|cut:" " == company.iced_company.name|lower|cut:" " %}
+                                    <span><i class="bi bi-three-dots text-success me-2"></i></span>
+                                    <span class="small text-muted me-2">{{ company.name|default:'--' }}</span>
+                                    <span><i class="bi bi-patch-check-fill text-success me-2"></i></span>
+                                {% else %}
+                                    <span><i class="bi bi-code text-danger me-2"></i></span>
+                                    <span class="small text-muted me-2">{{ company.name|default:'--' }}</span>
+                                    <span><i class="bi bi-patch-exclamation-fill text-danger me-2"></i></span>
+                                {% endif %}
+                            </div>
+
+                            <!-- <hr>{% for key, value in company.iced_company.items %}
+                                <div class="list-group-item">
+                                    <span class="small text-muted me-1">{{ key }}:</span>
+                                    <span class="">{{ value }}</span>
+                                </div>
+                            {% endfor %} -->
+                        {% else %}
+                            <div class="text-danger">
+                                <span><i class="bi bi-exclamation-octagon-fill fs-4 me-2"></i></span>
+                                <span>{% trans 'Checkup failed' %}</span>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-danger">
+                            <span><i class="bi bi-exclamation-octagon-fill fs-4 me-2"></i></span>
+                            <span>{% trans 'Please check your ICE' %}</span>
+                        </div>
+                    {% endif %}  
+                </div>
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                {% if company.iced_company %}
+                    <form action="{% url 'nas_company_icify' company.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary">Accept changes</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

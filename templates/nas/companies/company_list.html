@@ -19,7 +19,7 @@
                   </div>
                   <div class="ms-2">
                       <div class="mt-0 fw-bold">
-                        <span class="me-1">{{ company.name|default:'-' }}</span>
+                        <span class="me-1">{{ company.name|default:'--' }}</span>
                           {% if company.verified %}
                               <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID look fine' %}">
                                   <i class="small bi bi-patch-check-fill text-primary"></i>
@@ -30,11 +30,9 @@
                               </span>
                           {% endif %}
                       </div>
-                      <!-- <div class="mt-0 small text-muted">{{ company.ice }}</div> -->
                       <div class="mt-0 small {% if company.iceberg %}text-muted{% else %}text-danger{% endif %}">                              
-                          <span class="me-1">{{ company.ice|default:'-' }}</span>
+                          <span class="me-1">{{ company.ice|default:'--' }}</span>
                       </div>
-                      <!-- <div class="mt-0 small text-danger">{{ company.iced_company }}</div> -->
                   </div>
                 </div>
               </a>
