@@ -25,7 +25,6 @@ def get_company(ice=None):
             'established': entry.get('dateCreation'),
             'activity': entry.get('activite'),
         }
-
         return data
     return {}
 

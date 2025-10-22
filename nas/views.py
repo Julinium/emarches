@@ -19,8 +19,6 @@ from nas.models import Profile, Company, Notification, NotificationSubscription,
 from nas.forms import UserProfileForm, CompanyForm, NotificationSubscriptionForm, NewsletterSubscriptionForm
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
-# from nas.iceberg import get_company
-
 
 COMPANIES_ITEMS_PER_PAGE = 10
 
@@ -362,21 +360,3 @@ def show_form_errors(form, request):
         messages.error(request, _("Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, AVIF, or GIF."))
         messages.warning(request, _("SVG files are not allowed for security reasons."))
 
-
-
-
-# [
-#     {
-#         "raison_sociale": "AS VIP TRAVEL",
-#         "statut": "EN ACTIVITE",
-#         "pm": 1,
-#         "sigle": "",
-#         "capital": "500000",
-#         "dateCreation": "2011-05-26",
-#         "ice": "000077777000071",
-#         "forme": "SARL A ASSOCIE UNIQUE",
-#         "num_rc": 16299,
-#         "ville_rc": "SALE",
-#         "activite": "LOCATION DE VOITURE SANS CHAUFFEUR"
-#     }
-# ]

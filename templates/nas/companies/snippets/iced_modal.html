@@ -93,7 +93,7 @@
                     {% if company.iced_company.name and company.iced_company.rc %}
                         <form action="{% url 'nas_company_icify' company.id %}" method="post">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-primary">Accept all changes</button>
+                            <button type="submit" class="btn btn-primary">Accept Changes</button>
                         </form>
                     {% endif %}
                 {% endif %}
