@@ -4,7 +4,7 @@
 
 <div class="nav-item dropdown">
     {% if request.user.is_authenticated %}
-        <a class="btn btn-light p-1 nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="btn btn-light p-1 nav-link dropdown-toggle text-end" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span><img class="rounded-circle" height="24" width="24" src="{{ request.user.profile.avatar }}" alt="Avatar"></span>
             <span>{{ request.user.username|truncatechars:8 }}</span>
         </a>
@@ -21,7 +21,7 @@
                     <span class="ms-1">{% trans "Profile" %}</span>
                 </a>
             </li>
-            {% url 'account_email' as email_url_ %}
+            <!-- {% url 'account_email' as email_url_ %}
             {% if email_url_ %}
                 <li>
                     <a href="{{ email_url_ }}" class="p-2 dropdown-item" type="button">
@@ -29,8 +29,8 @@
                         <span class="ms-1">{% trans "Change Email" %}</span>
                     </a>
                 </li>
-            {% endif %}
-            {% url 'account_change_password' as change_password_url_ %}
+            {% endif %} -->
+            <!-- {% url 'account_change_password' as change_password_url_ %}
             {% if change_password_url_ %}
                 <li>
                     <a href="{{ change_password_url_ }}" class="p-2 dropdown-item" type="button">
@@ -38,8 +38,8 @@
                         <span class="ms-1">{% trans "Change Password" %}</span>
                     </a>
                 </li>
-            {% endif %}
-            {% url 'socialaccount_connections' as connections_url_ %}
+            {% endif %} -->
+            <!-- {% url 'socialaccount_connections' as connections_url_ %}
             {% if connections_url_ %}
                 <li>
                     <a href="{{ connections_url_ }}" class="p-2 dropdown-item" type="button">
@@ -47,7 +47,7 @@
                         <span class="ms-1">{% trans "Account Connections" %}</span>
                     </a>
                 </li>
-            {% endif %}
+            {% endif %} -->
             {% url 'mfa_index' as mfa_url_ %}
             {% if mfa_url_ %}
                 <li>

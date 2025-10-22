@@ -6,26 +6,27 @@ def get_company(ice=None):
     if not ice : return {}
     
     url = f"{ host }?query={ ice }"
-    
-    response = requests.get(url)
-    response.raise_for_status()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
 
-    data_list = response.json()
+        data_list = response.json()
 
-    if data_list:
-        entry = data_list[0]
-        data = {
-            'status': entry.get('statut'),
-            'name': entry.get('raison_sociale'),
-            'ice': entry.get('ice'),
-            'capital': entry.get('capital'),
-            'rc': str(entry.get('num_rc')),
-            'city': entry.get('ville_rc'),
-            'type': entry.get('forme'),
-            'established': entry.get('dateCreation'),
-            'activity': entry.get('activite'),
-        }
-        return data
+        if data_list:
+            entry = data_list[0]
+            data = {
+                'status': entry.get('statut'),
+                'name': entry.get('raison_sociale'),
+                'ice': entry.get('ice'),
+                'capital': entry.get('capital'),
+                'rc': str(entry.get('num_rc')),
+                'city': entry.get('ville_rc'),
+                'type': entry.get('forme'),
+                'established': entry.get('dateCreation'),
+                'activity': entry.get('activite'),
+            }
+            return data
+    except: pass
     return {}
 
 def get_ice_checkup(ice):

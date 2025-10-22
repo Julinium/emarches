@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="mt-0">
+    <div class="d-flex align-items-center">
+        <div class="h4 pb-0">
+            <span class=""><i class="bi bi-shield-lock me-1"></i></span>
+            <span>{% trans "Account and security" %}</span>
+        </div>
+        <!-- <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_profile_edit' %}"><i class="bi bi-pencil me-2"></i>{% trans "Edit" %}</a></div> -->
+    </div>
+</div>
+<div class="ms-4">
+    <div class="my-2">
+        <a href="{% url 'account_email' %}" class="my-2 me-2 btn btn-outline-primary"><i class="bi bi-envelope-at me-2"></i>{% trans "Addresses" %}</a>
+        <a href="{% url 'account_change_password' %}" class="my-2 me-2 btn btn-outline-primary"><i class="bi bi-lock me-2"></i>{% trans "Password" %}</a>
+        <a href="{% url 'socialaccount_connections' %}" class="my-2 me-2 btn btn-outline-primary"><i class="bi bi-fingerprint me-2"></i>{% trans "Connections" %}</a>
+    </div>                  
+</div>
