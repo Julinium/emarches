@@ -33,7 +33,7 @@ class Agrement(models.Model):
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     label = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Name"))
-
+    
     class Meta:
         db_table = 'base_category'
         ordering = ['label']
@@ -42,6 +42,16 @@ class Category(models.Model):
     
     def __str__(self):
         return self.label
+
+    @property
+    def icon_bs_class(self):
+        try: 
+            if self.label[0] == "F": return 'basket'
+            if self.label[0] == "S": return 'gear'
+            if self.label[0] == "T": return 'cone-striped'
+        except: pass
+
+        return 'question-circle'
 
 
 class Change(models.Model):
@@ -297,10 +307,25 @@ class Tender(models.Model):
     class Meta:
         db_table = 'base_tender'
         verbose_name = _("Tender")
-        # verbose_name_plural = _("")
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
+    
+    @property
+    def days_to_go(self, full_bar = 30):
+        try: 
+            today_now = timezone.now()
+            delta_to_go = self.deadline - today_now
+            return delta_to_go.days
+        except: return 0
+    
+    @property
+    def progress_percent(self, full_bar = 30):
+        try:
+            ratio = int(100 * self.days_to_go / full_bar)
+            progress = max(0, min(ratio, 100))
+            return progress
+        except: return 0
 
     def save(self, *args, **kwargs):
         self.updated = None

@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load i18n static %}
+
+{% block title %}
+    {% trans "Running Tenders" %}
+{% endblock title %}
+
+{% block content %}
+<h3>{% trans "Running Tenders" %}</h3>
+    {% for tender in tenders %}
+        <div class="my-4">
+            {% include 'portal/snippets/tenders/tender-summary.html' %}
+        </div>
+        
+    {% empty %}
+        {% trans "Nothing to show here !" %}
+    {% endfor %}
+
+    {% include 'base/snippets/paginator.html' %}
+{% endblock content %}

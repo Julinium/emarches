@@ -1,8 +1,12 @@
 {% extends 'base/base.html' %}
 {% load static i18n %}
 
+{% block title %}
+    {% if form.instance.pk %}Edit Company{% else %}Add Company{% endif %}
+{% endblock title %}
+
 {% block content %}
-    <h3>{% if form.instance.pk %}Edit Company{% else %}Add Company{% endif %}</h3>
+    <h3>{% trans "Edit Company" %}</h3>
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
         <div class="mt-3">

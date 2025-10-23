@@ -1,9 +1,13 @@
 {% extends 'base/base.html' %}
 {% load static i18n %}
 
+{% block title %}
+    {% trans "Companies list" %}
+{% endblock title %}
+
 {% block content %}
   <div class="container mt-4">
-    <h2>{% trans "Your Companies" %}</h2>
+    <h2>{% trans "Companies list" %}</h2>
     <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Add Company" %}</a>
 
     {% if companies %}

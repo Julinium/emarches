@@ -1,10 +1,8 @@
 {% load static %}
 {% load i18n %}
-<!-- load taginos -->
  {% load languify %}
 
 {% get_current_language as LANGUAGE_CODE %}
-
 
 <nav class="navbar navbar-expand-md pt-3 pb-4 my-0
             navbar-light sticky-top">
@@ -34,68 +32,12 @@
              alt="" style="width: 1.5rem; height: 1.5rem; object-fit: cover;">
         {% endif %}
         <span class="navbar-toggler-icon"></span>
-        <!-- {% if new_contactings %}
-          <span class="badge mb-2 px-1 bg-danger text-white"> </span>
-        {% else %}
-          {% if user_favs %}
-            <span class="badge mb-2 px-1 bg-primary text-white "> </span>
-          {% endif %}
-        {% endif %} -->
     </button>
       
     <div class="collapse navbar-collapse" id="navbarToggler">
       
           <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-            <li class="nav-item dropdown">
-              <a class="nav-link py-1 dropdown-toggle" 
-                 href="#" id="portalScrollingDropdown" role="button" 
-                 data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-megaphone-fill"></i> {% translate 'Tenders' %}
-                {% if user_favs %}
-                  <span class="badge mb-2 px-1 text-white bg-primary"> </span>
-                {% endif %}
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
-                <!-- <li>
-                  <a class="dropdown-item" href="/">
-                    <i class="bi bi-hourglass-split"></i>
-                    {% translate 'Expiring' %}
-                  </a>
-                </li> -->
-                <!-- <li><hr class="dropdown-divider"></li> -->
-                <li>
-                  <a class="dropdown-item" href="{% url 'portal_tender_list' %}">
-                    <i class="bi bi-search"></i>
-                    {% translate 'Browse' %}
-                  </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <a class="dropdown-item" href="/">
-                    <i class="bi bi-bookmark-heart-fill"></i>
-                    {% translate 'My Favourites' %}
-                    {% if user_favs %}
-                      <span class="badge bg-primary text-white mx-1">
-                        {{ user_favs.count }}
-                      </span>
-                    {% endif %}
-                  </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                  <a class="dropdown-item" aria-disabled="true" href="/">
-                    <i class="bi bi-opencollective"></i>
-                    {% translate 'Insights' %}
-                  </a>
-                </li><li><hr class="dropdown-divider"></li>
-                <li>
-                  <a class="dropdown-item" aria-disabled="true" href="/">
-                    <i class="bi bi-cart4"></i>
-                    {% translate 'Purchase Orders' %}
-                  </a>
-                </li>
-              </ul>
-            </li>
+            {% include 'portal/snippets/menu-tenders.html' %}
             <!-- <li class="nav-item">
               <a class="nav-link py-1 nav-section" 
                  tabindex="-1" aria-disabled="true" 

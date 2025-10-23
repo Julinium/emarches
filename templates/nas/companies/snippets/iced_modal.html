@@ -75,8 +75,24 @@
 
                         {% else %}
                             <div class="text-danger">
-                                <span><i class="bi bi-exclamation-octagon-fill fs-4 me-2"></i></span>
-                                <span>{% trans 'Checkup failed' %}</span>
+                                <div> 
+                                    <span><i class="bi bi-exclamation-octagon-fill fs-4 me-1"></i></span>
+                                    <span class="me-2">{% trans 'ICE Checkup failed' %}.</span>
+                                    <span class="small text-muted">{% trans "Possible reasons include" %}:</span>
+                                </div>
+                                <div>
+                                    <ul class="my-2 small fw-bold">
+                                        <li>
+                                            {% trans "Internet connection" %}
+                                        </li>
+                                        <li>
+                                            {% trans "Wrong ICE" %}
+                                        </li>
+                                    </ul>
+                                    <div class="small text-muted">
+                                        {% trans "Please try again later. If the problem persists, feel free to contact us" %}.
+                                    </div>
+                                </div>
                             </div>
                         {% endif %}
                     {% else %}

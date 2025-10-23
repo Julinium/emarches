@@ -1,0 +1,41 @@
+{% load i18n static %}   
+<div class="card shadow">
+    <div class="card-header px-3 py-0">
+        <div class="d-flex align-items-center">
+            <div class="fs-4 border-0" 
+                 data-bs-toggle="tooltip" title="{{ tender.category.label }}">
+                <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
+            </div>
+            <div class="ms-1">
+                <div class="fw-bold fs-6" 
+                     data-bs-toggle="tooltip" 
+                     title="{{ tender.estimate }} / {{ tender.bond }}">
+                    {{ tender.estimate }}
+                </div>            
+            </div>
+        </div>
+    </div>
+    <div class="progress bg-danger p-0 m-0" style="height: 0.3rem;">
+        <div class="progress-bar bg-success" 
+                role="progressbar" style="width: {{ tender.progress_percent }}%;" 
+                aria-valuenow="{{ tender.progress_percent }}" aria-valuemin="0" 
+                aria-valuemax="100">
+        </div>
+    </div>
+    <div class="card-body px-3 py-2">
+        <div class="{% if not strip_long_texts %}twolines{% endif %}">{{ tender.title }}</div>
+    </div>
+    <div class="card-footer px-3 py-1">
+        <div class="text-muted small">{{ tender.client.name }}</div>
+    </div>
+</div>
+
+<!-- <div class="btn btn-light shadow mt-3 text-start w-100">
+    {% if tender in favorites %}
+        <span><i class="bi bi-heart me-1">LOVE</i></span>
+    {% endif %}
+    <div class="me-1 fw-bold text-success">{{ tender.days_to_go }} days ({{ tender.progress_percent }}%)</div>
+    <div class="me-1 text-primary">{{ tender.published }} -- {{ tender.deadline }}</div>
+    <div>{{ tender.title }}</div>
+    <div class="text-muted small">{{ tender.client.name }}</div>    
+</div> -->
