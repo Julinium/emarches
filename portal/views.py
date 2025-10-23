@@ -11,7 +11,7 @@ from nas.models import Favorite
 from base.models import Tender
 
 
-TENDERS_ITEMS_PER_PAGE = 20
+TENDERS_ITEMS_PER_PAGE = 10
 TENDERS_ORDERING_FIELD = 'deadline'
 
 
@@ -29,7 +29,10 @@ class TenderListView(ListView):
                 deadline__gte=today_now
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
-            ).select_related('client').prefetch_related('lots')
+            ).select_related('client').prefetch_related(
+                'lots', 'favorites', 'downloads', 
+                'comments', 'changes'
+                )
 
         return running_tenders
     

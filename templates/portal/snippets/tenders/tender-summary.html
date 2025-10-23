@@ -1,41 +1,150 @@
 {% load i18n static %}   
+{% load humanize %}
+
 <div class="card shadow">
-    <div class="card-header px-3 py-0">
-        <div class="d-flex align-items-center">
-            <div class="fs-4 border-0" 
-                 data-bs-toggle="tooltip" title="{{ tender.category.label }}">
-                <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
+    <div class="card-header px-3 py-1 bg-light">
+
+        <div class="d-flex justify-content-between">
+            <div class="d-flex align-items-center">
+                <div class="ms-1 oneline" id="h{{ tender.chrono }}l">
+                    <span class="fs-5 border-0" 
+                        data-bs-toggle="tooltip" title="{{ tender.category.label }}">
+                        <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
+                    </span>
+                    {% if tender in changes.all %}
+                        <i class="bi bi-heart-fill text-success"
+                           data-bs-toggle="tooltip" 
+                           title="{% trans 'Bookmarked' %}">
+                        </i>
+                    {% endif %}
+                    {% if tender.lots_count > 1 %}
+                        <i class="bi bi-grid small"
+                           data-bs-toggle="tooltip" 
+                           title="{{ tender.lots_count }} {% trans 'Lots' %}">
+                        </i>
+                    {% endif %}
+                    <span class="fw-bold fs-6 me-1 border-0 border-end" 
+                          data-bs-toggle="tooltip" 
+                          title="{% trans 'Total Estimate' %}: {{ tender.estimate }}">
+                        {{ tender.estimate|metrify }}
+                    </span>
+                    <span class="fw-light small text-muted me-1" 
+                          data-bs-toggle="tooltip" 
+                          title="{% trans 'Total Guaranty' %}: {{ tender.bond }}">
+                        {{ tender.bond|metrify:1 }}
+                    </span>
+                    <span class="fw-light small text-muted mx-1" 
+                          data-bs-toggle="tooltip" 
+                          title="{% trans 'Execution Location' %}: {{ tender.location }}">
+                        <span><i class="bi bi-geo"></i></span>
+                        <span>{{ tender.location }}</span>
+                    </span>
+                </div>
             </div>
-            <div class="ms-1">
-                <div class="fw-bold fs-6" 
-                     data-bs-toggle="tooltip" 
-                     title="{{ tender.estimate }} / {{ tender.bond }}">
-                    {{ tender.estimate }}
-                </div>            
+            <div class="ms-3">
+                <div class="dropstart">
+                    <button class="btn py-1 px-2" type="button" 
+                            data-bs-toggle="dropdown" 
+                            aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                    </button>
+                    <ul class="dropdown-menu shadow">
+                        <li><a class="dropdown-item" href="javascript:">Details</a></li>
+                        <li><a class="dropdown-item" href="javascript:">Download</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="javascript:">Share</a></li>
+                        <li><a class="dropdown-item" href="javascript:">Bookmark</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-    <div class="progress bg-danger p-0 m-0" style="height: 0.3rem;">
+
+    <div class="progress bg-danger p-0 m-0" style="height: 0.25rem;">
         <div class="progress-bar bg-success" 
                 role="progressbar" style="width: {{ tender.progress_percent }}%;" 
                 aria-valuenow="{{ tender.progress_percent }}" aria-valuemin="0" 
                 aria-valuemax="100">
         </div>
     </div>
+
     <div class="card-body px-3 py-2">
-        <div class="{% if not strip_long_texts %}twolines{% endif %}">{{ tender.title }}</div>
+        <div id="t{{ tender.chrono }}2" class="twolines">
+            <div 
+                 data-bs-toggle="tooltip"
+                 title="{% trans 'Tender object' %}: {{ tender.title }}">
+                {% if tender.cancelled %}
+                    <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
+                {% endif %}
+                <span>{{ tender.title }}</span>
+            </div>
+            <div id="t{{ tender.chrono }}d" class="d-none">
+                <div class="fw-light small text-muted mt-2 me-2"
+                    data-bs-toggle="tooltip"
+                    title="{% trans 'Public Client' %}: {{ tender.client.name }}">
+                    <div class="d-flex">
+                        <div class="me-2"><i class="i bi-bank"></i></div>
+                        <div>{{ tender.client.name }}</div>
+                    </div>
+                </div>
+                <div class="fw-light small text-muted mt-2 me-2"
+                     data-bs-toggle="tooltip"
+                     title="{% trans 'Execution Location' %}: {{ tender.location }}">
+                    <div class="d-flex">
+                        <div class="me-2"><i class="i bi-geo"></i></div>
+                        <div>{{ tender.location }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-footer px-3 py-1">
-        <div class="text-muted small">{{ tender.client.name }}</div>
+
+    <div class="card-footer py-1">
+        <div class="d-flex justify-content-between">
+            <div class="me-2 small fw-light">
+                <span class="me-2"
+                      data-bs-toggle="tooltip"
+                      title="{% trans 'Downloads' %}">
+                    {{ tender.downloads.all.count|metrify }}
+                    <i class="bi bi-download"></i>
+                </span>
+            </div>
+            <div class="ms-2 small fw-light text-end">
+                <span class="me-2"
+                      data-bs-toggle="tooltip"
+                      title="{% trans 'Changes' %}">
+                    {{ tender.changes.all.count|metrify }}
+                    <i class="bi bi-pencil-square"></i>
+                </span>
+                <span class="me-2"
+                      data-bs-toggle="tooltip"
+                      title="{% trans 'Bookmarks' %}">
+                    {{ tender.favorites.all.count|metrify }}
+                    <i class="bi bi-heart"></i>
+                </span>
+                <span class="me-2"
+                      data-bs-toggle="tooltip"
+                      title="{% trans 'Downloads' %}">
+                    {{ tender.downloads.all.count|metrify }}
+                    <i class="bi bi-download"></i>
+                </span>
+            </div>
+        </div>
     </div>
+
 </div>
 
-<!-- <div class="btn btn-light shadow mt-3 text-start w-100">
-    {% if tender in favorites %}
-        <span><i class="bi bi-heart me-1">LOVE</i></span>
-    {% endif %}
-    <div class="me-1 fw-bold text-success">{{ tender.days_to_go }} days ({{ tender.progress_percent }}%)</div>
-    <div class="me-1 text-primary">{{ tender.published }} -- {{ tender.deadline }}</div>
-    <div>{{ tender.title }}</div>
-    <div class="text-muted small">{{ tender.client.name }}</div>    
-</div> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const tenderTitle = document.querySelector('#t{{ tender.chrono }}2'); 
+        const tenderExtra = document.querySelector('#t{{ tender.chrono }}d');        
+        if (tenderTitle) {
+            tenderTitle.addEventListener('click', function() {
+                this.classList.toggle('twolines');
+                if (tenderExtra) {
+                    tenderExtra.classList.toggle('d-none');
+                }
+            });
+        }
+    });
+</script>
