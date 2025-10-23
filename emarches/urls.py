@@ -23,10 +23,11 @@ urlpatterns += i18n_patterns(
 
     path('', include('base.urls')),
     path('admin/', admin.site.urls),
+    path('@<str:username>', nas_views.username_view, name='nas_at_username'),
     path('accounts/', include('authy.urls')),
     path('accounts/', include('allauth.urls')),
     path('user/', include('nas.urls')),
-    path('@<str:username>', nas_views.username_view, name='nas_at_username'),
+    path('portal/', include('portal.urls')),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

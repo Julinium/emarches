@@ -50,23 +50,23 @@
               <a class="nav-link py-1 dropdown-toggle" 
                  href="#" id="portalScrollingDropdown" role="button" 
                  data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-search"></i> {% translate 'Tenders' %}
+                <i class="bi bi-megaphone-fill"></i> {% translate 'Tenders' %}
                 {% if user_favs %}
                   <span class="badge mb-2 px-1 text-white bg-primary"> </span>
                 {% endif %}
               </a>
               <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
-                <li>
+                <!-- <li>
                   <a class="dropdown-item" href="/">
                     <i class="bi bi-hourglass-split"></i>
                     {% translate 'Expiring' %}
                   </a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
+                </li> -->
+                <!-- <li><hr class="dropdown-divider"></li> -->
                 <li>
-                  <a class="dropdown-item" href="/">
-                    <i class="bi bi-menu-app-fill"></i>
-                    {% translate 'Newest' %}
+                  <a class="dropdown-item" href="{% url 'portal_tender_list' %}">
+                    <i class="bi bi-search"></i>
+                    {% translate 'Browse' %}
                   </a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
@@ -96,7 +96,7 @@
                 </li>
               </ul>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link py-1 nav-section" 
                  tabindex="-1" aria-disabled="true" 
                  href="{% if request.path != '/'|add:request.LANGUAGE_CODE|add:'/' %}
@@ -105,14 +105,14 @@
                 <i class="bi bi-rocket-takeoff-fill"></i>
                 {% translate 'Services' %}
               </a>
-            </li>
-            <li class="nav-item">
+            </li> -->
+            <!-- <li class="nav-item">
               <a class="nav-link py-1" tabindex="-1" 
                  aria-disabled="true" href="/">
                 <i class="bi bi-chat-text-fill"></i>
                 {% translate 'Contact' %}
               </a>
-            </li>
+            </li> -->
           </ul>
 
           <span>

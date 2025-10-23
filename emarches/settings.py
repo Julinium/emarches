@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'base',
     'authy',
     'nas',
+    'portal',
 
     # 'private_storage',
     'django_cleanup',
