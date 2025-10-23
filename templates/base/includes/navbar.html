@@ -6,24 +6,40 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
-<nav class="navbar navbar-expand-md p-0 m-0 bg-light shadow-sm navbar-light sticky-top">
+<nav class="navbar navbar-expand-md pt-3 pb-4 my-0
+            navbar-light sticky-top">
   <div class="container container-fluid ">
-    <a class="navbar-brand btn-preload" href="{% url 'base_home' %}">      
-      <img class="img-fluid" style="max-height: 1.5rem; max-width: 10rem;" src="{% if LANGUAGE_CODE == 'ar' %}{% static 'brand/insi-brand-ar.svg' %}{% else %}{% static 'brand/insi-brand.svg' %}{% endif %}" alt="eMarches">
+    <a class="navbar-brand py-0" href="{% url 'base_home' %}">      
+      <img class="img-fluid" 
+           style="max-height: 1.7rem; max-width: 12rem;" 
+           src="{% if LANGUAGE_CODE == 'ar' %}
+                  {% static 'brand/insi-brand-ar.svg' %}
+                {% else %}
+                  {% static 'brand/insi-brand.svg' %}
+                {% endif %}" 
+           alt="eMarches">
     </a>
-    <button class="navbar-toggler border-0 px-1" type="button" 
+    <button class="navbar-toggler border-0 p-0 ps-1" type="button" 
         data-bs-toggle="collapse" data-bs-target="#navbarToggler"
         aria-controls="navbarToggler" aria-expanded="false" 
         style="outline: none; box-shadow: none;"
         aria-label="Toggle navigation">
         {% if request.user.is_authenticated %}
-        <img class="img-fluid border rounded-circle" src="{% if request.user.profile.avatar %}{{ MEDIA_URL }}{{ request.user.profile.avatar }}{% else %}/static/media/users/avatars/default.png{% endif %}" alt="" style="width: 1.5rem; height: 1.5rem; object-fit: cover;">
+        <img class="img-fluid border rounded-circle" 
+             src="{% if request.user.profile.avatar %}
+                    {{ MEDIA_URL }}{{ request.user.profile.avatar }}
+                  {% else %}
+                    /static/media/users/avatars/default.png
+                  {% endif %}"
+             alt="" style="width: 1.5rem; height: 1.5rem; object-fit: cover;">
         {% endif %}
         <span class="navbar-toggler-icon"></span>
         <!-- {% if new_contactings %}
           <span class="badge mb-2 px-1 bg-danger text-white"> </span>
         {% else %}
-          {% if user_favs %}<span class="badge mb-2 px-1 bg-primary text-white "> </span>{% endif %}
+          {% if user_favs %}
+            <span class="badge mb-2 px-1 bg-primary text-white "> </span>
+          {% endif %}
         {% endif %} -->
     </button>
       
@@ -31,25 +47,72 @@
       
           <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="portalScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link py-1 dropdown-toggle" 
+                 href="#" id="portalScrollingDropdown" role="button" 
+                 data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-search"></i> {% translate 'Tenders' %}
                 {% if user_favs %}
                   <span class="badge mb-2 px-1 text-white bg-primary"> </span>
                 {% endif %}
               </a>
               <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
-                <li><a class="dropdown-item btn-preload" href="/"><i class="bi bi-hourglass-split"></i> {% translate 'Expiring' %}</a></li>
+                <li>
+                  <a class="dropdown-item" href="/">
+                    <i class="bi bi-hourglass-split"></i>
+                    {% translate 'Expiring' %}
+                  </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item btn-preload" href="/"><i class="bi bi-menu-app-fill"></i> {% translate 'Newest' %}</a></li>
+                <li>
+                  <a class="dropdown-item" href="/">
+                    <i class="bi bi-menu-app-fill"></i>
+                    {% translate 'Newest' %}
+                  </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item btn-preload" href="/"><i class="bi bi-bookmark-heart-fill"></i> {% translate 'My Favourites' %}{% if user_favs %}<span class="badge bg-primary text-white mx-1">{{ user_favs.count }}</span>{% endif %}</a></li>
+                <li>
+                  <a class="dropdown-item" href="/">
+                    <i class="bi bi-bookmark-heart-fill"></i>
+                    {% translate 'My Favourites' %}
+                    {% if user_favs %}
+                      <span class="badge bg-primary text-white mx-1">
+                        {{ user_favs.count }}
+                      </span>
+                    {% endif %}
+                  </a>
+                </li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item btn-preload" aria-disabled="true" href="/"><i class="bi bi-opencollective"></i> {% translate 'Insights' %}</a></li><li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item btn-preload" aria-disabled="true" href="/"><i class="bi bi-cart4"></i> {% translate 'Purchase Orders' %}</a></li>
+                <li>
+                  <a class="dropdown-item" aria-disabled="true" href="/">
+                    <i class="bi bi-opencollective"></i>
+                    {% translate 'Insights' %}
+                  </a>
+                </li><li><hr class="dropdown-divider"></li>
+                <li>
+                  <a class="dropdown-item" aria-disabled="true" href="/">
+                    <i class="bi bi-cart4"></i>
+                    {% translate 'Purchase Orders' %}
+                  </a>
+                </li>
               </ul>
             </li>
-            <li class="nav-item"><a class="nav-link nav-section" tabindex="-1" aria-disabled="true" href="{% if request.path != '/'|add:request.LANGUAGE_CODE|add:'/' %}/{{ request.LANGUAGE_CODE }}/{% endif %}#our-services"><i class="bi bi-rocket-takeoff-fill"></i> {% translate 'Services' %}</a></li>
-            <li class="nav-item"><a class="nav-link btn-preload" tabindex="-1" aria-disabled="true" href="/"><i class="bi bi-chat-text-fill"></i> {% translate 'Contact' %}</a></li>
+            <li class="nav-item">
+              <a class="nav-link py-1 nav-section" 
+                 tabindex="-1" aria-disabled="true" 
+                 href="{% if request.path != '/'|add:request.LANGUAGE_CODE|add:'/' %}
+                        /{{ request.LANGUAGE_CODE }}/
+                      {% endif %}#our-services">
+                <i class="bi bi-rocket-takeoff-fill"></i>
+                {% translate 'Services' %}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link py-1" tabindex="-1" 
+                 aria-disabled="true" href="/">
+                <i class="bi bi-chat-text-fill"></i>
+                {% translate 'Contact' %}
+              </a>
+            </li>
           </ul>
 
           <span>
@@ -64,3 +127,21 @@
 </nav>
 
 		
+<script>
+    // Get the navbar
+    const navbar = document.querySelector('.navbar');
+    const scrollThreshold = 10; // pixels
+
+    // Listen for scroll events
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > scrollThreshold) {
+        // Scrolled past threshold → shrink
+        navbar.classList.remove('pt-3', 'pb-4');
+        navbar.classList.add('py-1', 'shadow', 'bg-success-subtle');
+      } else {
+        // At top → restore original padding
+        navbar.classList.remove('py-1', 'shadow', 'bg-success-subtle');
+        navbar.classList.add('pt-3', 'pb-4');
+      }
+    });
+  </script>

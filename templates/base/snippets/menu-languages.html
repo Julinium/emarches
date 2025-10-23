@@ -9,16 +9,36 @@
 
 
 <div class="nav-item dropdown">
-    <a class="btn btn-light p-1 nav-link dropdown-toggle text-end" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <span><img height="24" width="24" src="{% static 'flags/' %}{{ lang_info.code }}.svg" alt="{{ lang_info.code|upper }}"></span>
+    <a class="btn px-1 py-1 nav-link dropdown-toggle text-end" 
+       href="#" id="languageDropdown" role="button" 
+       data-bs-toggle="dropdown" aria-expanded="false">
+        <span>
+            <img class="img-fluid"
+                 style="max-height: 1.5rem; max-width: 1.5rem;"
+                 src="{% static 'flags/' %}{{ lang_info.code }}.svg" 
+                 alt="{{ lang_info.code|upper }}">
+        </span>
     </a>
-    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="languageDropdown">
+    <ul class="dropdown-menu dropdown-menu-end shadow" 
+        aria-labelledby="languageDropdown">
         {% for lang in languages %}
         <li>
-            <a class="p-2 dropdown-item{% if lang.code != lang_info.code %}{% else %} fw-bold disabled{% endif %}"
-                href="{% if lang.code != lang_info.code %}{% switch_language lang.code%}{% endif %}"
-                data-bs-toggle="tooltip" title="{{ lang.name_translated|capfirst }}" type="button">
-                <span><img height="20" src="{% static 'flags/' %}{{ lang.code }}.svg" alt="{{ lang.code|upper }}"></span>
+            <a class="p-2 dropdown-item
+                      {% if lang.code == lang_info.code %}
+                         fw-bold disabled
+                      {% endif %}"
+                href="
+                      {% if lang.code != lang_info.code %}
+                        {% switch_language lang.code%}
+                      {% endif %}"
+                data-bs-toggle="tooltip" 
+                title="{{ lang.name_translated|capfirst }}" 
+                type="button">
+                <span>
+                    <img height="20" 
+                         src="{% static 'flags/' %}{{ lang.code }}.svg" 
+                         alt="{{ lang.code|upper }}">
+                </span>
                 <span class="ms-1">{{ lang.name_local|capfirst }}</span>
             </a>
         </li>
