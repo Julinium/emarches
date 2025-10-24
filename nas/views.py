@@ -61,7 +61,7 @@ def username_view(request, username):
 
     context = {
         'user': user,
-        # 'profile': user.profile,
+        'profile': user.profile,
         # 'companies': companies,
         # 'notifications': noti_subs,
         'notif_disabled': nofif_disabled,
@@ -208,7 +208,11 @@ class CompanyDetailView(DetailView):
     context_object_name = 'company'
 
     def get_queryset(self):
-        return Company.objects.filter(user=self.request.user, active=True)
+        return Company.objects.select_related(
+                'user__profile'
+            ).prefetch_related(
+                'agrements', 'qualifs'
+            ).filter(user=self.request.user, active=True)
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
