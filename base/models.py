@@ -311,7 +311,7 @@ class Tender(models.Model):
         return f"{self.chrono} - {self.reference}: {self.title}"
     
     @property
-    def days_to_go(self, full_bar = 30):
+    def days_to_go(self):
         try: 
             today_now = timezone.now()
             delta_to_go = self.deadline - today_now

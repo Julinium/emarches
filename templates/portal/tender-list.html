@@ -2,11 +2,17 @@
 {% load i18n static %}
 
 {% block title %}
-    {% trans "Running Tenders" %}
+    {% trans "Tenders list" %}
 {% endblock title %}
 
 {% block content %}
-<h3>{% trans "Running Tenders" %}</h3>
+    <div class="d-flex align-items-center justify-content-between">
+        <h3>{{ tenders.count }} {% trans "Tenders list" %}</h3>
+        <div class="small text-muted">
+            <span><i class="bi bi-hash"></i></span>
+            <span>{{ tenders.count }}</span>
+        </div>
+    </div>
     {% for tender in tenders %}
         <div class="my-4">
             {% include 'portal/snippets/tenders/tender-summary.html' %}

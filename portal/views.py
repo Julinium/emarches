@@ -25,7 +25,7 @@ class TenderListView(ListView):
     paginate_by = TENDERS_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        TENDERS_ORDERING_FIELD = '-estimate'
+        TENDERS_ORDERING_FIELD = '-published'
         today_now = timezone.now()
         tenders = Tender.objects.filter(
                 deadline__gte=today_now
@@ -43,21 +43,38 @@ class TenderListView(ListView):
             tender.has_samples = any(lot.samples.exists() for lot in tender.lots.all())
             tender.has_visits = any(lot.visits.exists() for lot in tender.lots.all())
             tender.has_meetings = any(lot.meetings.exists() for lot in tender.lots.all())
-            # tender.is_variant = any(lot.variant == True for lot in tender.lots.all())
+            tender.is_variant = any(lot.variant == True for lot in tender.lots.all())
 
         return tenders
 
         # Annotate each workshop with has_samples
         # return render(request, 'tenders/list.html', {'tenders': tenders})
     
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    
-    #     iced_company = get_company(self.ice)
-    #     if len(iced_company) > 0:
-    #         context['iced_company'] = iced_company
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    #     return context
+        context['icon_location']      = 'geo'
+        context['icon_client']        = 'bank'
+
+        context['icon_is_reserved']   = 'sign-yield-fill'
+        context['icon_is_variant']    = 'shuffle'
+        context['icon_has_agrements'] = 'shield-fill-check'
+        context['icon_has_qualifs']   = 'mortarboard-fill'
+        context['icon_has_samples']   = 'palette2'
+        context['icon_has_visits']    = 'person-walking'
+        context['icon_has_meetings']  = 'chevron-bar-contract'
+
+        context['icon_changes']       = 'pencil-square'
+        context['icon_favorites']     = 'heart'
+        context['icon_downloads']     = 'download'
+        context['icon_comments']      = 'chat-square-text'
+
+        context['icon_ebid']          = 'laptop'
+        context['icon_esign']         = 'usb-drive'
+        context['icon_no_ebid']       = 'briefcase'
+
+
+        return context
 
 
     # workshops = Tender.objects.prefetch_related(
