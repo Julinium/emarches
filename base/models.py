@@ -64,7 +64,6 @@ class Change(models.Model):
         db_table = 'base_change'
         ordering = ['-reported', 'tender']
         verbose_name = _("Change")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{self.tender.chrono} - {self.reported}"
@@ -355,7 +354,6 @@ class Lot(models.Model):
         db_table = 'base_lot'
         ordering = ['number']
         verbose_name = _("Lot")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.tender.chrono } - { self.number } - { self.title }"
@@ -405,7 +403,6 @@ class Sample(models.Model):
         db_table = 'base_sample'
         ordering = ['-when']
         verbose_name = _("Sample")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
@@ -421,7 +418,6 @@ class Visit(models.Model):
         db_table = 'base_visit'
         ordering = ['-when']
         verbose_name = _("Visit")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"

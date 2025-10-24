@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models import Prefetch
+# from datetime import datetime
 
 from django.views.generic import ListView
 
@@ -23,18 +25,30 @@ class TenderListView(ListView):
     paginate_by = TENDERS_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        TENDERS_ORDERING_FIELD = '-published'
+        TENDERS_ORDERING_FIELD = '-estimate'
         today_now = timezone.now()
-        running_tenders = Tender.objects.filter(
+        tenders = Tender.objects.filter(
                 deadline__gte=today_now
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
             ).select_related('client').prefetch_related(
-                'lots', 'favorites', 'downloads', 
-                'comments', 'changes'
+                'lots', 'favorites', 'downloads', 'comments', 
+                # 'lots__agrements', 'lots__qualifs', 
+                # 'lots__samples', 'lots__visits', 'lots__meetings', 
                 )
+        for tender in tenders:
+            tender.is_reserved = any(lot.reserved == True for lot in tender.lots.all())
+            tender.has_agrements = any(lot.agrements.exists() for lot in tender.lots.all())
+            tender.has_qualifs = any(lot.qualifs.exists() for lot in tender.lots.all())
+            tender.has_samples = any(lot.samples.exists() for lot in tender.lots.all())
+            tender.has_visits = any(lot.visits.exists() for lot in tender.lots.all())
+            tender.has_meetings = any(lot.meetings.exists() for lot in tender.lots.all())
+            # tender.is_variant = any(lot.variant == True for lot in tender.lots.all())
 
-        return running_tenders
+        return tenders
+
+        # Annotate each workshop with has_samples
+        # return render(request, 'tenders/list.html', {'tenders': tenders})
     
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -44,3 +58,18 @@ class TenderListView(ListView):
     #         context['iced_company'] = iced_company
 
     #     return context
+
+
+    # workshops = Tender.objects.prefetch_related(
+    #     Prefetch(
+    #         'lots__agrements',
+    #         # queryset=Lot.objects.filter(age__lt=10),  # Example filter
+    #         # to_attr='young_agrements'
+    #     ),
+    #     Prefetch(
+    #         'lots__samples',
+    #         # queryset=Trip.objects.filter(date__year=2025),
+    #         # to_attr='recent_samples'
+    #     ),
+    #     'lots'  # Still need workers for the base relation
+    # )

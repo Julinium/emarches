@@ -102,12 +102,48 @@
     <div class="card-footer py-1">
         <div class="d-flex justify-content-between">
             <div class="me-2 small fw-light">
-                <span class="me-2"
-                      data-bs-toggle="tooltip"
-                      title="{% trans 'Downloads' %}">
-                    {{ tender.downloads.all.count|metrify }}
-                    <i class="bi bi-download"></i>
-                </span>
+                {% if tender.is_reserved %}
+                    <span class="text-danger small px-1"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Reserved to SMBs, individuals, Unions, ...' %}">
+                        <i class="bi bi-sign-yield-fill"></i>
+                    </span>
+                {% endif %}
+                {% if tender.has_agrements %}
+                    <span class="text-danger small px-1"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Licenses required' %}">
+                        <i class="bi bi-shield-check"></i>
+                    </span>
+                {% endif %}
+                {% if tender.has_qualifs %}
+                    <span class="text-danger small px-1"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Qualifications required' %}">
+                        <i class="bi bi-mortarboard"></i>
+                    </span>
+                {% endif %}
+                {% if tender.has_samples %}
+                    <span class="text-danger small px-1"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Samples required' %}">
+                        <i class="bi bi-palette2"></i>
+                    </span>
+                {% endif %}
+                {% if tender.has_visits %}
+                    <span class="text-danger small px-1"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'In-site visits scheduled' %}">
+                        <i class="bi bi-person-walking"></i>
+                    </span>
+                {% endif %}
+                {% if tender.has_meetings %}
+                    <span class="text-danger small px-1"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Meetings scheduled' %}">
+                        <i class="bi bi-chevron-bar-contract"></i>
+                    </span>
+                {% endif %}
             </div>
             <div class="ms-2 small fw-light text-end">
                 <span class="me-2"
@@ -127,6 +163,12 @@
                       title="{% trans 'Downloads' %}">
                     {{ tender.downloads.all.count|metrify }}
                     <i class="bi bi-download"></i>
+                </span>
+                <span class="me-2"
+                      data-bs-toggle="tooltip"
+                      title="{% trans 'Comments' %}">
+                    {{ tender.comments.all.count|metrify }}
+                    <i class="bi bi-chat-square-text"></i>
                 </span>
             </div>
         </div>
