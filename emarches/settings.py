@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     # 'private_storage',
     'django_cleanup',
+    'debug_toolbar',
 
     'allauth',
     'allauth.account',
@@ -67,6 +68,8 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
 
     'allauth.account.middleware.AccountMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'emarches.urls'
@@ -275,3 +278,12 @@ MESSAGE_TAGS = {
 env_scraper_path = BASE_DIR / 'scraper/.env'
 load_dotenv(dotenv_path=env_scraper_path)
 DCE_MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+
+
+TENDER_FULL_PROGRESS_DAYS = 30
+TENDERS_ITEMS_PER_PAGE = 10
+
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]

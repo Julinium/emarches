@@ -28,6 +28,8 @@ urlpatterns += i18n_patterns(
     path('accounts/', include('allauth.urls')),
     path('user/', include('nas.urls')),
     path('portal/', include('portal.urls')),
+
+    path('__debug__/', include('debug_toolbar.urls')),
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

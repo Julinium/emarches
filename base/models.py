@@ -1,7 +1,7 @@
 
 import uuid, traceback, re
-
 from os import path as path
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -319,7 +319,7 @@ class Tender(models.Model):
         except: return 0
     
     @property
-    def progress_percent(self, full_bar = 30):
+    def progress_percent(self, full_bar = settings.TENDER_FULL_PROGRESS_DAYS):
         try:
             ratio = int(100 * self.days_to_go / full_bar)
             progress = max(0, min(ratio, 100))

@@ -21,25 +21,25 @@
         <div class="row gx-4">
             <div class="col-md-6 col-12">
                 <div class="mt-5">
-                    {% include 'nas/profile/snippets/user-details.html' with user=user profile=profile %}
+                    {% include 'nas/profile/snippets/user-details.html' with user=user profile=user.profile %}
                 </div>
             </div>
 
             <div class="col-md-6 col-12">
                 <div class="mt-5">
-                    {% include 'nas/profile/snippets/companies-list.html' with companies=companies %}
+                    {% include 'nas/profile/snippets/companies-list.html' with companies=user.companies %}
                 </div>
             </div>
 
             <div class="col-md-6 col-12">
                 <div class="mt-5">
-                    {% include 'nas/profile/snippets/notifications.html' with notifications=notifications %}
+                    {% include 'nas/profile/snippets/notifications.html' with notifications=user.notifications %}
                 </div>
             </div>
 
             <div class="col-md-6 col-12">
                 <div class="mt-5">
-                    {% include 'nas/profile/snippets/newsletters.html' with newsletters=newsletters %}
+                    {% include 'nas/profile/snippets/newsletters.html' with newsletters=user.newsletters %}
                 </div>
             </div>
         </div>

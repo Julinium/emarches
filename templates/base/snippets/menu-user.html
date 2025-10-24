@@ -9,7 +9,7 @@
             <span>{{ request.user.username|truncatechars:8 }}</span>
         </a>
     {% else %}
-        <a class="btn px-1 py-1 nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <a class="btn px-1 py-1 nav-link dropdown-toggle text-end" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span><img class="rounded-circle" height="24" src="{% static 'avatars/default.png' %}" alt="Avatar"></span>
         </a>
     {% endif %}

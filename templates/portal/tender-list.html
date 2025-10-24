@@ -6,21 +6,30 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="d-flex align-items-center justify-content-between">
-        <h3>{{ tenders.count }} {% trans "Tenders list" %}</h3>
-        <div class="small text-muted">
-            <span><i class="bi bi-hash"></i></span>
-            <span>{{ tenders.count }}</span>
+    <div class="d-flex align-items-center justify-content-between px-2">
+        <div class="">
+            <span class="h3 me-1">{% trans "Tenders list" %}</span>
+            <span class="fw-light border-0 border-start ps-1">
+                {{ page_obj.paginator.count }} {% trans "items" %}
+            </span>
+        </div>
+        <div class="small">
+            <!-- <span><i class="bi bi-hash me-0"></i></span> -->
+            <span class="ms-0">WIP</span>
         </div>
     </div>
+
     {% for tender in tenders %}
         <div class="my-4">
             {% include 'portal/snippets/tenders/tender-summary.html' %}
         </div>
         
     {% empty %}
-        {% trans "Nothing to show here !" %}
+        {% include 'base/snippets/empty-list.html' %}
     {% endfor %}
-
-    {% include 'base/snippets/paginator.html' %}
+    
+    {% if tenders %}
+        {% include 'portal/snippets/tenders/tender-legend.html' %}
+        {% include 'base/snippets/paginator.html' %}
+    {% endif %}
 {% endblock content %}

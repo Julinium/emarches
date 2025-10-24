@@ -18,7 +18,7 @@
                         </i>
                     {% endif %}
                     {% if tender.lots_count > 1 %}
-                        <i class="bi bi-grid small"
+                        <i class="bi bi-{{ icon_multi_lots }} small"
                            data-bs-toggle="tooltip" 
                            title="{{ tender.lots_count }} {% trans 'Lots' %}">
                         </i>
@@ -207,7 +207,7 @@
                     </span>
                 {% endif %}
                 {% if tender.is_variant %}
-                    <span class="small me-2 text-primary"
+                    <span class="small me-2 text-success"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Variants accepted' %}">
                         <i class="bi bi-{{ icon_is_variant }}"></i>

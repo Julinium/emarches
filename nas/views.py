@@ -31,7 +31,8 @@ def profile_view(request):
 @login_required
 def username_view(request, username):
     try:
-        user_arg = User.objects.get(username=username)
+        user_arg = User.objects.select_related('profile').prefetch_related(
+            'newsletters', 'notifications', 'companies').get(username=username)
     except User.DoesNotExist:
         user_arg = None
         # Return 403, not 404, to prevent checking if a certain username exists.
@@ -48,7 +49,7 @@ def username_view(request, username):
         profile = Profile(user=user)
         profile.save()
 
-    companies = user.companies
+    # companies = user.companies
     subscribeUserToNotifications(user)
     subscribeUserToNewsletters(user)
     noti_subs = user.notifications.all()
@@ -60,12 +61,12 @@ def username_view(request, username):
 
     context = {
         'user': user,
-        'profile': user.profile,
-        'companies': companies,
-        'notifications': noti_subs,
+        # 'profile': user.profile,
+        # 'companies': companies,
+        # 'notifications': noti_subs,
         'notif_disabled': nofif_disabled,
-        'newsl_disabled': newsl_disabled,
-        'newsletters': newl_subs
+        # 'newsletters': newl_subs,
+        'newsl_disabled': newsl_disabled
     }
     # messages.success(request, "Your personal data is kept private.")
     # messages.success(request, "Only your username and avatar may be seen by other users.")

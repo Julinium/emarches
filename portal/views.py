@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.utils import timezone
+from django.conf import settings
+
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.db.models import Prefetch
@@ -10,10 +12,11 @@ from django.views.generic import ListView
 from django.contrib.auth.models import User
 
 from nas.models import Favorite
-from base.models import Tender
+from base.models import Tender, Category
 
 
-TENDERS_ITEMS_PER_PAGE = 10
+TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
+TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
 TENDERS_ORDERING_FIELD = 'deadline'
 
 
@@ -28,13 +31,13 @@ class TenderListView(ListView):
         TENDERS_ORDERING_FIELD = '-published'
         today_now = timezone.now()
         tenders = Tender.objects.filter(
-                deadline__gte=today_now
+                deadline__gte=today_now,
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
             ).select_related('client').prefetch_related(
                 'lots', 'favorites', 'downloads', 'comments', 
-                # 'lots__agrements', 'lots__qualifs', 
-                # 'lots__samples', 'lots__visits', 'lots__meetings', 
+                'lots__agrements', 'lots__qualifs', 
+                'lots__samples', 'lots__visits', 'lots__meetings', 
                 )
         for tender in tenders:
             tender.is_reserved = any(lot.reserved == True for lot in tender.lots.all())
@@ -46,13 +49,22 @@ class TenderListView(ListView):
             tender.is_variant = any(lot.variant == True for lot in tender.lots.all())
 
         return tenders
-
-        # Annotate each workshop with has_samples
-        # return render(request, 'tenders/list.html', {'tenders': tenders})
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        all_categories = Category.objects.all()
+        # category_translations = {
+        #     'works': _('Travaux'),
+        #     'supplies': _('Fourniture'),
+        #     'services': _('Services'),
+        #     }
+        # translated_category = category_translations.get(product.category, product.category)
+
+        context['categories']         = all_categories
+        context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
+        
+        context['icon_multi_lots']    = 'grid'
         context['icon_location']      = 'geo'
         context['icon_client']        = 'bank'
 
@@ -76,17 +88,3 @@ class TenderListView(ListView):
 
         return context
 
-
-    # workshops = Tender.objects.prefetch_related(
-    #     Prefetch(
-    #         'lots__agrements',
-    #         # queryset=Lot.objects.filter(age__lt=10),  # Example filter
-    #         # to_attr='young_agrements'
-    #     ),
-    #     Prefetch(
-    #         'lots__samples',
-    #         # queryset=Trip.objects.filter(date__year=2025),
-    #         # to_attr='recent_samples'
-    #     ),
-    #     'lots'  # Still need workers for the base relation
-    # )
