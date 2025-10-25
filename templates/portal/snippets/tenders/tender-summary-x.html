@@ -201,38 +201,38 @@
                         </span>
                     {% endif %}
 
-                    {% if tender.has_agrements %}
+                    {% if tender.lots.first.agrements.first %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Licenses required' %}">
                             <i class="bi bi-{{ icon_has_agrements }}"></i>
                         </span>
                     {% endif %}
-                    {% if tender.has_qualifs %}
+                    {% if tender.lots.first.qualifs.first %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Qualifications required' %}">
                             <i class="bi bi-{{ icon_has_qualifs }}"></i>
                         </span>
                     {% endif %}
-                    {% if tender.has_samples %}
+                    {% if tender.lots.first.samples.first %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
-                            title="{% trans 'Samples required' %}">
+                            title="{% trans 'Samples required' %}: {{ tender.lots.first.samples.first.when }}">
                             <i class="bi bi-{{ icon_has_samples }}"></i>
                         </span>
                     {% endif %}
-                    {% if tender.has_visits %}
+                    {% if tender.lots.first.visits.first %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
-                            title="{% trans 'In-site visits scheduled' %}">
+                            title="{% trans 'In-site visits scheduled' %}: {{ tender.lots.first.visits.first.when }}">
                             <i class="bi bi-{{ icon_has_visits }}"></i>
                         </span>
                     {% endif %}
-                    {% if tender.has_meetings %}
+                    {% if tender.lots.first.meetings.first %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
-                            title="{% trans 'Meetings scheduled' %}">
+                            title="{% trans 'Meetings scheduled' %}: {{ tender.lots.first.meetings.first.when }}">
                             <i class="bi bi-{{ icon_has_meetings }}"></i>
                         </span>
                     {% endif %}

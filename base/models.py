@@ -162,11 +162,16 @@ class Meeting(models.Model):
     class Meta:
         db_table = 'base_meeting'
         ordering = ['-when']
-        verbose_name = _("Meeting")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
+
+    def save(self, *args, **kwargs):
+        tender = self.lot.tender
+        tender.has_meetings = True
+        tender.save()
+
+        super().save(*args, **kwargs)
 
 
 class Mode(models.Model):
@@ -283,9 +288,9 @@ class Tender(models.Model):
     variant = models.BooleanField(blank=True, null=True, verbose_name=_("Variants accepted"))
     has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Licenses required"))
     has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Qualifications required"))
-    has_sample = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
-    has_meeting = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
-    has_visit = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
+    has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
+    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
+    has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
 
     location = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Works execution location"))
     ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name=_("Electronic bid"))  # 1: Required, 0: Not required, Else: NA'
@@ -343,6 +348,22 @@ class Tender(models.Model):
 
 
     def save(self, *args, **kwargs):
+
+        if self.has_agrements == True:
+            self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
+
+        if self.has_qualifs == True:
+            self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
+
+        if self.has_meetings == True:
+            self.has_meetings = any(lot.meetings.count() > 0 for lot in self.lots.all())
+
+        if self.has_samples == True:
+            self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
+
+        if self.has_visits == True:
+            self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
+
         self.updated = None
         if self.pk is not None:
             self.updated = timezone.now()
@@ -373,6 +394,20 @@ class Lot(models.Model):
     
     def __str__(self):
         return f"{ self.tender.chrono } - { self.number } - { self.title }"
+
+    def save(self, *args, **kwargs):
+        tender = self.tender
+        save = False
+        if self.agrements:
+            save = True
+            tender.has_agrements = True
+        if self.qualifs:
+            save = True
+            tender.has_qualifs = True
+
+        if save: tender.save()
+
+        super().save(*args, **kwargs)
 
 
 class RelAgrementLot(models.Model):
@@ -423,6 +458,13 @@ class Sample(models.Model):
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
 
+    def save(self, *args, **kwargs):
+        tender = self.lot.tender
+        tender.has_samples = True
+        tender.save()
+
+        super().save(*args, **kwargs)
+
 
 class Visit(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -437,6 +479,13 @@ class Visit(models.Model):
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
+
+    def save(self, *args, **kwargs):
+        tender = self.lot.tender
+        tender.has_visits = True
+        tender.save()
+
+        super().save(*args, **kwargs)
 
 
 class FileToGet(models.Model):
