@@ -99,7 +99,7 @@
                     {% if tender.cancelled %}
                         text-danger
                     {% endif %}">
-            <div id="t{{ tender.chrono }}2">
+            <div id="t{{ tender.chrono }}2" class="twolines">
                 <div 
                     data-bs-toggle="tooltip"
                     title="{% trans 'Tender object' %}: {{ tender.title }}">
