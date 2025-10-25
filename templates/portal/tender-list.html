@@ -19,14 +19,16 @@
         </div>
     </div>
 
-    {% for tender in tenders %}
-        {% include 'portal/snippets/tenders/tender-summary.html' %}
-    {% empty %}
-        {% include 'base/snippets/empty-list.html' %}
-    {% endfor %}
+    <div class="mt-4">
+        {% for tender in tenders %}
+            {% include 'portal/snippets/tenders/tender-summary.html' %}
+        {% endfor %}
+    </div>
     
     {% if tenders %}
         {% include 'portal/snippets/tenders/tender-legend.html' %}
         {% include 'base/snippets/paginator.html' %}
+    {% else %}
+        {% include 'base/snippets/empty-list.html' %}
     {% endif %}
 {% endblock content %}

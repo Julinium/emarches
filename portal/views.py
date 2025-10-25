@@ -37,7 +37,8 @@ class TenderListView(ListView):
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
             ).select_related(
-                'client', 'category', 'kind', 'mode', 'procedure'
+                # 'kind', 
+                'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
                 # 'lots', 
                 'favorites', 'downloads', 'comments', 'changes', 
@@ -55,7 +56,7 @@ class TenderListView(ListView):
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
 
-        context['icon_multi_lots']    = 'ui-checks-grid'        # 'grid'
+        context['icon_multi_lots']    = 'ui-radios-grid'        # 'grid' # 'ui-checks-grid'
         context['icon_location']      = 'pin-map'               # 'geo'
         context['icon_client']        = 'bank'
 
@@ -68,14 +69,14 @@ class TenderListView(ListView):
         context['icon_has_visits']    = 'person-walking'
         context['icon_has_meetings']  = 'chevron-bar-contract'
 
-        context['icon_changes']       = 'pencil-square'
+        context['icon_changes']       = 'activity'              # 'pencil-square'
         context['icon_favorites']     = 'heart'
         context['icon_downloads']     = 'arrow-down-square'     # 'download'
         context['icon_comments']      = 'chat-square-quote'
 
         context['icon_ebid']          = 'pc-display-horizontal' # 'laptop'
         context['icon_esign']         = 'usb-drive'             # 'device-ssd'
-        context['icon_no_ebid']       = 'briefcase-fill'
+        context['icon_no_ebid']       = 'pc-display-horizontal' # 'briefcase-fill'
 
 
         return context
