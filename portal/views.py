@@ -32,9 +32,12 @@ class TenderListView(ListView):
         today_now = timezone.now()
         tenders = Tender.objects.filter(
                 deadline__gte=today_now,
+                # procedure__restricted=True
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
-            ).select_related('client').prefetch_related(
+            ).select_related(
+                'client', 'category', 'kind', 'mode', 'procedure'
+            ).prefetch_related(
                 'lots', 'favorites', 'downloads', 'comments', 
                 'changes', 'lots__agrements', 'lots__qualifs', 
                 'lots__samples', 'lots__visits', 'lots__meetings', 
@@ -49,13 +52,14 @@ class TenderListView(ListView):
 
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
-        
+
         context['icon_multi_lots']    = 'grid'
-        context['icon_location']      = 'geo'
+        context['icon_location']      = 'pin-map' #'geo'
         context['icon_client']        = 'bank'
 
-        context['icon_reserved']   = 'sign-yield-fill'
-        context['icon_variant']    = 'shuffle'
+        context['icon_restricted']    = 'intersect' #'bell-slash-fill'
+        context['icon_reserved']      = 'sign-yield-fill'
+        context['icon_variant']       = 'shuffle'
         context['icon_has_agrements'] = 'shield-fill-check'
         context['icon_has_qualifs']   = 'mortarboard-fill'
         context['icon_has_samples']   = 'palette2'

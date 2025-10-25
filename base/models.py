@@ -186,16 +186,25 @@ class Mode(models.Model):
 class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
+    restricted = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Restricted"))
     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
 
     class Meta:
         db_table = 'base_procedure'
         ordering = ['name']
-        verbose_name = _("Procedure")
-        # verbose_name_plural = _("")
     
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        # if self.name
+        lower_name = self.name.lower()
+        restrictions = ['restreint', 'négocié', 'négociée', 'préselection', 'pré-selection']
+        self.restricted = any(word.lower() in lower_name for word in restrictions)
+
+        super().save(*args, **kwargs)
+    
+    
 
 
 class Qualif(models.Model):

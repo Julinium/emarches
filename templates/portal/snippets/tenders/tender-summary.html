@@ -17,12 +17,6 @@
                            title="{% trans 'Bookmarked' %}">
                         </i>
                     {% endif %}
-                    {% if tender.lots_count > 1 %}
-                        <i class="bi bi-{{ icon_multi_lots }} small"
-                           data-bs-toggle="tooltip" 
-                           title="{{ tender.lots_count }} {% trans 'Lots' %}">
-                        </i>
-                    {% endif %}
                     <span class="fw-bold fs-6 me-1 border-0 border-end" 
                           data-bs-toggle="tooltip" 
                           title="{% trans 'Total Estimate' %}: {{ tender.estimate }}">
@@ -123,6 +117,23 @@
     <div class="card-footer py-1">
         <div class="d-flex justify-content-between">
             <div class="me-2 small fw-light">
+
+                {% if tender.lots_count > 1 %}
+                    <span class="small me-2"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Tender is allotted' %}: {{ tender.lots_count }} {% trans 'Lots' %}">
+                        <i class="bi bi-{{ icon_multi_lots }}"></i>
+                    </span>
+                {% endif %}
+
+                {% if tender.procedure.restricted %}
+                    <span class="small me-2 text-danger"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Procedure may be restricted' %}: {{ tender.procedure.name }}">
+                        <i class="bi bi-{{ icon_restricted }}"></i>
+                    </span>
+                {% endif %}
+
                 {% if tender.ebid == 1 %}
                     <span class="small me-0 text-primary"
                           data-bs-toggle="tooltip"
@@ -136,7 +147,7 @@
                         <i class="bi bi-{{ icon_ebid }}"></i>
                     </span>
                 {% else %}
-                    <span class="small me-0 text-danger"
+                    <span class="small me-2 text-danger"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Electronic bidding is not applicable' %}">
                         <i class="bi bi-{{ icon_no_ebid }}"></i>
@@ -172,14 +183,15 @@
                         <i class="bi bi-{{ icon_reserved }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.lots.first.agrements.all %}
+
+                {% if tender.lots.first.agrements.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Licenses required' %}">
                         <i class="bi bi-{{ icon_has_agrements }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.lots.first.qualifs.all %}
+                {% if tender.lots.first.qualifs.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Qualifications required' %}">
@@ -189,21 +201,21 @@
                 {% if tender.lots.first.samples.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
-                          title="{% trans 'Samples required' %}">
+                          title="{% trans 'Samples required' %}: {{ tender.lots.first.samples.first.when }}">
                         <i class="bi bi-{{ icon_has_samples }}"></i>
                     </span>
                 {% endif %}
                 {% if tender.lots.first.visits.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
-                          title="{% trans 'In-site visits scheduled' %}">
+                          title="{% trans 'In-site visits scheduled' %}: {{ tender.lots.first.visits.first.when }}">
                         <i class="bi bi-{{ icon_has_visits }}"></i>
                     </span>
                 {% endif %}
                 {% if tender.lots.first.meetings.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
-                          title="{% trans 'Meetings scheduled' %}">
+                          title="{% trans 'Meetings scheduled' %}: {{ tender.lots.first.meetings.first.when }}">
                         <i class="bi bi-{{ icon_has_meetings }}"></i>
                     </span>
                 {% endif %}
@@ -221,7 +233,7 @@
                     <span class="ms-2"
                         data-bs-toggle="tooltip"
                         title="{% trans 'Changes' %}">
-                        {{ tender.changes.all.count|metrify }}
+                        {{ tender.changes.all.count|metrify:0 }}
                         <i class="bi bi-{{ icon_changes }}"></i>
                     </span>
                 {% endif %}
@@ -229,19 +241,19 @@
                 <span class="ms-2"
                       data-bs-toggle="tooltip"
                       title="{% trans 'Bookmarks' %}">
-                    {{ tender.favorites.all.count|metrify }}
+                    {{ tender.favorites.all.count|metrify:0 }}
                     <i class="bi bi-{{ icon_favorites }}" style="width: 1rem; height: 1rem;"></i>
                 </span>
                 <span class="ms-2"
                       data-bs-toggle="tooltip"
                       title="{% trans 'Comments' %}">
-                    {{ tender.comments.all.count|metrify }}
+                    {{ tender.comments.all.count|metrify:0 }}
                     <i class="bi bi-{{ icon_comments }}" style="width: 1rem; height: 1rem;"></i>
                 </span>
                 <span class="ms-2"
                       data-bs-toggle="tooltip"
                       title="{% trans 'Downloads' %}">
-                    {{ tender.downloads.all.count|metrify }}
+                    {{ tender.downloads.all.count|metrify:0 }}
                     <i class="bi bi-{{ icon_downloads }}" style="width: 1rem; height: 1rem;"></i>
                 </span>
             </div>
