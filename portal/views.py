@@ -53,11 +53,11 @@ class TenderListView(ListView):
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
 
-        context['icon_multi_lots']    = 'grid'
-        context['icon_location']      = 'pin-map' #'geo'
+        context['icon_multi_lots']    = 'ui-checks-grid'        # 'grid'
+        context['icon_location']      = 'pin-map'               # 'geo'
         context['icon_client']        = 'bank'
 
-        context['icon_restricted']    = 'intersect' #'bell-slash-fill'
+        context['icon_restricted']    = 'intersect'             # 'bell-slash-fill'
         context['icon_reserved']      = 'sign-yield-fill'
         context['icon_variant']       = 'shuffle'
         context['icon_has_agrements'] = 'shield-fill-check'
@@ -68,11 +68,11 @@ class TenderListView(ListView):
 
         context['icon_changes']       = 'pencil-square'
         context['icon_favorites']     = 'heart'
-        context['icon_downloads']     = 'download'
-        context['icon_comments']      = 'chat-square-text'
+        context['icon_downloads']     = 'arrow-down-square'     # 'download'
+        context['icon_comments']      = 'chat-square-quote'
 
-        context['icon_ebid']          = 'pc-display-horizontal' #'laptop'
-        context['icon_esign']         = 'usb-drive'
+        context['icon_ebid']          = 'pc-display-horizontal' # 'laptop'
+        context['icon_esign']         = 'usb-drive'             # 'device-ssd'
         context['icon_no_ebid']       = 'briefcase-fill'
 
 

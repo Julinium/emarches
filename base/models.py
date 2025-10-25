@@ -204,8 +204,6 @@ class Procedure(models.Model):
         self.restricted = any(word.lower() in lower_name for word in restrictions)
 
         super().save(*args, **kwargs)
-    
-    
 
 
 class Qualif(models.Model):
@@ -280,8 +278,14 @@ class Tender(models.Model):
     estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Total estimate"))
     bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Total bond"))
     plans_price = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Plans price"))
+
     reserved = models.BooleanField(blank=True, null=True, verbose_name=_("Reserved to SMB+"))
     variant = models.BooleanField(blank=True, null=True, verbose_name=_("Variants accepted"))
+    has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Licenses required"))
+    has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Qualifications required"))
+    has_sample = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
+    has_meeting = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
+    has_visit = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
 
     location = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Works execution location"))
     ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name=_("Electronic bid"))  # 1: Required, 0: Not required, Else: NA'
@@ -313,11 +317,6 @@ class Tender(models.Model):
     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
     domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name=_("Domains of activity"))
 
-    # has_agrements = None
-    # has_qualifs = None
-    # first_sample = None
-    # first_meeting = None
-    # first_visit = None
 
     class Meta:
         db_table = 'base_tender'
