@@ -59,6 +59,7 @@ class Change(models.Model):
     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="changes", db_column='tender', blank=True, null=True, verbose_name=_("Tender"))    
     reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Date Reported"))
     changes = models.TextField(blank=True, null=True, verbose_name=_("Changes"))
+    # changed_field = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("Changed field"))
 
     class Meta:
         db_table = 'base_change'
