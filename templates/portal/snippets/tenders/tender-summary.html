@@ -249,7 +249,7 @@
                     {% if tender.changes.all %}
                         <span class="ms-2"
                             data-bs-toggle="tooltip"
-                            title="{% trans 'Tender was changed since it was created' %}">
+                            title="{% trans 'Changes since Tender was created' %}">
                             {{ tender.changes.all.count|metrify:0 }}
                             <i class="bi bi-{{ icon_changes }}"></i>
                         </span>
