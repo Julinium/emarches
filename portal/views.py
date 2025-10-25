@@ -36,17 +36,9 @@ class TenderListView(ListView):
                 TENDERS_ORDERING_FIELD, 'id'
             ).select_related('client').prefetch_related(
                 'lots', 'favorites', 'downloads', 'comments', 
-                'lots__agrements', 'lots__qualifs', 
+                'changes', 'lots__agrements', 'lots__qualifs', 
                 'lots__samples', 'lots__visits', 'lots__meetings', 
                 )
-        for tender in tenders:
-            tender.is_reserved = any(lot.reserved == True for lot in tender.lots.all())
-            tender.has_agrements = any(lot.agrements.exists() for lot in tender.lots.all())
-            tender.has_qualifs = any(lot.qualifs.exists() for lot in tender.lots.all())
-            tender.has_samples = any(lot.samples.exists() for lot in tender.lots.all())
-            tender.has_visits = any(lot.visits.exists() for lot in tender.lots.all())
-            tender.has_meetings = any(lot.meetings.exists() for lot in tender.lots.all())
-            tender.is_variant = any(lot.variant == True for lot in tender.lots.all())
 
         return tenders
     
@@ -54,12 +46,6 @@ class TenderListView(ListView):
         context = super().get_context_data(**kwargs)
 
         all_categories = Category.objects.all()
-        # category_translations = {
-        #     'works': _('Travaux'),
-        #     'supplies': _('Fourniture'),
-        #     'services': _('Services'),
-        #     }
-        # translated_category = category_translations.get(product.category, product.category)
 
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
@@ -68,8 +54,8 @@ class TenderListView(ListView):
         context['icon_location']      = 'geo'
         context['icon_client']        = 'bank'
 
-        context['icon_is_reserved']   = 'sign-yield-fill'
-        context['icon_is_variant']    = 'shuffle'
+        context['icon_reserved']   = 'sign-yield-fill'
+        context['icon_variant']    = 'shuffle'
         context['icon_has_agrements'] = 'shield-fill-check'
         context['icon_has_qualifs']   = 'mortarboard-fill'
         context['icon_has_samples']   = 'palette2'
@@ -81,9 +67,9 @@ class TenderListView(ListView):
         context['icon_downloads']     = 'download'
         context['icon_comments']      = 'chat-square-text'
 
-        context['icon_ebid']          = 'laptop'
+        context['icon_ebid']          = 'pc-display-horizontal' #'laptop'
         context['icon_esign']         = 'usb-drive'
-        context['icon_no_ebid']       = 'briefcase'
+        context['icon_no_ebid']       = 'briefcase-fill'
 
 
         return context

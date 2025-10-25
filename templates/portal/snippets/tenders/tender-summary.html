@@ -96,6 +96,7 @@
                 {% if tender.cancelled %}
                     <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
                 {% endif %}
+                
                 <span>{{ tender.title }}</span>
             </div>
             <div id="t{{ tender.chrono }}d" class="d-none">
@@ -123,22 +124,22 @@
         <div class="d-flex justify-content-between">
             <div class="me-2 small fw-light">
                 {% if tender.ebid == 1 %}
-                    <span class="small me-2 text-primary"
+                    <span class="small me-0 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Electronic bidding is required' %}">
                         <i class="bi bi-{{ icon_ebid }}"></i>
                     </span>
                 {% elif tender.ebid == 0 %}
-                    <span class="small me-2 text-success"
+                    <span class="small me-0 text-success"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Electronic bidding is optional' %}">
                         <i class="bi bi-{{ icon_ebid }}"></i>
                     </span>
                 {% else %}
-                    <span class="small me-2 text-danger"
+                    <span class="small me-0 text-danger"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Electronic bidding is not applicable' %}">
-                        <i class="bi bi-{{ icon_ebid }}"></i>
+                        <i class="bi bi-{{ icon_no_ebid }}"></i>
                     </span>
                 {% endif %}
 
@@ -164,53 +165,53 @@
                     {% endif %}
                 {% endif %}
 
-                {% if tender.is_reserved %}
+                {% if tender.reserved %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Reserved to SMBs, individuals, Unions, ...' %}">
-                        <i class="bi bi-{{ icon_is_reserved }}"></i>
+                        <i class="bi bi-{{ icon_reserved }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.has_agrements %}
+                {% if tender.lots.first.agrements.all %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Licenses required' %}">
                         <i class="bi bi-{{ icon_has_agrements }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.has_qualifs %}
+                {% if tender.lots.first.qualifs.all %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Qualifications required' %}">
                         <i class="bi bi-{{ icon_has_qualifs }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.has_samples %}
+                {% if tender.lots.first.samples.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Samples required' %}">
                         <i class="bi bi-{{ icon_has_samples }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.has_visits %}
+                {% if tender.lots.first.visits.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'In-site visits scheduled' %}">
                         <i class="bi bi-{{ icon_has_visits }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.has_meetings %}
+                {% if tender.lots.first.meetings.first %}
                     <span class="small me-2 text-primary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Meetings scheduled' %}">
                         <i class="bi bi-{{ icon_has_meetings }}"></i>
                     </span>
                 {% endif %}
-                {% if tender.is_variant %}
+                {% if tender.variant %}
                     <span class="small me-2 text-success"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Variants accepted' %}">
-                        <i class="bi bi-{{ icon_is_variant }}"></i>
+                        <i class="bi bi-{{ icon_variant }}"></i>
                     </span>
                 {% endif %}
             </div>
@@ -224,23 +225,24 @@
                         <i class="bi bi-{{ icon_changes }}"></i>
                     </span>
                 {% endif %}
+
                 <span class="ms-2"
                       data-bs-toggle="tooltip"
                       title="{% trans 'Bookmarks' %}">
                     {{ tender.favorites.all.count|metrify }}
-                    <i class="bi bi-{{ icon_favorites }}"></i>
+                    <i class="bi bi-{{ icon_favorites }}" style="width: 1rem; height: 1rem;"></i>
                 </span>
                 <span class="ms-2"
                       data-bs-toggle="tooltip"
                       title="{% trans 'Comments' %}">
                     {{ tender.comments.all.count|metrify }}
-                    <i class="bi bi-{{ icon_comments }}"></i>
+                    <i class="bi bi-{{ icon_comments }}" style="width: 1rem; height: 1rem;"></i>
                 </span>
                 <span class="ms-2"
                       data-bs-toggle="tooltip"
                       title="{% trans 'Downloads' %}">
                     {{ tender.downloads.all.count|metrify }}
-                    <i class="bi bi-{{ icon_downloads }}"></i>
+                    <i class="bi bi-{{ icon_downloads }}" style="width: 1rem; height: 1rem;"></i>
                 </span>
             </div>
         </div>

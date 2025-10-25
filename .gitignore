@@ -5,27 +5,10 @@
 db.sqlite3
 media/
 
-emarches/__pycache__/
-emarches/migrations/
-
-base/__pycache__/
-base/migrations/
-
-authy/__pycache__/
-authy/migrations/
-
-nas/__pycache__/
-nas/migrations/
-nas/management/commands/__pycache__/
-
-db.sqlite3
-
 scraper/.env
 scraper/.env.*
 scraper/exports
 scraper/logs
 scraper/crony/.lock
-scraper/__pycache__/
-
 
 templates/base-x/

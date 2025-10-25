@@ -303,6 +303,12 @@ class Tender(models.Model):
     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
     domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name=_("Domains of activity"))
 
+    # has_agrements = None
+    # has_qualifs = None
+    # first_sample = None
+    # first_meeting = None
+    # first_visit = None
+
     class Meta:
         db_table = 'base_tender'
         verbose_name = _("Tender")
@@ -325,6 +331,7 @@ class Tender(models.Model):
             progress = max(0, min(ratio, 100))
             return progress
         except: return 0
+
 
     def save(self, *args, **kwargs):
         self.updated = None
