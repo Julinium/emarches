@@ -99,7 +99,7 @@
                     {% if tender.cancelled %}
                         text-danger
                     {% endif %}">
-            <div id="t{{ tender.chrono }}2" class="twolines">
+            <div id="t{{ tender.chrono }}2">
                 <div 
                     data-bs-toggle="tooltip"
                     title="{% trans 'Tender object' %}: {{ tender.title }}">
@@ -281,23 +281,23 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tenderTitle = document.querySelector('#t{{ tender.chrono }}2'); 
-        //const tenderExtra = document.querySelector('#t{{ tender.chrono }}d');        
-        if (tenderTitle) {
-            // const tooltip = new bootstrap.Tooltip(tenderTitle);
-            tenderTitle.addEventListener('click', function() {
-                this.classList.toggle('twolines');
-                // if (tenderExtra) {
-                //     tenderExtra.classList.toggle('d-none');
-                // }
-                // Check if my-class is present
-                // if (this.classList.contains('twolines')) {
-                //     tooltip.show();
-                // } else {
-                //     tooltip.hide();
-                // }
-            });
-        }
-    });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const tenderTitle = document.querySelector('#t{{ tender.chrono }}2'); 
+    //     //const tenderExtra = document.querySelector('#t{{ tender.chrono }}d');        
+    //     if (tenderTitle) {
+    //         // const tooltip = new bootstrap.Tooltip(tenderTitle);
+    //         tenderTitle.addEventListener('click', function() {
+    //             this.classList.toggle('twolines');
+    //             // if (tenderExtra) {
+    //             //     tenderExtra.classList.toggle('d-none');
+    //             // }
+    //             // Check if my-class is present
+    //             // if (this.classList.contains('twolines')) {
+    //             //     tooltip.show();
+    //             // } else {
+    //             //     tooltip.hide();
+    //             // }
+    //         });
+    //     }
+    // });
 </script>
