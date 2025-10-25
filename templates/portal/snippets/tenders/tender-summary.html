@@ -14,7 +14,7 @@
                 <div class="d-flex align-items-center">
                     <div class="ms-1 oneline" id="h{{ tender.chrono }}l">
                         <span class="fs-5 border-0" 
-                            data-bs-toggle="tooltip" title="{{ tender.category.label }}">
+                            data-bs-toggle="tooltip" title="{% trans 'Main Category' %}: {{ tender.category.label }}">
                             <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
                         </span>
                         <!-- {% if tender in favorites.all %}
