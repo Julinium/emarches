@@ -23,30 +23,6 @@ TENDERS_ORDERING_FIELD = 'deadline'
 @method_decorator(login_required, name='dispatch')
 class TenderListView(ListView):
 
-    #######################
-    from base.models import Agrement, Qualif, Sample, Meeting, Visit
-
-    agrements = Agrement.objects.all()
-    for agrement in agrements:
-        agrement.save()
-
-    qualifs = Qualif.objects.all()
-    for qualif in qualifs:
-        qualif.save()
-
-    samples = Sample.objects.all()
-    for sample in samples:
-        sample.save()
-
-    meetings = Meeting.objects.all()
-    for meeting in meetings:
-        meeting.save()
-
-    visits = Visit.objects.all()
-    for visit in visits:
-        visit.save()
-    #######################
-
     model = Tender
     template_name = 'portal/tender-list.html'
     context_object_name = 'tenders'
