@@ -108,31 +108,6 @@
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
-                        {% trans 'Public Client' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.client.name }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Domains of activity' %}
-                    </div>
-                    <div class="ms-4">
-                        {% for domain in tender.domains.all %}
-                            <span>— {{ domain.name }}</span><br>
-                        {% empty %}
-                            <span class="fw-light small text-muted">{% trans 'Not found' %}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
                         {% trans 'Main Category' %}
                     </div>
                     <div class="ms-4">
@@ -193,6 +168,68 @@
                 </div>
             </div>
 
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Public Client' %}
+                    </div>
+                    <div class="ms-4">
+                        {{ tender.client.name }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Domains of activity' %}
+                    </div>
+                    <div class="ms-4">
+                        {% for domain in tender.domains.all %}
+                            <span>— {{ domain.name }}</span><br>
+                        {% empty %}
+                            <span class="fw-light small text-muted">{% trans 'Not found' %}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if tender.lots.count == 1 %}
+                {% if tender.has_agrements %}
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex-inline my-3 border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans 'Required Licences' %}
+                            </div>
+                            <div class="ms-4">
+                                {% for agrement in tender.lots.first.agrements.all %}
+                                    <span class="badge bg-secondary mt-2">{{ agrement.short }}</span>
+                                    <span class="small fw-light">{{ agrement.name }}</span><br>
+                                {% empty %}
+                                    <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if tender.has_qualifs %}
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex-inline my-3 border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans 'Required Qualifications' %}
+                            </div>
+                            <div class="ms-4">
+                                {% for qualif in tender.lots.first.qualifs.all %}
+                                    <span class="badge bg-secondary mt-2">{{ qualif.short }}</span>
+                                    <span class="small fw-light">{{ qualif.name }}</span><br>                                    
+                                {% empty %}
+                                    <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
         </div>
     </div>
 
@@ -205,12 +242,8 @@
     </ul> -->
 
 <!-- 
-                'client', 'category', 'mode', 'procedure'
-            ).prefetch_related(
-                'domains', 'lots', 'lots__agrements', 'lots__qualifs',
+            'lots', 'lots__agrements', 'lots__qualifs',
                 'lots__meetings', 'lots__samples', 'lots__visits'
-            )
-
 
 Id: b9723d20-19ee-44b6-b2a2-d8d2e1443879
 Chrono: 917273
