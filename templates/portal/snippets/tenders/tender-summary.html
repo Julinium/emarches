@@ -49,14 +49,6 @@
                 </div>
             </div>
 
-            <div class="progress bg-warning p-0 m-0" style="height: 0.25rem;">
-                <div class="progress-bar bg-success" 
-                        role="progressbar" style="width: {{ tender.progress_percent }}%;" 
-                        aria-valuenow="{{ tender.progress_percent }}" aria-valuemin="0" 
-                        aria-valuemax="100">
-                </div>
-            </div>
-
             <div class="card-body px-3 py-2 {% if tender.cancelled %}text-danger{% endif %}">
 
                 <div id="t{{ tender.chrono }}t" class="twolines">
@@ -96,11 +88,6 @@
                                         — {{ tender.published }}
                                     </span>
                                 </div>
-                                <!-- <div class="text-wrap border-0 border-bottom">
-                                    <span class="">
-                                        {{ tender.published }}
-                                    </span>
-                                </div> -->
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
@@ -294,6 +281,14 @@
                             <i class="bi bi-{{ icon_downloads }}" style="width: 1rem; height: 1rem;"></i>
                         </span>
                     </div>
+                </div>
+            </div>
+            
+            <div class="progress bg-danger p-0 m-0" style="height: 0.25rem;">
+                <div class="progress-bar bg-success" 
+                        role="progressbar" style="width: {{ tender.progress_percent }}%;" 
+                        aria-valuenow="{{ tender.progress_percent }}" aria-valuemin="0" 
+                        aria-valuemax="100">
                 </div>
             </div>
 

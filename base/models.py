@@ -46,7 +46,7 @@ class Category(models.Model):
     @property
     def icon_bs_class(self):
         try: 
-            if self.label[0] == "F": return 'basket'
+            if self.label[0] == "F": return 'cart3' # 'basket'
             if self.label[0] == "S": return 'gear'
             if self.label[0] == "T": return 'cone-striped'
         except: pass
@@ -535,6 +535,12 @@ class Crawler(models.Model):
     
     def __str__(self):
         return f"{ self.started } - { self.finished }"
+    
+    @property
+    def duration(self):
+        if self.started and self.finished:
+            return self.finished - self.started
+        return None
 
 
 

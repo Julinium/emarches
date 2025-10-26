@@ -23,6 +23,19 @@ TENDERS_ORDERING_FIELD = 'published'
 @method_decorator(login_required, name='dispatch')
 class TenderListView(ListView):
 
+    ##########################
+    # from base.models import Meeting, Sample, Visit, Lot
+
+    # for m in Meeting.objects.all():
+    #     m.save()
+    # for s in Sample.objects.all():
+    #     s.save()
+    # for v in Visit.objects.all():
+    #     v.save()
+    # for l in Lot.objects.all():
+    #     l.save()
+    ##########################
+
     model = Tender
     template_name = 'portal/tender-list.html'
     context_object_name = 'tenders'
@@ -47,7 +60,10 @@ class TenderListView(ListView):
 
         all_categories = Category.objects.all()
 
-        last_crawler = Crawler.objects.filter(saving_errors=False).order_by('finished').last()
+        last_crawler = Crawler.objects.filter(
+            saving_errors=False,
+            import_links=False
+            ).order_by('finished').last()
         last_updated = last_crawler.finished if last_crawler else None
 
         context['categories']         = all_categories
@@ -56,8 +72,8 @@ class TenderListView(ListView):
 
         context['icon_multi_lots']    = 'ui-radios-grid'        # 'grid' # 'ui-checks-grid'
         context['icon_location']      = 'pin-map'               # 'geo'
-        context['icon_client']        = 'bank'
-        context['icon_deadline']      = 'calendar4-event'
+        context['icon_client']        = 'briefcase'             # 'house-door' # 'bank'
+        context['icon_deadline']      = 'hourglass-bottom'      # 'calendar4-event'
         context['icon_reference']     = 'tag'
 
         context['icon_restricted']    = 'intersect'             # 'bell-slash-fill'
@@ -77,7 +93,6 @@ class TenderListView(ListView):
         context['icon_ebid']          = 'pc-display-horizontal' # 'laptop'
         context['icon_esign']         = 'usb-drive'             # 'device-ssd'
         context['icon_no_ebid']       = 'pc-display-horizontal' # 'briefcase-fill'
-
 
         return context
 
