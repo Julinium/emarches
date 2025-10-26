@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.db.models import Prefetch
 # from datetime import datetime
 
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 from django.contrib.auth.models import User
 
@@ -17,7 +17,7 @@ from base.models import Tender, Category
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
-TENDERS_ORDERING_FIELD = 'deadline'
+TENDERS_ORDERING_FIELD = 'published'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -29,21 +29,15 @@ class TenderListView(ListView):
     paginate_by = TENDERS_ITEMS_PER_PAGE
 
     def get_queryset(self):
-        TENDERS_ORDERING_FIELD = '-published'
         today_now = timezone.now()
         tenders = Tender.objects.filter(
                 deadline__gte=today_now,
-                # procedure__restricted=True
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
             ).select_related(
-                # 'kind', 
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
-                # 'lots', 
-                'favorites', 'downloads', 'comments', 'changes', 
-                # 'lots__agrements', 'lots__qualifs', 
-                # 'lots__samples', 'lots__visits', 'lots__meetings', 
+                'favorites', 'downloads', 'comments', 'changes',
                 )
 
         return tenders
@@ -59,6 +53,8 @@ class TenderListView(ListView):
         context['icon_multi_lots']    = 'ui-radios-grid'        # 'grid' # 'ui-checks-grid'
         context['icon_location']      = 'pin-map'               # 'geo'
         context['icon_client']        = 'bank'
+        context['icon_deadline']      = 'calendar4-event'
+        context['icon_reference']     = 'tag'
 
         context['icon_restricted']    = 'intersect'             # 'bell-slash-fill'
         context['icon_reserved']      = 'sign-yield-fill'
@@ -81,3 +77,25 @@ class TenderListView(ListView):
 
         return context
 
+
+@method_decorator(login_required, name='dispatch')
+class TenderDetailView(DetailView):
+    model = Tender
+    template_name = 'portal/tender-details.html'
+    context_object_name = 'tender'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get all fields for the model instance
+        context['fields'] = [(field.name, field.value_to_string(self.object)) 
+                            for field in Tender._meta.get_fields() 
+                            if field.concrete and not field.many_to_many]
+        return context
+
+
+    # def get_queryset(self):
+    #     return Tender.objects.select_related(
+    #             'user__profile'
+    #         ).prefetch_related(
+    #             'agrements', 'qualifs'
+    #         ).filter(user=self.request.user, active=True)

@@ -35,9 +35,9 @@ def metric(value: float, unit: str = "", precision: int = 3) -> str:
     else:
         ordinal_ = ""
     value_ = format(value, f".{int(max(0, precision - exponent % 3 - 1))}f")
-    # if not (unit or ordinal_) or unit in ("°", "′", "″"):
-    #     space = ""
-    # else:
-    #     space = ""
+    if not (unit or ordinal_) or unit in ("°", "′", "″"):
+        space = ""
+    else:
+        space = " "
 
     return f"{value_}{ordinal_}{unit}"

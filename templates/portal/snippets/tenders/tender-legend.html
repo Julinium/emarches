@@ -15,20 +15,11 @@
             <div class="card-body pb-2 px-3">
 
                 <div class="d-flex-inline my-1 border-0 border-bottom">
-                    <!-- <span class="small">
-                        <i class="pe-1 bi bi-{{ category.icon_bs_class }}"></i>
-                    </span> -->
-                    <!-- <span class="text-muted small fw-light">
-                        {% blocktrans with full_bar_days=full_bar_days %}
-                            Green bar represents remaining days until bidding Deadline.
-                            Full bar is {{ full_bar_days }} days or more.
-                        {% endblocktrans %}
-                    </span> -->
                     <div class="d-flex justify-content-between">
                         <div class="text-muted small fw-light">
                             {% trans 'Days to Deadline (%)' %}                            
                         </div>
-                        <div class="text-muted small fw-light">
+                        <div class="text-muted small fw-bold">
                             {{ full_bar_days }} {% trans 'days' %}                            
                         </div>
                     </div>
@@ -62,6 +53,28 @@
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender is allotted' %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex-inline my-1 border-0 border-bottom">
+                            <span class="small text-muted">
+                                <i class="pe-1 bi bi-{{ icon_deadline }}"></i>
+                            </span>
+                            <span class="text-muted small fw-light">
+                                {% trans 'Bidding deadline' %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex-inline my-1 border-0 border-bottom">
+                            <span class="small text-muted">
+                                <i class="pe-1 bi bi-{{ icon_reference }}"></i>
+                            </span>
+                            <span class="text-muted small fw-light">
+                                {% trans 'Tender reference' %}
                             </span>
                         </div>
                     </div>
@@ -248,7 +261,7 @@
                                 <i class="pe-1 bi bi-{{ icon_changes }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
-                                {% trans 'Tender has Changes' %}
+                                {% trans 'Tender Changes' %}
                             </span>
                         </div>
                     </div>
@@ -259,7 +272,7 @@
                                 <i class="pe-1 bi bi-{{ icon_favorites }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
-                                {% trans 'Tender Favorites count' %}
+                                {% trans 'Tender Favorites' %}
                             </span>
                         </div>
                     </div>
@@ -270,7 +283,7 @@
                                 <i class="pe-1 bi bi-{{ icon_downloads }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
-                                {% trans 'Tender Downloads count' %}
+                                {% trans 'Tender Downloads' %}
                             </span>
                         </div>
                     </div>
@@ -281,7 +294,7 @@
                                 <i class="pe-1 bi bi-{{ icon_comments }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
-                                {% trans 'Tender Comments count' %}
+                                {% trans 'Tender Comments' %}
                             </span>
                         </div>
                     </div>

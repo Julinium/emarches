@@ -2,7 +2,7 @@
 {% load humanize %}
 
 <div class="">
-    <div class="p-0 my-2" id="t{{ tender.chrono }}b">
+    <div class="p-0 my-3">
             
         <div class="card shadow">
             <div class="card-header px-3 py-1 
@@ -66,25 +66,73 @@
                         {% if tender.cancelled %}
                             <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
                         {% endif %}
-                        <span>{{ tender.title }}</span>
+                        <span class="text-wrap" >
+                            {{ tender.title }}
+                        </span>
                     </div>
                 </div>
 
-                <div id="t{{ tender.chrono }}e" class="d-none">
-                    Details
+                <div id="t{{ tender.chrono }}d" class="mt-2 d-none">
+                    <div class="row gx-4 gy-0">
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                <div class="me-2"><i class="bi bi-{{ icon_deadline }}"></i></div>
+                                <div class="">
+                                    <span class="text-wrap border-0 border-bottom">
+                                        {{ tender.deadline }}
+                                    </span>
+                                    <span class="text-wrap fw-bold badge bg-primary ms-1">
+                                        {{ tender.days_to_go }} {% trans 'days' %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                <div class="me-2"><i class="bi bi-{{ icon_reference }}"></i></div>
+                                <div class="text-wrap border-0 border-bottom">
+                                    {{ tender.reference }}
+                                    <span class="me-1">
+                                        — {{ tender.published }}
+                                    </span>
+                                </div>
+                                <!-- <div class="text-wrap border-0 border-bottom">
+                                    <span class="">
+                                        {{ tender.published }}
+                                    </span>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                <div class="me-2"><i class="bi bi-{{ icon_location }}"></i></div>
+                                <div class="text-wrap border-0 border-bottom">
+                                    {{ tender.location }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                <div class="me-2"><i class="bi bi-{{ icon_client }}"></i></div>
+                                <div class="text-wrap border-0 border-bottom">
+                                    {{ tender.client.name }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div id="t{{ tender.chrono }}a" class="d-none">
+                <div id="t{{ tender.chrono }}a" class="d-none mt-2">
                     <a class="btn btn-sm btn-outline-primary my-1 ms-0 me-1" 
-                            href="javascript:">
+                            href="{% url 'portal_tender_detail' tender.id %}">
                         <i class="bi bi-text-left"></i>
                         <span class="d-none d-md-inline ms-1">{% trans "Details" %}</span>
                     </a>
                     <a class="btn btn-sm btn-outline-primary my-1 ms-0 me-1" 
                             href="javascript:">
                         <i class="bi bi-{{ icon_downloads }}"></i>
-                        <span class="badge bg-primary">
-                            {{ tender.size_bytes|metrify:1 }}B
+                        <span class="">
+                            {{ tender.size_bytes|metrify:2 }}B
                         </span>
                         <span class="d-none d-md-inline ms-1">{% trans "Download" %}</span>
                     </a>
@@ -258,39 +306,13 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tenderActions = document.querySelector('#t{{ tender.chrono }}a');
-        // const tenderButton = document.querySelector('#t{{ tender.chrono }}b');
         const tenderHeader = document.querySelector('#t{{ tender.chrono }}h');
-        const tenderDetails = document.querySelector('#t{{ tender.chrono }}e');
+        const tenderDetails = document.querySelector('#t{{ tender.chrono }}d');
         const tenderTitle = document.querySelector('#t{{ tender.chrono }}t');
 
         toggleLayout(tenderTitle);
         toggleLayout(tenderHeader);
-        // if (tenderTitle) {
-        //     tenderTitle.addEventListener('click', function() {
-        //         if (tenderTitle) {
-        //             tenderTitle.classList.toggle('twolines');
-        //         }
-        //         if (tenderActions) {
-        //             tenderActions.classList.toggle('d-none');
-        //         }
-        //         if (tenderDetails) {
-        //             tenderDetails.classList.toggle('d-none');
-        //         }
-        //     });
-        // }
-        // if (tenderHeader) {
-        //     tenderHeader.addEventListener('click', function() {
-        //         if (tenderTitle) {
-        //             tenderTitle.classList.toggle('twolines');
-        //         }
-        //         if (tenderActions) {
-        //             tenderActions.classList.toggle('d-none');
-        //         }
-        //         if (tenderDetails) {
-        //             tenderDetails.classList.toggle('d-none');
-        //         }
-        //     });
-        // }
+
         function toggleLayout(element){
             if (element) {
                 element.addEventListener('click', function() {
