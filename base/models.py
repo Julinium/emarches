@@ -15,7 +15,7 @@ class Agrement(models.Model):
     class Meta:
         db_table = 'base_agrement'
         ordering = ['name']
-        verbose_name = _("")
+        verbose_name = _("License")
     
     def __str__(self):
         return self.name
@@ -79,7 +79,7 @@ class Client(models.Model):
     class Meta:
         db_table = 'base_client'
         ordering = ['ministery', 'name']
-        verbose_name = _("Client")
+        verbose_name = _("Public Client")
         # verbose_name_plural = _("")
     
     def __str__(self):
@@ -146,7 +146,7 @@ class Kind(models.Model):
     class Meta:
         db_table = 'base_kind'
         ordering = ['name']
-        verbose_name = _("Kind")
+        verbose_name = _("Type")
         # verbose_name_plural = _("")
     
     def __str__(self):
@@ -162,6 +162,7 @@ class Meeting(models.Model):
     class Meta:
         db_table = 'base_meeting'
         ordering = ['-when']
+        verbose_name = _("Meeting")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
@@ -182,7 +183,7 @@ class Mode(models.Model):
     class Meta:
         db_table = 'base_mode'
         ordering = ['name']
-        verbose_name = _("Mode")
+        verbose_name = _("Awarding Mode")
         # verbose_name_plural = _("")
     
     def __str__(self):
@@ -198,6 +199,7 @@ class Procedure(models.Model):
     class Meta:
         db_table = 'base_procedure'
         ordering = ['name']
+        verbose_name = _("Procedure")
     
     def __str__(self):
         return self.name
@@ -325,6 +327,7 @@ class Tender(models.Model):
 
     class Meta:
         db_table = 'base_tender'
+        ordering = ['-deadline', 'id']
         verbose_name = _("Tender")
 
     def __str__(self):
@@ -390,7 +393,7 @@ class Lot(models.Model):
     class Meta:
         db_table = 'base_lot'
         ordering = ['number']
-        verbose_name = _("Lot")
+        # verbose_name = _("Lot")
     
     def __str__(self):
         return f"{ self.tender.chrono } - { self.number } - { self.title }"
@@ -453,7 +456,7 @@ class Sample(models.Model):
     class Meta:
         db_table = 'base_sample'
         ordering = ['-when']
-        verbose_name = _("Sample")
+        # verbose_name = _("Sample")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
@@ -475,7 +478,7 @@ class Visit(models.Model):
     class Meta:
         db_table = 'base_visit'
         ordering = ['-when']
-        verbose_name = _("Visit")
+        # verbose_name = _("Visit")
     
     def __str__(self):
         return f"{ self.lot.tender.chrono } - { self.when }"
@@ -499,9 +502,39 @@ class FileToGet(models.Model):
     class Meta:
         db_table = 'base_file_to_get'
         ordering = ['-closed', 'created']
+        # verbose_name = _("File to get")
+        # verbose_name_plural = _("Files to get")
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
             self.updated = timezone.now()
         super().save(*args, **kwargs)
+
+
+class Crawler(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    started = models.DateTimeField(blank=True, null=True, verbose_name=_("Started"))
+    finished = models.DateTimeField(blank=True, null=True, verbose_name=_("Finished"))
+    
+    import_links = models.BooleanField(blank=True, null=True, default=False)
+
+    links_crawled = models.SmallIntegerField(blank=True, null=True, default=0)
+    links_imported = models.SmallIntegerField(blank=True, null=True, default=0)
+    links_from_saved = models.SmallIntegerField(blank=True, null=True, default=0)
+
+    tenders_created = models.SmallIntegerField(blank=True, null=True, default=0)
+    tenders_updated = models.SmallIntegerField(blank=True, null=True, default=0)
+    files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+    files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+
+    saving_errors = models.BooleanField(blank=True, null=True, default=False)
+
+    class Meta:
+        db_table = 'base_crawler'
+        ordering = ['-finished']
+    
+    def __str__(self):
+        return f"{ self.started } - { self.finished }"
+
+
 

@@ -1,8 +1,13 @@
 {% load i18n static %}
 
 <div class="my-3">
+    <div class="my-4">
+        <span class="small fw-light"><i class="bi bi-clock"></i></span>
+        <span class="small fw-light">{% trans 'Updated since' %}:</span>
+        <span class="small">{{ last_updated|timesince }}</span>
+    </div>
     <div class="shadow-sm">
-        <h2 class="">
+        <div class="">
             <button class="btn btn-outline-light py-1 text-start text-muted w-100 collapsed" 
                     type="button"
                     data-bs-toggle="collapse" data-bs-target="#collapseLegend" 
@@ -10,7 +15,7 @@
                 <span class=""><i class="bi bi-key"></i></span>
                 <span class="ms-1 small">{% translate "Legend" %} ...</span>
             </button>
-        </h2>
+        </div>
         <div id="collapseLegend" class="collapse">
             <div class="card-body pb-2 px-3">
 

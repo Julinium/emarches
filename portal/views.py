@@ -12,7 +12,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.models import User
 
 from nas.models import Favorite
-from base.models import Tender, Category
+from base.models import Tender, Category, Crawler
 
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -47,8 +47,12 @@ class TenderListView(ListView):
 
         all_categories = Category.objects.all()
 
+        last_crawler = Crawler.objects.filter(saving_errors=False).order_by('finished').last()
+        last_updated = last_crawler.finished if last_crawler else None
+
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
+        context['last_updated']       = last_updated
 
         context['icon_multi_lots']    = 'ui-radios-grid'        # 'grid' # 'ui-checks-grid'
         context['icon_location']      = 'pin-map'               # 'geo'

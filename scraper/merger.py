@@ -5,11 +5,13 @@ from datetime import datetime, timedelta, timezone
 
 from scraper import constants as C
 from scraper import helper
+
 from base.models import (
     Tender, Lot, Agrement, Qualif, Kind, Domain, Mode, Procedure, 
     Category, Change, Client, Meeting, Sample, Visit, FileToGet,
     RelAgrementLot, RelDomainTender, RelQualifLot
 )
+
 from scraper.serializers import (
     TenderSerializer, LotSerializer, MeetingSerializer, SampleSerializer, VisitSerializer, 
     ModeSerializer, ProcedureSerializer, DomainSerializer, 
@@ -17,7 +19,6 @@ from scraper.serializers import (
     QualifSerializer, RelDomainTenderSerializer, RelAgrementLotSerializer, 
     RelQualifLotSerializer
 )
-
 
 
 def format(tender_json):
@@ -285,222 +286,222 @@ def save(tender_data):
         reserved_tender = l1["reserved"]
         variant_tender = l1["variant"]
 
-    for lot_data in lots_data:
-        i += 1
-        helper.printMessage('DEBUG', 'm.save', f"#### Handling Lot {i}/{ll} ... ")
-        # Update Tender fields
-        estimate_total += lot_data["estimate"]
-        bond_total += lot_data["bond"]
+        for lot_data in lots_data:
+            i += 1
+            helper.printMessage('DEBUG', 'm.save', f"#### Handling Lot {i}/{ll} ... ")
+            # Update Tender fields
+            estimate_total += lot_data["estimate"]
+            bond_total += lot_data["bond"]
 
-        # Handle nested Category for Lot
-        lot_category_data = lot_data["category"]
-        lot_category = None
-        helper.printMessage('DEBUG', 'm.save', "#### Handling Lot Category ... ")
-        if lot_category_data:
-            label = lot_category_data.get('label')
-            if label and Category.objects.filter(label=label).exists():
-                helper.printMessage('TRACE', 'm.save', "#### Lot Category exists. Skipping.")
-                lot_category = Category.objects.get(label=label)
-                lot_category_serializer = CategorySerializer(lot_category, data=lot_category_data, partial=True)
+            # Handle nested Category for Lot
+            lot_category_data = lot_data["category"]
+            lot_category = None
+            helper.printMessage('DEBUG', 'm.save', "#### Handling Lot Category ... ")
+            if lot_category_data:
+                label = lot_category_data.get('label')
+                if label and Category.objects.filter(label=label).exists():
+                    helper.printMessage('TRACE', 'm.save', "#### Lot Category exists. Skipping.")
+                    lot_category = Category.objects.get(label=label)
+                    lot_category_serializer = CategorySerializer(lot_category, data=lot_category_data, partial=True)
+                else:
+                    lot_category_serializer = CategorySerializer(data=lot_category_data)
+                    helper.printMessage('TRACE', 'm.save', f"#### Lot Category to be created: {label[:C.TRUNCA]}...")
+                    lot_category_serializer.is_valid(raise_exception=True)
+                    lot_category = lot_category_serializer.save()
+                    if not tender_create: 
+                        change = {"field": "category" , "old_value": "", "new_value": lot_category.label}
+                        changed_fields.append(change)
+
+            meetings_data = lot_data['meetings']
+            samples_data = lot_data['samples']
+            visits_data = lot_data['visits']
+            agrements_data = lot_data['agrements']
+            qualifs_data = lot_data['qualifs']
+
+            lot_data['category'] = lot_category
+
+            # Match Lot by title
+            lot_title = lot_data.get('title')
+            lot = None
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
+            if lot_title and Lot.objects.filter(title=lot_title, tender=tender).exists():
+                helper.printMessage('TRACE', 'm.save', "#### Lot exists. Skipping.")
+                lot = Lot.objects.get(title=lot_title, tender=tender)
+                lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
             else:
-                lot_category_serializer = CategorySerializer(data=lot_category_data)
-                helper.printMessage('TRACE', 'm.save', f"#### Lot Category to be created: {label[:C.TRUNCA]}...")
-                lot_category_serializer.is_valid(raise_exception=True)
-                lot_category = lot_category_serializer.save()
-                if not tender_create: 
-                    change = {"field": "category" , "old_value": "", "new_value": lot_category.label}
-                    changed_fields.append(change)
-
-        meetings_data = lot_data['meetings']
-        samples_data = lot_data['samples']
-        visits_data = lot_data['visits']
-        agrements_data = lot_data['agrements']
-        qualifs_data = lot_data['qualifs']
-
-        lot_data['category'] = lot_category
-
-        # Match Lot by title
-        lot_title = lot_data.get('title')
-        lot = None
-        helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
-        if lot_title and Lot.objects.filter(title=lot_title, tender=tender).exists():
-            helper.printMessage('TRACE', 'm.save', "#### Lot exists. Skipping.")
-            lot = Lot.objects.get(title=lot_title, tender=tender)
-            lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
-        else:
-            lot_serializer = LotSerializer(data=lot_data)
-            helper.printMessage('TRACE', 'm.save', f"#### Lot to be created: {lot_title[:C.TRUNCA]}...")
-            lot_serializer.is_valid(raise_exception=True)
-            lot = lot_serializer.save(tender=tender)
-            if not tender_create:
-                change = {"field": "lot" , "old_value": "", "new_value": lot.title}
-                changed_fields.append(change)
-
-        json_lot_keys.add((lot.title, lot.number))
-
-        # Handle Meetings
-        json_meeting_keys = set()
-        helper.printMessage('TRACE', 'm.save', "#### Handling Lot Meetings ... ")
-        for meeting_data in meetings_data:
-            when = meeting_data.get('when')
-            description = meeting_data.get('description')
-            json_meeting_keys.add((when, description))
-            meeting = None
-            if when and Meeting.objects.filter(when=when, lot=lot).exists():
-                helper.printMessage('TRACE', 'm.save', "#### Meeting exists. Skipping.")
-                meeting = Meeting.objects.get(when=when, lot=lot)
-                meeting_serializer = MeetingSerializer(meeting, data=meeting_data, partial=True)
-            else:
-                meeting_serializer = MeetingSerializer(data=meeting_data)
-                helper.printMessage('TRACE', 'm.save', f"#### Meeting to be created: {when}")
-                meeting_serializer.is_valid(raise_exception=True)
-                meeting_serializer.save(lot=lot)
-                if not tender_create: 
-                    change = {"field": "meeting" , "old_value": "", "new_value": str(when)}
-                    changed_fields.append(change)
-
-        # Remove Meetings not in JSON
-        helper.printMessage('TRACE', 'm.save', "#### Handling Meetings relationships ... ")
-        existing_meetings = set(lot.meetings.values_list('when', 'description'))
-        meetings_to_remove = existing_meetings - json_meeting_keys
-        for when, description in meetings_to_remove:
-            Meeting.objects.filter(when=when, description=description, lot=lot).delete()
-            if not tender_create:
-                change = {"field": "meeting" , "old_value": str(when), "new_value": ""}
-                changed_fields.append(change)
-
-        # Handle Samples
-        json_sample_keys = set()
-        helper.printMessage('TRACE', 'm.save', "#### Handling Lot Samples ... ")
-        for sample_data in samples_data:
-            when = sample_data.get('when')
-            description = sample_data.get('description')
-            json_sample_keys.add((when, description))
-            sample = None
-            if when and Sample.objects.filter(when=when, lot=lot).exists():
-                helper.printMessage('TRACE', 'm.save', "#### Sample exists. Skipping.")
-                sample = Sample.objects.get(when=when, lot=lot)
-                sample_serializer = SampleSerializer(sample, data=sample_data, partial=True)
-            else:
-                sample_serializer = SampleSerializer(data=sample_data)
-                helper.printMessage('TRACE', 'm.save', f"#### Sample to be created: {when}")
-                sample_serializer.is_valid(raise_exception=True)
-                sample_serializer.save(lot=lot)
-                if not tender_create: 
-                    change = {"field": "sample" , "old_value": "", "new_value": str(when)}
-                    changed_fields.append(change)
-
-        # Remove Samples not in JSON
-        helper.printMessage('TRACE', 'm.save', "#### Handling Samples relationships ... ")
-        existing_samples = set(lot.samples.values_list('when', 'description'))
-        samples_to_remove = existing_samples - json_sample_keys
-        for when, description in samples_to_remove:
-            Sample.objects.filter(when=when, description=description, lot=lot).delete()
-            if not tender_create: 
-                change = {"field": "sample" , "old_value": str(when), "new_value": ""}
-                changed_fields.append(change)
-
-        # Handle Visits
-        json_visit_keys = set()
-        helper.printMessage('TRACE', 'm.save', "#### Handling Lot Visits ... ")
-        for visit_data in visits_data:
-            when = visit_data.get('when')
-            description = visit_data.get('description')
-            json_visit_keys.add((when, description))
-            visit = None
-            if when and Visit.objects.filter(when=when, lot=lot).exists():
-                helper.printMessage('TRACE', 'm.save', "#### Visit exists. Skipping.")
-                visit = Visit.objects.get(when=when, lot=lot)
-                visit_serializer = VisitSerializer(visit, data=visit_data, partial=True)
-            else:
-                visit_serializer = VisitSerializer(data=visit_data)
-                helper.printMessage('TRACE', 'm.save', f"#### Visit to be created: {when}")
-                visit_serializer.is_valid(raise_exception=True)
-                visit_serializer.save(lot=lot)
-                if not tender_create: 
-                    change = {"field": "visit" , "old_value": "", "new_value": str(when)}
-                    changed_fields.append(change)
-
-        # Remove Visits not in JSON
-        helper.printMessage('TRACE', 'm.save', "#### Handling Visits relationships ... ")
-        existing_visits = set(lot.visits.values_list('when', 'description'))
-        visits_to_remove = existing_visits - json_visit_keys
-        for when, description in visits_to_remove:
-            Visit.objects.filter(when=when, description=description, lot=lot).delete()
-            if not tender_create: 
-                change = {"field": "visit" , "old_value": str(when), "new_value": ""}
-                changed_fields.append(change)
-
-        # Handle Agrements (many-to-many)
-        json_agrement_keys = set()
-        helper.printMessage('TRACE', 'm.save', "#### Handling Lot Agrements ... ")
-        for agrement_data in agrements_data:
-            name = agrement_data.get('name')
-            agrement = None
-            if name and Agrement.objects.filter(name=name).exists():
-                helper.printMessage('TRACE', 'm.save', "#### Agrement exists. Skipping.")
-                agrement = Agrement.objects.get(name=name)
-                agrement_serializer = AgrementSerializer(agrement, data=agrement_data, partial=True)
-            else:
-                agrement_serializer = AgrementSerializer(data=agrement_data)
-                helper.printMessage('TRACE', 'm.save', f"#### Agrement to be created: {name[:C.TRUNCA]}...")
-                agrement_serializer.is_valid(raise_exception=True)
-                agrement = agrement_serializer.save()
-                if not tender_create: 
-                    change = {"field": "agrement" , "old_value": "", "new_value": agrement.name}
-                    changed_fields.append(change)
-                    
-            json_agrement_keys.add((agrement.short, agrement.name))
-            RelAgrementLot.objects.get_or_create(agrement=agrement, lot=lot)
-
-        # Remove Agrements not in JSON
-        helper.printMessage('TRACE', 'm.save', "#### Handling Agrements relationships ... ")
-        existing_agrements = set(lot.agrements.values_list('short', 'name'))
-        agrements_to_remove = existing_agrements - json_agrement_keys
-        for short, name in agrements_to_remove:
-            agrement = Agrement.objects.filter(short=short, name=name).first()
-            if agrement:
-                RelAgrementLot.objects.filter(agrement=agrement, lot=lot).delete()
-                if not tender_create: 
-                    change = {"field": "agrement" , "old_value": agrement.name, "new_value": ""}
-                    changed_fields.append(change)
-
-        # Handle Qualifs (many-to-many)
-        json_qualif_keys = set()
-        helper.printMessage('TRACE', 'm.save', "#### Handling Lot Qualifs ... ")
-        for qualif_data in qualifs_data:
-            short = qualif_data.get('short')
-            name = qualif_data.get('name')
-            qualif = None
-            if name and Qualif.objects.filter(name=name).exists():
-                helper.printMessage('TRACE', 'm.save', "#### Qualif exists. Skipping.")
-                qualif = Qualif.objects.get(name=name)
-                qualif_serializer = QualifSerializer(qualif, data=qualif_data, partial=True)
-            else:
-                qualif_serializer = QualifSerializer(data=qualif_data)
-                helper.printMessage('TRACE', 'm.save', f"#### Qualif to be created: {name[:C.TRUNCA]}...")
-                qualif_serializer.is_valid(raise_exception=True)
-                qualif = qualif_serializer.save()
+                lot_serializer = LotSerializer(data=lot_data)
+                helper.printMessage('TRACE', 'm.save', f"#### Lot to be created: {lot_title[:C.TRUNCA]}...")
+                lot_serializer.is_valid(raise_exception=True)
+                lot = lot_serializer.save(tender=tender)
                 if not tender_create:
-                    change = {"field": "qualif" , "old_value": "", "new_value": qualif.name}
+                    change = {"field": "lot" , "old_value": "", "new_value": lot.title}
                     changed_fields.append(change)
 
-            json_qualif_keys.add((qualif.short, qualif.name))
-            RelQualifLot.objects.get_or_create(qualif=qualif, lot=lot)
+            json_lot_keys.add((lot.title, lot.number))
 
-        # Remove Qualifs not in JSON
-        helper.printMessage('TRACE', 'm.save', "#### Handling Qualifs relationships ... ")
-        existing_qualifs = set(lot.qualifs.values_list('short', 'name'))
-        qualifs_to_remove = existing_qualifs - json_qualif_keys
-        for short, name in qualifs_to_remove:
-            qualif = Qualif.objects.filter(name=name).first()
-            if qualif:
-                RelQualifLot.objects.filter(qualif=qualif, lot=lot).delete()
+            # Handle Meetings
+            json_meeting_keys = set()
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot Meetings ... ")
+            for meeting_data in meetings_data:
+                when = meeting_data.get('when')
+                description = meeting_data.get('description')
+                json_meeting_keys.add((when, description))
+                meeting = None
+                if when and Meeting.objects.filter(when=when, lot=lot).exists():
+                    helper.printMessage('TRACE', 'm.save', "#### Meeting exists. Skipping.")
+                    meeting = Meeting.objects.get(when=when, lot=lot)
+                    meeting_serializer = MeetingSerializer(meeting, data=meeting_data, partial=True)
+                else:
+                    meeting_serializer = MeetingSerializer(data=meeting_data)
+                    helper.printMessage('TRACE', 'm.save', f"#### Meeting to be created: {when}")
+                    meeting_serializer.is_valid(raise_exception=True)
+                    meeting_serializer.save(lot=lot)
+                    if not tender_create: 
+                        change = {"field": "meeting" , "old_value": "", "new_value": str(when)}
+                        changed_fields.append(change)
+
+            # Remove Meetings not in JSON
+            helper.printMessage('TRACE', 'm.save', "#### Handling Meetings relationships ... ")
+            existing_meetings = set(lot.meetings.values_list('when', 'description'))
+            meetings_to_remove = existing_meetings - json_meeting_keys
+            for when, description in meetings_to_remove:
+                Meeting.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create:
-                    change = {"field": "qualif" , "old_value": qualif.name, "new_value": ""}
+                    change = {"field": "meeting" , "old_value": str(when), "new_value": ""}
                     changed_fields.append(change)
 
-        new_lots.append(lot)
+            # Handle Samples
+            json_sample_keys = set()
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot Samples ... ")
+            for sample_data in samples_data:
+                when = sample_data.get('when')
+                description = sample_data.get('description')
+                json_sample_keys.add((when, description))
+                sample = None
+                if when and Sample.objects.filter(when=when, lot=lot).exists():
+                    helper.printMessage('TRACE', 'm.save', "#### Sample exists. Skipping.")
+                    sample = Sample.objects.get(when=when, lot=lot)
+                    sample_serializer = SampleSerializer(sample, data=sample_data, partial=True)
+                else:
+                    sample_serializer = SampleSerializer(data=sample_data)
+                    helper.printMessage('TRACE', 'm.save', f"#### Sample to be created: {when}")
+                    sample_serializer.is_valid(raise_exception=True)
+                    sample_serializer.save(lot=lot)
+                    if not tender_create: 
+                        change = {"field": "sample" , "old_value": "", "new_value": str(when)}
+                        changed_fields.append(change)
+
+            # Remove Samples not in JSON
+            helper.printMessage('TRACE', 'm.save', "#### Handling Samples relationships ... ")
+            existing_samples = set(lot.samples.values_list('when', 'description'))
+            samples_to_remove = existing_samples - json_sample_keys
+            for when, description in samples_to_remove:
+                Sample.objects.filter(when=when, description=description, lot=lot).delete()
+                if not tender_create: 
+                    change = {"field": "sample" , "old_value": str(when), "new_value": ""}
+                    changed_fields.append(change)
+
+            # Handle Visits
+            json_visit_keys = set()
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot Visits ... ")
+            for visit_data in visits_data:
+                when = visit_data.get('when')
+                description = visit_data.get('description')
+                json_visit_keys.add((when, description))
+                visit = None
+                if when and Visit.objects.filter(when=when, lot=lot).exists():
+                    helper.printMessage('TRACE', 'm.save', "#### Visit exists. Skipping.")
+                    visit = Visit.objects.get(when=when, lot=lot)
+                    visit_serializer = VisitSerializer(visit, data=visit_data, partial=True)
+                else:
+                    visit_serializer = VisitSerializer(data=visit_data)
+                    helper.printMessage('TRACE', 'm.save', f"#### Visit to be created: {when}")
+                    visit_serializer.is_valid(raise_exception=True)
+                    visit_serializer.save(lot=lot)
+                    if not tender_create: 
+                        change = {"field": "visit" , "old_value": "", "new_value": str(when)}
+                        changed_fields.append(change)
+
+            # Remove Visits not in JSON
+            helper.printMessage('TRACE', 'm.save', "#### Handling Visits relationships ... ")
+            existing_visits = set(lot.visits.values_list('when', 'description'))
+            visits_to_remove = existing_visits - json_visit_keys
+            for when, description in visits_to_remove:
+                Visit.objects.filter(when=when, description=description, lot=lot).delete()
+                if not tender_create: 
+                    change = {"field": "visit" , "old_value": str(when), "new_value": ""}
+                    changed_fields.append(change)
+
+            # Handle Agrements (many-to-many)
+            json_agrement_keys = set()
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot Agrements ... ")
+            for agrement_data in agrements_data:
+                name = agrement_data.get('name')
+                agrement = None
+                if name and Agrement.objects.filter(name=name).exists():
+                    helper.printMessage('TRACE', 'm.save', "#### Agrement exists. Skipping.")
+                    agrement = Agrement.objects.get(name=name)
+                    agrement_serializer = AgrementSerializer(agrement, data=agrement_data, partial=True)
+                else:
+                    agrement_serializer = AgrementSerializer(data=agrement_data)
+                    helper.printMessage('TRACE', 'm.save', f"#### Agrement to be created: {name[:C.TRUNCA]}...")
+                    agrement_serializer.is_valid(raise_exception=True)
+                    agrement = agrement_serializer.save()
+                    if not tender_create: 
+                        change = {"field": "agrement" , "old_value": "", "new_value": agrement.name}
+                        changed_fields.append(change)
+                        
+                json_agrement_keys.add((agrement.short, agrement.name))
+                RelAgrementLot.objects.get_or_create(agrement=agrement, lot=lot)
+
+            # Remove Agrements not in JSON
+            helper.printMessage('TRACE', 'm.save', "#### Handling Agrements relationships ... ")
+            existing_agrements = set(lot.agrements.values_list('short', 'name'))
+            agrements_to_remove = existing_agrements - json_agrement_keys
+            for short, name in agrements_to_remove:
+                agrement = Agrement.objects.filter(short=short, name=name).first()
+                if agrement:
+                    RelAgrementLot.objects.filter(agrement=agrement, lot=lot).delete()
+                    if not tender_create: 
+                        change = {"field": "agrement" , "old_value": agrement.name, "new_value": ""}
+                        changed_fields.append(change)
+
+            # Handle Qualifs (many-to-many)
+            json_qualif_keys = set()
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot Qualifs ... ")
+            for qualif_data in qualifs_data:
+                short = qualif_data.get('short')
+                name = qualif_data.get('name')
+                qualif = None
+                if name and Qualif.objects.filter(name=name).exists():
+                    helper.printMessage('TRACE', 'm.save', "#### Qualif exists. Skipping.")
+                    qualif = Qualif.objects.get(name=name)
+                    qualif_serializer = QualifSerializer(qualif, data=qualif_data, partial=True)
+                else:
+                    qualif_serializer = QualifSerializer(data=qualif_data)
+                    helper.printMessage('TRACE', 'm.save', f"#### Qualif to be created: {name[:C.TRUNCA]}...")
+                    qualif_serializer.is_valid(raise_exception=True)
+                    qualif = qualif_serializer.save()
+                    if not tender_create:
+                        change = {"field": "qualif" , "old_value": "", "new_value": qualif.name}
+                        changed_fields.append(change)
+
+                json_qualif_keys.add((qualif.short, qualif.name))
+                RelQualifLot.objects.get_or_create(qualif=qualif, lot=lot)
+
+            # Remove Qualifs not in JSON
+            helper.printMessage('TRACE', 'm.save', "#### Handling Qualifs relationships ... ")
+            existing_qualifs = set(lot.qualifs.values_list('short', 'name'))
+            qualifs_to_remove = existing_qualifs - json_qualif_keys
+            for short, name in qualifs_to_remove:
+                qualif = Qualif.objects.filter(name=name).first()
+                if qualif:
+                    RelQualifLot.objects.filter(qualif=qualif, lot=lot).delete()
+                    if not tender_create:
+                        change = {"field": "qualif" , "old_value": qualif.name, "new_value": ""}
+                        changed_fields.append(change)
+
+            new_lots.append(lot)
     
     # Remove Lots not in JSON
     helper.printMessage('TRACE', 'm.save', "#### Handling Lots relationships ... ")

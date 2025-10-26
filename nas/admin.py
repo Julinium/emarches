@@ -4,9 +4,9 @@ from .models import Company, Notification, Newsletter, NotificationSubscription,
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'city', 'activity', 'user', 'active', 'created')
+    list_display = ('name', 'ice', 'user', 'city', 'active', 'created')
     list_filter = ('active', 'city', 'sector')
-    search_fields = ('name', 'ice', 'activity', 'city')
+    search_fields = ('name', 'ice', 'ice', 'city')
 
 
 @admin.register(Notification)
