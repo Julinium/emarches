@@ -110,6 +110,14 @@
                     </div>
                     <div class="ms-4">
                         {{ tender.lots_count }}
+                        {% if tender.lots_count > 1 %}
+                            <span>
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-2 ms-2" data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
+                                    {% trans "Lots details" %}
+                                </button>
+                                {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
+                            </span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -226,6 +234,11 @@
                     {% trans 'Scheduled Visits' as visits_caption %}
                     {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=tender.lots.first.visits.all %}
                 {% endif %}
+            {% else %}
+                <!-- <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
+                    {{ tender.lots_count }} {% trans "Lots details" %}
+                </button>
+                {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %} -->
             {% endif %}
         </div>
 

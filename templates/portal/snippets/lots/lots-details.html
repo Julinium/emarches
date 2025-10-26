@@ -1,0 +1,28 @@
+{% load i18n %}
+<div class="modal fade" 
+     id="t{{ chrono }}m" tabindex="-1" 
+     aria-labelledby="t{{ tender.chrono }}Label" 
+     aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h1 class="modal-title fs-5" id="t{{ tender.chrono }}Label">{% trans "Lots details" %}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          {% for lot in lots %}
+            <div class="list-group-item {% if forloop.counter|divisibleby:2 %}bg-light{% endif %}">
+              {% include 'portal/snippets/lots/lot-details.html' with lot=lot %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

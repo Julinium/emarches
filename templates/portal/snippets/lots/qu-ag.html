@@ -2,14 +2,14 @@
 <div class="col-12">
     <div class="d-flex-inline my-1">
         <div class="text-muted small fw-light">
-            {{ caption }}
+            {{ caption }}:
         </div>
-        <div class="ms-4">
+        <div class="ms-2">
             {% for object in objects %}
-                <span class="badge bg-secondary mt-2">{{ object.short }}</span>
+                <span class="">— {{ object.short }}: </span>
                 <span class="small">{{ object.name }}</span><br>                                    
             {% empty %}
-                <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+                <span class="fw-light small text-muted my-2">{% trans 'Not found' %}</span>
             {% endfor %}
         </div>
     </div>

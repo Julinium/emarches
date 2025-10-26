@@ -385,13 +385,13 @@ class Lot(models.Model):
     number = models.SmallIntegerField(blank=True, null=True, verbose_name=_("Number"))
     title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
     description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
-    
+
     estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Estimate"))
     bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond"))
     reserved = models.BooleanField(blank=True, null=True, verbose_name=_("Reserved to SMB+"))
     variant = models.BooleanField(blank=True, null=True, verbose_name=_("Variants accepted"))
     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="lots", db_column='category', blank=True, null=True, verbose_name=_("Category"))
-    
+
     tender = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="lots", db_column='tender', blank=True, null=True)
     agrements = models.ManyToManyField(Agrement, through='RelAgrementLot', related_name='lots')
     qualifs = models.ManyToManyField(Qualif, through='RelQualifLot', related_name='lots')

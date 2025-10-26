@@ -1,0 +1,113 @@
+{% load i18n %}
+
+
+<div class="row gx-4 gy-0">
+
+
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="badge bg-secondary">
+                {% trans "Lot" %} {{ lot.number }}
+            </span>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Category' %}:
+            </span>
+            <span class="ms-1">
+                {{ lot.category.name|default:'?' }}
+            </span>
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Title' %}:
+            </span>
+            <span class="ms-1">
+                {{ lot.title|default:'--' }}
+            </span>
+        </div>
+    </div>
+
+
+
+    <!-- <div class="col-12">
+        <div class="d-flex-inline my-1">
+            <span class="">
+                <span class="badge bg-secondary">
+                    {% trans "Lot" %} {{ lot.number }}
+                </span>
+            </span>
+            <span class="ms-1">
+                {{ lot.title }}
+            </span>
+        </div>
+    </div> -->
+    {% if lot.description %}
+        <div class="col-12">
+            <div class="d-flex-inline my-1">
+                <span class="text-muted small fw-light">
+                    {% trans 'Description' %}:
+                </span>
+                <span class="ms-1">
+                    {{ lot.description }}
+                </span>
+            </div>
+        </div>
+    {% endif %}
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Estimate' %}:
+            </span>
+            <span class="ms-1 fw-bold">
+                {{ lot.estimate }}
+            </span>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Guarantee' %}:
+            </span>
+            <span class="ms-1">
+                {{ lot.bond }}
+            </span>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Reserved to SMBs, individuals, Unions, ...' %}
+            </span>
+            <span class="ms-1">
+                {% if lot.reserved %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Variants accepted' %}:
+            </span>
+            <span class="ms-1">
+                {% if lot.variant %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+            </span>
+        </div>
+    </div>
+
+    {% if lot.agrements.all %}
+        {% trans 'Required Licences' as agrements_caption %}
+        {% include 'portal/snippets/lots/qu-ag.html' with caption=agrements_caption objects=lot.agrements.all %}
+    {% endif %}
+
+    {% if lot.qualifs.all %}
+        {% trans 'Required Qualifications' as qualifs_caption %}
+        {% include 'portal/snippets/lots/qu-ag.html' with caption=qualifs_caption objects=lot.qualifs.all %}
+    {% endif %}
+</div>
+

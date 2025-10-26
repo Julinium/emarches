@@ -47,6 +47,7 @@ class TenderListView(ListView):
         today_now = timezone.now()
         tenders = Tender.objects.filter(
                 deadline__gte=today_now,
+                lots_count__gt=1
             ).order_by(
                 TENDERS_ORDERING_FIELD, 'id'
             ).select_related(
