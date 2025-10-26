@@ -349,6 +349,12 @@ class Tender(models.Model):
             return progress
         except: return 0
 
+    @property
+    def days_span(self):
+        try:
+            delta_span = self.deadline.date() - self.published
+            return delta_span.days
+        except: return 0
 
     def save(self, *args, **kwargs):
 

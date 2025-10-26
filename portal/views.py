@@ -108,13 +108,19 @@ class TenderDetailView(DetailView):
         # Get all fields for the model instance
         context['fields'] = [(field.name, field.value_to_string(self.object)) 
                             for field in Tender._meta.get_fields() 
-                            if field.concrete and not field.many_to_many]
+                            if field.concrete]
         return context
 
 
-    # def get_queryset(self):
-    #     return Tender.objects.select_related(
-    #             'user__profile'
-    #         ).prefetch_related(
-    #             'agrements', 'qualifs'
-    #         ).filter(user=self.request.user, active=True)
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+
+        queryset = queryset.select_related(
+                'client', 'category', 'mode', 'procedure'
+            ).prefetch_related(
+                'domains', 'lots', 'lots__agrements', 'lots__qualifs',
+                'lots__meetings', 'lots__samples', 'lots__visits'
+            )
+
+        return queryset
+
