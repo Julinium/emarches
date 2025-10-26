@@ -14,6 +14,8 @@ from django.contrib.auth.models import User
 from nas.models import Favorite
 from base.models import Tender, Category, Crawler
 
+# from scraper.serializers import TenderSerializer
+
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
@@ -103,13 +105,13 @@ class TenderDetailView(DetailView):
     template_name = 'portal/tender-details.html'
     context_object_name = 'tender'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Get all fields for the model instance
-        context['fields'] = [(field.name, field.value_to_string(self.object)) 
-                            for field in Tender._meta.get_fields() 
-                            if field.concrete]
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     # Get all fields for the model instance
+    #     context['fields'] = [(field.name, field.value_to_string(self.object)) 
+    #                         for field in Tender._meta.get_fields() 
+    #                         if field.concrete]
+    #     return context
 
 
     def get_queryset(self, **kwargs):
@@ -123,4 +125,17 @@ class TenderDetailView(DetailView):
             )
 
         return queryset
+
+    # def get_context_data(self, **kwargs):
+    #     """
+    #     Add serialized data to the template context.
+    #     """
+    #     context = super().get_context_data(**kwargs)
+    #     # Get the model instance
+    #     instance = self.get_object()
+    #     # Use the serializer to get data with nested/related objects
+    #     serializer = TenderSerializer(instance)
+    #     # Add serialized data to context
+    #     context['serialized_data'] = serializer.data
+    #     return context
 

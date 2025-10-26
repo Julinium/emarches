@@ -353,7 +353,7 @@ class Tender(models.Model):
     def days_span(self):
         try:
             delta_span = self.deadline.date() - self.published
-            return delta_span.days
+            return 1 + delta_span.days
         except: return 0
 
     def save(self, *args, **kwargs):

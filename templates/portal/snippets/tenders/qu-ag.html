@@ -1,0 +1,16 @@
+{% load i18n %}                    
+<div class="col-12">
+    <div class="d-flex-inline my-3 border-0 border-bottom">
+        <div class="text-muted small fw-light">
+            {{ caption }}
+        </div>
+        <div class="ms-4">
+            {% for object in objects %}
+                <span class="badge bg-secondary mt-2">{{ object.short }}</span>
+                <span class="small">{{ object.name }}</span><br>                                    
+            {% empty %}
+                <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+            {% endfor %}
+        </div>
+    </div>
+</div>

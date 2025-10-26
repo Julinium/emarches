@@ -8,6 +8,15 @@
 {% block content %}
     <h3>{% trans "Tenders Details" %}</h3>
     <div class="my-3">
+
+        {% if tender.cancelled %}
+            <div class="text-bg-danger rounded text-center my-2">
+                <div class="fw-bold p-1">
+                    {% trans 'CANCELLED' %}
+                </div>
+            </div>
+        {% endif %}
+
         <div class="row gx-4 gy-0">
 
             <div class="col-12">
@@ -15,7 +24,7 @@
                     <div class="text-muted small fw-light">
                         {% trans 'Object' %}
                     </div>
-                    <div class="ms-4">
+                    <div class="ms-4 fw-bold {% if tender.cancelled %}text-danger{% endif %}">
                         {{ tender.title }}
                     </div>
                 </div>
@@ -168,7 +177,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-md-6">
+            <div class="col-12">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
                         {% trans 'Public Client' %}
@@ -178,14 +187,14 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
                         {% trans 'Domains of activity' %}
                     </div>
                     <div class="ms-4">
                         {% for domain in tender.domains.all %}
-                            <span>— {{ domain.name }}</span><br>
+                            <span class="small">— {{ domain.name }}</span><br>
                         {% empty %}
                             <span class="fw-light small text-muted">{% trans 'Not found' %}</span>
                         {% endfor %}
@@ -194,43 +203,40 @@
             </div>
             {% if tender.lots.count == 1 %}
                 {% if tender.has_agrements %}
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-3 border-0 border-bottom">
-                            <div class="text-muted small fw-light">
-                                {% trans 'Required Licences' %}
-                            </div>
-                            <div class="ms-4">
-                                {% for agrement in tender.lots.first.agrements.all %}
-                                    <span class="badge bg-secondary mt-2">{{ agrement.short }}</span>
-                                    <span class="small fw-light">{{ agrement.name }}</span><br>
-                                {% empty %}
-                                    <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+                    {% trans 'Required Licences' as agrements_caption %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=agrements_caption objects=tender.lots.first.agrements.all %}
                 {% endif %}
 
                 {% if tender.has_qualifs %}
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-3 border-0 border-bottom">
-                            <div class="text-muted small fw-light">
-                                {% trans 'Required Qualifications' %}
-                            </div>
-                            <div class="ms-4">
-                                {% for qualif in tender.lots.first.qualifs.all %}
-                                    <span class="badge bg-secondary mt-2">{{ qualif.short }}</span>
-                                    <span class="small fw-light">{{ qualif.name }}</span><br>                                    
-                                {% empty %}
-                                    <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
+                    {% trans 'Required Qualifications' as qualifs_caption %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=qualifs_caption objects=tender.lots.first.qualifs.all %}
+                {% endif %}
+
+                {% if tender.has_samples %}
+                    {% trans 'Required Samples' as samples_caption %}
+                    {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=samples_caption objects=tender.lots.first.samples.all %}
+                {% endif %}
+
+                {% if tender.has_meetings %}
+                    {% trans 'Scheduled Meetings' as meetings_caption %}
+                    {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=meetings_caption objects=tender.lots.first.meetings.all %}
+                {% endif %}
+
+                {% if tender.has_visits %}
+                    {% trans 'Scheduled Visits' as visits_caption %}
+                    {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=tender.lots.first.visits.all %}
                 {% endif %}
             {% endif %}
-
         </div>
+
+        {% if tender.cancelled %}
+            <div class="text-bg-danger rounded text-center my-2">
+                <div class="fw-bold p-1">
+                    {% trans 'CANCELLED' %}
+                </div>
+            </div>
+        {% endif %}
+
     </div>
 
 {% endblock content %}
