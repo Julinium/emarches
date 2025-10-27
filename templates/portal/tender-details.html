@@ -147,6 +147,17 @@
                 </div>
             </div>
 
+            <div class="col-12">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Public Client' %}
+                    </div>
+                    <div class="ms-4">
+                        {{ tender.client.name }}
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
@@ -225,16 +236,6 @@
             <div class="col-12">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
-                        {% trans 'Public Client' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.client.name }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
                         {% trans 'Domains of activity' %}
                     </div>
                     <div class="ms-4">
@@ -246,6 +247,7 @@
                     </div>
                 </div>
             </div>
+
             {% if tender.lots.count == 1 %}
                 {% if tender.has_agrements %}
                     {% trans 'Required Licences' as agrements_caption %}
@@ -322,16 +324,17 @@
 Id: b9723d20-19ee-44b6-b2a2-d8d2e1443879
 Chrono: 917273
 Plans_Price: 0.00
-Ebid: 9
-Esign: 9
 Size_Read: 120,18 M
 Size_Bytes: 126014292
+
 Address_Withdrawal: ONEE/Branche Electricité Bureaux de la Direction Approvisionnements et Marchés (DAM) : 65, Rue OTHMAN BEN AFFAN 20000 CASABLANCA, B.P. 13 498 -MAROC, Tel : (212) (5) 22.66.80.21 – 22.66.83.59 - Télécopieur (212) (5) 22 43.31.12
 Address_Bidding: ONEE/Branche Electricité Bureaux de la Direction Approvisionnements et Marchés (DAM) : 65, Rue OTHMAN BEN AFFAN 20000 CASABLANCA, B.P. 13 498 -MAROC, Tel : (212) (5) 22.66.80.21 – 22.66.83.59 - Télécopieur (212) (5) 22 43.31.12
 Address_Opening: ONEE/Branche Electricité Bureaux de la Direction Approvisionnements et Marchés (DAM) : 65, Rue OTHMAN BEN AFFAN 20000 CASABLANCA, B.P. 13 498 -MAROC, Tel : (212) (5) 22.66.80.21 – 22.66.83.59 - Télécopieur (212) (5) 22 43.31.12
+
 Contact_Name: Brahim ARCHICH
 Contact_Phone: 05 22 75 45 01 à 06
 Contact_Email: archich@onee.ma
+
 Contact_Fax: 05 22 75 47 14
 Created: 2025-10-07T15:26:25.075291+00:00
 Updated: 2025-10-26T09:52:23.148217+00:00
