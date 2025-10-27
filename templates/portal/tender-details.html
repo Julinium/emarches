@@ -171,6 +171,39 @@
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
+                        {% trans 'Electronic bidding' %}
+                    </div>
+                    <div class="ms-4">
+                        {% if tender.ebid == 1 %}
+                            {% trans 'Required' %}
+                        {% elif tender.ebid == 0 %}
+                            {% trans 'Optional' %}
+                        {% else %}
+                            {% trans 'Not Applicable' %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Electronic signature' %}
+                    </div>
+                    <div class="ms-4">
+                        {% if tender.esign == 1 %}
+                            {% trans 'Required' %}
+                        {% elif tender.esign == 0 %}
+                            {% trans 'Optional' %}
+                        {% else %}
+                            {% trans 'Not Applicable' %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
                         {% trans 'Reserved to SMBs, individuals, Unions, ...' %}
                     </div>
                     <div class="ms-4">
@@ -284,24 +317,11 @@
 
 {% endblock content %}
 
-    <!-- <ul>
-        {% for field_name, field_value in fields %}
-            <li><strong>{{ field_name|title }}:</strong> {{ field_value }}</li>
-        {% endfor %}
-    </ul> -->
 
 <!-- 
-            'lots', 'lots__agrements', 'lots__qualifs',
-                'lots__meetings', 'lots__samples', 'lots__visits'
-
 Id: b9723d20-19ee-44b6-b2a2-d8d2e1443879
 Chrono: 917273
 Plans_Price: 0.00
-Has_Agrements: False
-Has_Qualifs: False
-Has_Samples: False
-Has_Meetings: True
-Has_Visits: True
 Ebid: 9
 Esign: 9
 Size_Read: 120,18 M
@@ -315,9 +335,6 @@ Contact_Email: archich@onee.ma
 Contact_Fax: 05 22 75 47 14
 Created: 2025-10-07T15:26:25.075291+00:00
 Updated: 2025-10-26T09:52:23.148217+00:00
-Cancelled: False
 Deleted: False
 Link: 917273&orgAcronyme=d4q
-Acronym: d4q
-Kind: b3a5c769-22a8-4a5c-ace5-78496fd4f004
  -->

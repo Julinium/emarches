@@ -13,12 +13,6 @@ from django.contrib.auth.models import User
 from nas.models import Favorite
 from base.models import Tender, Category, Crawler
 
-<<<<<<< HEAD
-=======
-from base.models import Meeting, Sample, Visit, Lot
-# from scraper.serializers import TenderSerializer
-
->>>>>>> e03ddc0 (Updates)
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
@@ -28,37 +22,6 @@ TENDERS_ORDERING_FIELD = 'published'
 @method_decorator(login_required, name='dispatch')
 class TenderListView(ListView):
 
-<<<<<<< HEAD
-=======
-    ##########################
-
-    # lots = Lot.objects.filter(category=None)
-    # for lot in lots:
-    #     if lot.category == None:
-    #         print(lot.id)
-    #         lot.category = lot.tender.category
-    #         lot.save()
-    #     else:
-    #         print('pass')
-
-    # for m in Meeting.objects.all():
-    #     m.save()
-    # for s in Sample.objects.all():
-    #     s.save()
-    # for v in Visit.objects.all():
-    #     v.save()
-    # for l in Lot.objects.all():
-    #     l.save()
-
-    # from base.models import Change
-    # for c in Change.objects.all():
-    #     c.changes = c.changes.replace('[', '{').replace(']', '}')
-    #     c.changes = "[" + c.changes[1:-1] + "]"
-    #     c.save()
-    
-    ##########################
-
->>>>>>> e03ddc0 (Updates)
     model = Tender
     template_name = 'portal/tender-list.html'
     context_object_name = 'tenders'
@@ -127,17 +90,6 @@ class TenderDetailView(DetailView):
     template_name = 'portal/tender-details.html'
     context_object_name = 'tender'
 
-<<<<<<< HEAD
-=======
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     # Get all fields for the model instance
-    #     context['fields'] = [(field.name, field.value_to_string(self.object)) 
-    #                         for field in Tender._meta.get_fields() 
-    #                         if field.concrete]
-    #     return context
-
->>>>>>> e03ddc0 (Updates)
     
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
