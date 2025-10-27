@@ -1,5 +1,7 @@
 {% extends 'base/base.html' %}
 {% load i18n static %}
+{% load changes_2_dict %}
+
 
 {% block title %}
     {% trans "Tenders Details" %}
@@ -106,17 +108,19 @@
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
-                        {% trans 'Lots count' %}
+                        {% trans 'Lots' %}
                     </div>
                     <div class="ms-4">
-                        {{ tender.lots_count }}
                         {% if tender.lots_count > 1 %}
                             <span>
-                                <button type="button" class="btn btn-sm btn-outline-secondary mb-2 ms-2" data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                                    {% trans "Lots details" %}
+                                <button type="button" class="btn btn-sm btn-outline-secondary mb-1" 
+                                        data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
+                                    {{ tender.lots_count }} {% trans "Lots details" %}
                                 </button>
                                 {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
                             </span>
+                        {% else %}
+                            {{ tender.lots_count }}
                         {% endif %}
                     </div>
                 </div>
@@ -234,11 +238,37 @@
                     {% trans 'Scheduled Visits' as visits_caption %}
                     {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=tender.lots.first.visits.all %}
                 {% endif %}
-            {% else %}
-                <!-- <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                    {{ tender.lots_count }} {% trans "Lots details" %}
-                </button>
-                {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %} -->
+            {% endif %}
+
+            {% if tender.changes.all %}                
+                <div class="col-12">
+                    <div class="d-flex-inline my-3 border-0 border-bottom">
+                        <div class="text-muted small fw-light">
+                            {% trans 'Tender Changes' %}
+                        </div>
+                        <div class="ms-4 small">
+                            {% for change in tender.changes.all  %}
+                                <div class="mt-2">
+                                    <span class=""
+                                           data-bs-toggle="tooltip" 
+                                           title="{% trans 'Reported' %}: {{ change.reported }}">
+                                        — {{ change.reported|date }}:
+                                    </span>
+                                    <span class="">
+                                        {% for mod in change.changes|dictify %}
+                                            <span class="ms-2" data-bs-toggle="tooltip" 
+                                                title="{{ mod.old_value|default:'-' }} &gt;&gt; {{ mod.new_value|default:'-' }}">
+                                                <i class="bi bi-activity"></i> {{ mod.field }}
+                                            </span>
+                                        {% endfor %}
+                                    </span><br>
+                                </div>
+                            {% empty %}
+                                <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             {% endif %}
         </div>
 

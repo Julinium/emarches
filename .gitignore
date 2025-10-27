@@ -11,4 +11,4 @@ scraper/exports
 scraper/logs
 scraper/crony/.lock
 
-templates/base-x/
+*.log

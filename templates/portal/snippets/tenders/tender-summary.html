@@ -1,141 +1,113 @@
 {% load i18n static %}   
 {% load humanize %}
 
-<div class="">
-    <div class="p-0 my-3">
-            
+<div class="my-3">
         <div class="card shadow">
-            <div class="card-header px-3 py-1 
-                        {% if tender in favorites.all %}
-                            bg-success-subtle
-                        {% else %}
-                            bg-light
-                        {% endif %}">
+            <a class="btn p-0 w-100 text-start" href="{% url 'portal_tender_detail' tender.id %}">
+                <div class="card-header px-3 py-1 
+                            {% if tender in favorites.all %}
+                                bg-success-subtle
+                            {% else %}
+                                bg-light
+                            {% endif %}">
 
-                <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between">
 
-                    <div class="d-flex align-items-center">
-                        <div class="oneline" id="t{{ tender.chrono }}h"
-                             style="cursor: pointer;">
-                            <span class="fs-5" 
-                                  data-bs-toggle="tooltip" 
-                                  title="{% trans 'Main Category' %}: {{ tender.category.label }}">
-                                <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
-                            </span>
-                            <span class="fw-bold fs-6 me-1 border-0 border-end" 
-                                  data-bs-toggle="tooltip" 
-                                  title="{% trans 'Total Estimate' %}: {{ tender.estimate }}">
-                                {{ tender.estimate|metrify }}
-                            </span>
-                            <span class="fw-light small text-muted me-1" 
-                                  data-bs-toggle="tooltip" 
-                                  title="{% trans 'Total Guaranty' %}: {{ tender.bond }}">
-                                {{ tender.bond|metrify:1 }}
-                            </span>
-                            <span class="fw-light small text-muted mx-1" 
-                                  data-bs-toggle="tooltip" 
-                                  title="{% trans 'Execution Location' %}: {{ tender.location }}">
-                                <span><i class="bi bi-{{ icon_location }}"></i></span>
-                                <span>{{ tender.location }}</span>
-                            </span>
-                            <span class="fw-light small text-muted mx-1" 
-                                  data-bs-toggle="tooltip" 
-                                  title="{% trans 'Public Client' %}: {{ tender.client.name }}">
-                                <span><i class="bi bi-{{ icon_client }}"></i></span>
-                                <span>{{ tender.client }}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-body px-3 py-2 {% if tender.cancelled %}text-danger{% endif %}">
-
-                <div id="t{{ tender.chrono }}t" class="twolines">
-                    <div data-bs-toggle="tooltip"
-                         title="{% trans 'Tender object' %}: {{ tender.title }}"
-                         style="cursor: pointer;">
-                        {% if tender.cancelled %}
-                            <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
-                        {% endif %}
-                        <span class="text-wrap" >
-                            {{ tender.title }}
-                        </span>
-                    </div>
-                </div>
-
-                <div id="t{{ tender.chrono }}d" class="mt-2 d-none">
-                    <div class="row gx-4 gy-0">
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_deadline }}"></i></div>
-                                <div class="">
-                                    <span class="text-wrap border-0 border-bottom">
-                                        {{ tender.deadline }}
-                                    </span>
-                                    <span class="text-wrap fw-bold badge bg-primary ms-1">
-                                        {{ tender.days_to_go }} {% trans 'days' %}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_reference }}"></i></div>
-                                <div class="text-wrap border-0 border-bottom">
-                                    {{ tender.reference }}
-                                    <span class="me-1">
-                                        — {{ tender.published }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_location }}"></i></div>
-                                <div class="text-wrap border-0 border-bottom">
-                                    {{ tender.location }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_client }}"></i></div>
-                                <div class="text-wrap border-0 border-bottom">
-                                    {{ tender.client.name }}
-                                </div>
+                        <div class="d-flex align-items-center">
+                            <div class="oneline" id="t{{ tender.chrono }}h">
+                                <span class="fs-5" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{% trans 'Main Category' %}: {{ tender.category.label }}">
+                                    <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
+                                </span>
+                                <span class="fw-bold fs-6 me-1 border-0 border-end" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{% trans 'Total Estimate' %}: {{ tender.estimate }}">
+                                    {{ tender.estimate|metrify }}
+                                </span>
+                                <span class="fw-light small text-muted me-1" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{% trans 'Total Guaranty' %}: {{ tender.bond }}">
+                                    {{ tender.bond|metrify:1 }}
+                                </span>
+                                <span class="fw-light small text-muted mx-1" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{% trans 'Execution Location' %}: {{ tender.location }}">
+                                    <span><i class="bi bi-{{ icon_location }}"></i></span>
+                                    <span>{{ tender.location }}</span>
+                                </span>
+                                <span class="fw-light small text-muted mx-1" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{% trans 'Public Client' %}: {{ tender.client.name }}">
+                                    <span><i class="bi bi-{{ icon_client }}"></i></span>
+                                    <span>{{ tender.client }}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="t{{ tender.chrono }}a" class="d-none mt-2">
-                    <a class="btn btn-sm btn-outline-primary my-1 ms-0 me-1" 
-                            href="{% url 'portal_tender_detail' tender.id %}">
-                        <i class="bi bi-text-left"></i>
-                        <span class="d-none d-md-inline ms-1">{% trans "Details" %}</span>
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary my-1 ms-0 me-1" 
-                            href="javascript:">
-                        <i class="bi bi-{{ icon_downloads }}"></i>
-                        <span class="">
-                            {{ tender.size_bytes|metrify:2 }}B
-                        </span>
-                        <span class="d-none d-md-inline ms-1">{% trans "Download" %}</span>
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary my-1 ms-0 me-1" 
-                            href="javascript:">
-                        <i class="bi bi-{{ icon_favorites }}"></i>
-                        <span class="d-none d-md-inline ms-1">{% trans "Bookmark" %}</span>
-                    </a>
-                    <a class="btn btn-sm btn-outline-primary my-1 ms-0 me-1" 
-                            href="javascript:">
-                        <i class="bi bi-share"></i>
-                        <span class="d-none d-md-inline ms-1">{% trans "Share" %}</span>
-                    </a>
-                </div>
+                <div class="card-body px-3 py-2 {% if tender.cancelled %}text-danger{% endif %}">
 
-            </div>
+                    <div id="t{{ tender.chrono }}t" class="twolines">
+                        <div data-bs-toggle="tooltip"
+                            title="{% trans 'Tender object' %}: {{ tender.title }}">
+                            {% if tender.cancelled %}
+                                <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
+                            {% endif %}
+                            <span class="text-wrap" >
+                                {{ tender.title }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div id="t{{ tender.chrono }}d" class="mt-2 d-none">
+                        <div class="row gx-4 gy-0">
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                    <div class="me-2"><i class="bi bi-{{ icon_deadline }}"></i></div>
+                                    <div class="">
+                                        <span class="text-wrap border-0 border-bottom">
+                                            {{ tender.deadline }}
+                                        </span>
+                                        <span class="text-wrap fw-bold badge bg-primary ms-1">
+                                            {{ tender.days_to_go }} {% trans 'days' %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                    <div class="me-2"><i class="bi bi-{{ icon_reference }}"></i></div>
+                                    <div class="text-wrap border-0 border-bottom">
+                                        {{ tender.reference }}
+                                        <span class="me-1">
+                                            — {{ tender.published }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                    <div class="me-2"><i class="bi bi-{{ icon_location }}"></i></div>
+                                    <div class="text-wrap border-0 border-bottom">
+                                        {{ tender.location }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex fw-light small text-muted mb-1 mt-2">
+                                    <div class="me-2"><i class="bi bi-{{ icon_client }}"></i></div>
+                                    <div class="text-wrap border-0 border-bottom">
+                                        {{ tender.client.name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </a>
 
             <div class="card-footer py-1">
                 <div class="d-flex justify-content-between">
@@ -284,45 +256,21 @@
                 </div>
             </div>
             
-            <div class="progress bg-danger p-0 m-0" style="height: 0.25rem;">
+            <div class="progress bg-danger p-0 m-0" 
+                 style="height: 0.25rem;"
+                 data-bs-toggle="tooltip"
+                 title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
                 <div class="progress-bar bg-success" 
                         role="progressbar" style="width: {{ tender.progress_percent }}%;" 
                         aria-valuenow="{{ tender.progress_percent }}" aria-valuemin="0" 
                         aria-valuemax="100">
                 </div>
             </div>
+<<<<<<< HEAD
+        </div>
 
-        </div>        
-    </div>
+=======
+        </div> 
     
+>>>>>>> e03ddc0 (Updates)
 </div>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const tenderActions = document.querySelector('#t{{ tender.chrono }}a');
-        const tenderHeader = document.querySelector('#t{{ tender.chrono }}h');
-        const tenderDetails = document.querySelector('#t{{ tender.chrono }}d');
-        const tenderTitle = document.querySelector('#t{{ tender.chrono }}t');
-
-        toggleLayout(tenderTitle);
-        toggleLayout(tenderHeader);
-
-        function toggleLayout(element){
-            if (element) {
-                element.addEventListener('click', function() {
-                    if (tenderTitle) {
-                        tenderTitle.classList.toggle('twolines');
-                    }
-                    if (tenderActions) {
-                        tenderActions.classList.toggle('d-none');
-                    }
-                    if (tenderDetails) {
-                        tenderDetails.classList.toggle('d-none');
-                    }
-                });
-            }
-        }
-
-    });
-</script>

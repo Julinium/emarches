@@ -1,31 +1,16 @@
 {% load i18n %}
 
 
-<div class="row gx-4 gy-0">
+<div class="row gx-4 gy-0 small">
 
+<<<<<<< HEAD
+=======
 
-    <div class="col-12 col-md-6">
+>>>>>>> e03ddc0 (Updates)
+    <div class="col-12">
         <div class="d-flex-inline my-1">
             <span class="badge bg-secondary">
-                {% trans "Lot" %} {{ lot.number }}
-            </span>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Category' %}:
-            </span>
-            <span class="ms-1">
-                {{ lot.category.name|default:'?' }}
-            </span>
-        </div>
-    </div>
-
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Title' %}:
+                {{ lot.number }}
             </span>
             <span class="ms-1">
                 {{ lot.title|default:'--' }}
@@ -33,32 +18,21 @@
         </div>
     </div>
 
-
-
-    <!-- <div class="col-12">
-        <div class="d-flex-inline my-1">
-            <span class="">
-                <span class="badge bg-secondary">
-                    {% trans "Lot" %} {{ lot.number }}
-                </span>
-            </span>
-            <span class="ms-1">
-                {{ lot.title }}
-            </span>
-        </div>
-    </div> -->
     {% if lot.description %}
-        <div class="col-12">
-            <div class="d-flex-inline my-1">
-                <span class="text-muted small fw-light">
-                    {% trans 'Description' %}:
-                </span>
-                <span class="ms-1">
-                    {{ lot.description }}
-                </span>
+        {% if lot.description != lot.title %}
+            <div class="col-12">
+                <div class="d-flex-inline my-1">
+                    <span class="text-muted small fw-light">
+                        {% trans 'Description' %}:
+                    </span>
+                    <span class="ms-1">
+                        {{ lot.description }}
+                    </span>
+                </div>
             </div>
-        </div>
+        {% endif %}
     {% endif %}
+
     <div class="col-12 col-md-6">
         <div class="d-flex-inline my-1">
             <span class="text-muted small fw-light">
@@ -79,6 +53,21 @@
             </span>
         </div>
     </div>
+    
+    <div class="col-12 col-md-6">
+        <div class="d-flex-inline my-1">
+            <span class="text-muted small fw-light">
+                {% trans 'Category' %}:
+            </span>
+            <span class="ms-1">
+<<<<<<< HEAD
+                {{ lot.category.label|default:'?' }}
+=======
+                {{ lot.category.name|default:'?' }}
+>>>>>>> e03ddc0 (Updates)
+            </span>
+        </div>
+    </div>
     <div class="col-12 col-md-6">
         <div class="d-flex-inline my-1">
             <span class="text-muted small fw-light">
@@ -92,7 +81,7 @@
     <div class="col-12 col-md-6">
         <div class="d-flex-inline my-1">
             <span class="text-muted small fw-light">
-                {% trans 'Variants accepted' %}:
+                {% trans 'Variant' %}:
             </span>
             <span class="ms-1">
                 {% if lot.variant %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
@@ -108,6 +97,21 @@
     {% if lot.qualifs.all %}
         {% trans 'Required Qualifications' as qualifs_caption %}
         {% include 'portal/snippets/lots/qu-ag.html' with caption=qualifs_caption objects=lot.qualifs.all %}
+    {% endif %}
+
+    {% if tender.has_samples %}
+        {% trans 'Required Samples' as samples_caption %}
+        {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=samples_caption objects=lot.samples.all %}
+    {% endif %}
+
+    {% if tender.has_meetings %}
+        {% trans 'Scheduled Meetings' as meetings_caption %}
+        {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=meetings_caption objects=lot.meetings.all %}
+    {% endif %}
+
+    {% if tender.has_visits %}
+        {% trans 'Scheduled Visits' as visits_caption %}
+        {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=lot.visits.all %}
     {% endif %}
 </div>
 

@@ -111,7 +111,7 @@ def getJson(link_item, skipExisting=False):
         category = None
         categ_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_categoriePrincipale')
         cons_categ = categ_span.get_text().strip() if categ_span else NA_PLH
-        if cons_categ != "":
+        if cons_categ != NA_PLH:
             category = {"label": cons_categ}
 
         refce_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_reference')
@@ -135,7 +135,7 @@ def getJson(link_item, skipExisting=False):
         if cons_kind and len(cons_kind) > 3:
             if cons_kind != NA_PLH:
                 kind = {"name": cons_kind}
-        
+
         procedure = None
         proce_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_typeProcedure')
         cons_proce = proce_span.get_text().strip() if proce_span else NA_PLH
