@@ -2,7 +2,7 @@
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404, redirect
-# from django.urls import reverse
+
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.http import HttpResponse
@@ -213,15 +213,6 @@ class CompanyDetailView(DetailView):
             ).prefetch_related(
                 'agrements', 'qualifs'
             ).filter(user=self.request.user, active=True)
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    
-    #     iced_company = get_company(self.ice)
-    #     if len(iced_company) > 0:
-    #         context['iced_company'] = iced_company
-
-    #     return context
 
 
 @method_decorator(login_required, name='dispatch')
