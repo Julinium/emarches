@@ -338,7 +338,7 @@ class Tender(models.Model):
         try: 
             today_now = timezone.now()
             delta_to_go = self.deadline - today_now
-            return delta_to_go.days
+            return 1 + delta_to_go.days
         except: return 0
     
     @property

@@ -16,7 +16,7 @@ from base.models import Tender, Category, Crawler
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
-TENDERS_ORDERING_FIELD = 'published'
+TENDERS_ORDERING_FIELD = 'deadline'
 
 
 @method_decorator(login_required, name='dispatch')
@@ -27,13 +27,28 @@ class TenderListView(ListView):
     context_object_name = 'tenders'
     paginate_by = TENDERS_ITEMS_PER_PAGE
 
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+
+        self.query_params = request.GET.copy()
+        self.query_params.pop('page', None)
+        self.query_string = self.query_params.urlencode()
+        self.sorter = self.request.GET.get('sort', TENDERS_ORDERING_FIELD)
+        self.query_params.pop('sort', None)
+        self.query_unsorted = self.query_params.urlencode()
+
     def get_queryset(self):
         today_now = timezone.now()
+        sorter = self.sorter
+        
+        if sorter and sorter != '': ordering = [sorter]
+        else: ordering = []
+        ordering.append('id')
+
         tenders = Tender.objects.filter(
                 deadline__gte=today_now,
-                # lots_count__gt=1
             ).order_by(
-                TENDERS_ORDERING_FIELD, 'id'
+                *ordering
             ).select_related(
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
@@ -53,10 +68,17 @@ class TenderListView(ListView):
             ).order_by('finished').last()
         last_updated = last_crawler.finished if last_crawler else None
 
+        context['query_string']       = self.query_string
+        context['query_unsorted']     = self.query_unsorted
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
 
+        context['sorter']             = self.sorter #request.GET.get('sort', TENDERS_ORDERING_FIELD)
+
+        context['icon_estimate']      = 'cash-coin'
+        context['icon_bond']          = 'bookmark-check'
+        context['icon_published']     = 'clock'
         context['icon_multi_lots']    = 'ui-radios-grid'        # 'grid' # 'ui-checks-grid'
         context['icon_location']      = 'pin-map'               # 'geo'
         context['icon_client']        = 'briefcase'             # 'house-door' # 'bank'

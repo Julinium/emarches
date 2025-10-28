@@ -1,0 +1,27 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-outline-secondary py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-arrow-down-up"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <li>
+                {% trans 'Deadline' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='deadline' icon=icon_deadline %}
+            </li>
+            <li>
+                {% trans 'Estimate' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='estimate' icon=icon_estimate %}
+            </li>
+            <li>
+                {% trans 'Guarantee' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='bond' icon=icon_bond %}
+            </li>
+            <li>
+                {% trans 'Published' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='published' icon=icon_published %}
+            </li>
+        </ul>
+    </div>
+</div>

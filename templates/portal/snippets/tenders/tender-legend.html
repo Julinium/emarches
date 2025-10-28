@@ -1,11 +1,13 @@
-{% load i18n static %}
+{% load i18n static tz %}
 
 <div class="my-3">
     {% if last_updated %}
         <div class="my-4">
-            <span class="small fw-light"><i class="bi bi-clock"></i></span>
-            <span class="small fw-light">{% trans 'Updated' %}</span>
-            <span class="small text-muted">{{ last_updated|default:'?' }}:</span>
+            <span class="small fw-light"><i class="bi bi-arrow-repeat"></i></span>
+            <span class="small fw-light">{% trans 'Updated since' %}</span>
+            {% timezone "UTC" %}
+                <span class="small text-muted">{{ last_updated }} ({% trans 'UTC' %}):</span>
+            {% endtimezone %}
             <span class="small fw-bold">
                 {{ last_updated|timesince }}
             </span>

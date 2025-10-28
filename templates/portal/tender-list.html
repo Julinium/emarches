@@ -9,14 +9,26 @@
     <div class="d-flex align-items-center justify-content-between px-2">
         <div class="">
             <span class="h3 me-1">{% trans "Tenders list" %}</span>
-            <span class="fw-light border-0 border-start ps-1">
-                {{ page_obj.paginator.count }} {% trans "items" %}
+        </div>
+        <div class="my-3 text-danger">
+            Login and Register not working in Private mode
+        </div>
+        <div class="d-flex align-items-top">            
+            {% include 'portal/snippets/tenders/search-form.html' %}
+            {% include 'portal/snippets/tenders/menu-sort.html' %}
+        </div>
+    </div>
+    <div class="fw-light mx-2">
+        <span class="fw-bold">
+            {{ page_obj.paginator.count }} 
+        </span>
+        <span class="small text-muted">{% trans "Items found" %}.</span>
+        {% if is_paginated %}
+            <span class="small text-muted">{% trans "Showing" %}:</span>
+            <span class="small">
+                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
             </span>
-        </div>
-        <div class="small">
-            <!-- <span><i class="bi bi-hash me-0"></i></span> -->
-            <span class="ms-0">WIP</span>
-        </div>
+        {% endif %}
     </div>
 
     <div class="mt-4">

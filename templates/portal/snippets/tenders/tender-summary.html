@@ -20,12 +20,19 @@
                                 title="{% trans 'Main Category' %}: {{ tender.category.label }}">
                                 <i class="bi bi-{{ tender.category.icon_bs_class}} me-1"></i>
                             </span>
-                            <span class="fw-bold fs-6 me-1 border-0 border-end" 
+                            <span class="fw-bold fs-6 pe-1 border-0 border-end" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Total Estimate' %}: {{ tender.estimate }}">
                                 {{ tender.estimate|metrify }}
+                                {% if tender.lots_count > 1 %}
+                                    <span class="small"
+                                        data-bs-toggle="tooltip"
+                                        title="{{ tender.lots_count }} {% trans 'Lots' %}">
+                                        <i class="bi bi-{{ icon_multi_lots }}"></i>
+                                    </span>
+                                {% endif %}
                             </span>
-                            <span class="fw-light small text-muted me-1" 
+                            <span class="fw-light small text-muted mx-1" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Total Guaranty' %}: {{ tender.bond }}">
                                 {{ tender.bond|metrify:1 }}
@@ -112,15 +119,6 @@
         <div class="card-footer py-1">
             <div class="d-flex justify-content-between">
                 <div class="me-2 small fw-light">
-
-                    {% if tender.lots_count > 1 %}
-                        <span class="small me-2"
-                            data-bs-toggle="tooltip"
-                            title="{% trans 'Tender is allotted' %}">
-                            <span>{{ tender.lots_count }}</span>
-                            <i class="bi bi-{{ icon_multi_lots }}"></i>
-                        </span>
-                    {% endif %}
 
                     {% if tender.procedure.restricted %}
                         <span class="small me-2 text-danger"

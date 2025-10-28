@@ -1,4 +1,4 @@
-import json
+import json, ast
 from django import template
 from django.utils.translation import gettext as _
 
@@ -37,13 +37,22 @@ CHANGES_FIELDS = {
     'mode': _('Mode'),
     'procedure': _('Procedure'),
     'client': _('Public client'),
+
+    'qualif': _('Qualifications'),
+    'agrement': _('Licenses'),
+    'meeting': _('Meetings'),
+    'sample': _('Samples'),
+    'visit': _('Visits'),
 }
 
 
 @register.filter
 def dictify(value):
     try:
-        data = json.loads(value.replace("'", "\""))
+        evaled = ast.literal_eval(value)
+        json_str = json.dumps(evaled)
+        data = json.loads(json_str)
+
         for item in data:
             item['field'] = str(CHANGES_FIELDS.get(item['field'], item['field']))
         return data
