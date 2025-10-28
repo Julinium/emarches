@@ -10,15 +10,12 @@
         <div class="">
             <span class="h3 me-1">{% trans "Tenders list" %}</span>
         </div>
-        <div class="my-3 text-danger">
-            Login and Register not working in Private mode
-        </div>
         <div class="d-flex align-items-top">            
             {% include 'portal/snippets/tenders/search-form.html' %}
             {% include 'portal/snippets/tenders/menu-sort.html' %}
         </div>
     </div>
-    <div class="fw-light mx-2">
+    <div class="fw-light mx-2 mt-1">
         <span class="fw-bold">
             {{ page_obj.paginator.count }} 
         </span>

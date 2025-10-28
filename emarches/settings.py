@@ -1,9 +1,5 @@
-# import os
-# from pathlib import Path
-# from dotenv import load_dotenv
 import os, django.conf.locale
 from pathlib import Path
-# from django.conf import global_settings
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
@@ -17,10 +13,22 @@ load_dotenv(dotenv_path=env_path)
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-# DEBUG = os.getenv("DEBUG") == "True"
 DEBUG = ENVIRONMENT != 'production'
 
-ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', os.getenv("IP_ADDRESS")]
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     # f"http://{ os.getenv("IP_ADDRESS") }",
+#     'http://94.72.98.224',
+
+#     "http://emarches.com",
+#     "http://localhost:8000",  # for dev
+#     "http://127.0.0.1:8000",
+# ]
+
+# SESSION_COOKIE_SECURE = False
+# CSRF_COOKIE_SECURE = False
+
 
 SITE_ID = 1
 

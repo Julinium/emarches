@@ -1,14 +1,47 @@
+<!DOCTYPE html>
+{% load static %}
 {% load i18n %}
+{% get_current_language_bidi as LB %}
 
-    <div class="text-center">
-        <div class="card" style="min-width: 32rem;">
-            <div class="card-body">
-                <h5 class="card-title"><i class="bi bi-sign-do-not-enter-fill text-danger"></i>
-                    {% trans 'Forbidden' %}
-                </h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">{% trans 'aka ERROR 403' %}</h6>
-                <p class="card-text">{% trans 'This happens generally when using Private/Incognito mode.' %}</p>
-                <p class="card-text">{% trans 'Please make sure your browser is not in Private/Incognito mode.' %}</p>
-            </div>
-        </div>
-    </div>
+
+<html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
+	<head>
+		<title>eMarches</title>
+		{% include 'base/includes/head.html' %}
+	</head>
+
+	<body>
+		{% include 'base/includes/navbar.html' %}
+		
+		<div id="main-content">
+			<div class="container mt-4">
+				<div class="row justify-content-center">
+					<div class="col-12 col-md-11 col-lg-10 col-xl-8">
+						{% if messages %}{% include 'base/snippets/messages.html' %}{% endif %}						
+                        <div class="text-center">
+                            <div class="card shadow w-100">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <i class="bi bi-dash-circle-fill text-danger display-1"></i>
+                                        <h3 class="text-danger">{% trans 'Forbidden' %}</h3>
+                                    </div>
+                                    <h6 class="card-subtitle mb-2 text-body-secondary">
+										{% trans 'aka error 403' %}
+									</h6>
+                                    <p class="card-text">
+										{% trans 'Are you using Private/Incognito mode?' %}
+									</p>
+                                    <p class="card-text text-muted small fw-light mb-4">
+										{% trans 'Please make sure your browser is not in Private/Incognito mode.' %}
+									</p>
+                                </div>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		{% include 'base/includes/knee.html' %}
+	</body>
+</html>

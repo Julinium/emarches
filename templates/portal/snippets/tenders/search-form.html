@@ -1,27 +1,41 @@
 {% load i18n %}
 
-<button class="btn btn-outline-secondary py-1 mx-1" type="button" 
+<button class="btn btn-light py-1 mx-1" type="button" 
         data-bs-toggle="modal" data-bs-target="#searchModal">
     <i class="bi bi-search"></i>
 </button>
 
 
 <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Search and filters' %}</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        {% trans 'Coming soon' %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
-        <button type="button" class="btn btn-secondary">{% trans 'Reset' %}</button>
-        <button type="button" class="btn btn-secondary">{% trans 'Advanced' %}</button>
-        <button type="button" class="btn btn-primary">{% trans 'Submit' %}</button>
-      </div>
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Search and filters' %}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'portal_tender_list' %}?&sort={{ request.GET.sort }}">
+                    <div class="input-group mb-3">
+                        {% if request.GET.sort %}
+                            <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+                        {% endif %}
+                        <input type="text" class="form-control" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search' %}" aria-label="q">
+                        <span class="input-group-text">{% trans 'in' %}</span>
+                        <select class="form-select" name="f" aria-label="f">
+                            <option {% if request.GET.f == 'any' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                            <option {% if request.GET.f == 'title' %} selected {% endif %} value="title">{% trans 'Object' %}</option>
+                            <option {% if request.GET.f == 'client' %} selected {% endif %} value="client">{% trans 'Client' %}</option>
+                            <option {% if request.GET.f == 'location' %} selected {% endif %} value="location">{% trans 'Location' %}</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+                        <button type="button" class="btn btn-secondary">{% trans 'Reset' %}</button>
+                        <!-- <button type="button" class="btn btn-secondary">{% trans 'Advanced' %}</button> -->
+                        <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
