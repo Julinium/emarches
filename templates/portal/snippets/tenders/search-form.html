@@ -14,11 +14,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'portal_tender_list' %}?&sort={{ request.GET.sort }}">
+                <form action="{% url 'portal_tender_list' %}">
                     <div class="input-group mb-3">
-                        {% if request.GET.sort %}
-                            <input type="hidden" name="sort" value="{{ request.GET.sort }}">
-                        {% endif %}
                         <input type="text" class="form-control" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search' %}" aria-label="q">
                         <span class="input-group-text">{% trans 'in' %}</span>
                         <select class="form-select" name="f" aria-label="f">
@@ -27,6 +24,9 @@
                             <option {% if request.GET.f == 'client' %} selected {% endif %} value="client">{% trans 'Client' %}</option>
                             <option {% if request.GET.f == 'location' %} selected {% endif %} value="location">{% trans 'Location' %}</option>
                         </select>
+                        {% if request.GET.sort %}
+                            <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+                        {% endif %}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
