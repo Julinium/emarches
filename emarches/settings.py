@@ -288,7 +288,7 @@ load_dotenv(dotenv_path=env_scraper_path)
 DCE_MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 
 
-TENDER_FULL_PROGRESS_DAYS = 45
+TENDER_FULL_PROGRESS_DAYS = 30
 TENDERS_ITEMS_PER_PAGE = 10
 
 

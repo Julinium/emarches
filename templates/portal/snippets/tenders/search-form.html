@@ -1,7 +1,9 @@
 {% load i18n %}
 
 <button class="btn btn-light py-1 mx-1" type="button" 
-        data-bs-toggle="modal" data-bs-target="#searchModal">
+        data-bs-toggle="modal" data-bs-target="#searchModal"
+        data-bs-toggle="tooltip"
+        title="{% trans 'Serach Tenders' %}">
     <i class="bi bi-search"></i>
 </button>
 
@@ -11,7 +13,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Tenders Search' %}</h1>
+                <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Tenders Search' %} - {{ query_dict.procedure }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -24,6 +26,7 @@
                         <select class="form-select py-1" name="f" aria-label="f">
                             <option {% if query_dict.f == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
                             <option {% if query_dict.f == 'title' %} selected {% endif %} value="title">{% trans 'Object' %}</option>
+                            <option {% if query_dict.f == 'reference' %} selected {% endif %} value="reference">{% trans 'Reference' %}</option>
                             <option {% if query_dict.f == 'client' %} selected {% endif %} value="client">{% trans 'Client' %}</option>
                             <option {% if query_dict.f == 'location' %} selected {% endif %} value="location">{% trans 'Location' %}</option>
                         </select>
@@ -59,6 +62,29 @@
                         </div>
 
                         <div class="row gx-3 mb-2">
+                            <div class="col-12 col-md-6">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text px-2 py-1 small">{% trans "Category" %}</span>
+                                    <select class="form-select py-1" name="category" aria-label="category">
+                                        <option {% if query_dict.category == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                        {% for c in categories %}
+                                            <option {% if query_dict.category == c.id %} selected {% endif %} value="{{ c.id }}">{{ c.label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text px-2 py-1 small">{% trans "Procedure" %}</span>
+                                    <select class="form-select py-1" name="procedure" aria-label="procedure">
+                                        <option {% if query_dict.procedure == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                        {% for p in procedures %}
+                                            <option {% if query_dict.procedure == p.id %} selected {% endif %} value="{{ p.id }}">{{ p.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-2">
                                     <span class="input-group-text px-2 py-1 small">{% trans "Lots" %}</span>

@@ -14,7 +14,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.models import User
 
 from nas.models import Favorite
-from base.models import Tender, Category, Crawler
+from base.models import Tender, Category, Procedure, Crawler
 
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -53,6 +53,7 @@ class TenderListView(ListView):
 
         tenders, filters = self.filter_tenders(Tender.objects.all(), self.query_params)
         self.query_dict['filters'] = filters
+        # self.query_dict['filted_items'] = filted_items
 
         tenders = tenders.order_by(
                 *ordering
@@ -67,6 +68,7 @@ class TenderListView(ListView):
         context = super().get_context_data(**kwargs)
 
         all_categories = Category.objects.all()
+        all_procedures = Procedure.objects.all()
 
         last_crawler = Crawler.objects.filter(
             saving_errors=False,
@@ -79,6 +81,7 @@ class TenderListView(ListView):
         context['query_dict']         = self.query_dict
 
         context['categories']         = all_categories
+        context['procedures']         = all_procedures
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
 
@@ -116,10 +119,16 @@ class TenderListView(ListView):
 
     def get_requete_params(self, requete):
         all_params = requete.GET.dict()
-        # print('========================\n', str(all_params), '\n========================\n')
         all_params = {k: v for k, v in all_params.items() if v not in ('', None)}
-        if not 'ddlnn' in all_params: all_params['ddlnn'] = timezone.now().date()
+        if not 'ddlnn' in all_params: all_params['ddlnn'] = timezone.now().date().strftime("%Y-%m-%d")
         if not 'sort' in all_params: all_params['sort'] = TENDERS_ORDERING_FIELD
+
+        if 'category' in all_params:
+            c = all_params['category']
+            all_params['category'] = str(c)
+        if 'procedure' in all_params:
+            p = all_params['procedure']
+            all_params['procedure'] = str(p)
 
         return all_params
 
@@ -135,11 +144,14 @@ class TenderListView(ListView):
                         tenders = tenders.filter(Q(client__name__icontains=q))
                     case 'location':
                         tenders = tenders.filter(Q(location__icontains=q))
+                    case 'reference':
+                        tenders = tenders.filter(Q(reference__icontains=q))
                     case _:
                         tenders = tenders.filter(Q(title__icontains=q))
             else:
                 tenders = tenders.filter(
                     Q(title__icontains=q) | 
+                    Q(reference__icontains=q) | 
                     Q(location__icontains=q) | 
                     Q(client__name__icontains=q)
                 )
@@ -162,9 +174,10 @@ class TenderListView(ListView):
             bondx = params['bondx']
             tenders = tenders.filter(bond__lte=bondx)
 
-        if 'ddlnn' in params:
-            ff += 1
+        if 'ddlnn' in params:            
             ddlnn = params['ddlnn']
+            if ddlnn != timezone.now().date().strftime("%Y-%m-%d"): 
+                ff += 1
             tenders = tenders.filter(deadline__date__gte=ddlnn)
         if 'ddlnx' in params:
             ff += 1
@@ -196,6 +209,16 @@ class TenderListView(ListView):
             if pme == 'open': 
                 tenders = tenders.filter(reserved=False)
         
+        if 'category' in params:
+            ff += 1
+            category = params['category']
+            tenders = tenders.filter(category__id=category)
+
+        if 'procedure' in params:
+            ff += 1
+            procedure = params['procedure']
+            tenders = tenders.filter(procedure__id=procedure)
+
         if 'variant' in params:
             ff += 1
             variant = params['variant']
