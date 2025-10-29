@@ -2,9 +2,10 @@
 {% load static %}
 {% load i18n %}
 {% get_current_language_bidi as LB %}
+{% get_current_language as LANGUAGE_CODE %}
 
 
-<html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
+<html dir="{% if LB %}rtl{% else %}ltr{% endif %}" lang="{{ LANGUAGE_CODE }}">
 	<head>
 		<title>eMarches | {% block title %}{% endblock title %}</title>
 		{% include 'base/includes/head.html' %}

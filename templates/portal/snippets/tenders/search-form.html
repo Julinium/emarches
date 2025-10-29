@@ -7,28 +7,121 @@
 
 
 <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Search and filters' %}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'portal_tender_list' %}">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search' %}" aria-label="q">
-                        <span class="input-group-text">{% trans 'in' %}</span>
-                        <select class="form-select" name="f" aria-label="f">
-                            <option {% if request.GET.f == 'any' %} selected {% endif %} value="">{% trans 'Any' %}</option>
-                            <option {% if request.GET.f == 'title' %} selected {% endif %} value="title">{% trans 'Object' %}</option>
-                            <option {% if request.GET.f == 'client' %} selected {% endif %} value="client">{% trans 'Client' %}</option>
-                            <option {% if request.GET.f == 'location' %} selected {% endif %} value="location">{% trans 'Location' %}</option>
+
+                <form action="{% url 'portal_tender_list' %}?{{ query_string }}&sort={{ sorter }}">
+                    <div class="input-group mb-2">
+
+                        <input type="text" class="form-control p-1" name="q" value="{{ query_dict.q }}" placeholder="{% trans 'Search' %}" aria-label="search_query">
+                        <span class="input-group-text px-2 py-1 small">{% trans 'in' %}</span>
+                        <select class="form-select py-1" name="f" aria-label="f">
+                            <option {% if query_dict.f == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                            <option {% if query_dict.f == 'title' %} selected {% endif %} value="title">{% trans 'Object' %}</option>
+                            <option {% if query_dict.f == 'client' %} selected {% endif %} value="client">{% trans 'Client' %}</option>
+                            <option {% if query_dict.f == 'location' %} selected {% endif %} value="location">{% trans 'Location' %}</option>
                         </select>
-                        {% if request.GET.sort %}
-                            <input type="hidden" name="sort" value="{{ request.GET.sort }}">
-                        {% endif %}
                     </div>
-                    <div class="modal-footer">
+
+                    <div class="input-group mb-2">
+                        <span class="input-group-text px-2 py-1 small">{% trans "Deadline" %}</span>
+                        <input type="date" class="form-control p-1 text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" placeholder="{% trans 'Min' %}" aria-label="deadline_min">
+                        <span class="input-group-text px-2 py-1 small"><i class="bi bi-code"></i></span>
+                        <input type="date" class="form-control p-1 text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" placeholder="{% trans 'Max' %}" aria-label="deadline_max">
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <span class="input-group-text px-2 py-1 small">{% trans "Estimate" %}</span>
+                        <input type="number" step="any" class="form-control p-1 text-end" name="estin" value="{{ query_dict.estin }}" placeholder="{% trans 'Min' %}" aria-label="estimate_min">
+                        <span class="input-group-text px-2 py-1 small"><i class="bi bi-code"></i></span>
+                        <input type="number" step="any" class="form-control p-1 text-end" name="estix" value="{{ query_dict.estix }}" placeholder="{% trans 'Max' %}" aria-label="estimate_max">
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <span class="input-group-text px-2 py-1 small">{% trans "Guarantee" %}</span>
+                        <input type="number" step="any" class="form-control p-1 text-end" name="bondn" value="{{ query_dict.bondn }}" placeholder="{% trans 'Min' %}" aria-label="guarantee_min">
+                        <span class="input-group-text px-2 py-1 small"><i class="bi bi-code"></i></span>
+                        <input type="number" step="any" class="form-control p-1 text-end" name="bondx" value="{{ query_dict.bondx }}" placeholder="{% trans 'Max' %}" aria-label="guarantee_max">
+                    </div>
+
+                    <div class="input-group mb-2">
+                        <span class="input-group-text px-2 py-1 small">{% trans "Published" %}</span>
+                        <input type="date" class="form-control p-1 text-end" name="publn" value="{{ query_dict.publn }}" placeholder="{% trans 'Min' %}" aria-label="published_min">
+                        <span class="input-group-text px-2 py-1 small"><i class="bi bi-code"></i></span>
+                        <input type="date" class="form-control p-1 text-end" name="publx" value="{{ query_dict.publx }}" placeholder="{% trans 'Max' %}" aria-label="published_max">
+                    </div>
+
+                    <div class="row gx-3 mb-2">
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="allotted" aria-label="allotted">
+                                <option {% if query_dict.allotted == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.allotted == 'single' %} selected {% endif %} value="single">{% trans 'Single lots only' %}</option>
+                                <option {% if query_dict.allotted == 'multi' %} selected {% endif %} value="multi">{% trans 'Multiple lots only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="pme" aria-label="pme">
+                                <option {% if query_dict.pme == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.pme == 'reserved' %} selected {% endif %} value="reserved">{% trans 'Reserved only' %}</option>
+                                <option {% if query_dict.pme == 'open' %} selected {% endif %} value="open">{% trans 'Not reserved only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="variant" aria-label="variant">
+                                <option {% if query_dict.variant == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.variant == 'accepted' %} selected {% endif %} value="accepted">{% trans 'Variants only' %}</option>
+                                <option {% if query_dict.variant == 'rejected' %} selected {% endif %} value="rejected">{% trans 'Not variants only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="samples" aria-label="samples">
+                                <option {% if query_dict.samples == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.samples == 'required' %} selected {% endif %} value="required">{% trans 'Samples required only' %}</option>
+                                <option {% if query_dict.samples == 'na' %} selected {% endif %} value="na">{% trans 'Samples not required only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="meetings" aria-label="meetings">
+                                <option {% if query_dict.meetings == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.meetings == 'required' %} selected {% endif %} value="required">{% trans 'Meetings scheduled only' %}</option>
+                                <option {% if query_dict.meetings == 'na' %} selected {% endif %} value="na">{% trans 'No meetings only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="visits" aria-label="visits">
+                                <option {% if query_dict.visits == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.visits == 'required' %} selected {% endif %} value="required">{% trans 'Visits scheduled only' %}</option>
+                                <option {% if query_dict.visits == 'na' %} selected {% endif %} value="na">{% trans 'No visits only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="agrements" aria-label="agrements">
+                                <option {% if query_dict.agrements == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.agrements == 'required' %} selected {% endif %} value="required">{% trans 'Any licenses required only' %}</option>
+                                <option {% if query_dict.agrements == 'na' %} selected {% endif %} value="na">{% trans 'No licenses required only' %}</option>
+                                <option {% if query_dict.agrements == 'companies' %} selected {% endif %} value="companies">{% trans 'From my companies only' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6 my-1">
+                            <select class="form-select py-1" name="qualifs" aria-label="qualifs">
+                                <option {% if query_dict.qualifs == '' %} selected {% endif %} value="">{% trans 'Any' %}</option>
+                                <option {% if query_dict.qualifs == 'required' %} selected {% endif %} value="required">{% trans 'Any Qualifs required only' %}</option>
+                                <option {% if query_dict.qualifs == 'na' %} selected {% endif %} value="na">{% trans 'No Qualifs required only' %}</option>
+                                <option {% if query_dict.qualifs == 'companies' %} selected {% endif %} value="companies">{% trans 'From my companies only' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                        <input type="hidden" name="sort" value="{{ sorter }}">
+
+                    <!-- {% if query_dict.sort %}
+                    {% endif %} -->
+
+                    <div class="modal-footer pb-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
                         <button type="button" class="btn btn-secondary">{% trans 'Reset' %}</button>
                         <!-- <button type="button" class="btn btn-secondary">{% trans 'Advanced' %}</button> -->

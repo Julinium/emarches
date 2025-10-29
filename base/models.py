@@ -334,11 +334,19 @@ class Tender(models.Model):
         return f"{self.chrono} - {self.reference}: {self.title}"
     
     @property
+    def expired(self):
+        try:
+            today_now = timezone.now()
+            expired = self.deadline <= today_now
+            return expired
+        except: return None
+    
+    @property
     def days_to_go(self):
         try: 
             today_now = timezone.now()
             delta_to_go = self.deadline - today_now
-            return 1 + delta_to_go.days
+            return delta_to_go.days
         except: return 0
     
     @property

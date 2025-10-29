@@ -62,7 +62,7 @@
                         {% if tender.cancelled %}
                             <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
                         {% endif %}
-                        <span class="text-wrap" >
+                        <span class="text-wrap {% if tender.expired %}text-muted{% endif %}" >
                             {{ tender.title }}
                         </span>
                     </div>

@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.conf import settings
 
+from django.db.models import Q
+from urllib.parse import urlencode
+
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 # from django.db.models import Prefetch
@@ -29,32 +32,56 @@ class TenderListView(ListView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-
-        self.query_params = request.GET.copy()
-        self.query_params.pop('page', None)
-        self.query_string = self.query_params.urlencode()
         self.sorter = self.request.GET.get('sort', TENDERS_ORDERING_FIELD)
-        self.query_params.pop('sort', None)
-        self.query_unsorted = self.query_params.urlencode()
+
+        self.query_params = self.get_requete_params(self.request)
+        self.query_dict = self.query_params
+
+        self.query_params.pop('page', None)
+        self.query_string = self.query_params
+        self.query_params.pop('sort', '')
+        self.query_unsorted = self.query_params
 
     def get_queryset(self):
-        today_now = timezone.now()
+        # Query strings and possible values:
+        # q            = '' | string
+        # f            = '' | 'title' | 'client' | 'location'
+
+        # estin        = '' | number
+        # estix        = '' | number
+        # bondn        = '' | number
+        # bondx        = '' | number
+        # ddlnn        = '' | date
+        # ddlnx        = '' | date
+        # publn        = '' | date
+        # publx        = '' | date
+
+        # allotted     = '' | 'single' | 'multi'
+        # pme          = '' | 'reserved' | 'open'
+        # variant      = '' | 'accepted' | 'rejected'
+
+        # samples      = '' | 'required' | 'na'
+        # meetings     = '' | 'required' | 'na' 
+        # visits       = '' | 'required' | 'na' 
+
+        # agrements    = '' | 'required' | 'na' | 'companies'
+        # qualifs      = '' | 'required' | 'na' | 'companies'
+
         sorter = self.sorter
         
         if sorter and sorter != '': ordering = [sorter]
         else: ordering = []
         ordering.append('id')
 
-        tenders = Tender.objects.filter(
-                deadline__gte=today_now,
-            ).order_by(
+        tenders = self.filter_tenders(Tender.objects.all(), self.query_params)
+
+        tenders = tenders.order_by(
                 *ordering
             ).select_related(
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
                 'favorites', 'downloads', 'comments', 'changes',
                 )
-
         return tenders
     
     def get_context_data(self, **kwargs):
@@ -68,13 +95,15 @@ class TenderListView(ListView):
             ).order_by('finished').last()
         last_updated = last_crawler.finished if last_crawler else None
 
-        context['query_string']       = self.query_string
-        context['query_unsorted']     = self.query_unsorted
+        context['query_string']       = urlencode(self.query_string)
+        context['query_unsorted']     = urlencode(self.query_unsorted)
+        context['query_dict']         = self.query_dict
+
         context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
 
-        context['sorter']             = self.sorter #request.GET.get('sort', TENDERS_ORDERING_FIELD)
+        context['sorter']             = self.sorter
 
         context['icon_estimate']      = 'cash-coin'
         context['icon_bond']          = 'bookmark-check'
@@ -105,6 +134,102 @@ class TenderListView(ListView):
 
         return context
 
+    def get_requete_params(self, requete):
+        all_params = requete.GET.dict()
+        print('========================\n', str(all_params), '\n========================\n')
+        all_params = {k: v for k, v in all_params.items() if v not in ('', None)}
+        if not 'ddlnn' in all_params: all_params['ddlnn'] = timezone.now().date()
+        if not 'sort' in all_params: all_params['sort'] = TENDERS_ORDERING_FIELD
+        # all_params.setdefault('ddlnn', timezone.now().date())
+        # all_params.setdefault('sort', TENDERS_ORDERING_FIELD)
+        # 
+
+        return all_params
+
+    def filter_tenders(slef, tenders, params):
+
+        # today_now = timezone.now()
+        # sorter = self.sorter
+        
+        # if sorter and sorter != '': ordering = [sorter]
+        # else: ordering = []
+        # ordering.append('id')
+
+        if 'q' in params:
+            q = params['q']
+            if 'f' in params:
+                match params['f']:
+                    case 'client':
+                        tenders = tenders.filter(Q(client__name__icontains=q))
+                    case 'location':
+                        tenders = tenders.filter(Q(location__icontains=q))
+                    case _:
+                        tenders = tenders.filter(Q(title__icontains=q))
+            else:
+                tenders = tenders.filter(
+                    Q(title__icontains=q) | 
+                    Q(location__icontains=q) | 
+                    Q(client__name__icontains=q)
+                )
+
+        if 'estin' in params:
+            estin = params['estin']
+            tenders = tenders.filter(estimate__gte=estin)
+        if 'estix' in params:
+            estix = params['estix']
+            tenders = tenders.filter(estimate__lte=estix)
+
+        if 'bondn' in params:
+            bondn = params['bondn']
+            tenders = tenders.filter(bond__gte=bondn)
+        if 'bondx' in params:
+            bondx = params['bondx']
+            tenders = tenders.filter(bond__lte=bondx)
+
+        if 'ddlnn' in params:
+            ddlnn = params['ddlnn']
+            tenders = tenders.filter(deadline__date__gte=ddlnn)
+        if 'ddlnx' in params:
+            ddlnx = params['ddlnx']
+            tenders = tenders.filter(deadline__date__lte=ddlnx)
+
+        if 'publn' in params:
+            publn = params['publn']
+            tenders = tenders.filter(published__gte=publn)
+        if 'publx' in params:
+            publx = params['publx']
+            tenders = tenders.filter(published__lte=publx)
+        
+        if 'allotted' in params:
+            allotted = params['allotted']
+            if allotted == 'single': 
+                tenders = tenders.filter(lots_count=1)
+            if allotted == 'multi': 
+                tenders = tenders.filter(lots_count__gt=1)
+        
+        if 'pme' in params:
+            pme = params['pme']
+            if pme == 'reserved':
+                tenders = tenders.filter(reserved=True)
+            if pme == 'open': 
+                tenders = tenders.filter(reserved=False)
+        
+        if 'variant' in params:
+            variant = params['variant']
+            if variant == 'accepted':
+                tenders = tenders.filter(variant=True)
+            if variant == 'rejected':
+                tenders = tenders.filter(variant=False)
+
+
+        # samples      = '' | 'required' | 'na'
+        # meetings     = '' | 'required' | 'na' 
+        # visits       = '' | 'required' | 'na' 
+
+        # agrements    = '' | 'required' | 'na' | 'companies'
+        # qualifs      = '' | 'required' | 'na' | 'companies'
+
+        return tenders
 
 @method_decorator(login_required, name='dispatch')
 class TenderDetailView(DetailView):
