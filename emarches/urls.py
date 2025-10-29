@@ -27,7 +27,7 @@ urlpatterns += i18n_patterns(
     path('accounts/', include('authy.urls')),
     path('accounts/', include('allauth.urls')),
     path('user/', include('nas.urls')),
-    path('portal/', include('portal.urls')),
+    path('tenders/', include('portal.urls')),
 
     path('__debug__/', include('debug_toolbar.urls')),
 )

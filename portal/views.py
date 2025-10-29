@@ -136,24 +136,14 @@ class TenderListView(ListView):
 
     def get_requete_params(self, requete):
         all_params = requete.GET.dict()
-        print('========================\n', str(all_params), '\n========================\n')
+        # print('========================\n', str(all_params), '\n========================\n')
         all_params = {k: v for k, v in all_params.items() if v not in ('', None)}
         if not 'ddlnn' in all_params: all_params['ddlnn'] = timezone.now().date()
         if not 'sort' in all_params: all_params['sort'] = TENDERS_ORDERING_FIELD
-        # all_params.setdefault('ddlnn', timezone.now().date())
-        # all_params.setdefault('sort', TENDERS_ORDERING_FIELD)
-        # 
 
         return all_params
 
     def filter_tenders(slef, tenders, params):
-
-        # today_now = timezone.now()
-        # sorter = self.sorter
-        
-        # if sorter and sorter != '': ordering = [sorter]
-        # else: ordering = []
-        # ordering.append('id')
 
         if 'q' in params:
             q = params['q']
@@ -221,7 +211,10 @@ class TenderListView(ListView):
             if variant == 'rejected':
                 tenders = tenders.filter(variant=False)
 
-
+        # procedure
+        # category
+        # esign
+        # #### labels
         # samples      = '' | 'required' | 'na'
         # meetings     = '' | 'required' | 'na' 
         # visits       = '' | 'required' | 'na' 
