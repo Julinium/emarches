@@ -45,6 +45,19 @@
                 </div>
                 <div class="row gx-4 gy-0">
 
+                    {% if query_dict.filters > 0 %}
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 bi bi-{{ icon_filters }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Displayed list is filtered' %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+
                     {% for category in categories %}
                         <div class="col-12 col-md-6">
                             <div class="d-flex-inline my-1 border-0 border-bottom">

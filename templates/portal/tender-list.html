@@ -17,6 +17,11 @@
     </div>
 
     <div class="fw-light mx-2 mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="">
+                <i class="bi bi-{{ icon_filters }}"></i>
+            </span>
+        {% endif %}
         <span class="fw-bold">
             {{ page_obj.paginator.count }} 
         </span>

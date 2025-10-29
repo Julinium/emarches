@@ -32,6 +32,7 @@ class TenderListView(ListView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
+
         self.sorter = self.request.GET.get('sort', TENDERS_ORDERING_FIELD)
 
         self.query_params = self.get_requete_params(self.request)
@@ -43,29 +44,6 @@ class TenderListView(ListView):
         self.query_unsorted = self.query_params
 
     def get_queryset(self):
-        # Query strings and possible values:
-        # q            = '' | string
-        # f            = '' | 'title' | 'client' | 'location'
-
-        # estin        = '' | number
-        # estix        = '' | number
-        # bondn        = '' | number
-        # bondx        = '' | number
-        # ddlnn        = '' | date
-        # ddlnx        = '' | date
-        # publn        = '' | date
-        # publx        = '' | date
-
-        # allotted     = '' | 'single' | 'multi'
-        # pme          = '' | 'reserved' | 'open'
-        # variant      = '' | 'accepted' | 'rejected'
-
-        # samples      = '' | 'required' | 'na'
-        # meetings     = '' | 'required' | 'na' 
-        # visits       = '' | 'required' | 'na' 
-
-        # agrements    = '' | 'required' | 'na' | 'companies'
-        # qualifs      = '' | 'required' | 'na' | 'companies'
 
         sorter = self.sorter
         
@@ -73,7 +51,8 @@ class TenderListView(ListView):
         else: ordering = []
         ordering.append('id')
 
-        tenders = self.filter_tenders(Tender.objects.all(), self.query_params)
+        tenders, filters = self.filter_tenders(Tender.objects.all(), self.query_params)
+        self.query_dict['filters'] = filters
 
         tenders = tenders.order_by(
                 *ordering
@@ -105,6 +84,7 @@ class TenderListView(ListView):
 
         context['sorter']             = self.sorter
 
+        context['icon_filters']       = 'front text-warning'
         context['icon_estimate']      = 'cash-coin'
         context['icon_bond']          = 'bookmark-check'
         context['icon_published']     = 'clock'
@@ -145,7 +125,9 @@ class TenderListView(ListView):
 
     def filter_tenders(slef, tenders, params):
 
+        ff = 0
         if 'q' in params:
+            ff += 1
             q = params['q']
             if 'f' in params:
                 match params['f']:
@@ -163,34 +145,43 @@ class TenderListView(ListView):
                 )
 
         if 'estin' in params:
+            ff += 1
             estin = params['estin']
             tenders = tenders.filter(estimate__gte=estin)
         if 'estix' in params:
+            ff += 1
             estix = params['estix']
             tenders = tenders.filter(estimate__lte=estix)
 
         if 'bondn' in params:
+            ff += 1
             bondn = params['bondn']
             tenders = tenders.filter(bond__gte=bondn)
         if 'bondx' in params:
+            ff += 1
             bondx = params['bondx']
             tenders = tenders.filter(bond__lte=bondx)
 
         if 'ddlnn' in params:
+            ff += 1
             ddlnn = params['ddlnn']
             tenders = tenders.filter(deadline__date__gte=ddlnn)
         if 'ddlnx' in params:
+            ff += 1
             ddlnx = params['ddlnx']
             tenders = tenders.filter(deadline__date__lte=ddlnx)
 
         if 'publn' in params:
+            ff += 1
             publn = params['publn']
             tenders = tenders.filter(published__gte=publn)
         if 'publx' in params:
+            ff += 1
             publx = params['publx']
             tenders = tenders.filter(published__lte=publx)
         
         if 'allotted' in params:
+            ff += 1
             allotted = params['allotted']
             if allotted == 'single': 
                 tenders = tenders.filter(lots_count=1)
@@ -198,6 +189,7 @@ class TenderListView(ListView):
                 tenders = tenders.filter(lots_count__gt=1)
         
         if 'pme' in params:
+            ff += 1
             pme = params['pme']
             if pme == 'reserved':
                 tenders = tenders.filter(reserved=True)
@@ -205,11 +197,13 @@ class TenderListView(ListView):
                 tenders = tenders.filter(reserved=False)
         
         if 'variant' in params:
+            ff += 1
             variant = params['variant']
             if variant == 'accepted':
                 tenders = tenders.filter(variant=True)
             if variant == 'rejected':
                 tenders = tenders.filter(variant=False)
+
 
         # procedure
         # category
@@ -222,7 +216,8 @@ class TenderListView(ListView):
         # agrements    = '' | 'required' | 'na' | 'companies'
         # qualifs      = '' | 'required' | 'na' | 'companies'
 
-        return tenders
+        return tenders, ff
+
 
 @method_decorator(login_required, name='dispatch')
 class TenderDetailView(DetailView):
