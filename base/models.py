@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from .texter import normalize_text as nt
 
 class Agrement(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -76,6 +77,8 @@ class Client(models.Model):
     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
     ministery = models.CharField(max_length=16, blank=True, null=True, verbose_name=_("Sector"))
 
+    keywords = models.TextField(blank=True, null=True, editable=False)
+
     class Meta:
         db_table = 'base_client'
         ordering = ['ministery', 'name']
@@ -86,6 +89,7 @@ class Client(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
+        self.keywords = nt(self.name)
         try:
             if self.name.find("/") > -1:
                 self.ministery = self.name.split("/")[0].strip()
@@ -324,6 +328,10 @@ class Tender(models.Model):
     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
     domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name=_("Domains of activity"))
 
+    keywords = models.TextField(blank=True, null=True, editable=False)
+    refwords = models.TextField(blank=True, null=True, editable=False)
+    locwords = models.TextField(blank=True, null=True, editable=False)
+
 
     class Meta:
         db_table = 'base_tender'
@@ -365,7 +373,9 @@ class Tender(models.Model):
         except: return 0
 
     def save(self, *args, **kwargs):
-
+        self.keywords = nt(self.title)
+        self.refwords = nt(self.reference)
+        self.locwords = nt(self.location)
         if self.has_agrements == True:
             self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
 
@@ -404,25 +414,26 @@ class Lot(models.Model):
     agrements = models.ManyToManyField(Agrement, through='RelAgrementLot', related_name='lots')
     qualifs = models.ManyToManyField(Qualif, through='RelQualifLot', related_name='lots')
 
+    
     class Meta:
         db_table = 'base_lot'
         ordering = ['number']
-        # verbose_name = _("Lot")
     
     def __str__(self):
         return f"{ self.tender.chrono } - { self.number } - { self.title }"
 
     def save(self, *args, **kwargs):
         tender = self.tender
-        save = False
-        if self.agrements:
-            save = True
-            tender.has_agrements = True
-        if self.qualifs:
-            save = True
-            tender.has_qualifs = True
-
-        if save: tender.save()
+        if tender:
+            if self.title: 
+                if tender.keywords: tender.keywords = nt(self.title)
+                else: tender.keywords += ' ' + nt(self.title)
+            if self.description:
+                if tender.keywords: tender.keywords = nt(self.description)
+                else: tender.keywords += ' ' + nt(self.description)
+            tender.has_agrements = self.agrements != None
+            tender.has_qualifs = self.qualifs != None
+            tender.save()
 
         super().save(*args, **kwargs)
 

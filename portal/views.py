@@ -141,19 +141,19 @@ class TenderListView(ListView):
             if 'f' in params:
                 match params['f']:
                     case 'client':
-                        tenders = tenders.filter(Q(client__name__icontains=q))
+                        tenders = tenders.filter(Q(client__name__icontains=q) | Q(client__keywords__icontains=q))
                     case 'location':
-                        tenders = tenders.filter(Q(location__icontains=q))
+                        tenders = tenders.filter(Q(location__icontains=q) | Q(locwords__icontains=q))
                     case 'reference':
-                        tenders = tenders.filter(Q(reference__icontains=q))
+                        tenders = tenders.filter(Q(refwords__icontains=q) | Q(reference__icontains=q))
                     case _:
-                        tenders = tenders.filter(Q(title__icontains=q))
+                        tenders = tenders.filter(Q(keywords__icontains=q) | Q(title__icontains=q))
             else:
                 tenders = tenders.filter(
-                    Q(title__icontains=q) | 
-                    Q(reference__icontains=q) | 
-                    Q(location__icontains=q) | 
-                    Q(client__name__icontains=q)
+                    Q(client__name__icontains=q) | Q(client__keywords__icontains=q) | 
+                    Q(location__icontains=q) | Q(locwords__icontains=q) | 
+                    Q(refwords__icontains=q) | Q(reference__icontains=q) | 
+                    Q(keywords__icontains=q) | Q(title__icontains=q)
                 )
 
         if 'estin' in params:
@@ -196,18 +196,14 @@ class TenderListView(ListView):
         if 'allotted' in params:
             ff += 1
             allotted = params['allotted']
-            if allotted == 'single': 
-                tenders = tenders.filter(lots_count=1)
-            if allotted == 'multi': 
-                tenders = tenders.filter(lots_count__gt=1)
+            if allotted == 'single': tenders = tenders.filter(lots_count=1)
+            if allotted == 'multi': tenders = tenders.filter(lots_count__gt=1)
         
         if 'pme' in params:
             ff += 1
             pme = params['pme']
-            if pme == 'reserved':
-                tenders = tenders.filter(reserved=True)
-            if pme == 'open': 
-                tenders = tenders.filter(reserved=False)
+            if pme == 'reserved': tenders = tenders.filter(reserved=True)
+            if pme == 'open': tenders = tenders.filter(reserved=False)
         
         if 'category' in params:
             ff += 1
@@ -219,27 +215,49 @@ class TenderListView(ListView):
             procedure = params['procedure']
             tenders = tenders.filter(procedure__id=procedure)
 
+        if 'ebid' in params:
+            ff += 1
+            ebid = params['ebid']
+            if ebid == 'required': tenders = tenders.filter(ebid=1)
+            if ebid == 'optional': tenders = tenders.filter(ebid=0)
+            if ebid == 'na': tenders = tenders.exclude(ebid=0).exclude(ebid=1)
+
         if 'variant' in params:
             ff += 1
             variant = params['variant']
-            if variant == 'accepted':
-                tenders = tenders.filter(variant=True)
-            if variant == 'rejected':
-                tenders = tenders.filter(variant=False)
+            if variant == 'accepted': tenders = tenders.filter(variant=True)
+            if variant == 'rejected': tenders = tenders.filter(variant=False)
 
+        if 'samples' in params:
+            ff += 1
+            samples = params['samples']
+            if samples == 'required': tenders = tenders.filter(has_samples=True)
+            if samples == 'na': tenders = tenders.filter(has_samples=False)
 
-        # procedure
-        # category
-        # esign
-        # #### labels
-        # samples      = '' | 'required' | 'na'
-        # meetings     = '' | 'required' | 'na' 
-        # visits       = '' | 'required' | 'na' 
+        if 'meetings' in params:
+            ff += 1
+            meetings = params['meetings']
+            if meetings == 'required': tenders = tenders.filter(has_meetings=True)
+            if meetings == 'na': tenders = tenders.filter(has_meetings=False)
 
-        # agrements    = '' | 'required' | 'na' | 'companies'
-        # qualifs      = '' | 'required' | 'na' | 'companies'
+        if 'visits' in params:
+            ff += 1
+            visits = params['visits']
+            if visits == 'required': tenders = tenders.filter(has_visits=True)
+            if visits == 'na': tenders = tenders.filter(has_visits=False)
 
-        return tenders, ff
+        # has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
+        # has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
+        # has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
+
+        # #### icons
+
+        # has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Licenses required"))
+        # has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Qualifications required"))
+        # agrements    = '' | 'companies' | 'required' | 'na'
+        # qualifs      = '' | 'companies' | 'required' | 'na'
+
+        return tenders.distinct(), ff
 
 
 @method_decorator(login_required, name='dispatch')
@@ -251,6 +269,24 @@ class TenderDetailView(DetailView):
     
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
+
+
+        ######################
+        # print("ssssssssssssssssssssssssssssssss")
+        # from base.models import Client, Lot
+        # clients = Client.objects.all()
+        # for c in clients:
+        #     c.save()
+        # tenders = Tender.objects.all()
+        # for t in tenders:
+        #     t.save()
+        # lots = Lot.objects.all()
+        # for l in lots:
+        #     l.save()
+        # print("fffffffffffffffffffffffffffffff")
+        ######################
+
+
 
         queryset = queryset.select_related(
                 'client', 'category', 'mode', 'procedure'

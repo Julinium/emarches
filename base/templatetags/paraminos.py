@@ -58,3 +58,7 @@ def dictify(value):
         return data
     except json.JSONDecodeError:
         return []
+
+@register.filter
+def stringify(value):
+    return str(value)
