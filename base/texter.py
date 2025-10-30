@@ -2,7 +2,6 @@ import re, unicodedata
 
 
 def normalize_text(text):
-    # print("in ----------------------------- "  + text)
     # Blank out special symbols
     keep_as_space = str.maketrans({
         "'": " ", "°": " ", "’": " ", "′": " ", 
@@ -12,7 +11,7 @@ def normalize_text(text):
     text = text.translate(keep_as_space)
 
     # Remove punctuation and extra whitespace
-    text = re.sub(r'[^\w\s]', '', text)  # Remove punctuation
+    text = re.sub(r'[^\w\s]', ' ', text)  # Remove punctuation
     text = re.sub(r'\s+', ' ', text).strip()  # Normalize spaces
     text = text.lower()
     
@@ -28,5 +27,4 @@ def normalize_text(text):
     # Rejoin with single space
     text = ' '.join(words)
 
-    # print("out =========================== "  + text)
     return text
