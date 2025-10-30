@@ -13,22 +13,10 @@ load_dotenv(dotenv_path=env_path)
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-# DEBUG = ENVIRONMENT != 'production'
-DEBUG = True
+DEBUG = ENVIRONMENT != 'production'
+# DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
-
-# CSRF_TRUSTED_ORIGINS = [
-#     # f"http://{ os.getenv("IP_ADDRESS") }",
-#     'http://94.72.98.224',
-
-#     "http://emarches.com",
-#     "http://localhost:8000",  # for dev
-#     "http://127.0.0.1:8000",
-# ]
-
-# SESSION_COOKIE_SECURE = False
-# CSRF_COOKIE_SECURE = False
 
 
 SITE_ID = 1
@@ -48,7 +36,6 @@ INSTALLED_APPS = [
     'nas',
     'portal',
 
-    # 'private_storage',
     'django_cleanup',
     'debug_toolbar',
 
@@ -142,26 +129,17 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-# AUTH_PASSWORD_VALIDATORS = [
-#     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-#     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-#     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-#     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
-# ]
-
-
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Add support for non-standardized language
 EXTRA_LANG_INFO = {
     'zg': {
-        'bidi': False, # right-to-left ?
+        'bidi': False,
         'code': 'zg',
         'name': 'Tamazight',
-        'name_local': 'ⵜⴰⵎⴰⵣⵉⵖⵜ', #unicode codepoints
+        'name_local': 'ⵜⴰⵎⴰⵣⵉⵖⵜ',
     },
 }
 
@@ -186,9 +164,6 @@ STATIC_URL = '/static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-# PRIVATE_STORAGE_ROOT = BASE_DIR / 'media/private'
-# PRIVATE_STORAGE_AUTH_FUNCTION = 'private_storage.permissions.allow_authenticated'
-# PRIVATE_STORAGE_AUTH_FUNCTION = 'nas.permissions.allow_profile_owner'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -247,10 +222,10 @@ SOCIALACCOUNT_PROVIDERS = {
     'openid_connect': {
         'APPS': [
             {
-                'provider_id': 'linkedin',  # This is the OIDC issuer identifier for LinkedIn
+                'provider_id': 'linkedin',
                 'name': 'LinkedIn',
-                'client_id': os.getenv("ALLAUTH_LINKEDIN_CLIENT_ID"),  # From Step 1
-                'secret': os.getenv("ALLAUTH_LINKEDIN_SECRET"),  # From Step 1
+                'client_id': os.getenv("ALLAUTH_LINKEDIN_CLIENT_ID"),
+                'secret': os.getenv("ALLAUTH_LINKEDIN_SECRET"),
                 'settings': {
                     'server_url': 'https://www.linkedin.com/oauth',
                 },
@@ -272,9 +247,8 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_ADAPTER = "authy.adapters.CustomAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "authy.adapters.SocialAccountAdapter"
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # Requires email verification before login
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
-
 
 
 
