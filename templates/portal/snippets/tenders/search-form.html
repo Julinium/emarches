@@ -202,9 +202,9 @@
                                     <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Licenses" %}</span></span>
                                     <select class="form-select" name="agrements" aria-label="agrements">
                                         <option {% if query_dict.agrements == '' %} selected {% endif %} value="">--</option>
-                                        <option {% if query_dict.agrements == 'companies' %} selected {% endif %} value="companies">{% trans 'Required' %} - {% trans 'Mine' %}</option>
-                                        <option {% if query_dict.agrements == 'required' %} selected {% endif %} value="required">{% trans 'Any required' %} - {% trans 'Any' %}</option>
+                                        <option {% if query_dict.agrements == 'required' %} selected {% endif %} value="required">{% trans 'Required' %} - {% trans 'Any' %}</option>
                                         <option {% if query_dict.agrements == 'na' %} selected {% endif %} value="na">{% trans 'None required' %}</option>
+                                        <option {% if query_dict.agrements == 'companies' %} selected {% endif %} value="companies">{% trans "From My Companies" %}</option>
                                     </select>
                                 </div>
                             </div>
@@ -213,9 +213,9 @@
                                     <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Qualifs" %}</span></span>
                                     <select class="form-select" name="qualifs" aria-label="qualifs">
                                         <option {% if query_dict.qualifs == '' %} selected {% endif %} value="">--</option>
-                                        <option {% if query_dict.qualifs == 'companies' %} selected {% endif %} value="companies">{% trans 'Required' %} - {% trans 'Mine' %}</option>
-                                        <option {% if query_dict.qualifs == 'required' %} selected {% endif %} value="required">{% trans 'Any required' %} - {% trans 'Any' %}</option>
+                                        <option {% if query_dict.qualifs == 'required' %} selected {% endif %} value="required">{% trans 'Required' %} - {% trans 'Any' %}</option>
                                         <option {% if query_dict.qualifs == 'na' %} selected {% endif %} value="na">{% trans 'None required' %}</option>
+                                        <option {% if query_dict.qualifs == 'companies' %} selected {% endif %} value="companies">{% trans "From My Companies" %}</option>
                                     </select>
                                 </div>
                             </div>

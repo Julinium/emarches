@@ -1,20 +1,37 @@
 {% extends 'base.html' %}
 {% load i18n %}
-{% load static%}
 
 {% block title %} 400 - {% translate 'Bad Request' %} {% endblock title %}
 
 
 {% block content %}
-    {% trans "Bad Request" as top_title %}
-    {% trans "We did not understand !" as subtitle %}
-    {% trans "Our server did not understand and could not handle your request." as paragraph %}
-    {% with 'img/errors/error-'|add:m7|add:'.jpg' as image %}
-        {% include 'base/includes/page-top.html' with image=image %}
-    {% endwith %}
-
-    {% translate 'Go Home' as caption_primary %}
-    {% translate 'Read FAQs' as caption_secondary %}
-    {% include 'base/includes/page-cta.html' with url_primary='base_home' url_secondary='base_faqs' %}
-
+    <div id="main-content">
+        <div class="container mt-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-11 col-lg-10 col-xl-8">
+                    <div class="text-center">
+                        <div class="card shadow w-100">
+                            <div class="card-body">
+                                <div class="card-title">
+                                    <span><i class="bi bi-4-circle-fill text-danger display-5"></i></span>
+                                    <span><i class="bi bi-0-circle-fill text-danger display-5"></i></span>
+                                    <span><i class="bi bi-0-circle-fill text-danger display-5"></i></span>                                    
+                                    <h3 class="text-danger">{% trans 'BAD REQUEST' %}</h3>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-body-secondary">
+                                    {% trans 'aka error 400' %}
+                                </h6>
+                                <p class="card-text">
+                                    {% trans 'Sorry, our server did not understand your request.' %}
+                                </p>
+                                <p class="card-text text-muted small fw-light mb-4">
+                                    {% trans 'Please try again later. If this problem persists, please let us know.' %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

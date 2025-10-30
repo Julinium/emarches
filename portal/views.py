@@ -14,7 +14,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.models import User
 
 from nas.models import Favorite
-from base.models import Tender, Category, Procedure, Crawler
+from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -51,7 +51,7 @@ class TenderListView(ListView):
         else: ordering = []
         ordering.append('id')
 
-        tenders, filters = self.filter_tenders(Tender.objects.all(), self.query_params)
+        tenders, filters = self.filter_tenders(Tender.objects.all(), self.query_params, self.request)
         self.query_dict['filters'] = filters
         # self.query_dict['filted_items'] = filted_items
 
@@ -132,7 +132,7 @@ class TenderListView(ListView):
 
         return all_params
 
-    def filter_tenders(slef, tenders, params):
+    def filter_tenders(slef, tenders, params, requete):
 
         ff = 0
         if 'q' in params:
@@ -245,6 +245,29 @@ class TenderListView(ListView):
             visits = params['visits']
             if visits == 'required': tenders = tenders.filter(has_visits=True)
             if visits == 'na': tenders = tenders.filter(has_visits=False)
+
+        if 'agrements' in params:
+            ff += 1
+            agrements = params['agrements']
+            if agrements == 'required': tenders = tenders.filter(has_agrements=True)
+            if agrements == 'na': tenders = tenders.filter(has_agrements=False)
+            if agrements == 'companies':
+                user = requete.user
+                if user.is_authenticated:
+                    user_agrements = Agrement.objects.filter(companies__user=user)
+                    tenders = tenders.filter(lots__agrements__in=user_agrements)
+
+        if 'qualifs' in params:
+            ff += 1
+            qualifs = params['qualifs']
+            if qualifs == 'required': tenders = tenders.filter(has_qualifs=True)
+            if qualifs == 'na': tenders = tenders.filter(has_qualifs=False)
+            if qualifs == 'companies':
+                user = requete.user
+                if user.is_authenticated:
+                    user_qualifs = Qualif.objects.filter(companies__user=user)
+                    tenders = tenders.filter(lots__qualifs__in=user_qualifs)
+
 
         # has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
         # has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
