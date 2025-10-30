@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .texter import normalize_text as nt
 
+
 class Agrement(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
