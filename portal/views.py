@@ -7,7 +7,9 @@ from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-# from django.db.models import Prefetch
+
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 
 from django.views.generic import ListView, DetailView
 
@@ -51,7 +53,8 @@ class TenderListView(ListView):
         else: ordering = []
         ordering.append('id')
 
-        tenders, filters = self.filter_tenders(Tender.objects.all(), self.query_params, self.request)
+        tenders, filters = self.filter_tenders(Tender.objects.filter(cancelled=False), 
+                                                self.query_params, self.request)
         self.query_dict['filters'] = filters
         # self.query_dict['filted_items'] = filted_items
 
@@ -116,6 +119,19 @@ class TenderListView(ListView):
         context['icon_no_ebid']       = 'pc-display-horizontal' # 'briefcase-fill'
 
         return context
+
+    def paginate_queryset(self, queryset, page_size):
+        paginator = self.get_paginator(queryset, page_size)
+        page = self.request.GET.get('page')
+        try:
+            tenders = paginator.page(page)
+        except PageNotAnInteger:
+            tenders = paginator.page(1)
+        except EmptyPage:
+            tenders = paginator.page(paginator.num_pages)
+        return (paginator, tenders, tenders.object_list, tenders.has_other_pages())
+
+
 
     def get_requete_params(self, requete):
         all_params = requete.GET.dict()
@@ -292,24 +308,6 @@ class TenderDetailView(DetailView):
     
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
-
-
-        ######################
-        # print("ssssssssssssssssssssssssssssssss")
-        # from base.models import Client, Lot
-        # clients = Client.objects.all()
-        # for c in clients:
-        #     c.save()
-        # tenders = Tender.objects.all()
-        # for t in tenders:
-        #     t.save()
-        # lots = Lot.objects.all()
-        # for l in lots:
-        #     l.save()
-        # print("fffffffffffffffffffffffffffffff")
-        ######################
-
-
 
         queryset = queryset.select_related(
                 'client', 'category', 'mode', 'procedure'

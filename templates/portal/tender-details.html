@@ -19,6 +19,14 @@
             </div>
         {% endif %}
 
+        {% if tender.expired %}
+            <div class="text-bg-secondary rounded text-center my-2">
+                <div class="fw-bold p-1">
+                    {% trans 'EXPIRED' %}
+                </div>
+            </div>
+        {% endif %}
+
         <div class="row gx-4 gy-0">
 
             <div class="col-12">
@@ -26,7 +34,9 @@
                     <div class="text-muted small fw-light">
                         {% trans 'Object' %}
                     </div>
-                    <div class="ms-4 fw-bold {% if tender.cancelled %}text-danger{% endif %}">
+                    <div class="ms-4 fw-bold 
+                                {% if tender.cancelled %}text-danger{% endif %}
+                                ">
                         {{ tender.title }}
                     </div>
                 </div>
