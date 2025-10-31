@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.contrib.postgres.indexes import GinIndex
 
 from .texter import normalize_text as nt
 
@@ -330,6 +331,7 @@ class Tender(models.Model):
     domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name=_("Domains of activity"))
 
     keywords = models.TextField(blank=True, null=True, editable=False)
+    cliwords = models.TextField(blank=True, null=True, editable=False)
     refwords = models.TextField(blank=True, null=True, editable=False)
     locwords = models.TextField(blank=True, null=True, editable=False)
 
@@ -338,6 +340,12 @@ class Tender(models.Model):
         db_table = 'base_tender'
         ordering = ['-deadline', 'id']
         verbose_name = _("Tender")
+        indexes = [
+            GinIndex(fields=['keywords'], name='keywords_idx', opclasses=['gin_trgm_ops']),
+            GinIndex(fields=['cliwords'], name='cliwords_idx', opclasses=['gin_trgm_ops']),
+            GinIndex(fields=['refwords'], name='refwords_idx', opclasses=['gin_trgm_ops']),
+            GinIndex(fields=['locwords'], name='locwords_idx', opclasses=['gin_trgm_ops']),
+        ]
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
@@ -375,6 +383,7 @@ class Tender(models.Model):
 
     def save(self, *args, **kwargs):
         self.keywords = nt(self.title)
+        self.cliwords = nt(self.client.name)
         self.refwords = nt(self.reference)
         self.locwords = nt(self.location)
         if self.has_agrements == True:

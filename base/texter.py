@@ -1,8 +1,11 @@
 import re, unicodedata
 
 
-def normalize_text(text):
-    # Blank out special symbols
+def normalize_text(text, include_raw=True, min_length=2):
+
+    if not text: return ""
+
+    original = text.lower()
     keep_as_space = str.maketrans({
         "'": " ", "°": " ", "’": " ", "′": " ", 
         ",": " ", ".": " ", "-": " ",
@@ -22,9 +25,12 @@ def normalize_text(text):
     )
     
     words = text.split()
-    words = [word for word in words if len(word) >= 3]
+    words = [word for word in words if len(word) >= min_length]
 
     # Rejoin with single space
     text = ' '.join(words)
+
+    if include_raw:
+        text = f"{ text } { original }"
 
     return text

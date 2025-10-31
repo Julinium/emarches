@@ -6,9 +6,9 @@ from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
 from base.models import Agrement, Tender, Qualif, Change
-from . imaging import squarify_image
-from . iceberg import get_ice_checkup
-
+from .imaging import squarify_image
+from .iceberg import get_ice_checkup
+from .choices import ItemsPerPage, OrderingField, FullBarDays
 
 class Profile(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -404,53 +404,24 @@ class Reaction(models.Model):
         return f"{ self.user.username }-{ self.reaction }-{ self.comment }"
 
 
-
-
 class UserSetting(models.Model):
-    ORDERING_CHOICES = [
-        ('deadline', _('Deadline: Nearest first')),
-        ('-deadline', _('Deadline: Farthest first')),
-        ('estimate', _('Estimate: Smallest first')),
-        ('-estimate', _('Estimate: Largest first')),
-        ('bond', _('Guarantee: Smallest first')),
-        ('-bond', _('Guarantee: Largest first')),
-        ('published', _('Published: Oldest first')),
-        ('-published', _('Published: Newest first')),
-    ]
 
-    PAGING_CHOICES = [5, 10, 15, 20, 25, 50, 100, 250, 500 ]
+    id                     = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    active                 = models.BooleanField(null=True, default=True, editable=False, related_name='settings')
+    user                   = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
+    tenders_ordering_field = models.CharField(max_length=10, choices=OrderingField.choices, default=OrderingField.DEADLINE_ASC, verbose_name=_('Tenders: Ordering field'))
+    tenders_items_per_page = models.CharField(max_length=10, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Tenders: Items per page'))
+    tenders_full_bar_days  = models.CharField(max_length=10, choices=FullBarDays.choices, default=FullBarDays.FBD_30, verbose_name=_('Tenders: Full progress bar days'))
+    tenders_show_expired   = models.BooleanField(default=False, verbose_name=_("Tenders: Show today's expired tenders"))
+    tenders_show_cancelled = models.BooleanField(default=False, verbose_name=_("Tenders: Show cancelled tenders"))
 
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active    = models.BooleanField(null=True, default=True, editable=False)
-    user      = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
-    tenders_ordering_field = models.CharField(max_length=10, choices=ORDERING_CHOICES, default='deadline', verbose_name=_('Tenders ordering field'))
-
-    tenders_ordering_field = models.CharField(max_length=16, default='deadline', verbose_name=_('Tenders ordering field'))
-
-    created   = models.DateTimeField(auto_now_add=True, editable=False)
-    updated   = models.DateTimeField(auto_now=True, editable=False)
-# TENDERS_ORDERING_FIELD # --> deadline / +/- { deadline, estimate, bond, published}
-# TENDERS_ITEMS_PER_PAGE # --> 10 / 5, 15, 20, 25, 50, 100
-# TENDER_FULL_PROGRESS_DAYS # --> 30 / 7, 10, 15, 20, 45, 60, 90, 180, 360
-# SHOW_TODAYS_EXPIRED = False #--> no / yes 
-# SHOW_CANCELLED = True # --> yes, now, fav
+    # created   = models.DateTimeField(auto_now_add=True, editable=False)
+    # updated   = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
-        db_table = 'nas_profile'
+        db_table = 'nas_user_setting'
 
     def __str__(self):
-        return f'{self.user.username}'
-    
-    @property
-    def avatar(self):
-        try:
-            avatar = self.image.url
-        except:
-            avatar = static('avatars/default.png')
-        return avatar
-    
-    def save(self, *args, **kwargs):
-        if self.image:
-            # Process the image before saving
-            self.image = squarify_image(self.image, str(self.id).split('-')[0])
-        super().save(*args, **kwargs)
+        return f'Settings for {self.user.username}'
+
+

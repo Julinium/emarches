@@ -5,14 +5,18 @@ from zoneinfo import ZoneInfo
 
 from django.conf import settings
 
-from django.db.models import Q
+from django.db import models
+from django.db.models import Q #, Value
+# from django.contrib.postgres.search import TrigramSimilarity
+# from django.db.models.functions import Greatest, Coalesce
+
 from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404
+# from django.http import Http404
 
 from django.views.generic import ListView, DetailView
 
@@ -20,6 +24,7 @@ from django.contrib.auth.models import User
 
 from nas.models import Favorite
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
+from base.texter import normalize_text
 
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -28,9 +33,9 @@ TENDERS_ORDERING_FIELD = 'deadline'
 
 
 # TODO: User settings to/from database :
-# TENDERS_ORDERING_FIELD # --> deadline / +/- { deadleine, estimate, bond, published}
-# TENDERS_ITEMS_PER_PAGE # --> 10 / 5, 15, 20, 25, 50, 100
-# TENDER_FULL_PROGRESS_DAYS # --> 30 / 7, 10, 15, 20, 45, 60, 90, 180, 360
+# TENDERS_ORDERING_FIELD = 'deadline' # --> deadline / +/- { deadleine, estimate, bond, published}
+# TENDERS_ITEMS_PER_PAGE = 10 # --> 10 / 5, 15, 20, 25, 50, 100
+# TENDER_FULL_PROGRESS_DAYS = 30 # --> 30 / 7, 10, 15, 20, 45, 60, 90, 180, 360
 SHOW_TODAYS_EXPIRED = False #--> no / yes 
 SHOW_CANCELLED = True # --> yes, now, fav
 
@@ -161,30 +166,45 @@ class TenderListView(ListView):
 
     def filter_tenders(slef, tenders, params, requete):
 
+        def afas(queryset, field_names, phrase):
+            phrase = normalize_text(phrase, False)
+            words = [word.strip() for word in phrase.split() if word.strip()]
+            if words:
+                # query = Q()
+                # for word in words:
+                #     query |= Q(**{f"{field_name}__icontains": word})
+                # queryset = queryset.filter(query)
+                or_query = Q()
+                for field in field_names:
+                    field_q = Q()
+                    for word in words:
+                        field_q &= Q(**{f"{field}__icontains": word})
+                    or_query |= field_q
+
+                queryset = queryset.filter(or_query)
+
+            return queryset
+
         ff = 0
         if not SHOW_CANCELLED:
             tenders = tenders.exclude(cancelled=False)
-        
+
         if 'q' in params:
             ff += 1
             q = params['q']
             if 'f' in params:
                 match params['f']:
                     case 'client':
-                        tenders = tenders.filter(Q(client__name__icontains=q) | Q(client__keywords__icontains=q))
+                        tenders = afas(tenders, ['cliwords'], q)
                     case 'location':
-                        tenders = tenders.filter(Q(location__icontains=q) | Q(locwords__icontains=q))
+                        tenders = afas(tenders, ['locwords'], q)
                     case 'reference':
-                        tenders = tenders.filter(Q(refwords__icontains=q) | Q(reference__icontains=q))
+                        tenders = afas(tenders, ['refwords'], q)
                     case _:
-                        tenders = tenders.filter(Q(keywords__icontains=q) | Q(title__icontains=q))
+                        tenders = afas(tenders, ['keywords'], q)
             else:
-                tenders = tenders.filter(
-                    Q(client__name__icontains=q) | Q(client__keywords__icontains=q) | 
-                    Q(location__icontains=q) | Q(locwords__icontains=q) | 
-                    Q(refwords__icontains=q) | Q(reference__icontains=q) | 
-                    Q(keywords__icontains=q) | Q(title__icontains=q)
-                )
+                tenders = afas(tenders, ['keywords', 'cliwords','locwords', 'refwords'], q)                
+
 
         if 'estin' in params:
             ff += 1
