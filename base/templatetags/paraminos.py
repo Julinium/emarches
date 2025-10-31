@@ -62,3 +62,12 @@ def dictify(value):
 @register.filter
 def stringify(value):
     return str(value)
+
+
+
+# @register.filter
+# def progressify(value, full=30):
+#     try:
+#         ratio = int(100 * value / full)
+#         return max(0, min(ratio, 100))
+#     except: return 0

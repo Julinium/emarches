@@ -24,12 +24,10 @@ from base.texter import normalize_text
 
 
 # Default Settings
-TENDER_FULL_PROGRESS_DAYS = 30
 TENDERS_ITEMS_PER_PAGE = 10
 TENDERS_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = False
 SHOW_CANCELLED = True
-
 
 @method_decorator(login_required, name='dispatch')
 class TenderListView(ListView):
@@ -37,11 +35,11 @@ class TenderListView(ListView):
     model = Tender
     template_name = 'portal/tender-list.html'
     context_object_name = 'tenders'
-    # paginate_by = TENDERS_ITEMS_PER_PAGE
+    paginate_by = TENDERS_ITEMS_PER_PAGE
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-
+        
         self.sorter = self.request.GET.get('sort', TENDERS_ORDERING_FIELD)
 
         self.query_params = self.get_requete_params(self.request)
@@ -53,10 +51,8 @@ class TenderListView(ListView):
         self.query_unsorted = self.query_params
 
 
-    def get_paginate_by(self, queryset):
-        settings = self.get_user_settings()
-        if settings: return DEFAULT_SETTINGS.tenders_items_per_page
-        else: return 10
+    # def get_paginate_by(self, queryset):
+        # return self.get_user_settings('tenders_items_per_page') or TENDERS_ITEMS_PER_PAGE
 
 
     def get_queryset(self):
@@ -99,7 +95,7 @@ class TenderListView(ListView):
 
         context['categories']         = all_categories
         context['procedures']         = all_procedures
-        context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
+        # context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
 
         context['sorter']             = self.sorter
@@ -177,6 +173,7 @@ class TenderListView(ListView):
             return queryset
 
         ff = 0
+        # sct = super().get_user_settings('tenders_ordering_field') or SHOW_CANCELLED
         if not SHOW_CANCELLED:
             tenders = tenders.exclude(cancelled=False)
 
@@ -220,6 +217,7 @@ class TenderListView(ListView):
             tenders = tenders.filter(deadline__date__gte=ddlnn)
             if ddlnn == timezone.now().date().strftime("%Y-%m-%d"): 
 
+                # ste = self.get_user_settings('tenders_ordering_field') or SHOW_TODAYS_EXPIRED
                 if not SHOW_TODAYS_EXPIRED:
                     rabat_tz = ZoneInfo('Africa/Casablanca')
                     tenders = tenders.exclude(deadline__lt=datetime.now(rabat_tz))
@@ -329,13 +327,12 @@ class TenderListView(ListView):
 
         return tenders.distinct(), ff
 
-    def get_user_settings(self):
-        try:
-            user_settings = UserSetting.objects.get(user=self.request.user)
-            return user_settings
-        except (UserSetting.DoesNotExist, AttributeError):
-            return DEFAULT_SETTINGS
-
+    # def get_user_settings(self, field_name):
+    #     try:
+    #         instance, _ = UserSetting.objects.get_or_create(user=self.request.user)
+    #         return getattr(instance, field_name)
+    #     except (UserSetting.DoesNotExist, AttributeError):
+    #         return None
 
 
 @method_decorator(login_required, name='dispatch')

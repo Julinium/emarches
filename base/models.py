@@ -365,7 +365,7 @@ class Tender(models.Model):
             delta_to_go = self.deadline - today_now
             return delta_to_go.days
         except: return 0
-    
+
     @property
     def progress_percent(self, full_bar = settings.TENDER_FULL_PROGRESS_DAYS):
         try:
