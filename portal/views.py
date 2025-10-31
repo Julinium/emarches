@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django.utils import timezone
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from django.conf import settings
 
 from django.db.models import Q
@@ -22,6 +25,14 @@ from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
 TENDERS_ORDERING_FIELD = 'deadline'
+
+
+# TODO: User settings to/from database :
+# TENDERS_ORDERING_FIELD # --> deadline / +/- { deadleine, estimate, bond, published}
+# TENDERS_ITEMS_PER_PAGE # --> 10 / 5, 15, 20, 25, 50, 100
+# TENDER_FULL_PROGRESS_DAYS # --> 30 / 7, 10, 15, 20, 45, 60, 90, 180, 360
+SHOW_TODAYS_EXPIRED = False #--> no / yes 
+SHOW_CANCELLED = True # --> yes, now, fav
 
 
 @method_decorator(login_required, name='dispatch')
@@ -53,7 +64,7 @@ class TenderListView(ListView):
         else: ordering = []
         ordering.append('id')
 
-        tenders, filters = self.filter_tenders(Tender.objects.filter(cancelled=False), 
+        tenders, filters = self.filter_tenders(Tender.objects.all(), 
                                                 self.query_params, self.request)
         self.query_dict['filters'] = filters
         # self.query_dict['filted_items'] = filted_items
@@ -151,6 +162,9 @@ class TenderListView(ListView):
     def filter_tenders(slef, tenders, params, requete):
 
         ff = 0
+        if not SHOW_CANCELLED:
+            tenders = tenders.exclude(cancelled=False)
+        
         if 'q' in params:
             ff += 1
             q = params['q']
@@ -190,11 +204,16 @@ class TenderListView(ListView):
             bondx = params['bondx']
             tenders = tenders.filter(bond__lte=bondx)
 
-        if 'ddlnn' in params:            
+        if 'ddlnn' in params:
             ddlnn = params['ddlnn']
-            if ddlnn != timezone.now().date().strftime("%Y-%m-%d"): 
-                ff += 1
             tenders = tenders.filter(deadline__date__gte=ddlnn)
+            if ddlnn == timezone.now().date().strftime("%Y-%m-%d"): 
+                if not SHOW_TODAYS_EXPIRED:
+                    rabat_tz = ZoneInfo('Africa/Casablanca')
+                    tenders = tenders.exclude(deadline__lt=datetime.now(rabat_tz))
+            else:
+                ff += 1
+
         if 'ddlnx' in params:
             ff += 1
             ddlnx = params['ddlnx']
