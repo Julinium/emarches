@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 class ItemsPerPage(models.IntegerChoices):
     IPP_005 = 5,   "5"
@@ -10,7 +11,7 @@ class ItemsPerPage(models.IntegerChoices):
     # IPP_250 = 250, "250"
     # IPP_500 = 500, "500"
 
-class OrderingField(models.IntegerChoices):    
+class OrderingField(models.TextChoices):
         DEADLINE_ASC  = 'deadline',   _('Deadline: Nearest first')
         DEADLINE_DES  = '-deadline',  _('Deadline: Farthest first')
         ESTIMATE_ASC  = 'estimate',   _('Estimate: Smallest first')

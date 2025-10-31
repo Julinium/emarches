@@ -407,11 +407,11 @@ class Reaction(models.Model):
 class UserSetting(models.Model):
 
     id                     = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active                 = models.BooleanField(null=True, default=True, editable=False, related_name='settings')
-    user                   = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
+    active                 = models.BooleanField(null=True, default=True, editable=False)
+    user                   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='settings')
     tenders_ordering_field = models.CharField(max_length=10, choices=OrderingField.choices, default=OrderingField.DEADLINE_ASC, verbose_name=_('Tenders: Ordering field'))
     tenders_items_per_page = models.CharField(max_length=10, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Tenders: Items per page'))
-    tenders_full_bar_days  = models.CharField(max_length=10, choices=FullBarDays.choices, default=FullBarDays.FBD_30, verbose_name=_('Tenders: Full progress bar days'))
+    tenders_full_bar_days  = models.CharField(max_length=10, choices=FullBarDays.choices, default=FullBarDays.FBD_030, verbose_name=_('Tenders: Full progress bar days'))
     tenders_show_expired   = models.BooleanField(default=False, verbose_name=_("Tenders: Show today's expired tenders"))
     tenders_show_cancelled = models.BooleanField(default=False, verbose_name=_("Tenders: Show cancelled tenders"))
 

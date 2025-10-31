@@ -13,8 +13,8 @@ load_dotenv(dotenv_path=env_path)
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = ENVIRONMENT != 'production'
-# DEBUG = True
+# DEBUG = ENVIRONMENT != 'production'
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 

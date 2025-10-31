@@ -6,38 +6,29 @@ from zoneinfo import ZoneInfo
 from django.conf import settings
 
 from django.db import models
-from django.db.models import Q #, Value
-# from django.contrib.postgres.search import TrigramSimilarity
-# from django.db.models.functions import Greatest, Coalesce
-
+from django.db.models import Q
 from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-# from django.http import Http404
 
 from django.views.generic import ListView, DetailView
 
 from django.contrib.auth.models import User
 
-from nas.models import Favorite
+from nas.models import Favorite, UserSetting
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
 
 
-TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
-TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
+# Default Settings
+TENDER_FULL_PROGRESS_DAYS = 30
+TENDERS_ITEMS_PER_PAGE = 10
 TENDERS_ORDERING_FIELD = 'deadline'
-
-
-# TODO: User settings to/from database :
-# TENDERS_ORDERING_FIELD = 'deadline' # --> deadline / +/- { deadleine, estimate, bond, published}
-# TENDERS_ITEMS_PER_PAGE = 10 # --> 10 / 5, 15, 20, 25, 50, 100
-# TENDER_FULL_PROGRESS_DAYS = 30 # --> 30 / 7, 10, 15, 20, 45, 60, 90, 180, 360
-SHOW_TODAYS_EXPIRED = False #--> no / yes 
-SHOW_CANCELLED = True # --> yes, now, fav
+SHOW_TODAYS_EXPIRED = False
+SHOW_CANCELLED = True
 
 
 @method_decorator(login_required, name='dispatch')
@@ -46,7 +37,7 @@ class TenderListView(ListView):
     model = Tender
     template_name = 'portal/tender-list.html'
     context_object_name = 'tenders'
-    paginate_by = TENDERS_ITEMS_PER_PAGE
+    # paginate_by = TENDERS_ITEMS_PER_PAGE
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -60,6 +51,13 @@ class TenderListView(ListView):
         self.query_string = self.query_params
         self.query_params.pop('sort', '')
         self.query_unsorted = self.query_params
+
+
+    def get_paginate_by(self, queryset):
+        settings = self.get_user_settings()
+        if settings: return DEFAULT_SETTINGS.tenders_items_per_page
+        else: return 10
+
 
     def get_queryset(self):
 
@@ -147,8 +145,6 @@ class TenderListView(ListView):
             tenders = paginator.page(paginator.num_pages)
         return (paginator, tenders, tenders.object_list, tenders.has_other_pages())
 
-
-
     def get_requete_params(self, requete):
         all_params = requete.GET.dict()
         all_params = {k: v for k, v in all_params.items() if v not in ('', None)}
@@ -170,17 +166,12 @@ class TenderListView(ListView):
             phrase = normalize_text(phrase, False)
             words = [word.strip() for word in phrase.split() if word.strip()]
             if words:
-                # query = Q()
-                # for word in words:
-                #     query |= Q(**{f"{field_name}__icontains": word})
-                # queryset = queryset.filter(query)
                 or_query = Q()
                 for field in field_names:
                     field_q = Q()
                     for word in words:
                         field_q &= Q(**{f"{field}__icontains": word})
                     or_query |= field_q
-
                 queryset = queryset.filter(or_query)
 
             return queryset
@@ -228,6 +219,7 @@ class TenderListView(ListView):
             ddlnn = params['ddlnn']
             tenders = tenders.filter(deadline__date__gte=ddlnn)
             if ddlnn == timezone.now().date().strftime("%Y-%m-%d"): 
+
                 if not SHOW_TODAYS_EXPIRED:
                     rabat_tz = ZoneInfo('Africa/Casablanca')
                     tenders = tenders.exclude(deadline__lt=datetime.now(rabat_tz))
@@ -337,13 +329,20 @@ class TenderListView(ListView):
 
         return tenders.distinct(), ff
 
+    def get_user_settings(self):
+        try:
+            user_settings = UserSetting.objects.get(user=self.request.user)
+            return user_settings
+        except (UserSetting.DoesNotExist, AttributeError):
+            return DEFAULT_SETTINGS
+
+
 
 @method_decorator(login_required, name='dispatch')
 class TenderDetailView(DetailView):
     model = Tender
     template_name = 'portal/tender-details.html'
     context_object_name = 'tender'
-
     
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
