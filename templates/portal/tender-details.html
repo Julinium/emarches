@@ -61,7 +61,7 @@
                     <div class="text-muted small fw-light">
                         {% trans 'Time to Deadline' %}
                     </div>
-                    <span class="ms-1 fw-bold
+                    <span class="ms-4 fw-bold
                                     {% if tender.expired %}
                                     text-danger
                                 {% endif %}">
@@ -107,17 +107,7 @@
                         {% trans 'Lots' %}
                     </div>
                     <div class="ms-4">
-                        {% if tender.lots_count > 1 %}
-                            <span>
-                                <button type="button" class="btn btn-sm btn-outline-secondary mb-1" 
-                                        data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                                    {{ tender.lots_count }} {% trans "Lots details" %}
-                                </button>
-                                {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
-                            </span>
-                        {% else %}
-                            {{ tender.lots_count }}
-                        {% endif %}
+                        {{ tender.lots_count }}
                     </div>
                 </div>
             </div>
@@ -324,6 +314,46 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="col-12">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Contact' %}
+                    </div>
+                    <div class="ms-4">
+                        {% if tender.contact_name and tender.contact_name != '-' %}
+                            <span class="me-1 mb-1">{{ tender.contact_name }}</span>
+                        {% endif %}
+                        {% if tender.contact_phone and tender.contact_phone != '-' %}
+                            <span class="me-1 small">
+                                <a href="tel:{{ tender.contact_phone }}" 
+                                class="btn btn-sm mb-1 btn-outline-secondary">
+                                    <i class="bi bi-telephone"></i>
+                                    {{ tender.contact_phone }}
+                                </a>
+                            </span>
+                        {% endif %}
+                        {% if tender.contact_email and tender.contact_email != '-' %}
+                            <span class="me-1 small">
+                                <a href="mailto:{{ tender.contact_email }}" 
+                                class="btn btn-sm mb-1 btn-outline-secondary">
+                                    <i class="bi bi-envelope"></i>
+                                    {{ tender.contact_email }}
+                                </a>
+                            </span>
+                        {% endif %}
+                        {% if tender.contact_fax and tender.contact_fax != '-' %}
+                            <span class="me-1 small">
+                                <a href="tel:{{ tender.contact_fax }}" 
+                                class="btn btn-sm mb-1 btn-outline-secondary">
+                                    <i class="bi bi-printer"></i>
+                                    {{ tender.contact_fax }}
+                                </a>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -333,9 +363,30 @@
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
+                        {% trans 'Created' %}
+                    </div>
+                    <div class="ms-4 small">
+                        {{ tender.created }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Database ID' %}
+                    </div>
+                    <div class="ms-4 small">
+                        <span>{{ tender.id }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
                         {% trans 'Last updated' %}
                     </div>
-                    <div class="ms-4">
+                    <div class="ms-4 small">
                         <span>{{ tender.updated }}</span>
                     </div>
                 </div>
@@ -345,7 +396,7 @@
                     <div class="text-muted small fw-light">
                         {% trans 'Time on display' %}
                     </div>
-                    <div class="ms-4">
+                    <div class="ms-4 small">
                         {{ tender.days_span }} {% trans 'days' %}
                     </div>
                 </div>
@@ -397,9 +448,32 @@
 
     <div class="my-3" id="tender-actions" >
         <div class="text-center">
-            <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Download' %}</a>
-            <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bookmark' %}</a>
-            <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bid' %}</a>
+            {% if tender.lots_count > 1 %}
+                <span>
+                    <button type="button" class="m-1 btn btn-outline-primary" 
+                            data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
+                        {{ tender.lots_count }} {% trans "Lots details" %}
+                    </button>
+                    <span class="text-start">
+                        {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
+                    </span>
+                </span>
+            {% endif %}
+            <a href="javascript:"
+               class="m-1 btn btn-outline-primary">
+                <span><i class="bi bi-download"></i></span>
+                <span>{% trans 'Download' %}</span>
+                <span class="badge text-bg-primary">{{ tender.size_bytes|filesizeformat }}</span>
+            </a>
+
+            <!-- <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bookmark' %}</a> -->
+
+            <a target="_blank"
+               href="{{ link_prefix }}{{ tender.link }}" 
+               class="m-1 btn btn-outline-primary">
+                <span><i class="bi bi-box-arrow-up-right"></i></span>
+                <span>{% trans 'Bidding link' %}</span>
+            </a>
         </div>
     </div>
 
@@ -407,19 +481,14 @@
 
 
 <!-- 
-Id: b9723d20-19ee-44b6-b2a2-d8d2e1443879
 Chrono: 917273
-Plans_Price: 0.00
 Size_Read: 120,18 M
 Size_Bytes: 126014292
 
 Contact_Name: Brahim ARCHICH
 Contact_Phone: 05 22 75 45 01 à 06
 Contact_Email: archich@onee.ma
-
 Contact_Fax: 05 22 75 47 14
-Created: 2025-10-07T15:26:25.075291+00:00
-Updated: 2025-10-26T09:52:23.148217+00:00
-Deleted: False
+
 Link: 917273&orgAcronyme=d4q
  -->

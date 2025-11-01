@@ -12,7 +12,7 @@
       <div class="modal-body">
         <div class="list-group">
           {% for lot in lots %}
-            <div class="list-group-item {% if forloop.counter|divisibleby:2 %}bg-light{% endif %}">
+            <div class="list-group-item py-3 {% if forloop.counter|divisibleby:2 %}bg-light{% endif %}">
               {% include 'portal/snippets/lots/lot-details.html' with lot=lot %}
             </div>
           {% endfor %}

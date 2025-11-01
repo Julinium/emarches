@@ -29,54 +29,56 @@
         {% endif %}
     {% endif %}
 
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Estimate' %}:
+    <div class="col-12">
+        <div class="">
+            <span class="me-3 my-1">
+                <span class="text-muted small fw-light">
+                    <i class="bi bi-dash-lg"></i>
+                    {% trans 'Estimate' %}:
+                </span>
+                <span class=" fw-bold">
+                    {{ lot.estimate }}
+                </span>
             </span>
-            <span class="ms-1 fw-bold">
-                {{ lot.estimate }}
+
+            <span class="me-3 my-1">
+                <span class="text-muted small fw-light">
+                    <i class="bi bi-dash-lg"></i>
+                    {% trans 'Guarantee' %}:
+                </span>
+                <span class="">
+                    {{ lot.bond }}
+                </span>
             </span>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Guarantee' %}:
+
+            <span class="me-3 my-1">
+                <span class="text-muted small fw-light">
+                    <i class="bi bi-dash-lg"></i>
+                    {% trans 'Category' %}:
+                </span>
+                <span class="">
+                    {{ lot.category|default:'?' }}
+                </span>
             </span>
-            <span class="ms-1">
-                {{ lot.bond }}
+
+            <span class="me-3 my-1">
+                <span class="text-muted small fw-light">
+                    <i class="bi bi-dash-lg"></i>
+                    {% trans 'Variant' %}:
+                </span>
+                <span class="">
+                    {% if lot.variant %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+                </span>
             </span>
-        </div>
-    </div>
-    
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Category' %}:
-            </span>
-            <span class="ms-1">
-                {{ lot.category.label|default:'?' }}
-            </span>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Reserved to SMBs, individuals, Unions, ...' %}
-            </span>
-            <span class="ms-1">
-                {% if lot.reserved %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
-            </span>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="d-flex-inline my-1">
-            <span class="text-muted small fw-light">
-                {% trans 'Variant' %}:
-            </span>
-            <span class="ms-1">
-                {% if lot.variant %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+
+            <span class="me-3 my-1">
+                <span class="text-muted small fw-light">
+                    <i class="bi bi-dash-lg"></i>
+                    {% trans 'Reserved' %}:
+                </span>
+                <span class="">
+                    {% if lot.reserved %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+                </span>
             </span>
         </div>
     </div>

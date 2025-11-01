@@ -29,6 +29,7 @@ TENDERS_ITEMS_PER_PAGE = 10
 TENDERS_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = False
 SHOW_CANCELLED = True
+LINK_PREFIX = settings.LINK_PREFIX
 
 @method_decorator(login_required, name='dispatch')
 class TenderListView(ListView):
@@ -328,7 +329,27 @@ class TenderDetailView(DetailView):
     model = Tender
     template_name = 'portal/tender-details.html'
     context_object_name = 'tender'
+
+
+    #####
+    # print("sssssssssssssssss")
+    # from base.models import Lot
+    # lots = Lot.objects.filter(category=None)
+    # i = 0
+    # for l in lots:
+    #     i += 1
+    #     print(i)
+    #     l.category = l.tender.category
+    #     l.save()
+    # print("eeeeeeeeeeeeeeeeee")
+    #####
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["link_prefix"] = LINK_PREFIX
+
+        return context
+
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
 
