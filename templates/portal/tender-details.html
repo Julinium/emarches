@@ -9,24 +9,28 @@
 
 {% block content %}
     <h3>{% trans "Tenders Details" %}</h3>
-    <div class="my-3">
 
-        {% if tender.cancelled %}
+    {% if tender.cancelled %}
+        <div class="my-3" id="tender-cancelled-top" >
             <div class="text-bg-danger rounded text-center my-2">
                 <div class="fw-bold p-1">
                     {% trans 'CANCELLED' %}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
-        {% if tender.expired %}
+    {% if tender.expired %}
+        <div class="my-3" id="tender-expired-top" >
             <div class="text-bg-secondary rounded text-center my-2">
                 <div class="fw-bold p-1">
                     {% trans 'EXPIRED' %}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
+    <div class="my-3" id="tender-details">
         <div class="row gx-4 gy-0">
 
             <div class="col-12">
@@ -48,7 +52,7 @@
                         {% trans 'Deadline' %}
                     </div>
                     <div class="ms-4">
-                        {{ tender.deadline }}
+                        <span>{{ tender.deadline }}</span>
                     </div>
                 </div>
             </div>
@@ -57,30 +61,12 @@
                     <div class="text-muted small fw-light">
                         {% trans 'Time to Deadline' %}
                     </div>
-                    <div class="ms-4 fw-bold">
+                    <span class="ms-1 fw-bold
+                                    {% if tender.expired %}
+                                    text-danger
+                                {% endif %}">
                         {{ tender.days_to_go }} {% trans 'days' %}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Published' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.published }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Time span' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.days_span }} {% trans 'days' %}
-                    </div>
+                    </span>
                 </div>
             </div>
 
@@ -132,6 +118,27 @@
                         {% else %}
                             {{ tender.lots_count }}
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Published' %}
+                    </div>
+                    <div class="ms-4">
+                        <span>{{ tender.published }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Price of Plans' %}
+                    </div>
+                    <div class="ms-4">
+                        {{ tender.plans_price }}
                     </div>
                 </div>
             </div>
@@ -284,6 +291,65 @@
                     {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=tender.lots.first.visits.all %}
                 {% endif %}
             {% endif %}
+            
+            <div class="col-12">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Withdrawal Address' %}
+                    </div>
+                    <div class="ms-4 small">
+                        {{ tender.address_withdrawal }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Bidding Address' %}
+                    </div>
+                    <div class="ms-4 small">
+                        {{ tender.address_bidding }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Awaeding Address' %}
+                    </div>
+                    <div class="ms-4 small">
+                        {{ tender.address_opening }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="my-3" id="tender-meta" >
+        <div class="row gx-4 gy-0">
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Last updated' %}
+                    </div>
+                    <div class="ms-4">
+                        <span>{{ tender.updated }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Time on display' %}
+                    </div>
+                    <div class="ms-4">
+                        {{ tender.days_span }} {% trans 'days' %}
+                    </div>
+                </div>
+            </div>
 
             {% if tender.changes.all %}                
                 <div class="col-12">
@@ -302,9 +368,10 @@
                                     <span class="">
                                         {% for mod in change.changes|dictify %}
                                             <span class="ms-2" data-bs-toggle="tooltip" 
-                                                title="{{ mod.old_value|default:'-' }} &gt;&gt; {{ mod.new_value|default:'-' }}">
+                                                title="{{ mod.old_value|default:'-' }} &#10230; {{ mod.new_value|default:'-' }}">
                                                 <i class="bi bi-activity"></i> {{ mod.field }}
                                             </span>
+                                            <!-- &gt;&gt; 10230 129050 129054 129062 129106 11142 -->
                                         {% endfor %}
                                     </span><br>
                                 </div>
@@ -316,15 +383,24 @@
                 </div>
             {% endif %}
         </div>
+    </div>
 
-        {% if tender.cancelled %}
+    {% if tender.cancelled %}
+        <div class="my-3" id="tender-cancelled-bottom" >
             <div class="text-bg-danger rounded text-center my-2">
                 <div class="fw-bold p-1">
                     {% trans 'CANCELLED' %}
                 </div>
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
 
+    <div class="my-3" id="tender-actions" >
+        <div class="text-center">
+            <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Download' %}</a>
+            <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bookmark' %}</a>
+            <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bid' %}</a>
+        </div>
     </div>
 
 {% endblock content %}
@@ -336,10 +412,6 @@ Chrono: 917273
 Plans_Price: 0.00
 Size_Read: 120,18 M
 Size_Bytes: 126014292
-
-Address_Withdrawal: ONEE/Branche Electricité Bureaux de la Direction Approvisionnements et Marchés (DAM) : 65, Rue OTHMAN BEN AFFAN 20000 CASABLANCA, B.P. 13 498 -MAROC, Tel : (212) (5) 22.66.80.21 – 22.66.83.59 - Télécopieur (212) (5) 22 43.31.12
-Address_Bidding: ONEE/Branche Electricité Bureaux de la Direction Approvisionnements et Marchés (DAM) : 65, Rue OTHMAN BEN AFFAN 20000 CASABLANCA, B.P. 13 498 -MAROC, Tel : (212) (5) 22.66.80.21 – 22.66.83.59 - Télécopieur (212) (5) 22 43.31.12
-Address_Opening: ONEE/Branche Electricité Bureaux de la Direction Approvisionnements et Marchés (DAM) : 65, Rue OTHMAN BEN AFFAN 20000 CASABLANCA, B.P. 13 498 -MAROC, Tel : (212) (5) 22.66.80.21 – 22.66.83.59 - Télécopieur (212) (5) 22 43.31.12
 
 Contact_Name: Brahim ARCHICH
 Contact_Phone: 05 22 75 45 01 à 06

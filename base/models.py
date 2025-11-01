@@ -382,7 +382,7 @@ class Tender(models.Model):
         except: return 0
 
     def save(self, *args, **kwargs):
-        self.keywords = nt(self.title)
+        self.keywords = nt(f"{ self.title } { self.chrono }")
         self.cliwords = nt(self.client.name)
         self.refwords = nt(self.reference)
         self.locwords = nt(self.location)

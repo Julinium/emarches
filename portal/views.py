@@ -24,6 +24,7 @@ from base.texter import normalize_text
 
 
 # Default Settings
+TENDER_FULL_PROGRESS_DAYS = 30
 TENDERS_ITEMS_PER_PAGE = 10
 TENDERS_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = False
@@ -49,11 +50,6 @@ class TenderListView(ListView):
         self.query_string = self.query_params
         self.query_params.pop('sort', '')
         self.query_unsorted = self.query_params
-
-
-    # def get_paginate_by(self, queryset):
-        # return self.get_user_settings('tenders_items_per_page') or TENDERS_ITEMS_PER_PAGE
-
 
     def get_queryset(self):
 
@@ -95,7 +91,7 @@ class TenderListView(ListView):
 
         context['categories']         = all_categories
         context['procedures']         = all_procedures
-        # context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
+        context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
 
         context['sorter']             = self.sorter
@@ -173,7 +169,7 @@ class TenderListView(ListView):
             return queryset
 
         ff = 0
-        # sct = super().get_user_settings('tenders_ordering_field') or SHOW_CANCELLED
+        # sct = self.get_user_settings('tenders_ordering_field') or SHOW_CANCELLED
         if not SHOW_CANCELLED:
             tenders = tenders.exclude(cancelled=False)
 
@@ -314,18 +310,10 @@ class TenderListView(ListView):
                     tenders = tenders.filter(lots__qualifs__in=user_qualifs)
 
 
-        # has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
-        # has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
-        # has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
-
-        # #### icons
-
-        # has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Licenses required"))
-        # has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Qualifications required"))
-        # agrements    = '' | 'companies' | 'required' | 'na'
-        # qualifs      = '' | 'companies' | 'required' | 'na'
-
         return tenders.distinct(), ff
+
+    # def get_paginate_by(self, queryset):
+        # return self.get_user_settings('tenders_items_per_page') or TENDERS_ITEMS_PER_PAGE
 
     # def get_user_settings(self, field_name):
     #     try:
