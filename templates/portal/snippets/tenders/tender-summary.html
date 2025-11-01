@@ -28,7 +28,7 @@
                                     <span class="small"
                                         data-bs-toggle="tooltip"
                                         title="{{ tender.lots_count }} {% trans 'Lots' %}">
-                                        <i class="bi bi-{{ icon_multi_lots }}"></i>
+                                        <i class="bi bi-{{ bicons.multi_lots }}"></i>
                                     </span>
                                 {% endif %}
                             </span>
@@ -40,13 +40,13 @@
                             <span class="fw-light small text-muted mx-1" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Execution Location' %}: {{ tender.location }}">
-                                <span><i class="bi bi-{{ icon_location }}"></i></span>
+                                <span><i class="bi bi-{{ bicons.location }}"></i></span>
                                 <span>{{ tender.location }}</span>
                             </span>
                             <span class="fw-light small text-muted mx-1" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Public Client' %}: {{ tender.client.name }}">
-                                <span><i class="bi bi-{{ icon_client }}"></i></span>
+                                <span><i class="bi bi-{{ bicons.client }}"></i></span>
                                 <span>{{ tender.client }}</span>
                             </span>
                         </div>
@@ -75,7 +75,7 @@
                     <div class="row gx-4 gy-0">
                         <div class="col-12 col-md-6">
                             <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_deadline }}"></i></div>
+                                <div class="me-2"><i class="bi bi-{{ bicons.deadline }}"></i></div>
                                 <div class="">
                                     <span class="text-wrap border-0 border-bottom">
                                         {{ tender.deadline }}
@@ -88,7 +88,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_reference }}"></i></div>
+                                <div class="me-2"><i class="bi bi-{{ bicons.reference }}"></i></div>
                                 <div class="text-wrap border-0 border-bottom">
                                     {{ tender.reference }}
                                     <span class="me-1">
@@ -99,7 +99,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_location }}"></i></div>
+                                <div class="me-2"><i class="bi bi-{{ bicons.location }}"></i></div>
                                 <div class="text-wrap border-0 border-bottom">
                                     {{ tender.location }}
                                 </div>
@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="d-flex fw-light small text-muted mb-1 mt-2">
-                                <div class="me-2"><i class="bi bi-{{ icon_client }}"></i></div>
+                                <div class="me-2"><i class="bi bi-{{ bicons.client }}"></i></div>
                                 <div class="text-wrap border-0 border-bottom">
                                     {{ tender.client.name }}
                                 </div>
@@ -127,7 +127,7 @@
                         <span class="small me-2 text-danger"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Procedure may be restricted' %}: {{ tender.procedure.name }}">
-                            <i class="bi bi-{{ icon_restricted }}"></i>
+                            <i class="bi bi-{{ bicons.restricted }}"></i>
                         </span>
                     {% endif %}
 
@@ -135,19 +135,19 @@
                         <span class="small me-0 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Electronic bidding is required' %}">
-                            <i class="bi bi-{{ icon_ebid }}"></i>
+                            <i class="bi bi-{{ bicons.ebid }}"></i>
                         </span>
                     {% elif tender.ebid == 0 %}
                         <span class="small me-0 text-success"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Electronic bidding is optional' %}">
-                            <i class="bi bi-{{ icon_ebid }}"></i>
+                            <i class="bi bi-{{ bicons.ebid }}"></i>
                         </span>
                     {% else %}
                         <span class="small me-2 text-danger"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Electronic bidding is not applicable' %}">
-                            <i class="bi bi-{{ icon_no_ebid }}"></i>
+                            <i class="bi bi-{{ bicons.no_ebid }}"></i>
                         </span>
                     {% endif %}
 
@@ -156,19 +156,19 @@
                             <span class="small me-2 text-primary"
                                 data-bs-toggle="tooltip"
                                 title="{% trans 'Electronic signature is required' %}">
-                                <i class="bi bi-{{ icon_esign }}"></i>
+                                <i class="bi bi-{{ bicons.esign }}"></i>
                             </span>
                         {% elif tender.esign == 0 %}
                             <span class="small me-2 text-success"
                                 data-bs-toggle="tooltip"
                                 title="{% trans 'Electronic signature is optional' %}">
-                                <i class="bi bi-{{ icon_esign }}"></i>
+                                <i class="bi bi-{{ bicons.esign }}"></i>
                             </span>
                         {% else %}
                             <span class="small me-2 text-secondary"
                                 data-bs-toggle="tooltip"
                                 title="{% trans 'Electronic signature is not applicable' %}">
-                                <i class="bi bi-{{ icon_esign }}"></i>
+                                <i class="bi bi-{{ bicons.esign }}"></i>
                             </span>
                         {% endif %}
                     {% endif %}
@@ -177,7 +177,7 @@
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Reserved to SMBs, individuals, Unions, ...' %}">
-                            <i class="bi bi-{{ icon_reserved }}"></i>
+                            <i class="bi bi-{{ bicons.reserved }}"></i>
                         </span>
                     {% endif %}
 
@@ -185,42 +185,42 @@
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Licenses required' %}">
-                            <i class="bi bi-{{ icon_has_agrements }}"></i>
+                            <i class="bi bi-{{ bicons.has_agrements }}"></i>
                         </span>
                     {% endif %}
                     {% if tender.has_qualifs %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Qualifications required' %}">
-                            <i class="bi bi-{{ icon_has_qualifs }}"></i>
+                            <i class="bi bi-{{ bicons.has_qualifs }}"></i>
                         </span>
                     {% endif %}
                     {% if tender.has_samples %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Samples required' %}">
-                            <i class="bi bi-{{ icon_has_samples }}"></i>
+                            <i class="bi bi-{{ bicons.has_samples }}"></i>
                         </span>
                     {% endif %}
                     {% if tender.has_visits %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'In-site visits scheduled' %}">
-                            <i class="bi bi-{{ icon_has_visits }}"></i>
+                            <i class="bi bi-{{ bicons.has_visits }}"></i>
                         </span>
                     {% endif %}
                     {% if tender.has_meetings %}
                         <span class="small me-2 text-primary"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Meetings scheduled' %}">
-                            <i class="bi bi-{{ icon_has_meetings }}"></i>
+                            <i class="bi bi-{{ bicons.has_meetings }}"></i>
                         </span>
                     {% endif %}
                     {% if tender.variant %}
                         <span class="small me-2 text-success"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Variants accepted' %}">
-                            <i class="bi bi-{{ icon_variant }}"></i>
+                            <i class="bi bi-{{ bicons.variant }}"></i>
                         </span>
                     {% endif %}
 
@@ -229,7 +229,7 @@
                             data-bs-toggle="tooltip"
                             title="{% trans 'Tender has Changes' %}">
                             {{ tender.changes.all.count|metrify:0 }}
-                            <i class="bi bi-{{ icon_changes }}"></i>
+                            <i class="bi bi-{{ bicons.changes }}"></i>
                         </span>
                     {% endif %}
                 </div>
@@ -239,19 +239,19 @@
                         data-bs-toggle="tooltip"
                         title="{% trans 'Bookmarks' %}">
                         {{ tender.favorites.all.count|metrify:0 }}
-                        <i class="bi bi-{{ icon_favorites }}" style="width: 1rem; height: 1rem;"></i>
+                        <i class="bi bi-{{ bicons.favorites }}" style="width: 1rem; height: 1rem;"></i>
                     </span>
                     <span class="ms-2"
                         data-bs-toggle="tooltip"
                         title="{% trans 'Comments' %}">
                         {{ tender.comments.all.count|metrify:0 }}
-                        <i class="bi bi-{{ icon_comments }}" style="width: 1rem; height: 1rem;"></i>
+                        <i class="bi bi-{{ bicons.comments }}" style="width: 1rem; height: 1rem;"></i>
                     </span>
                     <span class="ms-2"
                         data-bs-toggle="tooltip"
                         title="{% trans 'Downloads' %}">
                         {{ tender.downloads.all.count|metrify:0 }}
-                        <i class="bi bi-{{ icon_downloads }}" style="width: 1rem; height: 1rem;"></i>
+                        <i class="bi bi-{{ bicons.downloads }}" style="width: 1rem; height: 1rem;"></i>
                     </span>
                 </div>
             </div>

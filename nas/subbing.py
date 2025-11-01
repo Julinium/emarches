@@ -19,7 +19,6 @@ def subscribeUserToNotifications(user):
     except Exception as xc : print('xxxxxxxxxxxxxxxxxxx Exception raised when subscribing to Notifications:', str(xc))
 
 
-
 def subscribeUserToNewsletters(user):
     newls = Newsletter.objects.all()
     newls_subs = []

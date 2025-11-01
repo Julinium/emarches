@@ -1,7 +1,10 @@
-from django.shortcuts import render
+import os
+
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from datetime import datetime
 from zoneinfo import ZoneInfo
+from uuid import UUID
 
 from django.conf import settings
 
@@ -11,8 +14,10 @@ from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control, never_cache
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse, FileResponse
 
 from django.views.generic import ListView, DetailView
 
@@ -21,10 +26,11 @@ from django.contrib.auth.models import User
 from nas.models import Favorite, UserSetting
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
+from portal.bs_icons import bicons
 
 
 # Default Settings
-TENDER_FULL_PROGRESS_DAYS = 30
+TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = 10
 TENDERS_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = False
@@ -97,33 +103,7 @@ class TenderListView(ListView):
 
         context['sorter']             = self.sorter
 
-        context['icon_filters']       = 'front text-warning'
-        context['icon_estimate']      = 'cash-coin'
-        context['icon_bond']          = 'bookmark-check'
-        context['icon_published']     = 'clock'
-        context['icon_multi_lots']    = 'ui-radios-grid'        # 'grid' # 'ui-checks-grid'
-        context['icon_location']      = 'pin-map'               # 'geo'
-        context['icon_client']        = 'briefcase'             # 'house-door' # 'bank'
-        context['icon_deadline']      = 'hourglass-bottom'      # 'calendar4-event'
-        context['icon_reference']     = 'tag'
-
-        context['icon_restricted']    = 'intersect'             # 'bell-slash-fill'
-        context['icon_reserved']      = 'sign-yield-fill'
-        context['icon_variant']       = 'shuffle'
-        context['icon_has_agrements'] = 'shield-fill-check'
-        context['icon_has_qualifs']   = 'mortarboard-fill'
-        context['icon_has_samples']   = 'palette2'
-        context['icon_has_visits']    = 'person-walking'
-        context['icon_has_meetings']  = 'chevron-bar-contract'
-
-        context['icon_changes']       = 'activity'              # 'pencil-square'
-        context['icon_favorites']     = 'heart'
-        context['icon_downloads']     = 'arrow-down-square'     # 'download'
-        context['icon_comments']      = 'chat-square-quote'
-
-        context['icon_ebid']          = 'pc-display-horizontal' # 'laptop'
-        context['icon_esign']         = 'usb-drive'             # 'device-ssd'
-        context['icon_no_ebid']       = 'pc-display-horizontal' # 'briefcase-fill'
+        context['bicons']             = bicons
 
         return context
 
@@ -330,20 +310,6 @@ class TenderDetailView(DetailView):
     template_name = 'portal/tender-details.html'
     context_object_name = 'tender'
 
-
-    #####
-    # print("sssssssssssssssss")
-    # from base.models import Lot
-    # lots = Lot.objects.filter(category=None)
-    # i = 0
-    # for l in lots:
-    #     i += 1
-    #     print(i)
-    #     l.category = l.tender.category
-    #     l.save()
-    # print("eeeeeeeeeeeeeeeeee")
-    #####
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["link_prefix"] = LINK_PREFIX
@@ -362,3 +328,60 @@ class TenderDetailView(DetailView):
 
         return queryset
 
+
+def tender_list(request):
+    pass
+
+
+
+@login_required(login_url="account_login")
+def tender_details(request, pk=None):
+
+    tender = get_object_or_404(Tender.objects.select_related(
+                'client', 'category', 'mode', 'procedure'
+            ).prefetch_related(
+                'domains', 'lots', 'lots__agrements', 'lots__qualifs',
+                'lots__meetings', 'lots__samples', 'lots__visits'
+            ), id=pk)
+
+
+    files_list = []
+    total_size = 0
+    dce_dir = os.path.join(
+        os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), 
+        settings.DL_PATH_PREFIX + tender.chrono
+        )
+    print(f"======== { dce_dir } =========")
+    if os.path.exists(dce_dir): files_list = os.listdir(dce_dir)
+
+    files_info = []
+    if len(files_list) > 0:
+        for entry in files_list:
+            full_path = os.path.join(dce_dir, entry)
+            if os.path.exists(full_path):
+                if os.path.isfile(full_path):
+                    sizens = os.path.getsize(full_path)
+                    total_size += sizens
+                    files_info.append({
+                        "name": entry,
+                        "size": sizens,
+                        "priv": 1
+                    })
+        
+    files_count = len(files_info)
+
+
+    context = { 
+        'tender'        : tender,
+        'link_prefix'   : LINK_PREFIX,
+        'bicons'        : bicons,
+        'total_size'    : total_size,
+        'files_info'    : files_info,
+        }
+
+    return render(request, 'portal/tender-details.html', context)
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def toggle_favorite(request, pk=None):
+    pass

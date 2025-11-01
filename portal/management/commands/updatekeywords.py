@@ -8,9 +8,7 @@ class Command(BaseCommand):
     help = "Updates"
 
     def handle(self, *args, **kwargs):
-
-        from base.models import Client, Lot
-
+        
         clients = Client.objects.filter(keywords=None)
         cc = clients.count()
         i = 0

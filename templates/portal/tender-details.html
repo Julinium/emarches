@@ -46,6 +46,17 @@
                 </div>
             </div>
 
+            <div class="col-12">
+                <div class="d-flex-inline my-3 border-0 border-bottom">
+                    <div class="text-muted small fw-light">
+                        {% trans 'Public Client' %}
+                    </div>
+                    <div class="ms-4">
+                        {{ tender.client.name }}
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
@@ -101,16 +112,18 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Lots' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.lots_count }}
+            <!-- {% if tender.lots.count > 1 %}
+                <div class="col-12 col-md-6">
+                    <div class="d-flex-inline my-3 border-0 border-bottom">
+                        <div class="text-muted small fw-light">
+                            {% trans 'Lots' %}
+                        </div>
+                        <div class="ms-4">
+                            {{ tender.lots_count }}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %} -->
 
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
@@ -122,16 +135,19 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Price of Plans' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.plans_price }}
+
+            {% if tender.plans_price > 0 %}
+                <div class="col-12 col-md-6">
+                    <div class="d-flex-inline my-3 border-0 border-bottom">
+                        <div class="text-muted small fw-light">
+                            {% trans 'Price of Plans' %}
+                        </div>
+                        <div class="ms-4">
+                            {{ tender.plans_price }}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
 
             <div class="col-12 col-md-6">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
@@ -150,17 +166,6 @@
                     </div>
                     <div class="ms-4">
                         {{ tender.location }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Public Client' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.client.name }}
                     </div>
                 </div>
             </div>
@@ -239,21 +244,22 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Domains of activity' %}
-                    </div>
-                    <div class="ms-4">
-                        {% for domain in tender.domains.all %}
-                            <span class="small">— {{ domain.name }}</span><br>
-                        {% empty %}
-                            <span class="fw-light small text-muted">{% trans 'Not found' %}</span>
-                        {% endfor %}
+            {% if tender.domains.all %}
+                <div class="col-12">
+                    <div class="d-flex-inline my-3 border-0 border-bottom">
+                        <div class="text-muted small fw-light">
+                            {% trans 'Domains of activity' %}
+                        </div>
+                        <div class="ms-4">
+                            {% for domain in tender.domains.all %}
+                                <span class="small">— {{ domain.name }}</span><br>
+                            {% empty %}
+                                <span class="fw-light small text-muted">{% trans 'Not found' %}</span>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
 
             {% if tender.lots.count == 1 %}
                 {% if tender.has_agrements %}
@@ -452,7 +458,10 @@
                 <span>
                     <button type="button" class="m-1 btn btn-outline-primary" 
                             data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                        {{ tender.lots_count }} {% trans "Lots details" %}
+                        <span><i class="bi bi-{{ bicons.multi_lots }}"></i></span>
+                        <span class="fw-bold">{{ tender.lots_count }}</span>
+                        <span class="ms-1">{% trans "Lots details" %}</span>
+                        
                     </button>
                     <span class="text-start">
                         {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
@@ -461,19 +470,33 @@
             {% endif %}
             <a href="javascript:"
                class="m-1 btn btn-outline-primary">
-                <span><i class="bi bi-download"></i></span>
-                <span>{% trans 'Download' %}</span>
-                <span class="badge text-bg-primary">{{ tender.size_bytes|filesizeformat }}</span>
+                <span><i class="bi bi-{{ bicons.downloads }}"></i></span>
+                <span class="ms-1 fw-bold">{{ total_size|filesizeformat }}</span>
+                <span class="ms-1">{% trans 'Download' %}</span>
             </a>
 
             <!-- <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bookmark' %}</a> -->
 
             <a target="_blank"
-               href="{{ link_prefix }}{{ tender.link }}" 
+               href="{{ link_prefix }}{{ tender.link }}"
                class="m-1 btn btn-outline-primary">
-                <span><i class="bi bi-box-arrow-up-right"></i></span>
-                <span>{% trans 'Bidding link' %}</span>
+                <span><i class="bi bi-{{ bicons.bidding }}"></i></span>
+                <span class="ms-1">{% trans 'Bid' %}</span>
             </a>
+            <!--
+                Modal to say:
+                We don't handle bidding process automatically.
+                We can provide paid support separately (eSign, preparation, ...).
+                Go to portal: Good luck.
+                Contact us: $200 and if won: +1.5%
+            -->
+        </div>
+        <div class="my-4" id="files-list">
+            {% for file_item in files_info %}
+                <p>{{ file_item.size|filesizeformat }} = {{ file_item.name }} - {{ file_item.priv }}</p>
+            {% empty %}
+                <p class="text-danger">No files found.</p>
+            {% endfor %}
         </div>
     </div>
 

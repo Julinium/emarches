@@ -7,6 +7,9 @@ SELENO_DIR = str(Path(__file__).resolve().parent)
 env_path = f'{ SELENO_DIR }/.env'
 load_dotenv(dotenv_path=env_path)
 
+MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
+
 VERBOSITY = 1
 BURST_LENGTH = 25
 
@@ -73,8 +76,6 @@ LOG_TIME_FORMAT = '%d/%m-%H:%M:%S'
 
 NA_PLH = ''
 TRUNCA = 32
-
-DL_PATH_PREFIX = 'DCE-'
 
 DCE_CLEANING_DAY = 7        # 1 to 28 (just to be sure)
 CLEAN_DCE_AFTER_DAYS = 60
