@@ -1,43 +1,47 @@
 
 bicons = {
-    'filters'       : 'front text-warning',
-    'estimate'      : 'cash-coin',
-    'bond'          : 'safe',                  
+    'filters'       : 'bi bi-front text-warning',
+    'estimate'      : 'bi bi-cash-coin',
+    'bond'          : 'bi bi-safe',            
                     # bookmark-check
                     # piggy-bank 
                     # credit-card
-    'published'     : 'clock',
-    'multi_lots'    : 'ui-radios-grid',        
+    'published'     : 'bi bi-clock',
+    'multi_lots'    : 'bi bi-ui-radios-grid',  
                     # 'grid'
                     # 'ui-checks-grid'
-    'location'      : 'pin-map' ,              
+    'location'      : 'bi bi-pin-map' ,        
                     # 'geo'
-    'client'        : 'briefcase',             
+    'client'        : 'bi bi-briefcase',       
                     # 'house-door' # 'bank'
-    'deadline'      : 'hourglass-bottom',      
+    'deadline'      : 'bi bi-hourglass-bottom',
                     # 'calendar4-event'
-    'reference'     : 'tag',
-    'restricted'    : 'intersect',             
-                    # 'bell-slash-fill'
-    'reserved'      : 'sign-yield-fill',
-    'variant'       : 'shuffle',
-    'has_agrements' : 'shield-fill-check',
-    'has_qualifs'   : 'mortarboard-fill',
-    'has_samples'   : 'palette2',
-    'has_visits'    : 'person-walking',
-    'has_meetings'  : 'chevron-bar-contract',
-    'changes'       : 'activity',              
+    'reference'     : 'bi bi-tag',
+    'restricted'    : 'bi bi-intersect text-danger',       
+                    # 'bell-slash-fill text-danger'
+    'reserved'      : 'bi bi-sign-yield-fill text-primary',
+    'variant'       : 'bi bi-shuffle text-success',
+    'has_agrements' : 'bi bi-shield-fill-check text-primary',
+    'has_qualifs'   : 'bi bi-mortarboard-fill text-primary',
+    'has_samples'   : 'bi bi-palette2 text-primary',
+    'has_visits'    : 'bi bi-person-walking text-primary',
+    'has_meetings'  : 'bi bi-chevron-bar-contract text-primary',
+    'changes'       : 'bi bi-activity',        
                     # 'pencil-square'
-    'favorites'     : 'heart',
-    'downloads'     : 'arrow-down-square',     
+    'favorites'     : 'bi bi-heart',
+    'downloads'     : 'bi bi-arrow-down-square',
                     # 'download'
-    'comments'      : 'chat-square-quote',
-    'ebid'          : 'pc-display-horizontal', 
+    'comments'      : 'bi bi-chat-square-quote',
+    'ebid_req'      : 'bi bi-pc-display-horizontal text-primary',
+    'ebid_opt'      : 'bi bi-pc-display-horizontal text-success',
+    'ebid_na'       : 'bi bi-pc-display-horizontal text-danger',
                     # 'laptop'
-    'esign'         : 'usb-drive',             
+    'esign_req'     : 'bi bi-usb-drive text-primary', 
+    'esign_opt'     : 'bi bi-usb-drive text-success', 
+    'esign_na'      : 'bi bi-usb-drive text-secondary',       
                     # 'device-ssd'
-    'no_ebid'       : 'pc-display-horizontal',
-    'bidding'       : 'send-check',     
+    # 'no_ebid'       : 'bi bi-pc-display-horizontal',
+    'bidding'       : 'bi bi-send-check',
                     # arrow-90deg-right
                     # reply 
                     # handbag 

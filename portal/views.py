@@ -344,14 +344,13 @@ def tender_details(request, pk=None):
                 'lots__meetings', 'lots__samples', 'lots__visits'
             ), id=pk)
 
-
     files_list = []
     total_size = 0
     dce_dir = os.path.join(
         os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), 
         settings.DL_PATH_PREFIX + tender.chrono
         )
-    print(f"======== { dce_dir } =========")
+    # print(f"======== { dce_dir } =========")
     if os.path.exists(dce_dir): files_list = os.listdir(dce_dir)
 
     files_info = []
@@ -381,7 +380,58 @@ def tender_details(request, pk=None):
 
     return render(request, 'portal/tender-details.html', context)
 
+
 @login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_get_file(request, pk=None, fn=None, fp=1):
+
+    if request.method != 'GET': return HttpResponse(status=403)
+    if pk == None or fn == None: return HttpResponse(status=404)
+
+    tender = get_object_or_404(Tender, id=pk)
+    if not tender : return HttpResponse(status=404)
+
+    if fp == 0:
+        return HttpResponse(status=403)
+        # dce_dir = os.path.join(settings.DCE_MEDIA_ROOT, 'readme')
+        # file_path = os.path.join('readme', fn)
+        # file_fp = os.path.join(dce_dir, fn)
+    else:
+        dce_dir = os.path.join(os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), settings.DL_PATH_PREFIX + tender.chrono)
+        file_path = os.path.join(os.path.join('dce', settings.DL_PATH_PREFIX + tender.chrono), fn)
+        file_fp = os.path.join(dce_dir, fn)
+
+    if os.path.exists(file_fp):
+
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for: user_ip = x_forwarded_for.split(',')[0]
+        else: user_ip = request.META.get('REMOTE_ADDR', '')
+        if not request.user.is_superuser:
+            if not request.user.is_staff:
+                if fp == 1:
+                    udf = UserDownloadFile(
+                        consultation = tender.chrono,
+                        user = request.user,
+                        user_agent = user_agent,
+                        user_ip = user_ip,
+                        file_name = os.path.basename(file_fp),
+                        file_size = os.path.getsize(file_fp),
+                        )
+                    udf.save()
+
+        # Set X-Accel-Redirect header to point to the internal Nginx location
+        response = HttpResponse()
+        response['Content-Type'] = 'application/octet-stream'
+        response['X-Accel-Redirect'] = f'/comedia/{file_path}'
+        response['Content-Disposition'] = f'attachment; filename="{ fn }"'
+        response['Content-Length'] = os.path.getsize(file_fp)
+        return response
+
+    return HttpResponse(status=404)
+
+
+
+@login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def toggle_favorite(request, pk=None):
     pass

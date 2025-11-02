@@ -49,7 +49,7 @@
                         <div class="col-12 col-md-6">
                             <div class="d-flex-inline my-1 border-0 border-bottom">
                                 <span class="small">
-                                    <i class="pe-1 bi bi-{{ icon_filters }}"></i>
+                                    <i class="pe-1 {{ bicons.filters }}"></i>
                                 </span>
                                 <span class="text-muted small fw-light">
                                     {% trans 'Results are filtered' %}
@@ -74,7 +74,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small">
-                                <i class="pe-1 bi bi-{{ icon_multi_lots }}"></i>
+                                <i class="pe-1 {{ bicons.multi_lots }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender is allotted' %}
@@ -85,7 +85,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_deadline }}"></i>
+                                <i class="pe-1 {{ bicons.deadline }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Bidding deadline' %}
@@ -96,7 +96,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_reference }}"></i>
+                                <i class="pe-1 {{ bicons.reference }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender reference' %}
@@ -107,7 +107,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_location }}"></i>
+                                <i class="pe-1 {{ bicons.location }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Execution Location' %}
@@ -118,7 +118,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_client }}"></i>
+                                <i class="pe-1 {{ bicons.client }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Public Client' %}
@@ -128,8 +128,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-danger">
-                                <i class="pe-1 bi bi-{{ icon_restricted }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.restricted }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Procedure may be restricted' %}
@@ -139,8 +139,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_ebid }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.ebid_req }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Electronic bidding is required' %}
@@ -150,8 +150,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-success">
-                                <i class="pe-1 bi bi-{{ icon_ebid }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.ebid_opt }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Electronic bidding is optional' %}
@@ -161,8 +161,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-danger">
-                                <i class="pe-1 bi bi-{{ icon_no_ebid }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.ebid_na }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Electronic bidding is not applicable' %}
@@ -172,8 +172,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_esign }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.esign_req }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Electronic signature is required' %}
@@ -183,8 +183,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-success">
-                                <i class="pe-1 bi bi-{{ icon_esign }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.esign_opt }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Electronic signature is optional' %}
@@ -194,8 +194,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-secondary">
-                                <i class="pe-1 bi bi-{{ icon_esign }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.esign_na }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Electronic signature is not applicable' %}
@@ -205,8 +205,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_reserved }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.reserved }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Reserved to SMBs, individuals, Unions, ...' %}
@@ -216,8 +216,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_has_agrements }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.has_agrements }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Licenses required' %}
@@ -227,8 +227,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_has_qualifs }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.has_qualifs }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Qualifications required' %}
@@ -238,8 +238,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_has_samples }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.has_samples }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Samples required' %}
@@ -249,8 +249,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_has_visits }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.has_visits }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'In-site visits scheduled' %}
@@ -260,8 +260,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-primary">
-                                <i class="pe-1 bi bi-{{ icon_has_meetings }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.has_meetings }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Meetings scheduled' %}
@@ -271,8 +271,8 @@
 
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-success">
-                                <i class="pe-1 bi bi-{{ icon_variant }}"></i>
+                            <span class="small">
+                                <i class="pe-1 {{ bicons.variant }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Variants accepted' %}
@@ -283,7 +283,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_changes }}"></i>
+                                <i class="pe-1 {{ bicons.changes }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender Changes' %}
@@ -294,7 +294,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_favorites }}"></i>
+                                <i class="pe-1 {{ bicons.favorites }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender Favorites' %}
@@ -305,7 +305,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_downloads }}"></i>
+                                <i class="pe-1 {{ bicons.downloads }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender Downloads' %}
@@ -316,7 +316,7 @@
                     <div class="col-12 col-md-6">
                         <div class="d-flex-inline my-1 border-0 border-bottom">
                             <span class="small text-muted">
-                                <i class="pe-1 bi bi-{{ icon_comments }}"></i>
+                                <i class="pe-1 {{ bicons.comments }}"></i>
                             </span>
                             <span class="text-muted small fw-light">
                                 {% trans 'Tender Comments' %}

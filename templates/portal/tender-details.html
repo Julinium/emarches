@@ -458,7 +458,7 @@
                 <span>
                     <button type="button" class="m-1 btn btn-outline-primary" 
                             data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                        <span><i class="bi bi-{{ bicons.multi_lots }}"></i></span>
+                        <span><i class="{{ bicons.multi_lots }}"></i></span>
                         <span class="fw-bold">{{ tender.lots_count }}</span>
                         <span class="ms-1">{% trans "Lots details" %}</span>
                         
@@ -470,7 +470,7 @@
             {% endif %}
             <a href="javascript:"
                class="m-1 btn btn-outline-primary">
-                <span><i class="bi bi-{{ bicons.downloads }}"></i></span>
+                <span><i class="{{ bicons.downloads }}"></i></span>
                 <span class="ms-1 fw-bold">{{ total_size|filesizeformat }}</span>
                 <span class="ms-1">{% trans 'Download' %}</span>
             </a>
@@ -480,7 +480,7 @@
             <a target="_blank"
                href="{{ link_prefix }}{{ tender.link }}"
                class="m-1 btn btn-outline-primary">
-                <span><i class="bi bi-{{ bicons.bidding }}"></i></span>
+                <span><i class="{{ bicons.bidding }}"></i></span>
                 <span class="ms-1">{% trans 'Bid' %}</span>
             </a>
             <!--
@@ -507,11 +507,4 @@
 Chrono: 917273
 Size_Read: 120,18 M
 Size_Bytes: 126014292
-
-Contact_Name: Brahim ARCHICH
-Contact_Phone: 05 22 75 45 01 à 06
-Contact_Email: archich@onee.ma
-Contact_Fax: 05 22 75 47 14
-
-Link: 917273&orgAcronyme=d4q
  -->
