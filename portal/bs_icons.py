@@ -48,4 +48,5 @@ bicons = {
                     # arrow-up-right-square 
                     # check-square 
                     # envelope-arrow-up
+    'search'        : 'bi bi-search',
 }
