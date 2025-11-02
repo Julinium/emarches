@@ -49,6 +49,12 @@ def format(tender_json):
             # case "reponse-elec-non": # cons_repec = 'I'
 
         ll = j["lots"]
+        
+        # TODO: Remove prints
+        print('==============j["lots"]=============')
+        print(str(ll))
+        print("===========================")
+
         reserved_t, variant_t = False, False
         estimate_t, bond_t = 0, 0
         jl = len(ll) if ll else 0
