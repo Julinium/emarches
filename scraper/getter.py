@@ -359,6 +359,12 @@ def getLots(lots_href):
     i = 0
     for comment in comments:
         if "Debut Lot 1" in comment :
+
+
+			# <div class="intitule-bloc intitule-150"> <span class="blue bold"><span>Lot</span> 1 :</span></div><div class="content-bloc bloc-600">TRAVAUX DE CONSTRUCTION DE 02 TERRAINS DE PROXIMITE TYPE E A LA COMMUNE AGHOUATIM (CENTRE ET BELAABASS) </div><div class="breaker"></div>
+			# <div class="intitule-bloc intitule-150"> <span>Catégorie</span> :</div> <div class="content-bloc bloc-600">Travaux</div><div class="breaker"></div>
+			# <div class="intitule-bloc intitule-150"> <span>Description</span> :</div><div class="content-bloc bloc-600"></div><div class="breaker"></div>
+
             current_lot = {}
 
             # Number
@@ -373,11 +379,10 @@ def getLots(lots_href):
             # Category
             category = None
             category_elem = title_elem.find_next_sibling("div", class_="content-bloc bloc-600")
-            categ = category_elem.get_text().strip() if category_elem else NA_PLH
-            if categ and len(categ) > 3:
-                if categ != NA_PLH:
-                    category = {"label": categ}
-            
+            category_text = category_elem.get_text().strip() if category_elem else NA_PLH
+            # if category_text and len(category_text) > 3:
+            if category_text != NA_PLH:
+                category = {"label": category_text}
 
             # Extract Description
             description_elem = category_elem.find_next_sibling("div", class_="content-bloc bloc-600")

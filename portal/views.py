@@ -8,6 +8,9 @@ from uuid import UUID
 
 from django.conf import settings
 
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+
 from django.db import models
 from django.db.models import Q
 from urllib.parse import urlencode
@@ -23,7 +26,7 @@ from django.views.generic import ListView, DetailView
 
 from django.contrib.auth.models import User
 
-from nas.models import Favorite, UserSetting
+from nas.models import UserSetting, Download
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
 from portal.bs_icons import bicons
@@ -340,6 +343,7 @@ def tender_details(request, pk=None):
     tender = get_object_or_404(Tender.objects.select_related(
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
+                'downloads',
                 'domains', 'lots', 'lots__agrements', 'lots__qualifs',
                 'lots__meetings', 'lots__samples', 'lots__visits'
             ), id=pk)
@@ -381,7 +385,8 @@ def tender_details(request, pk=None):
 
 
 @login_required(login_url="account_login")
-def tender_get_file(request, pk=None, fn=None, fp=1):
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_get_file(request, pk=None, fn=None):
 
     if request.method != 'GET': return HttpResponse(status=403)
     if pk == None or fn == None: return HttpResponse(status=404)
@@ -389,43 +394,22 @@ def tender_get_file(request, pk=None, fn=None, fp=1):
     tender = get_object_or_404(Tender, id=pk)
     if not tender : return HttpResponse(status=404)
     
-    if fp != 1:
-        return HttpResponse(status=403)
-        # dce_dir = os.path.join(settings.DCE_MEDIA_ROOT, 'readme')
-        # file_path = os.path.join('readme', fn)
-        # file_fp = os.path.join(dce_dir, fn)
-    else:
-        dce_dir = os.path.join(os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), settings.DL_PATH_PREFIX + tender.chrono)
-        file_path = os.path.join(os.path.join('dce', settings.DL_PATH_PREFIX + tender.chrono), fn)
-        file_fp = os.path.join(dce_dir, fn)
+    dce_dir = os.path.join(os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), settings.DL_PATH_PREFIX + tender.chrono)
+    file_path = os.path.join(os.path.join('dce', settings.DL_PATH_PREFIX + tender.chrono), fn)
+    file_fp = os.path.join(dce_dir, fn)
 
     if os.path.exists(file_fp):
+        if recordDownload(tender, request.user):
+            # Set X-Accel-Redirect header to point to the internal Nginx location
+            response = HttpResponse()
+            response['Content-Type'] = 'application/octet-stream'
+            response['X-Accel-Redirect'] = f'/dce/{file_path}'
+            response['Content-Disposition'] = f'attachment; filename="{ fn }"'
+            response['Content-Length'] = os.path.getsize(file_fp)
+            return response
+        else:
+            return HttpResponse(status=400)
 
-        # TODO: Log download to database
-        # user_agent = request.META.get('HTTP_USER_AGENT', '')
-        # x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        # if x_forwarded_for: user_ip = x_forwarded_for.split(',')[0]
-        # else: user_ip = request.META.get('REMOTE_ADDR', '')
-        # if not request.user.is_superuser:
-        #     if not request.user.is_staff:
-        #         if fp == 1:
-        #             udf = UserDownloadFile(
-        #                 consultation = tender.chrono,
-        #                 user = request.user,
-        #                 user_agent = user_agent,
-        #                 user_ip = user_ip,
-        #                 file_name = os.path.basename(file_fp),
-        #                 file_size = os.path.getsize(file_fp),
-        #                 )
-        #             udf.save()
-
-        # Set X-Accel-Redirect header to point to the internal Nginx location
-        response = HttpResponse()
-        response['Content-Type'] = 'application/octet-stream'
-        response['X-Accel-Redirect'] = f'/dce/{file_path}'
-        response['Content-Disposition'] = f'attachment; filename="{ fn }"'
-        response['Content-Length'] = os.path.getsize(file_fp)
-        return response
 
     return HttpResponse(status=404)
 
@@ -435,3 +419,16 @@ def tender_get_file(request, pk=None, fn=None, fp=1):
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def toggle_favorite(request, pk=None):
     pass
+
+# @login_required(login_url="account_login")
+def recordDownload(tender, user, size_r=None, size_b=None):
+    return Download.objects.create(
+            user = user,
+            tender = tender,
+            size_read = size_r if size_r else tender.size_read,
+            size_bytes = size_b if size_b else tender.size_bytes,        
+        )
+    #     messages.success(request, _('Download launched successfully.'))
+    # except Exception as e:
+    #     print("Exception raised:", e)
+    #     messages.error(request, _('Exception raised !'))

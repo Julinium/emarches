@@ -55,7 +55,7 @@ def format(tender_json):
         if jl > 0:
             reserved_t = ll[0]["reserved"] == "Oui"
             variant_t = ll[0]["variant"] == "Oui"
-            for l in ll:                
+            for l in ll:
                 l["estimate"] = helper.getAmount(l["estimate"])
                 estimate_t += l["estimate"]
                 l["bond"] = helper.getAmount(l["bond"])

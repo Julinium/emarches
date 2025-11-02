@@ -89,8 +89,9 @@ def getDCE(tender):
 
     def make_link(type=None):
         if type == 'query': return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDemandeTelechargementDce&refConsultation={chrono}&orgAcronyme={acro}'
-        if type == 'file': return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={chrono}&orgAcronym={acro}'
-        return None
+        if type == 'file':  return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={chrono}&orgAcronym={acro}'
+                                 # f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadReglement&reference=OTQ1Mzcx&orgAcronyme={acro}'
+        return None 
 
     def get_filename(cd):
         if not cd: return None
@@ -139,7 +140,7 @@ def getDCE(tender):
     
     helper.printMessage('DEBUG', 'd.getDCE', 'Building Tender and files links.')
     helper.printMessage('TRACE', 'd.getDCE', f'Cons link : {url_query.replace(C.SITE_INDEX, '')}')
-    helper.printMessage('TRACE', 'd.getDCE', f'File link : {url_file.replace(C.SITE_INDEX,'')}')
+    helper.printMessage('TRACE', 'd.getDCE', f'File link : {url_file.replace(C.SITE_INDEX, '')}')
 
     try: request_query = http_session.get(url_query, headers=headino, timeout=C.REQ_TIMEOUT)
     except Exception as xc: 

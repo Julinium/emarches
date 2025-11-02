@@ -57,7 +57,7 @@
                     {% trans 'Category' %}:
                 </span>
                 <span class="">
-                    {{ lot.category|default:'?' }}
+                    {{ lot.category|default:tender.category.label|default:'?' }}
                 </span>
             </span>
 

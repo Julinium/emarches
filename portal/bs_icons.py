@@ -40,7 +40,6 @@ bicons = {
     'esign_opt'     : 'bi bi-usb-drive text-success', 
     'esign_na'      : 'bi bi-usb-drive text-secondary',       
                     # 'device-ssd'
-    # 'no_ebid'       : 'bi bi-pc-display-horizontal',
     'bidding'       : 'bi bi-send-check',
                     # arrow-90deg-right
                     # reply 
@@ -49,4 +48,11 @@ bicons = {
                     # check-square 
                     # envelope-arrow-up
     'search'        : 'bi bi-search',
+    'sort'          : 'bi bi-arrow-down-up',
+    'sort_up'       : 'bi bi-arrow-up',
+    'sort_down'     : 'bi bi-arrow-down',
+    'backspace'     : 'bi bi-backspace',
+    'filter'        : 'bi bi-funnel',
+                    # binoculars
+
 }

@@ -6,23 +6,23 @@
         <a class="dropdown-item" href="?{{ query_unsorted }}&sort=published">
             <i class="bi bi-{{ icon }} me-2"></i>
             <span class="{% if sorter == '-'|add:field or sorter == field %}fw-bold{% endif %}">{{ caption }}</span>
-            {% if sorter == '-'|add:field %} <i class="bi bi-arrow-down small fw-bold ms-2"></i> {% endif %}
-            {% if sorter == field %} <i class="bi bi-arrow-up small fw-bold ms-2"></i> {% endif %}
+            {% if sorter == '-'|add:field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+            {% if sorter == field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
         </a>
     {% else %}
         <a class="dropdown-item" href="?{{ query_unsorted }}&sort=-published">
             <i class="bi bi-{{ icon }} me-2"></i>
             <span class="{% if sorter == '-'|add:field or sorter == field %}fw-bold{% endif %}">{{ caption }}</span>
-            {% if sorter == '-'|add:field %} <i class="bi bi-arrow-down small fw-bold ms-2"></i> {% endif %}
-            {% if sorter == field %} <i class="bi bi-arrow-up small fw-bold ms-2"></i> {% endif %}
+            {% if sorter == '-'|add:field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+            {% if sorter == field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
         </a>
     {% endif %}
 {% else %}
     <a class="dropdown-item" href="?{{ query_unsorted }}&sort={% if sorter == field %}-{% endif %}{{ field }}">
         <i class="bi bi-{{ icon }} me-2"></i>
         <span class="{% if sorter == '-'|add:field or sorter == field %}fw-bold{% endif %}">{{ caption }}</span>
-        {% if sorter == field %} <i class="bi bi-arrow-down small fw-bold ms-2"></i> {% endif %}
-        {% if sorter == '-'|add:field %} <i class="bi bi-arrow-up small fw-bold ms-2"></i> {% endif %}
+        {% if sorter == field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+        {% if sorter == '-'|add:field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
     </a>
 {% endif %}
 

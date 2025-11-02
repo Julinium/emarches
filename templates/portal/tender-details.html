@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load i18n static %}
 {% load paraminos %}
-
+{% load humanize %}
 
 {% block title %}
     {% trans "Tenders Details" %}
@@ -324,7 +324,7 @@
             <div class="col-12">
                 <div class="d-flex-inline my-3 border-0 border-bottom">
                     <div class="text-muted small fw-light">
-                        {% trans 'Contact' %}
+                        {% trans 'Public Client Contact' %}
                     </div>
                     <div class="ms-4">
                         {% if tender.contact_name and tender.contact_name != '-' %}
@@ -408,6 +408,21 @@
                 </div>
             </div>
 
+            {% if tender.downloads.all %}
+                <div class="col-12 col-md-6">
+                    <div class="d-flex-inline my-3 border-0 border-bottom">
+                        <div class="text-muted small fw-light">
+                            {% trans 'Downloads' %}
+                        </div>
+                        <div class="ms-4 small">
+                            <span class="fw-bold">{{ tender.downloads.all|length|metrify:0 }}</span>
+                            <span class="text-muted small fw-light ms-3">{% trans 'Latest since' %}:</span>
+                            <span>{{ tender.downloads.first.when|timesince }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             {% if tender.changes.all %}                
                 <div class="col-12">
                     <div class="d-flex-inline my-3 border-0 border-bottom">
@@ -485,7 +500,7 @@
                         <div class="modal-body">
 
                             {% if files_info  %}
-                                <hr class="my-1">
+                                <!-- <hr class="my-1"> -->
                                 <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
                                 {% for f in files_info %}
                                     <a id="dce-{{ forloop.counter }}"

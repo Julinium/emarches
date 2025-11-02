@@ -25,6 +25,9 @@
                                 title="{% trans 'Total Estimate' %}: {{ tender.estimate }}">
                                 {{ tender.estimate|metrify }}
                                 {% if tender.lots_count > 1 %}
+                                    <span class="small fw-light text-muted">
+                                        /{{ tender.lots_count }}
+                                    </span>
                                     <span class="small"
                                         data-bs-toggle="tooltip"
                                         title="{{ tender.lots_count }} {% trans 'Lots' %}">
