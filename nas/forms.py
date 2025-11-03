@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-from .models import Profile, Company, NotificationSubscription
+from .models import Profile, Company, NotificationSubscription, UserSetting
 from .iceberg import get_ice_checkup
 
 ALLOW_INVALID_ICE = True
@@ -59,6 +59,22 @@ class UserProfileForm(forms.ModelForm):
                 profile.image = None
             profile.save()
         return profile
+
+class UserSettingsForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print("Choices on field:", self.fields['tenders_items_per_page'].choices)
+        print("Choices from model:", UserSetting._meta.get_field('tenders_items_per_page').choices)
+
+    class Meta:
+        model = UserSetting
+        fields = [
+            'tenders_ordering_field', 
+            'tenders_items_per_page', 
+            'tenders_full_bar_days', 
+            'tenders_show_expired', 
+            'tenders_show_cancelled']
 
 
 class CompanyForm(forms.ModelForm):

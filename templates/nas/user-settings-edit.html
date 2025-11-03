@@ -1,0 +1,54 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+
+{% block title %}
+    {% trans "Edit Profile" %}
+{% endblock title %}
+
+{% block content %}
+    <div class="h3">{% trans "Edit Profile" %}</div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        
+        <!-- <div class="form-floating mt-3 d-none">
+            <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" value="{{ form.username.value }}" required>
+            <label class="text-muted small fw-light" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        </div>
+        
+        <div class="row gx-4 mt-1">
+            <div class="col-md-6 col-12">
+                <div class="form-floating mt-3 {% if form.first_name.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}" name="{{ form.first_name.name }}" value="{{ form.first_name.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                </div>
+                <div class="form-floating mt-3 {% if form.last_name.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.last_name.id_for_label }}" name="{{ form.last_name.name }}" value="{{ form.last_name.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="form-floating mt-3 {% if form.phone.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                </div>
+                <div class="form-floating mt-3 {% if form.whatsapp.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.whatsapp.id_for_label }}" name="{{ form.whatsapp.name }}" value="{{ form.whatsapp.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.whatsapp.id_for_label }}">{{ form.whatsapp.label }}</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-floating mt-3 {% if form.about.errors %}border-2 border-danger{% endif %}">
+            <textarea class="form-control" id="{{ form.about.id_for_label }}" name="{{ form.about.name }}" style="height: 5rem;">{{ form.about.value }}</textarea>
+            <label class="text-muted small fw-light" for="{{ form.about.id_for_label }}">{{ form.about.label }}</label>
+        </div> -->
+
+        <div class="mt-3 text-center">        
+            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
+            <!-- <a class="m-1 btn btn-outline-secondary" href="{% url 'nas_profile_view' %}"><i class="me-2 bi bi-x-lg"></i>Cancel{% trans "Cancel" %}</a> -->
+        </div>
+    </form>
+
+{% endblock content %}

@@ -15,8 +15,16 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.models import User
 
 from base.models import Agrement, Qualif
-from nas.models import Profile, Company, Notification, NotificationSubscription, Newsletter, NewsletterSubscription
-from nas.forms import UserProfileForm, CompanyForm, NotificationSubscriptionForm, NewsletterSubscriptionForm
+from nas.models import (
+    Profile, Company, Notification, NotificationSubscription, 
+    Newsletter, NewsletterSubscription, UserSetting)
+
+from nas.forms import (
+    UserProfileForm, CompanyForm, 
+    NotificationSubscriptionForm, 
+    NewsletterSubscriptionForm,
+    UserSettingsForm)
+
 from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 
 
@@ -26,51 +34,6 @@ COMPANIES_ITEMS_PER_PAGE = 10
 @login_required
 def profile_view(request):
     return redirect('nas_at_username', request.user.username)
-
-
-# @login_required
-# def username_view(request, username):
-#     try:
-#         user_arg = User.objects.select_related('profile').prefetch_related(
-#             'newsletters', 'notifications', 'companies').get(username=username)
-#     except User.DoesNotExist:
-#         user_arg = None
-#         # Return 403, not 404, to prevent checking if a certain username exists.
-#         return HttpResponse("Not allowed", status=403)
-
-#     user = request.user
-
-#     if user_arg != user:
-#         return HttpResponse("Not allowed", status=403)
-
-#     try:
-#         profile = user.profile
-#     except:
-#         profile = Profile(user=user)
-#         profile.save()
-
-#     # companies = user.companies
-#     subscribeUserToNotifications(user)
-#     subscribeUserToNewsletters(user)
-#     noti_subs = user.notifications.all()
-#     newl_subs = user.newsletters.all()
-
-#     nofif_disabled = noti_subs.filter(active=False).first() != None
-#     newsl_disabled = newl_subs.filter(active=False).first() != None
-
-
-#     context = {
-#         'user': user,
-#         'profile': user.profile,
-#         # 'companies': companies,
-#         # 'notifications': noti_subs,
-#         'notif_disabled': nofif_disabled,
-#         # 'newsletters': newl_subs,
-#         'newsl_disabled': newsl_disabled
-#     }
-#     # messages.success(request, "Your personal data is kept private.")
-#     # messages.success(request, "Only your username and avatar may be seen by other users.")
-#     return render(request, 'nas/profile-view.html', context)
 
 
 @login_required
@@ -399,6 +362,25 @@ def accept_iced_company(request, pk):
         
     return redirect('nas_company_detail', pk=company.id)
 
+
+@login_required
+def user_settings(request):
+    user = request.user
+
+    us = UserSetting.objects.filter(user = user).first()
+
+    if request.method == 'POST':
+        form = UserSettingsForm(request.POST, request.FILES, instance=us)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Settings saved successfully.")
+            return redirect('nas_profile_view')
+        else:
+            show_form_errors(form, request)
+    else:
+        form = UserSettingsForm(instance=us)
+
+    return render(request, 'nas/user-settings-edit.html', {'form': form})
 
 def show_form_errors(form, request):
     error_messages = []
