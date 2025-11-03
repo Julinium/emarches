@@ -49,11 +49,6 @@ def format(tender_json):
             # case "reponse-elec-non": # cons_repec = 'I'
 
         ll = j["lots"]
-        
-        # TODO: Remove prints
-        print('==============j["lots"]=============')
-        print(str(ll))
-        print("===========================")
 
         reserved_t, variant_t = False, False
         estimate_t, bond_t = 0, 0
@@ -338,7 +333,7 @@ def save(tender_data):
                 lot_serializer = LotSerializer(data=lot_data)
                 helper.printMessage('TRACE', 'm.save', f"#### Lot to be created: {lot_title[:C.TRUNCA]}...")
                 lot_serializer.is_valid(raise_exception=True)
-                lot = lot_serializer.save(tender=tender)
+                lot = lot_serializer.save(tender=tender, category=lot_category)
                 if not tender_create:
                     change = {"field": "lot" , "old_value": "", "new_value": lot.title}
                     changed_fields.append(change)

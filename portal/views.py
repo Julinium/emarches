@@ -252,9 +252,13 @@ def tender_list(request):
     tenders, filters = filter_tenders(all_tenders, query_dict, request.user)
 
     sort = query_dict['sort']
-    
-    if sort and sort != '': ordering = [sort]
+
+    if sort and sort != '':
+        ordering = [sort]
+        if sort == 'published': ordering = ['-published']
+        if sort == '-published': ordering = ['published']
     else: ordering = []
+
     ordering.append('id')
 
     query_dict['filters'] = filters
@@ -333,21 +337,6 @@ def tender_details(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_get_file(request, pk=None, fn=None):
 
-    # def recordDownload(tender, user, size_r=None, size_b=None):
-    #     d = Download(
-    #             user = user,
-    #             tender = tender,
-    #             size_read = size_r if size_r else tender.size_read,
-    #             size_bytes = size_b if size_b else tender.size_bytes,        
-    #         )
-        
-        # return Download.objects.create(
-        #         user = user,
-        #         tender = tender,
-        #         size_read = size_r if size_r else tender.size_read,
-        #         size_bytes = size_b if size_b else tender.size_bytes,        
-        #     )
-
     if request.method != 'GET': return HttpResponse(status=403)
     if pk == None or fn == None: return HttpResponse(status=404)
 
@@ -365,19 +354,13 @@ def tender_get_file(request, pk=None, fn=None):
         response['X-Accel-Redirect'] = f'/dce/{file_path}'
         response['Content-Disposition'] = f'attachment; filename="{ fn }"'
         response['Content-Length'] = os.path.getsize(file_fp)
-        # print("===============================")
         Download.objects.get_or_create(
             tender=tender, 
             user=request.user, 
             size_read = tender.size_read, 
             size_bytes = file_size if file_size else tender.size_bytes, )
-        # print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 
         return response
-
-        # else:
-            # return HttpResponse(status=400)
-
 
     return HttpResponse(status=404)
 

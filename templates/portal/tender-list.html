@@ -27,7 +27,7 @@
             {{ page_obj.paginator.count }} 
         </span>
         <span class="small text-muted">{% trans "Items found" %}.</span>
-        {% if is_paginated %}
+        {% if page_obj.has_other_pages %}
             <span class="small text-muted">{% trans "Showing" %}:</span>
             <span class="small">
                 {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}

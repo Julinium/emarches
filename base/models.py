@@ -366,13 +366,13 @@ class Tender(models.Model):
             return delta_to_go.days
         except: return 0
 
-    @property
-    def progress_percent(self, full_bar = settings.TENDER_FULL_PROGRESS_DAYS):
-        try:
-            ratio = int(100 * self.days_to_go / full_bar)
-            progress = max(0, min(ratio, 100))
-            return progress
-        except: return 0
+    # @property
+    # def progress_percent(self, full_bar = settings.TENDER_FULL_PROGRESS_DAYS):
+    #     try:
+    #         ratio = int(100 * self.days_to_go / full_bar)
+    #         progress = max(0, min(ratio, 100))
+    #         return progress
+    #     except: return 0
 
     @property
     def days_span(self):

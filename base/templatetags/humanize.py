@@ -16,6 +16,22 @@ def metrify(value, precision=2):
     return metric(num, "", precision)#.replace(" ", '')
 
 
+
+@register.filter
+def progrefy(value, full_bar=30):
+    print(f"In: --value: { value }, --full_bar={ full_bar }")
+    if value is None or value == 0 or full_bar < 1:
+        return 0
+    tg = int(value)
+    fb = int(full_bar)
+    try:
+        ratio = int(100 * tg / fb)
+        progress = max(0, min(ratio, 100))
+        return progress
+    except: 
+        return 0
+
+
 def metric(value: float, unit: str = "", precision: int = 3) -> str:
 
     import math

@@ -78,11 +78,13 @@
                         style="height: 0.25rem;"
                         data-bs-toggle="tooltip"
                         title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                    <div class="progress-bar bg-success" 
-                            role="progressbar" style="width: {{ tender.progress_percent }}%;" 
-                            aria-valuenow="{{ tender.progress_percent }}" aria-valuemin="0" 
-                            aria-valuemax="100">
-                    </div>
+                    {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                        <div class="progress-bar bg-success" 
+                                role="progressbar" style="width: {{ green }}%;" 
+                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                aria-valuemax="100">
+                        </div>
+                    {% endwith %}
                 </div>
 
                 <div id="t{{ tender.chrono }}f" class="d-flex justify-content-between mb-2">
