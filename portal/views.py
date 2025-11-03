@@ -42,13 +42,12 @@ SHOW_CANCELLED = True
 LINK_PREFIX = settings.LINK_PREFIX
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
 
-DCE_SHOW_MODAL = False #
+DCE_SHOW_MODAL = False
 
 @login_required(login_url="account_login")
 def tender_list(request):
 
     def get_req_params(req):
-        # query_dict = req.GET.dict()
 
         query_dict = {
             k: v for k, v in req.GET.items() if v != ''
@@ -86,7 +85,6 @@ def tender_list(request):
                 queryset = queryset.filter(or_query)
 
             return queryset
-        print(f"Filter in put tenders : { tenders.count() }")
         ff = 0
         
         if not params or not user: return tenders.distinct(), ff
@@ -130,9 +128,7 @@ def tender_list(request):
 
         if 'ddlnn' in params:
             ddlnn = params['ddlnn']
-            print(f"Found ddlnns: { params['ddlnn'] } vs { ddlnn }")
             tenders = tenders.filter(deadline__gte=ddlnn)
-            print(f"Output after ddlnn filter: { tenders.count() }")
             if ddlnn == datetime.now(RABAT_TZ).strftime("%Y-%m-%d"): 
                 if not SHOW_TODAYS_EXPIRED:
                     tenders = tenders.exclude(deadline__lt=datetime.now(RABAT_TZ))
@@ -251,7 +247,6 @@ def tender_list(request):
 
         return context
 
-    # print(f"request.GET.dict(): { request.GET.dict() }")
     query_dict, query_string, query_unsorted = get_req_params(request)
     all_tenders = Tender.objects.all()
     tenders, filters = filter_tenders(all_tenders, query_dict, request.user)
@@ -263,7 +258,6 @@ def tender_list(request):
     ordering.append('id')
 
     query_dict['filters'] = filters
-    print(f"query_dict: { query_dict }")
 
     tenders = tenders.order_by(
             *ordering
@@ -282,17 +276,6 @@ def tender_list(request):
     else:
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
-    # page_range = list(paginator.get_elided_page_range(number=page_number, on_each_side=1, on_ends=1))
-
-    # files_count = 0
-    # if page_obj:
-    #     for con in page_obj:
-    #         dce_dir = os.path.join(os.path.join(C.MEDIA_ROOT, 'dce'), C.DL_PATH_PREFIX + con.portal_id)
-    #         if os.path.exists(dce_dir):
-    #             files_count = len([f for f in os.listdir(dce_dir) if os.path.isfile(os.path.join(dce_dir, f))])
-
-    # try: logSerachQuery(request, qd, len(cons))
-    # except: pass
 
     context['page_obj'] = page_obj
 
@@ -350,13 +333,20 @@ def tender_details(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_get_file(request, pk=None, fn=None):
 
-    def recordDownload(tender, user, size_r=None, size_b=None):
-        return Download.objects.create(
-                user = user,
-                tender = tender,
-                size_read = size_r if size_r else tender.size_read,
-                size_bytes = size_b if size_b else tender.size_bytes,        
-            )
+    # def recordDownload(tender, user, size_r=None, size_b=None):
+    #     d = Download(
+    #             user = user,
+    #             tender = tender,
+    #             size_read = size_r if size_r else tender.size_read,
+    #             size_bytes = size_b if size_b else tender.size_bytes,        
+    #         )
+        
+        # return Download.objects.create(
+        #         user = user,
+        #         tender = tender,
+        #         size_read = size_r if size_r else tender.size_read,
+        #         size_bytes = size_b if size_b else tender.size_bytes,        
+        #     )
 
     if request.method != 'GET': return HttpResponse(status=403)
     if pk == None or fn == None: return HttpResponse(status=404)
@@ -369,15 +359,24 @@ def tender_get_file(request, pk=None, fn=None):
     file_fp = os.path.join(dce_dir, fn)
 
     if os.path.exists(file_fp):
-        if recordDownload(tender, request.user):
-            response = HttpResponse()
-            response['Content-Type'] = 'application/octet-stream'
-            response['X-Accel-Redirect'] = f'/dce/{file_path}'
-            response['Content-Disposition'] = f'attachment; filename="{ fn }"'
-            response['Content-Length'] = os.path.getsize(file_fp)
-            return response
-        else:
-            return HttpResponse(status=400)
+        file_size = os.path.getsize(file_fp)
+        response = HttpResponse()
+        response['Content-Type'] = 'application/octet-stream'
+        response['X-Accel-Redirect'] = f'/dce/{file_path}'
+        response['Content-Disposition'] = f'attachment; filename="{ fn }"'
+        response['Content-Length'] = os.path.getsize(file_fp)
+        # print("===============================")
+        Download.objects.get_or_create(
+            tender=tender, 
+            user=request.user, 
+            size_read = tender.size_read, 
+            size_bytes = file_size if file_size else tender.size_bytes, )
+        # print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+
+        return response
+
+        # else:
+            # return HttpResponse(status=400)
 
 
     return HttpResponse(status=404)

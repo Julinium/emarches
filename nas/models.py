@@ -187,6 +187,12 @@ class Download(models.Model):
     class Meta:
         db_table = 'nas_tender_download'
         ordering = ['-when']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['tender', 'user'],
+                name='unique_download_per_user'
+            )
+        ]
 
     def __str__(self):
         return f"{ self.tender.chrono }@{ self.user.username }"
@@ -411,7 +417,7 @@ class UserSetting(models.Model):
     user                   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='settings')
     tenders_ordering_field = models.CharField(max_length=10, choices=OrderingField.choices, default=OrderingField.DEADLINE_ASC, verbose_name=_('Tenders: Ordering field'))
     tenders_items_per_page = models.CharField(max_length=10, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Tenders: Items per page'))
-    # tenders_full_bar_days  = models.CharField(max_length=10, choices=FullBarDays.choices, default=FullBarDays.FBD_030, verbose_name=_('Tenders: Full progress bar days'))
+    tenders_full_bar_days  = models.CharField(max_length=10, choices=FullBarDays.choices, default=FullBarDays.FBD_030, verbose_name=_('Tenders: Full progress bar days'))
     tenders_show_expired   = models.BooleanField(default=False, verbose_name=_("Tenders: Show today's expired tenders"))
     tenders_show_cancelled = models.BooleanField(default=False, verbose_name=_("Tenders: Show cancelled tenders"))
 
