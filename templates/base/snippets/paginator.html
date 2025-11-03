@@ -4,7 +4,7 @@
     <ul class="pagination justify-content-center">
         {% if page_obj.has_previous %}
         <li class="page-item">
-            <a class="page-link" href="?{{ query_string }}&sort={{ sorter }}&page=1"
+            <a class="page-link" href="?{{ query_unsorted }}&sort={{ query_dict.sort }}&page=1"
                 aria-label="{% trans 'First Page' %}"
                 data-bs-toggle="tooltip"
                 title="{% trans 'First Page' %}">
@@ -13,7 +13,7 @@
         </li>
         <li class="page-item">
             <a class="page-link"
-                href="?{{ query_string }}&sort={{ sorter }}&page={{ page_obj.previous_page_number }}"
+                href="?{{ query_unsorted }}&sort={{ query_dict.sort }}&page={{ page_obj.previous_page_number }}"
                 aria-label="{% trans 'Previous Page' %}"
                 data-bs-toggle="tooltip"
                 title="{% trans 'Previous Page' %}">
@@ -33,7 +33,7 @@
         {% if page_obj.has_next %}
         <li class="page-item">
             <a class="page-link"
-                href="?{{ query_string }}&sort={{ sorter }}&page={{ page_obj.next_page_number }}"
+                href="?{{ query_unsorted }}&sort={{ query_dict.sort }}&page={{ page_obj.next_page_number }}"
                 aria-label="{% trans 'Next Page' %}"
                 data-bs-toggle="tooltip"
                 title="{% trans 'Next Page' %}">
@@ -42,7 +42,7 @@
         </li>
         <li class="page-item">
             <a class="page-link"
-                href="?{{ query_string }}&sort={{ sorter }}&page={{ page_obj.paginator.num_pages }}"
+                href="?{{ query_unsorted }}&sort={{ query_dict.sort }}&page={{ page_obj.paginator.num_pages }}"
                 aria-label="{% trans 'Last Page' %}"
                 data-bs-toggle="tooltip"
                 title="{% trans 'Last Page' %}">

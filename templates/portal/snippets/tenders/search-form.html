@@ -9,7 +9,7 @@
 </button>
 
 
-<form action="{% url 'portal_tender_list' %}?{{ query_string }}&sort={{ sorter }}">
+<form action="{% url 'portal_tender_list' %}?{{ query_string }}&sort={{ query_string.sorter }}">
     <div class="modal fade" id="searchModal" tabindex="-1" 
         aria-labelledby="searchModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -52,52 +52,52 @@
                             
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Estimate" %} {% trans "Min" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Estimate Min" %}</span></span>
                                     <input type="number" step="any" class="form-control text-end" name="estin" value="{{ query_dict.estin }}" placeholder="{% trans 'Min' %}" aria-label="estimate_min">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Estimate" %} {% trans "Max" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Estimate Max" %}</span></span>
                                     <input type="number" step="any" class="form-control text-end" name="estix" value="{{ query_dict.estix }}" placeholder="{% trans 'Max' %}" aria-label="estimate_max">
                                 </div>
                             </div>
                             
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Guarantee" %} {% trans "Min" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Guarantee Min" %}</span></span>
                                     <input type="number" step="any" class="form-control text-end" name="bondn" value="{{ query_dict.bondn }}" placeholder="{% trans 'Min' %}" aria-label="guarantee_min">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Guarantee" %} {% trans "Max" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Guarantee Max" %}</span></span>
                                     <input type="number" step="any" class="form-control text-end" name="bondx" value="{{ query_dict.bondx }}" placeholder="{% trans 'Max' %}" aria-label="guarantee_max">
                                 </div>
                             </div>
                             
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline" %} {% trans "Min" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
                                     <input type="date" class="form-control text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" placeholder="{% trans 'Min' %}" aria-label="deadline_min">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline" %} {% trans "Max" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
                                     <input type="date" class="form-control text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" placeholder="{% trans 'Max' %}" aria-label="deadline_max">
                                 </div>
                             </div>
                             
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Published" %} {% trans "Min" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Published Min" %}</span></span>
                                     <input type="date" class="form-control text-end" name="publn" value="{{ query_dict.publn }}" placeholder="{% trans 'Min' %}" aria-label="published_min">
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Published" %} {% trans "Max" %}</span></span>
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Published Max" %}</span></span>
                                     <input type="date" class="form-control text-end" name="publx" value="{{ query_dict.publx }}" placeholder="{% trans 'Max' %}" aria-label="published_max">
                                 </div>
                             </div>
@@ -221,7 +221,7 @@
                             </div>
                         </div>
                         
-                        <input type="hidden" name="sort" value="{{ sorter }}">
+                        <input type="hidden" name="sort" value="{{ query_dict.sort }}">
                     </div>
                 </div>
 

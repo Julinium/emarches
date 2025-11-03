@@ -1,28 +1,35 @@
 {% load i18n %}
 
+    <a class="dropdown-item" href="?{{ query_unsorted }}&sort={% if query_dict.sort == field %}-{% endif %}{{ field }}">
+        <i class="bi bi-{{ icon }} me-2"></i>
+        <span class="{% if query_dict.sort == '-'|add:field or query_dict.sort == field %}fw-bold{% endif %}">{{ caption }}</span>
+        {% if query_dict.sort == field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+        {% if query_dict.sort == '-'|add:field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
+    </a>
 
+<!-- 
 {% if field == 'published' %}
-    {% if sorter == '-published' %}
+    {% if query_dict.sort == '-published' %}
         <a class="dropdown-item" href="?{{ query_unsorted }}&sort=published">
             <i class="bi bi-{{ icon }} me-2"></i>
-            <span class="{% if sorter == '-'|add:field or sorter == field %}fw-bold{% endif %}">{{ caption }}</span>
-            {% if sorter == '-'|add:field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
-            {% if sorter == field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
+            <span class="{% if query_dict.sort == '-'|add:field or query_dict.sort == field %}fw-bold{% endif %}">{{ caption }}</span>
+            {% if query_dict.sort == '-'|add:field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+            {% if query_dict.sort == field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
         </a>
     {% else %}
         <a class="dropdown-item" href="?{{ query_unsorted }}&sort=-published">
             <i class="bi bi-{{ icon }} me-2"></i>
-            <span class="{% if sorter == '-'|add:field or sorter == field %}fw-bold{% endif %}">{{ caption }}</span>
-            {% if sorter == '-'|add:field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
-            {% if sorter == field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
+            <span class="{% if query_dict.sort == '-'|add:field or query_dict.sort == field %}fw-bold{% endif %}">{{ caption }}</span>
+            {% if query_dict.sort == '-'|add:field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+            {% if query_dict.sort == field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
         </a>
     {% endif %}
 {% else %}
-    <a class="dropdown-item" href="?{{ query_unsorted }}&sort={% if sorter == field %}-{% endif %}{{ field }}">
+    <a class="dropdown-item" href="?{{ query_unsorted }}&sort={% if query_dict.sort == field %}-{% endif %}{{ field }}">
         <i class="bi bi-{{ icon }} me-2"></i>
-        <span class="{% if sorter == '-'|add:field or sorter == field %}fw-bold{% endif %}">{{ caption }}</span>
-        {% if sorter == field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
-        {% if sorter == '-'|add:field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
+        <span class="{% if query_dict.sort == '-'|add:field or query_dict.sort == field %}fw-bold{% endif %}">{{ caption }}</span>
+        {% if query_dict.sort == field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}
+        {% if query_dict.sort == '-'|add:field %} <i class="{{ bicons.sort_up }} fw-bold ms-2"></i> {% endif %}
     </a>
-{% endif %}
+{% endif %} -->
 

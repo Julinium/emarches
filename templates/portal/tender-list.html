@@ -34,14 +34,13 @@
             </span>
         {% endif %}
     </div>
-
     <div class="mt-4">
-        {% for tender in tenders %}
+        {% for tender in page_obj %}
             {% include 'portal/snippets/tenders/tender-summary.html' %}
         {% endfor %}
     </div>
     
-    {% if tenders %}
+    {% if page_obj %}
         {% include 'portal/snippets/tenders/tender-legend.html' %}
         {% include 'base/snippets/paginator.html' %}
     {% else %}
