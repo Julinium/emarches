@@ -55,7 +55,7 @@ def main():
         helper.printMessage('INFO', 'worker', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
         for l in links:
             i += 1
-            helper.printMessage('DEBUG', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
+            helper.printMessage('INFO', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
             jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
             if jsono:
                 handled += 1

@@ -23,7 +23,7 @@ from scraper.serializers import (
 
 def format(tender_json):
 
-    helper.printMessage('INFO', 'm.format', "### Started formatting Tender data ...")
+    helper.printMessage('DEBUG', 'm.format', "### Started formatting Tender data ...")
     j = tender_json
     try:
         j["published"] = helper.getDateTime(j["published"])
@@ -98,7 +98,7 @@ def format(tender_json):
 def save(tender_data):    
 
     formatted_data = format(tender_data)
-    helper.printMessage('INFO', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
+    helper.printMessage('DEBUG', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
 
     # Step x: Validate the JSON using TenderSerializer
     tender_serializer = TenderSerializer(data=formatted_data)
@@ -222,10 +222,10 @@ def save(tender_data):
                 if keep_change:
                     change = { "field": field , "old_value": str(current_value), "new_value": str(new_value)}
                     changed_fields.append(change)
-        helper.printMessage('INFO', 'm.save', "+++ Tender already exists. Updating.")
+        helper.printMessage('DEBUG', 'm.save', "+++ Tender already exists. Updating.")
     else:
         tender_serializer = TenderSerializer(data=validated_data)
-        helper.printMessage('INFO', 'm.save', f"+++ Tender to be created: {chrono}")
+        helper.printMessage('DEBUG', 'm.save', f"+++ Tender to be created: {chrono}")
         changed_fields = []
         tender_create = True
     tender_serializer.is_valid(raise_exception=True)
@@ -525,7 +525,7 @@ def save(tender_data):
             change = Change(tender=tender, changes=changed_fields)
             change.save()
             log_message = f"Tender {tender.chrono} updated. Changes saved."
-            helper.printMessage('INFO', 'm.save', log_message)
+            helper.printMessage('DEBUG', 'm.save', log_message)
             helper.printMessage('DEBUG', 'm.save', f"Reported changes: {changed_fields}")
         except:
             helper.printMessage('WARN', 'm.save', "---- Exception raised saving change to database.")
@@ -552,7 +552,7 @@ def save(tender_data):
                 traceback.print_exc()
     else: # Update return boolean: True=Created, False=Updated, None=None
         if len(changed_fields) == 0:
-            helper.printMessage('INFO', 'm.save', f"No change was found for {tender.chrono}" )
+            helper.printMessage('DEBUG', 'm.save', f"No change was found for {tender.chrono}" )
             tender_create = None
 
 

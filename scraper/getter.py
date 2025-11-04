@@ -304,7 +304,7 @@ def getJson(link_item, skipExisting=False):
             "size_bytes": cons_bytes,
             }
 
-        helper.printMessage('INFO', 'g.getJson', f'Finished getting objects for item {link_item[0]}')
+        helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_item[0]}')
         return cons_dict
 
     except:
@@ -314,7 +314,7 @@ def getJson(link_item, skipExisting=False):
 
 
 def getLots(lots_href):
-    helper.printMessage('INFO', 'g.getLots', 'Item is multi-lot. Reading lots ... ')
+    helper.printMessage('DEBUG', 'g.getLots', 'Item is multi-lot. Reading lots ... ')
     lots_link = C.SITE_INDEX + lots_href.replace("javascript:popUp('index.php", "").replace("%27,%27yes%27)", "")
 
     rua = helper.getUa()
