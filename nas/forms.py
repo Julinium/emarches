@@ -64,8 +64,6 @@ class UserSettingsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print("Choices on field:", self.fields['tenders_items_per_page'].choices)
-        print("Choices from model:", UserSetting._meta.get_field('tenders_items_per_page').choices)
 
     class Meta:
         model = UserSetting
@@ -74,7 +72,12 @@ class UserSettingsForm(forms.ModelForm):
             'tenders_items_per_page', 
             'tenders_full_bar_days', 
             'tenders_show_expired', 
-            'tenders_show_cancelled']
+            'tenders_show_cancelled',
+            # 'preferred_language',
+            ]
+        # widgets = {
+        #     'language': forms.Select(attrs={'class': 'form-control'}),  # Optional styling
+        # }
 
 
 class CompanyForm(forms.ModelForm):

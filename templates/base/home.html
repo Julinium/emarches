@@ -1,17 +1,23 @@
 {% extends 'base/base.html' %}
 {% load i18n %}
 
+
+{% block title %}
+    {% trans "Public Procurement Market in Morocco" %}
+{% endblock title %}
+
 {% block content %}
+    <h2>{% trans "Public Procurement Market in Morocco" %}</h2>
     <div class="">
         <div class="">
-            <dv class="mb-2">
+            <div class="mb-2">
                 {% if request.user.is_authenticated %}
                     Welcome, {{ request.user.username }}
                 {% else %}
                     Welcome, Guest!
                 {% endif %}
-            </dv>
-            <h2>{% trans "Home sweet home" %}</h2>
+            </div>
+            <h3>{% trans "Home sweet home" %}</h3>
             <p>{% trans "A warning once complained. WARNING: This is a development server" %} </p>
             <p>{% trans "Do not use it in a production setting. Use a production WSGI or ASGI server instead" %}</p>
         </div>

@@ -1,14 +1,17 @@
 {% extends 'base/base.html' %}
 {% load static i18n %}
+{% load languify %}
 
 
 {% block title %}
-    {% trans "Edit Profile" %}
+    {% trans "User preferrences" %}
 {% endblock title %}
 
 {% block content %}
     <div class="h3">{% trans "Edit Profile" %}</div>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data"
+          >
+          
         {% csrf_token %}
 
         {{ form.as_p }}

@@ -61,6 +61,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # 'nas.middleware.UserLanguageMiddleware',
+
     'django.middleware.locale.LocaleMiddleware',
 
     'allauth.account.middleware.AccountMiddleware',
@@ -155,6 +158,8 @@ LANGUAGES = [
     ("es", _("Spanish")),
     ("de", _("German")),
     ]
+    
+# SESSION_LANGUAGE_KEY = 'django_language'
 
 LOCALE_PATHS = [BASE_DIR / "locale", ]
 USE_THOUSAND_SEPARATOR = True

@@ -27,8 +27,7 @@
                       {% if lang.code == lang_info.code %}
                          fw-bold disabled
                       {% endif %}"
-                href="
-                      {% if lang.code != lang_info.code %}
+                href="{% if lang.code != lang_info.code %}
                         {% switch_language lang.code%}
                       {% endif %}"
                 data-bs-toggle="tooltip" 

@@ -21,6 +21,12 @@
                     <span class="ms-1">{% trans "Profile" %}</span>
                 </a>
             </li>
+            <li>
+                <a href="{% url 'nas_user_settings' %}" class="p-2 dropdown-item" type="button">
+                    <span><i class="bi bi-gear"></i></span>
+                    <span class="ms-1">{% trans "Preferences" %}</span>
+                </a>
+            </li>
             <!-- {% url 'account_email' as email_url_ %}
             {% if email_url_ %}
                 <li>

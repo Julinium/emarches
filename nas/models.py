@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
+from django.conf import settings
+
 from base.models import Agrement, Tender, Qualif, Change
 from .imaging import squarify_image
 from .iceberg import get_ice_checkup
@@ -421,8 +423,8 @@ class UserSetting(models.Model):
     tenders_show_expired   = models.BooleanField(default=False, verbose_name=_("Tenders: Show today's expired tenders"))
     tenders_show_cancelled = models.BooleanField(default=False, verbose_name=_("Tenders: Show cancelled tenders"))
 
-    # created   = models.DateTimeField(auto_now_add=True, editable=False)
-    # updated   = models.DateTimeField(auto_now=True, editable=False)
+    preferred_language     = models.CharField(max_length=10, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE, verbose_name=_("Preferred interface language"))
+    updated   = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         db_table = 'nas_user_setting'

@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
+from django.utils import translation
 from django.http import HttpResponse
 from django.core import serializers
 import json
@@ -366,11 +367,10 @@ def accept_iced_company(request, pk):
 @login_required
 def user_settings(request):
     user = request.user
-
-    us = UserSetting.objects.filter(user = user).first()
+    user_settings = UserSetting.objects.filter(user = user).first()
 
     if request.method == 'POST':
-        form = UserSettingsForm(request.POST, request.FILES, instance=us)
+        form = UserSettingsForm(request.POST, request.FILES, instance=user_settings)
         if form.is_valid():
             form.save()
             messages.success(request, "Settings saved successfully.")
@@ -378,7 +378,7 @@ def user_settings(request):
         else:
             show_form_errors(form, request)
     else:
-        form = UserSettingsForm(instance=us)
+        form = UserSettingsForm(instance=user_settings)
 
     return render(request, 'nas/user-settings-edit.html', {'form': form})
 
