@@ -383,7 +383,6 @@ def toggle_favorite(request, pk=None):
     pass
 
 
-
 def get_user_settings(request):
     return UserSetting.objects.filter(user = request.user).first()
 

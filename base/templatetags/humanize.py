@@ -19,7 +19,6 @@ def metrify(value, precision=2):
 
 @register.filter
 def progrefy(value, full_bar=30):
-    print(f"In: --value: { value }, --full_bar={ full_bar }")
     if value is None or value == 0 or full_bar < 1:
         return 0
     tg = int(value)

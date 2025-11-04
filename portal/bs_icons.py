@@ -46,14 +46,14 @@ bicons = {
                     # 'download'
     'comments'      : 'bi bi-chat-square-quote',
     'ebid'          : 'bi bi-laptop',
-    'ebid_req'      : 'bi bi-laptop-fill text-primary',
-    'ebid_opt'      : 'bi bi-laptop-fill text-success',
-    'ebid_na'       : 'bi bi-laptop-fill text-danger',
+    'ebid_req'      : 'bi bi-laptop text-primary',
+    'ebid_opt'      : 'bi bi-laptop text-success',
+    'ebid_na'       : 'bi bi-laptop text-danger',
                     # 'pc-display-horizontal'
     'esign'         : 'bi bi-usb-drive', 
-    'esign_req'     : 'bi bi-usb-drive-fill text-primary', 
-    'esign_opt'     : 'bi bi-usb-drive-fill text-success', 
-    'esign_na'      : 'bi bi-usb-drive-fill text-secondary',       
+    'esign_req'     : 'bi bi-usb-drive text-primary', 
+    'esign_opt'     : 'bi bi-usb-drive text-success', 
+    'esign_na'      : 'bi bi-usb-drive text-secondary',       
                     # 'device-ssd'
     'bidding'       : 'bi bi-send-check',
                     # arrow-90deg-right
@@ -76,4 +76,14 @@ bicons = {
     'domains'       : 'bi bi-layers',
     'address'       : 'bi bi-geo-alt',
     'contact'       : 'bi bi-person',
+    'no_files'      : 'bi bi-file-earmark-break text-warning',
+                    # exclamation-circle
+    'created'       : 'bi bi-calendar-plus',
+                    # upload
+    'updated'       : 'bi bi-arrow-repeat',
+    'hash'          : 'bi bi-database',
+    'days_span'     : 'bi bi-calendar-range',
+                    # arrows-expand-vertical
+    'history'       : 'bi bi-clock-history',
+                    # 
 }

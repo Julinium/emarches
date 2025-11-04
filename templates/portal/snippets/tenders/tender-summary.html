@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <div class="card-body px-3 pt-2 pb-0 {% if tender.cancelled %}text-danger{% endif %}">
+            <div class="card-body px-3 pt-2 pb-0">
 
                 <div id="t{{ tender.chrono }}t" class="twolines">
                     <div data-bs-toggle="tooltip"
@@ -68,7 +68,9 @@
                         {% if tender.expired %}
                             <span class="badge bg-secondary me-2 fst-italic">{% trans "EXPIRED" %}</span>
                         {% endif %}
-                        <span class="text-wrap {% if tender.expired %}text-secondary fst-italic{% endif %}" >
+                        <span class="text-wrap 
+                                     {% if tender.expired %}text-secondary fst-italic{% endif %}
+                                     {% if tender.cancelled %}text-danger{% endif %}">
                             {{ tender.title }}
                         </span>
                     </div>
@@ -199,6 +201,16 @@
                                 <i class="{{ bicons.changes }}"></i>
                             </span>
                         {% endif %}
+
+                        {% if not tender.size_bytes %}
+                            <span class="small me-2"
+                                data-bs-toggle="tooltip"
+                                title="{% trans 'Files may not be up to date' %}">
+                                <!-- {{ tender.size_bytes|metrify:0 }} -->
+                                <i class="{{ bicons.no_files }}"></i>
+                            </span>
+                        {% endif %}
+
                     </div>
 
                     <div class="small ms-2 fw-light text-end">
