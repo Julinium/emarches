@@ -1,0 +1,43 @@
+
+
+<div class="col-12 {% if not full_width %}col-md-6{% endif %}" 
+     data-bs-toggle="tooltip" 
+     title="{{ key_value }}: {{ val_value }} {{ uni_value }}">
+    <div class="d-flex my-3">
+        <div>
+            <i class="{% if ico_class %}
+                            {{ ico_class }} 
+                      {% else %} 
+                            bi bi-dash-lg 
+                      {% endif %}">
+            </i>
+        </div>
+        <div class="ms-2 w-100 
+                    {% if border %}
+                        border-0 border-{{ border }}
+                    {% endif %}">
+            <div class="
+                        {% if key_class %}
+                            {{ key_class }}
+                        {% else %}
+                            text-muted small fw-light
+                        {% endif %}">
+                {{ key_value }}
+            </div>
+            <div id="{{ id_value }}" class="{{ liner }}">
+                <span class="{{ val_class }}">{{ val_value }}</span>
+                <span class="
+                             {% if uni_class %}
+                                 {{ uni_class }}
+                             {% else %}
+                                 text-muted small fw-light
+                             {% endif %}">
+                    {{ uni_value }}
+                </span>
+                {% if liner %}
+                    <script>document.getElementById('{{ id_value }}').addEventListener('click', function() { this.classList.toggle('{{ liner }}'); });</script>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

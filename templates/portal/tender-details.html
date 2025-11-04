@@ -2,6 +2,7 @@
 {% load i18n static %}
 {% load paraminos %}
 {% load humanize %}
+{% load tz %}
 
 {% block title %}
     {% trans "Tenders Details" %}
@@ -33,232 +34,98 @@
     <div class="my-3" id="tender-details">
         <div class="row gx-4 gy-0">
 
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Object' %}
-                    </div>
-                    <div class="ms-4 fw-bold 
-                                {% if tender.cancelled %}text-danger{% endif %}
-                                ">
-                        {{ tender.title }}
-                    </div>
-                </div>
-            </div>
+            {% trans 'Object' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-title' val_value=tender.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
+            
+            {% trans 'Public Client' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-client' val_value=tender.client.name key_value=key_value uni_value='' ico_class=bicons.client full_width='yes' val_class='' border='bottom' liner='oneline' %}
 
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Public Client' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.client.name }}
-                    </div>
-                </div>
-            </div>
+            {% timezone "Africa/Casablanca" %}
+                {% trans 'Deadline' as key_value %}
+                {% trans 'Morocco time' as unit %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-deadline' val_value=tender.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='' border='bottom' liner='oneline' %}
+            {% endtimezone %}
 
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Deadline' %}
-                    </div>
-                    <div class="ms-4">
-                        <span>{{ tender.deadline }}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Time to Deadline' %}
-                    </div>
-                    <span class="ms-4 fw-bold
-                                    {% if tender.expired %}
-                                    text-danger
-                                {% endif %}">
-                        {{ tender.days_to_go }} {% trans 'days' %}
-                    </span>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Total Estimate' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.estimate }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Total Guarantee' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.bond }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Reference' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.reference }}
-                    </div>
-                </div>
-            </div>
-            <!-- {% if tender.lots.count > 1 %}
-                <div class="col-12 col-md-6">
-                    <div class="d-flex-inline my-3 border-0 border-bottom">
-                        <div class="text-muted small fw-light">
-                            {% trans 'Lots' %}
-                        </div>
-                        <div class="ms-4">
-                            {{ tender.lots_count }}
-                        </div>
-                    </div>
-                </div>
-            {% endif %} -->
-
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Published' %}
-                    </div>
-                    <div class="ms-4">
-                        <span>{{ tender.published }}</span>
-                    </div>
-                </div>
-            </div>
+            {% trans 'Time to Deadline' as key_value %}
+            {% trans 'days' as unit %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_to_go' val_value=tender.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='' border='bottom' liner='oneline' %}
+                        
+            {% trans 'Total Estimate' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-estimate' val_value=tender.estimate key_value=key_value uni_value='' ico_class=bicons.estimate val_class='fw-bold' border='bottom' liner='oneline' %}
+            
+            {% trans 'Total Guarantee' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond' val_value=tender.bond key_value=key_value uni_value='' ico_class=bicons.bond val_class='' border='bottom' liner='oneline' %}
+            
+            {% trans 'Reference' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-reference' val_value=tender.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
+            
+            {% trans 'Published' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-published' val_value=tender.published key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='oneline' %}
 
             {% if tender.plans_price > 0 %}
-                <div class="col-12 col-md-6">
-                    <div class="d-flex-inline my-3 border-0 border-bottom">
-                        <div class="text-muted small fw-light">
-                            {% trans 'Price of Plans' %}
-                        </div>
-                        <div class="ms-4">
-                            {{ tender.plans_price }}
-                        </div>
-                    </div>
-                </div>
+                {% trans 'Price of Plans' as key_value %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-plans_price' val_value=tender.plans_price key_value=key_value uni_value='' ico_class=bicons.plans_price val_class='' border='bottom' liner='oneline' %}
             {% endif %}
 
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Main Category' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.category.label }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Execution Location' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.location }}
-                    </div>
-                </div>
-            </div>
+            {% trans 'Main Category' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-category' val_value=tender.category.label key_value=key_value uni_value='' ico_class=bicons.category val_class='' border='bottom' liner='oneline' %}
 
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Procedure' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.procedure.name }}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Awarding Mode' %}
-                    </div>
-                    <div class="ms-4">
-                        {{ tender.mode.name }}
-                    </div>
-                </div>
-            </div>
+            {% trans 'Execution Location' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-location' val_value=tender.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
 
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Electronic bidding' %}
-                    </div>
-                    <div class="ms-4">
-                        {% if tender.ebid == 1 %}
-                            {% trans 'Required' %}
-                        {% elif tender.ebid == 0 %}
-                            {% trans 'Optional' %}
-                        {% else %}
-                            {% trans 'Not Applicable' %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Electronic signature' %}
-                    </div>
-                    <div class="ms-4">
-                        {% if tender.esign == 1 %}
-                            {% trans 'Required' %}
-                        {% elif tender.esign == 0 %}
-                            {% trans 'Optional' %}
-                        {% else %}
-                            {% trans 'Not Applicable' %}
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+            {% trans 'Procedure' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-procedure' val_value=tender.procedure.name key_value=key_value uni_value='' ico_class=bicons.procedure val_class='' border='bottom' liner='oneline' %}
 
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Reserved to SMBs, individuals, Unions, ...' %}
-                    </div>
-                    <div class="ms-4">
-                        {% if tender.reserved %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Variants accepted' %}
-                    </div>
-                    <div class="ms-4">
-                        {% if tender.variant %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
-                    </div>
-                </div>
-            </div>
+            {% trans 'Awarding Mode' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-mode' val_value=tender.mode.name key_value=key_value uni_value='' ico_class=bicons.awarding val_class='' border='bottom' liner='oneline' %}
+
+            {% trans 'Electronic bidding' as key_value %}
+            {% with translated_value="" %}
+                {% if tender.ebid == 1 %}
+                    {% trans 'Required' as translated_value %}
+                {% elif tender.ebid == 0 %}
+                    {% trans 'Optional' as translated_value %}
+                {% else %}
+                    {% trans 'Not Applicable' as translated_value %}
+                {% endif %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-ebid' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.ebid val_class='' border='bottom' liner='oneline' %}
+            {% endwith %}
+
+            {% trans 'Electronic signature' as key_value %}
+            {% with translated_value="" %}
+                {% if tender.esign == 1 %}
+                    {% trans 'Required' as translated_value %}
+                {% elif tender.esign == 0 %}
+                    {% trans 'Optional' as translated_value %}
+                {% else %}
+                    {% trans 'Not Applicable' as translated_value %}
+                {% endif %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-esign' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.esign val_class='' border='bottom' liner='oneline' %}
+            {% endwith %}
+
+            {% trans 'Reserved to SMBs, individuals, Unions, ...' as key_value %}
+            {% with translated_value="" %}
+                {% if tender.reserved %}
+                    {% trans 'Yes' as translated_value %}
+                {% else %}
+                    {% trans 'No' as translated_value %}
+                {% endif %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-reserved' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.reserved_ico val_class='' border='bottom' liner='oneline' %}
+            {% endwith %}
+
+            {% trans 'Variants accepted' as key_value %}
+            {% with translated_value="" %}
+                {% if tender.variant %}
+                    {% trans 'Yes' as translated_value %}
+                {% else %}
+                    {% trans 'No' as translated_value %}
+                {% endif %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-variant' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.variant_ico val_class='' border='bottom' liner='oneline' %}
+            {% endwith %}
+
             {% if tender.domains.all %}
-                <div class="col-12">
-                    <div class="d-flex-inline my-3 border-0 border-bottom">
-                        <div class="text-muted small fw-light">
-                            {% trans 'Domains of activity' %}
-                        </div>
-                        <div class="ms-4">
-                            {% for domain in tender.domains.all %}
-                                <span class="small">— {{ domain.name }}</span><br>
-                            {% empty %}
-                                <span class="fw-light small text-muted">{% trans 'Not found' %}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+                {% trans 'Domains of activity' as key_value %}
+                {% include 'base/snippets/ico-key-list.html' with id_value=tender.chrono|add:'-domain' items=tender.domains.all key_value=key_value uni_value='' full_width='yes' ico_class=bicons.domains val_class='small' border='bottom' liner='oneline' %}
             {% endif %}
 
             {% if tender.lots.count == 1 %}

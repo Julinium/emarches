@@ -1,0 +1,40 @@
+
+
+<div class="col-12 {% if not full_width %}col-md-6{% endif %}">
+    <div class="d-flex my-3">
+        <div>
+            <i class="{% if ico_class %}
+                            {{ ico_class }} 
+                      {% else %} 
+                            bi bi-dash-lg 
+                      {% endif %}">
+            </i>
+        </div>
+        <div class="ms-2 w-100 
+                    {% if border %}
+                        border-0 border-{{ border }}
+                    {% endif %}">
+            <div class="
+                        {% if key_class %}
+                            {{ key_class }}
+                        {% else %}
+                            text-muted small fw-light
+                        {% endif %}">
+                {{ key_value }}
+            </div>
+            {% for item in items %}
+                <div id="{{ id_value }}-{{forloop.counter}}" class="{{ liner }}"
+                     data-bs-toggle="tooltip"
+                     title="{{ item }}">
+                    <span><i class="bi bi-dash-lg "></i></span>
+                    <span class="{{ val_class }}">{{ item }}</span>
+                    {% if liner %}
+                        <script>document.getElementById('{{ id_value }}-{{forloop.counter}}').addEventListener('click', function() { this.classList.toggle('{{ liner }}'); });</script>
+                    {% endif %}
+                </div>
+            {% empty %}
+                --
+            {% endfor %}
+        </div>
+    </div>
+</div>
