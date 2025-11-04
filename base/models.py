@@ -171,7 +171,7 @@ class Meeting(models.Model):
         verbose_name = _("Meeting")
     
     def __str__(self):
-        return f"{ self.lot.tender.chrono } - { self.when }"
+        return f"{ self.when.date() } - { self.description }"
 
     def save(self, *args, **kwargs):
         tender = self.lot.tender
@@ -494,7 +494,7 @@ class Sample(models.Model):
         # verbose_name = _("Sample")
     
     def __str__(self):
-        return f"{ self.lot.tender.chrono } - { self.when }"
+        return f"{ self.when.date() } - { self.description }"
 
     def save(self, *args, **kwargs):
         tender = self.lot.tender
@@ -516,7 +516,7 @@ class Visit(models.Model):
         # verbose_name = _("Visit")
     
     def __str__(self):
-        return f"{ self.lot.tender.chrono } - { self.when }"
+        return f"{ self.when.date() } - { self.description }"
 
     def save(self, *args, **kwargs):
         tender = self.lot.tender

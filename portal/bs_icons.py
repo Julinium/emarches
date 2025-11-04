@@ -28,8 +28,17 @@ bicons = {
     'has_agrements' : 'bi bi-shield-fill-check text-primary',
     'has_qualifs'   : 'bi bi-mortarboard-fill text-primary',
     'has_samples'   : 'bi bi-palette2 text-primary',
-    'has_visits'    : 'bi bi-person-walking text-primary',
+    'has_visits'    : 'bi bi-eye-fill text-primary',
+                    # 'person-walking'
     'has_meetings'  : 'bi bi-chevron-bar-contract text-primary',
+
+    'agrements_ico' : 'bi bi-shield-check',
+    'qualifs_ico'   : 'bi bi-mortarboard',
+    'samples_ico'   : 'bi bi-palette2',
+    'visits_ico'    : 'bi bi-eye',
+                    # 'person-walking'
+    'meetings_ico'  : 'bi bi-chevron-bar-contract',
+    
     'changes'       : 'bi bi-activity',
                     # 'pencil-square'
     'favorites'     : 'bi bi-heart',
@@ -37,14 +46,14 @@ bicons = {
                     # 'download'
     'comments'      : 'bi bi-chat-square-quote',
     'ebid'          : 'bi bi-laptop',
-    'ebid_req'      : 'bi bi-pc-display-horizontal text-primary',
-    'ebid_opt'      : 'bi bi-pc-display-horizontal text-success',
-    'ebid_na'       : 'bi bi-pc-display-horizontal text-danger',
-                    # 'laptop'
+    'ebid_req'      : 'bi bi-laptop-fill text-primary',
+    'ebid_opt'      : 'bi bi-laptop-fill text-success',
+    'ebid_na'       : 'bi bi-laptop-fill text-danger',
+                    # 'pc-display-horizontal'
     'esign'         : 'bi bi-usb-drive', 
-    'esign_req'     : 'bi bi-usb-drive text-primary', 
-    'esign_opt'     : 'bi bi-usb-drive text-success', 
-    'esign_na'      : 'bi bi-usb-drive text-secondary',       
+    'esign_req'     : 'bi bi-usb-drive-fill text-primary', 
+    'esign_opt'     : 'bi bi-usb-drive-fill text-success', 
+    'esign_na'      : 'bi bi-usb-drive-fill text-secondary',       
                     # 'device-ssd'
     'bidding'       : 'bi bi-send-check',
                     # arrow-90deg-right
@@ -63,6 +72,8 @@ bicons = {
     'days_to_go'    : 'bi bi-calendar-x',
     'title'         : 'bi bi-card-heading',
     'procedure'     : 'bi bi-book',
-    'awarding'      : 'bi bi-filter-left',
+    'mode'          : 'bi bi-filter-left',
     'domains'       : 'bi bi-layers',
+    'address'       : 'bi bi-geo-alt',
+    'contact'       : 'bi bi-person',
 }

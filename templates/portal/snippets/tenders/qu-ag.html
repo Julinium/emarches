@@ -1,16 +1,43 @@
 {% load i18n %}                    
 <div class="col-12">
-    <div class="d-flex-inline my-1">
-        <div class="text-muted small fw-light">
-            {{ caption }}
+    <div class="d-flex my-3">
+        <div>
+            <i class="{% if ico_class %}
+                            {{ ico_class }} 
+                      {% else %} 
+                            bi bi-dash-lg 
+                      {% endif %}">
+            </i>
         </div>
-        <div class="ms-4">
-            {% for object in objects %}
-                <span class="badge bg-secondary mt-2">{{ object.short }}</span>
-                <span class="small">{{ object.name }}</span><br>                                    
-            {% empty %}
-                <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
-            {% endfor %}
+        <div class="ms-2 w-100 
+                    {% if border %}
+                        border-0 border-{{ border }}
+                    {% endif %}">
+            <div class="text-muted small fw-light">
+                {{ caption }}
+            </div>
+            <div class="">
+                {% for object in objects %}
+                    <div id="{{ kind }}-{{forloop.counter}}" class="{{ liner }}"
+                        data-bs-toggle="tooltip"
+                        title="{% if object.name %}{{  object.name }}{% else %}{{ object.description }}{% endif %}">
+                        <span><i class="bi bi-dash-lg "></i></span>
+                        {% if object.short and object.name %}
+                            <span class="small fw-bold">{{ object.short }}</span>
+                            <span class="small fw-bold">{% if object.classe %} - {% trans 'Class' %} {{ object.classe }}{% endif %}. </span>
+                            <span class="small fw-light">{{  object.name }}</span>
+                        {% else %}
+                            <span class="small fw-bold">{{ object.when }}</span>
+                            <span class="small fw-light">{{ object.description }}</span>
+                        {% endif %}
+                        {% if liner %}
+                            <script>document.getElementById('{{ kind }}-{{forloop.counter}}').addEventListener('click', function() { this.classList.toggle('{{ liner }}'); });</script>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>

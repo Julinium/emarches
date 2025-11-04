@@ -77,7 +77,7 @@
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-procedure' val_value=tender.procedure.name key_value=key_value uni_value='' ico_class=bicons.procedure val_class='' border='bottom' liner='oneline' %}
 
             {% trans 'Awarding Mode' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-mode' val_value=tender.mode.name key_value=key_value uni_value='' ico_class=bicons.awarding val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-mode' val_value=tender.mode.name key_value=key_value uni_value='' ico_class=bicons.mode val_class='' border='bottom' liner='oneline' %}
 
             {% trans 'Electronic bidding' as key_value %}
             {% with translated_value="" %}
@@ -131,99 +131,75 @@
             {% if tender.lots.count == 1 %}
                 {% if tender.has_agrements %}
                     {% trans 'Required Licences' as agrements_caption %}
-                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=agrements_caption objects=tender.lots.first.agrements.all %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=agrements_caption objects=tender.lots.first.agrements.all kind='agrement' ico_class=bicons.agrements_ico val_class='small' border='bottom' liner='oneline' %}
                 {% endif %}
 
                 {% if tender.has_qualifs %}
                     {% trans 'Required Qualifications' as qualifs_caption %}
-                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=qualifs_caption objects=tender.lots.first.qualifs.all %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=qualifs_caption objects=tender.lots.first.qualifs.all kind='qualif' ico_class=bicons.qualifs_ico val_class='small' border='bottom' liner='oneline' %}
                 {% endif %}
 
                 {% if tender.has_samples %}
                     {% trans 'Required Samples' as samples_caption %}
-                    {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=samples_caption objects=tender.lots.first.samples.all %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=samples_caption objects=tender.lots.first.samples.all kind='sample' ico_class=bicons.samples_ico val_class='small' border='bottom' liner='oneline' %}
                 {% endif %}
 
                 {% if tender.has_meetings %}
                     {% trans 'Scheduled Meetings' as meetings_caption %}
-                    {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=meetings_caption objects=tender.lots.first.meetings.all %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=meetings_caption objects=tender.lots.first.meetings.all kind='meeting' ico_class=bicons.meetings_ico val_class='small' border='bottom' liner='oneline' %}
                 {% endif %}
 
                 {% if tender.has_visits %}
                     {% trans 'Scheduled Visits' as visits_caption %}
-                    {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=tender.lots.first.visits.all %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=visits_caption objects=tender.lots.first.visits.all kind='visit' ico_class=bicons.visits_ico val_class='small' border='bottom' liner='oneline' %}
                 {% endif %}
             {% endif %}
-            
+
+            {% trans 'Withdrawal, Bidding & Awarding addresses' as key_value %}
+            {% include 'base/snippets/ico-key-list.html' with id_value=tender.chrono|add:'-address' items=addresses key_value=key_value uni_value='' full_width='yes' ico_class=bicons.address val_class='small' border='bottom' liner='oneline' %}
+              
             <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Withdrawal Address' %}
+                <div class="d-flex my-3">
+                    <div>
+                        <i class="{{ bicons.contact }}"></i>
                     </div>
-                    <div class="ms-4 small">
-                        {{ tender.address_withdrawal }}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Bidding Address' %}
-                    </div>
-                    <div class="ms-4 small">
-                        {{ tender.address_bidding }}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Awaeding Address' %}
-                    </div>
-                    <div class="ms-4 small">
-                        {{ tender.address_opening }}
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-12">
-                <div class="d-flex-inline my-3 border-0 border-bottom">
-                    <div class="text-muted small fw-light">
-                        {% trans 'Public Client Contact' %}
-                    </div>
-                    <div class="ms-4">
-                        {% if tender.contact_name and tender.contact_name != '-' %}
-                            <span class="me-1 mb-1">{{ tender.contact_name }}</span>
-                        {% endif %}
-                        {% if tender.contact_phone and tender.contact_phone != '-' %}
-                            <span class="me-1 small">
-                                <a href="tel:{{ tender.contact_phone }}" 
-                                class="btn btn-sm mb-1 btn-outline-secondary">
-                                    <i class="bi bi-telephone"></i>
-                                    {{ tender.contact_phone }}
-                                </a>
-                            </span>
-                        {% endif %}
-                        {% if tender.contact_email and tender.contact_email != '-' %}
-                            <span class="me-1 small">
-                                <a href="mailto:{{ tender.contact_email }}" 
-                                class="btn btn-sm mb-1 btn-outline-secondary">
-                                    <i class="bi bi-envelope"></i>
-                                    {{ tender.contact_email }}
-                                </a>
-                            </span>
-                        {% endif %}
-                        {% if tender.contact_fax and tender.contact_fax != '-' %}
-                            <span class="me-1 small">
-                                <a href="tel:{{ tender.contact_fax }}" 
-                                class="btn btn-sm mb-1 btn-outline-secondary">
-                                    <i class="bi bi-printer"></i>
-                                    {{ tender.contact_fax }}
-                                </a>
-                            </span>
-                        {% endif %}
+                    <div class="ms-2 w-100 border-0 border-bottom">
+                        <div class="text-muted small fw-light">
+                            {% trans 'Public Client Contact' %}
+                        </div>
+                        <div class="oneline" id="public-contact">
+                            {% if tender.contact_name and tender.contact_name != '-' %}
+                                <span class="me-1 mb-1 small">{{ tender.contact_name }}</span>
+                            {% endif %}
+                            {% if tender.contact_phone and tender.contact_phone != '-' %}
+                                <span class="me-1 small">
+                                    <a href="tel:{{ tender.contact_phone }}" 
+                                    class="btn btn-sm mb-1 btn-outline-secondary">
+                                        <i class="bi bi-telephone"></i>
+                                        {{ tender.contact_phone }}
+                                    </a>
+                                </span>
+                            {% endif %}
+                            {% if tender.contact_email and tender.contact_email != '-' %}
+                                <span class="me-1 small">
+                                    <a href="mailto:{{ tender.contact_email }}" 
+                                    class="btn btn-sm mb-1 btn-outline-secondary">
+                                        <i class="bi bi-envelope"></i>
+                                        {{ tender.contact_email }}
+                                    </a>
+                                </span>
+                            {% endif %}
+                            {% if tender.contact_fax and tender.contact_fax != '-' %}
+                                <span class="me-1 small">
+                                    <a href="tel:{{ tender.contact_fax }}" 
+                                    class="btn btn-sm mb-1 btn-outline-secondary">
+                                        <i class="bi bi-printer"></i>
+                                        {{ tender.contact_fax }}
+                                    </a>
+                                </span>
+                            {% endif %}
+                            <script>document.getElementById('public-contact').addEventListener('click', function() { this.classList.toggle('oneline'); });</script>
+                        </div>
                     </div>
                 </div>
             </div>

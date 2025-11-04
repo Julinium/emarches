@@ -264,8 +264,8 @@ def tender_list(request):
 
     if sort and sort != '':
         ordering = [sort]
-        if sort == 'published': ordering = ['-published']
-        if sort == '-published': ordering = ['published']
+        # if sort == 'published': ordering = ['-published']
+        # if sort == '-published': ordering = ['published']
     else: ordering = []
 
     ordering.append('id')
@@ -322,13 +322,14 @@ def tender_details(request, pk=None):
                 if os.path.isfile(full_path):
                     sizens = os.path.getsize(full_path)
                     total_size += sizens
-                    files_info.append({
-                        "name": entry,
-                        "size": sizens,
-                        "priv": 1
-                    })
+                    files_info.append({"name": entry, "size": sizens})
         
     files_count = len(files_info)
+    if tender.address_withdrawal == tender.address_bidding and \
+        tender.address_withdrawal == tender.address_opening:
+        addresses = [tender.address_withdrawal]
+    else:
+        addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
 
     context = { 
         'tender'        : tender,
@@ -337,6 +338,7 @@ def tender_details(request, pk=None):
         'total_size'    : total_size,
         'files_info'    : files_info,
         'dce_modal'     : DCE_SHOW_MODAL,
+        'addresses'     : addresses,
         }
 
     return render(request, 'portal/tender-details.html', context)
