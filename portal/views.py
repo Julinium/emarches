@@ -1,4 +1,4 @@
-import os, logging
+import os, logging, json
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -18,20 +18,19 @@ from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_control, never_cache
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, FileResponse
-
-# from django.views.generic import ListView, DetailView
+from django.http import HttpResponse, FileResponse, JsonResponse
 
 from django.contrib.auth.models import User
 
-from nas.models import UserSetting, Download
+from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
+from nas.forms import FavoriteForm
 from portal.bs_icons import bicons
-
 
 # Default Settings
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -46,6 +45,10 @@ DCE_SHOW_MODAL = False
 
 @login_required(login_url="account_login")
 def tender_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
 
     us = get_user_settings(request)
     if us: 
@@ -302,6 +305,10 @@ def tender_list(request):
 @login_required(login_url="account_login")
 def tender_details(request, pk=None):
 
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
     tender = get_object_or_404(Tender.objects.select_related(
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
@@ -309,6 +316,8 @@ def tender_details(request, pk=None):
                 'domains', 'lots', 'lots__agrements', 'lots__qualifs',
                 'lots__meetings', 'lots__samples', 'lots__visits'
             ), id=pk)
+
+    if not tender : return HttpResponse(status=404)
 
     files_list = []
     total_size = 0
@@ -335,6 +344,8 @@ def tender_details(request, pk=None):
     else:
         addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
 
+    us = get_user_settings(request)
+    full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
     context = { 
         'tender'        : tender,
         'link_prefix'   : LINK_PREFIX,
@@ -343,7 +354,12 @@ def tender_details(request, pk=None):
         'files_info'    : files_info,
         'dce_modal'     : DCE_SHOW_MODAL,
         'addresses'     : addresses,
+        'full_bar_days' : full_bar_days,
         }
+    
+    TenderView.objects.create(
+        tender=tender, 
+        user=user, )
 
     logger = logging.getLogger('portal')
     logger.info(f"Tender details view: {tender.id}")
@@ -357,6 +373,10 @@ def tender_get_file(request, pk=None, fn=None):
 
     if request.method != 'GET': return HttpResponse(status=403)
     if pk == None or fn == None: return HttpResponse(status=404)
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
 
     tender = get_object_or_404(Tender, id=pk)
     if not tender : return HttpResponse(status=404)
@@ -372,9 +392,9 @@ def tender_get_file(request, pk=None, fn=None):
         response['X-Accel-Redirect'] = f'/dce/{file_path}'
         response['Content-Disposition'] = f'attachment; filename="{ fn }"'
         response['Content-Length'] = os.path.getsize(file_fp)
-        Download.objects.get_or_create(
+        Download.objects.create(
             tender=tender, 
-            user=request.user, 
+            user=user, 
             size_read = tender.size_read, 
             size_bytes = file_size if file_size else tender.size_bytes, )
 
@@ -386,10 +406,70 @@ def tender_get_file(request, pk=None, fn=None):
 
 
 
+
+
+
 @login_required(login_url="account_login")
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def toggle_favorite(request, pk=None):
-    pass
+def favorite_toggle(request, pk=None):
+    
+    if request.method != 'GET': return HttpResponse(status=403)
+    if pk == None : return HttpResponse(status=404)
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    tender = get_object_or_404(Tender, id=pk)
+    if not tender : return HttpResponse(status=404)
+    tender = get_object_or_404(Tender, pk=pk)
+    user = request.user
+
+    action = request.POST.get('action')
+
+    logger = logging.getLogger('portal')
+    # ------------------- REMOVE -------------------
+    if action == 'remove':
+        deleted, _ = Favorite.objects.filter(user=user, tender=tender).delete()
+        logger.info(f"Tender UnFavorite: { tender.id }")
+        return JsonResponse({
+            'status': 'removed',
+            'favorited': False
+        })
+
+    # ------------------- ADD / UPDATE -------------------
+    favorite, created = Favorite.objects.get_or_create(
+        user=user, tender=tender,
+        defaults={'company': None}
+    )
+
+    form = FavoriteForm(request.POST, user=user, tender=tender, instance=favorite)
+    if form.is_valid():
+        form.save()
+        logger.info(f"Tender Favorite: { tender.id }")
+        return JsonResponse({
+            'status': 'added' if created else 'updated',
+            'favorited': True,
+            'favorite_id': str(favorite.id)
+        })
+    else:
+        return JsonResponse({
+            'status': 'error',
+            'errors': form.errors
+        }, status=400)
+
+    return HttpResponse(status=404)
+
+
+@login_required
+def company_folder_choices(request):
+    companies = Company.objects.filter(user=request.user).values('id', 'name')
+    folders = Folder.objects.filter(user=request.user).values('id', 'name')
+
+    return JsonResponse({
+        'companies': list(companies),
+        'folders': list(folders),
+    })
 
 
 def get_user_settings(request):

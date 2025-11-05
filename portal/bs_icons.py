@@ -43,6 +43,7 @@ bicons = {
                     # 'pencil-square'
     'favorites'     : 'bi bi-heart',
     'downloads'     : 'bi bi-arrow-down-square',
+    'views'         : 'bi bi-compass',
                     # 'download'
     'comments'      : 'bi bi-chat-square-quote',
     'ebid'          : 'bi bi-laptop',

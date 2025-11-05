@@ -32,10 +32,10 @@ class CustomLoggingMiddleware(MiddlewareMixin):
 
 def process_response(self, request, response):
     ctx = getattr(request, "_logging_context", {})
-    # ctx["status_code"] = response.status_code
+    ctx["status_code"] = response.status_code
     logging.getLogger("django").info("HTTP request", extra=ctx)
-    # if hasattr(request, '_log_context'):
-    #     request._log_context["status_code"] = response.status_code
+    if hasattr(request, '_log_context'):
+        request._log_context["status_code"] = response.status_code
 
     # CLEAN UP
     clear_logging_context()

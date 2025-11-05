@@ -1,13 +1,24 @@
 from django.contrib import admin
 from base.models import Crawler
+from nas.models import TenderView, Download
 
 @admin.register(Crawler)
 class CrawlerAdmin(admin.ModelAdmin):
     list_display = (
         'finished', 'formatted_duration', 'import_links', 'links_digest', 
         'tenders_digest', 'saving_errors', 'files_downloaded')
-    # list_filter = ('finished', 'saving_errors')
-    # list_display = ('id', 'other_field')
+    list_filter = ('finished', 'saving_errors')
+    # actions = None
+    # list_display_links = None
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
     def formatted_duration(self, obj):
         return str(obj.duration).split('.')[0]
@@ -21,3 +32,71 @@ class CrawlerAdmin(admin.ModelAdmin):
     formatted_duration.short_description = 'Duration'  # Column header in admin
     links_digest.short_description = 'Links C/I/S'  # Column header in admin
     tenders_digest.short_description = 'Tenders C/U'  # Column header in admin
+
+
+
+@admin.register(TenderView)
+class TenderViewAdmin(admin.ModelAdmin):
+    list_display = ('get_tender_title', 'get_tender_id', 'get_username', 'when',)
+    list_filter = ('when',)
+    list_display_links = None
+
+    def __init__(self, model, admin_site):
+        super().__init__(model, admin_site)
+        model._meta.verbose_name = "Tender View"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_tender_title(self, obj):
+        return obj.tender.title
+
+    def get_tender_id(self, obj):
+        return obj.tender.id
+
+    def get_username(self, obj):
+        return obj.user.username
+
+    get_tender_id.short_description = 'Tender ID'
+    get_tender_title.short_description = 'Tender title'
+    get_username.short_description = 'User'
+
+
+
+@admin.register(Download)
+class DownloadAdmin(admin.ModelAdmin):
+    list_display = ('get_tender_title', 'get_tender_id', 'get_username', 'size_bytes', 'when',)
+    list_filter = ('when',)
+    list_display_links = None
+
+    def __init__(self, model, admin_site):
+        super().__init__(model, admin_site)
+        model._meta.verbose_name = "Tender Download"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def get_tender_title(self, obj):
+        return obj.tender.title
+
+    def get_tender_id(self, obj):
+        return obj.tender.id
+
+    def get_username(self, obj):
+        return obj.user.username
+
+    get_tender_id.short_description = 'Tender ID'
+    get_tender_title.short_description = 'Tender title'
+    get_username.short_description = 'User'

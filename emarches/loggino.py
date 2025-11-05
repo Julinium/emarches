@@ -28,6 +28,29 @@ class JsonFormatter(logging.Formatter):
         if hasattr(record, "extra"):
             log_data.update(record.extra)
 
+        # from django.utils import timezone
+        # try:
+        #     from django.core.signals import request_started
+        #     # This is the *only* way to get current request in logging
+        #     current_request = None
+        #     for receiver in request_started.receivers:
+        #         if receiver[0][0] is not None:
+        #             current_request = receiver[0][0]()
+        #             break
+        #     if current_request and hasattr(current_request, '_log_context'):
+        #         ctx = current_request._log_context
+        #         log_data.update({
+        #             "request_id": ctx.get("request_id"),
+        #             "ip": ctx.get("ip"),
+        #             "user_id": ctx.get("user_id"),
+        #             "user_agent": ctx.get("user_agent"),
+        #             "path": ctx.get("path"),
+        #             "method": ctx.get("method"),
+        #             "status_code": ctx.get("status_code"),
+        #         })
+        # except:
+        #     pass  # Fallback: no request context
+
         context = get_request_context()
         if context:
             log_data.update({
@@ -36,7 +59,7 @@ class JsonFormatter(logging.Formatter):
                 "user_id": context.get("user_id"),
                 "user_agent": context.get("user_agent"),
                 "query_dict": context.get("query_dict"),
-                # "status_code": context.get("status_code"),
+                "status_code": context.get("status_code"),
             })
 
         return json.dumps(log_data, ensure_ascii=False, default=str)

@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-from .models import Profile, Company, NotificationSubscription, UserSetting
+from .models import Profile, Company, Favorite, NotificationSubscription, UserSetting
 from .iceberg import get_ice_checkup
 
 ALLOW_INVALID_ICE = True
@@ -193,4 +193,23 @@ class NewsletterSubscriptionForm(forms.Form):
                 sub.id for sub in subscriptions if sub.active
             ]
 
+
+class FavoriteForm(forms.ModelForm):
+    class Meta:
+        model = Favorite
+        fields = ('company', 'folders', 'comment')
+        widgets = {
+            'company': forms.CheckboxSelectMultiple,
+            'folders': forms.CheckboxSelectMultiple,
+            'comment': forms.Textarea(attrs={'rows': 3}),
+        }
+
+    def __init__(self, *args, user, tender, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.instance.user = user
+        self.instance.tender = tender
+
+        # Restrict choices to user-owned objects (adjust as needed)
+        self.fields['company'].queryset = Company.objects.filter(user=user)
+        self.fields['folders'].queryset = Folder.objects.filter(user=user)
 
