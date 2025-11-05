@@ -69,7 +69,8 @@ bicons = {
     'backspace'     : 'bi bi-backspace',
     'filter'        : 'bi bi-funnel',
                     # binoculars
-    'days_to_go'    : 'bi bi-calendar-x',
+    'days_to_go'    : 'bi bi-stopwatch',
+                    # calendar-x
     'title'         : 'bi bi-card-heading',
     'procedure'     : 'bi bi-book',
     'mode'          : 'bi bi-filter-left',

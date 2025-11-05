@@ -1,4 +1,4 @@
-import os
+import os, logging
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -292,6 +292,10 @@ def tender_list(request):
 
     context['page_obj'] = page_obj
 
+    logger = logging.getLogger('portal')
+    logger.info(f"Tender List view")
+
+
     return render(request, 'portal/tender-list.html', context)
 
 
@@ -341,6 +345,9 @@ def tender_details(request, pk=None):
         'addresses'     : addresses,
         }
 
+    logger = logging.getLogger('portal')
+    logger.info(f"Tender details view: {tender.id}")
+
     return render(request, 'portal/tender-details.html', context)
 
 
@@ -371,6 +378,8 @@ def tender_get_file(request, pk=None, fn=None):
             size_read = tender.size_read, 
             size_bytes = file_size if file_size else tender.size_bytes, )
 
+        logger = logging.getLogger('portal')
+        logger.info(f"Tender File Download: {tender.id} (={tender.size_bytes}B)")
         return response
 
     return HttpResponse(status=404)

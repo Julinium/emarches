@@ -73,16 +73,16 @@ def getJson(link_item, skipExisting=False):
                 helper.printMessage('WARN', 'g.getJson', f'Too many Requests, said the server: {dce_head.status_code} !')
                 helper.sleepRandom(300, 600)
     except Exception as x:
-        helper.printMessage('WARN', 'g.getJson', f'Exception raised while getting file size at {str(dce_link)}: {str(x)}')
+        helper.printMessage('WARN', 'g.getJson', f'Exception raised while getting file size at {str(dce_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         # return None
 
     try: request_cons = sessiono.get(cons_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
     except Exception as x:
-        helper.printMessage('ERROR', 'g.getJson', f'Exception raised while getting Cons at {str(cons_link)}: {str(x)}')
+        helper.printMessage('ERROR', 'g.getJson', f'Exception raised while getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         return None
-    helper.printMessage('DEBUG', 'g.getJson', f'Getting Cons page : {request_cons}')
+    helper.printMessage('DEBUG', 'g.getJson', f'Getting Tender page : {request_cons}')
     if request_cons.status_code != 200 :
-        helper.printMessage('ERROR', 'g.getJson', f'Request to Cons page returned a {request_cons.status_code} status code.')
+        helper.printMessage('ERROR', 'g.getJson', f'Request to Tender page returned a {request_cons.status_code} status code.')
         if request_cons.status_code == 429:
             helper.printMessage('ERROR', 'g.getJson', f'Too many Requests, said the server: {request_cons.status_code} !')
             helper.sleepRandom(300, 600)

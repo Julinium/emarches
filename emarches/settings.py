@@ -69,6 +69,8 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
+    'emarches.middleware.CustomLoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'emarches.urls'
@@ -136,6 +138,8 @@ else:
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'UTC'
 USE_I18N = True
+
+# TIME_ZONE = 'Africa/Casablanca'
 USE_TZ = True
 
 EXTRA_LANG_INFO = {
@@ -277,3 +281,124 @@ TENDERS_ITEMS_PER_PAGE = 10
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+
+# from .loggino import LOGGING_CONFIG
+# import logging.config
+# logging.config.dictConfig(LOGGING_CONFIG)
+from .loggino import JsonFormatter
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Keep Django's default loggers
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {asctime} {message}',
+            'style': '{',
+        },
+        "json": {
+            "()": JsonFormatter,
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'portal_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/portal.log'),
+            'maxBytes': 1024*1024*16,
+            'backupCount': 20,
+            'formatter': 'json',
+        },
+        'request_file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/requests.log'),
+            'maxBytes': 1024*1024*32,
+            'backupCount': 20,
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['request_file', 'console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'portal': {  # Your app
+            'handlers': ['console', 'portal_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,  # Keep Django's default loggers
+#     'formatters': {
+#         'verbose': {
+#             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+#             'style': '{',
+#         },
+#         'standard': {
+#             'format': '{levelname} {asctime} {module} {message}',
+#             'style': '{',
+#         },
+#         'simple': {
+#             'format': '{levelname} {message}',
+#             'style': '{',
+#         },
+#         # 'nested': {
+#         #     'format': '{ "time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s" }',
+#         #     'style': '{',
+#         # },
+#     },
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'verbose',
+#         },
+#         'portal_file': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_DIR, 'logs/portal.log'),
+#             'maxBytes': 1024*1024*16,
+#             'backupCount': 20,
+#             'formatter': 'standard',
+#         },
+#         'request_file': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': os.path.join(BASE_DIR, 'logs/requests.log'),
+#             'maxBytes': 1024*1024*32,
+#             'backupCount': 20,
+#             'formatter': 'standard',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'django.request': {
+#             'handlers': ['request_file', 'console'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#         'portal': {  # Your app
+#             'handlers': ['console', 'portal_file'],
+#             'level': 'INFO',
+#             'propagate': False,
+#         },
+#     },
+# }

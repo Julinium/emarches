@@ -167,8 +167,9 @@ class Favorite(models.Model):
     folders = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
     active  = models.BooleanField(null=True, default=True, editable=False)
     when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
-    tags    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Tags'))
+    # tags    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Tags'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
+    
 
     class Meta:
         db_table = 'nas_favorite'
@@ -189,15 +190,40 @@ class Download(models.Model):
     class Meta:
         db_table = 'nas_tender_download'
         ordering = ['-when']
-        constraints = [
-            models.UniqueConstraint(
-                fields=['tender', 'user'],
-                name='unique_download_per_user'
-            )
-        ]
+        constraints = [models.UniqueConstraint(fields=['tender', 'user'], name='unique_download_per_user')]
 
     def __str__(self):
-        return f"{ self.tender.chrono }@{ self.user.username }"
+        return f"D-{ self.tender.chrono }-BY-{ self.user.username }"
+
+
+class TenderView(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='views', editable=False)
+    tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='views', editable=False, verbose_name=_('Tender'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
+
+    class Meta:
+        db_table = 'nas_tender_view'
+        ordering = ['-when']
+
+    def __str__(self):
+        return f"V-{ self.tender.chrono }-BY-{ self.user.username }"
+
+
+class TenderList(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lists', editable=False)
+    # tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='lists', editable=False, verbose_name=_('Tender'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
+    results    = models.SmallIntegerField(default=0, verbose_name=_('Results count'))
+    params     = models.TextField(verbose_name=_('Query parameters'))
+
+    class Meta:
+        db_table = 'nas_tender_list'
+        ordering = ['-when']
+
+    def __str__(self):
+        return f"V-{ self.tender.chrono }-BY-{ self.user.username }"
 
 
 class Letter(models.Model):

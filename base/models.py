@@ -1,11 +1,11 @@
 
-import uuid, traceback, re
+import uuid, traceback, re, pytz
 from os import path as path
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.postgres.indexes import GinIndex
+# from django.contrib.postgres.indexes import GinIndex
 
 from .texter import normalize_text as nt
 
@@ -340,12 +340,12 @@ class Tender(models.Model):
         db_table = 'base_tender'
         ordering = ['-deadline', 'id']
         verbose_name = _("Tender")
-        indexes = [
-            GinIndex(fields=['keywords'], name='keywords_idx', opclasses=['gin_trgm_ops']),
-            GinIndex(fields=['cliwords'], name='cliwords_idx', opclasses=['gin_trgm_ops']),
-            GinIndex(fields=['refwords'], name='refwords_idx', opclasses=['gin_trgm_ops']),
-            GinIndex(fields=['locwords'], name='locwords_idx', opclasses=['gin_trgm_ops']),
-        ]
+        # indexes = [
+        #     GinIndex(fields=['keywords'], name='keywords_idx', opclasses=['gin_trgm_ops']),
+        #     GinIndex(fields=['cliwords'], name='cliwords_idx', opclasses=['gin_trgm_ops']),
+        #     GinIndex(fields=['refwords'], name='refwords_idx', opclasses=['gin_trgm_ops']),
+        #     GinIndex(fields=['locwords'], name='locwords_idx', opclasses=['gin_trgm_ops']),
+        # ]
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
@@ -353,26 +353,17 @@ class Tender(models.Model):
     @property
     def expired(self):
         try:
-            today_now = timezone.now()
-            expired = self.deadline <= today_now
-            return expired
+            rabat_now = timezone.localtime(timezone.now(), timezone=pytz.timezone('Africa/Casablanca'))
+            return self.deadline <= rabat_now
         except: return None
     
     @property
     def days_to_go(self):
-        try: 
-            today_now = timezone.now()
-            delta_to_go = self.deadline - today_now
+        try:
+            rabat_now = timezone.localtime(timezone.now(), timezone=pytz.timezone('Africa/Casablanca'))
+            delta_to_go = self.deadline.date() - rabat_now.date()
             return delta_to_go.days
         except: return 0
-
-    # @property
-    # def progress_percent(self, full_bar = settings.TENDER_FULL_PROGRESS_DAYS):
-    #     try:
-    #         ratio = int(100 * self.days_to_go / full_bar)
-    #         progress = max(0, min(ratio, 100))
-    #         return progress
-    #     except: return 0
 
     @property
     def days_span(self):
