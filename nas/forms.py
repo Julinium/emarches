@@ -203,6 +203,10 @@ class FavoriteForm(forms.ModelForm):
             'folders': forms.CheckboxSelectMultiple,
             'comment': forms.Textarea(attrs={'rows': 3}),
         }
+        # folders = forms.ModelMultipleChoiceField(
+        #     queryset=Folder.objects.filter(), 
+        #     required=False
+        #     )
 
     def __init__(self, *args, user, tender, **kwargs):
         super().__init__(*args, **kwargs)

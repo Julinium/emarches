@@ -1,0 +1,59 @@
+
+{% load i18n %}
+<button class="m-1 btn btn-outline-primary" type="button"
+        data-bs-toggle="modal" data-bs-target="#favModal">
+    {% if favorited %}
+        <span><i class="{{ bicons.unfavorite }}"></i></span>
+        <span class="ms-1">{% trans 'Unfavorite' %}</span>
+    {% else %}
+        <span><i class="{{ bicons.favorite }}"></i></span>
+        <span class="ms-1">{% trans 'Favorite' %}</span>
+    {% endif %}
+</button>
+
+<div id="favModal" class="modal fade" tabindex="-1" aria-labelledby="favModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="{% url 'favorite_toggle' tender.id %}" method="POST">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="favModalLabel">{% translate "Favorite Tender" %}</h1>
+                </div>
+                <div class="modal-body">                    
+
+                    <div class="row gx-3">
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Comment" %}</span></span>
+                                <input type="text" class="form-control"  name="comment" value="{{ favorited.comment }}" placeholder="{% trans 'Optional comment' %}" aria-label="comment">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-buildings"></i>{% trans "Company" %}</span></span>
+                                <select class="form-select" name="company" aria-label="company">
+                                    <option {% if favorited.company %} selected {% endif %} value="">{% trans 'All' %}</option>
+                                    {% for company in request.user.companies.all %}
+                                        <option {% if favorited.company  == company %} selected {% endif %} value="{{ company.id }}">{{ company }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <span><i class="{{ bicons.favorite }}"></i></span>
+                        <span class="ms-1">{% translate 'Submit' %}</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <span><i class="bi bi-x-lg"></i></span>
+                        <span class="ms-1">{% translate 'Close' %}</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

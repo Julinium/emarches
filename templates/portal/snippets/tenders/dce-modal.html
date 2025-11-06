@@ -1,0 +1,60 @@
+{% load i18n %}
+<button class="m-1 btn btn-outline-primary" type="button" 
+        data-bs-toggle="modal" data-bs-target="#dceModal">
+    <span><i class="{{ bicons.downloads }}"></i></span>
+    <span class="ms-1 fw-bold">{{ total_size|filesizeformat }}</span>
+    <span class="ms-1">{% trans 'Download' %}</span>
+</button>
+
+<div id="dceModal" class="modal fade" tabindex="-1" aria-labelledby="dceModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="dceModalLabel">{% translate "Tender's files" %}</h1>
+            </div>
+            <div class="modal-body">
+
+                {% if files_info  %}
+                    <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
+                    {% for f in files_info %}
+                        <a id="dce-{{ forloop.counter }}"
+                        class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
+                        href="{% url 'portal_tender_get_file' tender.id f.name %}">
+                            <span class=""><i class="{{ bicons.downloads }}"></i></span>
+                            <span class="ms-1 badge text-bg-primary">{{ f.size|filesizeformat }}</span>
+                            <span class="ms-1">{{ f.name }}</span>
+                            {% if files_info|length == 1 %}
+                                <script>
+                                    document.getElementById('dce-{{ forloop.counter }}').addEventListener('click', () => {
+                                        bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
+                                        document.getElementById('dceModal').classList.toggle('show');
+                                    });
+                                </script>
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-danger">{% translate "Sorry. We could not get the files for this Tender." %}</div>
+                    <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
+                    <div class="mt-2">
+                        <a href="/base_contact" target="_blank" class="btn btn-outline-primary mt-2">
+                            <span><i class="bi bi-send"></i></span>
+                            <span class="ms-1">{% translate 'Contact Us' %}</span>
+                        </a>
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="modal-footer">
+                <a href="/base_legal'" target="_blank" class="btn btn-outline-secondary">
+                    <span><i class="bi bi-shield-exclamation"></i></span>
+                    <span class="ms-1">{% translate 'Legal Information' %}</span>
+                </a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <span><i class="bi bi-x-lg"></i></span>
+                    <span class="ms-1">{% translate 'Close' %}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

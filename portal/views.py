@@ -411,9 +411,6 @@ def tender_get_file(request, pk=None, fn=None):
 
 
 
-
-
-
 @login_required(login_url="account_login")
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def favorite_toggle(request, pk=None):
