@@ -44,7 +44,8 @@ bicons = {
     'favorites'     : 'bi bi-heart',
     'downloads'     : 'bi bi-arrow-down-square',
     'views'         : 'bi bi-compass',
-                    # 'download'
+    'favorite'      : 'bi bi-heart',
+    'unfavorites'   : 'bi bi-heartbreak',
     'comments'      : 'bi bi-chat-square-quote',
     'ebid'          : 'bi bi-laptop',
     'ebid_req'      : 'bi bi-laptop text-primary',

@@ -41,7 +41,7 @@ SHOW_CANCELLED = True
 LINK_PREFIX = settings.LINK_PREFIX
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
 
-DCE_SHOW_MODAL = False
+DCE_SHOW_MODAL = True
 
 @login_required(login_url="account_login")
 def tender_list(request):
@@ -312,7 +312,7 @@ def tender_details(request, pk=None):
     tender = get_object_or_404(Tender.objects.select_related(
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
-                'downloads',
+                'downloads', 'views', 'favorites',
                 'domains', 'lots', 'lots__agrements', 'lots__qualifs',
                 'lots__meetings', 'lots__samples', 'lots__visits'
             ), id=pk)
@@ -344,6 +344,9 @@ def tender_details(request, pk=None):
     else:
         addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
 
+    favorited = tender.favorites.filter(user=user).first()
+    form = FavoriteForm(user=user, tender=tender, instance=favorited)
+
     us = get_user_settings(request)
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
     context = { 
@@ -355,6 +358,8 @@ def tender_details(request, pk=None):
         'dce_modal'     : DCE_SHOW_MODAL,
         'addresses'     : addresses,
         'full_bar_days' : full_bar_days,
+        'favorited'     : favorited,
+        'form'          : form,
         }
     
     TenderView.objects.create(
@@ -413,7 +418,7 @@ def tender_get_file(request, pk=None, fn=None):
 # @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def favorite_toggle(request, pk=None):
     
-    if request.method != 'GET': return HttpResponse(status=403)
+    if request.method != 'POST': return HttpResponse(status=403)
     if pk == None : return HttpResponse(status=404)
 
     user = request.user
@@ -428,37 +433,57 @@ def favorite_toggle(request, pk=None):
     action = request.POST.get('action')
 
     logger = logging.getLogger('portal')
-    # ------------------- REMOVE -------------------
-    if action == 'remove':
-        deleted, _ = Favorite.objects.filter(user=user, tender=tender).delete()
+
+    favorited = Favorite.objects.filter(tender=tender, user=user).first()
+    if favorited:
         logger.info(f"Tender UnFavorite: { tender.id }")
-        return JsonResponse({
-            'status': 'removed',
-            'favorited': False
-        })
+        favorited.delete()
+    else:
+        # favorited = Favorite.objects.create(
+        #     user=user,
+        #     tender=tender,
+        #     company=None
+        # )
+        form = FavoriteForm(request.POST, user=user, tender=tender, instance=favorited)
+        if form.is_valid():
+            form.save()
+            logger.info(f"Tender Favorite: { tender.id }")
+        else:
+            messages.error(request, 'Validation error')
+
+    return redirect('portal_tender_detail', tender.id)
+
+    # ------------------- REMOVE -------------------
+    # if action == 'remove':
+    #     deleted, _ = Favorite.objects.filter(user=user, tender=tender).delete()
+    #     logger.info(f"Tender UnFavorite: { tender.id }")
+    #     return JsonResponse({
+    #         'status': 'removed',
+    #         'favorited': False
+    #     })
 
     # ------------------- ADD / UPDATE -------------------
-    favorite, created = Favorite.objects.get_or_create(
-        user=user, tender=tender,
-        defaults={'company': None}
-    )
+    # favorite, created = Favorite.objects.get_or_create(
+    #     user=user, tender=tender,
+    #     defaults={'company': None}
+    # )
 
-    form = FavoriteForm(request.POST, user=user, tender=tender, instance=favorite)
-    if form.is_valid():
-        form.save()
-        logger.info(f"Tender Favorite: { tender.id }")
-        return JsonResponse({
-            'status': 'added' if created else 'updated',
-            'favorited': True,
-            'favorite_id': str(favorite.id)
-        })
-    else:
-        return JsonResponse({
-            'status': 'error',
-            'errors': form.errors
-        }, status=400)
+    # form = FavoriteForm(request.POST, user=user, tender=tender, instance=favorite)
+    # if form.is_valid():
+    #     form.save()
+    #     logger.info(f"Tender Favorite: { tender.id }")
+    #     return JsonResponse({
+    #         'status': 'added' if created else 'updated',
+    #         'favorited': True,
+    #         'favorite_id': str(favorite.id)
+    #     })
+    # else:
+    #     return JsonResponse({
+    #         'status': 'error',
+    #         'errors': form.errors
+    #     }, status=400)
 
-    return HttpResponse(status=404)
+    # return HttpResponse(status=404)
 
 
 @login_required

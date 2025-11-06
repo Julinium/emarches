@@ -33,6 +33,36 @@
 
     <div class="my-3" id="tender-details">
         <div class="row gx-4 gy-0">
+            {% if not tender.expired %}
+                <div class="col-12 mb-3">
+                    <div class="progress bg-danger p-0 mx-0 my-1" 
+                        style="max-height: 0.2rem;"
+                        data-bs-toggle="tooltip"
+                        title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
+                        {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                            <div class="progress-bar bg-success" 
+                                role="progressbar" style="width: {{ green }}%;" 
+                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                aria-valuemax="100">
+                            </div>
+                        {% endwith %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if favorited %}
+                <div>
+                    <div class="col-12 mb-3">
+                        <span class="badge text-bg-success">
+                            {% trans "FAVORITE" %}
+                        </span>
+                        <span>
+                            [{{ favorited.folders.all }}] - [{{ favorited.company }}]
+                        </span>
+                    </div>
+                </div>
+            {% endif %}
+
 
             {% trans 'Object' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-title' val_value=tender.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
@@ -49,21 +79,6 @@
                 {% trans 'Morocco time' as unit %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-deadline' val_value=tender.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' %}
             {% endtimezone %}
-
-            <div class="col-12 mb-3">
-                <div class="progress bg-danger p-0 mx-0 my-1" 
-                     style="max-height: 0.5rem;"
-                     data-bs-toggle="tooltip"
-                     title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                    {% with tender.days_to_go|progrefy:full_bar_days as green %}
-                        <div class="progress-bar bg-success" 
-                             role="progressbar" style="width: {{ green }}%;" 
-                             aria-valuenow="{{ green }}" aria-valuemin="0" 
-                             aria-valuemax="100">
-                        </div>
-                    {% endwith %}
-                </div>
-            </div>
 
             {% trans 'Total Estimate' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-estimate' val_value=tender.estimate key_value=key_value uni_value='' ico_class=bicons.estimate val_class='fw-bold' border='bottom' liner='oneline' %}
@@ -416,144 +431,43 @@
             {% endif %}
             
             <!-- Start Favorite toggle -->
-            <!-- <a href="javascript:" class="m-1 btn btn-outline-primary">{% trans 'Bookmark' %}</a> -->
-            <!-- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> -->
-            <!-- Favorite Button -->
-            <!-- <button id="favorite-btn"
-                    class="btn {% if is_favorited %}btn-danger{% else %}btn-success{% endif %}"
-                    data-tender-pk="{{ tender.pk }}"
-                    data-bs-toggle="modal"
-                    data-bs-target="#favoriteModal">
-                {% if is_favorited %}
-                    {% trans "Remove from Favorites" %}
-                {% else %}
-                    {% trans "Add to Favorites" %}
-                {% endif %}
-            </button> -->
+                            
+                <button class="m-1 btn btn-outline-primary" type="button"
+                        data-bs-toggle="modal" data-bs-target="#favModal">
+                    {% if favorited %}
+                        <span><i class="{{ bicons.unfavorite }}"></i></span>
+                        <span class="ms-1">{% trans 'Unfavorite' %}</span>
+                    {% else %}
+                        <span><i class="{{ bicons.favorite }}"></i></span>
+                        <span class="ms-1">{% trans 'Favorite' %}</span>
+                    {% endif %}
+                </button>
 
-            <!-- Modal Form -->
-            <div class="modal fade" id="favoriteModal" tabindex="-1">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <form id="favorite-form">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                            <h5 class="modal-title">{% trans "Add to Favorites" %}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                            <input type="hidden" name="action" value="add">
-
-                            <div class="mb-3">
-                                <label class="form-label">{% trans "Company" %}</label>
-                                <div id="company-container">
-                                <!-- Filled by JS -->
+                <div id="favModal" class="modal fade" tabindex="-1" aria-labelledby="favModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{% url 'favorite_toggle' tender.id %}" method="POST">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="favModalLabel">{% translate "Favorite Tender" %}</h1>
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">{% trans "Folders" %}</label>
-                                <div id="folder-container">
-                                <!-- Filled by JS -->
+                                <div class="modal-body">
+                                    {{ form.as_p }}
                                 </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">{% trans "Comment (optional)" %}</label>
-                                <textarea name="comment" class="form-control" rows="2"></textarea>
-                            </div>
-                            </div>
-                            <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                {% trans "Cancel" %}
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                {% trans "Save" %}
-                            </button>
-                            </div>
-                        </form>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">
+                                        <span><i class="{{ bicons.favorite }}"></i></span>
+                                        <span class="ms-1">{% translate 'Submit' %}</span>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        <span><i class="bi bi-x-lg"></i></span>
+                                        <span class="ms-1">{% translate 'Close' %}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <script>
-                $(function () {
-                    const $btn   = $('#favorite-btn');
-                    const $modal = $('#favoriteModal');
-                    const $form  = $('#favorite-form');
-
-                    // -------------------------------------------------
-                    // Load companies / folders (once)
-                    // -------------------------------------------------
-                    function loadChoices() {
-                        $.getJSON("{% url 'company_folder_choices' %}", function (data) {
-                            const compHtml = data.companies.map(c =>
-                                `<div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="company" value="${c.id}" id="c${c.id}">
-                                <label class="form-check-label" for="c${c.id}">${c.name}</label>
-                                </div>`
-                            ).join('');
-                            $('#company-container').html(compHtml);
-
-                            const folderHtml = data.folders.map(f =>
-                                `<div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="folders" value="${f.id}" id="f${f.id}">
-                                <label class="form-check-label" for="f${f.id}">${f.name}</label>
-                                </div>`
-                            ).join('');
-                            $('#folder-container').html(folderHtml);
-                        });
-                    }
-
-                    // -------------------------------------------------
-                    // Button click
-                    // -------------------------------------------------
-                    $btn.on('click', function (e) {
-                        if ($btn.hasClass('btn-danger')) {
-                            // ---- REMOVE ----
-                            if (confirm('{% trans "Remove from favorites?" %}')) {
-                                $.post({
-                                    url: "{% url 'favorite_toggle' tender.pk %}",
-                                    data: { action: 'remove', csrfmiddlewaretoken: $form.find('input[name=csrfmiddlewaretoken]').val() },
-                                    success: function (resp) {
-                                        if (resp.status === 'removed') {
-                                            $btn.removeClass('btn-danger').addClass('btn-success')
-                                                .text('{% trans "Add to Favorites" %}');
-                                        }
-                                    }
-                                });
-                            }
-                            e.preventDefault();               // stop modal
-                        } else {
-                            // ---- ADD / EDIT ----
-                            if (!$('#company-container').children().length) loadChoices();
-                        }
-                    });
-
-                    // -------------------------------------------------
-                    // Form submit – ONE LINE serialize()
-                    // -------------------------------------------------
-                    $form.on('submit', function (e) {
-                        e.preventDefault();
-
-                        $.post({
-                            url: "{% url 'favorite_toggle' tender.pk %}",
-                            data: $form.serialize(),               // <-- includes csrf_token
-                            success: function (resp) {
-                                if (resp.status === 'added' || resp.status === 'updated') {
-                                    $modal.modal('hide');
-                                    $btn.removeClass('btn-success').addClass('btn-danger')
-                                        .text('{% trans "Remove from Favorites" %}');
-                                } else {
-                                    alert('Error: ' + JSON.stringify(resp.errors));
-                                }
-                            },
-                            error: function () {
-                                alert('Server error');
-                            }
-                        });
-                    });
-                });
-                </script>
 
 
             <!-- End Favorite toggle -->

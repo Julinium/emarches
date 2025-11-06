@@ -10,7 +10,7 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Folder)
 class FolderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'image', 'color', 'comment')
+    list_display = ('name', 'user', 'image', 'color', 'comment')
 
 
 @admin.register(Notification)
