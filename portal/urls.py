@@ -11,5 +11,4 @@ urlpatterns = [
     
     path('favorite/<uuid:pk>/', views.tender_favorite, name='tender_favorite'),
     path('unfavorite/<uuid:pk>/', views.tender_unfavorite, name='tender_unfavorite'),
-    path('choices/', views.company_folder_choices, name='company_folder_choices'),
 ]

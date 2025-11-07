@@ -377,28 +377,14 @@ class Tender(models.Model):
         self.cliwords = nt(self.client.name)
         self.refwords = nt(self.reference)
         self.locwords = nt(self.location)
-        
-        # tender.has_agrements = self.agrements != None
-        # tender.has_qualifs = self.qualifs != None
-
-
-        if self.has_agrements == True:
-            self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
-
-        if self.has_qualifs == True:
-            self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
-
-        if self.has_meetings == True:
-            self.has_meetings = any(lot.meetings.count() > 0 for lot in self.lots.all())
-
-        if self.has_samples == True:
-            self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
-
-        if self.has_visits == True:
-            self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
 
         self.updated = None
         if self.pk is not None:
+            self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
+            self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
+            self.has_meetings = any(lot.meetings.count() > 0 for lot in self.lots.all())
+            self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
+            self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
             self.updated = timezone.now()
 
         super().save(*args, **kwargs)

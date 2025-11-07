@@ -216,30 +216,43 @@
                     </div>
 
                     <div class="small ms-2 fw-light text-end">
-                        <span class="ms-2"
-                            data-bs-toggle="tooltip"
-                            title="{% trans 'Views' %}">
-                            {{ tender.views.all.count|metrify:0 }}
-                            <i class="{{ bicons.views }}" style="width: 1rem; height: 1rem;"></i>
-                        </span>
-                        <span class="ms-2"
+
+                        {% if tender.views.all.count > 0 %}
+                            <span class="ms-2 small"
+                                data-bs-toggle="tooltip"
+                                title="{% trans 'Views' %}">
+                                {{ tender.views.all.count|metrify:0 }}
+                                <i class="{{ bicons.views }}" style="width: 1rem; height: 1rem;"></i>
+                            </span>
+                        {% endif %}
+
+                        {% if tender.favorites.all.count > 0 %}
+                        <span class="ms-2 small"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Bookmarks' %}">
                             {{ tender.favorites.all.count|metrify:0 }}
                             <i class="{{ bicons.favorites }}" style="width: 1rem; height: 1rem;"></i>
                         </span>
-                        <span class="ms-2"
+                        {% endif %}
+
+                        {% if tender.comments.all.count > 0 %}
+                        <span class="ms-2 small"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Comments' %}">
                             {{ tender.comments.all.count|metrify:0 }}
                             <i class="{{ bicons.comments }}" style="width: 1rem; height: 1rem;"></i>
                         </span>
-                        <span class="ms-2"
+                        {% endif %}
+
+                        {% if tender.downloads.all.count > 0 %}
+                        <span class="ms-2 small"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Downloads' %}">
                             {{ tender.downloads.all.count|metrify:0 }}
                             <i class="{{ bicons.downloads }}" style="width: 1rem; height: 1rem;"></i>
                         </span>
+                        {% endif %}
+
                     </div>
                 </div>
                 

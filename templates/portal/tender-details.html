@@ -11,15 +11,32 @@
 {% block content %}
     <div class="d-flex justify-content-between align-items-center">
         <div>
+            <span id="faved" class="me-2 pt-2 pb-1 mb-1 badge text-bg-success {% if not favorited %}d-none{% endif %}">
+                <span class="">
+                    <i class="{{ bicons.favorited }}"></i>
+                    <span class="d-none d-md-inline">{% trans "FAVORITE" %}</span>
+                </span>
+            </span>
             <span class="h3">{% trans "Tenders Details" %}</span>
         </div>
-        <span id="faved" class="pt-2 badge text-bg-success {% if not favorited %}d-none{% endif %}">
-            <span class="">
-                <i class="{{ bicons.favorited }}"></i>
-                <span class="d-none d-md-inline ms-1">{% trans 'FAVORITE' %}</span>
-            </span>
-        </span>
     </div>
+
+    {% if not tender.expired %}
+        <div class="col-12 mb-3">
+            <div class="progress bg-danger p-0 mx-0 my-1" 
+                style="max-height: 0.2rem;"
+                data-bs-toggle="tooltip"
+                title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
+                {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                    <div class="progress-bar bg-success" 
+                        role="progressbar" style="width: {{ green }}%;" 
+                        aria-valuenow="{{ green }}" aria-valuemin="0" 
+                        aria-valuemax="100">
+                    </div>
+                {% endwith %}
+            </div>
+        </div>
+    {% endif %}
 
     {% if tender.cancelled %}
         <div class="my-3" id="tender-cancelled-top" >
@@ -41,39 +58,7 @@
         </div>
     {% endif %}
 
-    {% if not tender.expired %}
-        <div class="col-12 mb-3">
-            <div class="progress bg-danger p-0 mx-0 my-1" 
-                style="max-height: 0.2rem;"
-                data-bs-toggle="tooltip"
-                title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                {% with tender.days_to_go|progrefy:full_bar_days as green %}
-                    <div class="progress-bar bg-success" 
-                        role="progressbar" style="width: {{ green }}%;" 
-                        aria-valuenow="{{ green }}" aria-valuemin="0" 
-                        aria-valuemax="100">
-                    </div>
-                {% endwith %}
-            </div>
-        </div>
-    {% endif %}
-
-    <div class="text-center">
-        {% include 'portal/snippets/tenders/fav-button.html' %}
-
-        {% if files_info|length == 1 and not dce_modal %}
-            {% with files_info|first as f %}
-                <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
-                        class="m-1 btn btn-outline-primary" type="button">
-                    <span class="fw-bold">{{ total_size|filesizeformat }}</span>
-                    <span><i class="{{ bicons.downloads }}"></i></span>
-                    <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
-                </a>
-            {% endwith %}
-        {% else %}
-            {% include 'portal/snippets/tenders/dce-modal.html' %}
-        {% endif %}
-    </div>
+    {% include 'portal/snippets/tenders/tender-actions.html' %}
 
     <div class="my-3" id="tender-details">
         <div class="row gx-4 gy-0">
@@ -113,7 +98,7 @@
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-location' val_value=tender.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
         </div>
 
-        <div id="collapseAdvanced" class="collapse">
+        <div id="collapseAdvanced">
             <div class="row gx-4 gy-0">
                 {% trans 'Procedure' as key_value %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-procedure' val_value=tender.procedure.name key_value=key_value uni_value='' ico_class=bicons.procedure val_class='' border='bottom' liner='' %}
@@ -348,74 +333,89 @@
 
     <div class="my-3" id="tender-actions" >
         <div class="text-center">
-
-            <a class="m-1 btn btn-outline-secondary collapsed" 
-                    type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseAdvanced" 
-                    aria-expanded="false" aria-controls="collapseAdvanced">
-                <span class=""><i class="bi bi-list-columns-reverse"></i></span>
-                <span class="ms-1">{% translate "Advanced View" %}</span>
-            </a>
-
-            {% if tender.lots_count > 1 %}
-                <span>
-                    <button type="button" class="m-1 btn btn-outline-primary" 
-                            data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                        <span class="fw-bold">{{ tender.lots_count }}</span>
-                        <span><i class="{{ bicons.multi_lots }}"></i></span>
-                        <span class="ms-1">{% trans "Lots details" %}</span>
-                        
-                    </button>
-                    <span class="text-start">
-                        {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
-                    </span>
-                </span>
-            {% endif %}
-            {% if files_info|length == 1 and not dce_modal %}
-                {% with files_info|first as f %}
-                    <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
-                            class="m-1 btn btn-outline-primary" type="button">
-                        <span class="fw-bold">{{ total_size|filesizeformat }}</span>
-                        <span><i class="{{ bicons.downloads }}"></i></span>
-                        <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
-                    </a>
-                {% endwith %}
-            {% else %}
-
-                <!-- Start Download toggle -->
-                {% include 'portal/snippets/tenders/dce-modal.html' %}
-                <!-- End Download toggle -->
-
-            {% endif %}
-            
-            <!-- Start Favorite toggle -->
-
-             <!-- <button class="m-1 btn btn-outline-primary" type="button"
-                     data-bs-toggle="modal" data-bs-target="#favModal">
-                {% if favorited %}
-                    <span><i class="{{ bicons.unfavorite }}"></i></span>
-                    <span class="ms-1">{% trans 'Unfavorite' %}</span>
-                {% else %}
-                    <span><i class="{{ bicons.favorite }}"></i></span>
-                    <span class="ms-1">{% trans 'Favorite' %}</span>
-                {% endif %}
-            </button> -->
-            <!-- End Favorite toggle -->
-
-            <a target="_blank"
-               href="{{ link_prefix }}{{ tender.link }}"
-               class="m-1 btn btn-outline-primary">
-                <span><i class="{{ bicons.bidding }}"></i></span>
-                <span class="ms-1">{% trans 'Bid' %}</span>
-            </a>
-            <!--
-                Modal :
-                We don't handle bidding process automatically.
-                We can provide paid support separately (eSign, preparation, ...).
-                Go to portal: Good luck.
-                Contact us: $200 and if won: +1.5%
-            -->
+            {% include 'portal/snippets/tenders/tender-actions.html' %}
         </div>
     </div>
+
+
+    <div>
+        <div id="dceModal" class="modal fade" tabindex="-1" aria-labelledby="dceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="dceModalLabel">{% translate "Tender's files" %}</h1>
+                    </div>
+                    <div class="modal-body">
+
+                        {% if files_info  %}
+                            <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
+                            {% for f in files_info %}
+                                <a id="dce-{{ forloop.counter }}"
+                                class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
+                                href="{% url 'portal_tender_get_file' tender.id f.name %}">
+                                    <span class=""><i class="{{ bicons.downloads }}"></i></span>
+                                    <span class="ms-1 badge text-bg-primary">{{ f.size|filesizeformat }}</span>
+                                    <span class="ms-1">{{ f.name }}</span>
+                                    {% if files_info|length == 1 %}
+                                        <script>
+                                            document.getElementById('dce-{{ forloop.counter }}').addEventListener('click', () => {
+                                                bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
+                                                document.getElementById('dceModal').classList.toggle('show');
+                                            });
+                                        </script>
+                                    {% endif %}
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <div class="text-danger">{% translate "Sorry. We could not get the files for this Tender." %}</div>
+                            <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
+                            <div class="mt-2">
+                                <a href="/base_contact" target="_blank" class="btn btn-outline-primary mt-2">
+                                    <span><i class="bi bi-send"></i></span>
+                                    <span class="ms-1">{% translate 'Contact Us' %}</span>
+                                </a>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/base_legal'" target="_blank" class="btn btn-outline-secondary">
+                            <span><i class="bi bi-shield-exclamation"></i></span>
+                            <span class="ms-1">{% translate 'Legal Information' %}</span>
+                        </a>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <span><i class="bi bi-x-lg"></i></span>
+                            <span class="ms-1">{% translate 'Close' %}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const azrems = document.querySelectorAll('.wait-azrem');
+        function heartToggle(makas='fav') {
+            azrems.forEach(azrem => { azrem.classList.remove('d-none'); });
+
+            if (makas=='fav'){ url = "{% url 'tender_favorite' tender.id %}"
+            } else { url = "{% url 'tender_unfavorite' tender.id %}"}
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.setRequestHeader('Accept', 'text/plain');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        azrems.forEach(azrem => { azrem.classList.add('d-none'); });
+                        const fav_indicator = document.getElementById('faved')
+                        const buttons = document.querySelectorAll('.favorite-toggle');
+                        buttons.forEach(button => { button.classList.toggle('d-none'); });
+                        fav_indicator.classList.toggle('d-none');
+                    }
+                }
+            };
+            xhr.send();
+        }
+    </script>
 
 {% endblock content %}

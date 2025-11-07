@@ -95,17 +95,17 @@
 
     {% if tender.has_samples %}
         {% trans 'Required Samples' as samples_caption %}
-        {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=samples_caption objects=lot.samples.all %}
+        {% include 'portal/snippets/lots/sa-me-vi.html' with caption=samples_caption objects=lot.samples.all %}
     {% endif %}
 
     {% if tender.has_meetings %}
         {% trans 'Scheduled Meetings' as meetings_caption %}
-        {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=meetings_caption objects=lot.meetings.all %}
+        {% include 'portal/snippets/lots/sa-me-vi.html' with caption=meetings_caption objects=lot.meetings.all %}
     {% endif %}
 
     {% if tender.has_visits %}
         {% trans 'Scheduled Visits' as visits_caption %}
-        {% include 'portal/snippets/tenders/sa-me-vi.html' with caption=visits_caption objects=lot.visits.all %}
+        {% include 'portal/snippets/lots/sa-me-vi.html' with caption=visits_caption objects=lot.visits.all %}
     {% endif %}
 </div>
 

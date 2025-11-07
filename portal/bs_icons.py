@@ -28,15 +28,15 @@ bicons = {
     'has_agrements' : 'bi bi-shield-fill-check text-primary',
     'has_qualifs'   : 'bi bi-mortarboard-fill text-primary',
     'has_samples'   : 'bi bi-palette2 text-primary',
-    'has_visits'    : 'bi bi-eye-fill text-primary',
-                    # 'person-walking'
+    'has_visits'    : 'bi bi-person-walking text-primary',
+                    # 'eye-fill'
     'has_meetings'  : 'bi bi-chevron-bar-contract text-primary',
 
     'agrements_ico' : 'bi bi-shield-check',
     'qualifs_ico'   : 'bi bi-mortarboard',
     'samples_ico'   : 'bi bi-palette2',
-    'visits_ico'    : 'bi bi-eye',
-                    # 'person-walking'
+    'visits_ico'    : 'person-walking',
+                    # 'bi bi-eye',
     'meetings_ico'  : 'bi bi-chevron-bar-contract',
     
     'changes'       : 'bi bi-activity',
