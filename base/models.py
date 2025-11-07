@@ -377,6 +377,11 @@ class Tender(models.Model):
         self.cliwords = nt(self.client.name)
         self.refwords = nt(self.reference)
         self.locwords = nt(self.location)
+        
+        # tender.has_agrements = self.agrements != None
+        # tender.has_qualifs = self.qualifs != None
+
+
         if self.has_agrements == True:
             self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
 
@@ -426,7 +431,7 @@ class Lot(models.Model):
     def save(self, *args, **kwargs):
         tender = self.tender
         if tender:
-            if self.title: 
+            if self.title:
                 if tender.keywords: tender.keywords = nt(self.title)
                 else: tender.keywords += ' ' + nt(self.title)
             if self.description:
@@ -434,6 +439,9 @@ class Lot(models.Model):
                 else: tender.keywords += ' ' + nt(self.description)
             tender.has_agrements = self.agrements != None
             tender.has_qualifs = self.qualifs != None
+            tender.has_samples = self.samples != None
+            tender.has_meetings = self.meetings != None
+            tender.has_visits = self.visits != None
             tender.save()
 
         super().save(*args, **kwargs)

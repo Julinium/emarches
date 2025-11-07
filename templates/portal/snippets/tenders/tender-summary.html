@@ -3,13 +3,9 @@
 
 <div class="my-3">
     <div class="card shadow">
-        <a class="btn p-0 w-100 text-start" href="{% url 'portal_tender_detail' tender.id %}">
-            <div class="card-header px-3 py-1 
-                        {% if tender in favorites.all %}
-                            bg-success-subtle
-                        {% else %}
-                            bg-light
-                        {% endif %}">
+        <a class="btn p-0 w-100 text-start" 
+           href="{% url 'portal_tender_detail' tender.id %}">
+            <div class="card-header px-3 py-1">
 
                 <div class="d-flex justify-content-between">
 
@@ -40,6 +36,12 @@
                                 title="{% trans 'Total Guaranty' %}: {{ tender.bond }}">
                                 {{ tender.bond|metrify:1 }}
                             </span>
+                            {% if tender.id in faved_ids %}
+                                <span class="badge text-bg-success">
+                                    <i class="{{ bicons.favorite }}"></i>
+                                    {% trans 'FAVORITE' %}
+                                </span>
+                            {% endif %}
                             <span class="fw-light small text-muted mx-1" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Execution Location' %}: {{ tender.location }}">
@@ -61,7 +63,7 @@
 
                 <div id="t{{ tender.chrono }}t" class="twolines">
                     <div data-bs-toggle="tooltip"
-                        title="{% trans 'Tender object' %}: {{ tender.title }}">
+                        title="{% trans 'Tender object' %}: {{ tender.title }}">                        
                         {% if tender.cancelled %}
                             <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
                         {% endif %}

@@ -29,7 +29,7 @@ from django.contrib.auth.models import User
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
-from nas.forms import FavoriteForm
+# from nas.forms import FavoriteForm
 from portal.bs_icons import bicons
 
 # Default Settings
@@ -280,7 +280,8 @@ def tender_list(request):
         ).select_related(
             'client', 'category', 'mode', 'procedure'
         ).prefetch_related(
-            'favorites', 'downloads', 'comments', 'changes',
+            'favorites', 
+            'downloads', 'comments', 'changes',
             )
 
     context = define_context(request)
@@ -294,6 +295,7 @@ def tender_list(request):
     page_obj = paginator.page(page_number)
 
     context['page_obj'] = page_obj
+    context['faved_ids'] = user.favorites.values_list('tender', flat=True)
 
     logger = logging.getLogger('portal')
     logger.info(f"Tender List view")
@@ -345,7 +347,7 @@ def tender_details(request, pk=None):
         addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
 
     favorited = tender.favorites.filter(user=user).first()
-    form = FavoriteForm(user=user, tender=tender, instance=favorited)
+    # form = FavoriteForm(user=user, tender=tender, instance=favorited)
 
     us = get_user_settings(request)
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
@@ -359,7 +361,7 @@ def tender_details(request, pk=None):
         'addresses'     : addresses,
         'full_bar_days' : full_bar_days,
         'favorited'     : favorited,
-        'form'          : form,
+        # 'form'          : form,
         }
     
     TenderView.objects.create(
@@ -410,10 +412,9 @@ def tender_get_file(request, pk=None, fn=None):
     return HttpResponse(status=404)
 
 
-
 @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def favorite_toggle(request, pk=None):
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_favorite(request, pk=None):
     
     if request.method != 'POST': return HttpResponse(status=403)
     if pk == None : return HttpResponse(status=404)
@@ -425,62 +426,55 @@ def favorite_toggle(request, pk=None):
     tender = get_object_or_404(Tender, id=pk)
     if not tender : return HttpResponse(status=404)
     tender = get_object_or_404(Tender, pk=pk)
-    user = request.user
 
-    action = request.POST.get('action')
+    logger = logging.getLogger('portal')
+
+    favorited = Favorite.objects.filter(tender=tender, user=user).first()
+    if not favorited:
+        # favorited.delete()
+        # logger.info(f"Tender UnFavorite: { tender.id }")
+        # messages.success(request, _('Item successfully removed from your Favorites'))
+    # else:
+        company = None
+        company_id=request.POST.get('company', None)
+        comment=request.POST.get('comment', '')
+        if company_id:
+            company = Company.objects.filter(id=company_id).first()
+        favorited = Favorite.objects.create(
+            user=user,
+            tender=tender,
+            company=company,
+            comment=comment
+        )
+        favorited.save()
+        logger.info(f"Tender Favorite: { tender.id }")
+        messages.success(request, _('Item successfully added to your Favorites'))
+
+    return redirect('portal_tender_detail', tender.id)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_unfavorite(request, pk=None):
+    if pk == None : return HttpResponse(status=404)
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    tender = get_object_or_404(Tender, id=pk)
+    if not tender : return HttpResponse(status=404)
+    tender = get_object_or_404(Tender, pk=pk)
 
     logger = logging.getLogger('portal')
 
     favorited = Favorite.objects.filter(tender=tender, user=user).first()
     if favorited:
-        logger.info(f"Tender UnFavorite: { tender.id }")
         favorited.delete()
-    else:
-        # favorited = Favorite.objects.create(
-        #     user=user,
-        #     tender=tender,
-        #     company=None
-        # )
-        form = FavoriteForm(request.POST, user=user, tender=tender, instance=favorited)
-        if form.is_valid():
-            form.save()
-            logger.info(f"Tender Favorite: { tender.id }")
-        else:
-            messages.error(request, 'Validation error')
+        logger.info(f"Tender UnFavorite: { tender.id }")
+        messages.success(request, _('Item successfully removed from your Favorites'))
 
     return redirect('portal_tender_detail', tender.id)
-
-    # ------------------- REMOVE -------------------
-    # if action == 'remove':
-    #     deleted, _ = Favorite.objects.filter(user=user, tender=tender).delete()
-    #     logger.info(f"Tender UnFavorite: { tender.id }")
-    #     return JsonResponse({
-    #         'status': 'removed',
-    #         'favorited': False
-    #     })
-
-    # ------------------- ADD / UPDATE -------------------
-    # favorite, created = Favorite.objects.get_or_create(
-    #     user=user, tender=tender,
-    #     defaults={'company': None}
-    # )
-
-    # form = FavoriteForm(request.POST, user=user, tender=tender, instance=favorite)
-    # if form.is_valid():
-    #     form.save()
-    #     logger.info(f"Tender Favorite: { tender.id }")
-    #     return JsonResponse({
-    #         'status': 'added' if created else 'updated',
-    #         'favorited': True,
-    #         'favorite_id': str(favorite.id)
-    #     })
-    # else:
-    #     return JsonResponse({
-    #         'status': 'error',
-    #         'errors': form.errors
-    #     }, status=400)
-
-    # return HttpResponse(status=404)
 
 
 @login_required
