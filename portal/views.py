@@ -416,7 +416,6 @@ def tender_get_file(request, pk=None, fn=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_favorite(request, pk=None):
     
-    if request.method != 'POST': return HttpResponse(status=403)
     if pk == None : return HttpResponse(status=404)
 
     user = request.user
@@ -425,37 +424,27 @@ def tender_favorite(request, pk=None):
 
     tender = get_object_or_404(Tender, id=pk)
     if not tender : return HttpResponse(status=404)
-    tender = get_object_or_404(Tender, pk=pk)
 
     logger = logging.getLogger('portal')
 
     favorited = Favorite.objects.filter(tender=tender, user=user).first()
     if not favorited:
-        # favorited.delete()
-        # logger.info(f"Tender UnFavorite: { tender.id }")
-        # messages.success(request, _('Item successfully removed from your Favorites'))
-    # else:
-        company = None
-        company_id=request.POST.get('company', None)
-        comment=request.POST.get('comment', '')
-        if company_id:
-            company = Company.objects.filter(id=company_id).first()
         favorited = Favorite.objects.create(
             user=user,
             tender=tender,
-            company=company,
-            comment=comment
         )
-        favorited.save()
         logger.info(f"Tender Favorite: { tender.id }")
-        messages.success(request, _('Item successfully added to your Favorites'))
+        # messages.success(request, _('Item successfully added to your Favorites'))
 
-    return redirect('portal_tender_detail', tender.id)
+        return HttpResponse(tender.id, status=200)
+    logger.info(f"Failed Tender Favorite: { tender.id }")
+    return HttpResponse(status=500)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_unfavorite(request, pk=None):
+    
     if pk == None : return HttpResponse(status=404)
 
     user = request.user
@@ -464,18 +453,83 @@ def tender_unfavorite(request, pk=None):
 
     tender = get_object_or_404(Tender, id=pk)
     if not tender : return HttpResponse(status=404)
-    tender = get_object_or_404(Tender, pk=pk)
 
     logger = logging.getLogger('portal')
 
-    favorited = Favorite.objects.filter(tender=tender, user=user).first()
-    if favorited:
-        favorited.delete()
-        logger.info(f"Tender UnFavorite: { tender.id }")
-        messages.success(request, _('Item successfully removed from your Favorites'))
+    deleted, _ = Favorite.objects.filter(tender=tender, user=user).delete()
+    if deleted > 0:
+        logger.info(f"Tender Unfavorite: { tender.id }")
+        # messages.success(request, _('Item successfully removed from your Favorites'))
+        return HttpResponse(tender.id, status=200)
 
-    return redirect('portal_tender_detail', tender.id)
+    logger.info(f"Failed Tender Unfavorite: { tender.id }")
+    return HttpResponse(status=500)
 
+
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def tender_unfavorite_old(request, pk=None):
+#     if pk == None : return HttpResponse(status=404)
+
+#     user = request.user
+#     if not user or not user.is_authenticated : 
+#         return HttpResponse(status=403)
+
+#     tender = get_object_or_404(Tender, id=pk)
+#     if not tender : return HttpResponse(status=404)
+#     tender = get_object_or_404(Tender, pk=pk)
+
+#     logger = logging.getLogger('portal')
+
+#     favorited = Favorite.objects.filter(tender=tender, user=user).first()
+#     if favorited:
+#         favorited.delete()
+#         logger.info(f"Tender UnFavorite: { tender.id }")
+#         messages.success(request, _('Item successfully removed from your Favorites'))
+
+#     return redirect('portal_tender_detail', tender.id)
+
+
+
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def tender_favorite_post(request, pk=None):
+    
+#     if request.method != 'POST': return HttpResponse(status=403)
+#     if pk == None : return HttpResponse(status=404)
+
+#     user = request.user
+#     if not user or not user.is_authenticated : 
+#         return HttpResponse(status=403)
+
+#     tender = get_object_or_404(Tender, id=pk)
+#     if not tender : return HttpResponse(status=404)
+#     tender = get_object_or_404(Tender, pk=pk)
+
+#     logger = logging.getLogger('portal')
+
+#     favorited = Favorite.objects.filter(tender=tender, user=user).first()
+#     if not favorited:
+#         # favorited.delete()
+#         # logger.info(f"Tender UnFavorite: { tender.id }")
+#         # messages.success(request, _('Item successfully removed from your Favorites'))
+#     # else:
+#         company = None
+#         company_id=request.POST.get('company', None)
+#         comment=request.POST.get('comment', '')
+#         if company_id:
+#             company = Company.objects.filter(id=company_id).first()
+#         favorited = Favorite.objects.create(
+#             user=user,
+#             tender=tender,
+#             company=company,
+#             comment=comment
+#         )
+#         favorited.save()
+#         logger.info(f"Tender Favorite: { tender.id }")
+#         messages.success(request, _('Item successfully added to your Favorites'))
+
+#     return redirect('portal_tender_detail', tender.id)
 
 @login_required
 def company_folder_choices(request):

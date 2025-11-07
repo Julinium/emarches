@@ -3,7 +3,7 @@
         data-bs-toggle="modal" data-bs-target="#dceModal">
     <span><i class="{{ bicons.downloads }}"></i></span>
     <span class="ms-1 fw-bold">{{ total_size|filesizeformat }}</span>
-    <span class="ms-1">{% trans 'Download' %}</span>
+    <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
 </button>
 
 <div id="dceModal" class="modal fade" tabindex="-1" aria-labelledby="dceModalLabel" aria-hidden="true">

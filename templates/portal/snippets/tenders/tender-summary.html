@@ -38,8 +38,8 @@
                             </span>
                             {% if tender.id in faved_ids %}
                                 <span class="badge text-bg-success">
-                                    <i class="{{ bicons.favorite }}"></i>
-                                    {% trans 'FAVORITE' %}
+                                    <i class="{{ bicons.favorited }}"></i>
+                                    <span class="d-none d-md-inline ms-1">{% trans 'FAVORITE' %}</span>
                                 </span>
                             {% endif %}
                             <span class="fw-light small text-muted mx-1" 

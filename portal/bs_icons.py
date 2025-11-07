@@ -45,7 +45,7 @@ bicons = {
     'downloads'     : 'bi bi-arrow-down-square',
     'views'         : 'bi bi-compass',
     'favorite'      : 'bi bi-heart',
-    'favorited'     : 'bi bi-heart-fill text-success',
+    'favorited'     : 'bi bi-heart-fill',
     'unfavorite'    : 'bi bi-heartbreak',
     'comments'      : 'bi bi-chat-square-quote',
     'ebid'          : 'bi bi-laptop',

@@ -9,39 +9,16 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between align-items-center">
         <div>
-            {% if favorited %}
-                <span>
-                    <span class="h3 me-2">
-                        <i class="{{ bicons.favorited }}"></i>
-                    </span>
-                    <!-- {% if favorited.company %}
-                        <span>
-                            {{ favorited.company }}
-                        </span>
-                    {% endif %} -->
-                </span>
-            {% endif %}
             <span class="h3">{% trans "Tenders Details" %}</span>
         </div>
-        <div>
-            <!-- Start Favorite toggle -->
-            {% if favorited %}
-                <a href="{% url 'tender_unfavorite' tender.id %}" 
-                class="ms-1 py-1 btn btn-outline-primary">
-                    <span><i class="{{ bicons.unfavorite }}"></i></span>
-                    <span class="ms-1">{% trans 'Unfavorite' %}</span>
-                </a>
-            {% else %}
-                <button class="ms-1 py-1 btn btn-outline-primary" type="button"
-                        data-bs-toggle="modal" data-bs-target="#favModal">
-                    <span><i class="{{ bicons.favorite }}"></i></span>
-                    <span class="ms-1">{% trans 'Favorite' %}</span>
-                </button>
-            {% endif %}
-            <!-- End Favorite toggle -->
-        </div>
+        <span id="faved" class="pt-2 badge text-bg-success {% if not favorited %}d-none{% endif %}">
+            <span class="">
+                <i class="{{ bicons.favorited }}"></i>
+                <span class="d-none d-md-inline ms-1">{% trans 'FAVORITE' %}</span>
+            </span>
+        </span>
     </div>
 
     {% if tender.cancelled %}
@@ -64,25 +41,42 @@
         </div>
     {% endif %}
 
+    {% if not tender.expired %}
+        <div class="col-12 mb-3">
+            <div class="progress bg-danger p-0 mx-0 my-1" 
+                style="max-height: 0.2rem;"
+                data-bs-toggle="tooltip"
+                title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
+                {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                    <div class="progress-bar bg-success" 
+                        role="progressbar" style="width: {{ green }}%;" 
+                        aria-valuenow="{{ green }}" aria-valuemin="0" 
+                        aria-valuemax="100">
+                    </div>
+                {% endwith %}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="text-center">
+        {% include 'portal/snippets/tenders/fav-button.html' %}
+
+        {% if files_info|length == 1 and not dce_modal %}
+            {% with files_info|first as f %}
+                <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
+                        class="m-1 btn btn-outline-primary" type="button">
+                    <span class="fw-bold">{{ total_size|filesizeformat }}</span>
+                    <span><i class="{{ bicons.downloads }}"></i></span>
+                    <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
+                </a>
+            {% endwith %}
+        {% else %}
+            {% include 'portal/snippets/tenders/dce-modal.html' %}
+        {% endif %}
+    </div>
+
     <div class="my-3" id="tender-details">
         <div class="row gx-4 gy-0">
-            {% if not tender.expired %}
-                <div class="col-12 mb-3">
-                    <div class="progress bg-danger p-0 mx-0 my-1" 
-                        style="max-height: 0.2rem;"
-                        data-bs-toggle="tooltip"
-                        title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                        {% with tender.days_to_go|progrefy:full_bar_days as green %}
-                            <div class="progress-bar bg-success" 
-                                role="progressbar" style="width: {{ green }}%;" 
-                                aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                aria-valuemax="100">
-                            </div>
-                        {% endwith %}
-                    </div>
-                </div>
-            {% endif %}
-            
 
             {% trans 'Object' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-title' val_value=tender.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
@@ -383,7 +377,7 @@
                             class="m-1 btn btn-outline-primary" type="button">
                         <span class="fw-bold">{{ total_size|filesizeformat }}</span>
                         <span><i class="{{ bicons.downloads }}"></i></span>
-                        <span class="ms-1">{% trans 'Download' %}</span>
+                        <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
                     </a>
                 {% endwith %}
             {% else %}
@@ -396,7 +390,7 @@
             
             <!-- Start Favorite toggle -->
 
-             <button class="m-1 btn btn-outline-primary" type="button"
+             <!-- <button class="m-1 btn btn-outline-primary" type="button"
                      data-bs-toggle="modal" data-bs-target="#favModal">
                 {% if favorited %}
                     <span><i class="{{ bicons.unfavorite }}"></i></span>
@@ -405,8 +399,7 @@
                     <span><i class="{{ bicons.favorite }}"></i></span>
                     <span class="ms-1">{% trans 'Favorite' %}</span>
                 {% endif %}
-            </button>
-            {% include 'portal/snippets/tenders/fav-modal.html' %}
+            </button> -->
             <!-- End Favorite toggle -->
 
             <a target="_blank"
