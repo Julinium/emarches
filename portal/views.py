@@ -29,7 +29,8 @@ from django.contrib.auth.models import User
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
 from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
-# from nas.forms import FavoriteForm
+from base.context_processors import portal_context
+
 from portal.bs_icons import bicons
 
 # Default Settings
@@ -303,7 +304,7 @@ def tender_list(request):
     page_obj = paginator.page(page_number)
 
     context['page_obj'] = page_obj
-    context['faved_ids'] = user.favorites.values_list('tender', flat=True)
+    # context['faved_ids'] = user.favorites.values_list('tender', flat=True)
 
     logger = logging.getLogger('portal')
     logger.info(f"Tender List view")
@@ -540,7 +541,10 @@ def tender_favorite_list(request):
 
     ordering.append('id')
 
-    faved_ids = user.favorites.values_list('tender', flat=True)
+    # faved_ids = user.favorites.values_list('tender', flat=True)
+
+    pontext = portal_context(request)
+    faved_ids = pontext.get('faved_ids', None)
 
     tenders = Tender.objects.filter(
         id__in=faved_ids
@@ -560,7 +564,7 @@ def tender_favorite_list(request):
     context['query_unsorted']     = urlencode(query_unsorted)
     context['query_dict']         = query_dict
     context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
-    context['faved_ids']          = faved_ids
+    # context['faved_ids']          = faved_ids
     context['bicons']             = bicons
 
     paginator = Paginator(tenders, TENDERS_ITEMS_PER_PAGE)

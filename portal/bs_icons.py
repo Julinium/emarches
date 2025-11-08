@@ -58,8 +58,9 @@ bicons = {
     'esign_opt'       : 'bi bi-usb-drive text-success', 
     'esign_na'        : 'bi bi-usb-drive text-secondary',       
                         # 'device-ssd'
-    'bidding'         : 'bi bi-send-check',
+    'bidding'         : 'bi bi-box-arrow-up-right',
                         # arrow-90deg-right
+                        # send-check
                         # reply 
                         # handbag 
                         # arrow-up-right-square 
