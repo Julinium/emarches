@@ -1,0 +1,48 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Favorites cleanup' %}">
+            <i class="{{ bicons.delete }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Cleanup' %}</span>
+            </div>
+            <hr class="dropdown-divider">
+
+            <li>
+                <form method="POST" 
+                      action="{% url 'portal_tender_favorite_clean' 'expired' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="dropdown-item">
+                        <i class="{{ bicons.clean_expired }} me-2"></i>
+                        <span class="">{% trans 'Expired' %}</span>
+                    </button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" 
+                      action="{% url 'portal_tender_favorite_clean' 'cancelled' %}">
+                    {% csrf_token %}
+                    <button class="dropdown-item">
+                        <i class="{{ bicons.clean_cancelled }} me-2"></i>
+                        <span class="">{% trans 'Cancelled' %}</span>
+                    </button>
+                </form>
+            </li>
+            <li>
+                <form method="POST" 
+                      action="{% url 'portal_tender_favorite_clean' 'all' %}">
+                    {% csrf_token %}
+                    <button class="dropdown-item text-danger">
+                        <i class="{{ bicons.clean_all }} me-2"></i>
+                        <span class="">{% trans 'All Favorites' %}</span>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>

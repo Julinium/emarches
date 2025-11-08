@@ -18,14 +18,12 @@
         </li>
         <li><hr class="dropdown-divider"></li>
         <li class="">
-            <a class="dropdown-item" href="/">
-            <i class="bi bi-bookmark-heart-fill"></i>
+            <a class="dropdown-item" href="{% url 'portal_tender_favorite_list' %}">
+            <i class="bi bi-heart-fill"></i>
             {% trans 'My Favourites' %}
-            {% if user_favs %}
                 <span class="badge bg-primary text-white mx-1">
-                {{ user_favs.count }}
+                {{ faved_ids.count }}
                 </span>
-            {% endif %}
             </a>
         </li>
         <li><hr class="dropdown-divider"></li>

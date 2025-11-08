@@ -61,9 +61,16 @@ def tender_list(request):
 
 
     def get_req_params(req):
+        allowed_keys = [
+            'q', 'f', 'estin', 'estix', 'bondn', 'bondx', 
+            'ddlnn', 'ddlnx', 'publn', 'publx', 'allotted',
+            'category', 'procedure', 'ebid', 'esign', 
+            'pme', 'variant', 'agrements', 'qualifs',
+            'samples', 'meetings', 'visits', 'page', 'sort',
+            ]
 
         query_dict = {
-            k: v for k, v in req.GET.items() if v != ''
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
         }
         
         if not 'ddlnn' in query_dict:
@@ -73,12 +80,12 @@ def tender_list(request):
             query_dict['sort'] = TENDERS_ORDERING_FIELD
             
         query_string = {
-            k: v for k, v in req.GET.items() if v != '' and k != 'page'
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
         }
 
         query_unsorted = {
             k: v for k, v in req.GET.items()
-            if v != '' and k not in ('page', 'sort')
+            if k in allowed_keys and v != '' and k not in ('page', 'sort')
         }
 
         return query_dict, query_string, query_unsorted
@@ -281,7 +288,7 @@ def tender_list(request):
         ).select_related(
             'client', 'category', 'mode', 'procedure'
         ).prefetch_related(
-            'favorites', 
+            'favorites', 'views',
             'downloads', 'comments', 'changes',
             )
 
@@ -380,7 +387,7 @@ def tender_details(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_get_file(request, pk=None, fn=None):
 
-    if request.method != 'GET': return HttpResponse(status=403)
+    if request.method != 'GET': return HttpResponse(status=405)
     if pk == None or fn == None: return HttpResponse(status=404)
 
     user = request.user
@@ -418,6 +425,7 @@ def tender_get_file(request, pk=None, fn=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_favorite(request, pk=None):
     
+    if request.method != 'POST': return HttpResponse(status=405)
     if pk == None : return HttpResponse(status=404)
 
     user = request.user
@@ -446,7 +454,8 @@ def tender_favorite(request, pk=None):
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_unfavorite(request, pk=None):
-    
+
+    if request.method != 'POST': return HttpResponse(status=405)
     if pk == None : return HttpResponse(status=404)
 
     user = request.user
@@ -466,6 +475,108 @@ def tender_unfavorite(request, pk=None):
 
     logger.info(f"Failed Tender Unfavorite: { tender.id }")
     return HttpResponse(status=500)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_favorite_clean(request, span=None):
+    
+    if request.method != 'POST': return HttpResponse(status=405)
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    cleanables = None
+    if span:
+        if span == 'all':
+            cleanables = user.favorites.all()
+        if span == 'cancelled':
+            cleanables = user.favorites.filter(tender__cancelled=True)
+        if span == 'expired':
+            wassa = datetime.now(RABAT_TZ)
+            cleanables = user.favorites.filter(tender__deadline__lt=wassa)
+    
+    logger = logging.getLogger('portal')
+    if cleanables:
+        trash, xxx = cleanables.delete()
+        logger.info(f"Favorite Tender Cleanup: { span } => { trash } items")
+        messages.success(request, _('Favorite items cleaned') + f': { trash }')
+    else:
+        logger.info(f"Favorite Tender Cleanup: { span } => No items cleaned up")
+        messages.warning(request, _('Nothing to clean up.'))
+
+    return redirect('portal_tender_favorite_list')
+
+    # return render(request, 'portal/tender-favorite-list.html', {})
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_favorite_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    us = get_user_settings(request)
+    if us:
+        TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+        TENDERS_ORDERING_FIELD = us.tenders_ordering_field
+        TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+        SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+        SHOW_CANCELLED = us.tenders_show_cancelled
+
+    sort = request.GET.get('sort', TENDERS_ORDERING_FIELD)
+    page = request.GET.get('page', None)
+    query_dict = {'sort': sort, 'page': page}
+    query_string = {'sort': sort}
+    query_unsorted = {}
+
+    sort = request.GET.get('sort', TENDERS_ORDERING_FIELD)
+
+    if sort and sort != '':
+        ordering = [sort]
+    else: ordering = []
+
+    ordering.append('id')
+
+    faved_ids = user.favorites.values_list('tender', flat=True)
+
+    tenders = Tender.objects.filter(
+        id__in=faved_ids
+    )
+
+    tenders = tenders.order_by(
+            *ordering
+        ).select_related(
+            'client', 'category', 'mode', 'procedure'
+        ).prefetch_related(
+            'favorites', 'views',
+            'downloads', 'comments', 'changes',
+            )
+
+    context = {}
+    context['query_string']       = urlencode(query_string)
+    context['query_unsorted']     = urlencode(query_unsorted)
+    context['query_dict']         = query_dict
+    context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
+    context['faved_ids']          = faved_ids
+    context['bicons']             = bicons
+
+    paginator = Paginator(tenders, TENDERS_ITEMS_PER_PAGE)
+    page_number = query_dict['page'] if 'page' in query_dict else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context['page_obj'] = page_obj
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Favorite Tender List view")
+
+    return render(request, 'portal/tender-favorite-list.html', context)
 
 
 def get_user_settings(request):

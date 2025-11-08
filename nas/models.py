@@ -169,7 +169,7 @@ class Favorite(models.Model):
     active  = models.BooleanField(null=True, default=True, editable=False)
     when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
-    
+
 
     class Meta:
         db_table = 'nas_favorite'
