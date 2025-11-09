@@ -3,8 +3,6 @@ import logging
 import uuid
 from django.utils.deprecation import MiddlewareMixin
 
-from emarches.loggino import set_logging_context, clear_logging_context
-
 class CustomLoggingMiddleware(MiddlewareMixin):
     """
     Adds request context (user, IP, UA, request_id, query_dict) to every log record.
@@ -27,8 +25,6 @@ class CustomLoggingMiddleware(MiddlewareMixin):
             "user_agent": user_agent,
             "query_dict": query_dict,
         }
-        # PUSH context into logging
-        # set_logging_context(request._logging_context)
 
 def process_response(self, request, response):
     ctx = getattr(request, "_logging_context", {})
@@ -37,7 +33,5 @@ def process_response(self, request, response):
     if hasattr(request, '_log_context'):
         request._log_context["status_code"] = response.status_code
 
-    # CLEAN UP
-    # clear_logging_context()
     return response
 
