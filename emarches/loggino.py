@@ -1,17 +1,10 @@
-import os, json, logging #, logging.config, threading
+import os, json, logging 
 from pathlib import Path
 
 
 from django.conf import settings
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Thread-local storage to hold request context
-# _thread_locals = threading.local()
-
-# def get_request_context():
-#     """Return current request context (or empty dict if no request)"""
-#     return getattr(_thread_locals, "context", {})
 
 
 class JsonFormatter(logging.Formatter):
@@ -41,15 +34,6 @@ class JsonFormatter(logging.Formatter):
 
         return json.dumps(log_data, ensure_ascii=False, default=str)
 
-
-# Push context into thread-local storage
-# def set_logging_context(context):
-#     _thread_locals.context = context
-
-# Clear after request
-# def clear_logging_context():
-#     if hasattr(_thread_locals, "context"):
-#         del _thread_locals.context
 
 # Full logging config for Django
 LOGGING_CONFIG = {
