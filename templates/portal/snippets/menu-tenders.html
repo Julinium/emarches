@@ -5,40 +5,61 @@
         href="#" id="portalScrollingDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
     <i class="bi bi-megaphone-fill"></i> {% trans 'Tenders' %}
-    {% if user_favs %}
-        <span class="badge mb-2 px-1 text-white bg-primary"> </span>
-    {% endif %}
+        {% if faved_ids %}
+            <span class="badge mb-2 px-1 text-white bg-primary"> </span>
+        {% endif %}
     </a>
     <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
         <li class="">
             <a class="dropdown-item" href="{% url 'portal_tender_list' %}">
-            <i class="bi bi-search"></i>
-            {% trans 'Browse' %}
+                <i class="{{ bicons.search }} me-2"></i>
+                {% trans 'Browse' %}
             </a>
         </li>
-        <li><hr class="dropdown-divider"></li>
+        
         <li class="">
             <a class="dropdown-item" href="{% url 'portal_tender_favorite_list' %}">
-            <i class="bi bi-heart-fill"></i>
-            {% trans 'Favourites' %}
+                <i class="{{ bicons.favorite }} me-2"></i>
+                {% trans 'Favourites' %}
                 {% if faved_ids %}
-                <span class="badge bg-primary text-white mx-1">
-                    {{ faved_ids.count }}
+                    <span class="badge bg-primary text-white mx-1">
+                        {{ faved_ids.count|default:0 }}
                     </span>
                 {% endif %}
             </a>
         </li>
+
         <li><hr class="dropdown-divider"></li>
+
         <li class="">
-            <a class="dropdown-item" aria-disabled="true" href="/">
-            <i class="bi bi-opencollective"></i>
-            {% trans 'Insights' %}
+            <a class="dropdown-item" aria-disabled="true" href="#">
+                <i class="{{ bicons.client }} me-2"></i>
+                {% trans 'Public Clients' %}
             </a>
-        </li><li><hr class="dropdown-divider"></li>
+        </li>
+
         <li class="">
-            <a class="dropdown-item" aria-disabled="true" href="/">
-            <i class="bi bi-cart4"></i>
-            {% trans 'Purchase Orders' %}
+            <a class="dropdown-item" aria-disabled="true" href="#">
+                <i class="{{ bicons.location }} me-2"></i>
+                {% trans 'Locations' %}
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item" aria-disabled="true" href="#">
+                <i class="{{ bicons.insights }} me-2"></i>
+                {% trans 'Insights' %}
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item" aria-disabled="true" href="#">
+                <i class="{{ bicons.shopping }} me-2"></i>
+                {% trans 'Purchase Orders' %}
             </a>
         </li>
     </ul>

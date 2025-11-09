@@ -17,21 +17,21 @@
         {% if user.is_authenticated %}
             <li>
                 <a href="{% url 'nas_profile_view' %}" class="p-2 dropdown-item" type="button">
-                    <span><i class="bi bi-person-vcard"></i></span>
-                    <span class="ms-1">{% trans "Profile" %}</span>
+                    <span><i class="bi bi-person-vcard me-2"></i></span>
+                    <span class="">{% trans "Profile" %}</span>
                 </a>
             </li>
             <li>
                 <a href="{% url 'nas_user_settings' %}" class="p-2 dropdown-item" type="button">
-                    <span><i class="bi bi-gear"></i></span>
-                    <span class="ms-1">{% trans "Preferences" %}</span>
+                    <span><i class="bi bi-gear me-2"></i></span>
+                    <span class="">{% trans "Preferences" %}</span>
                 </a>
             </li>
             <!-- {% url 'account_email' as email_url_ %}
             {% if email_url_ %}
                 <li>
                     <a href="{{ email_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-envelope-check"></i></span>
+                        <span><i class="bi bi-envelope-check me-2"></i></span>
                         <span class="ms-1">{% trans "Change Email" %}</span>
                     </a>
                 </li>
@@ -40,7 +40,7 @@
             {% if change_password_url_ %}
                 <li>
                     <a href="{{ change_password_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-person-lock"></i></span>
+                        <span><i class="bi bi-person-lock me-2"></i></span>
                         <span class="ms-1">{% trans "Change Password" %}</span>
                     </a>
                 </li>
@@ -49,7 +49,7 @@
             {% if connections_url_ %}
                 <li>
                     <a href="{{ connections_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-plug"></i></span>
+                        <span><i class="bi bi-plug me-2"></i></span>
                         <span class="ms-1">{% trans "Account Connections" %}</span>
                     </a>
                 </li>
@@ -58,8 +58,8 @@
             {% if mfa_url_ %}
                 <li>
                     <a href="{{ mfa_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-fingerprint"></i></span>
-                        <span class="ms-1">{% trans "Two-Factor Authentication" %}</span>
+                        <span><i class="bi bi-fingerprint me-2"></i></span>
+                        <span class="">{% trans "Two-Factor Authentication" %}</span>
                     </a>
                 </li>
             {% endif %}
@@ -67,8 +67,8 @@
             {% if usersessions_list_url_ %}
                 <li>
                     <a href="{{ usersessions_list_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-database-lock"></i></span>
-                        <span class="ms-1">{% trans "Sessions" %}</span>
+                        <span><i class="bi bi-database-lock me-2"></i></span>
+                        <span class="">{% trans "Sessions" %}</span>
                     </a>
                 </li>
             {% endif %}
@@ -78,21 +78,21 @@
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <a class="dropdown-item p-2" href="https://emarches.com/crm/supervision">
-                        <i class="bi bi-eye-fill"></i> {% translate 'Supervision' %}
+                        <i class="bi bi-eye-fill me-2"></i> {% translate 'Supervision' %}
                         {% if new_contactings %}<span class="badge bg-danger text-white mx-1">{{ new_contactings.count }}</span>{% endif %}
                     </a>
                 </li>
                 <li>
-                    <a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-tools"></i> {% translate 'Administration' %}</a>
+                    <a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-tools me-2"></i> {% translate 'Administration' %}</a>
                 </li>
                 <li>
-                    <a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear"></i> {% translate 'Database' %}</a>
+                    <a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear me-2"></i> {% translate 'Database' %}</a>
                 </li>
                 <li>
-                    <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot"></i> Scraper Logs</a>
+                    <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot me-2"></i> Scraper Logs</a>
                 </li>
                 <li>
-                    <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock"></i> Certificates</a>
+                    <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
             {% endif %}
@@ -102,8 +102,8 @@
             {% if logout_url_ %}
                 <li>
                     <a href="{{ logout_url_ }}" class="p-2 dropdown-item text-danger fw-bold" type="button">
-                        <span><i class="bi bi-door-open"></i></span>
-                        <span class="ms-1">{% trans "Sign Out" %}</span>
+                        <span><i class="bi bi-door-open me-2"></i></span>
+                        <span class="">{% trans "Sign Out" %}</span>
                     </a>
                 </li>
             {% endif %}
@@ -112,8 +112,8 @@
             {% if login_url_ %}
                 <li>
                     <a href="{{ login_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-box-arrow-in-right"></i></span>
-                        <span class="ms-1">{% trans "Sign In" %}</span>
+                        <span><i class="bi bi-box-arrow-in-right me-2"></i></span>
+                        <span class="">{% trans "Sign In" %}</span>
                     </a>
                 </li>
             {% endif %}
@@ -121,8 +121,8 @@
             {% if signup_url_ %}
                 <li>
                     <a href="{{ signup_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-slash-square"></i></span>
-                        <span class="ms-1">{% trans "Sign Up" %}</span>
+                        <span><i class="bi bi-slash-square me-2"></i></span>
+                        <span class="">{% trans "Sign Up" %}</span>
                     </a>
                 </li>
             {% endif %}

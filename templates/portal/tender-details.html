@@ -352,7 +352,7 @@
                         {% if files_info  %}
                             <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
                             {% for f in files_info %}
-                                <a id="dce-{{ forloop.counter }}"
+                                <a id="dce-{{ tender.chrono }}000{{ forloop.counter }}"
                                 class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
                                 href="{% url 'portal_tender_get_file' tender.id f.name %}">
                                     <span class=""><i class="{{ bicons.downloads }}"></i></span>
@@ -393,7 +393,7 @@
 
     {% if files_info|length == 1 %}
         <script>
-            document.getElementById('dce-{{ forloop.counter }}').addEventListener('click', () => {
+            document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {
                 bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
                 document.getElementById('dceModal').classList.toggle('show');
             });

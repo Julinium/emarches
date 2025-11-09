@@ -17,9 +17,9 @@ class Command(BaseCommand):
         from base.models import Lot
         from django.db.models import Count
         lots = Lot.objects.annotate(
-            visits__count=Count('visits')).filter(
-            tender__has_visits=False,
-            visits__count__gt=0
+            agrements__count=Count('agrements')).filter(
+            tender__has_agrements=False,
+            agrements__count__gt=0
             )
         lc = lots.count()
         i = 0

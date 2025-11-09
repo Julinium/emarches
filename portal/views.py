@@ -31,7 +31,6 @@ from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
-from portal.bs_icons import bicons
 
 # Default Settings
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -263,9 +262,6 @@ def tender_list(request):
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
 
-        # context['sorter']             = self.sorter
-        context['bicons']             = bicons
-
         return context
 
     query_dict, query_string, query_unsorted = get_req_params(request)
@@ -364,14 +360,12 @@ def tender_details(request, pk=None):
     context = { 
         'tender'        : tender,
         'link_prefix'   : LINK_PREFIX,
-        'bicons'        : bicons,
         'total_size'    : total_size,
         'files_info'    : files_info,
         'dce_modal'     : DCE_SHOW_MODAL,
         'addresses'     : addresses,
         'full_bar_days' : full_bar_days,
         'favorited'     : favorited,
-        # 'form'          : form,
         }
     
     TenderView.objects.create(
@@ -564,8 +558,6 @@ def tender_favorite_list(request):
     context['query_unsorted']     = urlencode(query_unsorted)
     context['query_dict']         = query_dict
     context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
-    # context['faved_ids']          = faved_ids
-    context['bicons']             = bicons
 
     paginator = Paginator(tenders, TENDERS_ITEMS_PER_PAGE)
     page_number = query_dict['page'] if 'page' in query_dict else 1
