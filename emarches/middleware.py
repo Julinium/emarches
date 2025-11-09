@@ -28,7 +28,7 @@ class CustomLoggingMiddleware(MiddlewareMixin):
             "query_dict": query_dict,
         }
         # PUSH context into logging
-        set_logging_context(request._logging_context)
+        # set_logging_context(request._logging_context)
 
 def process_response(self, request, response):
     ctx = getattr(request, "_logging_context", {})
@@ -38,6 +38,6 @@ def process_response(self, request, response):
         request._log_context["status_code"] = response.status_code
 
     # CLEAN UP
-    clear_logging_context()
+    # clear_logging_context()
     return response
 
