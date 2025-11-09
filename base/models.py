@@ -423,11 +423,11 @@ class Lot(models.Model):
             if self.description:
                 if tender.keywords: tender.keywords = nt(self.description)
                 else: tender.keywords += ' ' + nt(self.description)
-            tender.has_agrements = self.agrements != None
-            tender.has_qualifs = self.qualifs != None
-            tender.has_samples = self.samples != None
-            tender.has_meetings = self.meetings != None
-            tender.has_visits = self.visits != None
+            tender.has_agrements = self.agrements.count() > 0
+            tender.has_qualifs = self.qualifs.count() > 0
+            tender.has_samples = self.samples.count() > 0
+            tender.has_meetings = self.meetings.count() > 0
+            tender.has_visits = self.visits.count() > 0
             tender.save()
 
         super().save(*args, **kwargs)

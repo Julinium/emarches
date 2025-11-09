@@ -276,8 +276,8 @@ def tender_list(request):
 
     if sort and sort != '':
         ordering = [sort]
-        # if sort == 'published': ordering = ['-published']
-        # if sort == '-published': ordering = ['published']
+        if sort == 'published': ordering = ['-published']
+        if sort == '-published': ordering = ['published']
     else: ordering = []
 
     ordering.append('id')

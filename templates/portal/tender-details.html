@@ -361,22 +361,26 @@
                                 </a>
                             {% endfor %}
                         {% else %}
-                            <div class="text-danger">{% translate "Sorry. We could not get the files for this Tender." %}</div>
-                            <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
-                            <div class="mt-2">
-                                <a href="/base_contact" target="_blank" class="btn btn-outline-primary mt-2">
-                                    <span><i class="bi bi-send"></i></span>
-                                    <span class="ms-1">{% translate 'Contact Us' %}</span>
-                                </a>
-                            </div>
+                        <div class="text-center">
+                            <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
+                        </div>
+                        <div class="text-danger">{% translate "Files for this Tender are not ready, yet." %}</div>
+                        <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
                         {% endif %}
 
                     </div>
                     <div class="modal-footer">
-                        <a href="/base_legal'" target="_blank" class="btn btn-outline-secondary">
-                            <span><i class="bi bi-shield-exclamation"></i></span>
-                            <span class="ms-1">{% translate 'Legal Information' %}</span>
-                        </a>
+                        {% if files_info  %}
+                            <a href="/base_legal'" target="_blank" class="btn btn-outline-secondary">
+                                <span><i class="bi bi-shield-exclamation"></i></span>
+                                <span class="ms-1">{% translate 'Legal Information' %}</span>
+                            </a>
+                        {% else %}
+                            <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
+                                <span><i class="bi bi-send"></i></span>
+                                <span class="ms-1">{% translate 'Contact Us' %}</span>
+                            </a>
+                        {% endif %}
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <span><i class="bi bi-x-lg"></i></span>
                             <span class="ms-1">{% translate 'Close' %}</span>

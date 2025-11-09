@@ -43,23 +43,30 @@
     </button>
 
     {% if total_size > 0 %}
-        {% if files_info|length == 1 and not dce_modal %}
-            {% with files_info|first as f %}
-                <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
-                        class="m-1 btn btn-outline-primary" type="button">
-                    <span class="fw-bold">{{ total_size|metrify:0 }}</span>
-                    <span><i class="{{ bicons.downloads }}"></i></span>
-                    <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
-                </a>
-            {% endwith %}
-        {% else %}
-            <button class="m-1 btn btn-outline-primary" type="button" 
-                    data-bs-toggle="modal" data-bs-target="#dceModal">
+    {% endif %}
+
+    {% if files_info|length == 1 and not dce_modal %}
+        {% with files_info|first as f %}
+            <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
+                    class="m-1 btn btn-outline-primary" type="button">
+                <span class="fw-bold">{{ total_size|metrify:1 }}</span>
                 <span><i class="{{ bicons.downloads }}"></i></span>
-                <span class="ms-1 fw-bold">{{ total_size|metrify:0 }}</span>
                 <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
-            </button>
-        {% endif %}
+            </a>
+        {% endwith %}
+    {% else %}
+        <button class="m-1 btn 
+                       {% if files_info|length == 0 %}
+                            btn-outline-primary 
+                       {% else %}
+                            btn-outline-secondary
+                       {% endif %}" 
+                type="button" 
+                data-bs-toggle="modal" data-bs-target="#dceModal">
+            <span><i class="{{ bicons.downloads }}"></i></span>
+            <span class="ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
+            <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
+        </button>
     {% endif %}
 
     <a target="_blank"

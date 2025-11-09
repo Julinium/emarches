@@ -1,0 +1,25 @@
+{% load static %}
+{% load i18n %}
+ {% load languify %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+
+<div class="d-flex justify-content-between mb-3">
+    <div> 
+        <a class="pb-3" href="/">
+        <img class="img-fluid p-0" 
+            style="max-height: 1.5rem; max-width: 10rem;" 
+            src="{% if LANGUAGE_CODE == 'ar' %}
+                    {% static 'brand/insi-brand-ar.svg' %}
+                    {% else %}
+                    {% static 'brand/insi-brand.svg' %}
+                    {% endif %}" 
+            alt="eMarches">
+        </a>
+    </div>
+    <div class="d-flex justify-content-end">
+        {% include 'base/snippets/menu-languages.html' %}
+        {% include 'base/snippets/menu-user.html' %}
+    </div>
+</div>
