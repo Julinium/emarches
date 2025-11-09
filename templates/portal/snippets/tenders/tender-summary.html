@@ -45,12 +45,6 @@
                                     </span>
                                 </span>
 
-
-
-                                <!-- <span class="badge text-bg-success">
-                                    <i class="{{ bicons.favorited }}"></i>
-                                    <span class="d-none d-md-inline ms-1">{% trans 'FAVORITE' %}</span>
-                                </span> -->
                             {% endif %}
                             <span class="fw-light small text-muted mx-1" 
                                 data-bs-toggle="tooltip" 
@@ -214,14 +208,14 @@
                             </span>
                         {% endif %}
 
-                        {% if not tender.size_bytes or tender.size_bytes == 0 %}
-                            <span class="small me-2"
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Files may not be up to date' %}">
-                                <!-- {{ tender.size_bytes|metrify:0 }} -->
-                                <i class="{{ bicons.no_files }}"></i>
-                            </span>
-                        {% endif %}
+                        <!-- {% if not tender.size_bytes or tender.size_bytes == 0 %}
+                        {% endif %} -->
+                        <span class="small me-2"
+                            data-bs-toggle="tooltip"
+                            title="{% trans 'Files may not be up to date' %}">
+                            {{ tender.size_bytes|metrify:0 }}
+                            <i class="{{ bicons.files_size }}"></i>
+                        </span>
 
                     </div>
 

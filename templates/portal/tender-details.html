@@ -356,16 +356,8 @@
                                 class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
                                 href="{% url 'portal_tender_get_file' tender.id f.name %}">
                                     <span class=""><i class="{{ bicons.downloads }}"></i></span>
-                                    <span class="ms-1 badge text-bg-primary">{{ f.size|filesizeformat }}</span>
+                                    <span class="ms-1 badge text-bg-primary">{{ f.size|metrify:0 }}</span>
                                     <span class="ms-1">{{ f.name }}</span>
-                                    {% if files_info|length == 1 %}
-                                        <script>
-                                            document.getElementById('dce-{{ forloop.counter }}').addEventListener('click', () => {
-                                                bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
-                                                document.getElementById('dceModal').classList.toggle('show');
-                                            });
-                                        </script>
-                                    {% endif %}
                                 </a>
                             {% endfor %}
                         {% else %}
@@ -394,6 +386,15 @@
             </div>
         </div>
     </div>
+
+    {% if files_info|length == 1 %}
+        <script>
+            document.getElementById('dce-{{ forloop.counter }}').addEventListener('click', () => {
+                bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
+                document.getElementById('dceModal').classList.toggle('show');
+            });
+        </script>
+    {% endif %}
 
     <script>
         const azrems = document.querySelectorAll('.wait-azrem');
@@ -428,5 +429,6 @@
             xhr.send();
         }
     </script>
+
 
 {% endblock content %}

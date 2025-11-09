@@ -82,6 +82,7 @@ bicons = {
     'address'         : 'bi bi-geo-alt',
     'contact'         : 'bi bi-person',
     'no_files'        : 'bi bi-file-earmark-break text-warning',
+    'files_size'      : 'bi bi-folder2',
                         # exclamation-circle
     'created'         : 'bi bi-calendar-plus',
                         # upload

@@ -1,4 +1,4 @@
-import os, json, logging, logging.config, threading
+import os, json, logging #, logging.config, threading
 from pathlib import Path
 
 
@@ -7,11 +7,11 @@ from django.conf import settings
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Thread-local storage to hold request context
-_thread_locals = threading.local()
+# _thread_locals = threading.local()
 
-def get_request_context():
-    """Return current request context (or empty dict if no request)"""
-    return getattr(_thread_locals, "context", {})
+# def get_request_context():
+#     """Return current request context (or empty dict if no request)"""
+#     return getattr(_thread_locals, "context", {})
 
 
 class JsonFormatter(logging.Formatter):
@@ -28,29 +28,6 @@ class JsonFormatter(logging.Formatter):
         if hasattr(record, "extra"):
             log_data.update(record.extra)
 
-        # from django.utils import timezone
-        # try:
-        #     from django.core.signals import request_started
-        #     # This is the *only* way to get current request in logging
-        #     current_request = None
-        #     for receiver in request_started.receivers:
-        #         if receiver[0][0] is not None:
-        #             current_request = receiver[0][0]()
-        #             break
-        #     if current_request and hasattr(current_request, '_log_context'):
-        #         ctx = current_request._log_context
-        #         log_data.update({
-        #             "request_id": ctx.get("request_id"),
-        #             "ip": ctx.get("ip"),
-        #             "user_id": ctx.get("user_id"),
-        #             "user_agent": ctx.get("user_agent"),
-        #             "path": ctx.get("path"),
-        #             "method": ctx.get("method"),
-        #             "status_code": ctx.get("status_code"),
-        #         })
-        # except:
-        #     pass  # Fallback: no request context
-
         context = get_request_context()
         if context:
             log_data.update({
@@ -66,13 +43,13 @@ class JsonFormatter(logging.Formatter):
 
 
 # Push context into thread-local storage
-def set_logging_context(context):
-    _thread_locals.context = context
+# def set_logging_context(context):
+#     _thread_locals.context = context
 
 # Clear after request
-def clear_logging_context():
-    if hasattr(_thread_locals, "context"):
-        del _thread_locals.context
+# def clear_logging_context():
+#     if hasattr(_thread_locals, "context"):
+#         del _thread_locals.context
 
 # Full logging config for Django
 LOGGING_CONFIG = {
