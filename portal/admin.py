@@ -6,7 +6,7 @@ from nas.models import TenderView, Download
 class CrawlerAdmin(admin.ModelAdmin):
     list_display = (
         'finished', 'formatted_duration', 'import_links', 'links_digest', 
-        'tenders_digest', 'saving_errors', 'files_downloaded')
+        'tenders_digest', 'saving_errors', 'files_digest')
     list_filter = ('finished', 'saving_errors')
     # actions = None
     # list_display_links = None
@@ -24,15 +24,18 @@ class CrawlerAdmin(admin.ModelAdmin):
         return str(obj.duration).split('.')[0]
 
     def links_digest(self, obj):
-        return f"{ obj.links_crawled }/{ obj.links_imported }/{ obj.links_from_saved }"
+        return f"{ obj.links_crawled }⚫{ obj.links_imported }⚫{ obj.links_from_saved }"
 
     def tenders_digest(self, obj):
-        return f"{ obj.tenders_created }/{ obj.tenders_updated }"
+        return f"{ obj.tenders_created }⚫{ obj.tenders_updated }"
 
-    formatted_duration.short_description = 'Duration'  # Column header in admin
-    links_digest.short_description = 'Links C/I/S'  # Column header in admin
-    tenders_digest.short_description = 'Tenders C/U'  # Column header in admin
+    def files_digest(self, obj):
+        return f"{ obj.files_downloaded }⚫{ obj.files_failed }"
 
+    formatted_duration.short_description = 'Duration'
+    links_digest.short_description = 'Links: C⚫I⚫S'
+    tenders_digest.short_description = 'Tenders: C⚫U'
+    files_digest.short_description = 'Files: D⚫F'
 
 
 @admin.register(TenderView)
@@ -66,7 +69,6 @@ class TenderViewAdmin(admin.ModelAdmin):
     get_tender_id.short_description = 'Tender ID'
     get_tender_title.short_description = 'Tender title'
     get_username.short_description = 'User'
-
 
 
 @admin.register(Download)

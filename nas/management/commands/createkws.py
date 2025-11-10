@@ -17,15 +17,15 @@ class Command(BaseCommand):
         from base.models import Lot
         from django.db.models import Count
         lots = Lot.objects.annotate(
-            agrements__count=Count('agrements')).filter(
-            tender__has_agrements=False,
-            agrements__count__gt=0
+            qualifs__count=Count('qualifs')).filter(
+            tender__has_qualifs=False,
+            qualifs__count__gt=0
             )
         lc = lots.count()
         i = 0
         for l in lots:
             i += 1
             print(f"\tUpdating {i} / {lc} ...")
-            l.save()
+            l.tender.save()
     
         self.stdout.write(self.style.SUCCESS("Data updated successfully."))

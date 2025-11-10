@@ -84,8 +84,8 @@ LOGGING_CONFIG = {
             'propagate': False,
         },
         'portal': {  # Your app
-            'handlers': ['console', 'portal_file'],
-            'level': 'INFO',
+            'handlers': ['portal_file'],
+            'level': 'DEBUG',
             'propagate': False,
         },
     },

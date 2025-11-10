@@ -339,13 +339,7 @@ class Tender(models.Model):
     class Meta:
         db_table = 'base_tender'
         ordering = ['-deadline', 'id']
-        verbose_name = _("Tender")
-        # indexes = [
-        #     GinIndex(fields=['keywords'], name='keywords_idx', opclasses=['gin_trgm_ops']),
-        #     GinIndex(fields=['cliwords'], name='cliwords_idx', opclasses=['gin_trgm_ops']),
-        #     GinIndex(fields=['refwords'], name='refwords_idx', opclasses=['gin_trgm_ops']),
-        #     GinIndex(fields=['locwords'], name='locwords_idx', opclasses=['gin_trgm_ops']),
-        # ]
+        # verbose_name = _("Tender")
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
@@ -378,13 +372,14 @@ class Tender(models.Model):
         self.refwords = nt(self.reference)
         self.locwords = nt(self.location)
 
+        self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
+        self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
+        self.has_meetings = any(lot.meetings.count() > 0 for lot in self.lots.all())
+        self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
+        self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
+
         self.updated = None
         if self.pk is not None:
-            self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
-            self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
-            self.has_meetings = any(lot.meetings.count() > 0 for lot in self.lots.all())
-            self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
-            self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
             self.updated = timezone.now()
 
         super().save(*args, **kwargs)
@@ -415,6 +410,7 @@ class Lot(models.Model):
         return f"{ self.tender.chrono } - { self.number } - { self.title }"
 
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
         tender = self.tender
         if tender:
             if self.title:
@@ -430,7 +426,6 @@ class Lot(models.Model):
             tender.has_visits = self.visits.count() > 0
             tender.save()
 
-        super().save(*args, **kwargs)
 
 
 class RelAgrementLot(models.Model):
@@ -441,6 +436,10 @@ class RelAgrementLot(models.Model):
     class Meta:
         db_table = 'base_rel_agrement_lot'
         unique_together = ('agrement', 'lot')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.lot.save()
 
 
 class RelDomainTender(models.Model):
@@ -465,6 +464,10 @@ class RelQualifLot(models.Model):
     class Meta:
         db_table = 'base_rel_qualif_lot'
         unique_together = ('qualif', 'lot')
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.lot.save()
 
 
 class Sample(models.Model):
