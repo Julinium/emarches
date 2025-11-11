@@ -24,18 +24,18 @@ class CrawlerAdmin(admin.ModelAdmin):
         return str(obj.duration).split('.')[0]
 
     def links_digest(self, obj):
-        return f"{ obj.links_crawled }⚫{ obj.links_imported }⚫{ obj.links_from_saved }"
+        return f"{ obj.links_crawled } ⏤ { obj.links_imported } ⏤ { obj.links_from_saved }"
 
     def tenders_digest(self, obj):
-        return f"{ obj.tenders_created }⚫{ obj.tenders_updated }"
+        return f"{ obj.tenders_created } ⏤ { obj.tenders_updated }"
 
     def files_digest(self, obj):
-        return f"{ obj.files_downloaded }⚫{ obj.files_failed }"
+        return f"{ obj.files_downloaded } ⏤ { obj.files_failed }"
 
     formatted_duration.short_description = 'Duration'
-    links_digest.short_description = 'Links: C⚫I⚫S'
-    tenders_digest.short_description = 'Tenders: C⚫U'
-    files_digest.short_description = 'Files: D⚫F'
+    links_digest.short_description = 'Links C ⏤ I ⏤ S'
+    tenders_digest.short_description = 'Tenders C ⏤ U'
+    files_digest.short_description = 'Files D ⏤ F'
 
 
 @admin.register(TenderView)

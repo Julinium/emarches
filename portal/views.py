@@ -1,4 +1,4 @@
-import os, logging, json
+import os, logging, json, random
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -15,6 +15,8 @@ from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.db.models import Q
 from urllib.parse import urlencode
+
+from decimal import Decimal
 
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -573,6 +575,62 @@ def tender_favorite_list(request):
     logger.info(f"Favorite Tender List view")
 
     return render(request, 'portal/tender-favorite-list.html', context)
+
+
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_simulator(request, pk=None, ln=0):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(_('Permission denied'), status=403)
+
+    tender = get_object_or_404(Tender, id=pk)
+    if not tender : return HttpResponse(_('Specified Tender not found'), status=404)
+
+    context = {}
+    if ln and ln > 0:
+        lot = get_object_or_404(Lot, tender=tender, number=ln)
+        if not lot : return HttpResponse(_('Specified Lot not found'), status=404)
+        estimate = lot.estimate
+        context['lot'] = lot
+    else:
+        estimate = tender.estimate
+
+    if not estimate: return HttpResponse(_('Could not get a valid estimate amount'), status=400)
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Tender Simulator: {tender.id}, Lot:{ ln }")
+
+    slo = 20.00
+    
+    offers_count = 5
+    tol = Decimal(slo/100).quantize(Decimal('0.00'))
+    e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
+    e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
+
+    offers = [e_min]
+    for _ in range(max(offers_count -2, 2)):
+        rand_float = random.uniform(float(e_min), float(e_max))
+        rand_decimal = Decimal(str(rand_float)).quantize(Decimal('0.00'))
+        if rand_decimal < e_min:
+            rand_decimal = e_min
+        elif rand_decimal > e_max:
+            rand_decimal = e_max
+        offers.append(rand_decimal)
+    offers.append(e_max)
+
+    context['tender'] = tender
+    context['estimate'] = estimate.quantize(Decimal('0.00'))
+    context['eMin'] = e_min
+    context['eMax'] = e_max
+    context['slot'] = slo
+    context['offers'] = offers
+
+    return render(request, 'portal/tender-simulator.html', context)
 
 
 def get_user_settings(request):

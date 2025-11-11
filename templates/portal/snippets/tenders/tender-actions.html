@@ -69,6 +69,13 @@
         </button>
     {% endif %}
 
+
+    <a href="{% url 'portal_tender_simulator' tender.id 0 %}"
+            class="m-1 btn btn-outline-primary" type="button">
+        <span><i class="{{ bicons.simulator }}"></i></span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
+    </a>
+
     <a target="_blank"
         href="{{ link_prefix }}{{ tender.link }}"
         class="m-1 btn btn-outline-primary">

@@ -41,7 +41,7 @@ def portal_context(request):
         'agrements_ico'   : 'bi bi-shield-check',
         'qualifs_ico'     : 'bi bi-mortarboard',
         'samples_ico'     : 'bi bi-palette2',
-        'visits_ico'      : 'person-walking',
+        'visits_ico'      : 'bi bi-person-walking',
         'meetings_ico'    : 'bi bi-chevron-bar-contract',
         
         'changes'         : 'bi bi-activity',
@@ -104,6 +104,7 @@ def portal_context(request):
         'clean_all'       : 'bi bi-heart',
         'insights'        : 'bi bi-bar-chart-line',
         'shopping'        : 'bi bi-cart4',
+        'simulator'       : 'bi bi-bar-chart-steps'
                             # 
     }
 
