@@ -18,30 +18,6 @@
 
     <div class="my-3" id="tender-details">
 
-        <div id="candidateList" class="ms-3 mb-3"></div>
-
-        <div class="d-flex mb-3 align-items-center">
-            <div>
-                <button id="addCandidate" class="btn btn-sm btn-outline-primary">
-                    <span><i class="{{ bicons.plus }}"></i></span>
-                    <span>{% trans 'Add Offer' %}</span>
-                </button>
-            </div>
-            <div class="ms-2">
-                <span>{% trans 'Offers' %} : </span>
-                <span id="offersCount" class="fw-bold"></span>
-            </div>
-        </div>
-        
-        <div class="my-3 small">
-            <span>Winner value:</span>
-            <span id="winnerValue"></span>
-            <span class="ms-3">Explain: </span>
-            <span id="winnerExplain"></span>
-            <hr>
-            <div id="sortedBids"></div>
-        </div>
-
         <div class="d-flex mb-2 ms-3">
             <div>
                 <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.estimate }}"></i>
@@ -81,12 +57,36 @@
             </div>
             <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
                 <div class="d-flex justify-content-between">
-                    <div class="mt-1 mb-0 small">
-                        <span id="spanTarget" class="value"></span>
+                    <div class="mt-1 mb-0 small text-primary">
+                        <span id="spanTarget" class="value fw-bold"></span>
                         <span class="small ms-1">{% trans 'Target Price' %}</span>
                     </div>
                 </div>
                 <input id="sliderTarget" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
+            </div>
+        </div>
+        
+        <div id="candidateList" class="ms-3 my-3"></div>
+        
+        <!-- <div class="my-3 small">
+            <span>Winner value:</span>
+            <span id="winnerValue"></span>
+            <span class="ms-3">Explain: </span>
+            <span id="winnerExplain"></span>
+            <hr>
+            <div id="sortedBids"></div>
+        </div> -->
+
+        <div class="d-flex mb-3 align-items-center">
+            <div>
+                <button id="addCandidate" class="btn btn-sm btn-outline-primary">
+                    <span><i class="{{ bicons.plus }}"></i></span>
+                    <span>{% trans 'Add Offer' %}</span>
+                </button>
+            </div>
+            <div class="ms-2">
+                <span>{% trans 'Offers' %} : </span>
+                <span id="offersCount" class="fw-bold"></span>
             </div>
         </div>
 
@@ -153,16 +153,22 @@
 
                 const offerDiv = document.createElement('div');
                 offerDiv.classList = 'mt-1 mb-0';
-                const winnerPrize = document.createElement('div');
-                winnerPrize.classList = 'winner small';
-                const winnerIndicator = document.createElement('i');
-                winnerPrize.dataset.id = id;
-
-                winnerIndicator.classList = 'bi bi-trophy-fill small';
-                winnerPrize.appendChild(winnerIndicator);
+                const rankingEl = document.createElement('div');
+                rankingEl.classList = 'small';
+                const winnerInd = document.createElement('i');
+                // winnerInd.classList = 'winner';
+                rankingEl.dataset.id = id;
+                const rankSpan = document.createElement('span');
+                rankSpan.classList = 'ranker fw-bold badge bg-secondary mx-1';
+                rankSpan.dataset.id = id;
+                
+                winnerInd.classList = 'bi bi-trophy-fill small winner';
+                winnerInd.dataset.id = id;
+                rankingEl.appendChild(winnerInd);
+                rankingEl.appendChild(rankSpan);
 
                 divTop.appendChild(offerDiv);
-                divTop.appendChild(winnerPrize);
+                divTop.appendChild(rankingEl);
 
                 // name
                 const nameInp = document.createElement('span');
@@ -210,26 +216,19 @@
 
             /* ---------- CALCULATION ---------- */
             function recalc() {
-                const E = Esti//Number(document.getElementById('estimate').value) || 0;
-                // const lower = Emin // E * 0.8;
-                // const upper = Emax //E * 1.2;
-
+                const E = Esti 
                 const accepted = [];
-
-                // 1. filter & mark eliminated
                 for (const c of candidates) {
                     const bid = c.bid;
                     accepted.push(bid);
                 }
 
-                // 2. mean M
                 const offersCount = document.getElementById('offersCount');
                 const spanR = document.getElementById('spanTarget');
                 const spanM = document.getElementById('spanMean');
                 const sliderMean = document.getElementById('sliderMean');
                 const sliderTarget = document.getElementById('sliderTarget');
                 const winnerBgClass = 'bg-success-subtle fw-bold text-success'.split(" ");
-                // const winnerVal = document.getElementById('winnerValue');
                 
                 let M = 0;
                 if (accepted.length) {
@@ -244,7 +243,6 @@
                 sliderTarget.min = Emin;
                 sliderTarget.max = Emax;
 
-                // 3. reference R
                 const R = 0.5 * (E + M);
                 if (accepted.length) {
                     spanM.textContent = formatMoney(M);
@@ -281,7 +279,7 @@
                 //     }
                 // }
 
-
+                document.querySelectorAll('.ranker').forEach(r=>r.textContent='-');
 
                 function sortCandidates(candidates, R) {
                     // Filter and sort bids below R in descending order
@@ -299,16 +297,22 @@
 
                 sortedCandidates.forEach((cand, index) => {
                     cand.rank = index + 1;   // 1-based rank
-                    cand.diff = cand.bid - R;
+                    // if (index > 0) {
+                    //     let prev_rank = sortedCandidates[index - 1].rank;
+                    //     if (cand.bid == prev_bid) { cand.rank = prev_rank}
+                    // }
+                    // cand.diff = cand.bid - R;
+                    // console.log(index, cand.rank, cand.id, cand.bid);
+                    const rankEl = document.querySelector(`.ranker[data-id="${cand.id}"]`);
+                    if (rankEl) rankEl.textContent = cand.rank;
                 });
-                console.log(sortedCandidates);
-                winnerBid = sortedCandidates[0].bid;
+                // console.log(sortedCandidates);
+                if (sortedCandidates.length){
+                    winnerBid = sortedCandidates[0].bid;
+                }
                 // below = winnerBid < R;
                 // const sortedBids = document.getElementById('sortedBids');
                 // sortedBids.textContent = sortedCandidates.map(obj => obj.bid);
-
-                // console.log(winnerBid);
-
 
                 // highlight
                 document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
@@ -321,10 +325,11 @@
                         if (element) {
                             element.classList.add(...winnerBgClass);
                         };
-                        const prize = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
-                        if (prize) {
-                            prize.classList.remove('d-none');
-                        }
+                        const winnerEl = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
+                        if (winnerEl) {
+                            // console.log(winnerCand.rank);
+                            winnerEl.classList.remove('d-none');
+                        };
                     });
                 }
 
@@ -338,25 +343,26 @@
                 //  html += `<strong>Accepted (${accepted.length}):</strong> ${accepted.map(fmt).join(', ') || '—'}<br>`;
                 // html += `<strong>Mean M:</strong> ${fmt(M)} ----- `;
                 // html += `<strong>Reference R:</strong> ${fmt(R)}<br>`;
-                const winnerVal = document.getElementById('winnerValue');
-                const winnerExp = document.getElementById('winnerExplain');
+
+                // const winnerVal = document.getElementById('winnerValue');
+                // const winnerExp = document.getElementById('winnerExplain');
 
 
 
-                if (winnerBid !== null) {
-                    winnerVal.textContent = formatMoney(winnerBid);
-                    // winnerExp.textContent = winnerBid <= R ? '(closest from below)' : '(smallest above)';
-                    winnerExp.textContent = winnerBid <= R ? '(Below R)' : '(Above R)';
+                // if (winnerBid !== null) {
+                //     winnerVal.textContent = formatMoney(winnerBid);
+                //     // winnerExp.textContent = winnerBid <= R ? '(closest from below)' : '(smallest above)';
+                //     winnerExp.textContent = winnerBid <= R ? '(Below R)' : '(Above R)';
 
-                    // const wc = candidates.find(c=>c.bid===winnerBid);
-                    // const name = wc ? wc.nameInp.value : '';
-                    // html += `<strong>Winner:</strong> ${name} – ${fmt(winnerBid)}`;
-                    // html += winnerBid <= R ? ' (closest from below)' : ' (smallest above)';
-                } else {
-                    // html += `<strong>Winner:</strong> —`;
-                    winnerVal.textContent = '-';
-                    winnerExp.textContent = '--';
-                }
+                //     // const wc = candidates.find(c=>c.bid===winnerBid);
+                //     // const name = wc ? wc.nameInp.value : '';
+                //     // html += `<strong>Winner:</strong> ${name} – ${fmt(winnerBid)}`;
+                //     // html += winnerBid <= R ? ' (closest from below)' : ' (smallest above)';
+                // } else {
+                //     // html += `<strong>Winner:</strong> —`;
+                //     winnerVal.textContent = '-';
+                //     winnerExp.textContent = '--';
+                // }
                 // res.innerHTML = html;
             }
 
