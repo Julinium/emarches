@@ -607,28 +607,39 @@ def tender_simulator(request, pk=None, ln=0):
 
     slo = 20.00
     
-    offers_count = 5
+    offers_count = 3
     tol = Decimal(slo/100).quantize(Decimal('0.00'))
     e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
     e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
+    e_est = estimate.quantize(Decimal('0.00'))
 
-    offers = [e_min]
-    for _ in range(max(offers_count -2, 2)):
+    # offers = [json.dumps(str(e_min))]
+    offers = []
+    for _ in range(max(offers_count, 3)):
         rand_float = random.uniform(float(e_min), float(e_max))
         rand_decimal = Decimal(str(rand_float)).quantize(Decimal('0.00'))
         if rand_decimal < e_min:
             rand_decimal = e_min
         elif rand_decimal > e_max:
             rand_decimal = e_max
-        offers.append(rand_decimal)
-    offers.append(e_max)
+        offers.append(json.dumps(str(rand_decimal)))
+    # offers.append(json.dumps(str(e_max)))
 
     context['tender'] = tender
-    context['estimate'] = estimate.quantize(Decimal('0.00'))
-    context['eMin'] = e_min
-    context['eMax'] = e_max
-    context['slot'] = slo
+    context['e_est'] = e_est
+    context['e_min'] = e_min
+    context['e_max'] = e_max
+    context['e_slo'] = slo
+    # context['e_off'] = offers
+    
+    context['eEst'] = json.dumps(str(e_est))
+    context['eMin'] = json.dumps(str(e_min))
+    context['eMax'] = json.dumps(str(e_max))
+    # context['eSlo'] = json.dumps(str(slo))
     context['offers'] = offers
+
+# json.dumps(str(amount))
+
 
     return render(request, 'portal/tender-simulator.html', context)
 
