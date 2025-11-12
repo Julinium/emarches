@@ -5,113 +5,179 @@
 {% load tz %}
 
 {% block title %}
-    {% trans "Tenders Simulator" %}
+    {% trans "Bidding Simulator" %}
 {% endblock title %}
 
 {% block content %}
 
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <span class="h3">{% trans "Tenders Simulator" %}</span>
-        </div>
+    <div class="mb-3">
+        <span class="h3 mb-0">{% trans "Bidding Simulator" %}</span>
+        <!-- <span class="small ms-2"><i class="{{ bicons.estimate }}"></i></span>
+        <span id="estimateValue" class="fw-bold text-muted ms-1"></span> -->
     </div>
 
     <div class="my-3" id="tender-details">
-        <div>
-            <div class="card shadow-sm mb-2 bg-secondary-subtle">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="my-1 mx-2">E=<span class="fw-bold">{{ e_est }}</span></div>
-                    <div class="my-1 mx-2 text-end small">T=+/- {{ e_slo }}%</div>
-                </div>
-            </div>
-            <!-- <div class="card shadow-sm mb-2 bg-secondary-subtle">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="my-1 mx-2 small">{{ e_min }}<</div>
-                    <div class="my-1 mx-2 small text-end">>{{ e_max }}</div>
-                </div>
-            </div> -->
-            <div class="card shadow-sm mb-2 bg-secondary-subtle">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="my-1 mx-2 small">M=<span id="spanMean"></span></div>
-                    <div class="my-1 mx-2 small text-end">R=<span class="fw-bold" id="spanReference"></span></div>
-                </div>
-            </div>
-            <div class="card shadow-sm mb-2 bg-success-subtle text-center">
-                <div>
-                    <span class="fw-bold small">WINNER = </span>
-                    <span id="winnerValue" class="text-success fw-bold fs-5"></span>
-                    <!-- <span id="winnerExplain" class="small ms-1"></span> -->
-                </div>
-            </div>
 
-            <!-- <div id="results" class="mb-2"></div> -->
-             <div class="mt-3 mb-2">Bidding Offers</div>
-            <div id="candidateList" class="ms-3"></div>
-            <button class="btn btn-outline-primary" id="addCandidate">+ Add Offer</button>
+        <div id="candidateList" class="ms-3 mb-3"></div>
+
+        <div class="d-flex mb-3 align-items-center">
+            <div>
+                <button id="addCandidate" class="btn btn-sm btn-outline-primary">
+                    <span><i class="{{ bicons.plus }}"></i></span>
+                    <span>{% trans 'Add Offer' %}</span>
+                </button>
+            </div>
+            <div class="ms-2">
+                <span>{% trans 'Offers' %} : </span>
+                <span id="offersCount" class="fw-bold"></span>
+            </div>
         </div>
+        
+        <div class="my-3 small">
+            <span>Winner value:</span>
+            <span id="winnerValue"></span>
+            <span class="ms-3">Explain: </span>
+            <span id="winnerExplain"></span>
+            <hr>
+            <div id="sortedBids"></div>
+        </div>
+
+        <div class="d-flex mb-2 ms-3">
+            <div>
+                <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.estimate }}"></i>
+                </button>
+            </div>
+            <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
+                <div class="d-flex justify-content-between">
+                    <div class="mt-1 mb-0 small">
+                        <span id="spanEsti" class="value"></span>
+                        <span class="small ms-1">{% trans 'Estimate' %}</span>
+                    </div>
+                </div>
+                <input id="sliderEsti" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
+            </div>
+        </div>
+
+        <div class="d-flex mb-2 ms-3">
+            <div>
+                <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.mean }}"></i>
+                </button>
+            </div>
+            <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
+                <div class="d-flex justify-content-between">
+                    <div class="mt-1 mb-0 small">
+                        <span id="spanMean" class="value"></span>
+                        <span class="small ms-1">{% trans 'Offers Average' %}</span>
+                    </div>
+                </div>
+                <input id="sliderMean" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
+            </div>
+        </div>
+
+        <div class="d-flex mb-2 ms-3"> 
+            <div>
+                <button class="btn btn-sm btn-outline-primary disabled"><i class="{{ bicons.target }}"></i>
+                </button>
+            </div>
+            <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
+                <div class="d-flex justify-content-between">
+                    <div class="mt-1 mb-0 small">
+                        <span id="spanTarget" class="value"></span>
+                        <span class="small ms-1">{% trans 'Target Price' %}</span>
+                    </div>
+                </div>
+                <input id="sliderTarget" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
+            </div>
+        </div>
+
     </div>
 
 
     <script>
             /* ---------- DATA & HELPERS ---------- */
-            const candidates = [];               // {id, nameInp, slider, valSpan, bid, eliminated}
+            const candidates = []; // {id, nameInp, slider, valSpan, bid}
             let candidateIdCounter = 0;
             const Esti = Number({{ eEst|safe }});
             const Emin = Number({{ eMin|safe }});
             const Emax = Number({{ eMax|safe }});
 
             const offerStrings = {{ offers|safe }};
-            console.log(offerStrings);
-            // const allOffers = offerStrings.map(s => Number(s));
-            // console.log(allOffers);
+
+            const estimateValue = document.getElementById('estimateValue');
+            const spanEsti = document.getElementById('spanEsti');
+            const sliderEsti = document.getElementById('sliderEsti');
+            // const rangeMin = document.getElementById('rangeMin');
+            // const rangeMax = document.getElementById('rangeMax');
+
+            // estimateValue.textContent = formatMoney(Esti);
+            spanEsti.textContent = formatMoney(Esti);
+            sliderEsti.min = Emin;
+            sliderEsti.max = Emax;
+            sliderEsti.value = Esti;
+            // rangeMin.textContent = formatMoney(Emin);
+            // rangeMax.textContent = formatMoney(Emax);
 
 
             /* ---------- UI CREATION ---------- */
             function createCandidateRow(initial_bid=0) {
                 const id = ++candidateIdCounter;
-                const card = document.createElement('div');
-                card.className = 'candidate card shadow-sm mb-2 p-2';
-                card.dataset.id = id;
 
-                const divTop = document.createElement('div');
-                card.appendChild(divTop);
-
-                const btnSpan = document.createElement('span');
-                divTop.appendChild(btnSpan);
+                const flexDiv = document.createElement('div');
+                flexDiv.className = 'd-flex mb-2';
 
                 // delete button
+                actionsDiv = document.createElement('div');
                 const delBtn = document.createElement('button');
-                delBtn.className = 'btn p-0';
+                delBtn.className = 'btn btn-sm btn-outline-danger';
                 delBtn.onclick = () => {
-                    card.remove();
+                    flexDiv.remove();
                     candidates.splice(candidates.findIndex(c=>c.id===id),1);
                     recalc();
                 };
                 const delIco = document.createElement('i');
-                delIco.className = 'bi bi-trash small';
+                delIco.className = 'bi bi-trash';
                 delBtn.appendChild(delIco);
 
-                btnSpan.appendChild(delBtn);
+                actionsDiv.appendChild(delBtn);
+                flexDiv.appendChild(actionsDiv);
+
+                const card = document.createElement('div');
+                card.className = 'candidate card shadow-sm px-2 w-100 ms-2';
+                card.dataset.id = id;
+
+                const divTop = document.createElement('div');
+                divTop.classList = 'd-flex justify-content-between';
+
+                card.appendChild(divTop);
+                flexDiv.appendChild(card);
+
+                const offerDiv = document.createElement('div');
+                offerDiv.classList = 'mt-1 mb-0';
+                const winnerPrize = document.createElement('div');
+                winnerPrize.classList = 'winner small';
+                const winnerIndicator = document.createElement('i');
+                winnerPrize.dataset.id = id;
+
+                winnerIndicator.classList = 'bi bi-trophy-fill small';
+                winnerPrize.appendChild(winnerIndicator);
+
+                divTop.appendChild(offerDiv);
+                divTop.appendChild(winnerPrize);
 
                 // name
                 const nameInp = document.createElement('span');
                 nameInp.type = 'text';
                 nameInp.value = `OFFER #${id}`;
-                nameInp.className = 'small mx-1';
-                nameInp.textContent = `OFFER #${id} :`;
-                btnSpan.appendChild(nameInp);
+                nameInp.className = 'small text-muted ms-2';
+                nameInp.textContent = `OFFER #${id}`;
 
                 // value display
                 const valSpan = document.createElement('span');
-                console.log('initial_bid =', initial_bid)
-                // const valVal = Number(initial_bid);
-                // console.log('valVal =', valVal);
-                valSpan.className = 'value ms-1';
-                // valSpan.textContent = Number({{ initial_bid|safe }});
-                valSpan.textContent = initial_bid;
-                // valSpan.textContent = valVal;
-                btnSpan.appendChild(valSpan);
-                // updateCandidate(id, Number(initial_bid));
+                valSpan.className = 'value';
+                valSpan.textContent = formatMoney(initial_bid);
+
+                offerDiv.appendChild(valSpan);
+                offerDiv.appendChild(nameInp);
 
                 // slider
                 const slider = document.createElement('input');
@@ -119,39 +185,19 @@
                 slider.step = 0.01;
                 slider.min = Emin;
                 slider.max = Emax;
-                // slider.value = Number(initial_bid);
                 slider.value = initial_bid;
-                slider.className = 'mt-1';
+                slider.className = 'mb-1 mt-0';
                 card.appendChild(slider);
 
                 // store
                 candidates.push({id, nameInp, slider, valSpan, bid:Number(initial_bid)});
-                document.getElementById('candidateList').appendChild(card);
+                document.getElementById('candidateList').appendChild(flexDiv);
 
                 // listeners
                 slider.addEventListener('input', () => updateCandidate(id, Number(slider.value)));
                 nameInp.addEventListener('change', recalc);
-                return card;
+                return flexDiv;
             }
-
-            /* ---------- SLIDER LIMITS ---------- */
-            // function updateSliderLimits() {
-            //     const E = Number(document.getElementById('estimate').value) || 0;
-            //     const min = E * 0.8;
-            //     const max = E * 1.2;
-
-            //     candidates.forEach(c => {
-            //         c.slider.min = min;
-            //         c.slider.max = max;
-
-            //         // clamp current value
-            //         const cur = Number(c.slider.value);
-            //         if (cur < min) c.slider.value = min;
-            //         if (cur > max) c.slider.value = max;
-            //         c.bid = Number(c.slider.value);
-            //         c.valSpan.textContent = formatMoney(c.bid);
-            //     });
-            // }
 
             /* ---------- CANDIDATE UPDATE ---------- */
             function updateCandidate(id, newBid) {
@@ -165,8 +211,8 @@
             /* ---------- CALCULATION ---------- */
             function recalc() {
                 const E = Esti//Number(document.getElementById('estimate').value) || 0;
-                const lower = Emin // E * 0.8;
-                const upper = Emax //E * 1.2;
+                // const lower = Emin // E * 0.8;
+                // const upper = Emax //E * 1.2;
 
                 const accepted = [];
 
@@ -177,53 +223,109 @@
                 }
 
                 // 2. mean M
+                const offersCount = document.getElementById('offersCount');
+                const spanR = document.getElementById('spanTarget');
+                const spanM = document.getElementById('spanMean');
+                const sliderMean = document.getElementById('sliderMean');
+                const sliderTarget = document.getElementById('sliderTarget');
+                const winnerBgClass = 'bg-success-subtle fw-bold text-success'.split(" ");
+                // const winnerVal = document.getElementById('winnerValue');
+                
                 let M = 0;
-                if (accepted.length) M = accepted.reduce((a,b)=>a+b,0) / accepted.length;
+                if (accepted.length) {
+                    M = accepted.reduce((a,b)=>a+b,0) / accepted.length;
+                    offersCount.textContent = accepted.length.toString();
+                } else {
+                    offersCount.textContent = '0';
+                }
+
+                sliderMean.min = Emin;
+                sliderMean.max = Emax;
+                sliderTarget.min = Emin;
+                sliderTarget.max = Emax;
 
                 // 3. reference R
                 const R = 0.5 * (E + M);
-                const spanR = document.getElementById('spanReference');
-                const spanM = document.getElementById('spanMean');
+                if (accepted.length) {
+                    spanM.textContent = formatMoney(M);
+                    spanR.textContent = formatMoney(R);
 
-                if (spanM) spanM.textContent = formatMoney(M);
-                if (spanR) spanR.textContent = formatMoney(R);
+                    sliderMean.value = M;
+                    sliderTarget.value = R;
+                } else {
+                    spanM.textContent = '-';
+                    spanR.textContent = '-';
+                    sliderMean.value = 0;
+                    sliderTarget.value = 0;
+                }
 
                 // 4. winner (closest from below, else smallest above)
                 let winnerBid = null;
-                let winnerDiff = Infinity;
-                let winnerBelow = false;
+                // let winnerDiff = Infinity;
+                // let winnerBelow = false;
 
-                for (const bid of accepted) {
-                    const diff = Math.abs(bid - R);
-                    const below = bid <= R;
+                // for (const bid of accepted) {
+                //     const diff = Math.abs(bid - R);
+                //     const below = bid <= R;
 
-                    if (below) {
-                        if (diff < winnerDiff || (diff === winnerDiff && !winnerBelow)) {
-                            winnerBid = bid; winnerDiff = diff; winnerBelow = true;
-                    }
-                    } else if (!winnerBelow && diff < winnerDiff) {
-                        winnerBid = bid; winnerDiff = diff; winnerBelow = false;
-                    }
+                //     if (below) {
+                //         if (diff < winnerDiff || (diff === winnerDiff && !winnerBelow)) {
+                //             winnerBid = bid; 
+                //             winnerDiff = diff;
+                //              winnerBelow = true;
+                //     }
+                //     } else if (!winnerBelow && diff < winnerDiff) {
+                //         winnerBid = bid; 
+                //         winnerDiff = diff; 
+                //         winnerBelow = false;
+                //     }
+                // }
+
+
+
+                function sortCandidates(candidates, R) {
+                    // Filter and sort bids below R in descending order
+                    const belowR = candidates.filter(candidate => candidate.bid < R).sort((a, b) => b.bid - a.bid);
+                    // objectsList.sort((a, b) => a.key - b.key);
+                    
+                    // Filter and sort bids at or above R in ascending order
+                    const atOrAboveR = candidates.filter(candidate => candidate.bid >= R).sort((a, b) => a.bid - b.bid);
+                    
+                    // Append atOrAbove to below
+                    return belowR.concat(atOrAboveR);
                 }
 
-                // highlight
-                const winnerClass = 'bg-success-subtle'
-                document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(winnerClass));
-                if (winnerBid !== null) {
-                    // const winnerCand = candidates.find(c=>c.bid===winnerBid);
-                    // if (winnerCand) {
-                    //     document.querySelector(`.candidate[data-id="${winnerCand.id}"]`).classList.add(winnerClass);
-                    // }
+                sortedCandidates = sortCandidates(candidates, R);
 
+                sortedCandidates.forEach((cand, index) => {
+                    cand.rank = index + 1;   // 1-based rank
+                    cand.diff = cand.bid - R;
+                });
+                console.log(sortedCandidates);
+                winnerBid = sortedCandidates[0].bid;
+                // below = winnerBid < R;
+                // const sortedBids = document.getElementById('sortedBids');
+                // sortedBids.textContent = sortedCandidates.map(obj => obj.bid);
+
+                // console.log(winnerBid);
+
+
+                // highlight
+                document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
+                document.querySelectorAll('.winner').forEach(r=>r.classList.add('d-none'));
+
+                if (winnerBid !== null) {
                     const winnerCands = candidates.filter(c => c.bid === winnerBid);
                     winnerCands.forEach(winnerCand => {
                         const element = document.querySelector(`.candidate[data-id="${winnerCand.id}"]`);
                         if (element) {
-                            element.classList.add(winnerClass);
+                            element.classList.add(...winnerBgClass);
+                        };
+                        const prize = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
+                        if (prize) {
+                            prize.classList.remove('d-none');
                         }
                     });
-
-
                 }
 
                 // ----- DISPLAY -----
@@ -236,13 +338,15 @@
                 //  html += `<strong>Accepted (${accepted.length}):</strong> ${accepted.map(fmt).join(', ') || '—'}<br>`;
                 // html += `<strong>Mean M:</strong> ${fmt(M)} ----- `;
                 // html += `<strong>Reference R:</strong> ${fmt(R)}<br>`;
+                const winnerVal = document.getElementById('winnerValue');
+                const winnerExp = document.getElementById('winnerExplain');
+
+
 
                 if (winnerBid !== null) {
-                    const winnerVal = document.getElementById('winnerValue');
-                    const winnerExp = document.getElementById('winnerExplain');
                     winnerVal.textContent = formatMoney(winnerBid);
                     // winnerExp.textContent = winnerBid <= R ? '(closest from below)' : '(smallest above)';
-                    // winnerExp.textContent = winnerBid <= R ? '(Below R)' : '(Above R)';
+                    winnerExp.textContent = winnerBid <= R ? '(Below R)' : '(Above R)';
 
                     // const wc = candidates.find(c=>c.bid===winnerBid);
                     // const name = wc ? wc.nameInp.value : '';
@@ -250,21 +354,21 @@
                     // html += winnerBid <= R ? ' (closest from below)' : ' (smallest above)';
                 } else {
                     // html += `<strong>Winner:</strong> —`;
-                    winnerVal.textContent = '--';
-                    // winnerExp.textContent = '--';
+                    winnerVal.textContent = '-';
+                    winnerExp.textContent = '--';
                 }
                 // res.innerHTML = html;
             }
 
             /* ---------- UTILITIES ---------- */
             function formatMoney(n) {
-                return new Intl.NumberFormat('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
+                const locale = navigator.language || navigator.userLanguage || 'en-US';
+                return new Intl.NumberFormat(locale, {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
             }
 
             /* ---------- INITIALISATION ---------- */
             document.getElementById('addCandidate').onclick = () => {
                 createCandidateRow(Esti);
-                // updateSliderLimits();   // set correct min/max for the new slider
                 recalc();
             };
 
@@ -274,33 +378,11 @@
             //     recalc();
             // });
 
-            // start with 3 candidates
-            // for (let i=0;i<3;i++) {
-            //     createCandidateRow();
-            // }for (const item of myList)
-            // for (const offer of allOffers){
-            //     console.log(offer);
-            //     createCandidateRow(offer);
-            // }
-
             offerStrings.forEach(offer => {
-                // console.log(offer); 
-                // const bid = Number({{ offer|safe }});
-                // const bid = Number({{ offer|safe }});
-                // console.log(offer); 
-
                 const sanitized = String(offer).trim().replace(/[^\d.-]/g, '');
                 const bid = Number(sanitized);
                 createCandidateRow(bid);
             });
-
-            // updateSliderLimits();   // apply limits to the initial rows
-            // set example bids inside the new range
-            // candidates.forEach((c,i) => {
-            //     const example = (c.slider.min * 1) + (i * (c.slider.max - c.slider.min) / 4);
-            //     c.slider.value = example;
-            //     updateCandidate(c.id, example);
-            // });
             recalc();
         </script>
 

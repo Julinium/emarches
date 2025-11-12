@@ -104,7 +104,15 @@ def portal_context(request):
         'clean_all'       : 'bi bi-heart',
         'insights'        : 'bi bi-bar-chart-line',
         'shopping'        : 'bi bi-cart4',
-        'simulator'       : 'bi bi-bar-chart-steps'
+        'simulator'       : 'bi bi-bar-chart-steps',
+        'plus'            : 'bi bi-plus-lg',
+        'winner'          : 'bi bi-trophy',
+        'range'           : 'bi bi-arrows-expand-vertical',
+        'range_min'       : 'bi bi-arrow-bar-up',
+        'range_max'       : 'bi bi-arrow-bar-down',
+        'target'          : 'bi bi-crosshair',
+                            # bullseye
+        'mean'            : 'bi bi-arrows-collapse',
                             # 
     }
 
