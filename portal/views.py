@@ -49,6 +49,12 @@ DCE_SHOW_MODAL = True
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_list(request):
 
+    # mt = 0
+    # for tender in Tender.objects.filter(lots_count__gt=1):
+    #     if tender.lots.count() != tender.lots_count:
+    #         mt += 1
+    # return HttpResponse(f"Mismatches found: { mt }")
+
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)

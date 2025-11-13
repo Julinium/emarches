@@ -9,7 +9,6 @@
 {% endblock title %}
 
 {% block content %}
-
     <div class="mb-3">
         <span class="h3 mb-0">{% trans "Bidding Simulator" %}
             {% if lot %}
@@ -90,7 +89,7 @@
 
     <script>
             /* ---------- DATA & HELPERS ---------- */
-            const candidates = []; // {id, nameInp, slider, valSpan, bid}
+            const candidates = [];
             let candidateIdCounter = 0;
             const Esti = Number({{ eEst|safe }});
             const Emin = Number({{ eMin|safe }});
@@ -104,7 +103,6 @@
             // const rangeMin = document.getElementById('rangeMin');
             // const rangeMax = document.getElementById('rangeMax');
 
-            // estimateValue.textContent = formatMoney(Esti);
             spanEsti.textContent = formatMoney(Esti);
             sliderEsti.min = Emin;
             sliderEsti.max = Emax;
@@ -150,16 +148,21 @@
                 offerDiv.classList = 'mt-1 mb-0';
                 const rankingEl = document.createElement('div');
                 rankingEl.classList = 'small';
-                const winnerInd = document.createElement('i');
-                // winnerInd.classList = 'winner';
+                const prizeInd = document.createElement('i');
                 rankingEl.dataset.id = id;
+                
                 const rankSpan = document.createElement('span');
-                rankSpan.classList = 'ranker fw-bold badge bg-primary mx-1';
+                rankSpan.classList = 'ranker fw-bold badge bg-primary ms-1';
                 rankSpan.dataset.id = id;
                 
-                winnerInd.classList = 'bi bi-trophy-fill small winner';
-                winnerInd.dataset.id = id;
-                rankingEl.appendChild(winnerInd);
+                const prizeSpan = document.createElement('span');
+                prizeSpan.classList = 'winner badge bg-success ms-1';
+                prizeSpan.dataset.id = id;
+                
+                prizeInd.classList = '{{ bicons.winner }}';
+                // prizeInd.dataset.id = id;
+                prizeSpan.appendChild(prizeInd);
+                rankingEl.appendChild(prizeSpan);
                 rankingEl.appendChild(rankSpan);
 
                 divTop.appendChild(offerDiv);
@@ -173,17 +176,21 @@
                 nameInp.textContent = `{{ offer_litteral }} FO#${id}D`;
 
                 // value display
+                const posiSpan = document.createElement('span');
+                posiSpan.className = 'positioner ms-2 small text-muted';
+                posiSpan.dataset.id = id;
                 const valSpan = document.createElement('span');
                 valSpan.className = 'value';
                 valSpan.textContent = formatMoney(initial_bid);
 
                 offerDiv.appendChild(valSpan);
                 offerDiv.appendChild(nameInp);
+                offerDiv.appendChild(posiSpan);
 
                 // slider
                 const slider = document.createElement('input');
                 slider.type = 'range';
-                slider.step = 0.01;
+                // slider.step = 0.01;
                 slider.min = Emin;
                 slider.max = Emax;
                 slider.value = initial_bid;
@@ -252,48 +259,19 @@
                     sliderTarget.value = 0;
                 }
 
-                // 4. winner (closest from below, else smallest above)
                 let winnerBid = null;
-                // let winnerDiff = Infinity;
-                // let winnerBelow = false;
-
-                // for (const bid of accepted) {
-                //     const diff = Math.abs(bid - R);
-                //     const below = bid <= R;
-
-                //     if (below) {
-                //         if (diff < winnerDiff || (diff === winnerDiff && !winnerBelow)) {
-                //             winnerBid = bid; 
-                //             winnerDiff = diff;
-                //              winnerBelow = true;
-                //     }
-                //     } else if (!winnerBelow && diff < winnerDiff) {
-                //         winnerBid = bid; 
-                //         winnerDiff = diff; 
-                //         winnerBelow = false;
-                //     }
-                // }
 
                 document.querySelectorAll('.ranker').forEach(r=>r.textContent='-');
 
                 function sortCandidates(candidates, R) {
-                    // Filter and sort bids below R in descending order
                     const belowR = candidates.filter(candidate => candidate.bid < R).sort((a, b) => b.bid - a.bid);
-                    // objectsList.sort((a, b) => a.key - b.key);
-                    
-                    // Filter and sort bids at or above R in ascending order
                     const atOrAboveR = candidates.filter(candidate => candidate.bid >= R).sort((a, b) => a.bid - b.bid);
-                    
-                    // Append atOrAbove to below
                     return belowR.concat(atOrAboveR);
                 }
 
                 sortedCandidates = sortCandidates(candidates, R);
-
-                // console.log(sortedCandidates);
                 if (sortedCandidates.length){
                     winnerBid = sortedCandidates[0].bid;
-
                     let currentRank = 1;
                     for (let i = 0; i < sortedCandidates.length; i++) {
                         if (i === 0 || sortedCandidates[i].bid !== sortedCandidates[i - 1].bid) {
@@ -301,17 +279,20 @@
                         }
                         sortedCandidates[i].rank = currentRank;
                     }
-
                     sortedCandidates.forEach(cand => {
-                        // cand.rank = index + 1;
-                        // console.log(cand.bid);
+                        cand.eDiff = cand.bid - E;
+                        cand.eDiffPercent = 0;
+                        if (E != 0) cand.eDiffPercent = 100 * cand.eDiff/E;
                         const rankElement = document.querySelector(`.ranker[data-id="${cand.id}"]`);
                         if (rankElement) rankElement.textContent = cand.rank;
+
+                        const positioneEl = document.querySelector(`.positioner[data-id="${cand.id}"]`);
+                        let unit = "E+";
+                        if (cand.eDiff < 0) unit = "E"
+                        if (positioneEl) positioneEl.textContent = `(${unit}${formatMoney(cand.eDiff)} ≈ ${unit}${cand.eDiffPercent.toFixed(1)}%)`;
+                        // `Percentage: ${percentage.toFixed(2)}%` ⇋≋≃≈
                     });
                 }
-                // below = winnerBid < R;
-                // const sortedBids = document.getElementById('sortedBids');
-                // sortedBids.textContent = sortedCandidates.map(obj => obj.bid);
 
                 // highlight
                 document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
@@ -326,43 +307,10 @@
                         };
                         const winnerEl = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
                         if (winnerEl) {
-                            // console.log(winnerCand.rank);
                             winnerEl.classList.remove('d-none');
                         };
                     });
                 }
-
-                // ----- DISPLAY -----
-                // const res = document.getElementById('results');
-                // const fmt = n => `<span class="highlight">${formatMoney(n)}</span>`;
-
-                //  let html = `<strong>Estimate E:</strong> ${fmt(E)}<br>`;
-                // let html = ``;
-                // html += `<strong>Range (±20 %):</strong> ${fmt(lower)} – ${fmt(upper)}<br>`;
-                //  html += `<strong>Accepted (${accepted.length}):</strong> ${accepted.map(fmt).join(', ') || '—'}<br>`;
-                // html += `<strong>Mean M:</strong> ${fmt(M)} ----- `;
-                // html += `<strong>Reference R:</strong> ${fmt(R)}<br>`;
-
-                // const winnerVal = document.getElementById('winnerValue');
-                // const winnerExp = document.getElementById('winnerExplain');
-
-
-
-                // if (winnerBid !== null) {
-                //     winnerVal.textContent = formatMoney(winnerBid);
-                //     // winnerExp.textContent = winnerBid <= R ? '(closest from below)' : '(smallest above)';
-                //     winnerExp.textContent = winnerBid <= R ? '(Below R)' : '(Above R)';
-
-                //     // const wc = candidates.find(c=>c.bid===winnerBid);
-                //     // const name = wc ? wc.nameInp.value : '';
-                //     // html += `<strong>Winner:</strong> ${name} – ${fmt(winnerBid)}`;
-                //     // html += winnerBid <= R ? ' (closest from below)' : ' (smallest above)';
-                // } else {
-                //     // html += `<strong>Winner:</strong> —`;
-                //     winnerVal.textContent = '-';
-                //     winnerExp.textContent = '--';
-                // }
-                // res.innerHTML = html;
             }
 
             /* ---------- UTILITIES ---------- */
@@ -373,15 +321,10 @@
 
             /* ---------- INITIALISATION ---------- */
             document.getElementById('addCandidate').onclick = () => {
-                createCandidateRow(Esti);
+                let randomBid = Math.random() * (Emax - Emin) + Emin;
+                createCandidateRow(randomBid);
                 recalc();
             };
-
-            // const estimateInput = document.getElementById('estimate');
-            // estimateInput.addEventListener('input', () => {
-            //     updateSliderLimits();
-            //     recalc();
-            // });
 
             offerStrings.forEach(offer => {
                 const sanitized = String(offer).trim().replace(/[^\d.-]/g, '');

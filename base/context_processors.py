@@ -106,7 +106,7 @@ def portal_context(request):
         'shopping'        : 'bi bi-cart4',
         'simulator'       : 'bi bi-bar-chart-steps',
         'plus'            : 'bi bi-plus-lg',
-        'winner'          : 'bi bi-trophy',
+        'winner'          : 'bi bi-trophy-fill',
         'range'           : 'bi bi-arrows-expand-vertical',
         'range_min'       : 'bi bi-arrow-bar-up',
         'range_max'       : 'bi bi-arrow-bar-down',
