@@ -7,7 +7,7 @@ urlpatterns = [
     # path('', views.TenderListView.as_view(), name='portal_tender_list'),
     path('', views.tender_list, name='portal_tender_list'),
     path('details/<uuid:pk>/', views.tender_details, name='portal_tender_detail'),
-    path('simulator/<uuid:pk>/<int:ln>/', views.tender_simulator, name='portal_tender_simulator'),
+    path('simulator/<uuid:pk>/', views.tender_simulator, name='portal_tender_simulator'),
     path('dce/<uuid:pk>/<str:fn>/', views.tender_get_file, name='portal_tender_get_file'),
     
     path('favorites/', views.tender_favorite_list, name='portal_tender_favorite_list'),

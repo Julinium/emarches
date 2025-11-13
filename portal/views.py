@@ -10,7 +10,7 @@ from django.core.paginator import Paginator
 from django.conf import settings
 
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as trans
 
 from django.db import models
 from django.db.models import Q
@@ -29,7 +29,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth.models import User
 
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
-from base.models import Tender, Category, Procedure, Crawler, Agrement, Qualif
+from base.models import Tender, Category, Lot, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
@@ -441,7 +441,7 @@ def tender_favorite(request, pk=None):
             tender=tender,
         )
         logger.info(f"Tender Favorite: { tender.id }")
-        # messages.success(request, _('Item successfully added to your Favorites'))
+        # messages.success(request, trans('Item successfully added to your Favorites'))
 
         return HttpResponse(tender.id, status=200)
     logger.info(f"Failed Tender Favorite: { tender.id }")
@@ -467,7 +467,7 @@ def tender_unfavorite(request, pk=None):
     deleted, _ = Favorite.objects.filter(tender=tender, user=user).delete()
     if deleted > 0:
         logger.info(f"Tender Unfavorite: { tender.id }")
-        # messages.success(request, _('Item successfully removed from your Favorites'))
+        # messages.success(request, trans('Item successfully removed from your Favorites'))
         return HttpResponse(tender.id, status=200)
 
     logger.info(f"Failed Tender Unfavorite: { tender.id }")
@@ -497,10 +497,10 @@ def tender_favorite_clean(request, span=None):
     if cleanables:
         trash, xxx = cleanables.delete()
         logger.info(f"Favorite Tender Cleanup: { span } => { trash } items")
-        messages.success(request, _('Favorite items cleaned') + f': { trash }')
+        messages.success(request, trans('Favorite items cleaned') + f': { trash }')
     else:
         logger.info(f"Favorite Tender Cleanup: { span } => No items cleaned up")
-        messages.warning(request, _('Nothing to clean up.'))
+        messages.warning(request, trans('Nothing to clean up.'))
 
     return redirect('portal_tender_favorite_list')
 
@@ -582,38 +582,44 @@ def tender_favorite_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def tender_simulator(request, pk=None, ln=0):
+def tender_simulator(request, pk=None):
+
+    # if request.method != 'POST': return HttpResponse(status=405)
+    if pk == None : return HttpResponse(status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(_('Permission denied'), status=403)
+        return HttpResponse(trans('Permission denied'), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender : return HttpResponse(_('Specified Tender not found'), status=404)
+    if not tender : return HttpResponse(trans('Specified Tender not found'), status=404)
 
     context = {}
-    if ln and ln > 0:
-        lot = get_object_or_404(Lot, tender=tender, number=ln)
-        if not lot : return HttpResponse(_('Specified Lot not found'), status=404)
-        estimate = lot.estimate
-        context['lot'] = lot
-    else:
-        estimate = tender.estimate
+    estimate = tender.estimate
 
-    if not estimate: return HttpResponse(_('Could not get a valid estimate amount'), status=400)
+    lot_no = request.GET.get('lot_no')
+    if lot_no:
+        ln = int(lot_no)
+        if ln > 0:
+            lot = get_object_or_404(Lot, tender=tender, number=ln)
+            if not lot : return HttpResponse(trans('Specified Lot not found'), status=404)
+            estimate = lot.estimate
+            context['lot'] = lot
+
+    if not estimate or estimate <= 0:
+        return HttpResponse(trans('Could not get a valid estimate amount'), status=400)
 
     logger = logging.getLogger('portal')
-    logger.info(f"Tender Simulator: {tender.id}, Lot:{ ln }")
+    logger.info(f"Tender Simulator: {tender.id}, Lot:{ lot_no if lot_no else 'None' }")
 
     slo = 20.00
     
-    offers_count = 3
+    offers_count = 5
     tol = Decimal(slo/100).quantize(Decimal('0.00'))
     e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
     e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
     e_est = estimate.quantize(Decimal('0.00'))
 
-    # offers = [json.dumps(str(e_min))]
     offers = []
     for _ in range(max(offers_count, 3)):
         rand_float = random.uniform(float(e_min), float(e_max))
@@ -623,23 +629,19 @@ def tender_simulator(request, pk=None, ln=0):
         elif rand_decimal > e_max:
             rand_decimal = e_max
         offers.append(json.dumps(str(rand_decimal)))
-    # offers.append(json.dumps(str(e_max)))
 
     context['tender'] = tender
-    context['e_est'] = e_est
-    context['e_min'] = e_min
-    context['e_max'] = e_max
-    context['e_slo'] = slo
+    # context['e_est'] = e_est
+    # context['e_min'] = e_min
+    # context['e_max'] = e_max
+    # context['e_slo'] = slo
     # context['e_off'] = offers
     
     context['eEst'] = json.dumps(str(e_est))
     context['eMin'] = json.dumps(str(e_min))
     context['eMax'] = json.dumps(str(e_max))
-    # context['eSlo'] = json.dumps(str(slo))
+    context['offer_litteral'] = trans('OFFER')
     context['offers'] = offers
-
-# json.dumps(str(amount))
-
 
     return render(request, 'portal/tender-simulator.html', context)
 

@@ -11,7 +11,11 @@
 {% block content %}
 
     <div class="mb-3">
-        <span class="h3 mb-0">{% trans "Bidding Simulator" %}</span>
+        <span class="h3 mb-0">{% trans "Bidding Simulator" %}
+            {% if lot %}
+                <span class="small ms-2">({% trans "Lot" %} {{ lot.number }})</span>
+            {% endif %}
+        </span>
         <!-- <span class="small ms-2"><i class="{{ bicons.estimate }}"></i></span>
         <span id="estimateValue" class="fw-bold text-muted ms-1"></span> -->
     </div>
@@ -33,49 +37,8 @@
                 <input id="sliderEsti" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
             </div>
         </div>
-
-        <div class="d-flex mb-2 ms-3">
-            <div>
-                <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.mean }}"></i>
-                </button>
-            </div>
-            <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
-                <div class="d-flex justify-content-between">
-                    <div class="mt-1 mb-0 small">
-                        <span id="spanMean" class="value"></span>
-                        <span class="small ms-1">{% trans 'Offers Average' %}</span>
-                    </div>
-                </div>
-                <input id="sliderMean" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
-            </div>
-        </div>
-
-        <div class="d-flex mb-2 ms-3"> 
-            <div>
-                <button class="btn btn-sm btn-outline-primary disabled"><i class="{{ bicons.target }}"></i>
-                </button>
-            </div>
-            <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
-                <div class="d-flex justify-content-between">
-                    <div class="mt-1 mb-0 small text-primary">
-                        <span id="spanTarget" class="value fw-bold"></span>
-                        <span class="small ms-1">{% trans 'Target Price' %}</span>
-                    </div>
-                </div>
-                <input id="sliderTarget" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
-            </div>
-        </div>
         
         <div id="candidateList" class="ms-3 my-3"></div>
-        
-        <!-- <div class="my-3 small">
-            <span>Winner value:</span>
-            <span id="winnerValue"></span>
-            <span class="ms-3">Explain: </span>
-            <span id="winnerExplain"></span>
-            <hr>
-            <div id="sortedBids"></div>
-        </div> -->
 
         <div class="d-flex mb-3 align-items-center">
             <div>
@@ -87,6 +50,38 @@
             <div class="ms-2">
                 <span>{% trans 'Offers' %} : </span>
                 <span id="offersCount" class="fw-bold"></span>
+            </div>
+        </div>
+
+        <div class="d-flex mb-2 ms-3"> 
+            <div>
+                <button class="btn btn-sm btn-outline-primary disabled"><i class="{{ bicons.target }}"></i>
+                </button>
+            </div>
+            <div class="card shadow-sm px-2 w-100 ms-2 bg-primary-subtle">
+                <div class="d-flex justify-content-between">
+                    <div class="mt-1 mb-0 small text-primary">
+                        <span id="spanTarget" class="value fw-bold"></span>
+                        <span class="small ms-1">{% trans 'Target Price' %}</span>
+                    </div>
+                </div>
+                <input id="sliderTarget" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
+            </div>
+        </div>
+
+        <div class="d-flex mb-2 ms-3">
+            <div>
+                <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.mean }}"></i>
+                </button>
+            </div>
+            <div class="card shadow-sm px-2 w-100 ms-2">
+                <div class="d-flex justify-content-between">
+                    <div class="mt-1 mb-0 small">
+                        <span id="spanMean" class="value"></span>
+                        <span class="small ms-1">{% trans 'Offers Average' %}</span>
+                    </div>
+                </div>
+                <input id="sliderMean" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
             </div>
         </div>
 
@@ -142,7 +137,7 @@
                 flexDiv.appendChild(actionsDiv);
 
                 const card = document.createElement('div');
-                card.className = 'candidate card shadow-sm px-2 w-100 ms-2';
+                card.className = 'candidate card px-2 w-100 ms-2';
                 card.dataset.id = id;
 
                 const divTop = document.createElement('div');
@@ -159,7 +154,7 @@
                 // winnerInd.classList = 'winner';
                 rankingEl.dataset.id = id;
                 const rankSpan = document.createElement('span');
-                rankSpan.classList = 'ranker fw-bold badge bg-secondary mx-1';
+                rankSpan.classList = 'ranker fw-bold badge bg-primary mx-1';
                 rankSpan.dataset.id = id;
                 
                 winnerInd.classList = 'bi bi-trophy-fill small winner';
@@ -172,10 +167,10 @@
 
                 // name
                 const nameInp = document.createElement('span');
-                nameInp.type = 'text';
-                nameInp.value = `OFFER #${id}`;
+                // nameInp.type = 'text';
+                // nameInp.value = `OFFER #${id}`;
                 nameInp.className = 'small text-muted ms-2';
-                nameInp.textContent = `OFFER #${id}`;
+                nameInp.textContent = `{{ offer_litteral }} FO#${id}D`;
 
                 // value display
                 const valSpan = document.createElement('span');
@@ -295,20 +290,24 @@
 
                 sortedCandidates = sortCandidates(candidates, R);
 
-                sortedCandidates.forEach((cand, index) => {
-                    cand.rank = index + 1;   // 1-based rank
-                    // if (index > 0) {
-                    //     let prev_rank = sortedCandidates[index - 1].rank;
-                    //     if (cand.bid == prev_bid) { cand.rank = prev_rank}
-                    // }
-                    // cand.diff = cand.bid - R;
-                    // console.log(index, cand.rank, cand.id, cand.bid);
-                    const rankEl = document.querySelector(`.ranker[data-id="${cand.id}"]`);
-                    if (rankEl) rankEl.textContent = cand.rank;
-                });
                 // console.log(sortedCandidates);
                 if (sortedCandidates.length){
                     winnerBid = sortedCandidates[0].bid;
+
+                    let currentRank = 1;
+                    for (let i = 0; i < sortedCandidates.length; i++) {
+                        if (i === 0 || sortedCandidates[i].bid !== sortedCandidates[i - 1].bid) {
+                            currentRank = i + 1;
+                        }
+                        sortedCandidates[i].rank = currentRank;
+                    }
+
+                    sortedCandidates.forEach(cand => {
+                        // cand.rank = index + 1;
+                        // console.log(cand.bid);
+                        const rankElement = document.querySelector(`.ranker[data-id="${cand.id}"]`);
+                        if (rankElement) rankElement.textContent = cand.rank;
+                    });
                 }
                 // below = winnerBid < R;
                 // const sortedBids = document.getElementById('sortedBids');
