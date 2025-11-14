@@ -49,12 +49,6 @@ DCE_SHOW_MODAL = True
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_list(request):
 
-    # mt = 0
-    # for tender in Tender.objects.filter(lots_count__gt=1):
-    #     if tender.lots.count() != tender.lots_count:
-    #         mt += 1
-    # return HttpResponse(f"Mismatches found: { mt }")
-
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
@@ -618,36 +612,38 @@ def tender_simulator(request, pk=None):
     logger = logging.getLogger('portal')
     logger.info(f"Tender Simulator: {tender.id}, Lot:{ lot_no if lot_no else 'None' }")
 
-    slo = 20.00
+    # slo = 20.00
+
+    tolerance_dn = 20.0
+    tolerance_up = 20.0
     
-    offers_count = 5
-    tol = Decimal(slo/100).quantize(Decimal('0.00'))
-    e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
-    e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
+    # offers_count = 3
+    # tol = Decimal(slo/100).quantize(Decimal('0.00'))
+    # e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
+    # e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
     e_est = estimate.quantize(Decimal('0.00'))
 
-    offers = []
-    for _ in range(max(offers_count, 3)):
-        rand_float = random.uniform(float(e_min), float(e_max))
-        rand_decimal = Decimal(str(rand_float)).quantize(Decimal('0.00'))
-        if rand_decimal < e_min:
-            rand_decimal = e_min
-        elif rand_decimal > e_max:
-            rand_decimal = e_max
-        offers.append(json.dumps(str(rand_decimal)))
+    # offers = []
+    # for _ in range(max(offers_count, 3)):
+    #     rand_float = random.uniform(float(e_min), float(e_max))
+    #     rand_decimal = Decimal(str(rand_float)).quantize(Decimal('0.00'))
+    #     if rand_decimal < e_min:
+    #         rand_decimal = e_min
+    #     elif rand_decimal > e_max:
+    #         rand_decimal = e_max
+    #     offers.append(json.dumps(str(rand_decimal)))
 
     context['tender'] = tender
-    # context['e_est'] = e_est
-    # context['e_min'] = e_min
-    # context['e_max'] = e_max
-    # context['e_slo'] = slo
-    # context['e_off'] = offers
-    
-    context['eEst'] = json.dumps(str(e_est))
-    context['eMin'] = json.dumps(str(e_min))
-    context['eMax'] = json.dumps(str(e_max))
+
+    # context['eMin'] = json.dumps(str(e_min))
+    # context['eMax'] = json.dumps(str(e_max))
+    # context['offers'] = offers
+
+    # context['eEst'] = json.dumps(str(e_est))
     context['offer_litteral'] = trans('OFFER')
-    context['offers'] = offers
+    context['offers_count'] = max(offers_count, 3)
+    context['tolerance_dn'] = tolerance_dn
+    context['tolerance_up'] = tolerance_up
 
     return render(request, 'portal/tender-simulator.html', context)
 

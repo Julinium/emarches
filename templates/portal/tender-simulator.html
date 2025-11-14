@@ -9,18 +9,16 @@
 {% endblock title %}
 
 {% block content %}
+
     <div class="mb-3">
         <span class="h3 mb-0">{% trans "Bidding Simulator" %}
             {% if lot %}
                 <span class="small ms-2">({% trans "Lot" %} {{ lot.number }})</span>
             {% endif %}
         </span>
-        <!-- <span class="small ms-2"><i class="{{ bicons.estimate }}"></i></span>
-        <span id="estimateValue" class="fw-bold text-muted ms-1"></span> -->
     </div>
 
-    <div class="my-3" id="tender-details">
-
+    <div class="my-3">
         <div class="d-flex mb-2 ms-3">
             <div>
                 <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.estimate }}"></i>
@@ -54,10 +52,10 @@
 
         <div class="d-flex mb-2 ms-3"> 
             <div>
-                <button class="btn btn-sm btn-outline-primary disabled"><i class="{{ bicons.target }}"></i>
+                <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.target }}"></i>
                 </button>
             </div>
-            <div class="card shadow-sm px-2 w-100 ms-2 bg-primary-subtle">
+            <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
                 <div class="d-flex justify-content-between">
                     <div class="mt-1 mb-0 small text-primary">
                         <span id="spanTarget" class="value fw-bold"></span>
@@ -86,254 +84,261 @@
 
     </div>
 
-
     <script>
-            /* ---------- DATA & HELPERS ---------- */
-            const candidates = [];
-            let candidateIdCounter = 0;
-            const Esti = Number({{ eEst|safe }});
-            const Emin = Number({{ eMin|safe }});
-            const Emax = Number({{ eMax|safe }});
+        /* ---------- DATA & HELPERS ---------- */
+        const candidates = [];
+        let candidateIdCounter = 0;
+        // const Esti = Number({{ eEst|safe }});
+        // Number(str.replace(/,/g, ''));
+        
+        const esti_str = '{{ tender.estimate }}';
+        const Esti = Number(esti_str.replace(/,/g, ''));
+        const tol_dn = Number({{ tolerance_dn }});
+        const tol_up = Number({{ tolerance_up }});
+        const Emin = Number(Esti * (1- tol_dn/100));
+        const Emax = Number(Esti * (1+ tol_up/100));
 
-            const offerStrings = {{ offers|safe }};
+        const estimateValue = document.getElementById('estimateValue');
+        const spanEsti = document.getElementById('spanEsti');
+        const sliderEsti = document.getElementById('sliderEsti');
 
-            const estimateValue = document.getElementById('estimateValue');
-            const spanEsti = document.getElementById('spanEsti');
-            const sliderEsti = document.getElementById('sliderEsti');
-            // const rangeMin = document.getElementById('rangeMin');
-            // const rangeMax = document.getElementById('rangeMax');
-
-            spanEsti.textContent = formatMoney(Esti);
-            sliderEsti.min = Emin;
-            sliderEsti.max = Emax;
-            sliderEsti.value = Esti;
-            // rangeMin.textContent = formatMoney(Emin);
-            // rangeMax.textContent = formatMoney(Emax);
+        spanEsti.textContent = formatMoney(Esti);
+        sliderEsti.min = Emin;
+        sliderEsti.max = Emax;
+        sliderEsti.value = Esti;
 
 
-            /* ---------- UI CREATION ---------- */
-            function createCandidateRow(initial_bid=0) {
-                const id = ++candidateIdCounter;
+        /* ---------- UI CREATION ---------- */
+        function createCandidateRow(initial_bid=0) {
+            const id = ++candidateIdCounter;
 
-                const flexDiv = document.createElement('div');
-                flexDiv.className = 'd-flex mb-2';
+            const flexDiv = document.createElement('div');
+            flexDiv.className = 'd-flex mb-2';
 
-                // delete button
-                actionsDiv = document.createElement('div');
-                const delBtn = document.createElement('button');
-                delBtn.className = 'btn btn-sm btn-outline-danger';
-                delBtn.onclick = () => {
-                    flexDiv.remove();
-                    candidates.splice(candidates.findIndex(c=>c.id===id),1);
-                    recalc();
-                };
-                const delIco = document.createElement('i');
-                delIco.className = 'bi bi-trash';
-                delBtn.appendChild(delIco);
-
-                actionsDiv.appendChild(delBtn);
-                flexDiv.appendChild(actionsDiv);
-
-                const card = document.createElement('div');
-                card.className = 'candidate card px-2 w-100 ms-2';
-                card.dataset.id = id;
-
-                const divTop = document.createElement('div');
-                divTop.classList = 'd-flex justify-content-between';
-
-                card.appendChild(divTop);
-                flexDiv.appendChild(card);
-
-                const offerDiv = document.createElement('div');
-                offerDiv.classList = 'mt-1 mb-0';
-                const rankingEl = document.createElement('div');
-                rankingEl.classList = 'small';
-                const prizeInd = document.createElement('i');
-                rankingEl.dataset.id = id;
-                
-                const rankSpan = document.createElement('span');
-                rankSpan.classList = 'ranker fw-bold badge bg-primary ms-1';
-                rankSpan.dataset.id = id;
-                
-                const prizeSpan = document.createElement('span');
-                prizeSpan.classList = 'winner badge bg-success ms-1';
-                prizeSpan.dataset.id = id;
-                
-                prizeInd.classList = '{{ bicons.winner }}';
-                // prizeInd.dataset.id = id;
-                prizeSpan.appendChild(prizeInd);
-                rankingEl.appendChild(prizeSpan);
-                rankingEl.appendChild(rankSpan);
-
-                divTop.appendChild(offerDiv);
-                divTop.appendChild(rankingEl);
-
-                // name
-                const nameInp = document.createElement('span');
-                // nameInp.type = 'text';
-                // nameInp.value = `OFFER #${id}`;
-                nameInp.className = 'small text-muted ms-2';
-                nameInp.textContent = `{{ offer_litteral }} FO#${id}D`;
-
-                // value display
-                const posiSpan = document.createElement('span');
-                posiSpan.className = 'positioner ms-2 small text-muted';
-                posiSpan.dataset.id = id;
-                const valSpan = document.createElement('span');
-                valSpan.className = 'value';
-                valSpan.textContent = formatMoney(initial_bid);
-
-                offerDiv.appendChild(valSpan);
-                offerDiv.appendChild(nameInp);
-                offerDiv.appendChild(posiSpan);
-
-                // slider
-                const slider = document.createElement('input');
-                slider.type = 'range';
-                // slider.step = 0.01;
-                slider.min = Emin;
-                slider.max = Emax;
-                slider.value = initial_bid;
-                slider.className = 'mb-1 mt-0';
-                card.appendChild(slider);
-
-                // store
-                candidates.push({id, nameInp, slider, valSpan, bid:Number(initial_bid)});
-                document.getElementById('candidateList').appendChild(flexDiv);
-
-                // listeners
-                slider.addEventListener('input', () => updateCandidate(id, Number(slider.value)));
-                nameInp.addEventListener('change', recalc);
-                return flexDiv;
-            }
-
-            /* ---------- CANDIDATE UPDATE ---------- */
-            function updateCandidate(id, newBid) {
-                const c = candidates.find(x=>x.id===id);
-                if (!c) return;
-                c.bid = newBid;
-                c.valSpan.textContent = formatMoney(newBid);
-                recalc();
-            }
-
-            /* ---------- CALCULATION ---------- */
-            function recalc() {
-                const E = Esti 
-                const accepted = [];
-                for (const c of candidates) {
-                    const bid = c.bid;
-                    accepted.push(bid);
-                }
-
-                const offersCount = document.getElementById('offersCount');
-                const spanR = document.getElementById('spanTarget');
-                const spanM = document.getElementById('spanMean');
-                const sliderMean = document.getElementById('sliderMean');
-                const sliderTarget = document.getElementById('sliderTarget');
-                const winnerBgClass = 'bg-success-subtle fw-bold text-success'.split(" ");
-                
-                let M = 0;
-                if (accepted.length) {
-                    M = accepted.reduce((a,b)=>a+b,0) / accepted.length;
-                    offersCount.textContent = accepted.length.toString();
-                } else {
-                    offersCount.textContent = '0';
-                }
-
-                sliderMean.min = Emin;
-                sliderMean.max = Emax;
-                sliderTarget.min = Emin;
-                sliderTarget.max = Emax;
-
-                const R = 0.5 * (E + M);
-                if (accepted.length) {
-                    spanM.textContent = formatMoney(M);
-                    spanR.textContent = formatMoney(R);
-
-                    sliderMean.value = M;
-                    sliderTarget.value = R;
-                } else {
-                    spanM.textContent = '-';
-                    spanR.textContent = '-';
-                    sliderMean.value = 0;
-                    sliderTarget.value = 0;
-                }
-
-                let winnerBid = null;
-
-                document.querySelectorAll('.ranker').forEach(r=>r.textContent='-');
-
-                function sortCandidates(candidates, R) {
-                    const belowR = candidates.filter(candidate => candidate.bid < R).sort((a, b) => b.bid - a.bid);
-                    const atOrAboveR = candidates.filter(candidate => candidate.bid >= R).sort((a, b) => a.bid - b.bid);
-                    return belowR.concat(atOrAboveR);
-                }
-
-                sortedCandidates = sortCandidates(candidates, R);
-                if (sortedCandidates.length){
-                    winnerBid = sortedCandidates[0].bid;
-                    let currentRank = 1;
-                    for (let i = 0; i < sortedCandidates.length; i++) {
-                        if (i === 0 || sortedCandidates[i].bid !== sortedCandidates[i - 1].bid) {
-                            currentRank = i + 1;
-                        }
-                        sortedCandidates[i].rank = currentRank;
-                    }
-                    sortedCandidates.forEach(cand => {
-                        cand.eDiff = cand.bid - E;
-                        cand.eDiffPercent = 0;
-                        if (E != 0) cand.eDiffPercent = 100 * cand.eDiff/E;
-                        const rankElement = document.querySelector(`.ranker[data-id="${cand.id}"]`);
-                        if (rankElement) rankElement.textContent = cand.rank;
-
-                        const positioneEl = document.querySelector(`.positioner[data-id="${cand.id}"]`);
-                        let unit = "E+";
-                        if (cand.eDiff < 0) unit = "E"
-                        if (positioneEl) positioneEl.textContent = `(${unit}${formatMoney(cand.eDiff)} ≈ ${unit}${cand.eDiffPercent.toFixed(1)}%)`;
-                        // `Percentage: ${percentage.toFixed(2)}%` ⇋≋≃≈
-                    });
-                }
-
-                // highlight
-                document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
-                document.querySelectorAll('.winner').forEach(r=>r.classList.add('d-none'));
-
-                if (winnerBid !== null) {
-                    const winnerCands = candidates.filter(c => c.bid === winnerBid);
-                    winnerCands.forEach(winnerCand => {
-                        const element = document.querySelector(`.candidate[data-id="${winnerCand.id}"]`);
-                        if (element) {
-                            element.classList.add(...winnerBgClass);
-                        };
-                        const winnerEl = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
-                        if (winnerEl) {
-                            winnerEl.classList.remove('d-none');
-                        };
-                    });
-                }
-            }
-
-            /* ---------- UTILITIES ---------- */
-            function formatMoney(n) {
-                const locale = navigator.language || navigator.userLanguage || 'en-US';
-                return new Intl.NumberFormat(locale, {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
-            }
-
-            /* ---------- INITIALISATION ---------- */
-            document.getElementById('addCandidate').onclick = () => {
-                let randomBid = Math.random() * (Emax - Emin) + Emin;
-                createCandidateRow(randomBid);
+            // delete button
+            actionsDiv = document.createElement('div');
+            const delBtn = document.createElement('button');
+            delBtn.className = 'btn btn-sm btn-outline-danger';
+            delBtn.onclick = () => {
+                flexDiv.remove();
+                candidates.splice(candidates.findIndex(c=>c.id===id),1);
                 recalc();
             };
+            const delIco = document.createElement('i');
+            delIco.className = 'bi bi-trash';
+            delBtn.appendChild(delIco);
 
-            offerStrings.forEach(offer => {
-                const sanitized = String(offer).trim().replace(/[^\d.-]/g, '');
-                const bid = Number(sanitized);
-                createCandidateRow(bid);
-            });
+            actionsDiv.appendChild(delBtn);
+            flexDiv.appendChild(actionsDiv);
+
+            const card = document.createElement('div');
+            card.className = 'candidate card px-2 w-100 ms-2';
+            card.dataset.id = id;
+
+            const divTop = document.createElement('div');
+            divTop.classList = 'd-flex justify-content-between';
+
+            card.appendChild(divTop);
+            flexDiv.appendChild(card);
+
+            const offerDiv = document.createElement('div');
+            offerDiv.classList = 'mt-1 mb-0';
+            const rankingEl = document.createElement('div');
+            rankingEl.classList = 'small';
+            const prizeInd = document.createElement('i');
+            rankingEl.dataset.id = id;
+            
+            const rankSpan = document.createElement('span');
+            rankSpan.classList = 'ranker fw-bold badge bg-primary ms-1';
+            rankSpan.dataset.id = id;
+            
+            const prizeSpan = document.createElement('span');
+            prizeSpan.classList = 'winner badge bg-success ms-1';
+            prizeSpan.dataset.id = id;
+            
+            prizeInd.classList = '{{ bicons.winner }}';
+            // prizeInd.dataset.id = id;
+            prizeSpan.appendChild(prizeInd);
+            rankingEl.appendChild(prizeSpan);
+            rankingEl.appendChild(rankSpan);
+
+            divTop.appendChild(offerDiv);
+            divTop.appendChild(rankingEl);
+
+            // name
+            const nameInp = document.createElement('span');
+            // nameInp.type = 'text';
+            // nameInp.value = `OFFER #${id}`;
+            nameInp.className = 'small text-muted ms-2 d-none d-md-inline';
+            nameInp.textContent = `{{ offer_litteral }}${id}D`;
+
+            // value display
+            const posiSpan = document.createElement('span');
+            posiSpan.className = 'positioner ms-2 small text-muted d-none d-md-inline';
+            posiSpan.dataset.id = id;
+            const valSpan = document.createElement('span');
+            valSpan.className = 'value';
+            valSpan.textContent = formatMoney(initial_bid);
+
+            offerDiv.appendChild(valSpan);
+            offerDiv.appendChild(nameInp);
+            offerDiv.appendChild(posiSpan);
+
+            // slider
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            // slider.step = 0.01;
+            slider.min = Emin;
+            slider.max = Emax;
+            slider.value = initial_bid;
+            slider.className = 'mb-1 mt-0';
+            card.appendChild(slider);
+
+            // store
+            candidates.push({id, nameInp, slider, valSpan, bid:Number(initial_bid)});
+            document.getElementById('candidateList').appendChild(flexDiv);
+
+            // listeners
+            slider.addEventListener('input', () => updateCandidate(id, Number(slider.value)));
+            nameInp.addEventListener('change', recalc);
+            return flexDiv;
+        }
+
+        /* ---------- CANDIDATE UPDATE ---------- */
+        function updateCandidate(id, newBid) {
+            const c = candidates.find(x=>x.id===id);
+            if (!c) return;
+            c.bid = newBid;
+            c.valSpan.textContent = formatMoney(newBid);
             recalc();
-        </script>
+        }
+
+        /* ---------- CALCULATION ---------- */
+        function recalc() {
+            const E = Esti 
+            const accepted = [];
+            for (const c of candidates) {
+                const bid = c.bid;
+                accepted.push(bid);
+            }
+
+            const offersCount = document.getElementById('offersCount');
+            const spanR = document.getElementById('spanTarget');
+            const spanM = document.getElementById('spanMean');
+            const sliderMean = document.getElementById('sliderMean');
+            const sliderTarget = document.getElementById('sliderTarget');
+            const winnerBgClass = 'bg-success-subtle fw-bold text-success'.split(" ");
+            
+            let M = 0;
+            if (accepted.length) {
+                M = accepted.reduce((a,b)=>a+b,0) / accepted.length;
+                offersCount.textContent = accepted.length.toString();
+            } else {
+                offersCount.textContent = '0';
+            }
+
+            sliderMean.min = Emin;
+            sliderMean.max = Emax;
+            sliderTarget.min = Emin;
+            sliderTarget.max = Emax;
+
+            const R = 0.5 * (E + M);
+            if (accepted.length) {
+                spanM.textContent = formatMoney(M);
+                spanR.textContent = formatMoney(R);
+
+                sliderMean.value = M;
+                sliderTarget.value = R;
+            } else {
+                spanM.textContent = '-';
+                spanR.textContent = '-';
+                sliderMean.value = 0;
+                sliderTarget.value = 0;
+            }
+
+            let winnerBid = null;
+
+            document.querySelectorAll('.ranker').forEach(r=>r.textContent='-');
+
+            function sortCandidates(candidates, R) {
+                const belowR = candidates.filter(candidate => candidate.bid < R).sort((a, b) => b.bid - a.bid);
+                const atOrAboveR = candidates.filter(candidate => candidate.bid >= R).sort((a, b) => a.bid - b.bid);
+                return belowR.concat(atOrAboveR);
+            }
+
+            sortedCandidates = sortCandidates(candidates, R);
+            if (sortedCandidates.length){
+                winnerBid = sortedCandidates[0].bid;
+                let currentRank = 1;
+                for (let i = 0; i < sortedCandidates.length; i++) {
+                    if (i === 0 || sortedCandidates[i].bid !== sortedCandidates[i - 1].bid) {
+                        currentRank = i + 1;
+                    }
+                    sortedCandidates[i].rank = currentRank;
+                }
+                sortedCandidates.forEach(cand => {
+                    cand.eDiff = cand.bid - E;
+                    cand.eDiffPercent = 0;
+                    if (E != 0) cand.eDiffPercent = 100 * cand.eDiff/E;
+                    const rankElement = document.querySelector(`.ranker[data-id="${cand.id}"]`);
+                    if (rankElement) rankElement.textContent = cand.rank;
+
+                    const positioneEl = document.querySelector(`.positioner[data-id="${cand.id}"]`);
+                    let unit = "E+";
+                    if (cand.eDiff < 0) unit = "E"
+                    if (positioneEl) positioneEl.textContent = `(${unit}${formatMoney(cand.eDiff)} ≈ ${unit}${cand.eDiffPercent.toFixed(1)}%)`;
+                    // `Percentage: ${percentage.toFixed(2)}%` ⇋≋≃≈
+                });
+            }
+
+            // highlight
+            document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
+            document.querySelectorAll('.winner').forEach(r=>r.classList.add('d-none'));
+
+            if (winnerBid !== null) {
+                const winnerCands = candidates.filter(c => c.bid === winnerBid);
+                winnerCands.forEach(winnerCand => {
+                    const element = document.querySelector(`.candidate[data-id="${winnerCand.id}"]`);
+                    if (element) {
+                        element.classList.add(...winnerBgClass);
+                    };
+                    const winnerEl = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
+                    if (winnerEl) {
+                        winnerEl.classList.remove('d-none');
+                    };
+                });
+            }
+        }
+
+        /* ---------- UTILITIES ---------- */
+        function formatMoney(n) {
+            const locale = navigator.language || navigator.userLanguage || 'en-US';
+            return new Intl.NumberFormat(locale, {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
+        }
+
+        /* ---------- INITIALISATION ---------- */
+        document.getElementById('addCandidate').onclick = () => {
+            let randomBid = Math.random() * (Emax - Emin) + Emin;
+            createCandidateRow(randomBid);
+            recalc();
+        };
+
+        for (let i = 0; i < Number({{ offers_count }}); i++) {
+            let randomBid = Math.random() * (Emax - Emin) + Emin;
+            createCandidateRow(randomBid);
+            recalc();
+        }
 
 
+        // offerStrings.forEach(offer => {
+        //     const sanitized = String(offer).trim().replace(/[^\d.-]/g, '');
+        //     const bid = Number(sanitized);
+        //     createCandidateRow(bid);
+        // });
+
+
+
+        recalc();
+    </script>
 
 {% endblock content %}

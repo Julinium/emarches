@@ -29,4 +29,19 @@ class Command(BaseCommand):
         #     print(f"\tUpdating {i} / {lc} ...")
         #     l.tender.save()
 
-        self.stdout.write(self.style.SUCCESS("Data updated successfully."))
+        #################################
+        mt = 0
+        tenders = Tender.objects.prefetch_related('lots').filter(lots_count__gt=1)
+        for tender in tenders:
+            if tender.lots.count() != tender.lots_count:
+                try: 
+                    tender.delete()
+                    mt += 1
+                    self.stdout.write(self.style.WARNING(f"\t Deleted {tender.chrono}: Declared={tender.lots_count}, \tfound={tender.lots.count()}"))
+                except Exception as xc: print(str(xc))
+
+        self.stdout.write(self.style.ERROR(f"Total Deleted mismatches: {mt}"))
+        ###################################
+
+
+        self.stdout.write(self.style.SUCCESS("Processing finished successfully."))
