@@ -1,7 +1,56 @@
 {% load i18n %}
 
-<div class="modal fade" id="modalSimulator" aria-hidden="true" aria-labelledby="modalSimulatorLabel" tabindex="-1">
+<div class="modal fade" id="lotSelctModal" 
+    tabindex="-1" aria-labelledby="lotSelctModalLabel" 
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="lotSelctModalLabel">{% trans "Lot Selection" %}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select id="lot-select" name="lot_no" class="form-select" aria-label="Select Lot">
+                    <option value = '' selected>
+                        <div class="d-flex justify-content-between">
+                            <div class="fw-bold">{% trans "All" %} = </div>
+                            <div>{{ tender.estimate }}</div>
+                        </div>
+                    </option>
+                    {% for lot in tender.lots.all %}
+                        {% if lot.estimate > 0 %}
+                            <option value="{{ lot.estimate }}">
+                                <div class="d-flex justify-content-between">
+                                    <div class="fw-bold">{{ lot.number }} = </div>
+                                    <div>{{ lot.estimate }}</div>
+                                </div>
+                            </option>
+                        {% endif %}
+                    {% empty %}
+                        <div class="text-danger fw-bold">{% trans "No item found !" %}</div>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                
+                <button class="m-1 btn btn-outline-primary
+                        {% if tender.estimate == 0 %} disabled {% endif %}" 
+                        type="button"
+                        data-bs-toggle="modal" data-bs-target="#modalSimulator">
+                    <span><i class="{{ bicons.simulator }}"></i></span>
+                    <span class="d-none d-md-inline ms-1">{% trans 'Simulate' %}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="modalSimulator" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="modalSimulatorLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -11,7 +60,7 @@
 
             <div class="modal-body">
             
-                <div class="my-3">
+                <div class="">
                     <div class="d-flex mb-2 ms-3">
                         <div>
                             <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.estimate }}"></i>
@@ -76,13 +125,14 @@
                     </div>
 
                 </div>
+
             </div>
 
             <div class="modal-footer">
                 {% if tender.lots_count == 1 %}
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close">{% trans "Close" %}</button>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal" aria-label="Close">{% trans "Close" %}</button>
                 {% else %}
-                    <button class="btn btn-primary" data-bs-target="#lotSelctModal" data-bs-toggle="modal">Back</button>
+                    <button class="btn btn-primary" data-bs-target="#lotSelctModal" data-bs-toggle="modal">{% trans "Back" %}</button>
                 {% endif %}
             </div>
         </div>
@@ -93,26 +143,30 @@
     /* ---------- DATA & HELPERS ---------- */
     const candidates = [];
     let candidateIdCounter = 0;
+    let esti_str = '{{ tender.estimate }}';
+    let Esti = Number(esti_str.replace(/,/g, ''));
 
-    document.getElementById('showItemBtn').addEventListener('click', function () {
-    });
-    
-    const select = document.getElementById("lot-select");
-    if (select.selectedIndex > 0) {
-        esti_str = select.options[select.selectedIndex].value;
-    } else {
-        esti_str = '{{ tender.estimate }}'
-    }
+    const selot = document.getElementById("lot-select");
+    // selot.addEventListener('change', function(event) {
+    //     // console.log(selot.selectedIndex, selot.options[selot.selectedIndex].value);
+    //     if (selot.selectedIndex > 0) {
+    //         esti_str = selot.options[selot.selectedIndex].value;
+    //         Esti = Number(esti_str.replace(/,/g, ''));
+    //     } else {
+    //         esti_str = '{{ tender.estimate }}';
+    //         Esti = Number(esti_str.replace(/,/g, ''));
+    //     }
+    //     recalc();
+    // });
 
-    // const selectedOption = select.options[select.selectedIndex];
-    // const target = selectedOption.getAttribute('data-bs-target');
-    // if (target) {
-    //     const modal = new bootstrap.Modal(document.querySelector(target));
-    //     modal.show();
+
+    // if (selot.selectedIndex > 0) {
+    //     esti_str = selot.options[selot.selectedIndex].value;
+    // } else {
+    //     esti_str = '{{ tender.estimate }}'
     // }
+    // console.log(esti_str)
 
-    // const esti_str = '{{ tender.estimate }}';
-    const Esti = Number(esti_str.replace(/,/g, ''));
     const tol_dn = Number({{ tolerance_dn }});
     const tol_up = Number({{ tolerance_up }});
     const Emin = Number(Esti * (1- tol_dn/100));
@@ -122,7 +176,7 @@
     const spanEsti = document.getElementById('spanEsti');
     const sliderEsti = document.getElementById('sliderEsti');
 
-    spanEsti.textContent = formatMoney(Esti);
+    // spanEsti.textContent = formatMoney(Esti);
     sliderEsti.min = Emin;
     sliderEsti.max = Emax;
     sliderEsti.value = Esti;
@@ -234,8 +288,25 @@
 
     /* ---------- CALCULATION ---------- */
     function recalc() {
+        selot.addEventListener('change', function(event) {
+            // console.log(selot.selectedIndex, selot.options[selot.selectedIndex].value);
+            console.log(Esti);
+            if (selot.selectedIndex > 0) {
+                esti_str = selot.options[selot.selectedIndex].value;
+                Esti = Number(esti_str.replace(/,/g, ''));
+            } else {
+                esti_str = '{{ tender.estimate }}';
+                Esti = Number(esti_str.replace(/,/g, ''));
+            }
+            // console.log(esti_str, Esti);
+        });
+        
+        spanEsti.textContent = formatMoney(Esti);
+
         const E = Esti 
+        // console.log(E, Esti);
         const accepted = [];
+        
         for (const c of candidates) {
             const bid = c.bid;
             accepted.push(bid);

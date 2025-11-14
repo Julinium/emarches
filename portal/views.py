@@ -377,6 +377,15 @@ def tender_details(request, pk=None):
     logger = logging.getLogger('portal')
     logger.info(f"Tender details view: {tender.id}")
 
+    tolerance_dn = 20.0
+    tolerance_up = 20.0    
+    offers_count = 3
+    
+    context['offer_litteral'] = trans('OFFER')
+    context['offers_count'] = max(offers_count, 3)
+    context['tolerance_dn'] = tolerance_dn
+    context['tolerance_up'] = tolerance_up
+
     return render(request, 'portal/tender-details.html', context)
 
 
@@ -617,7 +626,7 @@ def tender_simulator(request, pk=None):
     tolerance_dn = 20.0
     tolerance_up = 20.0
     
-    # offers_count = 3
+    offers_count = 3
     # tol = Decimal(slo/100).quantize(Decimal('0.00'))
     # e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
     # e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
