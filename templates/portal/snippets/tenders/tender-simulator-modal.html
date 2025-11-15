@@ -11,20 +11,10 @@
             </div>
             <div class="modal-body">
                 <select id="lot-select" name="lot_no" class="form-select" aria-label="Select Lot">
-                    <option value = '' selected>
-                        <div class="d-flex justify-content-between">
-                            <div class="fw-bold">{% trans "All" %} = </div>
-                            <div>{{ tender.estimate }}</div>
-                        </div>
-                    </option>
+                    <option value = '' selected>{% trans "All lots" %} = {{ tender.estimate }}</option>
                     {% for lot in tender.lots.all %}
                         {% if lot.estimate > 0 %}
-                            <option value="{{ lot.estimate }}">
-                                <div class="d-flex justify-content-between">
-                                    <div class="fw-bold">{{ lot.number }} = </div>
-                                    <div>{{ lot.estimate }}</div>
-                                </div>
-                            </option>
+                            <option value="{{ lot.estimate }}">{% trans "Lot" %} {{ lot.number }} = {{ lot.estimate }}</option>
                         {% endif %}
                     {% empty %}
                         <div class="text-danger fw-bold">{% trans "No item found !" %}</div>
@@ -32,14 +22,17 @@
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    <span><i class="{{ bicons.close }}"></i></span>
+                    <span class="ms-1">{% trans 'Close' %}</span>
+                </button>
                 
                 <button class="m-1 btn btn-outline-primary
                         {% if tender.estimate == 0 %} disabled {% endif %}" 
                         type="button"
                         data-bs-toggle="modal" data-bs-target="#modalSimulator">
                     <span><i class="{{ bicons.simulator }}"></i></span>
-                    <span class="d-none d-md-inline ms-1">{% trans 'Simulate' %}</span>
+                    <span class="ms-1">{% trans 'Simulate' %}</span>
                 </button>
             </div>
         </div>
@@ -49,8 +42,8 @@
 
 
 
-<div class="modal fade" id="modalSimulator" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true" aria-labelledby="modalSimulatorLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+<div class="modal fade" id="modalSimulator" aria-hidden="true" aria-labelledby="modalSimulatorLabel" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -61,23 +54,8 @@
             <div class="modal-body">
             
                 <div class="">
-                    <div class="d-flex mb-2 ms-3">
-                        <div>
-                            <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.estimate }}"></i>
-                            </button>
-                        </div>
-                        <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
-                            <div class="d-flex justify-content-between">
-                                <div class="mt-1 mb-0 small">
-                                    <span id="spanEsti" class="value"></span>
-                                    <span class="small ms-1">{% trans 'Estimate' %}</span>
-                                </div>
-                            </div>
-                            <input id="sliderEsti" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
-                        </div>
-                    </div>
                     
-                    <div id="candidateList" class="ms-3 my-3"></div>
+                    <div id="candidateList" class="ms-3 mb-3"></div>
 
                     <div class="d-flex mb-3 align-items-center">
                         <div>
@@ -108,12 +86,12 @@
                         </div>
                     </div>
 
-                    <div class="d-flex mb-2 ms-3">
+                    <div class="d-flex mb-2 ms-3 ">
                         <div>
                             <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.mean }}"></i>
                             </button>
                         </div>
-                        <div class="card shadow-sm px-2 w-100 ms-2">
+                        <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
                             <div class="d-flex justify-content-between">
                                 <div class="mt-1 mb-0 small">
                                     <span id="spanMean" class="value"></span>
@@ -124,15 +102,51 @@
                         </div>
                     </div>
 
+                    <div class="d-flex mb-2 ms-3">
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary disabled"><i class="{{ bicons.estimate }}"></i>
+                            </button>
+                        </div>
+                        <div class="card shadow-sm px-2 w-100 ms-2 bg-secondary-subtle">
+                            <div class="d-flex justify-content-between">
+                                <div class="mt-1 mb-0 small">
+                                    <span id="spanEsti" class="value"></span>
+                                    <span class="small ms-1">{% trans 'Estimate' %}</span>
+                                </div>
+                            </div>
+                            <input id="sliderEsti" type="range" step="0" min="0" max="0" class="mb-1 mt-0" disabled>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
 
             <div class="modal-footer">
+
+                <button class="btn btn-outline-primary" type="button" disabled>
+                    <span><i class="{{ bicons.info }}"></i></span>
+                    <span class="ms-1">{% trans 'Theory' %}</span>
+                </button>
+
+                <button class="btn btn-outline-primary" type="button" disabled>
+                    <span><i class="{{ bicons.printer }}"></i></span>
+                    <span class="ms-1">{% trans 'Print' %}</span>
+                </button>
+
                 {% if tender.lots_count == 1 %}
-                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal" aria-label="Close">{% trans "Close" %}</button>
+                    <button class="btn btn-outline-primary" type="button" 
+                            data-bs-dismiss="modal" aria-label="Close">
+                        <span><i class="{{ bicons.close }}"></i></span>
+                        <span class="ms-1">{% trans 'Close' %}</span>
+                    </button>
                 {% else %}
-                    <button class="btn btn-primary" data-bs-target="#lotSelctModal" data-bs-toggle="modal">{% trans "Back" %}</button>
+                    <button class="btn btn-outline-primary" 
+                            data-bs-target="#lotSelctModal" 
+                            data-bs-toggle="modal">
+                        <span><i class="{{ bicons.close }}"></i></span>
+                        <span class="ms-1">{% trans 'Back' %}</span>
+                    </button>
                 {% endif %}
             </div>
         </div>
@@ -141,42 +155,21 @@
 
 <script>
     /* ---------- DATA & HELPERS ---------- */
-    const candidates = [];
+    let candidates = [];
     let candidateIdCounter = 0;
     let esti_str = '{{ tender.estimate }}';
     let Esti = Number(esti_str.replace(/,/g, ''));
 
     const selot = document.getElementById("lot-select");
-    // selot.addEventListener('change', function(event) {
-    //     // console.log(selot.selectedIndex, selot.options[selot.selectedIndex].value);
-    //     if (selot.selectedIndex > 0) {
-    //         esti_str = selot.options[selot.selectedIndex].value;
-    //         Esti = Number(esti_str.replace(/,/g, ''));
-    //     } else {
-    //         esti_str = '{{ tender.estimate }}';
-    //         Esti = Number(esti_str.replace(/,/g, ''));
-    //     }
-    //     recalc();
-    // });
-
-
-    // if (selot.selectedIndex > 0) {
-    //     esti_str = selot.options[selot.selectedIndex].value;
-    // } else {
-    //     esti_str = '{{ tender.estimate }}'
-    // }
-    // console.log(esti_str)
 
     const tol_dn = Number({{ tolerance_dn }});
     const tol_up = Number({{ tolerance_up }});
-    const Emin = Number(Esti * (1- tol_dn/100));
-    const Emax = Number(Esti * (1+ tol_up/100));
+    let Emin = Number(Esti * (1- tol_dn/100));
+    let Emax = Number(Esti * (1+ tol_up/100));
 
-    const estimateValue = document.getElementById('estimateValue');
     const spanEsti = document.getElementById('spanEsti');
     const sliderEsti = document.getElementById('sliderEsti');
-
-    // spanEsti.textContent = formatMoney(Esti);
+    
     sliderEsti.min = Emin;
     sliderEsti.max = Emax;
     sliderEsti.value = Esti;
@@ -187,7 +180,7 @@
         const id = ++candidateIdCounter;
 
         const flexDiv = document.createElement('div');
-        flexDiv.className = 'd-flex mb-2';
+        flexDiv.className = 'd-flex mb-2 full-flex-row';
 
         // delete button
         actionsDiv = document.createElement('div');
@@ -206,7 +199,7 @@
         flexDiv.appendChild(actionsDiv);
 
         const card = document.createElement('div');
-        card.className = 'candidate card px-2 w-100 ms-2';
+        card.className = 'candidate card px-2 py-1 w-100 ms-2';
         card.dataset.id = id;
 
         const divTop = document.createElement('div');
@@ -260,7 +253,7 @@
         // slider
         const slider = document.createElement('input');
         slider.type = 'range';
-        // slider.step = 0.01;
+        slider.step = 0.01;
         slider.min = Emin;
         slider.max = Emax;
         slider.value = initial_bid;
@@ -286,25 +279,27 @@
         recalc();
     }
 
-    /* ---------- CALCULATION ---------- */
-    function recalc() {
-        selot.addEventListener('change', function(event) {
-            // console.log(selot.selectedIndex, selot.options[selot.selectedIndex].value);
-            console.log(Esti);
-            if (selot.selectedIndex > 0) {
-                esti_str = selot.options[selot.selectedIndex].value;
-                Esti = Number(esti_str.replace(/,/g, ''));
-            } else {
-                esti_str = '{{ tender.estimate }}';
-                Esti = Number(esti_str.replace(/,/g, ''));
-            }
-            // console.log(esti_str, Esti);
-        });
-        
-        spanEsti.textContent = formatMoney(Esti);
+    /* ---------- LOT SELECT ---------- */
+    selot.addEventListener('change', function(event) {
+        if (selot.selectedIndex > 0) {
+            esti_str = selot.options[selot.selectedIndex].value;
+        } else {
+            esti_str = '{{ tender.estimate }}';
+        }
 
+        Esti = Number(esti_str.replace(/,/g, ''));
+        Emin = Number(Esti * (1- tol_dn/100));
+        Emax = Number(Esti * (1+ tol_up/100));
+
+        createInitialCandidates();
+        recalc();
+        
+    });
+
+    /* ---------- CALCULATION ---------- */
+    function recalc() {        
+        spanEsti.textContent = formatMoney(Esti);
         const E = Esti 
-        // console.log(E, Esti);
         const accepted = [];
         
         for (const c of candidates) {
@@ -351,22 +346,24 @@
         document.querySelectorAll('.ranker').forEach(r=>r.textContent='-');
 
         function sortCandidates(candidates, R) {
+            const equalR = candidates.filter(candidate => candidate.bid == R);
             const belowR = candidates.filter(candidate => candidate.bid < R).sort((a, b) => b.bid - a.bid);
-            const atOrAboveR = candidates.filter(candidate => candidate.bid >= R).sort((a, b) => a.bid - b.bid);
-            return belowR.concat(atOrAboveR);
+            const aboveR = candidates.filter(candidate => candidate.bid > R).sort((a, b) => a.bid - b.bid);
+            return equalR.concat(belowR).concat(aboveR);
         }
 
+        // highlight
+        document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
+        document.querySelectorAll('.winner').forEach(r=>r.classList.add('d-none'));
+
+
         sortedCandidates = sortCandidates(candidates, R);
+
         if (sortedCandidates.length){
             winnerBid = sortedCandidates[0].bid;
-            let currentRank = 1;
-            for (let i = 0; i < sortedCandidates.length; i++) {
-                if (i === 0 || sortedCandidates[i].bid !== sortedCandidates[i - 1].bid) {
-                    currentRank = i + 1;
-                }
-                sortedCandidates[i].rank = currentRank;
-            }
-            sortedCandidates.forEach(cand => {
+
+            sortedCandidates.forEach((cand, index) => {
+                cand.rank = index + 1;
                 cand.eDiff = cand.bid - E;
                 cand.eDiffPercent = 0;
                 if (E != 0) cand.eDiffPercent = 100 * cand.eDiff/E;
@@ -380,29 +377,26 @@
             });
         }
 
-        // highlight
-        document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
-        document.querySelectorAll('.winner').forEach(r=>r.classList.add('d-none'));
 
         if (winnerBid !== null) {
-            const winnerCands = candidates.filter(c => c.bid === winnerBid);
-            winnerCands.forEach(winnerCand => {
-                const element = document.querySelector(`.candidate[data-id="${winnerCand.id}"]`);
-                if (element) {
-                    element.classList.add(...winnerBgClass);
+            const winnerCand = candidates.find(c => c.bid === winnerBid);
+            if (winnerCand) {
+                const winnerCard = document.querySelector(`.candidate[data-id="${winnerCand.id}"]`);
+                if (winnerCard) {
+                    winnerCard.classList.add(...winnerBgClass);
                 };
                 const winnerEl = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
                 if (winnerEl) {
                     winnerEl.classList.remove('d-none');
                 };
-            });
+            }
         }
     }
 
     /* ---------- UTILITIES ---------- */
     function formatMoney(n) {
         const locale = navigator.language || navigator.userLanguage || 'en-US';
-        return new Intl.NumberFormat(locale, {minimumFractionDigits:2, maximumFractionDigits:2}).format(n);
+        return new Intl.NumberFormat(locale, {minimumFractionDigits:3, maximumFractionDigits:3}).format(n);
     }
 
     /* ---------- INITIALISATION ---------- */
@@ -412,11 +406,18 @@
         recalc();
     };
 
-    for (let i = 0; i < Number({{ offers_count }}); i++) {
-        let randomBid = Math.random() * (Emax - Emin) + Emin;
-        createCandidateRow(randomBid);
+    function createInitialCandidates(){
+        document.querySelectorAll('.full-flex-row').forEach(r=>r.remove());
+        candidates.length = 0;
+        let candidateIdCounter = 0;
+        for (let i = 0; i < Number({{ offers_count }}); i++) {
+            let randomBid = Math.random() * (Emax - Emin) + Emin;
+            createCandidateRow(randomBid);
+        }
         recalc();
     }
-    recalc();
+
+    createInitialCandidates();
+    // recalc();
 </script>
 

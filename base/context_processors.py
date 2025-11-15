@@ -113,6 +113,7 @@ def portal_context(request):
         'target'          : 'bi bi-crosshair',
                             # bullseye
         'mean'            : 'bi bi-arrows-collapse',
+        'close'           : 'bi bi-x-lg',
                             # 
     }
 
