@@ -11,14 +11,14 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
         <li class="">
-            <a class="dropdown-item" href="{% url 'portal_tender_list' %}">
+            <a class="dropdown-item py-2" href="{% url 'portal_tender_list' %}">
                 <i class="{{ bicons.search }} me-2"></i>
                 {% trans 'Browse' %}
             </a>
         </li>
         
         <li class="">
-            <a class="dropdown-item" href="{% url 'portal_tender_favorite_list' %}">
+            <a class="dropdown-item py-2" href="{% url 'portal_tender_favorite_list' %}">
                 <i class="{{ bicons.favorite }} me-2"></i>
                 {% trans 'Favourites' %}
                 {% if faved_ids %}
@@ -32,14 +32,14 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item" aria-disabled="true" href="#">
+            <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.client }} me-2"></i>
                 {% trans 'Public Clients' %}
             </a>
         </li>
 
         <li class="">
-            <a class="dropdown-item" aria-disabled="true" href="#">
+            <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.location }} me-2"></i>
                 {% trans 'Locations' %}
             </a>
@@ -48,7 +48,7 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item" aria-disabled="true" href="#">
+            <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.insights }} me-2"></i>
                 {% trans 'Insights' %}
             </a>
@@ -57,7 +57,7 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item" aria-disabled="true" href="#">
+            <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.shopping }} me-2"></i>
                 {% trans 'Purchase Orders' %}
             </a>
