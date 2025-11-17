@@ -105,7 +105,10 @@ def portal_context(request):
         'clean_all'       : 'bi bi-heart',
         'insights'        : 'bi bi-bar-chart-line',
         'shopping'        : 'bi bi-cart4',
-        'simulator'       : 'bi bi-bar-chart-steps',
+        'simulator'       : 'bi bi-dpad',
+                            # bar-chart-steps
+                            # controller
+                            # joystick
         'plus'            : 'bi bi-plus-lg',
         'winner'          : 'bi bi-trophy-fill',
         'range'           : 'bi bi-arrows-expand-vertical',
@@ -116,9 +119,12 @@ def portal_context(request):
         'mean'            : 'bi bi-arrows-collapse',
         'close'           : 'bi bi-x-lg',
         'ratio'           : 'bi bi-percent',
+        'send'            : 'bi bi-send',
+        'support'         : 'bi bi-headset',
+
         # 'fournitures'     : 'bi bi-cart3',
         # 'travaux'         : 'bi bi-cone-striped',
-        # 'services'        : 'bi bi-gear',
+        # 'services'        : 'bi bi-gear', 
                             # 
     }
 

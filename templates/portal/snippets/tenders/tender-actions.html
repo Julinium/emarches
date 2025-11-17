@@ -70,14 +70,6 @@
     {% endif %}
 
     {% if tender.lots_count < 2 %}
-        <!-- <form class="d-inline" action="{% url 'portal_tender_simulator' tender.id %}">
-            <button class="m-1 btn btn-outline-primary
-                    {% if tender.estimate == 0 %} disabled {% endif %}" 
-                    type="submit">
-                <span><i class="{{ bicons.simulator }}"></i></span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
-            </button>
-        </form> -->
         <button class="m-1 btn btn-outline-primary
                 {% if tender.estimate == 0 %} disabled {% endif %}" 
                 type="button"
@@ -87,70 +79,22 @@
         </button>
 
     {% else %}
-        <a      class="m-1 btn btn-outline-primary
-                {% if tender.estimate == 0 %} disabled {% endif %}" 
-                type="button"
-                data-bs-toggle="modal" data-bs-target="#lotSelctModal">
+        <a class="m-1 btn btn-outline-primary
+           {% if tender.estimate == 0 %} disabled {% endif %}" 
+           type="button" data-bs-toggle="modal" 
+           data-bs-target="#lotSelctModal">
             <span><i class="{{ bicons.simulator }}"></i></span>
             <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
         </a>
 
-
-        <!-- <form class="d-inline" action="{% url 'portal_tender_simulator' tender.id %}">
-            <div class="modal fade" id="lotSelctModal" 
-                tabindex="-1" aria-labelledby="lotSelctModalLabel" 
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="lotSelctModalLabel">{% trans "Lot Selection" %}</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <select name="lot_no" class="form-select" aria-label="Select Lot">
-                                <option value = '' selected>
-                                    <div class="d-flex justify-content-between">
-                                        <div class="fw-bold">{% trans "All" %} = </div>
-                                        <div>{{ tender.estimate }}</div>
-                                    </div>
-                                </option>
-                                {% for lot in tender.lots.all %}
-                                    {% if lot.estimate > 0 %}
-                                        <option value="{{ lot.number }}">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="fw-bold">{{ lot.number }} = </div>
-                                                <div>{{ lot.estimate }}</div>
-                                            </div>
-                                        </option>
-                                    {% endif %}
-                                {% empty %}
-                                    <div class="text-danger fw-bold">{% trans "No item found !" %}</div>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button class="m-1 btn btn-outline-primary
-                                    {% if tender.estimate == 0 %} disabled {% endif %}" 
-                                    type="submit">
-                                <span><i class="{{ bicons.simulator }}"></i></span>
-                                <span class="d-none d-md-inline ms-1">{% trans 'Submit' %}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form> -->
-
     {% endif %}
 
-    
 
-    <a target="_blank"
-        href="{{ link_prefix }}{{ tender.link }}"
-        class="m-1 btn btn-outline-primary">
+    <a class="m-1 btn btn-outline-primary" 
+        type="button" data-bs-toggle="modal" 
+        data-bs-target="#bidConfirmModal">
         <span><i class="{{ bicons.bidding }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Bid' %}</span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
     </a>
     
 </div>

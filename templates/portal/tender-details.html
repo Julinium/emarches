@@ -345,7 +345,7 @@
     </div>
 
 
-    <div>
+    <div id="tender-modals">
         <div id="dceModal" class="modal fade" tabindex="-1" aria-labelledby="dceModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -394,6 +394,49 @@
                 </div>
             </div>
         </div>
+
+        {% include 'portal/snippets/tenders/tender-simulator-modal.html' %}
+
+
+        <div class="modal fade" id="bidConfirmModal" 
+            tabindex="-1" aria-labelledby="bidConfirmModalLabel" 
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="bidConfirmModalLabel">{% trans "Bidding process" %}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <span>
+                            {% trans "We provide Bidding Processing as a paid service. Please feel free to contact our support for more inforamtion" %}.
+                        </span>
+                        <span class="small text-muted">
+                            {% trans "To go to official website and procede with the bidding process, click Continue" %}.
+                        </span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <span><i class="{{ bicons.close }}"></i></span>
+                            <span class="ms-1">{% trans 'Cancel' %}</span>
+                        </button>
+                        <a href="/contact"
+                           class="m-1 btn btn-outline-success"data-bs-dismiss="modal"
+                           onclick="window.open(this.href, '_blank');">
+                            <span><i class="{{ bicons.support }}"></i></span>
+                            <span class="ms-1">{% trans 'Support' %}</span>
+                        </a>
+                        <a href="{{ link_prefix }}{{ tender.link }}"
+                           class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
+                           onclick="window.open(this.href, '_blank');">
+                            <span><i class="{{ bicons.bidding }}"></i></span>
+                            <span class="ms-1">{% trans 'Continue' %}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     {% if files_info|length == 1 %}
@@ -405,7 +448,7 @@
         </script>
     {% endif %}
 
-    {% include 'portal/snippets/tenders/tender-simulator-modal.html' %}
+
 
     <script>
         const azrems = document.querySelectorAll('.wait-azrem');

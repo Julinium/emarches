@@ -49,9 +49,9 @@ class Category(models.Model):
     @property
     def icon_bs_class(self):
         try:
-            if self.label == "Fournitures": return 'cart3' # 'basket'
-            if self.label == "Services": return 'gear'
-            if self.label == "Travaux": return 'cone-striped'
+            if self.label == "Fournitures": return 'basket'   # 'cart3'
+            if self.label == "Services": return 'gear'        # 'puzzle'
+            if self.label == "Travaux": return 'cone-striped' # 'bricks' # 'minecart-loaded' 
         except: pass
 
         return 'question-circle'

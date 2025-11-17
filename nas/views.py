@@ -369,8 +369,18 @@ def user_settings(request):
     user = request.user
     user_settings = UserSetting.objects.filter(user = user).first()
 
+    
+    
+
     if request.method == 'POST':
+        if user_settings:
+            if user_settings.tenders_ordering_field == 'published':
+                user_settings.tenders_ordering_field == '-published'
+            elif user_settings.tenders_ordering_field == '-published':
+                user_settings.tenders_ordering_field == 'published'
+
         form = UserSettingsForm(request.POST, request.FILES, instance=user_settings)
+
         if form.is_valid():
             form.save()
             messages.success(request, "Settings saved successfully.")
@@ -381,6 +391,7 @@ def user_settings(request):
         form = UserSettingsForm(instance=user_settings)
 
     return render(request, 'nas/user-settings-edit.html', {'form': form})
+
 
 def show_form_errors(form, request):
     error_messages = []
