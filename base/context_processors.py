@@ -1,5 +1,6 @@
 
 from nas.models import UserSetting, Favorite
+from base.models import Category
 
 def portal_context(request):
 
@@ -118,6 +119,8 @@ def portal_context(request):
     }
 
     context['bicons']        = bicons
+
+    context['categories'] = Category.objects.all()
 
     user = request.user
     if not user or not user.is_authenticated:

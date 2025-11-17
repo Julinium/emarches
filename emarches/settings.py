@@ -15,7 +15,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = ENVIRONMENT != 'production'
 
-DEBUG = True
+# DEBUG = True
 
 
 ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
@@ -24,6 +24,8 @@ ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 SITE_ID = 1
 
 INSTALLED_APPS = [
+    'modeltranslation',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -32,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'django.contrib.postgres',
+
 
     'emarches',
     'base',
@@ -287,6 +290,10 @@ INTERNAL_IPS = [
 ]
 
 
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('fr', 'en')
+
+
+
 # from .loggino import LOGGING_CONFIG
 # import logging.config
 # logging.config.dictConfig(LOGGING_CONFIG)
@@ -345,64 +352,3 @@ LOGGING = {
         },
     },
 }
-
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,  # Keep Django's default loggers
-#     'formatters': {
-#         'verbose': {
-#             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-#             'style': '{',
-#         },
-#         'standard': {
-#             'format': '{levelname} {asctime} {module} {message}',
-#             'style': '{',
-#         },
-#         'simple': {
-#             'format': '{levelname} {message}',
-#             'style': '{',
-#         },
-#         # 'nested': {
-#         #     'format': '{ "time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s" }',
-#         #     'style': '{',
-#         # },
-#     },
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'verbose',
-#         },
-#         'portal_file': {
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': os.path.join(BASE_DIR, 'logs/portal.log'),
-#             'maxBytes': 1024*1024*16,
-#             'backupCount': 20,
-#             'formatter': 'standard',
-#         },
-#         'request_file': {
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': os.path.join(BASE_DIR, 'logs/requests.log'),
-#             'maxBytes': 1024*1024*32,
-#             'backupCount': 20,
-#             'formatter': 'standard',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#         'django.request': {
-#             'handlers': ['request_file', 'console'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#         'portal': {  # Your app
-#             'handlers': ['console', 'portal_file'],
-#             'level': 'INFO',
-#             'propagate': False,
-#         },
-#     },
-# }

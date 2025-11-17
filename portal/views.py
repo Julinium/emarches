@@ -259,7 +259,7 @@ def tender_list(request):
         context['query_unsorted']     = urlencode(query_unsorted)
         context['query_dict']         = query_dict
 
-        context['categories']         = all_categories
+        # context['categories']         = all_categories
         context['procedures']         = all_procedures
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
@@ -309,6 +309,22 @@ def tender_list(request):
 
 
     return render(request, 'portal/tender-list.html', context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_details_chrono(request, ch=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(status=403)
+    if not ch : return HttpResponse(status=404)
+
+    tender = get_object_or_404(Tender, chrono=ch)
+
+    if not tender : return HttpResponse(status=404)
+    
+    return redirect('portal_tender_detail', tender.id)
 
 
 @login_required(login_url="account_login")

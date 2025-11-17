@@ -323,19 +323,20 @@ def save(tender_data):
 
             # Match Lot by title
             lot_title = lot_data.get('title')
+            lot_number = lot_data.get('number')
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
-            if lot_title and Lot.objects.filter(title=lot_title, tender=tender).exists():
-                if tender.lots_count > 1:
-                    helper.printMessage('TRACE', 'm.save', "#### Lot exists. Skipping.")
-                    print("======================== Lot exists. Skipping. ========================")
-                    print(f"\ttitle=lot_title = { lot_title }.")
-                    print(f"\ttender=tender = { tender }.")
-                lot = Lot.objects.get(title=lot_title, tender=tender)
+            if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
+                # if tender.lots_count > 1:
+                #     helper.printMessage('TRACE', 'm.save', "#### Lot exists. Skipping.")
+                #     print("======================== Lot exists. Skipping. ========================")
+                #     print(f"\ttitle=lot_title = { lot_title }.")
+                #     print(f"\ttender=tender = { tender }.")
+                lot = Lot.objects.get(title=lot_title, number=lot_number, tender=tender)
                 lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
-                if tender.lots_count > 1:
-                    print(f"\tLot.objects.get(title=lot_title, tender=tender) = { lot }.")
-                    print("======================== Lot existed. Skipped. ========================")
+                # if tender.lots_count > 1:
+                #     print(f"\tLot.objects.get(title=lot_title, tender=tender) = { lot }.")
+                #     print("======================== Lot existed. Skipped. ========================")
             else:
                 lot_serializer = LotSerializer(data=lot_data)
                 helper.printMessage('TRACE', 'm.save', f"#### Lot to be created: {lot_title[:C.TRUNCA]}...")

@@ -1,6 +1,7 @@
 from django.contrib import admin
-from base.models import Crawler
+from base.models import Crawler, Category
 from nas.models import TenderView, Download
+from modeltranslation.admin import TranslationAdmin
 
 @admin.register(Crawler)
 class CrawlerAdmin(admin.ModelAdmin):
@@ -102,3 +103,8 @@ class DownloadAdmin(admin.ModelAdmin):
     get_tender_id.short_description = 'Tender ID'
     get_tender_title.short_description = 'Tender title'
     get_username.short_description = 'User'
+
+
+@admin.register(Category)
+class CategoryAdmin(TranslationAdmin):
+    list_display = ('id', 'label')

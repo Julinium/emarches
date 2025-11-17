@@ -29,21 +29,17 @@
             </a>
         </li>
 
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="#">
-                <i class="{{ bicons.client }} me-2"></i>
-                {% trans 'Public Clients' %}
-            </a>
-        </li>
-
-        <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="#">
-                <i class="{{ bicons.location }} me-2"></i>
-                {% trans 'Locations' %}
-            </a>
-        </li>
+        {% if categories %}
+            <li><hr class="dropdown-divider"></li>
+            {% for cat in categories %}
+                <li class="">
+                    <a class="dropdown-item py-2" aria-disabled="true" href="#">
+                        <i class="bi bi-{{ cat.icon_bs_class }} me-2"></i>
+                        {{ cat.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        {% endif %}
 
         <li><hr class="dropdown-divider"></li>
 
