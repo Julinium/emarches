@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     # path('', views.TenderListView.as_view(), name='portal_tender_list'),
     path('',                            views.tender_list,              name='portal_tender_list'),
-    path('<str:ch>/',                   views.tender_details_chrono,    name='portal_tender_detail_chrono'),
+    path('chrono/<str:ch>/',                   views.tender_details_chrono,    name='portal_tender_detail_chrono'),
     path('details/<uuid:pk>/',          views.tender_details,           name='portal_tender_detail'),
     path('simulator/<uuid:pk>/',        views.tender_simulator,         name='portal_tender_simulator'),
     path('dce/<uuid:pk>/<str:fn>/',     views.tender_get_file,          name='portal_tender_get_file'),

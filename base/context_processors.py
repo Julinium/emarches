@@ -115,12 +115,16 @@ def portal_context(request):
                             # bullseye
         'mean'            : 'bi bi-arrows-collapse',
         'close'           : 'bi bi-x-lg',
+        'ratio'           : 'bi bi-percent',
+        # 'fournitures'     : 'bi bi-cart3',
+        # 'travaux'         : 'bi bi-cone-striped',
+        # 'services'        : 'bi bi-gear',
                             # 
     }
 
     context['bicons']        = bicons
 
-    context['categories'] = Category.objects.all()
+    context['categories'] = Category.objects.all().order_by('label')
 
     user = request.user
     if not user or not user.is_authenticated:

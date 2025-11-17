@@ -48,10 +48,10 @@ class Category(models.Model):
 
     @property
     def icon_bs_class(self):
-        try: 
-            if self.label[0] == "F": return 'cart3' # 'basket'
-            if self.label[0] == "S": return 'gear'
-            if self.label[0] == "T": return 'cone-striped'
+        try:
+            if self.label == "Fournitures": return 'cart3' # 'basket'
+            if self.label == "Services": return 'gear'
+            if self.label == "Travaux": return 'cone-striped'
         except: pass
 
         return 'question-circle'
@@ -339,7 +339,6 @@ class Tender(models.Model):
     class Meta:
         db_table = 'base_tender'
         ordering = ['-deadline', 'id']
-        # verbose_name = _("Tender")
 
     def __str__(self):
         return f"{self.chrono} - {self.reference}: {self.title}"
@@ -365,6 +364,14 @@ class Tender(models.Model):
             delta_span = self.deadline.date() - self.published
             return 1 + delta_span.days
         except: return 0
+
+    @property
+    def bond_ratio(self):
+        try:
+            if self.estimate != 0:
+                return 100 * self.bond / self.estimate
+        except: pass
+        return 0
 
     def save(self, *args, **kwargs):
         self.keywords = nt(f"{ self.title } { self.chrono }")
@@ -425,7 +432,6 @@ class Lot(models.Model):
             tender.has_meetings = self.meetings.count() > 0
             tender.has_visits = self.visits.count() > 0
             tender.save()
-
 
 
 class RelAgrementLot(models.Model):

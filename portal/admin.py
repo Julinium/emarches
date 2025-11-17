@@ -1,12 +1,12 @@
 from django.contrib import admin
-from base.models import Crawler, Category
+from base.models import Crawler #, Category
 from nas.models import TenderView, Download
-from modeltranslation.admin import TranslationAdmin
+# from modeltranslation.admin import TranslationAdmin
 
 @admin.register(Crawler)
 class CrawlerAdmin(admin.ModelAdmin):
     list_display = (
-        'finished', 'formatted_duration', 'import_links', 'links_digest', 
+        'started', 'formatted_duration', 'import_links', 'links_digest', 
         'tenders_digest', 'saving_errors', 'files_digest')
     list_filter = ('finished', 'saving_errors')
     # actions = None
@@ -105,6 +105,7 @@ class DownloadAdmin(admin.ModelAdmin):
     get_username.short_description = 'User'
 
 
-@admin.register(Category)
-class CategoryAdmin(TranslationAdmin):
-    list_display = ('id', 'label')
+# @admin.register(Category)
+# class CategoryAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'label')
+

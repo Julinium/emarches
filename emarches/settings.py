@@ -15,7 +15,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = ENVIRONMENT != 'production'
 
-# DEBUG = True
+DEBUG = True
 
 
 ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
@@ -24,7 +24,7 @@ ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 SITE_ID = 1
 
 INSTALLED_APPS = [
-    'modeltranslation',
+    # 'modeltranslation',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -290,7 +290,7 @@ INTERNAL_IPS = [
 ]
 
 
-MODELTRANSLATION_FALLBACK_LANGUAGES = ('fr', 'en')
+# MODELTRANSLATION_FALLBACK_LANGUAGES = ('fr', 'en')
 
 
 

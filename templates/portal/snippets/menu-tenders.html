@@ -33,7 +33,7 @@
             <li><hr class="dropdown-divider"></li>
             {% for cat in categories %}
                 <li class="">
-                    <a class="dropdown-item py-2" aria-disabled="true" href="#">
+                    <a class="dropdown-item py-2" href="{% url 'portal_tender_list' %}?&category={{ cat.id }}">
                         <i class="bi bi-{{ cat.icon_bs_class }} me-2"></i>
                         {{ cat.label }}
                     </a>

@@ -255,7 +255,12 @@
                 {% trans 'Time on display' as key_value %}
                 {% trans 'days' as uni_value %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_span' val_value=tender.days_span key_value=key_value uni_value=uni_value ico_class=bicons.days_span val_class='text-muted small' border='bottom' liner='' %}
-                
+
+                {% trans 'Guarantee ratio' as key_value %}
+                {% with tender.bond_ratio|floatformat:3 as val_value %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' %}
+                {% endwith %}
+
                 {% trans 'Database ID' as key_value %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
                 
