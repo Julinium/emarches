@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load l10n %}
 
 <div class="modal fade" id="lotSelctModal" 
     tabindex="-1" aria-labelledby="lotSelctModalLabel" 
@@ -70,10 +71,8 @@
             </div>
 
             <div class="modal-body striped-modal-body">
-            
-                <div class="">
                     
-                    <div id="candidateList" class="ms-3 mb-3"></div>
+                    <div id="candidateList" class="mb-3"></div>
 
                     <div class="d-flex mb-3 justify-content-between align-items-center">
                         <div>
@@ -82,15 +81,11 @@
                                 <span>{% trans 'Add Offer' %}</span>
                             </button>
                         </div>
-                        <!-- <div class="ms-2">
-                            <button class="btn btn-secondary disabled">
-                                <span>{% trans 'Offers' %} : </span>
-                                <span id="offersCount" class="fw-bold"></span>
-                            </button>
-                        </div> -->
                     </div>
 
-                    <div class="d-flex mb-2 ms-3"> 
+                    <hr>
+
+                    <div class="d-flex mb-2"> 
                         <div>
                             <button class="btn btn-sm btn-outline-secondary bg-light disabled"><i class="{{ bicons.target }}"></i>
                             </button>
@@ -106,7 +101,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex mb-2 ms-3 ">
+                    <div class="d-flex mb-2">
                         <div>
                             <button class="btn btn-sm btn-outline-secondary bg-light disabled"><i class="{{ bicons.mean }}"></i>
                             </button>
@@ -132,7 +127,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex mb-2 ms-3">
+                    <div class="d-flex mb-2">
                         <div>
                             <button class="btn btn-sm btn-outline-secondary bg-light disabled"><i class="{{ bicons.estimate }}"></i>
                             </button>
@@ -147,7 +142,7 @@
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="mt-1 mb-0 ms-2 text-end small">
-                                        <span class="small ms-1 text-muted">{% trans 'Range' %} (E±20%): </span>
+                                        <span class="small mx-1 text-muted">E±20%: </span>
                                         <span id="spanMin" class="small"></span>
                                         <span><i class="{{ bicons.range }}"></i></span>
                                         <span id="spanMax" class="small"></span>
@@ -159,21 +154,13 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-outline-primary" type="button"
-                        data-bs-toggle="modal" data-bs-target="#modalTheory" disabled>
-                    <span><i class="{{ bicons.info }}"></i></span>
-                    <span class="ms-1">{% trans 'Theory' %}</span>
-                </button>
 
                 <button class="btn btn-outline-primary" type="button" disabled>
                     <span><i class="{{ bicons.printer }}"></i></span>
-                    <span class="ms-1">{% trans 'Print' %}</span>
+                    <span class="ms-1">{% trans 'Export' %}</span>
                 </button>
 
                 {% if tender.lots_count == 1 %}
@@ -199,8 +186,8 @@
     /* ---------- DATA & HELPERS ---------- */
     let candidates = [];
     let candidateIdCounter = 0;
-    let esti_str = '{{ tender.estimate }}';
-    let Esti = Number(esti_str.replace(/,/g, ''));
+    let esti_str = '{{ tender.estimate|unlocalize }}';
+    let Esti = Number(esti_str);
 
     const selot = document.getElementById("lot-select");
 
@@ -214,10 +201,6 @@
 
     const spanMin = document.getElementById('spanMin');
     const spanMax = document.getElementById('spanMax');
-    
-    // sliderEsti.min = Emin;
-    // sliderEsti.max = Emax;
-    // sliderEsti.value = Esti;
 
 
     /* ---------- UI CREATION ---------- */
@@ -279,7 +262,7 @@
         // name
         const nameInp = document.createElement('span');
         // nameInp.type = 'text';
-        // nameInp.value = `OFFER #${id}`;
+        // nameInp.value = `{{ offer_litteral }}${id}D`;
         nameInp.className = 'small text-muted ms-2 d-none d-md-inline';
         nameInp.textContent = `{{ offer_litteral }}${id}D`;
 
@@ -292,7 +275,7 @@
         valSpan.textContent = formatMoney(initial_bid);
 
         offerDiv.appendChild(valSpan);
-        offerDiv.appendChild(nameInp);
+        // offerDiv.appendChild(nameInp);
         offerDiv.appendChild(posiSpan);
 
 
@@ -322,6 +305,7 @@
         if (!c) return;
         c.bid = newBid;
         c.valSpan.textContent = formatMoney(newBid);
+        // console.log(newBid, newBid.toString());
         recalc();
     }
 
@@ -329,7 +313,6 @@
     selot.addEventListener('change', function(event) {
         if (selot.selectedIndex > 0) {
             esti_str = selot.options[selot.selectedIndex].value;
-            // console.log('Selected a lot. Actually not a lot of lots but only a single lot hhhhhhhhh');
         } else {
             esti_str = '{{ tender.estimate }}';
         }
@@ -345,8 +328,8 @@
 
     /* ---------- CALCULATION ---------- */
     function recalc() {
-        // console.log('Esti: ', Esti, 'E-range: ', Emin, Emax)
         spanEsti.textContent = formatMoney(Esti);
+        // console.log(Esti, Esti.toString());
         spanMin.textContent = formatMoney(Emin);
         spanMax.textContent = formatMoney(Emax);
 
@@ -387,6 +370,8 @@
         if (accepted.length) {
             spanM.textContent = formatMoney(M);
             spanR.textContent = formatMoney(R);
+        // console.log(R, R.toString());
+        // console.log(M, M.toString());
 
             sliderMean.value = M;
             sliderTarget.value = R;
@@ -450,17 +435,20 @@
     }
 
     /* ---------- UTILITIES ---------- */
-    function formatMoney(n) {
-        const locale = navigator.language || navigator.userLanguage || 'en-US';
-        return new Intl.NumberFormat(locale, {minimumFractionDigits:3, maximumFractionDigits:3}).format(n);
+    function formatMoney(n, precision=2) {
+        const locale = '{{ LANGUAGE_CODE }}' || navigator.language || navigator.userLanguage || 'en-US';
+
+        return new Intl.NumberFormat(locale, {
+            minimumFractionDigits:precision, 
+            maximumFractionDigits:precision
+        }).format(n);
     }
 
     /* ---------- INITIALISATION ---------- */
-    // const addBtn = document.getElementById('addCandidate');
 
     document.getElementById('addCandidate').onclick = () => {
-        //let randomBid = Math.random() * (Emax - Emin) + Emin;
-        createCandidateRow();
+        let randomBid = Math.random() * (Emax - Emin) + Emin;
+        createCandidateRow(randomBid);
         recalc();
     };
 
@@ -469,14 +457,12 @@
         candidates.length = 0;
         let candidateIdCounter = 0;
         for (let i = 0; i < Number({{ offers_count }}); i++) {
-            //let randomBid = Math.random() * (Emax - Emin) + Emin;
-            createCandidateRow();
+            let randomBid = Math.random() * (Emax - Emin) + Emin;
+            createCandidateRow(randomBid);
         }
         recalc();
     }
 
     createInitialCandidates();
-    // recalc();
 </script>
 
-<!-- <script src="/static/scripts/toolcool-range-slider.min.js"></script> -->

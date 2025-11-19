@@ -13,37 +13,26 @@
         </div>
     </div>
 
-    {% if tender.lots_count > 1 %}
-        <span>
-            <button type="button" class="m-1 btn btn-outline-secondary" 
-                    data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
-                <span class="fw-bold">{{ tender.lots_count }}</span>
-                <span><i class="{{ bicons.multi_lots }}"></i></span>
-                <span class="ms-1">{% trans "Lots" %}</span>
-            </button>
-            <span class="text-start">
-                {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
-            </span>
-        </span>
-    {% endif %}
-
     <button onclick="heartToggle()"
             id="{{ tender.chrono }}-fav"
-            class="m-1 btn btn-outline-success favorite-toggle
+            class="m-1 btn btn-outline-primary favorite-toggle
                 {% if favorited %}d-none{% endif %}">
         <span><i class="{{ bicons.favorite }}"></i></span>
         <span class="d-none d-md-inline ms-1">{% trans 'Favorite' %}</span>
     </button>
     <button onclick="heartToggle('unfav')"
             id="{{ tender.chrono }}-unfav"
-            class="m-1 btn btn-outline-success favorite-toggle
+            class="m-1 btn btn-outline-primary favorite-toggle
                 {% if not favorited %}d-none{% endif %}">
         <span><i class="{{ bicons.unfavorite }}"></i></span>
         <span class="d-none d-md-inline ms-1">{% trans 'Unfavorite' %}</span>
     </button>
 
-    {% if total_size > 0 %}
-    {% endif %}
+    <a href="#" class="m-1 btn btn-outline-primary" 
+       type="button" disabled>
+        <span><i class="{{ bicons.share }}"></i></span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Share' %}</span>
+    </a>
 
     {% if files_info|length == 1 and not dce_modal %}
         {% with files_info|first as f %}
@@ -57,15 +46,15 @@
     {% else %}
         <button class="m-1 btn 
                        {% if files_info|length == 0 %}
-                            btn-outline-primary 
-                       {% else %}
                             btn-outline-secondary
+                       {% else %}
+                            btn-outline-primary 
                        {% endif %}" 
                 type="button" 
                 data-bs-toggle="modal" data-bs-target="#dceModal">
             <span><i class="{{ bicons.downloads }}"></i></span>
-            <span class="ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
+            <span class="d-none d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
+            <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
         </button>
     {% endif %}
 
@@ -88,7 +77,6 @@
         </a>
 
     {% endif %}
-
 
     <a class="m-1 btn btn-outline-primary" 
         type="button" data-bs-toggle="modal" 

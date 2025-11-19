@@ -91,10 +91,12 @@ def portal_context(request):
         'no_files'        : 'bi bi-file-earmark-break text-warning',
         'files_size'      : 'bi bi-folder2',
                             # exclamation-circle
+        'share'           : 'bi bi-share',
         'created'         : 'bi bi-calendar-plus',
                             # upload
         'updated'         : 'bi bi-arrow-repeat',
-        'hash'            : 'bi bi-database',
+        'database'        : 'bi bi-database',
+        'hash'            : 'bi bi-hash',
         'days_span'       : 'bi bi-calendar-range',
                             # arrows-expand-vertical
         'history'         : 'bi bi-clock-history',

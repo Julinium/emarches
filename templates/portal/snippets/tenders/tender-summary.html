@@ -208,6 +208,21 @@
                             </span>
                         {% endif %}
 
+                        <!-- <span class="small me-2"
+                            data-bs-toggle="tooltip"
+                            title="{% trans 'Files size' %}">
+                            <i class="{{ bicons.files_size }}"></i>
+                            {{ tender.size_bytes|metrify:0 }}
+                        </span> -->
+
+                        {% if not tender.size_bytes or tender.size_bytes == 0 %}
+                            <span class="small me-2"
+                                data-bs-toggle="tooltip"
+                                title="{% trans 'Files may not be ready, yet' %}">
+                                <i class="{{ bicons.no_files }}"></i>
+                            </span>
+                        {% endif %}
+
                     </div>
 
                     <div class="small ms-2 fw-light text-end">

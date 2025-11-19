@@ -162,6 +162,7 @@
                     {% include 'base/snippets/ico-key-list.html' with id_value=tender.chrono|add:'-domain' items=tender.domains.all key_value=key_value uni_value='' full_width='yes' ico_class=bicons.domains val_class='small' border='bottom' liner='' %}
                 {% endif %}
 
+
                 {% if tender.lots.count == 1 %}
                     {% if tender.lots.first.agrements.all %}
                         {% trans 'Required Licences' as agrements_caption %}
@@ -192,6 +193,20 @@
                     {% endtimezone %}
                 {% endif %}
 
+                {% if tender.lots_count > 1 %}
+                    <div>
+                        <button type="button" class="m-1 btn btn-outline-secondary" 
+                                data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
+                            <span><i class="{{ bicons.multi_lots }}"></i></span>
+                            <span class="fw-bold">{{ tender.lots_count }}</span>
+                            <span class="ms-1">{% trans "Lots details" %}</span>
+                        </button>
+                        <span class="text-start">
+                            {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
+                        </span>
+                    </div>
+                {% endif %}
+
                 {% trans 'Withdrawal, Bidding & Awarding addresses' as key_value %}
                 {% include 'base/snippets/ico-key-list.html' with id_value=tender.chrono|add:'-address' items=addresses key_value=key_value uni_value='' full_width='yes' ico_class=bicons.address val_class='small' border='bottom' liner='' %}
                 
@@ -211,7 +226,7 @@
                                 {% if tender.contact_phone and tender.contact_phone != '-' %}
                                     <span class="me-1 small">
                                         <a href="tel:{{ tender.contact_phone }}" 
-                                        class="btn btn-sm mb-1 btn-outline-secondary">
+                                        class="">
                                             <i class="bi bi-telephone"></i>
                                             {{ tender.contact_phone }}
                                         </a>
@@ -220,7 +235,7 @@
                                 {% if tender.contact_email and tender.contact_email != '-' %}
                                     <span class="me-1 small">
                                         <a href="mailto:{{ tender.contact_email }}" 
-                                        class="btn btn-sm mb-1 btn-outline-secondary">
+                                        class="">
                                             <i class="bi bi-envelope"></i>
                                             {{ tender.contact_email }}
                                         </a>
@@ -229,7 +244,7 @@
                                 {% if tender.contact_fax and tender.contact_fax != '-' %}
                                     <span class="me-1 small">
                                         <a href="tel:{{ tender.contact_fax }}" 
-                                        class="btn btn-sm mb-1 btn-outline-secondary">
+                                        class="">
                                             <i class="bi bi-printer"></i>
                                             {{ tender.contact_fax }}
                                         </a>
@@ -240,89 +255,22 @@
                     </div>
                 </div>
 
-                {% timezone "UTC" %}
-                    {% trans 'Created' as key_value %}
-                    {% trans 'UTC' as unit %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-created' val_value=tender.created key_value=key_value uni_value=unit ico_class=bicons.created val_class='text-muted small' border='bottom' liner='' %}
-                {% endtimezone %}
-                
-                {% timezone "UTC" %}
-                    {% trans 'UTC' as unit %}
-                    {% trans 'Last updated' as key_value %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-updated' val_value=tender.updated key_value=key_value uni_value=unit ico_class=bicons.updated val_class='text-muted small' border='bottom' liner='' %}
-                {% endtimezone %}
-
-                {% trans 'Time on display' as key_value %}
-                {% trans 'days' as uni_value %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_span' val_value=tender.days_span key_value=key_value uni_value=uni_value ico_class=bicons.days_span val_class='text-muted small' border='bottom' liner='' %}
-
-                {% trans 'Guarantee ratio' as key_value %}
-                {% with tender.bond_ratio|floatformat:3 as val_value %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' %}
-                {% endwith %}
-
-                {% trans 'Database ID' as key_value %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
-                
-
-                {% trans 'Views' as key_value %}
-                {% with count=tender.views.all|length|metrify:0 %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-views' val_value=count key_value=key_value uni_value='' ico_class=bicons.views val_class='text-muted small' border='bottom' liner='' %}
-                {% endwith %}
-                {% if tender.views.all %}
-                    {% trans 'Latest view since' as key_value %}
-                    {% with latest=tender.views.first.when|timesince %}
-                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
-                    {% endwith %}
-                {% endif %}
-
-                {% trans 'Downloads' as key_value %}
-                {% with count=tender.downloads.all|length|metrify:0 %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-downloads' val_value=count key_value=key_value uni_value='' ico_class=bicons.downloads val_class='text-muted small' border='bottom' liner='' %}
-                {% endwith %}
-                {% if tender.downloads.all %}
-                    {% trans 'Latest download since' as key_value %}
-                    {% with latest=tender.downloads.first.when|timesince %}
-                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
-                    {% endwith %}
-                {% endif %}
-
-                {% if tender.changes.all %}                
-                    <div class="col-12">
-                        <div class="d-flex my-3">
-                            <div>
-                                <i class="{{ bicons.changes }}"></i>
-                            </div>
-                            <div class="ms-2 w-100 border-0 border-bottom">
-                                <div class="text-muted small fw-light">
-                                    {% trans 'Tender Changes' %}
-                                </div>
-                                <div class="small">
-                                    {% for change in tender.changes.all  %}
-                                        <div class="mt-2">
-                                            <span class=""
-                                                data-bs-toggle="tooltip"
-                                                title="{% trans 'Reported' %}: {{ change.reported }}">
-                                                — {{ change.reported|date }}:
-                                            </span>
-                                            <span class="">
-                                                {% for mod in change.changes|dictify %}
-                                                    <span class="ms-2" data-bs-toggle="tooltip" 
-                                                        title="{{ mod.old_value|default:'-' }} &#10230; {{ mod.new_value|default:'-' }}">
-                                                        <i class="bi bi-bezier2 small"></i>
-                                                        <span>{{ mod.field }}</span>
-                                                    </span>
-                                                {% endfor %}
-                                            </span><br>
-                                        </div>
-                                    {% empty %}
-                                        <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
+                <div id="tender-extras" class="text-center">
+                    <a class="m-1 btn btn-outline-secondary" 
+                        type="button" data-bs-toggle="modal" 
+                        data-bs-target="#advancedModal">
+                        <span><i class="{{ bicons.database }}"></i></span>
+                        <span class="ms-1">{% trans 'Advanced data' %}</span>
+                    </a>
+                    {% if tender.changes.all %}
+                        <a class="m-1 btn btn-outline-secondary" 
+                            type="button" data-bs-toggle="modal" 
+                            data-bs-target="#changesModal">
+                            <span><i class="{{ bicons.changes }}"></i></span>
+                            <span class="ms-1">{% trans 'Changes' %}</span>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
@@ -397,8 +345,7 @@
 
         {% include 'portal/snippets/tenders/tender-simulator-modal.html' %}
 
-
-        <div class="modal fade" id="bidConfirmModal" 
+        <div id="bidConfirmModal" class="modal fade" 
             tabindex="-1" aria-labelledby="bidConfirmModalLabel" 
             aria-hidden="true">
             <div class="modal-dialog">
@@ -434,6 +381,116 @@
                 </div>
             </div>
         </div>
+
+        <div id="advancedModal" class="modal fade" 
+            tabindex="-1" aria-labelledby="advancedModalLabel" 
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="advancedModalLabel">{% trans "Advanced data" %}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body small">
+                        <div class="row gx-4 gy-1">
+                            {% timezone "UTC" %}
+                                {% trans 'Created' as key_value %}
+                                {% trans 'UTC' as unit %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-created' val_value=tender.created key_value=key_value uni_value=unit ico_class=bicons.created val_class='text-muted small' border='bottom' liner='' %}
+                            {% endtimezone %}
+                            
+                            {% timezone "UTC" %}
+                                {% trans 'UTC' as unit %}
+                                {% trans 'Last updated' as key_value %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-updated' val_value=tender.updated key_value=key_value uni_value=unit ico_class=bicons.updated val_class='text-muted small' border='bottom' liner='' %}
+                            {% endtimezone %}
+
+                            {% trans 'Time on display' as key_value %}
+                            {% trans 'days' as uni_value %}
+                            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_span' val_value=tender.days_span key_value=key_value uni_value=uni_value ico_class=bicons.days_span val_class='text-muted small' border='bottom' liner='' %}
+
+                            {% trans 'Guarantee ratio' as key_value %}
+                            {% with tender.bond_ratio|floatformat:3 as val_value %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' %}
+                            {% endwith %}
+
+                            {% trans 'Database ID' as key_value %}
+                            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
+                            
+
+                            {% trans 'Views' as key_value %}
+                            {% with count=tender.views.all|length|metrify:0 %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-views' val_value=count key_value=key_value uni_value='' ico_class=bicons.views val_class='text-muted small' border='bottom' liner='' %}
+                            {% endwith %}
+                            {% if tender.views.all %}
+                                {% trans 'Latest view since' as key_value %}
+                                {% with latest=tender.views.first.when|timesince %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
+                                {% endwith %}
+                            {% endif %}
+
+                            {% trans 'Downloads' as key_value %}
+                            {% with count=tender.downloads.all|length|metrify:0 %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-downloads' val_value=count key_value=key_value uni_value='' ico_class=bicons.downloads val_class='text-muted small' border='bottom' liner='' %}
+                            {% endwith %}
+                            {% if tender.downloads.all %}
+                                {% trans 'Latest download since' as key_value %}
+                                {% with latest=tender.downloads.first.when|timesince %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <span><i class="{{ bicons.close }}"></i></span>
+                            <span class="ms-1">{% trans 'Close' %}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="changesModal" class="modal fade" 
+            tabindex="-1" aria-labelledby="changesModalLabel" 
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="changesModalLabel">{% trans "Found changes" %}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body small">
+                        <table class="table table-hover small">
+                            <thead>
+                                <tr>
+                                    <th scope="col">{% trans 'Reported' %} : {% trans 'Field' %}</th>
+                                    <th scope="col">{% trans 'Old value' %} &#10230; {% trans 'New value' %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for change in tender.changes.all %}
+                                    <tr>
+                                        {% for mod in change.changes|dictify %}
+                                            <td>{{ change.reported|date }} : {{ mod.field }}</td>
+                                            <td>{{ mod.old_value|default:'-' }} &#10230; {{ mod.new_value|default:'-' }}</td>
+                                    </tr>
+                                        {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <span><i class="{{ bicons.close }}"></i></span>
+                            <span class="ms-1">{% trans 'Close' %}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 
