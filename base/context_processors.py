@@ -111,7 +111,9 @@ def portal_context(request):
                             # joystick
         'plus'            : 'bi bi-plus-lg',
         'winner'          : 'bi bi-trophy-fill',
-        'range'           : 'bi bi-arrows-expand-vertical',
+        'range'           : 'bi bi-arrows',
+                            # arrows-expand-vertical
+                            # arrow-left-right
         'range_min'       : 'bi bi-arrow-bar-up',
         'range_max'       : 'bi bi-arrow-bar-down',
         'target'          : 'bi bi-crosshair',

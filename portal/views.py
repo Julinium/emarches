@@ -395,10 +395,10 @@ def tender_details(request, pk=None):
 
     tolerance_dn = 20.0
     tolerance_up = 20.0    
-    offers_count = 3
+    offers_count = 1
     
     context['offer_litteral'] = trans('OFFER')
-    context['offers_count'] = max(offers_count, 3)
+    context['offers_count'] = max(offers_count, 1)
     context['tolerance_dn'] = tolerance_dn
     context['tolerance_up'] = tolerance_up
 
