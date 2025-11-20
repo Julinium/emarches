@@ -1,7 +1,9 @@
 import traceback
+import pytz
 from rest_framework import serializers
 from django.db import transaction
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, date, time
+from zoneinfo import ZoneInfo
 
 from scraper import constants as C
 from scraper import helper
@@ -352,7 +354,8 @@ def save(tender_data):
             json_meeting_keys = set()
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot Meetings ... ")
             for meeting_data in meetings_data:
-                when = meeting_data.get('when')
+                # when = meeting_data.get('when')
+                when = ensure_dt_rabat(meeting_data.get('when'))
                 description = meeting_data.get('description')
                 json_meeting_keys.add((when, description))
                 meeting = None
@@ -383,7 +386,8 @@ def save(tender_data):
             json_sample_keys = set()
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot Samples ... ")
             for sample_data in samples_data:
-                when = sample_data.get('when')
+                # when = sample_data.get('when')
+                when = ensure_dt_rabat(sample_data.get('when'))
                 description = sample_data.get('description')
                 json_sample_keys.add((when, description))
                 sample = None
@@ -414,7 +418,8 @@ def save(tender_data):
             json_visit_keys = set()
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot Visits ... ")
             for visit_data in visits_data:
-                when = visit_data.get('when')
+                # when = visit_data.get('when')
+                when = ensure_dt_rabat(visit_data.get('when'))
                 description = visit_data.get('description')
                 json_visit_keys.add((when, description))
                 visit = None
@@ -568,3 +573,11 @@ def save(tender_data):
 
     return tender, tender_create
 
+
+def ensure_dt_rabat(snap, default_time=time(0,0), tz=None):
+    if tz == None: tz = ZoneInfo("Africa/Casablanca")
+    print("\n\n\nsnaaaaaaaap = ", snap, '\n\n\n')
+    if isinstance(snap, date):
+        return datetime.combine(snap, default_time).replace(tzinfo=tz)
+    return snap if snap.tzinfo else snap.replace(tzinfo=tz)
+    

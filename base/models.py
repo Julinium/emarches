@@ -107,15 +107,7 @@ class Client(models.Model):
                     self.short = s[last_slash + len(slash):dash]
         except Exception as x:
             traceback.print_exc()
-
-        # try:
-        #     if self.name.find("/") > -1:
-        #         r = self.name.split("/")[1].strip()
-        #         if r.find("-") > -1:
-        #             self.short = r.split("-")[0].strip()
-        # except Exception as x:
-        #     traceback.print_exc()
-        
+                    
         return super().save(*args, **kwargs)
 
 
