@@ -329,16 +329,8 @@ def save(tender_data):
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
             if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
-                # if tender.lots_count > 1:
-                #     helper.printMessage('TRACE', 'm.save', "#### Lot exists. Skipping.")
-                #     print("======================== Lot exists. Skipping. ========================")
-                #     print(f"\ttitle=lot_title = { lot_title }.")
-                #     print(f"\ttender=tender = { tender }.")
                 lot = Lot.objects.get(title=lot_title, number=lot_number, tender=tender)
                 lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
-                # if tender.lots_count > 1:
-                #     print(f"\tLot.objects.get(title=lot_title, tender=tender) = { lot }.")
-                #     print("======================== Lot existed. Skipped. ========================")
             else:
                 lot_serializer = LotSerializer(data=lot_data)
                 helper.printMessage('TRACE', 'm.save', f"#### Lot to be created: {lot_title[:C.TRUNCA]}...")
@@ -547,8 +539,9 @@ def save(tender_data):
         if tender_date > target_date:
             try:
                 helper.printMessage('TRACE', 'm.save', f"#### Adding DCE request for Tender {tender.chrono} ... ")
-                f2d = FileToGet(tender=tender, reason="Updated")
-                f2d.save()
+                f2d, _ = FileToGet.update_or_create(tender=tender, defaults={'reason': 'Updated'})
+                # f2d = FileToGet(tender=tender, reason="Updated")
+                # f2d.save()
             except:
                 helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
                 traceback.print_exc()
@@ -558,8 +551,9 @@ def save(tender_data):
         if tender_date > target_date:
             try:
                 helper.printMessage('TRACE', 'm.save', "#### Adding DCE request for Tender ... ")
-                f2d = FileToGet(tender=tender)
-                f2d.save()
+                f2d, _ = FileToGet.update_or_create(tender=tender)
+                # f2d = FileToGet(tender=tender)
+                # f2d.save()
             except:
                 helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
                 traceback.print_exc()
@@ -574,10 +568,13 @@ def save(tender_data):
     return tender, tender_create
 
 
-def ensure_dt_rabat(snap, default_time=time(0,0), tz=None):
-    if tz == None: tz = ZoneInfo("Africa/Casablanca")
-    print("\n\n\nsnaaaaaaaap = ", snap, '\n\n\n')
-    if isinstance(snap, date):
-        return datetime.combine(snap, default_time).replace(tzinfo=tz)
-    return snap if snap.tzinfo else snap.replace(tzinfo=tz)
-    
+def ensure_dt_rabat(snap, default_time=time(0,0)):
+    rabat_tz = pytz.timezone("Africa/Casablanca")
+
+    print("\nsnaaaaaaaap = ", snap)
+    if not isinstance(snap, datetime):
+        print("isinstanceeeeeeeeeeeeeee of datetime = noooooooooooo\n")
+        naive_dt = datetime.combine(snap, default_time)
+        return rabat_tz.localize(naive_dt)
+    return snap
+

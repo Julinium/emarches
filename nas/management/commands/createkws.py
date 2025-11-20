@@ -49,24 +49,46 @@ class Command(BaseCommand):
 
 
         ###################################
-        from base.models import Tender, Lot, Category
-        from uuid import UUID
+        from base.models import FileToGet
 
-        # cat_works = Category.objects.filter(id=UUID("9c96d90e-337d-4151-8170-9476e3100833", version=4)).first()
-        # cat_trav  = Category.objects.filter(id=UUID("d769842e-6f40-48af-97aa-84b1f03ba426", version=4)).first()
-        cat_works = Category.objects.filter(id="9c96d90e-337d-4151-8170-9476e3100833").first()
-        cat_trav  = Category.objects.filter(id="d769842e-6f40-48af-97aa-84b1f03ba426").first()
-        # if cat_works: print(cat_works.label)
-        # if cat_trav: print(cat_trav.label)
+        from django.db import transaction
+        from django.db.models import Min
 
-        works_tenders = Tender.objects.filter(category=cat_works)
-        try:
-            self.stdout.write(self.style.SUCCESS(f"Found { works_tenders.count() } Tenders to update."))
-            works_tenders.update(category=cat_trav)
-        except Exception as xc:
-            self.stdout.write(self.style.ERROR('Exception raised with works_tenders.update(category="d769842e-6f40-48af-97aa-84b1f03ba426")'))
-            print(str(xc))
+        @transaction.atomic
+        def remove_duplicates_keep_any_one():
+            Model = FileToGet  # Replace with your actual model
+            fk_field = 'tender'  # e.g. 'user', 'product', 'category', etc.
 
+            seen = set()  # Tracks FK values we've already kept a record for
+            to_delete = []  # Collects IDs of duplicates to delete
+
+            # Order by FK for efficient grouping (then by ID for consistency)
+            queryset = Model.objects.order_by(fk_field, 'id').iterator(chunk_size=1000)
+
+            i = 0
+            for obj in queryset:
+                i += 1
+                print('\t Working on instance ', i)
+                # Get the FK value (use _id suffix if it's an FK to avoid loading related object)
+                key = getattr(obj, f'{fk_field}_id', getattr(obj, fk_field, None))
+                if key is None:
+                    continue  # Skip null FKs if they shouldn't be duplicated anyway
+
+                key_str = str(key)  # Ensure it's hashable (UUIDs are, but safe)
+                if key_str in seen:
+                    to_delete.append(obj.id)
+                    print('\t\t To delete ', i)
+                else:
+                    seen.add(key_str)
+                    print('\t\t Newly seen ', i)
+
+            # Bulk delete in one go
+            if to_delete:
+                deleted_count = Model.objects.filter(id__in=to_delete).delete()[0]
+                print(f"Deleted {deleted_count} duplicate records")
+            else:
+                print("No duplicates found")
+        remove_duplicates_keep_any_one()
         ###################################
 
         

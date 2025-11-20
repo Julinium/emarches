@@ -462,18 +462,29 @@
                     </div>
                     <div class="modal-body small">
                         <table class="table table-hover small">
-                            <thead>
+                            <!-- <thead>
                                 <tr>
                                     <th scope="col">{% trans 'Reported' %} : {% trans 'Field' %}</th>
                                     <th scope="col">{% trans 'Old value' %} &#10230; {% trans 'New value' %}</th>
                                 </tr>
-                            </thead>
+                            </thead> -->
                             <tbody>
                                 {% for change in tender.changes.all %}
                                     <tr>
                                         {% for mod in change.changes|dictify %}
-                                            <td>{{ change.reported|date }} : {{ mod.field }}</td>
-                                            <td>{{ mod.old_value|default:'-' }} &#10230; {{ mod.new_value|default:'-' }}</td>
+                                            <td>
+                                                <div>
+                                                    <span>{{ change.reported }}: </span>
+                                                    <span class="fw-bold">{{ mod.field }}</span>
+                                                </div>
+                                                <div>
+                                                    <span>{{ mod.old_value|default:'-' }}</span>
+                                                    <span>&#10230;</span>
+                                                    <span class="fw-bold">{{ mod.new_value|default:'-' }}</span>
+                                                </div>
+                                            </td>
+                                            <!-- <td>{{ change.reported|date }} : {{ mod.field }}</td>
+                                            <td>{{ mod.old_value|default:'-' }} &#10230; {{ mod.new_value|default:'-' }}</td> -->
                                     </tr>
                                         {% endfor %}
                                 {% endfor %}

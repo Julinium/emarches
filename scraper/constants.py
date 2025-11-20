@@ -42,6 +42,9 @@ SITE_INDEX = os.getenv("SITE_INDEX")
 LINK_PREFIX = os.getenv("LINK_PREFIX")
 LINK_STITCH = os.getenv("LINK_STITCH")
 
+BDC_RESULTS_BASE_URL = os.getenv("BDC_RESULTS_BASE_URL")
+BDC_LISTING_BASE_URL = os.getenv("BDC_LISTING_BASE_URL")
+
 DB_SERVER = os.getenv("DB_SERVER")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
