@@ -21,6 +21,8 @@ LISTING_PAGE_PARAM = "page"
 RESULTS_BASE_URL = C.BDC_RESULTS_BASE_URL
 RESULTS_PAGE_PARAM = "page"
 
+rabat_tz = pytz.timezone("Africa/Casablanca")
+
 
 def get_headers():
     return {
@@ -30,7 +32,7 @@ def get_headers():
     }
 
 
-def fetch_results_page(url, retries=3):
+def fetch_page(url, retries=3):
     for attempt in range(retries):
         try:
             r = requests.get(url, headers=get_headers(), timeout=15)
@@ -48,13 +50,73 @@ def fetch_results_page(url, retries=3):
     return None
 
 
+def get_bdc(card, details=None):
+    """
+    Extracts data from a single item card
+    """
+    
+    ref_text = card.select_one(".entreprise__middleSubCard a.table__links")
+    try: reference = ref_text.replace("Référence :", "").strip()
+    except: reference = None
+
+    title_elem = card.select_one(".entreprise__middleSubCard a.truncate_fullWidth")
+    try: title = title_elem.get_text(strip=True).replace("Objet :", "").strip()
+    except: title = None
+
+    acheteur_elem = card.select(".entreprise__middleSubCard a.table__links")[2]
+    try: acheteur = acheteur_elem.get_text(strip=True).replace("Acheteur :", "").strip()
+    except: acheteur = None
+
+    anchor_elem = card.select_one("a")
+    try: link = anchor_elem["href"]
+    except: link = None
+
+    date_limite_text = None
+    heure_limite_text = None
+    lieu = None
+
+    right = card.select_one(".entreprise__rightSubCard--top")
+    if right:
+        date_text = right.select("span")[1].get_text(strip=True)
+        try: date_limite_text = date_text.replace("", "").strip()
+        except: pass
+
+        heure_text = right.select("span")[2].get_text(strip=True)
+        try: heure_limite_text = heure_text.replace("", "").strip()
+        except: pass
+
+        lieu_text = right.select("span")[4]
+        try: lieu = lieu_text.get_text(strip=True)
+        except: pass
+
+    deadline = None
+    try:
+        deadline_str = f"{date_limite_text} {heure_limite_text}"
+        naive_dt = datetime.strptime(deadline_str, "%d/%m/%Y %H:%M")
+        deadline = rabat_tz.localize(naive_dt)
+    except: pass
+
+    # TODO: Fetch link and get details ...
+    
+    bdc = {
+        'reference' : reference,
+        'title'     : title,
+        'acheteur'  : acheteur,
+        'dealine'   : deadline,
+        'location'  : lieu,
+        'link'      : link,
+    }
+    
+    return bdc
+    
+
+
 def get_results_bdc(card):
     """
     Extracts data from a single item card
     """
     
     ref = card.select_one(".entreprise__middleSubCard div.font-bold.table__links")
-    # reference_text = ref.get_text(strip=True).replace("Référence :", "").strip() if ref else None
     reference = None
     if ref: reference = ref.get_text(strip=True).replace("Référence :", "").strip()
 
@@ -101,7 +163,6 @@ def get_results_bdc(card):
         else:
             n_devis = entreprise_attr = montant_ttc = None
 
-    rabat_tz = pytz.timezone("Africa/Casablanca")
     published_dt = None
     if date_pub:
         naive_dt = datetime.strptime(date_pub, "%d/%m/%Y %H:%M")
@@ -143,7 +204,7 @@ def get_and_save_results():
         url = f"{RESULTS_BASE_URL}&{RESULTS_PAGE_PARAM}={page}"
         print("[=====] Fetching page :", page)
         
-        html = fetch_results_page(url)
+        html = fetch_page(url)
         if not html:
             errors_happened = True
             break

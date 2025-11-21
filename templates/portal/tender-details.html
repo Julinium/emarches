@@ -461,17 +461,15 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body small">
+                        <div class="m-2">
+                            <span><i class="bi bi-info-circle text-warning"></i></span>
+                            <span class="small fw-light text-muted">{% trans 'Changes data may not be accurate' %}.</span>
+                        </div>
                         <table class="table table-hover small">
-                            <!-- <thead>
-                                <tr>
-                                    <th scope="col">{% trans 'Reported' %} : {% trans 'Field' %}</th>
-                                    <th scope="col">{% trans 'Old value' %} &#10230; {% trans 'New value' %}</th>
-                                </tr>
-                            </thead> -->
                             <tbody>
                                 {% for change in tender.changes.all %}
-                                    <tr>
-                                        {% for mod in change.changes|dictify %}
+                                    {% for mod in change.changes|dictify %}
+                                        <tr>
                                             <td>
                                                 <div>
                                                     <span>{{ change.reported }}: </span>
@@ -483,10 +481,8 @@
                                                     <span class="fw-bold">{{ mod.new_value|default:'-' }}</span>
                                                 </div>
                                             </td>
-                                            <!-- <td>{{ change.reported|date }} : {{ mod.field }}</td>
-                                            <td>{{ mod.old_value|default:'-' }} &#10230; {{ mod.new_value|default:'-' }}</td> -->
-                                    </tr>
-                                        {% endfor %}
+                                        </tr>
+                                    {% endfor %}
                                 {% endfor %}
                             </tbody>
                         </table>
@@ -515,6 +511,45 @@
     {% endif %}
 
 
+    
+
+    <div id="tosts-container" class="toast-container bottom-0 end-0 p-3" style="position: fixed; z-index: 99;">
+            
+        <div class="toast bg-success-subtle " id="favToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="dlToastHeader">
+                        {% trans "Item added to Favourites" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+        <div class="toast bg-success-subtle " id="defToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="dlToastHeader">
+                        {% trans "Item removed from Favourites" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+                    
+        <div class="toast bg-success-subtle " id="copyToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="dlToastHeader">
+                        {% trans "URL was copied to clipboard" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+    </div>
+
 
     <script>
         const azrems = document.querySelectorAll('.wait-azrem');
@@ -536,6 +571,17 @@
                         const buttons = document.querySelectorAll('.favorite-toggle');
                         buttons.forEach(button => { button.classList.toggle('d-none'); });
                         fav_indicator.classList.toggle('d-none');
+                
+                        if ( makas == 'fav' ) {
+                            let favToast = document.getElementById('favToast');
+                            let favAlert = new bootstrap.Toast(favToast);
+                            favAlert.show();
+                        }
+                        if ( makas == 'unfav' ) {
+                            const defToast = document.getElementById('defToast');
+                            const defAlert = new bootstrap.Toast(defToast);
+                            defAlert.show();
+                        }
                     } else {
                         alert('Operation Failed !')
                     }
@@ -547,6 +593,78 @@
             };
 
             xhr.send();
+        }
+    </script>
+    <script>
+        function sharePage(host='https://www.emarches.com') {
+            const tender_id = "{{ tender.id|escapejs }}";    
+            const baseUrl = `${host}/tenders/details/`;
+            const fullUrl = baseUrl + tender_id + "/";
+            const title = document.title;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: fullUrl
+                })
+                .then(() => console.log('Shared successfully'))
+                .catch((error) => console.error('Error sharing:', error));
+            } else {
+                navigator.clipboard.writeText(fullUrl)
+                    .then(() => {
+                        var toastElement = document.getElementById('copyToast');
+                            var toast = new bootstrap.Toast(toastElement);
+                            toast.show();
+                    })
+                    .catch((error) => console.error('Error copying URL:', error));
+            }
+        }
+    </script>
+
+    <script>
+        const toastEls = document.getElementsByClassName('alert-dismissible');
+        if (toastEls) {
+            for (let i = 0; i < toastEls.length; i++) {
+                const toastEl = toastEls[i];
+                if (!toastEl.classList.contains('alert-danger')){
+                    const timeout = 5000 + 1000*i;
+                    let timeoutId;
+                    let startTime;
+                    let remainingTime = timeout;
+
+                    const handleMouseEnter = () => {
+                    clearTimeout(timeoutId);
+                    startTime = Date.now();
+                    };
+
+                    const handleMouseLeave = () => {
+                    const elapsedTime = Date.now() - startTime;
+                    remainingTime -= elapsedTime;
+
+                    if (remainingTime > 0) {
+                        timeoutId = setTimeout(() => {
+                        toastEl.style.display = 'none';
+                        }, remainingTime);
+                    } else {
+                        toastEl.style.display = 'none';
+                    }
+                    };
+
+                    const updateTimerDisplay = (elt) => {
+                        if (elt){
+                            elt.style.width = "${remainingTime/timeout}%";
+                        }
+                    };
+
+
+                    toastEl.addEventListener('mouseenter', handleMouseEnter);
+                    toastEl.addEventListener('mouseleave', handleMouseLeave);
+
+                    timeoutId = setTimeout(() => {
+                    toastEl.style.display = 'none';
+                    }, timeout);
+                }
+            }
         }
     </script>
 
