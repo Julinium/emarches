@@ -378,8 +378,9 @@ def save(tender_data):
             json_sample_keys = set()
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot Samples ... ")
             for sample_data in samples_data:
-                # when = sample_data.get('when')
-                when = ensure_dt_rabat(sample_data.get('when'))
+                sample_data['when'] = ensure_dt_rabat(sample_data.get('when'))
+                when = sample_data.get('when')
+                # when = ensure_dt_rabat(sample_data.get('when'))
                 description = sample_data.get('description')
                 json_sample_keys.add((when, description))
                 sample = None
@@ -539,7 +540,7 @@ def save(tender_data):
         if tender_date > target_date:
             try:
                 helper.printMessage('TRACE', 'm.save', f"#### Adding DCE request for Tender {tender.chrono} ... ")
-                f2d, _ = FileToGet.update_or_create(tender=tender, defaults={'reason': 'Updated'})
+                f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Updated'})
                 # f2d = FileToGet(tender=tender, reason="Updated")
                 # f2d.save()
             except:
@@ -551,7 +552,7 @@ def save(tender_data):
         if tender_date > target_date:
             try:
                 helper.printMessage('TRACE', 'm.save', "#### Adding DCE request for Tender ... ")
-                f2d, _ = FileToGet.update_or_create(tender=tender)
+                f2d, _ = FileToGet.objects.update_or_create(tender=tender)
                 # f2d = FileToGet(tender=tender)
                 # f2d.save()
             except:
@@ -570,10 +571,7 @@ def save(tender_data):
 
 def ensure_dt_rabat(snap, default_time=time(0,0)):
     rabat_tz = pytz.timezone("Africa/Casablanca")
-
-    print("\nsnaaaaaaaap = ", snap)
     if not isinstance(snap, datetime):
-        print("isinstanceeeeeeeeeeeeeee of datetime = noooooooooooo\n")
         naive_dt = datetime.combine(snap, default_time)
         return rabat_tz.localize(naive_dt)
     return snap

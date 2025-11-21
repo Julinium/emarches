@@ -602,75 +602,94 @@ def tender_favorite_list(request):
     return render(request, 'portal/tender-favorite-list.html', context)
 
 
+def locations_list(request):
+    json_path = os.path.join(settings.BASE_DIR, 'scraper', 'data', 'regions-cities.json')
+    # json_path = '/var/opt/emarches/scraper/data/regions-cities.json'
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            states = json.load(f)
+    except FileNotFoundError:
+        states = [] 
+        return HttpResponse('File Not Found Error', code=404)
+        # Or raise a 404 / show error page
+    except json.JSONDecodeError:
+        states = []
+        return HttpResponse('JSON Decode Error', code=405)
+        # Handle corrupted JSON
+
+    context = {
+        'states': states
+    }
+    return render(request, 'portal/locations-list.html', context)
 
 
 
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def tender_simulator(request, pk=None):
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def tender_simulator(request, pk=None):
 
-    # if request.method != 'POST': return HttpResponse(status=405)
-    if pk == None : return HttpResponse(status=404)
+#     # if request.method != 'POST': return HttpResponse(status=405)
+#     if pk == None : return HttpResponse(status=404)
 
-    user = request.user
-    if not user or not user.is_authenticated : 
-        return HttpResponse(trans('Permission denied'), status=403)
+#     user = request.user
+#     if not user or not user.is_authenticated : 
+#         return HttpResponse(trans('Permission denied'), status=403)
 
-    tender = get_object_or_404(Tender, id=pk)
-    if not tender : return HttpResponse(trans('Specified Tender not found'), status=404)
+#     tender = get_object_or_404(Tender, id=pk)
+#     if not tender : return HttpResponse(trans('Specified Tender not found'), status=404)
 
-    context = {}
-    estimate = tender.estimate
+#     context = {}
+#     estimate = tender.estimate
 
-    lot_no = request.GET.get('lot_no')
-    if lot_no:
-        ln = int(lot_no)
-        if ln > 0:
-            lot = get_object_or_404(Lot, tender=tender, number=ln)
-            if not lot : return HttpResponse(trans('Specified Lot not found'), status=404)
-            estimate = lot.estimate
-            context['lot'] = lot
+#     lot_no = request.GET.get('lot_no')
+#     if lot_no:
+#         ln = int(lot_no)
+#         if ln > 0:
+#             lot = get_object_or_404(Lot, tender=tender, number=ln)
+#             if not lot : return HttpResponse(trans('Specified Lot not found'), status=404)
+#             estimate = lot.estimate
+#             context['lot'] = lot
 
-    if not estimate or estimate <= 0:
-        return HttpResponse(trans('Could not get a valid estimate amount'), status=400)
+#     if not estimate or estimate <= 0:
+#         return HttpResponse(trans('Could not get a valid estimate amount'), status=400)
 
-    logger = logging.getLogger('portal')
-    logger.info(f"Tender Simulator: {tender.id}, Lot:{ lot_no if lot_no else 'None' }")
+#     logger = logging.getLogger('portal')
+#     logger.info(f"Tender Simulator: {tender.id}, Lot:{ lot_no if lot_no else 'None' }")
 
-    # slo = 20.00
+#     # slo = 20.00
 
-    tolerance_dn = 20.0
-    tolerance_up = 20.0
+#     tolerance_dn = 20.0
+#     tolerance_up = 20.0
     
-    offers_count = 3
-    # tol = Decimal(slo/100).quantize(Decimal('0.00'))
-    # e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
-    # e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
-    e_est = estimate.quantize(Decimal('0.00'))
+#     offers_count = 3
+#     # tol = Decimal(slo/100).quantize(Decimal('0.00'))
+#     # e_min = (estimate * (1 - tol)).quantize(Decimal('0.00'))
+#     # e_max = (estimate * (1 + tol)).quantize(Decimal('0.00'))
+#     e_est = estimate.quantize(Decimal('0.00'))
 
-    # offers = []
-    # for _ in range(max(offers_count, 3)):
-    #     rand_float = random.uniform(float(e_min), float(e_max))
-    #     rand_decimal = Decimal(str(rand_float)).quantize(Decimal('0.00'))
-    #     if rand_decimal < e_min:
-    #         rand_decimal = e_min
-    #     elif rand_decimal > e_max:
-    #         rand_decimal = e_max
-    #     offers.append(json.dumps(str(rand_decimal)))
+#     # offers = []
+#     # for _ in range(max(offers_count, 3)):
+#     #     rand_float = random.uniform(float(e_min), float(e_max))
+#     #     rand_decimal = Decimal(str(rand_float)).quantize(Decimal('0.00'))
+#     #     if rand_decimal < e_min:
+#     #         rand_decimal = e_min
+#     #     elif rand_decimal > e_max:
+#     #         rand_decimal = e_max
+#     #     offers.append(json.dumps(str(rand_decimal)))
 
-    context['tender'] = tender
+#     context['tender'] = tender
 
-    # context['eMin'] = json.dumps(str(e_min))
-    # context['eMax'] = json.dumps(str(e_max))
-    # context['offers'] = offers
+#     # context['eMin'] = json.dumps(str(e_min))
+#     # context['eMax'] = json.dumps(str(e_max))
+#     # context['offers'] = offers
 
-    # context['eEst'] = json.dumps(str(e_est))
-    context['offer_litteral'] = trans('OFFER')
-    context['offers_count'] = max(offers_count, 3)
-    context['tolerance_dn'] = tolerance_dn
-    context['tolerance_up'] = tolerance_up
+#     # context['eEst'] = json.dumps(str(e_est))
+#     context['offer_litteral'] = trans('OFFER')
+#     context['offers_count'] = max(offers_count, 3)
+#     context['tolerance_dn'] = tolerance_dn
+#     context['tolerance_up'] = tolerance_up
 
-    return render(request, 'portal/tender-simulator.html', context)
+#     return render(request, 'portal/tender-simulator.html', context)
 
 
 def get_user_settings(request):

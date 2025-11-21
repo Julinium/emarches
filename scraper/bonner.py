@@ -1,65 +1,25 @@
 
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
+# import pandas as pd
 import random
 import time
 import json
+import pytz
 
 from datetime import datetime
 from decimal import Decimal
-from zoneinfo import ZoneInfo
 
-from scraper import helper
-from scraper import constants as C
+from . import helper
+from . import constants as C
+
+from bdc.models import Client, PurchaseOrder
 
 LISTING_BASE_URL = C.BDC_LISTING_BASE_URL
 LISTING_PAGE_PARAM = "page"
 
 RESULTS_BASE_URL = C.BDC_RESULTS_BASE_URL
 RESULTS_PAGE_PARAM = "page"
-
-# USER_AGENTS = [
-#     # Windows — Chrome
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
-
-#     # Windows — Firefox
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0",
-
-#     # Windows — Edge
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36 Edg/121.0.0.0",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0",
-#     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36 Edg/123.0.0.0",
-
-#     # macOS — Safari
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15",
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15",
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15",
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15",
-
-#     # macOS — Chrome
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-
-#     # Linux — Firefox
-#     "Mozilla/5.0 (X11; Linux x86_64; rv:122.0) Gecko/20100101 Firefox/122.0",
-#     "Mozilla/5.0 (X11; Linux x86_64; rv:123.0) Gecko/20100101 Firefox/123.0",
-
-#     # Linux — Chrome
-#     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-#     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
-# ]
 
 
 def get_headers():
@@ -94,16 +54,22 @@ def get_results_bdc(card):
     """
     
     ref = card.select_one(".entreprise__middleSubCard div.font-bold.table__links")
-    reference = ref.get_text(strip=True).replace("Référence :", "").strip() if ref else None
+    # reference_text = ref.get_text(strip=True).replace("Référence :", "").strip() if ref else None
+    reference = None
+    if ref: reference = ref.get_text(strip=True).replace("Référence :", "").strip()
+
 
     title_div = card.select_one('.entreprise__middleSubCard div[data-bs-toggle="tooltip"]')
-    title = title_div.get_text(strip=True).replace("Objet :", "").strip() if title_div else None
+    title = None
+    if title_div: title = title_div.get_text(strip=True).replace("Objet :", "").strip()
 
     client_div = card.find("span", string=lambda x: x and "Acheteur" in x)
-    client = client_div.parent.get_text(strip=True).replace("Acheteur :", "") if client_div else None
+    client = None
+    if client_div: client = client_div.parent.get_text(strip=True).replace("Acheteur :", "")
 
     date_div = card.find("span", string=lambda x: x and "Date de publication" in x)
-    date_pub = date_div.parent.get_text(strip=True).replace("Date de publication du résultat :", "") if date_div else None
+    date_pub = None
+    if date_div: date_pub = date_div.parent.get_text(strip=True).replace("Date de publication du résultat :", "")
 
     right_top = card.select_one(".entreprise__rightSubCard--top")
     if right_top:
@@ -136,11 +102,15 @@ def get_results_bdc(card):
             n_devis = entreprise_attr = montant_ttc = None
 
     rabat_tz = pytz.timezone("Africa/Casablanca")
-    naive_dt = datetime.strptime(date_pub, "%d/%m/%Y %H:%M")
-    published_dt = rabat_tz.localize(naive_dt)
+    published_dt = None
+    if date_pub:
+        naive_dt = datetime.strptime(date_pub, "%d/%m/%Y %H:%M")
+        published_dt = rabat_tz.localize(naive_dt)
 
-    cleaned = montant_ttc.replace(" ", "").replace(",", ".").replace("MAD", "")
-    montant_decimal_ttc = Decimal(cleaned)
+    montant_decimal_ttc = None
+    if montant_ttc:
+        cleaned = montant_ttc.replace(" ", "").replace(",", ".").replace("MAD", "")
+        montant_decimal_ttc = Decimal(cleaned)
 
     bdc_result = {
         'reference': reference,
@@ -196,13 +166,13 @@ def get_and_save_results():
                 itex, created_bdc = PurchaseOrder.objects.update_or_create(
                     reference = item['reference'],
                     client = client,
-                    title = title,
+                    title = item['title'],
                     defaults = {
-                        'unsuccessful': is_infructueux,
-                        'bids_count': n_devis,
-                        'winner_entity': entreprise_attr,
-                        "winner_amount" : montant_decimal_ttc,
-                        "deliberated" : published_dt,
+                        'unsuccessful': item['unsuccessful'],
+                        'bids_count': item['bids_count'],
+                        'winner_entity': item['winner_entity'],
+                        "winner_amount" : item['winner_amount'],
+                        "deliberated" : item['deliberated'],
                     }
                 )
                 if created_bdc: bdc_created += 1

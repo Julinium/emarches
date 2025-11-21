@@ -77,7 +77,7 @@ class Client(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
-    ministery = models.CharField(max_length=16, blank=True, null=True, verbose_name=_("Sector"))
+    ministery = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Sector"))
 
     keywords = models.TextField(blank=True, null=True, editable=False)
 

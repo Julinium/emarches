@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'authy',
     'nas',
     'portal',
+    'bdc',
 
     'django_cleanup',
     'debug_toolbar',

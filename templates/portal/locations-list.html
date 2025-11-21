@@ -1,0 +1,75 @@
+{% extends 'base/base.html' %}
+{% load i18n static %}
+
+{% block title %}
+    {% trans "Locations list" %}
+{% endblock title %}
+
+{% block content %}
+    <div class="d-flex align-items-center justify-content-between px-2">
+        <div class="">
+            <span class="h3 me-1">{% trans "Locations list" %}</span>
+        </div>
+    </div>    
+    
+    {% if states %}
+        <div class="container py-5">
+            <!-- <h1 class="mb-4 text-primary fw-bold">
+                <i class="bi bi-geo-alt-fill me-2"></i>
+                States & Cities in India
+            </h1> -->
+
+            {% if not states %}
+                <div class="alert alert-warning" role="alert">
+                    <strong>No data available.</strong> The location data could not be loaded.
+                </div>
+            {% else %}
+
+                <div class="accordion" id="statesAccordion">
+                    {% for state in states %}
+                        <div class="accordion-item shadow-sm mb-3 rounded">
+                            <h2 class="accordion-header" id="heading-{{ forloop.counter }}">
+                                <button class="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-{{ forloop.counter }}"
+                                        aria-expanded="false"
+                                        aria-controls="collapse-{{ forloop.counter }}">
+                                    <strong>{{ state.name }}</strong>
+                                    <small class="text-muted ms-3">
+                                        {{ state.cities|length }} {% if state.cities|length == 1 %}city{% else %}cities{% endif %}
+                                    </small>
+                                </button>
+                            </h2>
+                            <div id="collapse-{{ forloop.counter }}"
+                                    class="accordion-collapse collapse"
+                                    aria-labelledby="heading-{{ forloop.counter }}"
+                                    data-bs-parent="#statesAccordion">
+                                <div class="accordion-body">
+                                    {% if state.cities %}
+                                        <div class="">
+                                            {% for city in state.cities %}
+                                                <a href="{% url 'portal_tender_list' %}?&q={{ city.name }}&f=location"
+                                                   class="btn btn-outline-primary m-1">
+                                                    <span class="fs-6">{{ city.name }}</span>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <p class="text-muted mb-0">No cities listed for this state.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            {% endif %}
+        </div>
+
+    {% else %}
+        {% include 'base/snippets/empty-list.html' %}
+    {% endif %}
+{% endblock content %}
+
+
