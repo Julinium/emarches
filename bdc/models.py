@@ -83,8 +83,7 @@ class PurchaseOrder(models.Model):
 class Article(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name="articles", blank=True, null=True, verbose_name=_("Purchase Order"))
-    number = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Number"))
-    rank = models.SmallIntegerField(blank=True, null=True, default=1, verbose_name=_("Rank"))
+    number = models.SmallIntegerField(blank=True, null=True, default=1, verbose_name=_("Number"))
     title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
     specifications = models.TextField(blank=True, null=True, verbose_name=_("Specifications"))
     warranties = models.TextField(blank=True, null=True, verbose_name=_("Warranties"))
@@ -96,15 +95,27 @@ class Article(models.Model):
 
     class Meta:
         db_table = 'base_article'
-        ordering = ['rank']
+        ordering = ['number']
         verbose_name = _("Article")
     
     def __str__(self):
         return f"{ self.quantity } x { self.uom } - { self.title }"
 
-    # def save(self, *args, **kwargs):
-    #     tender = self.lot.tender
-    #     tender.has_samples = True
-    #     tender.save()
 
-    #     super().save(*args, **kwargs)
+class Attachement(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name="attachements", blank=True, null=True, verbose_name=_("Purchase Order"))
+    name = models.TextField(blank=True, null=True, verbose_name=_("Name"))
+    link = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Link"))
+
+
+    class Meta:
+        db_table = 'base_join'
+        ordering = ['name']
+        verbose_name = _("Attachement")
+    
+    def __str__(self):
+        return f"{ self.name } - { self.purchase_order.reference }"
+
+
+

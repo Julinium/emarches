@@ -13,7 +13,7 @@ from decimal import Decimal
 from . import helper
 from . import constants as C
 
-from bdc.models import Client, PurchaseOrder
+from bdc.models import Client, PurchaseOrder, Attachement
 
 LISTING_BASE_URL = C.BDC_LISTING_BASE_URL
 LISTING_PAGE_PARAM = "page"
@@ -27,9 +27,12 @@ rabat_tz = pytz.timezone("Africa/Casablanca")
 def get_headers():
     return {
         "User-Agent": helper.getUa(),
-        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
-        # "User-Agent": random.choice(USER_AGENTS),
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8"
     }
+    
+
+def safe_text(elem):
+    return elem.get_text(strip=True) if elem else ""
 
 
 def fetch_page(url, retries=3):
@@ -50,7 +53,7 @@ def fetch_page(url, retries=3):
     return None
 
 
-def get_bdc(card, details=None):
+def get_bdc(card):
     """
     Extracts data from a single item card
     """
@@ -96,16 +99,80 @@ def get_bdc(card, details=None):
         deadline = rabat_tz.localize(naive_dt)
     except: pass
 
-    # TODO: Fetch link and get details ...
-    
-    bdc = {
-        'reference' : reference,
-        'title'     : title,
-        'acheteur'  : acheteur,
-        'dealine'   : deadline,
-        'location'  : lieu,
-        'link'      : link,
-    }
+    # Get details
+    html = fetch_page(link)
+    if html:
+
+        soup = BeautifulSoup(html, "lxml")
+        box = soup.find("div", class_="py-3 content__subBox  devisAccordionStyle")
+
+        published = None
+        try:
+            published_str = safe_text(box.select_one("#dateMiseEnLigne ~ div span.truncate-one-line"))
+            naive_dt = datetime.strptime(published_str, "%d/%m/%Y %H:%M")
+            published = rabat_tz.localize(naive_dt)
+        except: pass
+
+        category_name = None
+        try: category_name = safe_text(box.select_one("#category ~ div span:nth-of-type(2)"))
+        except: pass
+
+        nature = None
+        try: nature = safe_text(box.select_one("#screwdriver ~ div span:nth-of-type(2)"))
+        except: pass
+
+        # Articles
+        articles = []
+        for acc in box.select(".accordion-item"):
+            title_btn = acc.select_one("button")
+            title_text = safe_text(title_btn).replace("\n", " ")
+
+            number = int(safe_text(acc.select_one("span.font-bold")).replace("#", ""))
+            title_article = " ".join(title_text.split()[1:])
+            uom = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(1)"))
+            quantity = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(2)"))
+            vat_percent = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(3)"))
+            warranties = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(4)"))
+            specifications = safe_text(acc.select_one(".gap-3 .text-black"))
+
+            # Le veau laid violet volait le volet et volait avec le vieux lait.
+
+            articles.append({
+                'number'            : number,
+                'title'             : title_article,
+                'uom'               : uom,
+                'quantity'          : quantity,
+                'vat_percent'       : vat_percent,
+                'specifications'    : specifications,
+                'warranties'        : warranties,
+            })
+
+        attachements = [
+            {
+                "name": safe_text(a),
+                "link": a["href"] if a and a.has_attr("href") else None
+            }
+            for a in box.select("a.nounderlinelink")
+        ]
+
+        category = {'name' : category_name}
+
+        bdc = {
+            'reference'     : reference,
+            'title'         : title,
+            'acheteur'      : acheteur,
+            'published'     : published,
+            'deadline'      : deadline,
+            'nature'        : nature,
+            'location'      : lieu,
+            'link'          : link,
+            'category'      : category,
+            'articles'      : articles,
+            'attachements'  : attachements,
+        }
+
+    else:
+        return {}
     
     return bdc
     
@@ -253,5 +320,69 @@ def get_and_save_results():
         page += 1
 
     return 0 if errors_happened == False else 1
+
+
+def get_and_save_bdcs():
+
+    errors_happened = False
+    handled_items = 0
+    clients_created = 0
+    bdc_created = 0
+
+    page = 1
+    while True:
+        url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
+        print("[=====] Fetching page :", page)
+        
+        html = fetch_page(url)
+        if not html:
+            errors_happened = True
+            break
+
+        soup = BeautifulSoup(html, "lxml")
+        container = soup.select_one("div.mt-4.py-3.content__subBox")
+
+        if not container:
+            errors_happened = True
+            break
+        
+        cards = container.select(".entreprise__card")
+        for card in cards:
+            try:
+                item = get_bdc(card)
+# TODO: Complete
+                client, created_clt = Client.objects.update_or_create(name=item['client'])
+                if created_clt: clients_created += 1
+
+                itex, created_bdc = PurchaseOrder.objects.update_or_create(
+                    reference = item['reference'],
+                    client = client,
+                    title = item['title'],
+                    defaults = {
+                        'unsuccessful': item['unsuccessful'],
+                        'bids_count': item['bids_count'],
+                        'winner_entity': item['winner_entity'],
+                        "winner_amount" : item['winner_amount'],
+                        "deliberated" : item['deliberated'],
+                    }
+                )
+                if created_bdc: bdc_created += 1
+            except Exception as xc:
+                print("[XXXXX] Exception raised while getting data: ", str(xc))
+                errors_happened = True
+
+            handled_items += 1
+
+        if not has_next_page(soup):
+            print("\n[✔✔✔✔✔] Reached last page.")
+            print('\tHandled items: ', handled_items)
+            print('\tP. Orders created: ', bdc_created)
+            print('\tClients created: ', clients_created)
+            break
+
+        page += 1
+
+    return 0 if errors_happened == False else 1
+
 
 get_and_save_results()
