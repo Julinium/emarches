@@ -44,6 +44,13 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
+            <a class="dropdown-item py-2" aria-disabled="true" href="#" disabled>
+                <i class="{{ bicons.client }} me-2"></i>
+                {% trans 'Clients' %}
+            </a>
+        </li>
+
+        <li class="">
             <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'portal_locations_list' %}">
                 <i class="{{ bicons.location }} me-2"></i>
                 {% trans 'Locations' %}

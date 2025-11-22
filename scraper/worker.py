@@ -16,7 +16,8 @@ def main():
 
 #####################################
     # from scraper import bonner
-    # bonner.get_and_save_results()
+    # bonner.get_and_save_bdcs()
+    # get_and_save_results()
 #####################################
 
     started_time = datetime.now()

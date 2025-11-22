@@ -462,24 +462,26 @@
                     </div>
                     <div class="modal-body small">
                         <div class="mb-3 p-1 border rounded bg-warning-subtle shadow shadow-sm">
-                            <span><i class="bi bi-info-circle px-1"></i></span>
-                            <span class="small fw-light text-muted">{% trans 'Changes data may not be accurate' %}.</span>
+                            <span><i class="bi bi-exclamation-diamond px-1"></i></span>
+                            <span class="small fw-light text-muted">{% trans 'Changes are collected independantly and are prone to inaccuracies' %}.</span>
+
                         </div>
                         <table class="table table-hover small">
                             <tbody>
+                                {% trans 'None' as empty %}
                                 {% for change in tender.changes.all %}
                                     {% for mod in change.changes|dictify %}
                                         <tr>
                                             <td>
-                                                <div>
-                                                    <span>{{ change.reported }}: </span>
-                                                    <span class="fw-bold">{{ mod.field }}</span>
-                                                </div>
-                                                <div>
-                                                    <span>{{ mod.old_value|default:'-' }}</span>
-                                                    <span>&#10230;</span>
-                                                    <span class="fw-bold">{{ mod.new_value|default:'-' }}</span>
-                                                </div>
+                                                <i class="bi bi-clock"></i>
+                                                <span>{{ change.reported }}</span>
+                                                <i class="{{ bicons.changes }} ms-2"></i>
+                                                <span class="fw-bold">{{ mod.field }}</span>
+                                                <i class="bi bi-eraser ms-2"></i>
+                                                <span class="text-muted">{{ mod.old_value|default:empty }}</span>
+                                                <!-- <span>&#10230;</span> -->
+                                                <i class="bi bi-pen ms-2"></i>
+                                                <span class="fw-bold">{{ mod.new_value|default:empty }}</span>
                                             </td>
                                         </tr>
                                     {% endfor %}

@@ -89,9 +89,8 @@ class Article(models.Model):
     warranties = models.TextField(blank=True, null=True, verbose_name=_("Warranties"))
 
     uom = models.CharField(max_length=1024, blank=True, null=True, default='U', verbose_name=_("Unit of Measure"))
-    quantity = models.DecimalField(max_digits=512, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Quantity"))
-    vat_percent = models.DecimalField(max_digits=512, decimal_places=2, blank=True, null=True, default=20, verbose_name=_("VAT %"))
-
+    quantity = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Quantity"))
+    vat_percent = models.DecimalField(max_digits=12, decimal_places=2, blank=True, null=True, default=20, verbose_name=_("VAT %"))
 
     class Meta:
         db_table = 'base_article'
@@ -108,9 +107,8 @@ class Attachement(models.Model):
     name = models.TextField(blank=True, null=True, verbose_name=_("Name"))
     link = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Link"))
 
-
     class Meta:
-        db_table = 'base_join'
+        db_table = 'base_attachement'
         ordering = ['name']
         verbose_name = _("Attachement")
     

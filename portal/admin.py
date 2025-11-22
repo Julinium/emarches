@@ -1,6 +1,7 @@
 from django.contrib import admin
 from base.models import Crawler #, Category
 from nas.models import TenderView, Download
+from bdc.models import PurchaseOrder
 # from modeltranslation.admin import TranslationAdmin
 
 @admin.register(Crawler)
@@ -105,7 +106,12 @@ class DownloadAdmin(admin.ModelAdmin):
     get_username.short_description = 'User'
 
 
-# @admin.register(Category)
-# class CategoryAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'label')
+@admin.register(PurchaseOrder)
+class PurchaseOrderAdmin(admin.ModelAdmin):
+    list_display = [f.name for f in PurchaseOrder._meta.fields]
+    list_display = ['title', 'reference', 'deadline', 'published', 'client', 'category', 'deliberated']
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(deliberated=None)
 

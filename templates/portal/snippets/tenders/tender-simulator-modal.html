@@ -231,6 +231,10 @@
     const spanMin = document.getElementById('spanMin');
     const spanMax = document.getElementById('spanMax');
 
+    const defaultCardClasses = 'candidate card px-2 py-1 w-100 ms-2 bg-opacity-25';
+    const winnerCardClasses = 'fw-bold text-success bg-success'.split(" ");
+    const loserCardClasses = 'bg-white'.split(" ");
+
 
     /* ---------- UI CREATION ---------- */
     function createCandidateRow(initial_bid=Esti) {
@@ -256,7 +260,8 @@
         flexDiv.appendChild(actionsDiv);
 
         const card = document.createElement('div');
-        card.className = 'candidate card px-2 py-1 w-100 ms-2 bg-white bg-opacity-50';
+        card.className = defaultCardClasses;
+        card.classList.add(...loserCardClasses);
         card.dataset.id = id;
 
         const divTop = document.createElement('div');
@@ -380,7 +385,6 @@
         const spanM = document.getElementById('spanMean');
         const sliderMean = document.getElementById('sliderMean');
         const sliderTarget = document.getElementById('sliderTarget');
-        const winnerBgClass = 'bg-success-subtle fw-bold text-success'.split(" ");
         
         let M = 0;
         if (accepted.length) {
@@ -423,7 +427,11 @@
         }
 
         // highlight
-        document.querySelectorAll('.candidate').forEach(r=>r.classList.remove(...winnerBgClass));
+        document.querySelectorAll('.candidate').forEach( r => {
+            r.classList.remove(...winnerCardClasses);
+            r.classList.add(...loserCardClasses);
+            } 
+        );
         document.querySelectorAll('.winner').forEach(r=>r.classList.add('d-none'));
 
 
@@ -453,7 +461,8 @@
             if (winnerCand) {
                 const winnerCard = document.querySelector(`.candidate[data-id="${winnerCand.id}"]`);
                 if (winnerCard) {
-                    winnerCard.classList.add(...winnerBgClass);
+                    winnerCard.classList.add(...winnerCardClasses);
+                    winnerCard.classList.remove(...loserCardClasses);
                 };
                 const winnerEl = document.querySelector(`.winner[data-id="${winnerCand.id}"]`);
                 if (winnerEl) {
