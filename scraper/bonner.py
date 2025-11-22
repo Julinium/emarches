@@ -64,7 +64,6 @@ def get_bdc(card):
     ref_text = card.select_one(".entreprise__middleSubCard a.table__links")
     try: reference = ref_text.get_text(strip=True).replace("Référence :", "").strip()
     except Exception as xc: 
-        print('ref_text :::::::::', ref_text)
         print('Reference exception: \n', xc)
         reference = None
 
@@ -86,6 +85,11 @@ def get_bdc(card):
         print('Link exception: \n', xc)
         link = None
 
+    try: chrono = link.rsplit('/', 1)[-1]
+    except Exception as xc: 
+        print('Chrono exception: \n', xc)
+        chrono = None
+
     date_limite_text = None
     heure_limite_text = None
     lieu = None
@@ -93,20 +97,26 @@ def get_bdc(card):
     right = card.select_one(".entreprise__rightSubCard--top")
     if right:
         date_text = right.select("span")[1].get_text(strip=True)
-        try: date_limite_text = date_text.replace("", "").strip()
+        try: 
+            date_limite_text = date_text.replace("", "").strip()
+            # print('\tdate_limite_text', date_limite_text)
         except Exception as xc: 
             print('date_limite_text exception: \n', xc)
             pass
 
         heure_text = right.select("span")[2].get_text(strip=True)
-        try: heure_limite_text = heure_text.replace("", "").strip()
+        try: 
+            heure_limite_text = heure_text.replace("", "").strip()
+            # print('\theure_limite_text', heure_limite_text)
         except Exception as xc: 
             print('heure_limite_text exception: \n', xc)
             pass
 
         lieu_text = right.select("span")[4]
-        try: lieu = lieu_text.get_text(strip=True)
-        except Exception as xc: 
+        try: 
+            lieu = lieu_text.get_text(strip=True)
+            # print('\tLieu:', lieu)
+        except Exception as xc:
             print('lieu exception: \n', xc)
             pass
 
@@ -115,7 +125,7 @@ def get_bdc(card):
         deadline_str = f"{date_limite_text} {heure_limite_text}"
         naive_dt = datetime.strptime(deadline_str, "%d/%m/%Y %H:%M")
         deadline = rabat_tz.localize(naive_dt)
-    except Exception as xc: 
+    except Exception as xc:
         print('deadline exception: \n', xc)
         pass
 
@@ -134,38 +144,63 @@ def get_bdc(card):
         try:
             published_str = safe_text(box.select_one("#dateMiseEnLigne ~ div span.truncate-one-line"))
             naive_dt = datetime.strptime(published_str, "%d/%m/%Y %H:%M")
+            # print('\tPublished naive_dt:', published_str)
             published = rabat_tz.localize(naive_dt)
-        except: pass
+            # print('\tPublished dt:', published)
+        except Exception as xc:
+            print('Published exception: \n', xc)
+            pass
 
         category_name = None
-        try: category_name = safe_text(box.select_one("#category ~ div span:nth-of-type(2)"))
-        except: pass
+        try: 
+            category_name = safe_text(box.select_one("#category ~ div span:nth-of-type(2)"))
+            # print('\tCategory name:', category_name)
+        except Exception as xc:
+            print('category_name exception: \n', xc)
+            pass
 
         nature = None
         try: nature = safe_text(box.select_one("#screwdriver ~ div span:nth-of-type(2)"))
-        except: pass
+        except Exception as xc:
+            print('nature exception: \n', xc)
+            pass
 
         # Articles
         articles = []
         for acc in box.select(".accordion-item"):
             title_btn = acc.select_one("button")
-            title_text = safe_text(title_btn).replace("\n", " ")
+            title_text = safe_text(title_btn) #.replace("\n", " ")
 
             number = safe_text(acc.select_one("span.font-bold")).replace("#", "")
-            title_article = " ".join(title_text.split()[1:])
-            uom = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(1)"))
-            quantity = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(2)"))
-            vat_percent = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(3)"))
-            warranties = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(4)"))
+            if number == '': number = '0'
+            # title_article = " ".join(title_text.split()[1:])
+            title_article = title_text.replace('#' + number, '')
+            mini_elements = acc.select(".content__article--subMiniCard")
+            uom = safe_text(mini_elements[0])
+            # uom = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(1)"))
+            quantity = safe_text(mini_elements[1])
+            # quantity_element = acc.select_one(".content__article--subMiniCard:nth-of-type(2)")
+            # content__article--subMiniCard
+            # quantity = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(2)"))
+            vat_percent = safe_text(mini_elements[2])
+            # vat_percent = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(3)"))
+            if vat_percent == '': vat_percent = '0'
+            # print('\n\n\n===========================\n', quantity, vat_percent, '==========================\n\n\n')
+            # warranties = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(4)"))
+            warranties = safe_text(mini_elements[3])
             specifications = safe_text(acc.select_one(".gap-3 .text-black"))
 
             # Le veau laid violet volait le volet et volait avec le vieux lait.
 
             try: number = int(number)
-            except: number = None
+            except Exception as xc:
+                print('Article number exception: \n', xc)
+                number = None
 
-            try: vat_percent = int(vat_percent)
-            except: vat_percent = None
+            # try: vat_percent = int(vat_percent)
+            # except Exception as xc:
+            #     print('vat_percent exception: \n', xc)
+            #     vat_percent = None
 
 
             articles.append({
@@ -188,18 +223,21 @@ def get_bdc(card):
 
 
         bdc = {
+            'chrono'        : chrono,
             'reference'     : reference,
             'title'         : title,
             'published'     : published,
             'deadline'      : deadline,
             'nature'        : nature,
             'location'      : lieu,
-            'link'          : link,
+            'link'          : details_url,
             'client'        : acheteur,
             'category'      : category_name,
             'articles'      : articles,
             'attachements'  : attachements,
         }
+
+        # print('\n\n\n', bdc, '\n\n\n')
 
     else:
         return {}
@@ -368,7 +406,7 @@ def get_and_save_bdcs():
     while True:
         url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
         print("[=====] Fetching page :", page)
-        
+
         html = fetch_page(url)
         if not html:
             errors_happened = True
@@ -382,38 +420,61 @@ def get_and_save_bdcs():
             break
         
         cards = container.select(".entreprise__card")
+        i = 0
         for card in cards:
+            i += 1
+            print("\t[=====] Fetching item :", i)
             try:
                 item = get_bdc(card)
                 if item != {} :
+
+                    published = item['published']
+                    deadline  = item['deadline']
+                    location  = item['location']
+                    link      = item['link']
+                    chrono    = item['chrono']
+
                     client_name = item['client']
                     if client_name and client_name != '':
-                        client, created = Client.objects.update_or_create(name=client_name)
-                        if created: clients_created += 1
+                        client, created = Client.objects.get_or_create(name=client_name)
+                        if created :
+                            print('\t\t\tCreated Client: ', client_name)
+                            clients_created += 1
+                        else:
+                            print('\t\t\tFound Client: ', client_name)
 
                     category_label = item['category']
                     if category_label and category_label != '':
-                        category, created = Category.objects.update_or_create(label=category_label)
-                        if created: categorys_created += 1
+                        category, created = Category.objects.get_or_create(label=category_label)
+                        if created :
+                            print('\t\t\tCreated Category: ', category_label)
+                            categorys_created += 1
+                        else:
+                            print('\t\t\tFound Category: ', category_label)
 
                     bdc, created = PurchaseOrder.objects.update_or_create(
                         reference = item['reference'],
                         client = client,
                         title = item['title'],
                         defaults = {
-                            'category' : category,
-                            # 'unsuccessful': None,
-                            # 'bids_count': item['bids_count'],
-                            # 'winner_entity': item['winner_entity'],
-                            # "winner_amount" : item['winner_amount'],
-                            # "deliberated" : item['deliberated'],
+                            'chrono'    : chrono,
+                            'category'  : category,
+                            'published' : published,
+                            'deadline'  : deadline,
+                            'location'  : location,
+                            'link'      : link,
                         }
                     )
-                    if created : bdc_created += 1
+                    if created : 
+                        print('\t\tCreated POOOOOOOOOO: ', chrono)
+                        bdc_created += 1
+                    else:
+                        print('\t\t\tUpdated POOOOOOOOOO: ', chrono)
 
                     articles_items = item['articles']
                     if articles_items and articles_items != {}:
                         for articles_item in articles_items:
+                            # print('\t\t\tarticles_item: ', articles_item)
                             article_number = articles_item['number']
                             if article_number and article_number != '':
                                 number = int(article_number)
@@ -421,19 +482,27 @@ def get_and_save_bdcs():
                                     qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
                                     quantity = Decimal(qts)
                                 except: quantity = 0
+                                try:
+                                    vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
+                                    vat_percent = Decimal(vat)
+                                except: vat_percent = 0
 
                                 article, created = Article.objects.update_or_create(
                                     purchase_order=bdc, number=number,
                                     defaults = {
-                                        'title' : articles_item['title'],
+                                        'title'          : articles_item['title'],
                                         'specifications' : articles_item['specifications'],
-                                        'warranties' : articles_item['warranties'],
-                                        'uom' : articles_item['uom'],
-                                        'quantity' : quantity,
-                                        'vat_percent' : articles_item['vat_percent'],
+                                        'warranties'     : articles_item['warranties'],
+                                        'uom'            : articles_item['uom'],
+                                        'quantity'       : quantity,
+                                        'vat_percent'    : vat_percent,
                                     }
                                 )
-                                if created : articles_created += 1
+                                if created:
+                                    print('\t\t\tCreated Article: ', number, articles_item['title'])
+                                    articles_created += 1
+                                else:
+                                    print('\t\t\tUpdated Article: ', number, articles_item['title'])
 
                     attachements_items = item['attachements']
                     if attachements_items and attachements_items != {}:
@@ -444,7 +513,11 @@ def get_and_save_bdcs():
                                     purchase_order=bdc, link=link,
                                     defaults = {'name': attachements_item['name']}
                                 )
-                                if created : attachements_created += 1
+                                if created :
+                                    print('\t\t\tCreated Attachement: ', attachements_item['name'])
+                                    attachements_created += 1
+                                else:
+                                    print('\t\t\tUpdated Attachement: ', attachements_item['name'])
                     
                 else:
                     print("[XXXXX] Got an empty item !")
@@ -469,4 +542,5 @@ def get_and_save_bdcs():
     return 0 if errors_happened == False else 1
 
 
-get_and_save_bdcs()
+# get_and_save_bdcs()
+

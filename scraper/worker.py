@@ -15,8 +15,8 @@ def main():
 
 
 #####################################
-    # from scraper import bonner
-    # bonner.get_and_save_bdcs()
+    from scraper import bonner
+    bonner.get_and_save_bdcs()
     # get_and_save_results()
 #####################################
 
