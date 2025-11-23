@@ -99,7 +99,6 @@ def get_bdc(card):
         date_text = right.select("span")[1].get_text(strip=True)
         try: 
             date_limite_text = date_text.replace("", "").strip()
-            # print('\tdate_limite_text', date_limite_text)
         except Exception as xc: 
             print('date_limite_text exception: \n', xc)
             pass
@@ -107,7 +106,6 @@ def get_bdc(card):
         heure_text = right.select("span")[2].get_text(strip=True)
         try: 
             heure_limite_text = heure_text.replace("", "").strip()
-            # print('\theure_limite_text', heure_limite_text)
         except Exception as xc: 
             print('heure_limite_text exception: \n', xc)
             pass
@@ -115,7 +113,6 @@ def get_bdc(card):
         lieu_text = right.select("span")[4]
         try: 
             lieu = lieu_text.get_text(strip=True)
-            # print('\tLieu:', lieu)
         except Exception as xc:
             print('lieu exception: \n', xc)
             pass
@@ -131,22 +128,17 @@ def get_bdc(card):
 
     # Get details
     details_url = f"{BDC_DETAILS_HOST}{link}"
-    # print('details_url', details_url)
     html = fetch_page(details_url)
     if html:
 
         soup = BeautifulSoup(html, "lxml")
-        # box = soup.find("div", class_="py-3 content__subBox  devisAccordionStyle")
         box = soup.select_one("div.py-3.content__subBox.devisAccordionStyle")
-        # print('soup =[', soup, ']')
 
         published = None
         try:
             published_str = safe_text(box.select_one("#dateMiseEnLigne ~ div span.truncate-one-line"))
             naive_dt = datetime.strptime(published_str, "%d/%m/%Y %H:%M")
-            # print('\tPublished naive_dt:', published_str)
             published = rabat_tz.localize(naive_dt)
-            # print('\tPublished dt:', published)
         except Exception as xc:
             print('Published exception: \n', xc)
             pass
@@ -154,7 +146,6 @@ def get_bdc(card):
         category_name = None
         try: 
             category_name = safe_text(box.select_one("#category ~ div span:nth-of-type(2)"))
-            # print('\tCategory name:', category_name)
         except Exception as xc:
             print('category_name exception: \n', xc)
             pass
@@ -169,24 +160,16 @@ def get_bdc(card):
         articles = []
         for acc in box.select(".accordion-item"):
             title_btn = acc.select_one("button")
-            title_text = safe_text(title_btn) #.replace("\n", " ")
+            title_text = safe_text(title_btn)
 
             number = safe_text(acc.select_one("span.font-bold")).replace("#", "")
             if number == '': number = '0'
-            # title_article = " ".join(title_text.split()[1:])
             title_article = title_text.replace('#' + number, '')
             mini_elements = acc.select(".content__article--subMiniCard")
             uom = safe_text(mini_elements[0])
-            # uom = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(1)"))
             quantity = safe_text(mini_elements[1])
-            # quantity_element = acc.select_one(".content__article--subMiniCard:nth-of-type(2)")
-            # content__article--subMiniCard
-            # quantity = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(2)"))
             vat_percent = safe_text(mini_elements[2])
-            # vat_percent = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(3)"))
             if vat_percent == '': vat_percent = '0'
-            # print('\n\n\n===========================\n', quantity, vat_percent, '==========================\n\n\n')
-            # warranties = safe_text(acc.select_one(".content__article--subMiniCard:nth-of-type(4)"))
             warranties = safe_text(mini_elements[3])
             specifications = safe_text(acc.select_one(".gap-3 .text-black"))
 
@@ -196,12 +179,6 @@ def get_bdc(card):
             except Exception as xc:
                 print('Article number exception: \n', xc)
                 number = None
-
-            # try: vat_percent = int(vat_percent)
-            # except Exception as xc:
-            #     print('vat_percent exception: \n', xc)
-            #     vat_percent = None
-
 
             articles.append({
                 'number'            : number,
@@ -236,8 +213,6 @@ def get_bdc(card):
             'articles'      : articles,
             'attachements'  : attachements,
         }
-
-        # print('\n\n\n', bdc, '\n\n\n')
 
     else:
         return {}
@@ -394,6 +369,7 @@ def get_and_save_results():
 
 def get_and_save_bdcs():
 
+    truncater = 32
     errors_happened = False
     handled_items = 0
     clients_created = 0
@@ -405,7 +381,7 @@ def get_and_save_bdcs():
     page = 1
     while True:
         url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
-        print("[=====] Fetching page :", page)
+        print("\n\n[=====] Fetching page :", page)
 
         html = fetch_page(url)
         if not html:
@@ -423,7 +399,7 @@ def get_and_save_bdcs():
         i = 0
         for card in cards:
             i += 1
-            print("\t[=====] Fetching item :", i)
+            print("\n\t[=====] Fetching item :", i)
             try:
                 item = get_bdc(card)
                 if item != {} :
@@ -438,26 +414,27 @@ def get_and_save_bdcs():
                     if client_name and client_name != '':
                         client, created = Client.objects.get_or_create(name=client_name)
                         if created :
-                            print('\t\t\tCreated Client: ', client_name)
+                            print('\t\t\tCreated Client: ', client_name[:truncater], '...')
                             clients_created += 1
                         else:
-                            print('\t\t\tFound Client: ', client_name)
+                            print('\t\t\tFound Client: ', client_name[:truncater], '...')
 
                     category_label = item['category']
                     if category_label and category_label != '':
                         category, created = Category.objects.get_or_create(label=category_label)
                         if created :
-                            print('\t\t\tCreated Category: ', category_label)
+                            print('\t\t\tCreated Category: ', category_label[:truncater], '...')
                             categorys_created += 1
                         else:
-                            print('\t\t\tFound Category: ', category_label)
+                            print('\t\t\tFound Category: ', category_label[:truncater], '...')
 
                     bdc, created = PurchaseOrder.objects.update_or_create(
                         reference = item['reference'],
-                        client = client,
                         title = item['title'],
+                        chrono = chrono,
+                        client = client,
                         defaults = {
-                            'chrono'    : chrono,
+                            # 'chrono'    : chrono,
                             'category'  : category,
                             'published' : published,
                             'deadline'  : deadline,
@@ -466,43 +443,57 @@ def get_and_save_bdcs():
                         }
                     )
                     if created : 
-                        print('\t\tCreated POOOOOOOOOO: ', chrono)
+                        print('\t\tCreated Purchase Order: ', chrono, item['title'][:truncater], '...')
                         bdc_created += 1
                     else:
-                        print('\t\t\tUpdated POOOOOOOOOO: ', chrono)
+                        print('\t\t\tUpdated Purchase Order: ', chrono, item['title'][:truncater], '...')
 
                     articles_items = item['articles']
                     if articles_items and articles_items != {}:
+                        r = 0
                         for articles_item in articles_items:
-                            # print('\t\t\tarticles_item: ', articles_item)
-                            article_number = articles_item['number']
-                            if article_number and article_number != '':
-                                number = int(article_number)
-                                try:
-                                    qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
-                                    quantity = Decimal(qts)
-                                except: quantity = 0
-                                try:
-                                    vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
-                                    vat_percent = Decimal(vat)
-                                except: vat_percent = 0
+                            r += 1
+                            try: number = int(articles_item['number'])
+                            except Exception as xc:
+                                print(xc)
+                                traceback.print_exc()
+                                number = r
 
-                                article, created = Article.objects.update_or_create(
-                                    purchase_order=bdc, number=number,
-                                    defaults = {
-                                        'title'          : articles_item['title'],
-                                        'specifications' : articles_item['specifications'],
-                                        'warranties'     : articles_item['warranties'],
-                                        'uom'            : articles_item['uom'],
-                                        'quantity'       : quantity,
-                                        'vat_percent'    : vat_percent,
-                                    }
-                                )
-                                if created:
-                                    print('\t\t\tCreated Article: ', number, articles_item['title'])
-                                    articles_created += 1
-                                else:
-                                    print('\t\t\tUpdated Article: ', number, articles_item['title'])
+                            # article_number = articles_item['number']
+                            # if article_number and article_number != '':
+                            #     number = int(article_number)
+                            try:
+                                qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
+                                quantity = Decimal(qts)
+                            except Exception as xc:
+                                print(xc)
+                                traceback.print_exc()
+                                quantity = 0
+                            try:
+                                vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
+                                vat_percent = Decimal(vat)
+                            except Exception as xc:
+                                print(xc)
+                                traceback.print_exc()
+                                vat_percent = 0
+
+                            article, created = Article.objects.update_or_create(
+                                purchase_order=bdc, 
+                                number=number,
+                                defaults = {
+                                    'title'          : articles_item['title'],
+                                    'specifications' : articles_item['specifications'],
+                                    'warranties'     : articles_item['warranties'],
+                                    'uom'            : articles_item['uom'],
+                                    'quantity'       : quantity,
+                                    'vat_percent'    : vat_percent,
+                                }
+                            )
+                            if created:
+                                print('\t\t\tCreated Article:', number, articles_item['title'][:truncater], '...')
+                                articles_created += 1
+                            else:
+                                print('\t\t\tUpdated Article:', number, articles_item['title'][:truncater], '...')
 
                     attachements_items = item['attachements']
                     if attachements_items and attachements_items != {}:
@@ -514,15 +505,15 @@ def get_and_save_bdcs():
                                     defaults = {'name': attachements_item['name']}
                                 )
                                 if created :
-                                    print('\t\t\tCreated Attachement: ', attachements_item['name'])
+                                    print('\t\t\tCreated Attachement:', attachements_item['name'][:truncater], '...')
                                     attachements_created += 1
                                 else:
-                                    print('\t\t\tUpdated Attachement: ', attachements_item['name'])
+                                    print('\t\t\tUpdated Attachement:', attachements_item['name'][:truncater], '...')
                     
                 else:
                     print("[XXXXX] Got an empty item !")
             except Exception as xc:
-                print("[XXX----XXX] Exception raised while getting data: ", str(xc))
+                print("[XXX----XXX] Exception raised while getting data:", xc)
                 traceback.print_exc()
                 errors_happened = True
 

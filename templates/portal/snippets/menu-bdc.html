@@ -1,13 +1,10 @@
 {% load i18n %}
 
 <li class="nav-item dropdown">
-    <a class="nav-link py-2 dropdown-toggle" 
+    <a class="nav-link py-2 dropdown-toggle"
         href="#" id="portalScrollingDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="bi bi-megaphone-fill"></i> {% trans 'Tenders' %}
-        {% if faved_ids %}
-            <span class="badge mb-2 px-1 text-white bg-primary"> </span>
-        {% endif %}
+    <i class="bi bi-megaphone-fill"></i> {% trans 'Purchase Orders' %}
     </a>
     <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
         <li class="">
@@ -16,37 +13,13 @@
                 {% trans 'Browse' %}
             </a>
         </li>
-        
-        <li class="">
-            <a class="dropdown-item py-2" href="{% url 'portal_tender_favorite_list' %}">
-                <i class="{{ bicons.favorite }} me-2"></i>
-                {% trans 'Favourites' %}
-                {% if faved_ids %}
-                    <span class="badge bg-primary text-white mx-1">
-                        {{ faved_ids.count|default:0 }}
-                    </span>
-                {% endif %}
-            </a>
-        </li>
-
-        {% if categories %}
-            <li><hr class="dropdown-divider"></li>
-            {% for cat in categories %}
-                <li class="">
-                    <a class="dropdown-item py-2" href="{% url 'portal_tender_list' %}?&category={{ cat.id }}">
-                        <i class="bi bi-{{ cat.icon_bs_class }} me-2"></i>
-                        {{ cat.label }}
-                    </a>
-                </li>
-            {% endfor %}
-        {% endif %}
 
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
             <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.location }} me-2"></i>
-                {% trans 'Locations' %}
+                {% trans 'Results' %}
             </a>
         </li>
 

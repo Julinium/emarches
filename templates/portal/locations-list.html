@@ -2,13 +2,13 @@
 {% load i18n static %}
 
 {% block title %}
-    {% trans "Regions list" %}
+    {% trans "Regions and Prefectures" %}
 {% endblock title %}
 
 {% block content %}
     <div class="d-flex align-items-center justify-content-between px-2">
         <div class="">
-            <span class="h3 me-1">{% trans "Regions list" %}</span>
+            <span class="h3 me-1">{% trans "Regions and Prefectures" %}</span>
         </div>
     </div>    
     
@@ -54,7 +54,7 @@
                                             {% endfor %}
                                         </div>
                                     {% else %}
-                                        <p class="text-muted mb-0">No cities listed for this state.</p>
+                                        <p class="text-muted mb-0">{% trans "No Prefecture listed for this Region" %}.</p>
                                     {% endif %}
                                 </div>
                             </div>

@@ -9,14 +9,13 @@ django.setup()
 
 def main():
     from datetime import datetime, timedelta
-    from scraper import helper, linker, getter , merger, downer
+    from scraper import helper, linker, getter , merger, downer, bonner
     from scraper import constants as C
     from base.models import Crawler
 
 
 #####################################
-    from scraper import bonner
-    bonner.get_and_save_bdcs()
+    # bonner.get_and_save_bdcs()
     # get_and_save_results()
 #####################################
 
@@ -137,6 +136,11 @@ def main():
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
 
+    print('\n\n\n\n======================================================')
+    helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
+    bonner.get_and_save_bdcs()
+    bonner.get_and_save_results()
+    print('\n\n======================================================\n\n')
 
 
 if __name__ == '__main__':

@@ -12,6 +12,7 @@ urlpatterns = [
     path('dce/<uuid:pk>/<str:fn>/',     views.tender_get_file,          name='portal_tender_get_file'),
 
     path('locations/',                  views.locations_list,           name='portal_locations_list'),
+    path('clients/',                    views.clients_list,             name='portal_clients_list'),
     
     path('favorites/',                  views.tender_favorite_list,     name='portal_tender_favorite_list'),
     path('favorites/clean/<str:span>/', views.tender_favorite_clean,    name='portal_tender_favorite_clean'),
