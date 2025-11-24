@@ -1,0 +1,215 @@
+{% extends 'base/base.html' %}
+{% load i18n static %}
+<!-- {% load paraminos %} -->
+{% load humanize %}
+{% load tz %}
+
+{% block title %}
+    {% trans "Purchase Order Details" %}
+{% endblock title %}
+
+{% block content %}
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <span class="h3">{% trans "Purchase Order Details" %}</span>
+        </div>
+    </div>
+
+    {% if not bdc.expired %}
+        <div class="col-12 mb-3">
+            <div class="progress bg-danger p-0 mx-0 my-1" 
+                style="max-height: 0.2rem;"
+                data-bs-toggle="tooltip"
+                title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }}">
+                {% with bdc.days_to_go|progrefy:full_bar_days as green %}
+                    <div class="progress-bar bg-success" 
+                        role="progressbar" style="width: {{ green }}%;" 
+                        aria-valuenow="{{ green }}" aria-valuemin="0" 
+                        aria-valuemax="100">
+                    </div>
+                {% endwith %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if bdc.expired %}
+        <div class="my-3" id="bdc-expired-top" >
+            <div class="text-bg-secondary rounded text-center my-2">
+                <div class="fw-bold p-1">
+                    {% trans 'EXPIRED' %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% include 'bdc/snippets/bdcs/bdc-actions.html' %}
+
+    <div class="my-3" id="bdc-details">
+
+        <div class="row gx-4 gy-0">
+            <div class="mt-3">
+                <span class="small text-muted me-2">{% trans "Object" %}</span>  
+                <span>{{ bdc.title }}</span>
+            </div>
+            <div class="mt-3">
+                <span class="small text-muted me-2">{% trans "Public Client" %}</span>  
+                <span>{{ bdc.client.name }}</span>
+            </div>
+            <div class="mt-3">
+                <span class="small text-muted me-2">{% trans "Category" %}</span>  
+                <span>{{ bdc.category.label }}</span>
+            </div>
+        </div>
+        
+        <div class="row gx-4 gy-0">
+            {% for article in bdc.articles.all %}
+                <div class="mt-2">{{ article.quantity }} x {{ article.uom }}: {{ article.title }}</div>
+            {% empty %}
+                <div>{% trans "No articles found" %}</div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    {% include 'bdc/snippets/bdcs/bdc-actions.html' %}
+
+
+    <div id="bdc-modals">
+        <div id="dceModal" class="modal fade" tabindex="-1" aria-labelledby="dceModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="dceModalLabel">{% translate "Purchase Order files" %}</h1>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
+                        {% for f in bdc.attachements.all %}
+                            <a id="dce-{{ bdc.chrono }}000{{ forloop.counter }}"
+                            class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
+                            href="{{ f.link }}">
+                                <span class=""><i class="{{ bicons.downloads }}"></i></span>
+                                <span class="ms-1">{{ f.name }}</span>
+                            </a>
+                        {% empty %}
+                            <div class="text-center mb-2">
+                                <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
+                            </div>
+                            <div class="text-danger">{% translate "Files for this PO are not ready, yet." %}</div>
+                            <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <span><i class="bi bi-x-lg"></i></span>
+                            <span class="ms-1">{% translate 'Close' %}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="tosts-container" class="toast-container bottom-0 end-0 p-3" style="position: fixed; z-index: 99;">
+                    
+        <div class="toast bg-success-subtle " id="copyToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="dlToastHeader">
+                        {% trans "URL was copied to clipboard" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+    </div>
+
+    {% if bdc.attachements.all|length == 1 %}
+        <script>
+            document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {
+                bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
+                document.getElementById('dceModal').classList.toggle('show');
+            });
+        </script>
+    {% endif %}
+
+    <script>
+        function sharePage(host='https://www.emarches.com') {
+            const bdc_id = "{{ bdc.id|escapejs }}"; 
+            const baseUrl = `${host}/bdc/details/`;
+            const fullUrl = baseUrl + bdc_id + "/";
+            const title = document.title;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: fullUrl
+                })
+                .then(() => console.log('Shared successfully'))
+                .catch((error) => console.error('Error sharing:', error));
+            } else {
+                navigator.clipboard.writeText(fullUrl)
+                    .then(() => {
+                        var toastElement = document.getElementById('copyToast');
+                        var toast = new bootstrap.Toast(toastElement);
+                        toast.show();
+                    })
+                    .catch((error) => console.error('Error copying URL:', error));
+            }
+        }
+    </script>
+
+    <script>
+        const toastEls = document.getElementsByClassName('alert-dismissible');
+        if (toastEls) {
+            for (let i = 0; i < toastEls.length; i++) {
+                const toastEl = toastEls[i];
+                if (!toastEl.classList.contains('alert-danger')){
+                    const timeout = 5000 + 1000*i;
+                    let timeoutId;
+                    let startTime;
+                    let remainingTime = timeout;
+
+                    const handleMouseEnter = () => {
+                    clearTimeout(timeoutId);
+                    startTime = Date.now();
+                    };
+
+                    const handleMouseLeave = () => {
+                    const elapsedTime = Date.now() - startTime;
+                    remainingTime -= elapsedTime;
+
+                    if (remainingTime > 0) {
+                        timeoutId = setTimeout(() => {
+                        toastEl.style.display = 'none';
+                        }, remainingTime);
+                    } else {
+                        toastEl.style.display = 'none';
+                    }
+                    };
+
+                    const updateTimerDisplay = (elt) => {
+                        if (elt){
+                            elt.style.width = "${remainingTime/timeout}%";
+                        }
+                    };
+
+
+                    toastEl.addEventListener('mouseenter', handleMouseEnter);
+                    toastEl.addEventListener('mouseleave', handleMouseLeave);
+
+                    timeoutId = setTimeout(() => {
+                    toastEl.style.display = 'none';
+                    }, timeout);
+                }
+            }
+        }
+    </script>
+
+
+{% endblock content %}

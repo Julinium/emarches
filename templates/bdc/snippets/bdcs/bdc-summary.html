@@ -4,10 +4,8 @@
 <div class="my-3">
     <div class="card shadow shadow-sm">
         <a class="btn p-0 w-100 text-start" 
-           href="#">
-           <!-- url 'portal_bdc_detail' bdc.id -->
+           href="{% url 'bdc_bdc_detail' bdc.id %}">           
             <div class="card-header px-3 py-1">
-
                 <div class="d-flex justify-content-between">
 
                     <div class="d-flex align-items-center">
@@ -105,32 +103,6 @@
                             {% endif %}
                         </div>
                     </div>
-                     <!-- <div class="twolines">
-                        <div>
-                           <span class="small text-muted">
-                                <i class="bi bi-check-square"></i>
-                                {{ bdc.deliberated }}
-                            </span> 
-                            {% if bdc.unsuccessful == True %}
-                                <span class="badge bg-danger">{% trans "UNSUCCESSFUL" %}</span>
-                            {% elif bdc.unsuccessful == False %}
-                                <span class="badge bg-success">              
-                                    <i class="{{ bicons.winner }}"></i>
-                                    {{ bdc.winner_entity|default:'?' }}
-                                </span>
-                                <span class="badge bg-success">
-                                    <i class="{{ bicons.estimate }}"></i>
-                                    {{ bdc.winner_amount|default:'?' }}
-                                </span>
-                            {% else %}
-                                <span class="badge bg-secondary me-2">
-                                    <i class="bi bi-check-circle"></i>
-                                    {% trans "DELIBIRATED" %}
-                                </span>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>  -->
             {% endif %}
                     
         </a>

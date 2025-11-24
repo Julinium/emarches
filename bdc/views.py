@@ -47,14 +47,6 @@ RABAT_TZ = ZoneInfo('Africa/Casablanca')
 
 DCE_SHOW_MODAL = True
 
-# pro_context = pro_context()
-# us = portal_context['user_settings']
-# if us: 
-#     TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
-#     TENDERS_ORDERING_FIELD = us.tenders_ordering_field
-#     TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-#     SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-#     SHOW_CANCELLED = us.tenders_show_cancelled
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -233,6 +225,36 @@ def bdc_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_details(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    bdc = get_object_or_404(PurchaseOrder.objects.select_related(
+                'client', 'category'
+            ).prefetch_related(
+                'articles', 'attachements'
+            ), id=pk)
+
+    if not bdc : return HttpResponse(status=404)
+
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
+    context = { 
+        'bdc'           : bdc,
+        'full_bar_days' : full_bar_days,
+        }
+
+    logger = logging.getLogger('portal')
+    logger.info(f"PurchaseOrder details view: {bdc.id}")
+
+    return render(request, 'bdc/bdc-details.html', context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_details_chrono(request, ch=None):
 
     user = request.user
@@ -245,86 +267,6 @@ def tender_details_chrono(request, ch=None):
     if not tender : return HttpResponse(status=404)
     
     return redirect('portal_tender_detail', tender.id)
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def tender_details(request, pk=None):
-
-    user = request.user
-    if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
-
-    tender = get_object_or_404(PurchaseOrder.objects.select_related(
-                'client', 'category', 'mode', 'procedure'
-            ).prefetch_related(
-                'downloads', 'views', 'favorites',
-                'domains', 'lots', 'lots__agrements', 'lots__qualifs',
-                'lots__meetings', 'lots__samples', 'lots__visits'
-            ), id=pk)
-
-    if not tender : return HttpResponse(status=404)
-
-    files_list = []
-    total_size = 0
-    dce_dir = os.path.join(
-        os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), 
-        settings.DL_PATH_PREFIX + tender.chrono
-        )
-    if os.path.exists(dce_dir): files_list = os.listdir(dce_dir)
-
-    files_info = []
-    if len(files_list) > 0:
-        for entry in files_list:
-            full_path = os.path.join(dce_dir, entry)
-            if os.path.exists(full_path):
-                if os.path.isfile(full_path):
-                    sizens = os.path.getsize(full_path)
-                    total_size += sizens
-                    files_info.append({"name": entry, "size": sizens})
-        
-    files_count = len(files_info)
-    if tender.address_withdrawal == tender.address_bidding and \
-        tender.address_withdrawal == tender.address_opening:
-        addresses = [tender.address_withdrawal]
-    else:
-        addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
-
-    favorited = tender.favorites.filter(user=user).first()
-    # form = FavoriteForm(user=user, tender=tender, instance=favorited)
-
-    # us = get_user_settings(request)
-    pro_context = portal_context(request)
-    us = pro_context['user_settings']
-    full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
-    context = { 
-        'tender'        : tender,
-        'link_prefix'   : LINK_PREFIX,
-        'total_size'    : total_size,
-        'files_info'    : files_info,
-        'dce_modal'     : DCE_SHOW_MODAL,
-        'addresses'     : addresses,
-        'full_bar_days' : full_bar_days,
-        'favorited'     : favorited,
-        }
-    
-    PurchaseOrderView.objects.create(
-        tender=tender, 
-        user=user, )
-
-    logger = logging.getLogger('portal')
-    logger.info(f"PurchaseOrder details view: {tender.id}")
-
-    tolerance_dn = 20.0
-    tolerance_up = 20.0    
-    offers_count = 1
-    
-    context['offer_litteral'] = trans('OFFER')
-    context['offers_count'] = max(offers_count, 1)
-    context['tolerance_dn'] = tolerance_dn
-    context['tolerance_up'] = tolerance_up
-
-    return render(request, 'portal/tender-details.html', context)
 
 
 @login_required(login_url="account_login")

@@ -1,32 +1,7 @@
 {% load i18n %}
 {% load humanize %}
+
 <div class="text-center">
-
-    <div class="wait-azrem pb-3 d-none">
-        <div class="progress" 
-            role="progressbar" aria-valuenow="100" 
-            aria-valuemin="0" aria-valuemax="100"
-            style="max-height: 0.5rem;">
-            <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                style="width: 100%">
-            </div>
-        </div>
-    </div>
-
-    <button onclick="heartToggle()"
-            id="{{ tender.chrono }}-fav"
-            class="m-1 btn btn-outline-primary favorite-toggle
-                {% if favorited %}d-none{% endif %}">
-        <span><i class="{{ bicons.favorite }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Favorite' %}</span>
-    </button>
-    <button onclick="heartToggle('unfav')"
-            id="{{ tender.chrono }}-unfav"
-            class="m-1 btn btn-outline-primary favorite-toggle
-                {% if not favorited %}d-none{% endif %}">
-        <span><i class="{{ bicons.unfavorite }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Unfavorite' %}</span>
-    </button>
 
     <a class="m-1 btn btn-outline-primary" 
        type="button" onclick="sharePage(`https://new.emarches.com`)">
@@ -34,53 +9,13 @@
         <span class="d-none d-md-inline ms-1">{% trans 'Share' %}</span>
     </a>
 
-    {% if files_info|length == 1 and not dce_modal %}
-        {% with files_info|first as f %}
-            <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
-                    class="m-1 btn btn-outline-primary" type="button">
-                <span class="fw-bold">{{ total_size|metrify:1 }}</span>
-                <span><i class="{{ bicons.downloads }}"></i></span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
-            </a>
-        {% endwith %}
-    {% else %}
-        <button class="m-1 btn 
-                       {% if files_info|length == 0 %}
-                            btn-outline-secondary
-                       {% else %}
-                            btn-outline-primary 
-                       {% endif %}" 
-                type="button" 
-                data-bs-toggle="modal" data-bs-target="#dceModal">
-            <span><i class="{{ bicons.downloads }}"></i></span>
-            <span class="d-none d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
-        </button>
-    {% endif %}
+    <button class="m-1 btn btn-outline-primary" type="button" 
+            data-bs-toggle="modal" data-bs-target="#dceModal">
+        <span><i class="{{ bicons.downloads }}"></i></span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
+    </button>
 
-    {% if tender.lots_count < 2 %}
-        <button class="m-1 btn btn-outline-primary
-                {% if tender.estimate == 0 %} disabled {% endif %}" 
-                type="button"
-                data-bs-toggle="modal" data-bs-target="#modalSimulator">
-            <span><i class="{{ bicons.simulator }}"></i></span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
-        </button>
-
-    {% else %}
-        <a class="m-1 btn btn-outline-primary
-           {% if tender.estimate == 0 %} disabled {% endif %}" 
-           type="button" data-bs-toggle="modal" 
-           data-bs-target="#lotSelctModal">
-            <span><i class="{{ bicons.simulator }}"></i></span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
-        </a>
-
-    {% endif %}
-
-    <a class="m-1 btn btn-outline-primary" 
-        type="button" data-bs-toggle="modal" 
-        data-bs-target="#bidConfirmModal">
+    <a href="{{ bdc.link }}" target="_blank" class="m-1 btn btn-outline-primary">
         <span><i class="{{ bicons.bidding }}"></i></span>
         <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
     </a>
