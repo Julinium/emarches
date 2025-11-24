@@ -2,7 +2,7 @@
 {% load humanize %}
 
 <div class="my-3">
-    <div class="card shadow">
+    <div class="card shadow shadow-sm">
         <a class="btn p-0 w-100 text-start" 
            href="#">
            <!-- url 'portal_bdc_detail' bdc.id -->
@@ -17,17 +17,19 @@
                                 title="{% trans 'Main Category' %}: {{ bdc.category.label }}">
                                 <i class="{{ bdc.category.icon_bs_class }} me-1"></i>
                             </span>
-                            <span class="fw-light small text-muted mx-1" 
-                                data-bs-toggle="tooltip" 
-                                title="{% trans 'Execution Location' %}: {{ bdc.location }}">
-                                <span><i class="{{ bicons.location }}"></i></span>
-                                <span>{{ bdc.location }}</span>
-                            </span>
-                            <span class="fw-light small text-muted mx-1" 
+                            {% if bdc.location %}
+                                <span class="fw-light small text-muted me-1" 
+                                    data-bs-toggle="tooltip" 
+                                    title="{% trans 'Execution Location' %}: {{ bdc.location }}">
+                                    <span><i class="{{ bicons.location }}"></i></span>
+                                    <span>{{ bdc.location }}</span>
+                                </span>
+                            {% endif %}
+                            <span class="fw-light small text-muted me-1" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Public Client' %}: {{ bdc.client.name }}">
                                 <span><i class="{{ bicons.client }}"></i></span>
-                                <span>{{ bdc.client }}</span>
+                                <span>{{ bdc.client|default:'?' }}</span>
                             </span>
                         </div>
                     </div>
@@ -52,7 +54,7 @@
                 <div id="t{{ bdc.chrono }}t" class="twolines">
                     <div data-bs-toggle="tooltip"
                         title="{% trans 'Purchase Order object' %}: {{ bdc.title }}">
-                        {% if bdc.expired %}
+                        {% if bdc.expired and not bdc.deliberated %}
                             <span class="badge bg-secondary me-2 fst-italic">{% trans "EXPIRED" %}</span>
                         {% endif %}
                         <span class="text-wrap 
@@ -64,6 +66,72 @@
                 </div>
 
             </div> 
+
+            {% if bdc.deliberated %}
+                <div class="card-footer px-3 py-2 bg-warning-subtle">
+                    <div class="hstack gap-3">
+                        <div class="">
+                            <span class="small text-muted">
+                                <i class="bi bi-check-square"></i>
+                                {{ bdc.deliberated }}
+                            </span>
+                        </div>
+                        <div class="ms-auto text-end ms-2">
+                            {% if bdc.unsuccessful == True %}
+                                <span class="rounded px-2 py-1 m-2 small text-bg-danger">
+                                    <span class="">{% trans "UNSUCCESSFUL" %}</span>
+                                </span>
+                            {% elif bdc.unsuccessful == False %}
+                                <span class="rounded px-2 py-1 m-2 small text-bg-success">  
+                                    <span class="">           
+                                        <i class="{{ bicons.winner }}"></i>
+                                        {{ bdc.winner_entity|default:'?' }}
+                                    </span>
+                                </span> 
+                                <span class="small text-muted">/{{ bdc.bids_count }}</span>
+                                <span class="rounded px-2 py-1 m-2 small text-bg-success">
+                                    <span class="">
+                                        <i class="{{ bicons.estimate }}"></i>
+                                        {{ bdc.winner_amount|default:'?' }}
+                                    </span>
+                                </span>
+                            {% else %}
+                                <span class="rounded px-2 py-1 m-2 small text-bg-secondary me-2">
+                                    <span class="">
+                                        <i class="bi bi-check-circle small"></i>
+                                        {% trans "DELIBIRATED" %}
+                                    </span>
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                     <!-- <div class="twolines">
+                        <div>
+                           <span class="small text-muted">
+                                <i class="bi bi-check-square"></i>
+                                {{ bdc.deliberated }}
+                            </span> 
+                            {% if bdc.unsuccessful == True %}
+                                <span class="badge bg-danger">{% trans "UNSUCCESSFUL" %}</span>
+                            {% elif bdc.unsuccessful == False %}
+                                <span class="badge bg-success">              
+                                    <i class="{{ bicons.winner }}"></i>
+                                    {{ bdc.winner_entity|default:'?' }}
+                                </span>
+                                <span class="badge bg-success">
+                                    <i class="{{ bicons.estimate }}"></i>
+                                    {{ bdc.winner_amount|default:'?' }}
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary me-2">
+                                    <i class="bi bi-check-circle"></i>
+                                    {% trans "DELIBIRATED" %}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>  -->
+            {% endif %}
                     
         </a>
     </div>

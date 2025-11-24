@@ -85,8 +85,8 @@ def bdc_list(request):
             k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
         }
         
-        if not 'ddlnn' in query_dict:
-            query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
+        # if not 'ddlnn' in query_dict:
+        #     query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
         
         if not 'sort' in query_dict:
             query_dict['sort'] = TENDERS_ORDERING_FIELD
@@ -121,9 +121,6 @@ def bdc_list(request):
         
         if not params or not user: return bdcs.distinct(), ff
 
-        # if not SHOW_CANCELLED:
-        #     bdcs = bdcs.filter(cancelled=False)
-
         if 'q' in params:
             ff += 1
             q = params['q']
@@ -138,25 +135,7 @@ def bdc_list(request):
                     case _:
                         bdcs = afas(bdcs, ['keywords'], q)
             else:
-                bdcs = afas(bdcs, ['keywords', 'cliwords','locwords', 'refwords'], q)                
-
-        # if 'estin' in params:
-        #     ff += 1
-        #     estin = params['estin']
-        #     bdcs = bdcs.filter(estimate__gte=estin)
-        # if 'estix' in params:
-        #     ff += 1
-        #     estix = params['estix']
-        #     bdcs = bdcs.filter(estimate__lte=estix)
-
-        # if 'bondn' in params:
-        #     ff += 1
-        #     bondn = params['bondn']
-        #     bdcs = bdcs.filter(bond__gte=bondn)
-        # if 'bondx' in params:
-        #     ff += 1
-        #     bondx = params['bondx']
-        #     bdcs = bdcs.filter(bond__lte=bondx)
+                bdcs = afas(bdcs, ['keywords', 'cliwords','locwords', 'refwords'], q)
 
         if 'ddlnn' in params:
             ddlnn = params['ddlnn']
@@ -180,79 +159,11 @@ def bdc_list(request):
             ff += 1
             publx = params['publx']
             bdcs = bdcs.filter(published__lte=publx)
-        
-        # if 'allotted' in params:
-        #     ff += 1
-        #     allotted = params['allotted']
-        #     if allotted == 'single': bdcs = bdcs.filter(lots_count=1)
-        #     if allotted == 'multi': bdcs = bdcs.filter(lots_count__gt=1)
-        
-        # if 'pme' in params:
-        #     ff += 1
-        #     pme = params['pme']
-        #     if pme == 'reserved': bdcs = bdcs.filter(reserved=True)
-        #     if pme == 'open': bdcs = bdcs.filter(reserved=False)
-        
+                
         if 'category' in params:
             ff += 1
             category = params['category']
             bdcs = bdcs.filter(category__id=category)
-
-        # if 'procedure' in params:
-        #     ff += 1
-        #     procedure = params['procedure']
-        #     bdcs = bdcs.filter(procedure__id=procedure)
-
-        # if 'ebid' in params:
-        #     ff += 1
-        #     ebid = params['ebid']
-        #     if ebid == 'required': bdcs = bdcs.filter(ebid=1)
-        #     if ebid == 'optional': bdcs = bdcs.filter(ebid=0)
-        #     if ebid == 'na': bdcs = bdcs.exclude(ebid=0).exclude(ebid=1)
-
-        # if 'variant' in params:
-        #     ff += 1
-        #     variant = params['variant']
-        #     if variant == 'accepted': bdcs = bdcs.filter(variant=True)
-        #     if variant == 'rejected': bdcs = bdcs.filter(variant=False)
-
-        # if 'samples' in params:
-        #     ff += 1
-        #     samples = params['samples']
-        #     if samples == 'required': bdcs = bdcs.filter(has_samples=True)
-        #     if samples == 'na': bdcs = bdcs.filter(has_samples=False)
-
-        # if 'meetings' in params:
-        #     ff += 1
-        #     meetings = params['meetings']
-        #     if meetings == 'required': bdcs = bdcs.filter(has_meetings=True)
-        #     if meetings == 'na': bdcs = bdcs.filter(has_meetings=False)
-
-        # if 'visits' in params:
-        #     ff += 1
-        #     visits = params['visits']
-        #     if visits == 'required': bdcs = bdcs.filter(has_visits=True)
-        #     if visits == 'na': bdcs = bdcs.filter(has_visits=False)
-
-        # if 'agrements' in params:
-        #     ff += 1
-        #     agrements = params['agrements']
-        #     if agrements == 'required': bdcs = bdcs.filter(has_agrements=True)
-        #     if agrements == 'na': bdcs = bdcs.filter(has_agrements=False)
-        #     if agrements == 'companies':
-        #         if user.is_authenticated:
-        #             user_agrements = Agrement.objects.filter(companies__user=user)
-        #             bdcs = bdcs.filter(lots__agrements__in=user_agrements)
-
-        # if 'qualifs' in params:
-        #     ff += 1
-        #     qualifs = params['qualifs']
-        #     if qualifs == 'required': bdcs = bdcs.filter(has_qualifs=True)
-        #     if qualifs == 'na': bdcs = bdcs.filter(has_qualifs=False)
-        #     if qualifs == 'companies':
-        #         if user.is_authenticated:
-        #             user_qualifs = Qualif.objects.filter(companies__user=user)
-        #             bdcs = bdcs.filter(lots__qualifs__in=user_qualifs)
 
         return bdcs.distinct(), ff
 
@@ -260,24 +171,23 @@ def bdc_list(request):
         context = {}
 
         all_categories = Category.objects.all()
-        # all_procedures = Procedure.objects.all()
-
-        # last_crawler = Crawler.objects.filter(saving_errors=False, import_links=False).order_by('finished').last()
-        # last_updated = last_crawler.finished if last_crawler else None
 
         context['query_string']       = urlencode(query_string)
         context['query_unsorted']     = urlencode(query_unsorted)
         context['query_dict']         = query_dict
 
         # context['categories']         = all_categories
-        # context['procedures']         = all_procedures
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
-        # context['last_updated']       = last_updated
 
         return context
 
     query_dict, query_string, query_unsorted = get_req_params(request)
     all_bdcs = PurchaseOrder.objects.all()
+    # all_bdcs = all_bdcs.filter(
+    #     deliberated__isnull=False, 
+    #     winner_entity__isnull=False,
+    #     unsuccessful=True
+    #     )
     bdcs, filters = filter_bdcs(all_bdcs, query_dict, request.user)
 
     sort = query_dict['sort']
@@ -304,6 +214,8 @@ def bdc_list(request):
 
     paginator = Paginator(bdcs, TENDERS_ITEMS_PER_PAGE)
     page_number = query_dict['page'] if 'page' in query_dict else 1
+    if '.' in str(page_number) or ',' in str(page_number): 
+        page_number = page_number.replace(',', '').replace('.', '')
     if not str(page_number).isdigit():
         page_number = 1
     else:
