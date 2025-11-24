@@ -108,6 +108,9 @@ def portal_context(request):
         'insights'        : 'bi bi-bar-chart-line',
         'shopping'        : 'bi bi-cart4',
         'simulator'       : 'bi bi-dpad',
+
+        'tenders'         : 'bi bi-megaphone',
+        'bdc'             : 'bi bi-basket',
                             # bar-chart-steps
                             # controller
                             # joystick
@@ -126,9 +129,9 @@ def portal_context(request):
         'send'            : 'bi bi-send',
         'support'         : 'bi bi-headset',
 
-        # 'fournitures'     : 'bi bi-cart3',
-        # 'travaux'         : 'bi bi-cone-striped',
-        # 'services'        : 'bi bi-gear', 
+        'Fournitures'     : 'bi bi-box-seam',
+        'Travaux'         : 'bi bi-cone-striped',
+        'Services'        : 'bi bi-gear', 
                             # 
     }
 

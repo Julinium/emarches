@@ -4,11 +4,11 @@
     <a class="nav-link py-2 dropdown-toggle"
         href="#" id="portalScrollingDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="bi bi-megaphone-fill"></i> {% trans 'Purchase Orders' %}
+    <i class="{{ bicons.bdc }}"></i> {% trans 'Purchase Orders' %}
     </a>
     <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
         <li class="">
-            <a class="dropdown-item py-2" href="{% url 'portal_tender_list' %}">
+            <a class="dropdown-item py-2" href="{% url 'bdc_bdc_list' %}">
                 <i class="{{ bicons.search }} me-2"></i>
                 {% trans 'Browse' %}
             </a>

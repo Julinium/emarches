@@ -49,12 +49,12 @@ class Category(models.Model):
     @property
     def icon_bs_class(self):
         try:
-            if self.label == "Fournitures": return 'basket'   # 'cart3'
-            if self.label == "Services": return 'gear'        # 'puzzle'
-            if self.label == "Travaux": return 'cone-striped' # 'bricks' # 'minecart-loaded' 
+            if self.label == "Fournitures": return 'bi bi-boxes' # basket   # cart3
+            if self.label == "Services": return 'bi bi-gear'        # puzzle
+            if self.label == "Travaux": return 'bi bi-cone-striped' #  bricks minecart-loaded rocket-takeoff 
         except: pass
 
-        return 'question-circle'
+        return 'bi bi-question-circle'
 
 
 class Change(models.Model):

@@ -47,6 +47,16 @@ RABAT_TZ = ZoneInfo('Africa/Casablanca')
 DCE_SHOW_MODAL = True
 
 
+# pro_context = portal_context(request)
+# us = pro_context['user_settings']
+# if us: 
+#     TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+#     TENDERS_ORDERING_FIELD = us.tenders_ordering_field
+#     TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+#     SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+#     SHOW_CANCELLED = us.tenders_show_cancelled
+
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_list(request):
@@ -55,7 +65,8 @@ def tender_list(request):
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
 
-    us = get_user_settings(request)
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
     if us: 
         TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
         TENDERS_ORDERING_FIELD = us.tenders_ordering_field
@@ -63,6 +74,13 @@ def tender_list(request):
         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
         SHOW_CANCELLED = us.tenders_show_cancelled
 
+    # us = get_user_settings(request)
+    # if us: 
+    #     TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+    #     TENDERS_ORDERING_FIELD = us.tenders_ordering_field
+    #     TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+    #     SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+    #     SHOW_CANCELLED = us.tenders_show_cancelled
 
 
     def get_req_params(req):
@@ -281,7 +299,7 @@ def tender_list(request):
         if sort == '-published': ordering = ['published']
     else: ordering = []
 
-    ordering.append('id')
+    ordering.append('-created')
 
     query_dict['filters'] = filters
 
@@ -376,7 +394,9 @@ def tender_details(request, pk=None):
     favorited = tender.favorites.filter(user=user).first()
     # form = FavoriteForm(user=user, tender=tender, instance=favorited)
 
-    us = get_user_settings(request)
+    # us = get_user_settings(request)
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
     context = { 
         'tender'        : tender,
@@ -543,7 +563,9 @@ def tender_favorite_list(request):
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
 
-    us = get_user_settings(request)
+    # us = get_user_settings(request)
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
     if us:
         TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
         TENDERS_ORDERING_FIELD = us.tenders_ordering_field
@@ -631,7 +653,9 @@ def locations_list(request):
 
 def clients_list(request):
 
-    us = get_user_settings(request)
+    # us = get_user_settings(request)
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
     if us: 
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
@@ -666,7 +690,7 @@ def clients_list(request):
 
     return render(request, 'portal/clients-list.html', context)
 
-def get_user_settings(request):
-    return UserSetting.objects.filter(user = request.user).first()
+# def get_user_settings(request):
+#     return UserSetting.objects.filter(user = request.user).first()
 
 

@@ -1,0 +1,70 @@
+{% load i18n static %}   
+{% load humanize %}
+
+<div class="my-3">
+    <div class="card shadow">
+        <a class="btn p-0 w-100 text-start" 
+           href="#">
+           <!-- url 'portal_bdc_detail' bdc.id -->
+            <div class="card-header px-3 py-1">
+
+                <div class="d-flex justify-content-between">
+
+                    <div class="d-flex align-items-center">
+                        <div class="oneline" id="t{{ bdc.chrono }}h">
+                            <span class="fs-5" 
+                                data-bs-toggle="tooltip" 
+                                title="{% trans 'Main Category' %}: {{ bdc.category.label }}">
+                                <i class="{{ bdc.category.icon_bs_class }} me-1"></i>
+                            </span>
+                            <span class="fw-light small text-muted mx-1" 
+                                data-bs-toggle="tooltip" 
+                                title="{% trans 'Execution Location' %}: {{ bdc.location }}">
+                                <span><i class="{{ bicons.location }}"></i></span>
+                                <span>{{ bdc.location }}</span>
+                            </span>
+                            <span class="fw-light small text-muted mx-1" 
+                                data-bs-toggle="tooltip" 
+                                title="{% trans 'Public Client' %}: {{ bdc.client.name }}">
+                                <span><i class="{{ bicons.client }}"></i></span>
+                                <span>{{ bdc.client }}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                <div class="progress bg-danger p-0 mx-0 mb-1" 
+                        style="height: 0.25rem;"
+                        data-bs-toggle="tooltip"
+                        title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }}">
+                    {% with bdc.days_to_go|progrefy:full_bar_days as green %}
+                        <div class="progress-bar bg-success" 
+                                role="progressbar" style="width: {{ green }}%;" 
+                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                aria-valuemax="100">
+                        </div>
+                    {% endwith %}
+                </div>
+
+            <div class="card-body px-3 py-2">
+
+                <div id="t{{ bdc.chrono }}t" class="twolines">
+                    <div data-bs-toggle="tooltip"
+                        title="{% trans 'Purchase Order object' %}: {{ bdc.title }}">
+                        {% if bdc.expired %}
+                            <span class="badge bg-secondary me-2 fst-italic">{% trans "EXPIRED" %}</span>
+                        {% endif %}
+                        <span class="text-wrap 
+                                     {% if bdc.expired %}text-secondary fst-italic{% endif %}
+                                     {% if bdc.cancelled %}text-danger{% endif %}">
+                            {{ bdc.title }}
+                        </span>
+                    </div>
+                </div>
+
+            </div> 
+                    
+        </a>
+    </div>
+</div>

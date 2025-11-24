@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load i18n static %}
+
+{% block title %}
+    {% trans "Purchase Orders" %}
+{% endblock title %}
+
+{% block content %}
+    <div class="d-flex align-items-center justify-content-between px-2">
+        <div class="">
+            <span class="h3 me-1">{% trans "Purchase Orders" %}</span>
+        </div>
+        <div class="d-flex align-items-top">
+            <!-- include 'bdc/snippets/bdcs/search-form.html' -->
+            <!-- include 'bdc/snippets/bdcs/menu-sort.html' -->
+        </div>
+    </div>
+
+    <div class="fw-light mx-2 mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="" data-bs-toggle="tooltip" 
+                  title="{% trans 'Results are filtered' %}">
+                <i class="{{ bicons.filters }}"></i>
+            </span>
+        {% endif %}
+        <span class="fw-bold">
+            {{ page_obj.paginator.count }} 
+        </span>
+        <span class="small text-muted">{% trans "Items found" %}.</span>
+        {% if page_obj.has_other_pages %}
+            <span class="small text-muted">{% trans "Showing" %}:</span>
+            <span class="small">
+                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
+            </span>
+        {% endif %}
+    </div>
+    <div class="mt-4">
+        {% for bdc in page_obj %}
+            {% include 'bdc/snippets/bdcs/bdc-summary.html' %}
+        {% endfor %}
+    </div>
+    
+    {% if page_obj %}
+        <!-- include 'bdc/snippets/bdcs/bdc-legend.html' -->
+        {% include 'base/snippets/paginator.html' %}
+    {% else %}
+        {% include 'base/snippets/empty-list.html' %}
+    {% endif %}
+{% endblock content %}

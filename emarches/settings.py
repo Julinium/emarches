@@ -69,13 +69,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # 'nas.middleware.UserLanguageMiddleware',
-
     'django.middleware.locale.LocaleMiddleware',
-
     'allauth.account.middleware.AccountMiddleware',
-
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    
+    'debug_toolbar.middleware.DebugToolbarMiddleware',    
     'emarches.middleware.CustomLoggingMiddleware',
 ]
 
