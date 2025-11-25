@@ -7,17 +7,39 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="d-flex align-items-center justify-content-between px-2">
+    <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
             <span class="h3 me-1">{% trans "Public Clients" %}</span>
         </div>
+        <div class="d-flex align-items-top">            
+            {% include 'portal/snippets/clients/client-search-form.html' %}
+            {% include 'portal/snippets/clients/client-menu-sort.html' %}
+        </div>
     </div>    
 
+
+    <div class="fw-light mx-2 mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="" data-bs-toggle="tooltip" 
+                  title="{% trans 'Results are filtered' %}">
+                <i class="{{ bicons.filters }}"></i>
+            </span>
+        {% endif %}
+        <span class="fw-bold">
+            {{ page_obj.paginator.count }} 
+        </span>
+        <span class="small text-muted">{% trans "Items found" %}.</span>
+        {% if page_obj.has_other_pages %}
+            <span class="small text-muted">{% trans "Showing" %}:</span>
+            <span class="small">
+                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
+            </span>
+        {% endif %}
+    </div>
+
+
     {% if page_obj %}
-
-        <!-- TODO: Search and sort. -->
-
-        <div class="container py-5">
+        <div class="container py-4 px-0">
                 {% for client in page_obj %}
                     <a href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client" 
                        class="btn text-start w-100 p-0 mb-2">
@@ -25,13 +47,14 @@
                             <div class="d-flex justify-content-between">
                                 <div>
                                     <span><i class="{{ bicons.client }} me-1"></i></span>
-                                    <span>{{ client.name }}</span>
+                                    <span>{{ client.short }}</span>
                                 </div>
                                 <div class="ms-2 text-end">
-                                    <span class="badge bg-secondary">{{ client.tenders_count }}</span>
+                                    <span class="badge bg-secondary"><i class="{{ bicons.count }} me-1"></i>{{ client.tenders_count }}</span>
                                     <span class="badge bg-success ms-1"><i class="{{ bicons.estimate }} me-1"></i>{{ client.total_estimate|metrify }}</span>
                                 </div>
                             </div>
+                            <div class="threelines small text-muted">{{ client.name }}</div>
                         </div>
                     </a>
                 {% endfor %}

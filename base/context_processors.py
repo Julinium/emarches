@@ -20,7 +20,7 @@ def portal_context(request):
         'category'        : 'bi bi-grid',
         'location'        : 'bi bi-pin-map',
                             # 'geo'
-        'client'          : 'bi bi-briefcase',       
+        'client'          : 'bi bi-briefcase',
                             # 'house-door'         # 'bank'
         'deadline'        : 'bi bi-hourglass',
                             # 'calendar4-event' -bottom
@@ -31,6 +31,8 @@ def portal_context(request):
         'variant_ico'     : 'bi bi-shuffle',
         'reserved'        : 'bi bi-sign-yield-fill text-primary',
         'variant'         : 'bi bi-shuffle text-success',
+        'count'           : 'bi bi-grid-3x3-gap',
+                            # '123' 
 
         'has_agrements'   : 'bi bi-shield-fill-check text-primary',
         'has_qualifs'     : 'bi bi-mortarboard-fill text-primary',

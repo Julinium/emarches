@@ -1,0 +1,37 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Order items by' %}">
+            <i class="{{ bicons.sort }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Ordering' %}</span>
+            </div>
+
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Client Name' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='name' icon=bicons.client %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Active tenders count' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='tenders_count' icon=bicons.count %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Active tenders amount' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='total_estimate' icon=bicons.estimate %}
+            </li>
+        </ul>
+    </div>
+</div>

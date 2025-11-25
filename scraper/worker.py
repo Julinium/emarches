@@ -16,7 +16,7 @@ def main():
 
 #####################################
     # bonner.get_and_save_bdcs()
-    # get_and_save_results()
+    # bonner.get_and_save_results()
 #####################################
 
     started_time = datetime.now()
@@ -139,7 +139,7 @@ def main():
     print('\n\n\n\n======================================================')
     helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
     bonner.get_and_save_bdcs()
-    # bonner.get_and_save_results()
+    bonner.get_and_save_results()
     print('\n\n======================================================\n\n')
 
 

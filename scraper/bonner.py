@@ -7,7 +7,7 @@ import time
 import json
 import pytz
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from . import helper
@@ -303,7 +303,7 @@ def has_next_page(soup):
     return next_link is not None
 
 
-def get_and_save_results():
+def get_and_save_results(published_since_days=2):
 
     errors_happened = False
     handled_items = 0
@@ -313,8 +313,28 @@ def get_and_save_results():
     page = 1
     while True:
         url = f"{RESULTS_BASE_URL}&{RESULTS_PAGE_PARAM}={page}"
-        print("[=====] Fetching page :", page)
-        
+        assnna = datetime.now().date() - timedelta(days=published_since_days)
+        assnna_str = assnna.strftime('%Y-%m-%d')
+        query_string = f"search_consultation_resultats[dateLimitePublicationStart]={ assnna_str }"
+        query_string += f"&search_consultation_resultats[pageSize]=50"
+        url += "?" + query_string
+        ###################
+        # search_consultation_resultats[keyword]
+        # search_consultation_resultats[reference]
+        # search_consultation_resultats[objet]
+        # search_consultation_resultats[dateLimitePublicationStart] = 2025-11-01
+        # search_consultation_resultats[dateLimitePublicationEnd] = 2025-11-30
+        # search_consultation_resultats[dateMiseEnLigneStart]
+        # search_consultation_resultats[dateMiseEnLigneEnd]
+        # search_consultation_resultats[categorie]
+        # search_consultation_resultats[naturePrestation]
+        # search_consultation_resultats[acheteur]
+        # search_consultation_resultats[service]
+        # search_consultation_resultats[lieuExecution]
+        # search_consultation_resultats[pageSize] = 10
+        ###################
+        print("\n[=====] Fetching page :", page)
+
         html = fetch_page(url)
         if not html:
             errors_happened = True
@@ -328,7 +348,10 @@ def get_and_save_results():
             break
         
         cards = container.select(".entreprise__card")
+        i = 0
         for card in cards:
+            i += 1
+            print("\t[=====] Fetching item:", i)
             try:
                 item = get_results_bdc(card)
 
@@ -347,7 +370,12 @@ def get_and_save_results():
                         "deliberated" : item['deliberated'],
                     }
                 )
-                if created_bdc: bdc_created += 1
+                if created_bdc:
+                    bdc_created += 1
+                    print("\t\t[=====] Created result for:", item['reference'])
+                else:
+                    print("\t\t[=====] Updated result for:", item['reference'])
+
             except Exception as xc:
                 print("[XXXXX] Exception raised while getting data: ", str(xc))
                 traceback.print_exc()

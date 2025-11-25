@@ -111,7 +111,7 @@ class PurchaseOrderAdmin(admin.ModelAdmin):
     list_display = [f.name for f in PurchaseOrder._meta.fields]
     list_display = ['title', 'reference', 'deadline', 'published', 'client', 'category', 'deliberated']
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(deliberated=None)
+    # def get_queryset(self, request):
+    #     qs = super().get_queryset(request)
+    #     return qs.filter(deliberated=None)
 

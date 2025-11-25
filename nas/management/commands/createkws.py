@@ -49,47 +49,65 @@ class Command(BaseCommand):
 
 
         ###################################
-        from base.models import FileToGet
+        # from base.models import FileToGet
 
-        from django.db import transaction
-        from django.db.models import Min
+        # from django.db import transaction
+        # from django.db.models import Min
 
-        @transaction.atomic
-        def remove_duplicates_keep_any_one():
-            Model = FileToGet  # Replace with your actual model
-            fk_field = 'tender'  # e.g. 'user', 'product', 'category', etc.
+        # @transaction.atomic
+        # def remove_duplicates_keep_any_one():
+        #     Model = FileToGet  # Replace with your actual model
+        #     fk_field = 'tender'  # e.g. 'user', 'product', 'category', etc.
 
-            seen = set()  # Tracks FK values we've already kept a record for
-            to_delete = []  # Collects IDs of duplicates to delete
+        #     seen = set()  # Tracks FK values we've already kept a record for
+        #     to_delete = []  # Collects IDs of duplicates to delete
 
-            # Order by FK for efficient grouping (then by ID for consistency)
-            queryset = Model.objects.order_by(fk_field, 'id').iterator(chunk_size=1000)
+        #     # Order by FK for efficient grouping (then by ID for consistency)
+        #     queryset = Model.objects.order_by(fk_field, 'id').iterator(chunk_size=1000)
 
-            i = 0
-            for obj in queryset:
-                i += 1
-                print('\t Working on instance ', i)
-                # Get the FK value (use _id suffix if it's an FK to avoid loading related object)
-                key = getattr(obj, f'{fk_field}_id', getattr(obj, fk_field, None))
-                if key is None:
-                    continue  # Skip null FKs if they shouldn't be duplicated anyway
+        #     i = 0
+        #     for obj in queryset:
+        #         i += 1
+        #         print('\t Working on instance ', i)
+        #         # Get the FK value (use _id suffix if it's an FK to avoid loading related object)
+        #         key = getattr(obj, f'{fk_field}_id', getattr(obj, fk_field, None))
+        #         if key is None:
+        #             continue  # Skip null FKs if they shouldn't be duplicated anyway
 
-                key_str = str(key)  # Ensure it's hashable (UUIDs are, but safe)
-                if key_str in seen:
-                    to_delete.append(obj.id)
-                    print('\t\t To delete ', i)
-                else:
-                    seen.add(key_str)
-                    print('\t\t Newly seen ', i)
+        #         key_str = str(key)  # Ensure it's hashable (UUIDs are, but safe)
+        #         if key_str in seen:
+        #             to_delete.append(obj.id)
+        #             print('\t\t To delete ', i)
+        #         else:
+        #             seen.add(key_str)
+        #             print('\t\t Newly seen ', i)
 
-            # Bulk delete in one go
-            if to_delete:
-                deleted_count = Model.objects.filter(id__in=to_delete).delete()[0]
-                print(f"Deleted {deleted_count} duplicate records")
-            else:
-                print("No duplicates found")
-        remove_duplicates_keep_any_one()
+        #     # Bulk delete in one go
+        #     if to_delete:
+        #         deleted_count = Model.objects.filter(id__in=to_delete).delete()[0]
+        #         print(f"Deleted {deleted_count} duplicate records")
+        #     else:
+        #         print("No duplicates found")
+        # remove_duplicates_keep_any_one()
         ###################################
+
+
+        ###################################
+
+        from bdc.models import PurchaseOrder
+        pos = PurchaseOrder.objects.all()
+        n = pos.count()
+        try:
+            print(f'deleting { n } items ...')
+            pos.delete()
+            print(f'Deletd { n } items.')
+        except Exception as xc:
+            print(xc)
+
+        ###################################
+
+
+
 
         
 

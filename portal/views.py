@@ -74,15 +74,6 @@ def tender_list(request):
         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
         SHOW_CANCELLED = us.tenders_show_cancelled
 
-    # us = get_user_settings(request)
-    # if us: 
-    #     TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
-    #     TENDERS_ORDERING_FIELD = us.tenders_ordering_field
-    #     TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-    #     SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-    #     SHOW_CANCELLED = us.tenders_show_cancelled
-
-
     def get_req_params(req):
         allowed_keys = [
             'q', 'f', 'estin', 'estix', 'bondn', 'bondx', 
@@ -651,29 +642,133 @@ def locations_list(request):
     return render(request, 'portal/locations-list.html', context)
 
 
-def clients_list(request):
+# def clients_list(request):
 
-    # us = get_user_settings(request)
+#     # us = get_user_settings(request)
+#     pro_context = portal_context(request)
+#     us = pro_context['user_settings']
+#     if us: 
+#         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+#         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+#         SHOW_CANCELLED = us.tenders_show_cancelled
+
+#     assa = timezone.now()
+#     clients = Client.objects.annotate(
+#         tenders_count=Count('tenders', filter=Q(
+#             tenders__deadline__gte=assa, 
+#             tenders__cancelled=False)),
+#         total_estimate=Sum('tenders__estimate', filter=Q(
+#             tenders__deadline__gte=assa, 
+#             tenders__cancelled=False))
+#     ).filter(tenders_count__gt=0).order_by('-tenders_count', 'name')
+
+#     context = {}
+
+#     paginator = Paginator(clients, CLIENTS_ITEMS_PER_PAGE)
+#     page_number = request.GET['page'] if 'page' in request.GET else 1
+#     if not str(page_number).isdigit():
+#         page_number = 1
+#     else:
+#         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+#     page_obj = paginator.page(page_number)
+
+#     context['page_obj'] = page_obj
+
+#     logger = logging.getLogger('portal')
+#     logger.info(f"Clients List view")
+
+#     return render(request, 'portal/clients-list.html', context)
+
+
+def client_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     if us: 
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-        SHOW_CANCELLED = us.tenders_show_cancelled
+    CLIENTS_ORDERING_FIELD = 'tenders_count'
+    # CLIENTS_ORDERING_FIELD = 'name'
 
+    def get_req_params(req):
+        allowed_keys = [
+            'q', 'page', 'sort',
+            ]
+
+        query_dict = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
+        }
+        if not 'sort' in query_dict:
+            query_dict['sort'] = CLIENTS_ORDERING_FIELD
+            
+        query_string = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
+        }
+
+        query_unsorted = {
+            k: v for k, v in req.GET.items()
+            if k in allowed_keys and v != '' and k not in ('page', 'sort')
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_clients(clients, params):
+        ff = 0        
+        if not params : return clients.distinct(), ff
+
+        if 'q' in params:
+            ff += 1
+            q = params['q']
+            clients = clients.filter(name__icontains=q)
+        return clients.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context['query_string']       = urlencode(query_string)
+        context['query_unsorted']     = urlencode(query_unsorted)
+        context['query_dict']         = query_dict
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+    # all_clients = Tender.objects.all()
     assa = timezone.now()
-    clients = Client.objects.annotate(
+    all_clients = Client.objects.annotate(
         tenders_count=Count('tenders', filter=Q(
             tenders__deadline__gte=assa, 
             tenders__cancelled=False)),
         total_estimate=Sum('tenders__estimate', filter=Q(
             tenders__deadline__gte=assa, 
             tenders__cancelled=False))
-    ).filter(tenders_count__gt=0).order_by('-tenders_count', 'name')
+    ).filter(tenders_count__gt=0)
 
-    context = {}
 
-    # context['clients'] = clients
+    clients, filters = filter_clients(all_clients, query_dict)
+
+    sort = query_dict['sort']
+
+    if sort and sort != '':
+        ordering = [sort]
+        if sort == 'tenders_count': ordering = ['-tenders_count']
+        if sort == '-tenders_count': ordering = ['tenders_count']
+        if sort == 'total_estimate': ordering = ['-total_estimate']
+        if sort == '-total_estimate': ordering = ['total_estimate']
+    else: ordering = []
+
+    # ordering.append('-created')
+
+    query_dict['filters'] = filters
+
+
+
+
+    clients = clients.order_by(*ordering)
+
+    context = define_context(request)
 
     paginator = Paginator(clients, CLIENTS_ITEMS_PER_PAGE)
     page_number = request.GET['page'] if 'page' in request.GET else 1
@@ -689,8 +784,4 @@ def clients_list(request):
     logger.info(f"Clients List view")
 
     return render(request, 'portal/clients-list.html', context)
-
-# def get_user_settings(request):
-#     return UserSetting.objects.filter(user = request.user).first()
-
 
