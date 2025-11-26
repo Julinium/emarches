@@ -49,7 +49,7 @@ class Category(models.Model):
     @property
     def icon_bs_class(self):
         try:
-            if self.label == "Fournitures": return 'bi bi-boxes' # basket   # cart3
+            if self.label == "Fournitures": return 'bi bi-box-seam' # basket  boxes # cart3
             if self.label == "Services": return 'bi bi-gear'        # puzzle
             if self.label == "Travaux": return 'bi bi-cone-striped' #  bricks minecart-loaded rocket-takeoff 
         except: pass
@@ -326,6 +326,7 @@ class Tender(models.Model):
     cliwords = models.TextField(blank=True, null=True, editable=False)
     refwords = models.TextField(blank=True, null=True, editable=False)
     locwords = models.TextField(blank=True, null=True, editable=False)
+    domwords = models.TextField(blank=True, null=True, editable=False)
 
 
     class Meta:
@@ -370,6 +371,10 @@ class Tender(models.Model):
         self.cliwords = nt(self.client.name)
         self.refwords = nt(self.reference)
         self.locwords = nt(self.location)
+        doms = self.domains.all()
+        for dom in doms:
+            if not self.domwords: self.domwords = ''
+            self.domwords += nt(dom.name) + ' '
 
         self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
         self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
@@ -562,6 +567,4 @@ class Crawler(models.Model):
         if self.started and self.finished:
             return self.finished - self.started
         return None
-
-
 

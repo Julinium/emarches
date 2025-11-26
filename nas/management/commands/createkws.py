@@ -94,18 +94,34 @@ class Command(BaseCommand):
 
         ###################################
 
-        from bdc.models import PurchaseOrder
-        pos = PurchaseOrder.objects.all()
-        n = pos.count()
-        try:
-            print(f'deleting { n } items ...')
-            pos.delete()
-            print(f'Deletd { n } items.')
-        except Exception as xc:
-            print(xc)
+        # from bdc.models import PurchaseOrder
+        # pos = PurchaseOrder.objects.all()
+        # n = pos.count()
+        # try:
+        #     print(f'deleting { n } items ...')
+        #     pos.delete()
+        #     print(f'Deletd { n } items.')
+        # except Exception as xc:
+        #     print(xc)
 
         ###################################
 
+
+
+        ###################################
+        from base.models import Tender
+        from datetime import datetime
+        assa = datetime.now()
+        running = Tender.objects.filter(deadline__gte=assa, domwords__isnull=True)
+        count = running.count()
+        print('================>', count)
+        i = 0
+        for t in running:
+            i += 1
+            t.save()
+            print(f'\t... { t.chrono } = { i }/{ count }.')
+        print('================<')
+        ###################################
 
 
 

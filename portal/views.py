@@ -47,16 +47,6 @@ RABAT_TZ = ZoneInfo('Africa/Casablanca')
 DCE_SHOW_MODAL = True
 
 
-# pro_context = portal_context(request)
-# us = pro_context['user_settings']
-# if us: 
-#     TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
-#     TENDERS_ORDERING_FIELD = us.tenders_ordering_field
-#     TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-#     SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-#     SHOW_CANCELLED = us.tenders_show_cancelled
-
-
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_list(request):
@@ -137,10 +127,12 @@ def tender_list(request):
                         tenders = afas(tenders, ['locwords'], q)
                     case 'reference':
                         tenders = afas(tenders, ['refwords'], q)
+                    case 'domains':
+                        tenders = afas(tenders, ['domwords'], q)
                     case _:
                         tenders = afas(tenders, ['keywords'], q)
             else:
-                tenders = afas(tenders, ['keywords', 'cliwords','locwords', 'refwords'], q)                
+                tenders = afas(tenders, ['keywords', 'cliwords','locwords', 'refwords', 'domwords'], q)                
 
         if 'estin' in params:
             ff += 1

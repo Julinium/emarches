@@ -131,9 +131,9 @@ def portal_context(request):
         'send'            : 'bi bi-send',
         'support'         : 'bi bi-headset',
 
-        'Fournitures'     : 'bi bi-box-seam',
-        'Travaux'         : 'bi bi-cone-striped',
-        'Services'        : 'bi bi-gear', 
+        # 'Fournitures'     : 'bi bi-box-seam',
+        # 'Travaux'         : 'bi bi-cone-striped',
+        # 'Services'        : 'bi bi-gear', 
                             # 
     }
 
