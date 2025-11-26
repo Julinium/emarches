@@ -30,9 +30,6 @@ else
     touch $_lock_file
     DJANGO_DIR="$SCRIPT_DIR/../"
 
-    # TODO: Delete this line
-    python manage.py createkws >> "$_logs_file"
-
     cd $DJANGO_DIR
     # echo "Working directory: $(pwd)" >> "$_logs_file"
     source $DJANGO_DIR/.venv/bin/activate
