@@ -3,8 +3,7 @@
 
 <div class="my-3">
     <div class="card shadow shadow-sm">
-        <a class="btn p-0 w-100 text-start" 
-           href="{% url 'bdc_bdc_detail' bdc.id %}">           
+        <a class="btn p-0 w-100 text-start" href="{% url 'bdc_bdc_detail' bdc.id %}">           
             <div class="card-header px-3 py-1">
                 <div class="d-flex justify-content-between">
 
@@ -34,18 +33,18 @@
                 </div>
             </div>
 
-                <div class="progress bg-danger p-0 mx-0 mb-1" 
-                        style="height: 0.25rem;"
-                        data-bs-toggle="tooltip"
-                        title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }}">
-                    {% with bdc.days_to_go|progrefy:full_bar_days as green %}
-                        <div class="progress-bar bg-success" 
-                                role="progressbar" style="width: {{ green }}%;" 
-                                aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                aria-valuemax="100">
-                        </div>
-                    {% endwith %}
-                </div>
+            <div class="progress bg-danger p-0 mx-0 mb-1" 
+                    style="height: 0.25rem;"
+                    data-bs-toggle="tooltip"
+                    title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }}">
+                {% with bdc.days_to_go|progrefy:full_bar_days as green %}
+                    <div class="progress-bar bg-success" 
+                            role="progressbar" style="width: {{ green }}%;" 
+                            aria-valuenow="{{ green }}" aria-valuemin="0" 
+                            aria-valuemax="100">
+                    </div>
+                {% endwith %}
+            </div>
 
             <div class="card-body px-3 py-2">
 
@@ -76,25 +75,25 @@
                         </div>
                         <div class="ms-auto text-end ms-2">
                             {% if bdc.unsuccessful == True %}
-                                <span class="rounded px-2 py-1 m-2 small text-bg-danger">
+                                <span class="rounded px-2 py-1 ms-2 small text-bg-danger">
                                     <span class="">{% trans "UNSUCCESSFUL" %}</span>
                                 </span>
                             {% elif bdc.unsuccessful == False %}
-                                <span class="rounded px-2 py-1 m-2 small text-bg-success">  
+                                <span class="rounded px-2 py-1 ms-2 small text-bg-success">  
                                     <span class="">           
                                         <i class="{{ bicons.winner }}"></i>
                                         {{ bdc.winner_entity|default:'?' }}
                                     </span>
                                 </span> 
                                 <span class="small text-muted">/{{ bdc.bids_count }}</span>
-                                <span class="rounded px-2 py-1 m-2 small text-bg-success">
+                                <span class="rounded px-2 py-1 ms-2 small text-bg-success">
                                     <span class="">
                                         <i class="{{ bicons.estimate }}"></i>
                                         {{ bdc.winner_amount|default:'?' }}
                                     </span>
                                 </span>
                             {% else %}
-                                <span class="rounded px-2 py-1 m-2 small text-bg-secondary me-2">
+                                <span class="rounded px-2 py-1 ms-2 small text-bg-secondary">
                                     <span class="">
                                         <i class="bi bi-check-circle small"></i>
                                         {% trans "DELIBIRATED" %}
@@ -103,8 +102,8 @@
                             {% endif %}
                         </div>
                     </div>
-            {% endif %}
-                    
+                </div>
+            {% endif %}                    
         </a>
     </div>
 </div>

@@ -27,8 +27,13 @@
                         <div class="col-12">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
-                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" placeholder="{% trans 'keywords' %}" aria-label="search_query">
+                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="clients" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
                             </div>
+                            <datalist id="clients">
+                                {% for client in clients %}
+                                    <option value="{{ client.name }}">
+                                {% endfor %}
+                            </datalist>
                         </div>
                     </div>
                 </div>

@@ -112,7 +112,10 @@ class Command(BaseCommand):
         from base.models import Tender
         from datetime import datetime
         assa = datetime.now()
-        running = Tender.objects.filter(deadline__gte=assa, domwords__isnull=True)
+        running = Tender.objects.filter(
+            # deadline__gte=assa, 
+            domwords__isnull=True
+            )
         count = running.count()
         print('================>', count)
         i = 0

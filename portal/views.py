@@ -122,9 +122,11 @@ def tender_list(request):
             if 'f' in params:
                 match params['f']:
                     case 'client':
-                        tenders = afas(tenders, ['cliwords'], q)
+                        # tenders = afas(tenders, ['cliwords'], q)
+                        tenders = tenders.filter(client__name__icontains=q)
                     case 'location':
-                        tenders = afas(tenders, ['locwords'], q)
+                        # tenders = afas(tenders, ['locwords'], q)
+                        tenders = tenders.filter(location__icontains=q)
                     case 'reference':
                         tenders = afas(tenders, ['refwords'], q)
                     case 'domains':
@@ -771,6 +773,7 @@ def client_list(request):
     page_obj = paginator.page(page_number)
 
     context['page_obj'] = page_obj
+    context['clients'] = clients
 
     logger = logging.getLogger('portal')
     logger.info(f"Clients List view")

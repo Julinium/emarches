@@ -2,147 +2,147 @@
     {"name": "Béni Mellal-Khénifra",
     "code": "BMK",
     "cities": [
-        {"name": "BENI MELLAL",  "code": "6535"},
-        {"name": "AZILAL",  "code": "6536"},
-        {"name": "FQUIH BEN SALAH",  "code": "6537"},
-        {"name": "KHENIFRA",  "code": "6538"},
-        {"name": "KHOURIBGA",  "code": "6539"}
+        {"name": "BENI MELLAL",  "code": "BML", "codex": "6535"},
+        {"name": "AZILAL",  "code": "AZL", "codex": "6536"},
+        {"name": "FQUIH BEN SALAH",  "code": "FBS", "codex": "6537"},
+        {"name": "KHENIFRA",  "code": "KHN", "codex": "6538"},
+        {"name": "KHOURIBGA",  "code": "KHR", "codex": "6539"}
         ]
     },
 
     {"name": "Casablanca-Settat",
     "code": "CAS",
     "cities": [
-        {"name": "CASABLANCA",  "code": "6540"},
-        {"name": "MOHAMMADIA",  "code": "6549"},
-        {"name": "EL JADIDA",  "code": "6550"},
-        {"name": "NOUACEUR",  "code": "6551"},
-        {"name": "MEDIOUNA",  "code": "6552"},
-        {"name": "BENSLIMANE",  "code": "6553"},
-        {"name": "BERRECHID",  "code": "6554"},
-        {"name": "SETTAT",  "code": "6555"},
-        {"name": "SIDI BENNOUR",  "code": "6556"}
+        {"name": "CASABLANCA",  "code": "CAS", "codex": "6540"},
+        {"name": "MOHAMMADIA",  "code": "MOH", "codex": "6549"},
+        {"name": "EL JADIDA",  "code": "JAD", "codex": "6550"},
+        {"name": "NOUACEUR",  "code": "NOA", "codex": "6551"},
+        {"name": "MEDIOUNA",  "code": "MDY", "codex": "6552"},
+        {"name": "BENSLIMANE",  "code": "BNS", "codex": "6553"},
+        {"name": "BERRECHID",  "code": "BRR", "codex": "6554"},
+        {"name": "SETTAT",  "code": "STT", "codex": "6555"},
+        {"name": "SIDI BENNOUR",  "code": "SBN", "codex": "6556"}
         ]
     },
 
     {"name": "Dakhla-Oued Ed-Dahab",
     "code": "DOD",
     "cities": [
-        {"name": "OUED ED DAHAB",  "code": "6584"},
-        {"name": "AOUSSERD",  "code": "6585"}
+        {"name": "OUED ED DAHAB",  "code": "DKH", "codex": "6584"},
+        {"name": "AOUSSERD",  "code": "OSR", "codex": "6585"}
         ]
     },
 
     {"name": "Drâa-Tafilalet",
     "code": "DTF",
     "cities": [
-        {"name": "ERRACHIDIA",  "code": "6565"},
-        {"name": "OUARZAZATE",  "code": "6566"},
-        {"name": "MIDELT",  "code": "6567"},
-        {"name": "TINGHIR",  "code": "6568"},
-        {"name": "ZAGORA",  "code": "6569"}
+        {"name": "ERRACHIDIA",  "code": "ERR", "codex": "6565"},
+        {"name": "OUARZAZATE",  "code": "ORZ", "codex": "6566"},
+        {"name": "MIDELT",  "code": "MDL", "codex": "6567"},
+        {"name": "TINGHIR",  "code": "TIN", "codex": "6568"},
+        {"name": "ZAGORA",  "code": "ZGR", "codex": "6569"}
         ]
     },
 
     {"name": "Fès-Meknès",
     "code": "FMK",
     "cities": [
-        {"name": "FES",  "code": "6519"},
-        {"name": "MEKNES",  "code": "6520"},
-        {"name": "EL-HAJEB",  "code": "6521"},
-        {"name": "IFRANE",  "code": "6522"},
-        {"name": "MOULAY-YACOUB",  "code": "6523"},
-        {"name": "SEFROU",  "code": "6524"},
-        {"name": "BOULEMANE",  "code": "6525"},
-        {"name": "TAOUNATE",  "code": "6526"},
-        {"name": "TAZA",  "code": "6527"}
+        {"name": "FES",  "code": "FES", "codex": "6519"},
+        {"name": "MEKNES",  "code": "MEK", "codex": "6520"},
+        {"name": "EL-HAJEB",  "code": "HJB", "codex": "6521"},
+        {"name": "IFRANE",  "code": "IFR", "codex": "6522"},
+        {"name": "MOULAY-YACOUB",  "code": "MYC", "codex": "6523"},
+        {"name": "SEFROU",  "code": "SFR", "codex": "6524"},
+        {"name": "BOULEMANE",  "code": "BLM", "codex": "6525"},
+        {"name": "TAOUNATE",  "code": "TNT", "codex": "6526"},
+        {"name": "TAZA",  "code": "TAZ", "codex": "6527"}
         ]
     },
 
     {"name": "Guelmim-Oued Noun",
     "code": "GON",
     "cities": [
-        {"name": "GUELMIM",  "code": "6576"},
-        {"name": "A,SSA-ZAG",  "code": "6577"},
-        {"name": "TAN-TAN",  "code": "6578"},
-        {"name": "SIDI IFNI",  "code": "6579"}
+        {"name": "GUELMIM",  "code": "GLM", "codex": "6576"},
+        {"name": "ASSA-ZAG",  "code": "ASZ", "codex": "6577"},
+        {"name": "TAN-TAN",  "code": "TAN", "codex": "6578"},
+        {"name": "SIDI IFNI",  "code": "FNI", "codex": "6579"}
         ]
     },
 
     {"name": "L'oriental",
     "code": "ORI",
     "cities": [
-        {"name": "OUJDA-ANGAD",  "code": "6511"},
-        {"name": "NADOR",  "code": "6512"},
-        {"name": "DRIOUCH",  "code": "6513"},
-        {"name": "JERADA",  "code": "6514"},
-        {"name": "BERKANE",  "code": "6515"},
-        {"name": "TAOURIRT",  "code": "6516"},
-        {"name": "GUERCIF",  "code": "6517"},
-        {"name": "FIGUIG",  "code": "6518"}
+        {"name": "OUJDA-ANGAD",  "code": "OJD", "codex": "6511"},
+        {"name": "NADOR",  "code": "NAD", "codex": "6512"},
+        {"name": "DRIOUCH",  "code": "DRI", "codex": "6513"},
+        {"name": "JERADA",  "code": "JRD", "codex": "6514"},
+        {"name": "BERKANE",  "code": "BRK", "codex": "6515"},
+        {"name": "TAOURIRT",  "code": "TRT", "codex": "6516"},
+        {"name": "GUERCIF",  "code": "GRC", "codex": "6517"},
+        {"name": "FIGUIG",  "code": "FIG", "codex": "6518"}
         ]
     },
 
     {"name": "Laâyoune-Sakia El Hamra",
     "code": "LSH",
     "cities": [
-        {"name": "LAAYOUNE",  "code": "6580"},
-        {"name": "BOUJDOUR",  "code": "6581"},
-        {"name": "TARFAYA",  "code": "6582"},
-        {"name": "ES-SEMARA",  "code": "6583"}
+        {"name": "LAAYOUNE",  "code": "LAY", "codex": "6580"},
+        {"name": "BOUJDOUR",  "code": "BJD", "codex": "6581"},
+        {"name": "TARFAYA",  "code": "TRF", "codex": "6582"},
+        {"name": "ES-SEMARA",  "code": "SMR", "codex": "6583"}
         ]
     },
 
     {"name": "Marrakech-Safi",
     "code": "MRS",
     "cities": [
-        {"name": "MARRAKECH",  "code": "6557"},
-        {"name": "CHICHAOUA",  "code": "6558"},
-        {"name": "AL HAOUZ",  "code": "6559"},
-        {"name": "EL KELAA DES SRAGHNA",  "code": "6560"},
-        {"name": "ESSAOUIRA",  "code": "6561"},
-        {"name": "REHAMNA",  "code": "6562"},
-        {"name": "SAFI",  "code": "6563"},
-        {"name": "YOUSSOUFIA",  "code": "6564"}
+        {"name": "MARRAKECH",  "code": "KCH", "codex": "6557"},
+        {"name": "CHICHAOUA",  "code": "CHI", "codex": "6558"},
+        {"name": "AL HAOUZ",  "code": "HOZ", "codex": "6559"},
+        {"name": "EL KELAA DES SRAGHNA",  "code": "KSR", "codex": "6560"},
+        {"name": "ESSAOUIRA",  "code": "ESS", "codex": "6561"},
+        {"name": "REHAMNA",  "code": "RHA", "codex": "6562"},
+        {"name": "SAFI",  "code": "SAF", "codex": "6563"},
+        {"name": "YOUSSOUFIA",  "code": "YSF", "codex": "6564"}
         ]
     },
 
     {"name": "Rabat-Salé-Kénitra",
     "code": "RSK",
     "cities": [
-        {"name": "RABAT",  "code": "6528"},
-        {"name": "SALE",  "code": "6529"},
-        {"name": "SKHIRATE-TEMARA",  "code": "6530"},
-        {"name": "KENITRA",  "code": "6531"},
-        {"name": "KHEMISSET",  "code": "6532"},
-        {"name": "SIDI KACEM",  "code": "6533"},
-        {"name": "SIDI SLIMANE",  "code": "6534"}
+        {"name": "RABAT",  "code": "RBT", "codex": "6528"},
+        {"name": "SALE",  "code": "SAL", "codex": "6529"},
+        {"name": "SKHIRATE-TEMARA",  "code": "SKH", "codex": "6530"},
+        {"name": "KENITRA",  "code": "KEN", "codex": "6531"},
+        {"name": "KHEMISSET",  "code": "KHM", "codex": "6532"},
+        {"name": "SIDI KACEM",  "code": "KCM", "codex": "6533"},
+        {"name": "SIDI SLIMANE",  "code": "SLM", "codex": "6534"}
         ]
     },
     
     {"name": "Souss-Massa",
     "code": "SMS",
     "cities": [
-        {"name": "AGADIR IDA OU TANANE",  "code": "6570"},
-        {"name": "INEZGANE-AIT MELLOUL",  "code": "6571"},
-        {"name": "CHTOUKA-AIT BAHA",  "code": "6572"},
-        {"name": "TAROUDANNT",  "code": "6573"},
-        {"name": "TIZNIT",  "code": "6574"},
-        {"name": "TATA",  "code": "6575"}
+        {"name": "AGADIR IDA OU TANANE",  "code": "IDA", "codex": "6570"},
+        {"name": "INEZGANE-AIT MELLOUL",  "code": "NZG", "codex": "6571"},
+        {"name": "CHTOUKA-AIT BAHA",  "code": "CHT", "codex": "6572"},
+        {"name": "TAROUDANNT",  "code": "TAR", "codex": "6573"},
+        {"name": "TIZNIT",  "code": "TIZ", "codex": "6574"},
+        {"name": "TATA",  "code": "TAT", "codex": "6575"}
         ]
     },
 
     {"name": "Tanger-Tetouan-Al Hoceima",
     "code": "TTH",
     "cities": [
-        {"name": "TANGER-ASSILAH",  "code": "6503"},
-        {"name": "MDIQ-FNIDEQ",  "code": "6504"},
-        {"name": "TETOUAN",  "code": "6505"},
-        {"name": "FAHS-ANJRA",  "code": "6506"},
-        {"name": "LARACHE",  "code": "6507"},
-        {"name": "AL HOCEIMA",  "code": "6508"},
-        {"name": "CHEFCHAOUEN",  "code": "6509"},
-        {"name": "OUEZZANE",  "code": "6510"}
+        {"name": "TANGER-ASSILAH",  "code": "TNG", "codex": "6503"},
+        {"name": "MDIQ-FNIDEQ",  "code": "MDQ", "codex": "6504"},
+        {"name": "TETOUAN",  "code": "TET", "codex": "6505"},
+        {"name": "FAHS-ANJRA",  "code": "FHS", "codex": "6506"},
+        {"name": "LARACHE",  "code": "LAR", "codex": "6507"},
+        {"name": "AL HOCEIMA",  "code": "HOC", "codex": "6508"},
+        {"name": "CHEFCHAOUEN",  "code": "CHF", "codex": "6509"},
+        {"name": "OUEZZANE",  "code": "OAZ", "codex": "6510"}
         ]
     }
 ]

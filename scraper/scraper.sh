@@ -19,19 +19,24 @@ if ! test -e "$_logs_file"; then
     mkdir -p $_logs_dir && touch $_logs_file
 fi
 
+_lock_file_short="${$_lock_file#"$_crony_dir/"}"
+
 if test -e "$_lock_file"; then
-    echo "Execution prevented by a Lock file: $_lock_file" # >> "$_logs_file"
+    echo "Execution prevented by a Lock file: $_lock_file_short" # >> "$_logs_file"
     echo "Another script is probably running or did not finish as expected." # >> "$_logs_file"
     echo "The lock file will be removed on next boot. It can also be removed manually." # >> "$_logs_file"
 else
-    echo "Lock file $_lock_file was not found." >> "$_logs_file"
+    echo "Lock file $_lock_file_short was not found." >> "$_logs_file"
     touch $_lock_file
     DJANGO_DIR="$SCRIPT_DIR/../"
 
+    # TODO: Delete this line
+    python manage.py createkws >> "$_logs_file"
+
     cd $DJANGO_DIR
-    echo "Working directory: $(pwd)" >> "$_logs_file"
+    # echo "Working directory: $(pwd)" >> "$_logs_file"
     source $DJANGO_DIR/.venv/bin/activate
-    echo "Using python from: $(which python)" >> "$_logs_file"
+    # echo "Using python from: $(which python)" >> "$_logs_file"
     python scraper/worker.py "$@" >> "$_logs_file"
     deactivate
     echo "Script finished executing. See logs and system journal for details." >> "$_logs_file"

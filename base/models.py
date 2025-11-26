@@ -568,3 +568,4 @@ class Crawler(models.Model):
             return self.finished - self.started
         return None
 
+
