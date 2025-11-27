@@ -6,6 +6,7 @@ import random
 import time
 import json
 import pytz
+# from urllib.parse import quote
 
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -164,7 +165,7 @@ def get_bdc(card):
             title_text = safe_text(title_btn)
 
             number = safe_text(acc.select_one("span.font-bold")).replace("#", "")
-            if number == '': number = '0'
+            # if number == '': number = '0'
             title_article = title_text.replace('#' + number, '')
             mini_elements = acc.select(".content__article--subMiniCard")
             uom = safe_text(mini_elements[0])
@@ -176,10 +177,10 @@ def get_bdc(card):
 
             # Le veau laid violet volait le volet et volait avec le vieux lait.
 
-            try: number = int(number)
-            except Exception as xc:
-                print('Article number exception: \n', xc)
-                number = None
+            # try: number = int(number)
+            # except Exception as xc:
+            #     print('Article number exception: \n', xc)
+            #     number = None
 
             articles.append({
                 'number'            : number,
@@ -304,9 +305,9 @@ def has_next_page(soup):
     return next_link is not None
 
 
-def get_and_save_results(published_since_days=2):
+def save_results(published_since_days=2):
     print('\n\n')
-    printMessage('INFO', 'bonner', "Started Results browsing ...")
+    printMessage('INFO', 'b.save_results', "Started Results browsing ...")
 
     errors_happened = False
     handled_items = 0
@@ -318,9 +319,10 @@ def get_and_save_results(published_since_days=2):
         url = f"{RESULTS_BASE_URL}&{RESULTS_PAGE_PARAM}={page}"
         assnna = datetime.now().date() - timedelta(days=published_since_days)
         assnna_str = assnna.strftime('%Y-%m-%d')
-        query_string = f"search_consultation_resultats[dateLimitePublicationStart]={ assnna_str }"
+        query_string = f"search_consultation_resultats%5BdateLimitePublicationStart%5D={ assnna_str }"
         query_string += f"&search_consultation_resultats[pageSize]=50"
         url += "?" + query_string
+        # url = quote(url)
         ###################
         # search_consultation_resultats[keyword]
         # search_consultation_resultats[reference]
@@ -336,7 +338,13 @@ def get_and_save_results(published_since_days=2):
         # search_consultation_resultats[lieuExecution]
         # search_consultation_resultats[pageSize] = 10
         ###################
-        printMessage('INFO', 'bonner', f"Fetching page:{ page }")
+        printMessage('INFO', 'b.save_results', f"Fetching Results page:{ page }")
+
+        print('\n\n')
+        print('\n\n====================')
+        print(url)
+        print('====================\n\n')
+        print('\n\n')
 
         html = fetch_page(url)
         if not html:
@@ -354,7 +362,7 @@ def get_and_save_results(published_since_days=2):
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'bonner', f"Fetching item:{ i } from page { page }")
+            printMessage('INFO', 'b.save_results', f"Fetching item:{ i } from page { page }")
             try:
                 item = get_results_bdc(card)
 
@@ -375,20 +383,20 @@ def get_and_save_results(published_since_days=2):
                 )
                 if created_bdc:
                     bdc_created += 1
-                    printMessage('DEBUG', 'bonner', f"Created result for: { item['reference'] }")
+                    printMessage('DEBUG', 'b.save_results', f"Created result for: { item['reference'] }")
                 else:
-                    printMessage('DEBUG', 'bonner', f"Updated result for: { item['reference'] }")
+                    printMessage('DEBUG', 'b.save_results', f"Updated result for: { item['reference'] }")
 
             except Exception as xc:
-                printMessage('ERROR', 'bonner', f"[XXXXX] Exception raised while getting data: { xc }")
+                printMessage('ERROR', 'b.save_results', f"[XXXXX] Exception raised while getting data: { xc }")
                 traceback.print_exc()
                 errors_happened = True
 
             handled_items += 1
 
         if not has_next_page(soup):
-            printMessage('INFO', 'bonner', "[✔✔✔✔✔] Reached last Results page.")
-            printMessage('INFO', 'bonner', f"Handled items: { handled_items }. Created P.Orders: { bdc_created }. Created Clients: { clients_created }")
+            printMessage('INFO', 'b.save_results', "[✔✔✔✔✔] Reached last Results page.")
+            printMessage('INFO', 'b.save_results', f"Handled items: { handled_items }. Created P.Orders: { bdc_created }. Created Clients: { clients_created }")
             break
 
         page += 1
@@ -396,9 +404,9 @@ def get_and_save_results(published_since_days=2):
     return 0 if errors_happened == False else 1
 
 
-def get_and_save_bdcs():
+def save_bdcs():
     print('\n\n')
-    printMessage('INFO', 'bonner', "Started browsing Ongoing POs ...")
+    printMessage('INFO', 'b.save_bdcs', "Started browsing Ongoing POs ...")
 
     truncater = 32
     errors_happened = False
@@ -413,10 +421,19 @@ def get_and_save_bdcs():
     while True:
         url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
         # query_string = f"search_consultation_resultats[dateLimitePublicationStart]={ assnna_str }"
-        query_string = f"search_consultation_entreprise[pageSize]=50"
+        query_string = f"&search_consultation_entreprise[pageSize]=50"
         # search_consultation_entreprise[pageSize]50
+        # https://www.marchespublics.gov.ma/bdc/entreprise/consultation/resultat?search_consultation_resultats%5Bkeyword%5D=&search_consultation_resultats%5Breference%5D=&search_consultation_resultats%5Bobjet%5D=&search_consultation_resultats%5BdateLimitePublicationStart%5D=2025-11-25&search_consultation_resultats%5BdateLimitePublicationEnd%5D=&search_consultation_resultats%5BdateMiseEnLigneStart%5D=&search_consultation_resultats%5BdateMiseEnLigneEnd%5D=&search_consultation_resultats%5Bcategorie%5D=&search_consultation_resultats%5BnaturePrestation%5D=&search_consultation_resultats%5Bacheteur%5D=&search_consultation_resultats%5Bservice%5D=&search_consultation_resultats%5BlieuExecution%5D=&search_consultation_resultats%5BpageSize%5D=50
+        
         url += "?" + query_string
-        printMessage('INFO', 'bonner', f"Fetching page: { page } ...")
+        # url = quote(url)
+        printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...")
+
+        print('\n\n')
+        print('\n\n====================')
+        print(url)
+        print('====================\n\n')
+        print('\n\n')
 
         html = fetch_page(url)
         if not html:
@@ -434,7 +451,7 @@ def get_and_save_bdcs():
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'bonner', f"Fetching item: { i } from { page } ...")
+            printMessage('INFO', 'b.save_bdcs', f"Fetching item: { i } from { page } ...")
             try:
                 item = get_bdc(card)
                 if item != {} :
@@ -449,19 +466,19 @@ def get_and_save_bdcs():
                     if client_name and client_name != '':
                         client, created = Client.objects.get_or_create(name=client_name)
                         if created :
-                            printMessage('DEBUG', 'bonner', f"Created Client: { client_name[:truncater] }")
+                            printMessage('DEBUG', 'b.save_bdcs', f"Created Client: { client_name[:truncater] }")
                             clients_created += 1
                         else:
-                            printMessage('DEBUG', 'bonner', f"Found Client: { client_name[:truncater] }")
+                            printMessage('DEBUG', 'b.save_bdcs', f"Found Client: { client_name[:truncater] }")
 
                     category_label = item['category']
                     if category_label and category_label != '':
                         category, created = Category.objects.get_or_create(label=category_label)
                         if created :
-                            printMessage('DEBUG', 'bonner', f"Created Category: { category_label[:truncater] }")
+                            printMessage('DEBUG', 'b.save_bdcs', f"Created Category: { category_label[:truncater] }")
                             categorys_created += 1
                         else:
-                            printMessage('DEBUG', 'bonner', f"Found Category: { category_label[:truncater] }")
+                            printMessage('DEBUG', 'b.save_bdcs', f"Found Category: { category_label[:truncater] }")
 
                     bdc, created = PurchaseOrder.objects.update_or_create(
                         reference = item['reference'],
@@ -477,41 +494,45 @@ def get_and_save_bdcs():
                         }
                     )
                     if created : 
-                        printMessage('DEBUG', 'bonner', f"Created Purchase Order: { chrono }: { item['title'][:truncater] }")
+                        printMessage('DEBUG', 'b.save_bdcs', f"Created Purchase Order: { chrono }: { item['title'][:truncater] }")
                         bdc_created += 1
                     else:
-                        printMessage('DEBUG', 'bonner', f"Updated Purchase Order: { chrono }: { item['title'][:truncater] }")
+                        printMessage('DEBUG', 'b.save_bdcs', f"Updated Purchase Order: { chrono }: { item['title'][:truncater] }")
 
                     articles_items = item['articles']
                     if articles_items and articles_items != {}:
-                        r = 0
+                        rank = 0
                         for articles_item in articles_items:
-                            r += 1
-                            try: number = int(articles_item['number'])
+                            rank += 1
+                            
+                            try: 
+                                number = articles_item['number']
+                                # number = int(articles_item['number'])
                             except Exception as xc:
-                                printMessage('ERROR', 'bonner', f"[XXXXX] Exception raised while getting article number: { xc }")
+                                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting article number: { xc }")
                                 traceback.print_exc()
-                                number = r
+                                # number = r
 
                             try:
                                 qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
                                 quantity = Decimal(qts)
                             except Exception as xc:
-                                printMessage('ERROR', 'bonner', f"[XXXXX] Exception raised while getting article quantity: { xc }")
+                                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting article quantity: { xc }")
                                 traceback.print_exc()
                                 quantity = 0
                             try:
                                 vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
                                 vat_percent = Decimal(vat)
                             except Exception as xc:
-                                printMessage('ERROR', 'bonner', f"[XXXXX] Exception raised while getting VAT: { xc }")
+                                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting VAT: { xc }")
                                 traceback.print_exc()
                                 vat_percent = 0
 
                             article, created = Article.objects.update_or_create(
                                 purchase_order=bdc, 
-                                number=number,
+                                number=number, 
                                 defaults = {
+                                    'rank'           : rank,
                                     'title'          : articles_item['title'],
                                     'specifications' : articles_item['specifications'],
                                     'warranties'     : articles_item['warranties'],
@@ -521,10 +542,10 @@ def get_and_save_bdcs():
                                 }
                             )
                             if created:
-                                printMessage('DEBUG', 'bonner', f"Created Article: { number }: { articles_item['title'][:truncater] }")
+                                printMessage('DEBUG', 'b.save_bdcs', f"Created Article: { number }: { articles_item['title'][:truncater] }")
                                 articles_created += 1
                             else:
-                                printMessage('DEBUG', 'bonner', f"Updated Article: { number }: { articles_item['title'][:truncater] }")
+                                printMessage('DEBUG', 'b.save_bdcs', f"Updated Article: { number }: { articles_item['title'][:truncater] }")
 
                     attachements_items = item['attachements']
                     if attachements_items and attachements_items != {}:
@@ -536,23 +557,23 @@ def get_and_save_bdcs():
                                     defaults = {'name': attachements_item['name']}
                                 )
                                 if created :
-                                    printMessage('DEBUG', 'bonner', f"Created Attachement: { attachements_item['name'][:truncater] }")
+                                    printMessage('DEBUG', 'b.save_bdcs', f"Created Attachement: { attachements_item['name'][:truncater] }")
                                     attachements_created += 1
                                 else:
-                                    printMessage('DEBUG', 'bonner', f"Updated Attachement: { attachements_item['name'][:truncater] }")
+                                    printMessage('DEBUG', 'b.save_bdcs', f"Updated Attachement: { attachements_item['name'][:truncater] }")
 
                 else:
-                    printMessage('ERROR', 'bonner', f"[XXXXX] Got an empty PO !")
+                    printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Got an empty PO !")
             except Exception as xc:
-                printMessage('ERROR', 'bonner', f"[XXXXX] Exception raised while getting PO data: { xc }")
+                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting PO data: { xc }")
                 traceback.print_exc()
                 errors_happened = True
 
             handled_items += 1
 
         if not has_next_page(soup):
-            printMessage('INFO', 'bonner', "[✔✔✔✔✔] Reached last POs page.")
-            printMessage('INFO', 'bonner', f"Handled items: { handled_items }. Created P.Orders: { bdc_created }. Created Clients: { clients_created }. Created Categories: { categorys_created }. Created Articles: { articles_created }")
+            printMessage('INFO', 'b.save_bdcs', "[✔✔✔✔✔] Reached last POs page.")
+            printMessage('INFO', 'b.save_bdcs', f"Handled items: { handled_items }. Created P.Orders: { bdc_created }. Created Clients: { clients_created }. Created Categories: { categorys_created }. Created Articles: { articles_created }")
 
             break
 

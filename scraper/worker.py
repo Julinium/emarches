@@ -13,12 +13,6 @@ def main():
     from scraper import constants as C
     from base.models import Crawler
 
-
-#####################################
-    # bonner.get_and_save_bdcs()
-    # bonner.get_and_save_results()
-#####################################
-
     started_time = datetime.now()
 
     helper.printBanner()
@@ -135,12 +129,17 @@ def main():
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Downloaded {files_downloaded} DCE files, {files_failed} downloads failed.", 2)
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
+    
+    
+    def handle_bdcs():
+        print('\n\n\n\n======================================================')
+        helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
+        bonner.save_results()
+        bonner.save_bdcs()
+        print('\n\n======================================================\n\n')
 
-    print('\n\n\n\n======================================================')
-    helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
-    bonner.get_and_save_bdcs()
-    bonner.get_and_save_results()
-    print('\n\n======================================================\n\n')
+    
+    handle_bdcs()
 
 
 if __name__ == '__main__':

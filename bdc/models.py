@@ -83,7 +83,8 @@ class PurchaseOrder(models.Model):
 class Article(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name="articles", blank=True, null=True, verbose_name=_("Purchase Order"))
-    number = models.SmallIntegerField(blank=True, null=True, default=1, verbose_name=_("Number"))
+    rank = models.SmallIntegerField(blank=True, null=True, default=1, verbose_name=_("Rank"))
+    number = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Number"))
     title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
     specifications = models.TextField(blank=True, null=True, verbose_name=_("Specifications"))
     warranties = models.TextField(blank=True, null=True, verbose_name=_("Warranties"))

@@ -154,6 +154,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while submitting search form: {str(e)}', 1, 1)
         if driver: driver.quit()
         return links
+
     try:
         helper.printMessage('DEBUG', 'l.getLinks', 'Finding page size element ...')
         page_size = Select(driver.find_element("id", "ctl0_CONTENU_PAGE_resultSearch_listePageSizeTop"))
@@ -182,6 +183,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     links = page2Links(driver, i, pages)
     try: next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
     except: next_page_button = None
+    
     while next_page_button != None:
         next_page_button.click()
         i += 1
