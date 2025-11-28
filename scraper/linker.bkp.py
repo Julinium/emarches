@@ -137,6 +137,13 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     """
     
     url = f"{C.SITE_INDEX}?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons"
+    sf = requests.get(url)
+    if sf.status_code == 200:
+        f_text = search_form.text
+
+
+    results_request = request.post(url, params={})
+
     driver = helper.getDriver(url)
     
     links = []
