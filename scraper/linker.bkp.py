@@ -132,7 +132,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         None.
     # Return:
         List of extremely abbriged Consultations.
-        Each item represents [portal id, organism acronym, published date] for a Consultation.
+        Each element represents [portal id, organism acronym, published date] of a Consultation.
         The first two values can be used to obtain a working link to the Consultaion on the portal.
     """
     

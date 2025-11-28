@@ -43,12 +43,13 @@
                                     class="accordion-collapse collapse"
                                     aria-labelledby="heading-{{ forloop.counter }}"
                                     data-bs-parent="#statesAccordion-{{ forloop.counter }}">
-                                <div class="accordion-body">
+                                <div class="accordion-body p-2 pb-1">
                                     {% if state.cities %}
-                                        <div class="">
+                                        <div class="mt-1">
                                             {% for city in state.cities %}
                                                 <a href="{% url 'portal_tender_list' %}?&q={{ city.name }}&f=location"
-                                                   class="btn btn-outline-primary m-1">
+                                                   class="btn btn-outline-primary ms-1 mb-2">
+                                                    <i class="{{ bicons.location }} me-1"></i>
                                                     <span class="fs-6">{{ city.name }}</span>
                                                 </a>
                                             {% endfor %}

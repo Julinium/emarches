@@ -40,10 +40,10 @@ def safe_text(elem):
     return elem.get_text(strip=True) if elem else ""
 
 
-def fetch_page(url, retries=3):
+def fetch_page(url, params={}, retries=3):
     for attempt in range(retries):
         try:
-            r = requests.get(url, headers=get_headers(), timeout=15)
+            r = requests.get(url, headers=get_headers(), params=params, timeout=15)
             s = r.status_code
             if s == 200:
                 return r.text
@@ -62,6 +62,12 @@ def get_bdc(card):
     """
     Extracts data from a single item card
     """
+    
+    # count_text = card.select_one(".entreprise__middleSubCard a.table__links")
+    # try: items_count = count_text.get_text(strip=True).replace("Nombre de résultats : ", "").strip()
+    # except Exception as xc: 
+    #     print('Items count exception: \n', xc)
+    #     items_count = None 
     
     ref_text = card.select_one(".entreprise__middleSubCard a.table__links")
     try: reference = ref_text.get_text(strip=True).replace("Référence :", "").strip()
@@ -222,7 +228,6 @@ def get_bdc(card):
     return bdc
     
 
-
 def get_results_bdc(card):
     """
     Extracts data from a single item card
@@ -319,34 +324,25 @@ def save_results(published_since_days=2):
         url = f"{RESULTS_BASE_URL}&{RESULTS_PAGE_PARAM}={page}"
         assnna = datetime.now().date() - timedelta(days=published_since_days)
         assnna_str = assnna.strftime('%Y-%m-%d')
-        query_string = f"search_consultation_resultats%5BdateLimitePublicationStart%5D={ assnna_str }"
-        query_string += f"&search_consultation_resultats[pageSize]=50"
-        url += "?" + query_string
-        # url = quote(url)
-        ###################
-        # search_consultation_resultats[keyword]
-        # search_consultation_resultats[reference]
-        # search_consultation_resultats[objet]
-        # search_consultation_resultats[dateLimitePublicationStart] = 2025-11-01
-        # search_consultation_resultats[dateLimitePublicationEnd] = 2025-11-30
-        # search_consultation_resultats[dateMiseEnLigneStart]
-        # search_consultation_resultats[dateMiseEnLigneEnd]
-        # search_consultation_resultats[categorie]
-        # search_consultation_resultats[naturePrestation]
-        # search_consultation_resultats[acheteur]
-        # search_consultation_resultats[service]
-        # search_consultation_resultats[lieuExecution]
-        # search_consultation_resultats[pageSize] = 10
-        ###################
-        printMessage('INFO', 'b.save_results', f"Fetching Results page:{ page }")
+        params = {
+            "search_consultation_resultats[keyword]" : '',
+            "search_consultation_resultats[reference]" : '',
+            "search_consultation_resultats[objet]" : '',
+            "search_consultation_resultats[dateLimitePublicationStart]" : assnna_str,
+            "search_consultation_resultats[dateLimitePublicationEnd]" : '',
+            "search_consultation_resultats[dateMiseEnLigneStart]" : '',
+            "search_consultation_resultats[dateMiseEnLigneEnd]" : '',
+            "search_consultation_resultats[categorie]" : '',
+            "search_consultation_resultats[naturePrestation]" : '',
+            "search_consultation_resultats[acheteur]" : '',
+            "search_consultation_resultats[service]" : '',
+            "search_consultation_resultats[lieuExecution]" : '',
+            "search_consultation_resultats[pageSize]" : '50'
+        }
+        
+        printMessage('INFO', 'b.save_results', f"Fetching Results page: { page }")
 
-        print('\n\n')
-        print('\n\n====================')
-        print(url)
-        print('====================\n\n')
-        print('\n\n')
-
-        html = fetch_page(url)
+        html = fetch_page(url, params=params)
         if not html:
             errors_happened = True
             break
@@ -357,12 +353,22 @@ def save_results(published_since_days=2):
         if not container:
             errors_happened = True
             break
-        
+
+        count_text = container.select_one(".content__resultat")
+        try:
+            items_count_str = count_text.get_text(strip=True).replace(":", "").replace("Nombre de résultats", "").strip()
+            items_count = int(items_count_str)
+        except Exception as xc:
+            print('Items count exception: \n', xc)
+            items_count = 0
+
+        printMessage('INFO', 'b.save_results', f"Found Results items count: { items_count }")
+
         cards = container.select(".entreprise__card")
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'b.save_results', f"Fetching item:{ i } from page { page }")
+            printMessage('INFO', 'b.save_results', f"Fetching item { i } from page { page }")
             try:
                 item = get_results_bdc(card)
 
@@ -388,7 +394,7 @@ def save_results(published_since_days=2):
                     printMessage('DEBUG', 'b.save_results', f"Updated result for: { item['reference'] }")
 
             except Exception as xc:
-                printMessage('ERROR', 'b.save_results', f"[XXXXX] Exception raised while getting data: { xc }")
+                printMessage('ERROR', 'b.save_results', f"[xxxxx] Exception raised while getting data: { xc }")
                 traceback.print_exc()
                 errors_happened = True
 
@@ -396,7 +402,7 @@ def save_results(published_since_days=2):
 
         if not has_next_page(soup):
             printMessage('INFO', 'b.save_results', "[✔✔✔✔✔] Reached last Results page.")
-            printMessage('INFO', 'b.save_results', f"Handled items: { handled_items }. Created P.Orders: { bdc_created }. Created Clients: { clients_created }")
+            printMessage('INFO', 'b.save_results', f"Handled items: { handled_items }. +P.Orders: { bdc_created }. +Clients: { clients_created }")
             break
 
         page += 1
@@ -421,21 +427,35 @@ def save_bdcs():
     while True:
         url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
         # query_string = f"search_consultation_resultats[dateLimitePublicationStart]={ assnna_str }"
-        query_string = f"&search_consultation_entreprise[pageSize]=50"
+        # query_string = f"&search_consultation_entreprise[pageSize]=50"
         # search_consultation_entreprise[pageSize]50
         # https://www.marchespublics.gov.ma/bdc/entreprise/consultation/resultat?search_consultation_resultats%5Bkeyword%5D=&search_consultation_resultats%5Breference%5D=&search_consultation_resultats%5Bobjet%5D=&search_consultation_resultats%5BdateLimitePublicationStart%5D=2025-11-25&search_consultation_resultats%5BdateLimitePublicationEnd%5D=&search_consultation_resultats%5BdateMiseEnLigneStart%5D=&search_consultation_resultats%5BdateMiseEnLigneEnd%5D=&search_consultation_resultats%5Bcategorie%5D=&search_consultation_resultats%5BnaturePrestation%5D=&search_consultation_resultats%5Bacheteur%5D=&search_consultation_resultats%5Bservice%5D=&search_consultation_resultats%5BlieuExecution%5D=&search_consultation_resultats%5BpageSize%5D=50
         
-        url += "?" + query_string
+        # url += "?" + query_string
         # url = quote(url)
+
+        params = {
+            "search_consultation_entreprise[keyword]": "",
+            "search_consultation_entreprise[reference]": "",
+            "search_consultation_entreprise[objet]": "",
+            "search_consultation_entreprise[dateLimiteStart] ": "",
+            "search_consultation_entreprise[dateLimiteEnd] ": "",
+            "search_consultation_entreprise[dateMiseEnLigneStart]": "",
+            "search_consultation_entreprise[dateMiseEnLigneEnd]": "",
+            "search_consultation_entreprise[categorie]": "",
+            "search_consultation_entreprise[naturePrestation]": "",
+            "search_consultation_entreprise[acheteur]": "",
+            "search_consultation_entreprise[service]": "",
+            "search_consultation_entreprise[lieuExecution]": "",
+            "search_consultation_entreprise[pageSize]": "50"
+        }
         printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...")
 
-        print('\n\n')
-        print('\n\n====================')
-        print(url)
-        print('====================\n\n')
-        print('\n\n')
+        # print('\n\n====================')
+        # print(url)
+        # print('====================\n\n')
 
-        html = fetch_page(url)
+        html = fetch_page(url, params=params)
         if not html:
             errors_happened = True
             break
@@ -446,7 +466,17 @@ def save_bdcs():
         if not container:
             errors_happened = True
             break
-        
+
+        count_text = container.select_one(".content__resultat")
+        try:
+            items_count_str = count_text.get_text(strip=True).replace(":", "").replace("Nombre de résultats", "").strip()
+            items_count = int(items_count_str)
+        except Exception as xc:
+            print('Items count exception: \n', xc)
+            items_count = 0
+
+        printMessage('INFO', 'b.save_results', f"Found PO items count: { items_count }")
+
         cards = container.select(".entreprise__card")
         i = 0
         for card in cards:
@@ -507,24 +537,22 @@ def save_bdcs():
                             
                             try: 
                                 number = articles_item['number']
-                                # number = int(articles_item['number'])
                             except Exception as xc:
-                                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting article number: { xc }")
+                                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting article number: { xc }")
                                 traceback.print_exc()
-                                # number = r
 
                             try:
                                 qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
                                 quantity = Decimal(qts)
                             except Exception as xc:
-                                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting article quantity: { xc }")
+                                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting article quantity: { xc }")
                                 traceback.print_exc()
                                 quantity = 0
                             try:
                                 vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
                                 vat_percent = Decimal(vat)
                             except Exception as xc:
-                                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting VAT: { xc }")
+                                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting VAT: { xc }")
                                 traceback.print_exc()
                                 vat_percent = 0
 
@@ -563,9 +591,9 @@ def save_bdcs():
                                     printMessage('DEBUG', 'b.save_bdcs', f"Updated Attachement: { attachements_item['name'][:truncater] }")
 
                 else:
-                    printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Got an empty PO !")
+                    printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Got an empty PO !")
             except Exception as xc:
-                printMessage('ERROR', 'b.save_bdcs', f"[XXXXX] Exception raised while getting PO data: { xc }")
+                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting PO data: { xc }")
                 traceback.print_exc()
                 errors_happened = True
 
@@ -573,7 +601,7 @@ def save_bdcs():
 
         if not has_next_page(soup):
             printMessage('INFO', 'b.save_bdcs', "[✔✔✔✔✔] Reached last POs page.")
-            printMessage('INFO', 'b.save_bdcs', f"Handled items: { handled_items }. Created P.Orders: { bdc_created }. Created Clients: { clients_created }. Created Categories: { categorys_created }. Created Articles: { articles_created }")
+            printMessage('INFO', 'b.save_bdcs', f"Handled items: { handled_items } +P.Orders: { bdc_created } +Clients: { clients_created } +Categories: { categorys_created } +Articles: { articles_created }")
 
             break
 
