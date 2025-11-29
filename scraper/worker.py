@@ -15,6 +15,11 @@ def main():
 
     started_time = datetime.now()
 
+    ########################
+    # from scraper import rinker
+    # links = rinker.getLinks()
+    ########################
+
     helper.printBanner()
     helper.printMessage('===', 'worker', "▶▷▶▷ The unlazy worker started working ◁◀◁◀", 1, 1)
 

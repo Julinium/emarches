@@ -1,5 +1,7 @@
 import os, csv, random, json, traceback
-from datetime import date, timedelta
+from datetime import datetime, date, timedelta
+import requests, pytz
+from bs4 import BeautifulSoup
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -12,6 +14,7 @@ from base.models import Tender
 
 
 REFRESH_SAVED = True
+rabat_tz = pytz.timezone("Africa/Casablanca")
 
 
 def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
@@ -124,6 +127,13 @@ def getSavedLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     return links
 
 
+def get_headers():
+    return {
+        "User-Agent": helper.getUa(),
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8"
+    }
+
+
 def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     """
     # Synopsis:
@@ -135,14 +145,140 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         Each element represents [portal id, organism acronym, published date] of a Consultation.
         The first two values can be used to obtain a working link to the Consultaion on the portal.
     """
-    
+
+    links = []
+    page = 1
+    items_per_page = 10 #500
+
+    # https://www.marchespublics.gov.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons#
+    # https://www.marchespublics.gov.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons
+
+    rua = helper.getUa()
+    rua_label = "Random"    
     url = f"{C.SITE_INDEX}?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons"
-    sf = requests.get(url)
-    if sf.status_code == 200:
-        f_text = search_form.text
+
+    helper.printMessage('DEBUG', 'l.getLinks', f'Using UA: {rua_label}.')
+    headino = {
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "accept-encoding": "gzip, deflate, br, zstd",
+        "accept-language": "en-US,en;q=0.9,fr-FR;q=0.8,fr;q=0.7,ar;q=0.6",
+        "cache-control": "no-cache",
+        "connection": "keep-alive",
+        "content-type": "application/x-www-form-urlencoded",
+        "Referer": url,
+        "User-Agent": rua, 
+        }
+    sessiono = requests.Session()
+    sessiono.headers=headino
+
+    
+    res_form = sessiono.get(url, headers=headino)
+    res_form.raise_for_status()
+
+    # res_form = requests.get(url, headers=get_headers(), params=params, timeout=15)
+    # s = r.status_code
+
+    print("\n=======================")
+    print("res_form.status_code:", res_form.status_code)
+    print("=======================\n")
+    soup = BeautifulSoup(res_form.text, 'html.parser')
+    
+
+    PRADO_PAGESTATE = soup.find('input', {'id': 'PRADO_PAGESTATE'})['value']
+    PRADO_POSTBACK_TARGET = soup.find('input', {'id': 'PRADO_POSTBACK_TARGET'})['value']
+    PRADO_POSTBACK_PARAMETER = soup.find('input', {'id': 'PRADO_POSTBACK_PARAMETER'})['value']
+
+    print(f'PRADO_PAGESTATE (/{ len(PRADO_PAGESTATE) })======== ', PRADO_PAGESTATE[:64], '...')
+    print('PRADO_POSTBACK_TARGET ======== ', PRADO_POSTBACK_TARGET[:64])
+    print('PRADO_POSTBACK_PARAMETER ======== ', PRADO_POSTBACK_PARAMETER[:64])
+
+    wassa = datetime.now().astimezone(rabat_tz)
+    wassa_str = wassa.strftime('%Y-%m-%d')
+# 
+    payload = {
+        "PRADO_PAGESTATE": PRADO_PAGESTATE,
+        "PRADO_POSTBACK_TARGET": "ctl0$CONTENU_PAGE$AdvancedSearch$lancerRecherche",
+        "PRADO_POSTBACK_PARAMETER": "undefined",
+        # "PRADO_POSTBACK_TARGET": PRADO_POSTBACK_TARGET,
+        # "PRADO_POSTBACK_PARAMETER": PRADO_POSTBACK_PARAMETER,
+        # "ctl0$CONTENU_PAGE$resultSearch$numPageTop": page,
+        # "ctl0$CONTENU_PAGE$resultSearch$listePageSizeTop": items_per_page,
+        "ctl0$menuGaucheEntreprise$quickSearch": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$type_rechercheEntite": "floue",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$classification" : 0,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$organismesNames" : 0,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$choixInclusionDescendancesServices": "ctl0$CONTENU_PAGE$AdvancedSearch$inclureDescendances",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$orgName": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$reference": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$procedureType": 0,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$categorie": 0,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idReferentielZoneText$RepeaterReferentielZoneText$ctl0$idReferentielZoneTextFrom": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idReferentielZoneText$RepeaterReferentielZoneText$ctl0$idReferentielZoneTextTo": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idReferentielZoneText$RepeaterReferentielZoneText$ctl0$modeRecherche": 1,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idReferentielZoneText$RepeaterReferentielZoneText$ctl0$typeData": "montant",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idAtexoLtRefRadio$RepeaterReferentielRadio$ctl0$ClientIdsRadio": "ctl0_CONTENU_PAGE_AdvancedSearch_idAtexoLtRefRadio_RepeaterReferentielRadio_ctl0_OptionOui#ctl0_CONTENU_PAGE_AdvancedSearch_idAtexoLtRefRadio_RepeaterReferentielRadio_ctl0_OptionNon",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idAtexoLtRefRadio$RepeaterReferentielRadio$ctl0$modeRecherche": 1,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$idsSelectedGeoN2": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$numSelectedGeoN2": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$domaineActivite$idsDomaines": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$qualification$idsQualification": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$qualification$libelleQualif": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$agrements$idsSelectedAgrements": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$dateMiseEnLigneStart": wassa_str,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$dateMiseEnLigneEnd": "31/12/2030",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$dateMiseEnLigneCalculeStart": "01/01/2001",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$dateMiseEnLigneCalculeEnd": wassa_str,
+        "ctl0$CONTENU_PAGE$AdvancedSearch$keywordSearch": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$rechercheFloue": "ctl0$CONTENU_PAGE$AdvancedSearch$floue",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$orgNameAM": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$refRestreinteSearch": "",
+        "ctl0$CONTENU_PAGE$AdvancedSearch$accesRestreinteSearch": "",
+    }
+
+    ###################
+
+    # cons_uri = f"{link_item[0]}{C.LINK_STITCH}{link_item[1]}"
+    # cons_link = f'{C.LINK_PREFIX}{cons_uri}'
+    # dce_link = f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={link_item[0]}&orgAcronym={link_item[1]}'
+    # /index.php?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons
+    url = "https://www.marchespublics.gov.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons"
+    try:
+        print("trying .......................")
+        # print(sessiono.headers)
+        response = sessiono.post(url, headers=headino, params=payload, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
+        print("response.status_code:", response.status_code)
+        bowl = BeautifulSoup(response.text, 'html.parser')
+        print("bowwwwwwwwwl:\n", bowl)
+    except Exception as x:
+        helper.printMessage('ERROR', 'l.getLinks', f'Exception raised while getting Tenders list {str(url.replace(C.SITE_INDEX, '[...]'))}: {x}')
+        return None
+
+    helper.printMessage('DEBUG', 'l.getLinks', f'Getting  Tenders list from page: { page }')
+    if response.status_code != 200 :
+        helper.printMessage('ERROR', 'l.getLinks', f'Request to server page returned a {response.status_code} status code.')
+        if response.status_code == 429:
+            helper.printMessage('ERROR', 'l.getLinks', f'Too many Requests, said the server: {response.status_code} !')
+            helper.sleepRandom(300, 600)
+        return None
+
+    bowl = BeautifulSoup(response.text, 'html.parser')
+    # soup = bowl.find(class_='ongletLayer')
+
+    print("bowl:\n", bowl)
+
+    pages_field = soup.find("span", {"id": "ctl0_CONTENU_PAGE_resultSearch_nombrePageTop"})
+    pages = int(pages_field.text.strip())
+
+    print("\n\t\t===========")
+    print("\t\tpages:", pages)
+    print("\t\t===========\n")
+
+    helper.sleepRandom(3000, 6000)
+
+    ###################
 
 
-    results_request = request.post(url, params={})
+    results_request = request.post(url, params=payload)
 
     driver = helper.getDriver(url)
     
@@ -187,6 +323,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
 
     i = 1
     # helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:03}/{pages:03} ... \n')
+
     links = page2Links(driver, i, pages)
     try: next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
     except: next_page_button = None
