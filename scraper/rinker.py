@@ -1,6 +1,7 @@
 import os, csv, random, json, traceback
-from datetime import datetime, date, timedelta
 import requests, pytz
+from datetime import datetime, date, timedelta
+from django.utils import timezone
 from bs4 import BeautifulSoup
 
 from selenium.webdriver.common.by import By
@@ -183,7 +184,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     print("=======================\n")
     soup = BeautifulSoup(res_form.text, 'html.parser')
     
-
+    
     PRADO_PAGESTATE = soup.find('input', {'id': 'PRADO_PAGESTATE'})['value']
     PRADO_POSTBACK_TARGET = soup.find('input', {'id': 'PRADO_POSTBACK_TARGET'})['value']
     PRADO_POSTBACK_PARAMETER = soup.find('input', {'id': 'PRADO_POSTBACK_PARAMETER'})['value']
@@ -192,7 +193,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     print('PRADO_POSTBACK_TARGET ======== ', PRADO_POSTBACK_TARGET[:64])
     print('PRADO_POSTBACK_PARAMETER ======== ', PRADO_POSTBACK_PARAMETER[:64])
 
-    wassa = datetime.now().astimezone(rabat_tz)
+    wassa = timezone.now().astimezone(rabat_tz)
     wassa_str = wassa.strftime('%Y-%m-%d')
 # 
     payload = {

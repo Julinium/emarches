@@ -2,7 +2,7 @@ import os, logging, json, random
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 # from uuid import UUID
 from django.core.paginator import Paginator
@@ -46,7 +46,7 @@ LINK_PREFIX = settings.LINK_PREFIX
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
 
 DCE_SHOW_MODAL = True
-
+DEADLINE_BACK_DAYS = 3
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -78,6 +78,7 @@ def bdc_list(request):
         }
         
         if not 'ddlnn' in query_dict:
+            default_ddlnn = datetime.now(RABAT_TZ).date() - timedelta(days=DEADLINE_BACK_DAYS)
             query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
         
         if not 'sort' in query_dict:
@@ -190,7 +191,7 @@ def bdc_list(request):
         if sort == '-published': ordering = ['published']
     else: ordering = []
 
-    ordering.append('id')
+    ordering.append('-created')
 
     query_dict['filters'] = filters
 

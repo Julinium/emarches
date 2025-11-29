@@ -95,7 +95,7 @@ class Article(models.Model):
 
     class Meta:
         db_table = 'base_article'
-        ordering = ['number']
+        ordering = ['rank']
         verbose_name = _("Article")
     
     def __str__(self):

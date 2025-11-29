@@ -14,6 +14,7 @@
                                 title="{% trans 'Main Category' %}: {{ bdc.category.label }}">
                                 <i class="{{ bdc.category.icon_bs_class }} me-1"></i>
                             </span>
+                            <span class="small me-2">{{ bdc.articles.all.count }}x</span>
                             {% if bdc.location %}
                                 <span class="fw-light small text-muted me-1" 
                                     data-bs-toggle="tooltip" 
