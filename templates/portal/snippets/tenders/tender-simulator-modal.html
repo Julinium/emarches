@@ -42,21 +42,17 @@
 
 <style>
     .striped-modal-body {
-    /* Fallback color */
-    background-color: #f8f9fa;
-    
-    /* Vertical stripes: 10px white + 10px light gray */
-    background-image: 
-        repeating-linear-gradient(
-        to right,
-        #ffffff 0px,
-        #ffffff 35px,
-        #f1f3f5 1px,
-        #f1f3f5 36px
-        );
-    
-    /* Optional: Add subtle shadow or padding */
-    background-attachment: local; /* Ensures pattern scrolls with content */
+        background-color: #f8f9fa;
+        
+        background-image: 
+            repeating-linear-gradient(
+            to right,
+            #ffffff 0px,
+            #ffffff 35px,
+            #f1f3f5 1px,
+            #f1f3f5 36px
+            );    
+        background-attachment: local;
     }
 </style>
 
@@ -85,43 +81,18 @@
 
                 <hr>
 
-                <!-- <div class="d-flex mb-2"> 
-                    <div>
-                        <button class="btn btn-sm btn-outline-secondary bg-light disabled"><i class="{{ bicons.target }}"></i>
-                        </button>
-                    </div>
-                    <div class="card shadow-sm px-2 w-100 ms-2 bg-primary-subtle">
-                        <div class="d-flex justify-content-between">
-                            <div class="mt-1 mb-0 small text-primary">
-                                <span id="spanTarget" class="value fw-bold"></span>
-                                <span class="small ms-1 text-muted">{% trans 'Target Price' %}</span>
-                            </div>
-                        </div>
-                        <input id="sliderTarget" type="range" step="0.01" min="0" max="0" class="mb-1 mt-0 w-100" disabled>
-                    </div>
-                </div> -->
-
-
                 <div class="d-flex mb-2">
                     <div>
                         <button class="btn btn-sm btn-outline-secondary bg-light disabled"><i class="{{ bicons.target }}"></i>
                         </button>
                     </div>
-                    <div class="card shadow-sm px-2 w-100 ms-2 bg-black bg-opacity-10">
+                    <div class="card shadow-sm px-2 w-100 ms-2 bg-primary bg-opacity-10">
                         <div class="row gx-3 gy-0">
                             <div class="col-12 col-md-6">
                                 <div class="mt-1 mb-0 small text-primary">
                                     <span id="spanTarget" class="value fw-bold"></span>
                                     <span class="small ms-1 text-muted">{% trans 'Target Price' %}</span>
                                 </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <!-- <div class="mt-1 mb-0 ms-2 text-end small">
-                                    <span class="small mx-1 text-muted">E±20%: </span>
-                                    <span id="spanMin" class="small"></span>
-                                    <span><i class="{{ bicons.range }}"></i></span>
-                                    <span id="spanMax" class="small"></span>
-                                </div> -->
                             </div>
                             <div class="col-12">
                                 <input id="sliderTarget" type="range" step="0.01" min="0" max="0" class="mb-1 mt-0 w-100" disabled>
@@ -135,7 +106,7 @@
                         <button class="btn btn-sm btn-outline-secondary bg-light disabled"><i class="{{ bicons.mean }}"></i>
                         </button>
                     </div>
-                    <div class="card shadow-sm px-2 w-100 ms-2 bg-black bg-opacity-10">
+                    <div class="card shadow-sm px-2 w-100 ms-2 bg-white bg-opacity-10">
                         <div class="row gx-3 gy-0">
                             <div class="col-12 col-md-6">
                                 <div class="mt-1 mb-0 small">

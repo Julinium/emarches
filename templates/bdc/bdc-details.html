@@ -62,42 +62,46 @@
                 <span>{{ bdc.category.label }}</span>
             </div>
         </div>
-        
-        <!-- <div class="row gx-4 gy-0">
-        </div> -->
-            <div class="list-group my-3 shadow-sm">
-                {% for article in bdc.articles.all %}
-                <div class="list-group-item list-group-item-action">
-                    <div>
-                        <span class="me-1 text-muted">#{{ article.number }}</span>
-                        <span class="me-0 small text-muted">{{ article.quantity }}</span>
-                        <span class="me-0 small text-muted">x {{ article.uom }}</span>
-                    </div>
-                    <div class="">
-                        <span class="fw-bold">{{ article.title }}</span>
-                    </div>
-                    {% if article.specifications %}
-                        {% if article.specifications != article.title and article.specifications != '-' %}
-                            <div class="small text-muted ms-3 mt-2">
-                                <span class="">=</span>
+
+        <div class="list-group my-3 shadow-sm">
+            {% for article in bdc.articles.all %}
+            <div class="list-group-item list-group-item-action">
+                <div class="">
+                    <span class="me-1 text-muted">#{{ article.number }}.</span>
+                    <span class="fw-bold">{{ article.title }}</span>
+                    <span class="ms-1 badge bg-secondary">{{ article.quantity }} x {{ article.uom }}</span>
+                    
+                </div> 
+                {% if article.specifications %}
+                    {% if article.specifications != article.title and article.specifications not in empties %}
+                        <div class="d-flex small text-muted ms-2 mt-2">
+                            <div class="">
+                                <i class="{{ bicons.specs }}"></i>
+                            </div>
+                            <div class="w-100 ms-2">
                                 <span class="">{{ article.specifications }}  </span>
                             </div>
-                        {% endif %}
+                        </div>
                     {% endif %}
-                    {% if article.warranties %}
-                        {% if article.warranties != article.title and article.warranties != '-' %}
-                            <div class="small text-muted ms-3 mt-2">
-                                <span class="">=</span>
-                                <span class="">{{ article.warranties }}  </span>                      
+                {% endif %}
+
+                {% if article.warranties %}
+                    {% if article.warranties != article.title and article.warranties not in empties %}
+                        <div class="d-flex small text-muted ms-2 mt-2">
+                            <div class="">
+                                <i class="{{ bicons.warranties }}"></i>
                             </div>
-                        {% endif %}
+                            <div class="w-100 ms-2">
+                                <span class="">{{ article.warranties }}  </span>
+                            </div>
+                        </div>
                     {% endif %}
-                </div>
-                    <!-- <div class="mt-2">{{ article.quantity }} x {{ article.uom }}: {{ article.title }}</div> -->
-                {% empty %}
-                    <div class="list-group-item text-danger small">{% trans "No articles found" %}</div>
-                {% endfor %}
+                {% endif %}
             </div>
+            {% empty %}
+                <div class="list-group-item text-danger small">{% trans "No articles found" %}</div>
+            {% endfor %}
+        </div>
 
     </div>
 

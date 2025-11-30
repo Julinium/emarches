@@ -140,6 +140,9 @@ def get_bdc(card):
     if html:
 
         soup = BeautifulSoup(html, "lxml")
+        for br in soup.find_all("br"):
+            br.replace_with("\n")
+            
         box = soup.select_one("div.py-3.content__subBox.devisAccordionStyle")
 
         published = None

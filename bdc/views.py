@@ -163,13 +163,12 @@ def bdc_list(request):
     def define_context(request):
         context = {}
 
-        all_categories = Category.objects.all()
-
+        # all_categories = Category.objects.all()
+        # context['categories']         = all_categories
         context['query_string']       = urlencode(query_string)
         context['query_unsorted']     = urlencode(query_unsorted)
         context['query_dict']         = query_dict
 
-        # context['categories']         = all_categories
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
 
         return context
@@ -243,9 +242,13 @@ def bdc_details(request, pk=None):
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
+    
+    empties = ['', '-', '---', '/']
+    
     context = { 
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,
+        'empties'       : empties,
         }
 
     logger = logging.getLogger('portal')

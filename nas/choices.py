@@ -10,14 +10,25 @@ class ItemsPerPage(models.TextChoices):
     IPP_100 = '100', "100"
 
 class OrderingField(models.TextChoices):
-        DEADLINE_ASC  = 'deadline',   _('Deadline: Nearest first')
-        DEADLINE_DES  = '-deadline',  _('Deadline: Farthest first')
-        ESTIMATE_ASC  = 'estimate',   _('Estimate: Smallest first')
-        ESTIMATE_DES  = '-estimate',  _('Estimate: Largest first')
-        BOND_ASC      = 'bond',       _('Guarantee: Smallest first')
-        BOND_DES      = '-bond',      _('Guarantee: Largest first')
-        PUBLISHED_ASC = 'published',  _('Published: Oldest first')
-        PUBLISHED_DES = '-published', _('Published: Newest first')
+    DEADLINE_ASC  = 'deadline',   _('Deadline') + ' ↗'
+    DEADLINE_DES  = '-deadline',  _('Deadline') + ' ↘'
+    ESTIMATE_ASC  = 'estimate',   _('Estimate') + ' ↗'
+    ESTIMATE_DES  = '-estimate',  _('Estimate') + ' ↘'
+    BOND_ASC      = 'bond',       _('Guarantee') + ' ↗'
+    BOND_DES      = '-bond',      _('Guarantee') + ' ↘'
+    PUBLISHED_ASC = 'published',  _('Published') + ' ↗'
+    PUBLISHED_DES = '-published', _('Published') + ' ↘'
+
+class BdcOrderingField(models.TextChoices):
+    DEADLINE_ASC  = 'deadline',   _('Deadline') + ' ↗'
+    DEADLINE_DES  = '-deadline',  _('Deadline') + ' ↘'
+    PUBLISHED_ASC = 'published',  _('Published') + ' ↗'
+    PUBLISHED_DES = '-published', _('Published') + ' ↘'
+    
+    ESTIMATE_ASC  = 'estimate',   _('Estimate') + ' ↗'
+    ESTIMATE_DES  = '-estimate',  _('Estimate') + ' ↘'
+    BOND_ASC      = 'bond',       _('Guarantee') + ' ↗'
+    BOND_DES      = '-bond',      _('Guarantee') + ' ↘'
 
 class FullBarDays(models.TextChoices):
     FBD_007 = '7',   "7"

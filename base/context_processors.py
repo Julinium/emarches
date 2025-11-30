@@ -131,6 +131,9 @@ def portal_context(request):
         'send'            : 'bi bi-send',
         'support'         : 'bi bi-headset',
 
+        'specs'           : 'bi bi-card-list',
+        'warranties'      : 'bi bi-exclamation-diamond',
+
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',
         # 'Services'        : 'bi bi-gear', 
