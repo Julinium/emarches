@@ -24,7 +24,7 @@
                         {% endif %}">
                 {{ key_value }}
             </div>
-            <div id="{{ id_value }}" class="{{ liner }}">
+            <div id="{{ id_value }}" class="{% if wrap_text == False %}liner{% endif %}">
                 <span class="{{ val_class }}">{{ val_value }}</span>
                 <span class="
                              {% if uni_class %}

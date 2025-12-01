@@ -37,6 +37,7 @@ from base.context_processors import portal_context
 
 BDC_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 BDC_ITEMS_PER_PAGE = 10
+WRAP_LONG_TEXT = True
 CLIENTS_ITEMS_PER_PAGE = 20
 
 BDC_ORDERING_FIELD = 'deadline'
@@ -63,6 +64,7 @@ def bdc_list(request):
         BDC_ORDERING_FIELD = us.p_orders_ordering_field
         BDC_ITEMS_PER_PAGE = int(us.p_orders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.p_orders_show_expired
+        WRAP_LONG_TEXT = us.general_wrap_long_text
         # SHOW_CANCELLED = us.tenders_show_cancelled
 
 
@@ -274,6 +276,11 @@ def bdc_details(request, pk=None):
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
+    
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    if us:
+        WRAP_LONG_TEXT = us.general_wrap_long_text
 
     bdc = get_object_or_404(PurchaseOrder.objects.select_related(
                 'client', 'category'
@@ -310,8 +317,8 @@ def client_list(request):
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     if us: 
-        CLIENTS_ITEMS_PER_PAGE = int(us.BDC_ITEMS_PER_PAGE)
-        SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+        CLIENTS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+        WRAP_LONG_TEXT = us.general_wrap_long_text
     CLIENTS_ORDERING_FIELD = 'name'
 
     def get_req_params(req):
@@ -402,6 +409,30 @@ def client_list(request):
     logger.info(f"PO's Clients List view")
 
     return render(request, 'bdc/clients-list.html', context)
+
+
+def locations_list(request):
+    json_path = os.path.join(settings.BASE_DIR, 'scraper', 'data', 'regions-cities.json')
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            states = json.load(f)
+    except FileNotFoundError:
+        states = [] 
+        return HttpResponse('File Not Found Error', code=404)
+        # Or raise a 404 / show error page
+    except json.JSONDecodeError:
+        states = []
+        return HttpResponse('JSON Decode Error', code=405)
+        # Handle corrupted JSON
+
+    context = {
+        'states': states
+    }
+
+    logger = logging.getLogger('portal')
+    logger.info(f"PO's Locations List view")
+    
+    return render(request, 'bdc/locations-list.html', context)
 
 
 # @login_required(login_url="account_login")

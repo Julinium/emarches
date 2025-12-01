@@ -54,7 +54,7 @@
                                     <span class="badge bg-success ms-1"><i class="{{ bicons.estimate }} me-1"></i>{{ client.total_estimate|metrify }}</span>
                                 </div>
                             </div>
-                            <div class="{% if user_settings.general_wrap_long_text == False %}threelines{% endif %} small text-muted">{{ client.name }}</div>
+                            <div class="{% if wrap_text == False %}threelines{% endif %} small text-muted">{{ client.name }}</div>
                         </div>
                     </a>
                 {% endfor %}

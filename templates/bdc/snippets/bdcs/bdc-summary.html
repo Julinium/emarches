@@ -8,7 +8,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div class="d-flex align-items-center">
-                        <div class="oneline" id="t{{ bdc.chrono }}h">
+                        <div class="{% if wrap_text == False %}oneline{% endif %}" id="t{{ bdc.chrono }}h">
                             <span class="fs-5" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Main Category' %}: {{ bdc.category.label }}">
@@ -52,7 +52,7 @@
 
             <div class="card-body px-3 py-2">
 
-                <div id="t{{ bdc.chrono }}t" class="twolines">
+                <div id="t{{ bdc.chrono }}t" class="{% if wrap_text == False %}twolines{% endif %}">
                     <div data-bs-toggle="tooltip"
                         title="{% trans 'Purchase Order object' %}: {{ bdc.title }}">
                         {% if bdc.expired and not bdc.deliberated %}

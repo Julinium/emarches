@@ -10,7 +10,7 @@ urlpatterns = [
     path('details/<uuid:pk>/',          views.bdc_details,           name='bdc_bdc_detail'),
     # path('dce/<uuid:pk>/<str:fn>/',     views.bdc_get_file,          name='bdc_bdc_get_file'),
 
-    # path('locations/',                  views.locations_list,        name='bdc_locations_list'),
+    path('locations/',                  views.locations_list,        name='bdc_locations_list'),
     path('clients/',                    views.client_list,          name='bdc_client_list'),
     
     # path('favorites/',                  views.bdc_favorite_list,     name='bdc_bdc_favorite_list'),

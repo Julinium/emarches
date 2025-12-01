@@ -6,7 +6,7 @@
         data-bs-toggle="dropdown" aria-expanded="false">
     <i class="{{ bicons.bdc }} me-1"></i> {% trans 'Purchase Orders' %}
     </a>
-    <ul class="dropdown-menu" aria-labelledby="portalScrollingDropdown">
+    <ul class="dropdown-menu shadow" aria-labelledby="portalScrollingDropdown">
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bdc_bdc_list' %}">
                 <i class="{{ bicons.search }} me-2"></i>
@@ -36,19 +36,19 @@
         </li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="#">
+            <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'bdc_locations_list' %}">
                 <i class="{{ bicons.location }} me-2"></i>
                 {% trans 'Locations' %}
             </a>
         </li>
 
-        <li><hr class="dropdown-divider"></li>
+        <!-- <li><hr class="dropdown-divider"></li>
 
         <li class="">
             <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.insights }} me-2"></i>
                 {% trans 'Insights' %}
             </a>
-        </li>
+        </li> -->
     </ul>
 </li>

@@ -10,7 +10,7 @@
                 <div class="d-flex justify-content-between">
 
                     <div class="d-flex align-items-center">
-                        <div class="oneline" id="t{{ tender.chrono }}h">
+                        <div class="{% if wrap_text == False %}oneline{% endif %}" id="t{{ tender.chrono }}h">
                             <span class="fs-5" 
                                 data-bs-toggle="tooltip" 
                                 title="{% trans 'Main Category' %}: {{ tender.category.label }}">
@@ -65,7 +65,7 @@
 
             <div class="card-body px-3 pt-2 pb-0">
 
-                <div id="t{{ tender.chrono }}t" class="twolines">
+                <div id="t{{ tender.chrono }}t" class="{% if wrap_text == False %}twolines{% endif %}">
                     <div data-bs-toggle="tooltip"
                         title="{% trans 'Tender object' %}: {{ tender.title }}">                        
                         {% if tender.cancelled %}

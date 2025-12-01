@@ -442,6 +442,7 @@ class UserSetting(models.Model):
     # p_orders_show_cancelled = models.BooleanField(default=False, verbose_name=_("p_orders: Show cancelled p_orders"))
 
     general_wrap_long_text = models.BooleanField(default=False, verbose_name=_("Do not wrap long text"))
+    general_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_020, verbose_name=_('List items per page'))
     
     preferred_language     = models.CharField(max_length=16, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE, verbose_name=_("Preferred interface language"))
     updated   = models.DateTimeField(auto_now=True, editable=False)
