@@ -125,6 +125,7 @@ def portal_context(request):
         'range_max'       : 'bi bi-arrow-bar-down',
         'target'          : 'bi bi-crosshair',
                             # bullseye
+
         'mean'            : 'bi bi-arrows-collapse',
         'close'           : 'bi bi-x-lg',
         'ratio'           : 'bi bi-percent',
@@ -133,6 +134,8 @@ def portal_context(request):
 
         'specs'           : 'bi bi-card-list',
         'warranties'      : 'bi bi-exclamation-diamond',
+        'deliberated'     : 'bi bi-check-square',
+        'articles'        : 'bi bi-list-check',
 
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',

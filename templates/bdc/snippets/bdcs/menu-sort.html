@@ -16,28 +16,28 @@
             
             <li>
                 {% trans 'Deadline' as caption %}
-                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='deadline' icon=bicons.deadline %}
-            </li>
-            
-            <hr class="dropdown-divider">
-            
-            <li>
-                {% trans 'Estimate' as caption %}
-                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='estimate' icon=bicons.estimate %}
-            </li>
-            
-            <hr class="dropdown-divider">
-            
-            <li>
-                {% trans 'Guarantee' as caption %}
-                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='bond' icon=bicons.bond %}
+                {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='deadline' icon=bicons.deadline %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Published' as caption %}
-                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='published' icon=bicons.published %}
+                {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='published' icon=bicons.published %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Deliberated' as caption %}
+                {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='deliberated' icon=bicons.deliberated %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Winner amount' as caption %}
+                {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='winner_amount' icon=bicons.estimate %}
             </li>
         </ul>
     </div>

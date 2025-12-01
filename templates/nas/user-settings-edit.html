@@ -37,6 +37,7 @@
             </li>
         </ul>
         <div class="tab-content" id="usTabContent">
+
             <div class="tab-pane fade show active" id="tab-general-pane" 
                  role="tabpanel" aria-labelledby="tab-general" tabindex="0">
                 
@@ -47,7 +48,7 @@
                            {% if form.general_wrap_long_text.value %}checked{% endif %}
                            >
                     <label class="form-check-label" for="id_general_wrap_long_text">
-                        {% trans "Show today's expired" %}
+                        {% trans "Show full text when possible" %}
                     </label>
                 </div>
             </div>
@@ -122,41 +123,60 @@
 
             <div class="tab-pane fade" id="tab-bdc-pane" 
                  role="tabpanel" aria-labelledby="tab-bdc" tabindex="0">
-                Coming soon
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="id_p_orders_ordering_field">{% trans "Default order" %}</label>
+                    <select name="{{ form.p_orders_ordering_field.name }}" class="form-select" id="id_p_orders_ordering_field">
+                        {% for value, label in form.p_orders_ordering_field.field.choices %}
+                            {% if value %}
+                                <option value="{{ value }}"
+                                        {% if form.p_orders_ordering_field.value == value|stringformat:"s" %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                 
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="id_p_orders_items_per_page">{% trans "Items per page" %}</label>
+                    <select name="{{ form.p_orders_items_per_page.name }}" class="form-select" id="id_p_orders_items_per_page">
+                        {% for value, label in form.p_orders_items_per_page.field.choices %}
+                            {% if value %}
+                                <option value="{{ value }}"
+                                        {% if form.p_orders_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                 
+                <div class="input-group mb-3">
+                    <label class="input-group-text" for="id_p_orders_full_bar_days">{% trans "Progress bar" %}</label>
+                    <select name="{{ form.p_orders_full_bar_days.name }}" class="form-select" id="id_p_orders_full_bar_days">
+                        {% for value, label in form.p_orders_full_bar_days.field.choices %}
+                            {% if value %}
+                                <option value="{{ value }}"
+                                        {% if form.p_orders_full_bar_days.value == value|stringformat:"s" %}selected{% endif %}>
+                                    {{ label }} {% trans "days" %}
+                                </option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" 
+                           role="switch" name="p_orders_show_expired" 
+                           id="id_p_orders_show_expired"
+                           {% if form.p_orders_show_expired.value %}checked{% endif %}
+                           >
+                    <label class="form-check-label" for="id_p_orders_show_expired">
+                        {% trans "Show today's expired" %}
+                    </label>
+                </div>
             </div>
-        </div>
-        
-        <!-- <div class="form-floating mt-3 d-none">
-            <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" value="{{ form.username.value }}" required>
-            <label class="text-muted small fw-light" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-        </div>
-        
-        <div class="row gx-4 mt-1">
-            <div class="col-md-6 col-12">
-                <div class="form-floating mt-3 {% if form.first_name.errors %}border-2 border-danger{% endif %}">
-                    <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}" name="{{ form.first_name.name }}" value="{{ form.first_name.value }}">
-                    <label class="text-muted small fw-light" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-                </div>
-                <div class="form-floating mt-3 {% if form.last_name.errors %}border-2 border-danger{% endif %}">
-                    <input type="text" class="form-control" id="{{ form.last_name.id_for_label }}" name="{{ form.last_name.name }}" value="{{ form.last_name.value }}">
-                    <label class="text-muted small fw-light" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-                </div>
-            </div>
-            <div class="col-md-6 col-12">
-                <div class="form-floating mt-3 {% if form.phone.errors %}border-2 border-danger{% endif %}">
-                    <input type="text" class="form-control" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value }}">
-                    <label class="text-muted small fw-light" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
-                </div>
-                <div class="form-floating mt-3 {% if form.whatsapp.errors %}border-2 border-danger{% endif %}">
-                    <input type="text" class="form-control" id="{{ form.whatsapp.id_for_label }}" name="{{ form.whatsapp.name }}" value="{{ form.whatsapp.value }}">
-                    <label class="text-muted small fw-light" for="{{ form.whatsapp.id_for_label }}">{{ form.whatsapp.label }}</label>
-                </div>
-            </div>
-        </div>
-        <div class="form-floating mt-3 {% if form.about.errors %}border-2 border-danger{% endif %}">
-            <textarea class="form-control" id="{{ form.about.id_for_label }}" name="{{ form.about.name }}" style="height: 5rem;">{{ form.about.value }}</textarea>
-            <label class="text-muted small fw-light" for="{{ form.about.id_for_label }}">{{ form.about.label }}</label>
-        </div> -->
+        </div>        
 
         <div class="mt-3 text-center">        
             <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>

@@ -35,6 +35,7 @@ class PurchaseOrder(models.Model):
     cliwords = models.TextField(blank=True, null=True, editable=False)
     refwords = models.TextField(blank=True, null=True, editable=False)
     locwords = models.TextField(blank=True, null=True, editable=False)
+    # artwords = models.TextField(blank=True, null=True, editable=False)
 
 
     class Meta:

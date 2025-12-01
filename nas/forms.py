@@ -68,12 +68,19 @@ class UserSettingsForm(forms.ModelForm):
     class Meta:
         model = UserSetting
         fields = [
+            'general_wrap_long_text',
+            
             'tenders_ordering_field', 
             'tenders_items_per_page', 
             'tenders_full_bar_days', 
             'tenders_show_expired', 
             'tenders_show_cancelled',
             # 'preferred_language',
+
+            'p_orders_ordering_field', 
+            'p_orders_items_per_page', 
+            'p_orders_full_bar_days', 
+            'p_orders_show_expired', 
             ]
         # widgets = {
         #     'language': forms.Select(attrs={'class': 'form-control'}),  # Optional styling

@@ -14,12 +14,31 @@
             </a>
         </li>
 
+        {% if categories %}
+            <li><hr class="dropdown-divider"></li>
+            {% for cat in categories %}
+                <li class="">
+                    <a class="dropdown-item py-2" href="{% url 'bdc_bdc_list' %}?&category={{ cat.id }}">
+                        <i class="bi bi-{{ cat.icon_bs_class }} me-2"></i>
+                        {{ cat.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        {% endif %}
+
         <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'bdc_client_list' %}" disabled>
+                <i class="{{ bicons.client }} me-2"></i>
+                {% trans 'Clients' %}
+            </a>
+        </li>
 
         <li class="">
             <a class="dropdown-item py-2" aria-disabled="true" href="#">
                 <i class="{{ bicons.location }} me-2"></i>
-                {% trans 'Results' %}
+                {% trans 'Locations' %}
             </a>
         </li>
 

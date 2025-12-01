@@ -636,44 +636,6 @@ def locations_list(request):
     return render(request, 'portal/locations-list.html', context)
 
 
-# def clients_list(request):
-
-#     # us = get_user_settings(request)
-#     pro_context = portal_context(request)
-#     us = pro_context['user_settings']
-#     if us: 
-#         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-#         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-#         SHOW_CANCELLED = us.tenders_show_cancelled
-
-#     assa = timezone.now()
-#     clients = Client.objects.annotate(
-#         tenders_count=Count('tenders', filter=Q(
-#             tenders__deadline__gte=assa, 
-#             tenders__cancelled=False)),
-#         total_estimate=Sum('tenders__estimate', filter=Q(
-#             tenders__deadline__gte=assa, 
-#             tenders__cancelled=False))
-#     ).filter(tenders_count__gt=0).order_by('-tenders_count', 'name')
-
-#     context = {}
-
-#     paginator = Paginator(clients, CLIENTS_ITEMS_PER_PAGE)
-#     page_number = request.GET['page'] if 'page' in request.GET else 1
-#     if not str(page_number).isdigit():
-#         page_number = 1
-#     else:
-#         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
-#     page_obj = paginator.page(page_number)
-
-#     context['page_obj'] = page_obj
-
-#     logger = logging.getLogger('portal')
-#     logger.info(f"Clients List view")
-
-#     return render(request, 'portal/clients-list.html', context)
-
-
 def client_list(request):
 
     user = request.user
@@ -779,4 +741,42 @@ def client_list(request):
     logger.info(f"Clients List view")
 
     return render(request, 'portal/clients-list.html', context)
+
+
+# def clients_list(request):
+
+#     # us = get_user_settings(request)
+#     pro_context = portal_context(request)
+#     us = pro_context['user_settings']
+#     if us: 
+#         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+#         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+#         SHOW_CANCELLED = us.tenders_show_cancelled
+
+#     assa = timezone.now()
+#     clients = Client.objects.annotate(
+#         tenders_count=Count('tenders', filter=Q(
+#             tenders__deadline__gte=assa, 
+#             tenders__cancelled=False)),
+#         total_estimate=Sum('tenders__estimate', filter=Q(
+#             tenders__deadline__gte=assa, 
+#             tenders__cancelled=False))
+#     ).filter(tenders_count__gt=0).order_by('-tenders_count', 'name')
+
+#     context = {}
+
+#     paginator = Paginator(clients, CLIENTS_ITEMS_PER_PAGE)
+#     page_number = request.GET['page'] if 'page' in request.GET else 1
+#     if not str(page_number).isdigit():
+#         page_number = 1
+#     else:
+#         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+#     page_obj = paginator.page(page_number)
+
+#     context['page_obj'] = page_obj
+
+#     logger = logging.getLogger('portal')
+#     logger.info(f"Clients List view")
+
+#     return render(request, 'portal/clients-list.html', context)
 
