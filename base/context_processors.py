@@ -136,6 +136,7 @@ def portal_context(request):
         'warranties'      : 'bi bi-exclamation-diamond',
         'deliberated'     : 'bi bi-check-square',
         'articles'        : 'bi bi-list-check',
+        'settings'        : 'bi bi-sliders2',
 
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',
@@ -151,7 +152,10 @@ def portal_context(request):
     if not user or not user.is_authenticated:
         return context
         
+    # user_settings = UserSetting.objects.get_or_create(user = request.user)
+
     user_settings = UserSetting.objects.filter(user = request.user).first()
+    if not user_settings: user_settings = UserSetting.objects.create(user=request.user)
     faved_ids = user.favorites.values_list('tender', flat=True)
 
     context['user_settings'] = user_settings

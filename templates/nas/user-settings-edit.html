@@ -9,193 +9,239 @@
 
 {% block content %}
     <div class="h3">{% trans "User preferrences" %}</div>
+    
     <form method="post" enctype="multipart/form-data">
 
         {% csrf_token %}
 
-        <ul class="nav nav-tabs my-3" id="usTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="tab-general" data-bs-toggle="tab" 
-                        data-bs-target="#tab-general-pane" type="button" role="tab" 
-                        aria-controls="tab-general-pane" aria-selected="true">
-                    {% trans 'General' %}
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-tenders" data-bs-toggle="tab" 
-                        data-bs-target="#tab-tenders-pane" type="button" role="tab" 
-                        aria-controls="tab-tenders-pane" aria-selected="false">
-                    {% trans 'Tenders' %}
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="tab-bdc" data-bs-toggle="tab" 
-                        data-bs-target="#tab-bdc-pane" type="button" role="tab" 
-                        aria-controls="tab-bdc-pane" aria-selected="false">
-                    {% trans 'P. Orders' %}
-                </button>
-            </li>
-        </ul>
-        <div class="tab-content" id="usTabContent">
-
-            <div class="tab-pane fade show active" id="tab-general-pane" 
-                 role="tabpanel" aria-labelledby="tab-general" tabindex="0">
-                 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_general_items_per_page">{% trans "List items per page" %}</label>
-                    <select name="{{ form.general_items_per_page.name }}" class="form-select" id="id_general_items_per_page">
-                        {% for value, label in form.general_items_per_page.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.general_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" 
-                           role="switch" name="general_wrap_long_text" 
-                           id="id_general_wrap_long_text"
-                           {% if form.general_wrap_long_text.value %}checked{% endif %}
-                           >
-                    <label class="form-check-label" for="id_general_wrap_long_text">
-                        {% trans "Show full text when possible" %}
-                    </label>
+        <div class="accordion mt-2" id="accordionPreferences">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold buffered" type="button" 
+                            id="collapseGeneral" style="scroll-margin-top: 90px;"
+                            data-bs-toggle="collapse" data-bs-target="#panelGeneral" 
+                            aria-expanded="true" aria-controls="panelGeneral">
+                        {% trans 'General' %}
+                    </button>
+                </h2>
+                <div id="panelGeneral" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_general_items_per_page">{% trans "List items per page" %}</label>
+                            <select name="{{ form.general_items_per_page.name }}" class="form-select" id="id_general_items_per_page">
+                                {% for value, label in form.general_items_per_page.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.general_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="general_wrap_long_text" 
+                                id="id_general_wrap_long_text"
+                                {% if form.general_wrap_long_text.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_general_wrap_long_text">
+                                {% trans "Show full text when possible" %}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold buffered" type="button" 
+                            id="collapseTenders" style="scroll-margin-top: 90px;"
+                            data-bs-toggle="collapse" data-bs-target="#panelTenders" 
+                            aria-expanded="false" aria-controls="panelTenders">
+                        {% trans 'Tenders' %}
+                    </button>
+                </h2>
+                <div id="panelTenders" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_tenders_ordering_field">{% trans "Default order" %}</label>
+                            <select name="{{ form.tenders_ordering_field.name }}" class="form-select" id="id_tenders_ordering_field">
+                                {% for value, label in form.tenders_ordering_field.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.tenders_ordering_field.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_tenders_items_per_page">{% trans "Items per page" %}</label>
+                            <select name="{{ form.tenders_items_per_page.name }}" class="form-select" id="id_tenders_items_per_page">
+                                {% for value, label in form.tenders_items_per_page.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.tenders_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_tenders_full_bar_days">{% trans "Progress bar" %}</label>
+                            <select name="{{ form.tenders_full_bar_days.name }}" class="form-select" id="id_tenders_full_bar_days">
+                                {% for value, label in form.tenders_full_bar_days.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.tenders_full_bar_days.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }} {% trans "days" %}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
 
-            <div class="tab-pane fade" id="tab-tenders-pane" 
-                 role="tabpanel" aria-labelledby="tab-tenders" tabindex="0">
-                 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_tenders_ordering_field">{% trans "Default order" %}</label>
-                    <select name="{{ form.tenders_ordering_field.name }}" class="form-select" id="id_tenders_ordering_field">
-                        {% for value, label in form.tenders_ordering_field.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.tenders_ordering_field.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_tenders_items_per_page">{% trans "Items per page" %}</label>
-                    <select name="{{ form.tenders_items_per_page.name }}" class="form-select" id="id_tenders_items_per_page">
-                        {% for value, label in form.tenders_items_per_page.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.tenders_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_tenders_full_bar_days">{% trans "Progress bar" %}</label>
-                    <select name="{{ form.tenders_full_bar_days.name }}" class="form-select" id="id_tenders_full_bar_days">
-                        {% for value, label in form.tenders_full_bar_days.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.tenders_full_bar_days.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }} {% trans "days" %}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="tenders_show_expired" 
+                                id="id_tenders_show_expired"
+                                {% if form.tenders_show_expired.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_tenders_show_expired">
+                                {% trans "Show today's expired" %}
+                            </label>
+                        </div>
 
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" 
-                           role="switch" name="tenders_show_expired" 
-                           id="id_tenders_show_expired"
-                           {% if form.tenders_show_expired.value %}checked{% endif %}
-                           >
-                    <label class="form-check-label" for="id_tenders_show_expired">
-                        {% trans "Show today's expired" %}
-                    </label>
-                </div>
-
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" 
-                           role="switch" name="tenders_show_cancelled" 
-                           id="id_tenders_show_cancelled"
-                           {% if form.tenders_show_cancelled.value %}checked{% endif %}
-                           >
-                    <label class="form-check-label" for="id_tenders_show_cancelled">
-                        {% trans "Show cancelled" %}
-                    </label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="tenders_show_cancelled" 
+                                id="id_tenders_show_cancelled"
+                                {% if form.tenders_show_cancelled.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_tenders_show_cancelled">
+                                {% trans "Show cancelled" %}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold buffered" type="button" 
+                            id="collapsePurchaseOrders" style="scroll-margin-top: 90px;"
+                            data-bs-toggle="collapse" data-bs-target="#panelPurchaseOrders" 
+                            aria-expanded="false" aria-controls="panelPurchaseOrders">
+                        {% trans 'Purchase Orders' %}
+                    </button>
+                </h2>
+                <div id="panelPurchaseOrders" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_p_orders_ordering_field">{% trans "Default order" %}</label>
+                            <select name="{{ form.p_orders_ordering_field.name }}" class="form-select" id="id_p_orders_ordering_field">
+                                {% for value, label in form.p_orders_ordering_field.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.p_orders_ordering_field.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_p_orders_items_per_page">{% trans "Items per page" %}</label>
+                            <select name="{{ form.p_orders_items_per_page.name }}" class="form-select" id="id_p_orders_items_per_page">
+                                {% for value, label in form.p_orders_items_per_page.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.p_orders_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_p_orders_full_bar_days">{% trans "Progress bar" %}</label>
+                            <select name="{{ form.p_orders_full_bar_days.name }}" class="form-select" id="id_p_orders_full_bar_days">
+                                {% for value, label in form.p_orders_full_bar_days.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.p_orders_full_bar_days.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }} {% trans "days" %}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
 
-            <div class="tab-pane fade" id="tab-bdc-pane" 
-                 role="tabpanel" aria-labelledby="tab-bdc" tabindex="0">
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_p_orders_ordering_field">{% trans "Default order" %}</label>
-                    <select name="{{ form.p_orders_ordering_field.name }}" class="form-select" id="id_p_orders_ordering_field">
-                        {% for value, label in form.p_orders_ordering_field.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.p_orders_ordering_field.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_p_orders_items_per_page">{% trans "Items per page" %}</label>
-                    <select name="{{ form.p_orders_items_per_page.name }}" class="form-select" id="id_p_orders_items_per_page">
-                        {% for value, label in form.p_orders_items_per_page.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.p_orders_items_per_page.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-                 
-                <div class="input-group mb-3">
-                    <label class="input-group-text" for="id_p_orders_full_bar_days">{% trans "Progress bar" %}</label>
-                    <select name="{{ form.p_orders_full_bar_days.name }}" class="form-select" id="id_p_orders_full_bar_days">
-                        {% for value, label in form.p_orders_full_bar_days.field.choices %}
-                            {% if value %}
-                                <option value="{{ value }}"
-                                        {% if form.p_orders_full_bar_days.value == value|stringformat:"s" %}selected{% endif %}>
-                                    {{ label }} {% trans "days" %}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" 
-                           role="switch" name="p_orders_show_expired" 
-                           id="id_p_orders_show_expired"
-                           {% if form.p_orders_show_expired.value %}checked{% endif %}
-                           >
-                    <label class="form-check-label" for="id_p_orders_show_expired">
-                        {% trans "Show today's expired" %}
-                    </label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="p_orders_show_expired" 
+                                id="id_p_orders_show_expired"
+                                {% if form.p_orders_show_expired.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_p_orders_show_expired">
+                                {% trans "Show today's expired" %}
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>        
+        </div>
 
-        <div class="mt-3 text-center">        
-            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
-            <!-- <a class="m-1 btn btn-outline-secondary" href="{% url 'nas_profile_view' %}"><i class="me-2 bi bi-x-lg"></i>Cancel{% trans "Cancel" %}</a> -->
+        <div class="mt-3 text-center">
+            <a href="{% if request.META.HTTP_REFERER %}
+                        {{ request.META.HTTP_REFERER }}{% else %}
+                        javascript:history.back(){% endif %}" 
+                class="m-1 btn btn-outline-secondary">
+                <i class="bi bi-backspace"></i>
+                {% trans 'Go Back' %}
+            </a>
+
+            <button type="button" class="m-1 btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#resetConfirmModal">
+                <i class="bi bi-trash"></i>
+                {% trans 'Reset to default' %}
+            </button>
+
+            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Submit" %}</button>
+
         </div>
     </form>
+
+    <div class="modal fade" id="resetConfirmModal" tabindex="-1" aria-labelledby="resetConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="resetConfirmModalLabel">{% trans 'Confirm Settings reset' %}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans 'This will reset your Preferences to factory values.' %}</p>
+                    <p class="text-danger">{% trans 'This operation is not reversible.' %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-backspace"></i>
+                        {% trans 'Cancel' %}
+                    </button>
+                    <a href="{% url 'nas_user_settings_reset' %}?&next={{ request.get_full_path }}" 
+                       class="btn btn-danger">
+                        <i class="bi bi-trash"></i>
+                        {% trans 'Reset Settings' %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}

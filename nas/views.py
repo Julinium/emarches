@@ -1,5 +1,6 @@
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control, never_cache
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -32,12 +33,14 @@ from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
 COMPANIES_ITEMS_PER_PAGE = 10
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def profile_view(request):
     return redirect('nas_at_username', request.user.username)
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def username_view(request, username):
     user = (
         User.objects
@@ -97,7 +100,8 @@ def username_view(request, username):
     return render(request, 'nas/profile-view.html', context)
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def profile_edit(request):
     user = request.user
     try:
@@ -123,7 +127,8 @@ def profile_edit(request):
     return render(request, 'nas/profile-edit.html', {'form': form})
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def enableAllNotifications(request):
     if request.method == "POST":
         user = request.user
@@ -140,7 +145,8 @@ def enableAllNotifications(request):
         return HttpResponse(content=json.dumps({'error': "Method Not Allowed"}), content_type='application/json', status=405)
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def enableAllNewsletters(request):
     if request.method == "POST":
         user = request.user
@@ -157,7 +163,8 @@ def enableAllNewsletters(request):
         return HttpResponse(content=json.dumps({'error': "Method Not Allowed"}), content_type='application/json', status=405)
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tuneNotifications(request):
     if request.method == 'POST':
         form = NotificationSubscriptionForm(request.POST, user=request.user)
@@ -181,7 +188,8 @@ def tuneNotifications(request):
     })
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tuneNewsletters(request):
     if request.method == 'POST':
         form = NewsletterSubscriptionForm(request.POST, user=request.user)
@@ -205,7 +213,8 @@ def tuneNewsletters(request):
     })
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def onboard(request):
     context = {
         'user': request.user,
@@ -290,7 +299,8 @@ class CompanyDeleteView(DeleteView):
         return Company.objects.filter(user=self.request.user)
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def manage_company_qualifs(request, pk):
     company = get_object_or_404(Company, id=pk)
     all_qualifs = Qualif.objects.all()
@@ -320,7 +330,8 @@ def manage_company_agrements(request, pk):
     return render(request, 'nas/companies/agrements_form.html', context)
 
 
-@login_required
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def accept_iced_company(request, pk):
     company = get_object_or_404(Company, id=pk)
     # all_qualifs = Qualif.objects.all()
@@ -364,13 +375,15 @@ def accept_iced_company(request, pk):
     return redirect('nas_company_detail', pk=company.id)
 
 
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required
 def user_settings(request):
     user = request.user
-    user_settings = UserSetting.objects.filter(user = user).first()
+    if not user or not user.is_authenticated:
+        return HttpResponse('Not allowed', status_code=403)
 
-    
-    
+    user_settings = UserSetting.objects.filter(user = user).first()
 
     if request.method == 'POST':
         if user_settings:
@@ -384,13 +397,43 @@ def user_settings(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Settings saved successfully.")
-            return redirect('nas_profile_view')
+            next_url = request.POST.get('next', None)
+            if next_url: return redirect(next_url)
+            
+            next_url = request.GET.get('next', None)
+            if next_url: return redirect(next_url)
+
+            return redirect('/')
+
         else:
             show_form_errors(form, request)
     else:
         form = UserSettingsForm(instance=user_settings)
 
     return render(request, 'nas/user-settings-edit.html', {'form': form})
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def user_settings_reset(request):
+    user = request.user
+    if not user or not user.is_authenticated:
+        return HttpResponse('Not allowed', status_code=403)
+
+    count, _ = UserSetting.objects.filter(user = user).delete()
+
+    if count > 0:
+        messages.success(request, "Settings reset successfully.")
+    else:
+        messages.error(request, "Something went wrong while resetting Settings.")
+
+    next_url = request.POST.get('next', None)
+    if next_url: return redirect(next_url)
+    
+    next_url = request.GET.get('next', None)
+    if next_url: return redirect(next_url)
+
+    return redirect('/')
 
 
 def show_form_errors(form, request):

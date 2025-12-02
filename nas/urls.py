@@ -14,7 +14,10 @@ urlpatterns = [
     path('profile', views.profile_view, name='nas_profile_view'),
     path('profile/edit', views.profile_edit, name='nas_profile_edit'),
     path('settings', views.user_settings, name='nas_user_settings'),
+    path('settings/reset', views.user_settings_reset, name='nas_user_settings_reset'),
+
     path('onboard', views.onboard, name='nas_onboard'),
+    
     path('notifications/all-on', views.enableAllNotifications, name='nas_enable_all_notifications'),
     path('newsletters/all-on', views.enableAllNewsletters, name='nas_enable_all_newsletters'),
     path('notifications/tune', views.tuneNotifications, name='nas_tune_notifications'),

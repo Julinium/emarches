@@ -42,13 +42,14 @@
             </a>
         </li>
 
-        <!-- <li><hr class="dropdown-divider"></li>
+        <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="#">
-                <i class="{{ bicons.insights }} me-2"></i>
-                {% trans 'Insights' %}
+            <a class="dropdown-item py-2" aria-disabled="true" 
+               href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}#collapsePurchaseOrders">
+                <i class="{{ bicons.settings }} me-2"></i>
+                {% trans 'Preferences' %}
             </a>
-        </li> -->
+        </li>
     </ul>
 </li>

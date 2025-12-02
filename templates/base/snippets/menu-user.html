@@ -22,7 +22,7 @@
                 </a>
             </li>
             <li>
-                <a href="{% url 'nas_user_settings' %}" class="p-2 dropdown-item" type="button">
+                <a href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}" class="p-2 dropdown-item" type="button">
                     <span><i class="bi bi-gear me-2"></i></span>
                     <span class="">{% trans "Preferences" %}</span>
                 </a>
