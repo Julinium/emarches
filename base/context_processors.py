@@ -138,6 +138,9 @@ def portal_context(request):
         'articles'        : 'bi bi-list-check',
         'settings'        : 'bi bi-sliders2',
 
+        'pinned'          : 'bi bi-pin-fill',
+        'unpinned'        : 'bi bi-pin-angle',
+
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',
         # 'Services'        : 'bi bi-gear', 
@@ -156,10 +159,13 @@ def portal_context(request):
 
     user_settings = UserSetting.objects.filter(user = request.user).first()
     if not user_settings: user_settings = UserSetting.objects.create(user=request.user)
-    faved_ids = user.favorites.values_list('tender', flat=True)
+
+    faved_ids  = user.favorites.values_list('tender', flat=True)
+    pinned_ids = user.stickies.values_list('purchase_order', flat=True)
 
     context['user_settings'] = user_settings
     context['faved_ids']     = faved_ids
+    context['pinned_ids']    = pinned_ids
     context['wrap_text']     = user_settings.general_wrap_long_text != False
 
     return context

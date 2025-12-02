@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 from base.models import Agrement, Tender, Qualif, Change
+from bdc.models import PurchaseOrder
 from .imaging import squarify_image
 from .iceberg import get_ice_checkup
 from .choices import ItemsPerPage, OrderingField, PurchaseOrderOrderingField, PurchaseOrderFullBarDays, FullBarDays
@@ -373,6 +374,24 @@ class NotificationSent(models.Model):
 
     def __str__(self):
         return f'{self.title}_{self.user}_{self.when}'
+
+
+class Sticky(models.Model):
+    id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user            = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stickies', editable=False)
+    # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='favorites', verbose_name=_('Company'))
+    purchase_order  = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name='stickies', editable=False, verbose_name=_('Purchase Order'))
+    # folders         = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
+    active          = models.BooleanField(null=True, default=True, editable=False)
+    when            = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
+    comment         = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
+
+    class Meta:
+        db_table = 'nas_stickies'
+        ordering = ['-when']
+    
+    def __str__(self):
+        return f"{ self.purchase_order.chrono }@{ self.user.username }"
 
 
 class Comment(models.Model):

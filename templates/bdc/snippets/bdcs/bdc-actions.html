@@ -3,6 +3,32 @@
 
 <div class="text-center">
 
+    <div class="wait-azrem pb-3 d-none">
+        <div class="progress" 
+            role="progressbar" aria-valuenow="100" 
+            aria-valuemin="0" aria-valuemax="100"
+            style="max-height: 0.5rem;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                style="width: 100%">
+            </div>
+        </div>
+    </div>
+
+    <button onclick="pinToggle()"
+            id="{{ bdc.chrono }}-pin"
+            class="m-1 btn btn-outline-primary pin-toggle
+                {% if pinned %}d-none{% endif %}">
+        <span><i class="{{ bicons.pinned }}"></i></span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Pin' %}</span>
+    </button>
+    <button onclick="pinToggle('unpin')"
+            id="{{ bdc.chrono }}-unpin"
+            class="m-1 btn btn-outline-primary pin-toggle
+                {% if not pinned %}d-none{% endif %}">
+        <span><i class="{{ bicons.unpinned }}"></i></span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Unpin' %}</span>
+    </button>
+
     <a class="m-1 btn btn-outline-primary" 
        type="button" onclick="sharePage(`https://new.emarches.com`)">
         <span><i class="{{ bicons.share }}"></i></span>

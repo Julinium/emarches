@@ -4,7 +4,7 @@
     <a class="nav-link py-2 dropdown-toggle"
         href="#" id="portalScrollingDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="{{ bicons.bdc }} me-1"></i> {% trans 'Purchase Orders' %}
+    <i class="{{ bicons.bdc }} me-1"></i> {% trans 'P. Orders' %}
     </a>
     <ul class="dropdown-menu shadow" aria-labelledby="portalScrollingDropdown">
         <li class="">
@@ -29,14 +29,14 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'bdc_client_list' %}" disabled>
+            <a class="dropdown-item py-2" href="{% url 'bdc_client_list' %}" disabled>
                 <i class="{{ bicons.client }} me-2"></i>
                 {% trans 'Clients' %}
             </a>
         </li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'bdc_locations_list' %}">
+            <a class="dropdown-item py-2" href="{% url 'bdc_locations_list' %}">
                 <i class="{{ bicons.location }} me-2"></i>
                 {% trans 'Locations' %}
             </a>
@@ -45,11 +45,25 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" 
+            <a class="dropdown-item py-2"
                href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}#collapsePurchaseOrders">
                 <i class="{{ bicons.settings }} me-2"></i>
                 {% trans 'Preferences' %}
             </a>
         </li>
+<!-- 
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2"
+               data-bs-toggle="modal" data-bs-target="#cleanPinsModal">
+                <i class="{{ bicons.delete }} me-2"></i>
+                {% trans 'Clean all pins' %}
+            </a>
+        </li> -->
+
     </ul>
 </li>
+
+
+

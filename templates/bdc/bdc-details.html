@@ -13,6 +13,12 @@
 
     <div class="d-flex justify-content-between align-items-center">
         <div>
+            <span id="pinned" class="me-2 p-2 badge text-bg-success {% if not pinned %}d-none{% endif %}">
+                <span class="">
+                    <i class="{{ bicons.pinned }}"></i>
+                    <span class="d-none d-md-inline">{% trans "PINNED" %}</span>
+                </span>
+            </span>
             <span class="h3">{% trans "Purchase Order Details" %}</span>
         </div>
     </div>
@@ -147,11 +153,33 @@
     </div>
 
     <div id="tosts-container" class="toast-container bottom-0 end-0 p-3" style="position: fixed; z-index: 99;">
-                    
+        
+        <div class="toast bg-success-subtle " id="pinToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="pinToastHeader">
+                        {% trans "Item Pinned to top" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+        <div class="toast bg-success-subtle " id="unpinToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="unpinToastHeader">
+                        {% trans "Item Unpinned" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
         <div class="toast bg-success-subtle " id="copyToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
             <div class="d-flex  justify-content-between">
                 <div class="toast-body alert-success">
-                    <strong class="me-auto" id="dlToastHeader">
+                    <strong class="me-auto" id="copyToastHeader">
                         {% trans "URL copied to clipboard" %}.
                     </strong>
                 </div>
@@ -161,14 +189,62 @@
 
     </div>
 
+
     {% if bdc.attachements.all|length == 1 %}
         <script>
-            document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {
+            document.getElementById('dce-{{ bdc.chrono }}0001').addEventListener('click', () => {
                 bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
                 document.getElementById('dceModal').classList.toggle('show');
             });
         </script>
     {% endif %}
+
+
+
+    <script>
+        const azrems = document.querySelectorAll('.wait-azrem');
+        
+        function pinToggle(makas='pin') {
+            azrems.forEach(azrem => { azrem.classList.remove('d-none'); });
+            const token = document.getElementById('csrf_token').value;
+
+            if (makas=='pin'){ url = "{% url 'bdc_bdc_stickies_add' bdc.id %}"
+            } else { url = "{% url 'bdc_bdc_stickies_remove' bdc.id %}"}
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('X-CSRFToken', token);
+            xhr.setRequestHeader('Accept', 'text/plain');
+            const pin_indicator = document.getElementById('pinned')
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const buttons = document.querySelectorAll('.pin-toggle');
+                        buttons.forEach(button => { button.classList.toggle('d-none'); });
+                        pin_indicator.classList.toggle('d-none');
+                
+                        if ( makas == 'pin' ) {
+                            let pinToast = document.getElementById('pinToast');
+                            let pinAlert = new bootstrap.Toast(pinToast);
+                            pinAlert.show();
+                        }
+                        if ( makas == 'unpin' ) {
+                            const unpinToast = document.getElementById('unpinToast');
+                            const unpinAlert = new bootstrap.Toast(unpinToast);
+                            unpinAlert.show();
+                        }
+                    } else {
+                        alert('Operation Failed !')
+                    }
+                    azrems.forEach(azrem => { azrem.classList.add('d-none'); });
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error while saving Favorite record');
+            };
+
+            xhr.send();
+        }
+    </script>
 
     <script>
         function sharePage(host='https://www.emarches.com') {

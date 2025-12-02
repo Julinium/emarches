@@ -1,0 +1,108 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Clean my pins' %}">
+            <i class="{{ bicons.pinned }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Pinned items' %}</span>
+            </div>
+
+            <hr class="dropdown-divider">
+            
+            <li>
+                <a class="dropdown-item"
+                   data-bs-toggle="modal"
+                   data-bs-target="#cleanPinsModal"
+                   >
+                    <i class="{{ bicons.delete }} me-2"></i>
+                    {% trans "Clean all" %}
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+    <div id="cleanPinsModal" class="modal fade" tabindex="-1" aria-labelledby="cleanPinsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="cleanPinsModalLabel">{% translate "Clean your PO's pins" %}</h1>
+                </div>
+                <div class="modal-body">
+
+                    <div class="text-muted my-2">
+                        {% translate "Remove all your Pins ?" %}
+                    </div>
+
+                    <div class="text-danger my-2">
+                        {% translate "This operation is not reversible" %}
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <span><i class="bi bi-x-lg"></i></span>
+                        <span class="ms-1">{% translate 'Close' %}</span>
+                    </button>
+
+                    <button class="btn btn-outline-danger"
+                            onclick="cleanAllPins()" type="button">
+                        <i class="{{ bicons.delete }} me-2"></i>
+                        {% trans 'Clean pins' %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="tosts-container" class="toast-container bottom-0 end-0 p-3" style="position: fixed; z-index: 99;">
+        
+        <div class="toast bg-success-subtle " id="cleanAllToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="cleanAllToastHeader">
+                        {% trans "Pinned items cleaned successfully." %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+    </div>
+
+    <script>            
+        function cleanAllPins(makas='pin') {
+            const token = document.getElementById('csrf_token').value;
+            url = "{% url 'bdc_bdc_stickies_remove_all' %}"
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('X-CSRFToken', token);
+            xhr.setRequestHeader('Accept', 'text/plain');
+            const pin_indicator = document.getElementById('pinned')
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        let cleanAllToast = document.getElementById('cleanAllToast');
+                        let cleanAllAlert = new bootstrap.Toast(cleanAllToast);
+                        cleanAllAlert.show();
+                        location.reload(true);
+                    } else {
+                        alert('Operation Failed !')
+                    }
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error while cleaning pins');
+            };
+
+            xhr.send();
+        }
+    </script>
+</div>

@@ -18,6 +18,16 @@
                                 <i class="{{ bicons.articles }} me-0"></i>
                                 <span class="">{{ bdc.articles.all.count }}</span>
                             </span>
+                            {% if bdc.id in pinned_ids %}
+
+                                <span id="pinned" class="me-2 px-2 py-1 badge text-bg-success">
+                                    <span class="">
+                                        <i class="{{ bicons.pinned }}"></i>
+                                        <span class="d-none d-md-inline">{% trans "PINNED" %}</span>
+                                    </span>
+                                </span>
+
+                            {% endif %}
                             {% if bdc.location %}
                                 <span class="fw-light small text-muted me-1" 
                                     data-bs-toggle="tooltip" 

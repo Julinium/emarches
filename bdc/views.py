@@ -31,6 +31,8 @@ from django.contrib.auth.models import User
 
 from bdc.models import PurchaseOrder
 from base.models import Category, Client
+from nas.models import Sticky
+from bdc.models import PurchaseOrder
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
@@ -42,12 +44,9 @@ CLIENTS_ITEMS_PER_PAGE = 20
 
 BDC_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = True
-# SHOW_CANCELLED = True
-# LINK_PREFIX = settings.LINK_PREFIX
+
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
 
-# DCE_SHOW_MODAL = True
-# DEADLINE_BACK_DAYS = 1
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -65,12 +64,6 @@ def bdc_list(request):
         BDC_ITEMS_PER_PAGE = int(us.p_orders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.p_orders_show_expired
         WRAP_LONG_TEXT = us.general_wrap_long_text
-        # SHOW_CANCELLED = us.tenders_show_cancelled
-
-
-
-    # p_orders_items_per_page = models.CharField(max_length=10, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('P. Orders: Items per page'))
-
 
     def get_req_params(req):
         allowed_keys = [
@@ -292,14 +285,17 @@ def bdc_details(request, pk=None):
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
-    full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else BDC_FULL_PROGRESS_DAYS
+    full_bar_days = int(us.p_orders_full_bar_days) if us.p_orders_full_bar_days else BDC_FULL_PROGRESS_DAYS
     
     empties = ['', '-', '---', '/']
     
+    pinned = bdc.stickies.filter(user=user).first()
+
     context = { 
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,
         'empties'       : empties,
+        'pinned'        : pinned,
         }
 
     logger = logging.getLogger('portal')
@@ -377,7 +373,7 @@ def client_list(request):
     if sort and sort != '':
         ordering = [sort]
         if sort == 'bdcs_count': ordering = ['-bdcs_count']
-        if sort == '-bdcs_count': ordering = ['tenders_count']
+        if sort == '-bdcs_count': ordering = ['bdcs_count']
     else: ordering = []
 
     # ordering.append('-created')
@@ -435,56 +431,89 @@ def locations_list(request):
     return render(request, 'bdc/locations-list.html', context)
 
 
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def tender_details_chrono(request, ch=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated :
-#         return HttpResponse(status=403)
-#     if not ch : return HttpResponse(status=404)
-
-#     tender = get_object_or_404(PurchaseOrder, chrono=ch)
-
-#     if not tender : return HttpResponse(status=404)
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_stickies_add(request, pk=None):
     
-#     return redirect('portal_tender_detail', tender.id)
+    if request.method != 'POST': return HttpResponse(status=405)
+    if pk == None : return HttpResponse(status=404)
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    purchase_order = get_object_or_404(PurchaseOrder, id=pk)
+    if not purchase_order : return HttpResponse(status=404)
+
+    logger = logging.getLogger('portal')
+
+    sticked = Sticky.objects.filter(purchase_order=purchase_order, user=user).first()
+    if not sticked:
+        sticked = Sticky.objects.create(
+            user=user,
+            purchase_order=purchase_order,
+        )
+        logger.info(f"Purchase Order Pinned successfully: { purchase_order.id }")
+        # messages.success(request, trans('Item successfully added to your Favorites'))
+
+        return HttpResponse(purchase_order.id, status=200)
+    logger.info(f"Failed Purchase Order Pinning: { purchase_order.id }")
+    return HttpResponse(status=500)
 
 
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def tender_get_file(request, pk=None, fn=None):
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_stickies_remove(request, pk=None):
 
-#     if request.method != 'GET': return HttpResponse(status=405)
-#     if pk == None or fn == None: return HttpResponse(status=404)
+    if request.method != 'POST': return HttpResponse(status=405)
+    if pk == None : return HttpResponse(status=404)
 
-#     user = request.user
-#     if not user or not user.is_authenticated : 
-#         return HttpResponse(status=403)
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
 
-#     tender = get_object_or_404(PurchaseOrder, id=pk)
-#     if not tender : return HttpResponse(status=404)
+    purchase_order = get_object_or_404(PurchaseOrder, id=pk)
+    if not purchase_order : return HttpResponse(status=404)
+
+    logger = logging.getLogger('portal')
+
+    deleted, _ = Sticky.objects.filter(purchase_order=purchase_order, user=user).delete()
+    if deleted > 0:
+        logger.info(f"Purchase Order Unpinned successfully: { purchase_order.id }")
+        # messages.success(request, trans('Item successfully removed from your Favorites'))
+        return HttpResponse(purchase_order.id, status=200)
+
+    logger.info(f"Failed Purchase Order Unpinning: { purchase_order.id }")
+    return HttpResponse(status=500)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_stickies_remove_all(request):
+
+    if request.method != 'POST': return HttpResponse(status=405)
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
     
-#     dce_dir = os.path.join(os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), settings.DL_PATH_PREFIX + tender.chrono)
-#     file_path = os.path.join(os.path.join('dce', settings.DL_PATH_PREFIX + tender.chrono), fn)
-#     file_fp = os.path.join(dce_dir, fn)
+    perimeter = request.POST['perimeter'] if 'perimeter' in request.POST else 'all'
+    perimeters = ['deliberated', 'unsuccessful', 'all']
 
-#     if os.path.exists(file_fp):
-#         file_size = os.path.getsize(file_fp)
-#         response = HttpResponse()
-#         response['Content-Type'] = 'application/octet-stream'
-#         response['X-Accel-Redirect'] = f'/dce/{file_path}'
-#         response['Content-Disposition'] = f'attachment; filename="{ fn }"'
-#         response['Content-Length'] = os.path.getsize(file_fp)
-#         Download.objects.create(
-#             tender=tender, 
-#             user=user, 
-#             size_read = tender.size_read, 
-#             size_bytes = file_size if file_size else tender.size_bytes, )
+    logger = logging.getLogger('portal')
+    
+    sticked = Sticky.objects.filter(user=user)
+    count = sticked.count()
 
-#         logger = logging.getLogger('portal')
-#         logger.info(f"PurchaseOrder File Download: {tender.id} (={tender.size_bytes}B)")
-#         return response
+    if count > 0:
+        deleted, _ = sticked.delete()
+        if deleted != count:
+            logger.info(f"Failed Unpinning Purchase Orders.")
+            return HttpResponse(status=500)
+        logger.info(f"All Purchase Order Unpinned successfully.")
+    else:
+        logger.info(f"Nothing to Unpin.")
 
-#     return HttpResponse(status=404)
+    return HttpResponse(status=200)
+
 
