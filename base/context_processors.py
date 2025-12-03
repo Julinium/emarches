@@ -111,11 +111,11 @@ def portal_context(request):
         'shopping'        : 'bi bi-cart4',
         'simulator'       : 'bi bi-dpad',
 
-        'tenders'         : 'bi bi-megaphone',
+        'tenders'         : 'bi bi-rocket-takeoff',
+                            # megaphone
         'bdc'             : 'bi bi-basket',
                             # bar-chart-steps
                             # controller
-                            # joystick
         'plus'            : 'bi bi-plus-lg',
         'winner'          : 'bi bi-trophy-fill',
         'range'           : 'bi bi-arrows',
@@ -140,8 +140,8 @@ def portal_context(request):
 
         'pinned'          : 'bi bi-pin-fill',
         'unpinned'        : 'bi bi-pin-angle',
-        
-        'unsuccessful'    : 'bi bi-trophy',
+
+        'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
 
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',

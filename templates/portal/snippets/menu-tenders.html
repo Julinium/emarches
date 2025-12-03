@@ -5,9 +5,9 @@
         href="#" id="portalScrollingDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
     <i class="{{ bicons.tenders }} me-1"></i> {% trans 'Tenders' %}
-        {% if faved_ids %}
+        <!-- {% if faved_ids %}
             <span class="badge mb-2 px-1 text-white bg-primary"> </span>
-        {% endif %}
+        {% endif %} -->
     </a>
     <ul class="dropdown-menu shadow" aria-labelledby="portalScrollingDropdown">
         <li class="">
@@ -34,8 +34,16 @@
             {% for cat in categories %}
                 <li class="">
                     <a class="dropdown-item py-2" href="{% url 'portal_tender_list' %}?&category={{ cat.id }}">
-                        <i class="bi bi-{{ cat.icon_bs_class }} me-2"></i>
-                        {{ cat.label }}
+                        <i class="bi bi-{{ cat.icon_bs_class }} me-2"></i>                        
+                        {% if cat.label == "Fournitures" %}
+                            {% trans "Supplies" %}
+                        {% elif cat.label == "Travaux" %}
+                            {% trans "Works" %}
+                        {% elif cat.label == "Services" %}
+                            {% trans "Services" %}
+                        {% else %}
+                            {{ cat.label }}
+                        {% endif %}
                     </a>
                 </li>
             {% endfor %}

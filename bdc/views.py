@@ -349,7 +349,7 @@ def bdc_details(request, pk=None):
     context = { 
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,
-        'empties'       : empties,
+        # 'empties'       : empties,
         'pinned'        : pinned,
         }
 
@@ -551,12 +551,11 @@ def bdc_stickies_remove_all(request):
     if not user or not user.is_authenticated :
         return HttpResponse(status=403)
     
-    perimeter = request.POST.get('perimeter', '') 
-    # data = json.loads(request.body)
-    # perimeter   = data.get('perimeter', 'all')
+    # perimeter = request.POST.get('perimeter', '') 
+    data = json.loads(request.body)
+    perimeter   = data.get('perimeter', 'all')
 
     # perimeters = ['expired', 'deliberated', 'awarded', 'unsuccessful', 'all']
-    
     sticked = Sticky.objects.filter(user=user)
     if perimeter == 'expired':
         sticked = sticked.filter(purchase_order__deadline__lt=datetime.now(RABAT_TZ))
@@ -565,20 +564,23 @@ def bdc_stickies_remove_all(request):
     elif perimeter == 'awarded':
         sticked = sticked.filter(purchase_order__winner_entity__isnull=False)
     elif perimeter == 'unsuccessful':
-        sticked = sticked.filter(unsuccessful=True)
+        sticked = sticked.filter(purchase_order__unsuccessful=True)
+    elif perimeter == '':
+        sticked = None
         
-    count = sticked.count()
+    count = sticked.count() if sticked else 0
+    bla = f'perimeter = [{ perimeter }], count = [{ count }]'
 
     logger = logging.getLogger('portal')
     if count > 0:
         deleted, _ = sticked.delete()
         if deleted != count:
             logger.info(f"Failed to unfavorite Purchase Orders.")
-            return HttpResponse(status=500)
+            return HttpResponse(bla, status=500)
         logger.info(f"All Purchase Order Unfavorited successfully.")
     else:
         logger.info(f"Nothing to Unfavorite.")
 
-    return HttpResponse(status=200)
+    return HttpResponse(bla, status=200)
 
 
