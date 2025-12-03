@@ -16,7 +16,7 @@
             <span id="pinned" class="me-2 p-2 badge text-bg-success {% if not pinned %}d-none{% endif %}">
                 <span class="">
                     <i class="{{ bicons.pinned }}"></i>
-                    <span class="d-none d-md-inline">{% trans "PINNED" %}</span>
+                    <span class="d-none d-md-inline">{% trans "FAVORITED" %}</span>
                 </span>
             </span>
             <span class="h3">{% trans "Purchase Order Details" %}</span>
@@ -158,7 +158,7 @@
             <div class="d-flex  justify-content-between">
                 <div class="toast-body alert-success">
                     <strong class="me-auto" id="pinToastHeader">
-                        {% trans "Item Pinned to top" %}.
+                        {% trans "Item Favorited successfully" %}.
                     </strong>
                 </div>
                     <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -169,7 +169,7 @@
             <div class="d-flex  justify-content-between">
                 <div class="toast-body alert-success">
                     <strong class="me-auto" id="unpinToastHeader">
-                        {% trans "Item Unpinned" %}.
+                        {% trans "Item Unfavorited successfully" %}.
                     </strong>
                 </div>
                     <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>

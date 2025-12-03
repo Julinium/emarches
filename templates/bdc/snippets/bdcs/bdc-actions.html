@@ -19,14 +19,14 @@
             class="m-1 btn btn-outline-primary pin-toggle
                 {% if pinned %}d-none{% endif %}">
         <span><i class="{{ bicons.pinned }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Pin' %}</span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Favorite' %}</span>
     </button>
     <button onclick="pinToggle('unpin')"
             id="{{ bdc.chrono }}-unpin"
             class="m-1 btn btn-outline-primary pin-toggle
                 {% if not pinned %}d-none{% endif %}">
         <span><i class="{{ bicons.unpinned }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Unpin' %}</span>
+        <span class="d-none d-md-inline ms-1">{% trans 'Unfavorite' %}</span>
     </button>
 
     <a class="m-1 btn btn-outline-primary" 

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-# from uuid import UUID
+
 from django.core.paginator import Paginator
 from django.db.models import Count, Sum, Q
 from django.db.models.functions import Lower
@@ -17,11 +17,7 @@ from django.utils.translation import gettext_lazy as trans
 from django.db import models
 from urllib.parse import urlencode
 
-# from decimal import Decimal
-
 from django.contrib.auth.decorators import login_required
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_control, never_cache
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -39,7 +35,6 @@ from base.context_processors import portal_context
 
 BDC_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 BDC_ITEMS_PER_PAGE = 10
-WRAP_LONG_TEXT = True
 CLIENTS_ITEMS_PER_PAGE = 20
 
 BDC_ORDERING_FIELD = 'deadline'
@@ -63,7 +58,6 @@ def bdc_list(request):
         BDC_ORDERING_FIELD = us.p_orders_ordering_field
         BDC_ITEMS_PER_PAGE = int(us.p_orders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.p_orders_show_expired
-        WRAP_LONG_TEXT = us.general_wrap_long_text
 
     def get_req_params(req):
         allowed_keys = [
@@ -264,17 +258,80 @@ def bdc_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_favorite_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    # us = get_user_settings(request)
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    if us: 
+        BDC_FULL_PROGRESS_DAYS = int(us.p_orders_full_bar_days)
+        BDC_ORDERING_FIELD = us.p_orders_ordering_field
+        BDC_ITEMS_PER_PAGE = int(us.p_orders_items_per_page)
+        # SHOW_TODAYS_EXPIRED = us.p_orders_show_expired
+
+    sort = request.GET.get('sort', BDC_ORDERING_FIELD)
+    page = request.GET.get('page', None)
+    query_dict = {'sort': sort, 'page': page}
+    query_string = {'sort': sort}
+    query_unsorted = {}
+
+    sort = request.GET.get('sort', BDC_ORDERING_FIELD)
+
+    if sort and sort != '':
+        ordering = [sort]
+    else: ordering = []
+
+    ordering.append('id')
+
+    pontext = portal_context(request)
+    pinned_ids = pontext.get('pinned_ids', None)
+
+    bdcs = PurchaseOrder.objects.filter(
+        id__in=pinned_ids
+    )
+
+    bdcs = bdcs.order_by(
+            *ordering
+        ).select_related(
+            'client', 'category'
+        ).prefetch_related(
+            'stickies',
+            )
+
+    context = {}
+    context['query_string']       = urlencode(query_string)
+    context['query_unsorted']     = urlencode(query_unsorted)
+    context['query_dict']         = query_dict
+    context['full_bar_days']      = BDC_FULL_PROGRESS_DAYS
+
+    paginator = Paginator(bdcs, BDC_ITEMS_PER_PAGE)
+    page_number = query_dict['page'] if 'page' in query_dict else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context['page_obj'] = page_obj
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Favorite PO's List view")
+
+    return render(request, 'bdc/bdc-favorite-list.html', context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
     
-    pro_context = portal_context(request)
-    us = pro_context['user_settings']
-    if us:
-        WRAP_LONG_TEXT = us.general_wrap_long_text
-
     bdc = get_object_or_404(PurchaseOrder.objects.select_related(
                 'client', 'category'
             ).prefetch_related(
@@ -286,9 +343,7 @@ def bdc_details(request, pk=None):
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     full_bar_days = int(us.p_orders_full_bar_days) if us.p_orders_full_bar_days else BDC_FULL_PROGRESS_DAYS
-    
-    empties = ['', '-', '---', '/']
-    
+        
     pinned = bdc.stickies.filter(user=user).first()
 
     context = { 
@@ -314,7 +369,6 @@ def client_list(request):
     us = pro_context['user_settings']
     if us: 
         CLIENTS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-        WRAP_LONG_TEXT = us.general_wrap_long_text
     CLIENTS_ORDERING_FIELD = 'name'
 
     def get_req_params(req):
@@ -453,11 +507,11 @@ def bdc_stickies_add(request, pk=None):
             user=user,
             purchase_order=purchase_order,
         )
-        logger.info(f"Purchase Order Pinned successfully: { purchase_order.id }")
+        logger.info(f"Purchase Order Favorited successfully: { purchase_order.id }")
         # messages.success(request, trans('Item successfully added to your Favorites'))
 
         return HttpResponse(purchase_order.id, status=200)
-    logger.info(f"Failed Purchase Order Pinning: { purchase_order.id }")
+    logger.info(f"Failed to favorite Purchase Order: { purchase_order.id }")
     return HttpResponse(status=500)
 
 
@@ -479,11 +533,11 @@ def bdc_stickies_remove(request, pk=None):
 
     deleted, _ = Sticky.objects.filter(purchase_order=purchase_order, user=user).delete()
     if deleted > 0:
-        logger.info(f"Purchase Order Unpinned successfully: { purchase_order.id }")
+        logger.info(f"Purchase Order Unfavorited successfully: { purchase_order.id }")
         # messages.success(request, trans('Item successfully removed from your Favorites'))
         return HttpResponse(purchase_order.id, status=200)
 
-    logger.info(f"Failed Purchase Order Unpinning: { purchase_order.id }")
+    logger.info(f"Failed to unfavorite Purchase Order: { purchase_order.id }")
     return HttpResponse(status=500)
 
 
@@ -494,25 +548,36 @@ def bdc_stickies_remove_all(request):
     if request.method != 'POST': return HttpResponse(status=405)
 
     user = request.user
-    if not user or not user.is_authenticated : 
+    if not user or not user.is_authenticated :
         return HttpResponse(status=403)
     
-    perimeter = request.POST['perimeter'] if 'perimeter' in request.POST else 'all'
-    perimeters = ['deliberated', 'unsuccessful', 'all']
+    perimeter = request.POST.get('perimeter', '') 
+    # data = json.loads(request.body)
+    # perimeter   = data.get('perimeter', 'all')
 
-    logger = logging.getLogger('portal')
+    # perimeters = ['expired', 'deliberated', 'awarded', 'unsuccessful', 'all']
     
     sticked = Sticky.objects.filter(user=user)
+    if perimeter == 'expired':
+        sticked = sticked.filter(purchase_order__deadline__lt=datetime.now(RABAT_TZ))
+    elif perimeter == 'deliberated':
+        sticked = sticked.filter(purchase_order__deliberated__isnull=False)
+    elif perimeter == 'awarded':
+        sticked = sticked.filter(purchase_order__winner_entity__isnull=False)
+    elif perimeter == 'unsuccessful':
+        sticked = sticked.filter(unsuccessful=True)
+        
     count = sticked.count()
 
+    logger = logging.getLogger('portal')
     if count > 0:
         deleted, _ = sticked.delete()
         if deleted != count:
-            logger.info(f"Failed Unpinning Purchase Orders.")
+            logger.info(f"Failed to unfavorite Purchase Orders.")
             return HttpResponse(status=500)
-        logger.info(f"All Purchase Order Unpinned successfully.")
+        logger.info(f"All Purchase Order Unfavorited successfully.")
     else:
-        logger.info(f"Nothing to Unpin.")
+        logger.info(f"Nothing to Unfavorite.")
 
     return HttpResponse(status=200)
 

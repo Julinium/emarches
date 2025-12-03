@@ -13,7 +13,7 @@ urlpatterns = [
     path('locations/',                  views.locations_list,           name='bdc_locations_list'),
     path('clients/',                    views.client_list,              name='bdc_client_list'),
     
-    # path('favorites/',                  views.bdc_favorite_list,        name='bdc_bdc_favorite_list'),
+    path('favorites/',                  views.bdc_favorite_list,        name='bdc_bdc_favorite_list'),
     # path('favorites/clean/<str:span>/', views.bdc_favorite_clean,       name='bdc_bdc_favorite_clean'),
     path('stickies/add/<uuid:pk>/',     views.bdc_stickies_add,         name='bdc_bdc_stickies_add'),
     path('stickies/remove/<uuid:pk>/',  views.bdc_stickies_remove,      name='bdc_bdc_stickies_remove'),

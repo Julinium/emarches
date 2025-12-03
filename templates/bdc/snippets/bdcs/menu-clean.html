@@ -4,23 +4,63 @@
         <button class="btn btn-light py-1 mx-1" type="button" 
                 data-bs-toggle="dropdown" aria-expanded="false"
                 data-bs-toggle="tooltip" 
-                title="{% trans 'Clean my pins' %}">
+                title="{% trans 'Clean my Favorites' %}">
             <i class="{{ bicons.pinned }}"></i>
         </button>
         <ul class="dropdown-menu dropdown-menu-lg-end shadow">
             <div class="ms-3 mb-2">
-                <span class="">{% trans 'Pinned items' %}</span>
+                <span class="">{% trans 'Clean Favorites' %}</span>
             </div>
-
+            
             <hr class="dropdown-divider">
             
             <li>
                 <a class="dropdown-item"
-                   data-bs-toggle="modal"
+                   href="#" data-bs-toggle="modal"
                    data-bs-target="#cleanPinsModal"
-                   >
+                   data-button-id="expired">
+                    <i class="{{ bicons.deadline }} me-2"></i>
+                    {% trans "Expired" %}
+                </a>
+            </li>
+            
+            <li>
+                <a class="dropdown-item"
+                   href="#" data-bs-toggle="modal"
+                   data-bs-target="#cleanPinsModal"
+                   data-button-id="unsuccessful">
+                    <i class="{{ bicons.unsuccessful }}" style="transform: rotate(90deg); display: inline-block;"></i>
+                    {% trans "Unsuccessful" %}
+                </a>
+            </li>
+            
+            <li>
+                <a class="dropdown-item"
+                   href="#" data-bs-toggle="modal"
+                   data-bs-target="#cleanPinsModal"
+                   data-button-id="deliberated">
+                    <i class="{{ bicons.deliberated }} me-2"></i>
+                    {% trans "Deliberated" %}
+                </a>
+            </li>
+            
+            <li>
+                <a class="dropdown-item"
+                   href="#" data-bs-toggle="modal"
+                   data-bs-target="#cleanPinsModal"
+                   data-button-id="awarded">
+                    <i class="{{ bicons.winner }} me-2"></i>
+                    {% trans "Awarded" %}
+                </a>
+            </li>
+            
+            <li>
+                <a class="dropdown-item"
+                   href="#" data-bs-toggle="modal"
+                   data-bs-target="#cleanPinsModal"
+                   data-button-id="all">
                     <i class="{{ bicons.delete }} me-2"></i>
-                    {% trans "Clean all" %}
+                    {% trans "All" %}
                 </a>
             </li>
         </ul>
@@ -31,12 +71,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="cleanPinsModalLabel">{% translate "Clean your PO's pins" %}</h1>
+                    <h1 class="modal-title fs-5" id="cleanPinsModalLabel">{% translate "Confirm Cleaning" %}</h1>
                 </div>
                 <div class="modal-body">
 
                     <div class="text-muted my-2">
-                        {% translate "Remove all your Pins ?" %}
+                        {% translate "Are you sure you want to clean your selected Favorited items ?" %}
                     </div>
 
                     <div class="text-danger my-2">
@@ -47,13 +87,13 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                         <span><i class="bi bi-x-lg"></i></span>
-                        <span class="ms-1">{% translate 'Close' %}</span>
+                        <span class="ms-1">{% translate 'Cancel' %}</span>
                     </button>
 
                     <button class="btn btn-outline-danger"
-                            onclick="cleanAllPins()" type="button">
+                            id="cleanButton" type="button">
                         <i class="{{ bicons.delete }} me-2"></i>
-                        {% trans 'Clean pins' %}
+                        {% trans 'Confirm' %}
                     </button>
                 </div>
             </div>
@@ -67,7 +107,7 @@
             <div class="d-flex  justify-content-between">
                 <div class="toast-body alert-success">
                     <strong class="me-auto" id="cleanAllToastHeader">
-                        {% trans "Pinned items cleaned successfully." %}.
+                        {% trans "Favorites cleaned successfully." %}.
                     </strong>
                 </div>
                     <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -76,15 +116,24 @@
 
     </div>
 
-    <script>            
-        function cleanAllPins(makas='pin') {
+    <script>
+        function cleanAllPins(perimeter='expired') {
             const token = document.getElementById('csrf_token').value;
-            url = "{% url 'bdc_bdc_stickies_remove_all' %}"
+            url = `{% url 'bdc_bdc_stickies_remove_all' %}`
 
             const xhr = new XMLHttpRequest();
             xhr.open('POST', url, true);
             xhr.setRequestHeader('X-CSRFToken', token);
             xhr.setRequestHeader('Accept', 'text/plain');
+            // xhr.setRequestHeader('body', 'text/plain');
+            const payload = {
+                perimeter: perimeter,
+            };
+
+            // xhr.send(JSON.stringify(payload));
+
+
+            // 
             const pin_indicator = document.getElementById('pinned')
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
@@ -92,17 +141,26 @@
                         let cleanAllToast = document.getElementById('cleanAllToast');
                         let cleanAllAlert = new bootstrap.Toast(cleanAllToast);
                         cleanAllAlert.show();
-                        location.reload(true);
+                        // location.reload(true);
                     } else {
                         alert('Operation Failed !')
                     }
                 }
             };
             xhr.onerror = function () {
-                console.error('Network error while cleaning pins');
+                console.error('Network error while cleaning favorites');
             };
 
-            xhr.send();
+            xhr.send(JSON.stringify(payload));
         }
+
+        document.getElementById('cleanPinsModal').addEventListener('show.bs.modal', function (e) {
+            const button = e.relatedTarget;
+            const perimeter = button.getAttribute('data-button-id');
+            this.querySelector('#cleanButton').onclick = function() {
+                cleanAllPins(perimeter);
+            };
+        });
+
     </script>
 </div>

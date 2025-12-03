@@ -13,6 +13,18 @@
                 {% trans 'Browse' %}
             </a>
         </li>
+        
+        <li class="">
+            <a class="dropdown-item py-2" href="{% url 'bdc_bdc_favorite_list' %}">
+                <i class="{{ bicons.favorite }} me-2"></i>
+                {% trans 'Favourites' %}
+                {% if pinned_ids %}
+                    <span class="badge bg-primary text-white mx-1">
+                        {{ pinned_ids.count|default:0 }}
+                    </span>
+                {% endif %}
+            </a>
+        </li>
 
         {% if categories %}
             <li><hr class="dropdown-divider"></li>

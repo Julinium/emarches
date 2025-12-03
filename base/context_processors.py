@@ -140,6 +140,8 @@ def portal_context(request):
 
         'pinned'          : 'bi bi-pin-fill',
         'unpinned'        : 'bi bi-pin-angle',
+        
+        'unsuccessful'    : 'bi bi-trophy',
 
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',
