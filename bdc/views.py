@@ -345,11 +345,12 @@ def bdc_details(request, pk=None):
     full_bar_days = int(us.p_orders_full_bar_days) if us.p_orders_full_bar_days else BDC_FULL_PROGRESS_DAYS
         
     pinned = bdc.stickies.filter(user=user).first()
+    empties = ['-', '---', '/', '?', ' ', '']
 
     context = { 
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,
-        # 'empties'       : empties,
+        'empties'       : empties,
         'pinned'        : pinned,
         }
 
@@ -530,11 +531,11 @@ def bdc_stickies_remove(request, pk=None):
     if not purchase_order : return HttpResponse(status=404)
 
     logger = logging.getLogger('portal')
+    sticked = Sticky.objects.filter(purchase_order=purchase_order, user=user)
 
-    deleted, _ = Sticky.objects.filter(purchase_order=purchase_order, user=user).delete()
+    deleted, _ = sticked.delete()
     if deleted > 0:
         logger.info(f"Purchase Order Unfavorited successfully: { purchase_order.id }")
-        # messages.success(request, trans('Item successfully removed from your Favorites'))
         return HttpResponse(purchase_order.id, status=200)
 
     logger.info(f"Failed to unfavorite Purchase Order: { purchase_order.id }")

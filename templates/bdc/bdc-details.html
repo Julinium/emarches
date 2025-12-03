@@ -124,6 +124,7 @@
                     <div class="modal-body">
 
                         <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
+                        <div class="small text-danger my-2">{% translate "We do not host these files. We only provide a link to their original locations." %}</div>
                         {% for f in bdc.attachements.all %}
                             <a id="dce-{{ bdc.chrono }}000{{ forloop.counter }}"
                             class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
@@ -170,6 +171,17 @@
                 <div class="toast-body alert-success">
                     <strong class="me-auto" id="unpinToastHeader">
                         {% trans "Item Unfavorited successfully" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+        <div class="toast bg-danger-subtle " id="failedToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-danger">
+                    <strong class="me-auto" id="failedToastHeader">
+                        {% trans "Operation failed" %}. {% trans "Please refresh the page or try again later" %}.
                     </strong>
                 </div>
                     <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -233,7 +245,10 @@
                             unpinAlert.show();
                         }
                     } else {
-                        alert('Operation Failed !')
+                        let failedToast = document.getElementById('failedToast');
+                        let failedAlert = new bootstrap.Toast(failedToast);
+                        failedAlert.show();
+                        // alert('Operation Failed !')
                     }
                     azrems.forEach(azrem => { azrem.classList.add('d-none'); });
                 }

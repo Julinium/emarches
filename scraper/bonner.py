@@ -6,7 +6,6 @@ import random
 import time
 import json
 import pytz
-# from urllib.parse import quote
 
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -186,11 +185,6 @@ def get_bdc(card):
 
             # Le veau laid violet volait le volet et volait avec le vieux lait.
 
-            # try: number = int(number)
-            # except Exception as xc:
-            #     print('Article number exception: \n', xc)
-            #     number = None
-
             articles.append({
                 'number'            : number,
                 'title'             : title_article,
@@ -204,7 +198,7 @@ def get_bdc(card):
         attachements = [
             {
                 "name": safe_text(a),
-                "link": a["href"] if a and a.has_attr("href") else None
+                "link": f"{ BDC_DETAILS_HOST }" + a["href"] if a and a.has_attr("href") else None
             }
             for a in box.select("a.nounderlinelink")
         ]
@@ -524,6 +518,7 @@ def save_bdcs():
                             'deadline'  : deadline,
                             'location'  : location,
                             'link'      : link,
+                            'nature'    : nature,
                         }
                     )
                     if created : 

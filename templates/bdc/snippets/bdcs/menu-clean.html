@@ -114,6 +114,17 @@
             </div>
         </div> 
 
+        <div class="toast bg-danger-subtle " id="failedToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-danger">
+                    <strong class="me-auto" id="failedToastHeader">
+                        {% trans "Operation failed" %}. {% trans "Please refresh the page or try again later" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
     </div>
 
     <script>
@@ -141,7 +152,10 @@
                         cleanAllAlert.show();
                         location.reload(true);
                     } else {
-                        alert('Operation Failed !')
+                        let failedToast = document.getElementById('failedToast');
+                        let failedAlert = new bootstrap.Toast(failedToast);
+                        failedAlert.show();
+                        // alert('Operation Failed !');
                     }
                 }
             };
