@@ -1,6 +1,6 @@
 {% load i18n %}
 
-    <a class="dropdown-item" href="?{{ query_unsorted }}&sort={% if query_dict.sort == field %}-{% endif %}{{ field }}">
+    <a class="dropdown-item py-2" href="?{{ query_unsorted }}&sort={% if query_dict.sort == field %}-{% endif %}{{ field }}">
         <i class="bi bi-{{ icon }} me-2"></i>
         <span class="{% if query_dict.sort == '-'|add:field or query_dict.sort == field %}fw-bold{% endif %}">{{ caption }}</span>
         {% if query_dict.sort == field %} <i class="{{ bicons.sort_down }} small fw-bold ms-2"></i> {% endif %}

@@ -74,9 +74,10 @@ def bdc_list(request):
         if not 'sort' in query_dict:
             query_dict['sort'] = BDC_ORDERING_FIELD
         
-        if not 'ddlnn' in query_dict:
+        dates_set = set(['ddlnn', 'ddlnx', 'publn', 'publx', 'delin', 'delix'])
+        if dates_set.isdisjoint(query_dict):
             query_dict['ddlnn'] = datetime.now(RABAT_TZ).strftime("%Y-%m-%d")
-            
+
         query_string = {
             k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
         }
@@ -117,7 +118,6 @@ def bdc_list(request):
                             bdcs = bdcs.filter(client__name__exact=q)
                         else:
                             bdcs = afas(bdcs, ['cliwords'], q)
-                        # bdcs = afas(bdcs, ['cliwords'], q)
                     case 'location':
                         bdcs = afas(bdcs, ['locwords'], q)
                     case 'reference':
@@ -160,11 +160,11 @@ def bdc_list(request):
         if 'delin' in params:
             ff += 1
             delin = params['delin']
-            bdcs = bdcs.filter(deliberated__gte=delin)
+            bdcs = bdcs.filter(deliberated__date__gte=delin)
         if 'delix' in params:
             ff += 1
             delix = params['delix']
-            bdcs = bdcs.filter(deliberated__lte=delix)
+            bdcs = bdcs.filter(deliberated__date__lte=delix)
 
         if 'amoun' in params:
             ff += 1

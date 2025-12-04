@@ -44,29 +44,48 @@
         <div class="my-3" id="bdc-expired-top" >
             <div class="text-bg-secondary rounded text-center my-2">
                 <div class="fw-bold p-1">
-                    {% trans 'EXPIRED' %}
+                    <span><i class="{{ bicons.expired }} me-1"></i></span>
+                    <span>{% trans 'EXPIRED' %}</span>
                 </div>
             </div>
         </div>
     {% endif %}
+
 
     {% include 'bdc/snippets/bdcs/bdc-actions.html' %}
 
     <div class="my-3" id="bdc-details">
 
         <div class="row gx-4 gy-0">
-            <div class="mt-3">
-                <span class="small text-muted me-2">{% trans "Object" %}</span>  
-                <span>{{ bdc.title }}</span>
-            </div>
-            <div class="mt-3">
-                <span class="small text-muted me-2">{% trans "Public Client" %}</span>  
-                <span>{{ bdc.client.name }}</span>
-            </div>
-            <div class="mt-3">
-                <span class="small text-muted me-2">{% trans "Category" %}</span>  
-                <span>{{ bdc.category.label }}</span>
-            </div>
+            
+            {% trans 'Object' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-title' val_value=bdc.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
+
+            {% trans 'Public Client' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-client' val_value=bdc.client.name key_value=key_value uni_value='' ico_class=bicons.client full_width='yes' val_class='fw-bold' border='bottom' liner='twolines' %}
+
+            {% trans 'Reference' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-reference' val_value=bdc.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
+            
+            {% trans 'Published' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-published' val_value=bdc.published key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='oneline' %}
+
+            {% trans 'Category' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-category' val_value=bdc.category.label key_value=key_value uni_value='' ico_class=bicons.category val_class='' border='bottom' liner='oneline' %}
+
+            {% trans 'Execution Location' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-location' val_value=bdc.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
+
+            {% timezone "Africa/Casablanca" %}
+                {% trans 'Deadline' as key_value %}
+                {% trans 'Morocco time' as unit %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-deadline' val_value=bdc.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' %}
+            {% endtimezone %}
+
+            {% trans 'Time to Deadline' as key_value %}
+            {% trans 'days' as unit %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold' border='bottom' liner='oneline' %}
+            
         </div>
 
         <div class="list-group my-3 shadow-sm">
@@ -76,7 +95,6 @@
                     <span class="me-1 text-muted">#{{ article.number }}.</span>
                     <span class="fw-bold">{{ article.title }}</span>
                     <span class="ms-1 badge bg-secondary">{{ article.quantity }} x {{ article.uom }}</span>
-                    
                 </div> 
                 {% if article.specifications %}
                     {% if article.specifications != article.title and article.specifications not in empties %}

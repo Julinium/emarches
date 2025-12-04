@@ -73,15 +73,5 @@
                 {% trans 'Insights' %}
             </a>
         </li>
-
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" 
-               href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}#collapseTenders">
-                <i class="{{ bicons.settings }} me-2"></i>
-                {% trans 'Preferences' %}
-            </a>
-        </li>
     </ul>
 </li>

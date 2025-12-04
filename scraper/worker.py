@@ -15,11 +15,6 @@ def main():
 
     started_time = datetime.now()
 
-    ########################
-    # from scraper import rinker
-    # links = rinker.getLinks()
-    ########################
-
     helper.printBanner()
     helper.printMessage('===', 'worker', "▶▷▶▷ The unlazy worker started working ◁◀◁◀", 1, 1)
 
@@ -139,10 +134,9 @@ def main():
     def handle_bdcs():
         print('\n\n\n\n======================================================')
         helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
+        bonner.save_bdcs(30)
         bonner.save_results()
-        bonner.save_bdcs()
         print('\n\n======================================================\n\n')
-
     
     handle_bdcs()
 

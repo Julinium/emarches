@@ -150,20 +150,20 @@ def get_bdc(card):
             naive_dt = datetime.strptime(published_str, "%d/%m/%Y %H:%M")
             published = rabat_tz.localize(naive_dt)
         except Exception as xc:
-            print('Published exception: \n', xc)
+            print('Published Exception: \n', xc)
             pass
 
         category_name = None
         try: 
             category_name = safe_text(box.select_one("#category ~ div span:nth-of-type(2)"))
         except Exception as xc:
-            print('category_name exception: \n', xc)
+            print('Category name Exception: \n', xc)
             pass
 
-        nature = None
+        nature = '--' # None
         try: nature = safe_text(box.select_one("#screwdriver ~ div span:nth-of-type(2)"))
         except Exception as xc:
-            print('nature exception: \n', xc)
+            print('Nature Exception: \n', xc)
             pass
 
         # Articles
@@ -276,7 +276,7 @@ def get_results_bdc(card):
                 montant_ttc = None
 
         else:
-            n_devis = entreprise_attr = montant_ttc = None
+            entreprise_attr, montant_ttc = None, None
 
     published_dt = None
     if date_pub:
@@ -307,7 +307,7 @@ def has_next_page(soup):
     return next_link is not None
 
 
-def save_results(published_since_days=2):
+def save_results(published_since_days=1):
     print('\n\n')
     printMessage('INFO', 'b.save_results', "Started Results browsing ...")
 
@@ -336,6 +336,10 @@ def save_results(published_since_days=2):
             "search_consultation_resultats[lieuExecution]" : '',
             "search_consultation_resultats[pageSize]" : '50'
         }
+
+        # print('\n\n====================')
+        # print('Searching Results with [dateLimitePublicationStart] = ', assnna_str)
+        # print('====================\n\n')
         
         printMessage('INFO', 'b.save_results', f"Fetching Results page: { page }")
 
@@ -407,7 +411,7 @@ def save_results(published_since_days=2):
     return 0 if errors_happened == False else 1
 
 
-def save_bdcs():
+def save_bdcs(published_since_days=1):
     print('\n\n')
     printMessage('INFO', 'b.save_bdcs', "Started browsing Ongoing POs ...")
 
@@ -423,13 +427,8 @@ def save_bdcs():
     page = 1
     while True:
         url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
-        # query_string = f"search_consultation_resultats[dateLimitePublicationStart]={ assnna_str }"
-        # query_string = f"&search_consultation_entreprise[pageSize]=50"
-        # search_consultation_entreprise[pageSize]50
-        # https://www.marchespublics.gov.ma/bdc/entreprise/consultation/resultat?search_consultation_resultats%5Bkeyword%5D=&search_consultation_resultats%5Breference%5D=&search_consultation_resultats%5Bobjet%5D=&search_consultation_resultats%5BdateLimitePublicationStart%5D=2025-11-25&search_consultation_resultats%5BdateLimitePublicationEnd%5D=&search_consultation_resultats%5BdateMiseEnLigneStart%5D=&search_consultation_resultats%5BdateMiseEnLigneEnd%5D=&search_consultation_resultats%5Bcategorie%5D=&search_consultation_resultats%5BnaturePrestation%5D=&search_consultation_resultats%5Bacheteur%5D=&search_consultation_resultats%5Bservice%5D=&search_consultation_resultats%5BlieuExecution%5D=&search_consultation_resultats%5BpageSize%5D=50
-        
-        # url += "?" + query_string
-        # url = quote(url)
+        assnna = datetime.now().date() - timedelta(days=published_since_days)
+        assnna_str = assnna.strftime('%Y-%m-%d')
 
         params = {
             "search_consultation_entreprise[keyword]": "",
@@ -437,7 +436,7 @@ def save_bdcs():
             "search_consultation_entreprise[objet]": "",
             "search_consultation_entreprise[dateLimiteStart] ": "",
             "search_consultation_entreprise[dateLimiteEnd] ": "",
-            "search_consultation_entreprise[dateMiseEnLigneStart]": "",
+            "search_consultation_entreprise[dateMiseEnLigneStart]": assnna_str,
             "search_consultation_entreprise[dateMiseEnLigneEnd]": "",
             "search_consultation_entreprise[categorie]": "",
             "search_consultation_entreprise[naturePrestation]": "",
@@ -446,11 +445,12 @@ def save_bdcs():
             "search_consultation_entreprise[lieuExecution]": "",
             "search_consultation_entreprise[pageSize]": "50"
         }
-        printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...")
 
         # print('\n\n====================')
-        # print(url)
+        # print('Searching POs with [dateMiseEnLigneStart] = ', assnna_str)
         # print('====================\n\n')
+
+        printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...")
 
         html = fetch_page(url, params=params)
         if not html:
@@ -482,12 +482,7 @@ def save_bdcs():
             try:
                 item = get_bdc(card)
                 if item != {} :
-
-                    published = item['published']
-                    deadline  = item['deadline']
-                    location  = item['location']
-                    link      = item['link']
-                    chrono    = item['chrono']
+                    chrono = item['chrono']
 
                     client_name = item['client']
                     if client_name and client_name != '':
@@ -510,15 +505,15 @@ def save_bdcs():
                     bdc, created = PurchaseOrder.objects.update_or_create(
                         reference = item['reference'],
                         title = item['title'],
-                        chrono = chrono,
                         client = client,
                         defaults = {
                             'category'  : category,
-                            'published' : published,
-                            'deadline'  : deadline,
-                            'location'  : location,
-                            'link'      : link,
-                            'nature'    : nature,
+                            'chrono'    : item['chrono'],
+                            'published' : item['published'],
+                            'deadline'  : item['deadline'],
+                            'location'  : item['location'],
+                            'link'      : item['link'],
+                            'nature'    : item['nature'],
                         }
                     )
                     if created : 

@@ -61,27 +61,6 @@
                 {% trans 'Locations' %}
             </a>
         </li>
-
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a class="dropdown-item py-2"
-               href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}#collapsePurchaseOrders">
-                <i class="{{ bicons.settings }} me-2"></i>
-                {% trans 'Preferences' %}
-            </a>
-        </li>
-<!-- 
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a class="dropdown-item py-2"
-               data-bs-toggle="modal" data-bs-target="#cleanPinsModal">
-                <i class="{{ bicons.delete }} me-2"></i>
-                {% trans 'Clean all pins' %}
-            </a>
-        </li> -->
-
     </ul>
 </li>
 

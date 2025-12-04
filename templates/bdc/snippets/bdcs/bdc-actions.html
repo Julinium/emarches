@@ -40,10 +40,12 @@
         <span><i class="{{ bicons.downloads }}"></i></span>
         <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
     </button>
-
-    <a href="{{ bdc.link }}" target="_blank" class="m-1 btn btn-outline-primary">
-        <span><i class="{{ bicons.bidding }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
-    </a>
+    
+    {% if bdc.link %}
+        <a href="{{ bdc.link }}" target="_blank" class="m-1 btn btn-outline-primary">
+            <span><i class="{{ bicons.bidding }}"></i></span>
+            <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
+        </a>
+    {% endif %}
     
 </div>

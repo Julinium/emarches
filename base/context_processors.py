@@ -138,8 +138,10 @@ def portal_context(request):
         'articles'        : 'bi bi-list-check',
         'settings'        : 'bi bi-sliders2',
 
-        'pinned'          : 'bi bi-pin-fill',
-        'unpinned'        : 'bi bi-pin-angle',
+        'pinned'          : 'bi bi-heart-fill',
+        'unpinned'        : 'bi bi-heartbreak',
+
+        'expired'         : 'bi bi-hourglass-bottom',
 
         'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
 

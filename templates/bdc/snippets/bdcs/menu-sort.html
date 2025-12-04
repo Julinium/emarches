@@ -9,35 +9,37 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-lg-end shadow">
             <div class="ms-3 mb-2">
-                <span class="">{% trans 'Ordering' %}</span>
+                <span class="">{% trans 'Ordering' %} :</span>
             </div>
 
-            <hr class="dropdown-divider">
-            
             <li>
                 {% trans 'Deadline' as caption %}
                 {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='deadline' icon=bicons.deadline %}
             </li>
-            
-            <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Published' as caption %}
                 {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='published' icon=bicons.published %}
             </li>
             
-            <hr class="dropdown-divider">
-            
             <li>
                 {% trans 'Deliberated' as caption %}
                 {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='deliberated' icon=bicons.deliberated %}
             </li>
             
-            <hr class="dropdown-divider">
-            
             <li>
                 {% trans 'Winner amount' as caption %}
                 {% include 'bdc/snippets/bdcs/menu-sort-item.html' with caption=caption field='winner_amount' icon=bicons.estimate %}
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li class="">
+                <a class="dropdown-item py-2"
+                href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}#collapsePurchaseOrders">
+                    <i class="{{ bicons.settings }} me-2"></i>
+                    {% trans 'Preferences' %}
+                </a>
             </li>
         </ul>
     </div>
