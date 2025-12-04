@@ -183,6 +183,20 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="id_p_orders_first_articles">{% trans "Show first articles" %}</label>
+                            <select name="{{ form.p_orders_first_articles.name }}" class="form-select" id="id_p_orders_first_articles">
+                                {% for value, label in form.p_orders_first_articles.field.choices %}
+                                    {% if value %}
+                                        <option value="{{ value }}"
+                                                {% if form.p_orders_first_articles.value == value|stringformat:"s" %}selected{% endif %}>
+                                            {{ label }} {% trans "articles" %}
+                                        </option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
 
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" 

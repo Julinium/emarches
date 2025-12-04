@@ -9,7 +9,7 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-lg-end shadow">
             <div class="ms-3 mb-2">
-                <span class="">{% trans 'Cleanup' %}</span>
+                <span class="">{% trans 'Clean Favorites' %}</span>
             </div>
 
             <hr class="dropdown-divider">
@@ -18,34 +18,30 @@
                 <form method="POST" 
                       action="{% url 'portal_tender_favorite_clean' 'expired' %}">
                     {% csrf_token %}
-                    <button type="submit" class="dropdown-item">
+                    <button type="submit" class="dropdown-item py-2">
                         <i class="{{ bicons.clean_expired }} me-2"></i>
                         <span class="">{% trans 'Expired' %}</span>
                     </button>
                 </form>
             </li>
 
-            <hr class="dropdown-divider">
-
             <li>
                 <form method="POST" 
                       action="{% url 'portal_tender_favorite_clean' 'cancelled' %}">
                     {% csrf_token %}
-                    <button class="dropdown-item">
+                    <button type="submit"  class="dropdown-item py-2">
                         <i class="{{ bicons.clean_cancelled }} me-2"></i>
                         <span class="">{% trans 'Cancelled' %}</span>
                     </button>
                 </form>
             </li>
 
-            <hr class="dropdown-divider">
-
             <li>
                 <form method="POST" 
                       action="{% url 'portal_tender_favorite_clean' 'all' %}">
                     {% csrf_token %}
-                    <button class="dropdown-item text-danger">
-                        <i class="{{ bicons.clean_all }} me-2"></i>
+                    <button type="submit"  class="dropdown-item py-2">
+                        <i class="{{ bicons.clean_all }} me-2 text-danger"></i>
                         <span class="">{% trans 'All Favorites' %}</span>
                     </button>
                 </form>

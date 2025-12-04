@@ -142,6 +142,7 @@ def portal_context(request):
         'unpinned'        : 'bi bi-heartbreak',
 
         'expired'         : 'bi bi-hourglass-bottom',
+        'nature'          : 'bi bi-tags',
 
         'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
 

@@ -49,4 +49,14 @@ class FullBarDays(models.TextChoices):
     FBD_090 = '90',  "90"
     FBD_180 = '180', "180"
     FBD_365 = '365', "365"
-    
+
+class FirstArticles(models.TextChoices):
+    ATS_002 = '2',   "2"
+    ATS_005 = '5',   "5"
+    ATS_010 = '10',  "10"
+    ATS_015 = '15',  "15"
+    ATS_025 = '25',  "25"
+    ATS_050 = '50',  "50"
+    ATS_100 = '100', "100"
+
+

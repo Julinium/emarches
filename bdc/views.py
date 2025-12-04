@@ -35,6 +35,7 @@ from base.context_processors import portal_context
 
 BDC_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 BDC_ITEMS_PER_PAGE = 10
+BDC_FIRST_ARTICLES = 10
 CLIENTS_ITEMS_PER_PAGE = 20
 
 BDC_ORDERING_FIELD = 'deadline'
@@ -343,7 +344,12 @@ def bdc_details(request, pk=None):
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     full_bar_days = int(us.p_orders_full_bar_days) if us.p_orders_full_bar_days else BDC_FULL_PROGRESS_DAYS
-        
+    first_articles = int(us.p_orders_first_articles) if us.p_orders_first_articles else BDC_FIRST_ARTICLES
+    
+
+    # all_articles = bdc.articles
+    f_articles = bdc.articles[:first_articles] if bdc.articles.count() > first_articles else None
+    
     pinned = bdc.stickies.filter(user=user).first()
     empties = ['-', '---', '/', '?', ' ', '']
 
@@ -352,6 +358,7 @@ def bdc_details(request, pk=None):
         'full_bar_days' : full_bar_days,
         'empties'       : empties,
         'pinned'        : pinned,
+        'f_articles'    : f_articles,
         }
 
     logger = logging.getLogger('portal')

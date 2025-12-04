@@ -82,6 +82,7 @@ class UserSettingsForm(forms.ModelForm):
             'p_orders_items_per_page', 
             'p_orders_full_bar_days', 
             'p_orders_show_expired', 
+            'p_orders_first_articles',
             ]
         # widgets = {
         #     'language': forms.Select(attrs={'class': 'form-control'}),  # Optional styling

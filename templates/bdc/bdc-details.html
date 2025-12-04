@@ -1,6 +1,5 @@
 {% extends 'base/base.html' %}
 {% load i18n static %}
-<!-- {% load paraminos %} -->
 {% load humanize %}
 {% load tz %}
 
@@ -51,7 +50,6 @@
         </div>
     {% endif %}
 
-
     {% include 'bdc/snippets/bdcs/bdc-actions.html' %}
 
     <div class="my-3" id="bdc-details">
@@ -76,6 +74,11 @@
             {% trans 'Execution Location' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-location' val_value=bdc.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
 
+            {% if bdc.nature %}
+                {% trans 'Nature of service' as key_value %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-nature' val_value=bdc.nature key_value=key_value uni_value='' ico_class=bicons.nature full_width='yes' val_class='' border='bottom' liner='twolines' %}
+            {% endif %}
+        
             {% timezone "Africa/Casablanca" %}
                 {% trans 'Deadline' as key_value %}
                 {% trans 'Morocco time' as unit %}
@@ -87,6 +90,12 @@
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold' border='bottom' liner='oneline' %}
             
         </div>
+
+
+        <div class="row gx-4 gy-0">
+
+        </div>
+
 
         <div class="list-group my-3 shadow-sm">
             {% for article in bdc.articles.all %}
