@@ -84,8 +84,8 @@
 
             {% if bdc.deliberated %}
                 <div class="card-footer px-3 py-2">
-                    <div class="">
-                        <span class="">
+                    <div class="row gx-3">
+                        <div class="col-12 col-md-6 oneline">
                             {% timezone "Africa/Casablanca" %}
                                 <span class="small text-muted">
                                     <i class="{{ bicons.deliberated }}"></i>
@@ -97,24 +97,24 @@
                                 <i class="{{ bicons.count }}"></i>
                                 <span class="">{{ bdc.bids_count|default:'-' }}</span>
                             </span>
-                        </span>
-                        <span class="">
+                        </div>
+                        <div class="col-12 col-md-6 oneline text-end">
                             {% if bdc.unsuccessful == True %}
                                 <span class="ms-2 small text-danger">
                                     <i class="{{ bicons.unsuccessful }}"></i>
                                     <span class="">{% trans "UNSUCCESSFUL" %}</span>
                                 </span>
                             {% elif bdc.unsuccessful == False %}
+                                <span class="ms-2 small text-success">
+                                    <span class="">
+                                        <i class="{{ bicons.estimate }}"></i>
+                                        <span class="fw-bold">{{ bdc.winner_amount|default:'?' }}</span>                                        
+                                    </span>
+                                </span>
                                 <span class="rounded ms-2 small text-success">  
                                     <span class="">
                                         <i class="{{ bicons.winner }}"></i>
                                         <span>{{ bdc.winner_entity|default:'?' }}</span>
-                                    </span>
-                                </span>
-                                <span class="ms-2 small text-success">
-                                    <span class="">
-                                        <i class="{{ bicons.estimate }}"></i>
-                                        <span>{{ bdc.winner_amount|default:'?' }}</span>                                        
                                     </span>
                                 </span>
                             {% else %}
@@ -125,7 +125,7 @@
                                     </span>
                                 </span>
                             {% endif %}
-                        </span>
+                        </div>
                     </div>
                 </div>
             {% endif %}                    

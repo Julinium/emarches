@@ -8,13 +8,14 @@ django.setup()
 
 
 def main():
-    from scraper import helper, bonner
+    from scraper import helper, bonner, infoer
     
     def handle_bdcs():
         print('\n\n\n\n======================================================')
         helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
-        bonner.save_bdcs(180)
-        bonner.save_results(180)
+        # bonner.save_results(180)
+        # bonner.save_bdcs(180)
+        print(infoer.get_business_details())
         print('\n\n======================================================\n\n')
     
     handle_bdcs()

@@ -58,11 +58,18 @@
             
             {% trans 'Object' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-title' val_value=bdc.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
+        
+            {% timezone "Africa/Casablanca" %}
+                {% trans 'Deadline' as key_value %}
+                {% trans 'Morocco time' as unit %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-deadline' val_value=bdc.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class=ddl_classes border='bottom' liner='oneline' %}
+            {% endtimezone %}
+            
+            {% trans 'Time to Deadline' as key_value %}
+            {% trans 'days' as unit %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class=ddl_classes border='bottom' liner='oneline' %}
 
-            {% trans 'Public Client' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-client' val_value=bdc.client.name key_value=key_value uni_value='' ico_class=bicons.client full_width='yes' val_class='fw-bold' border='bottom' liner='twolines' %}
-
-            {% trans 'Reference' as key_value %}
+           {% trans 'Reference' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-reference' val_value=bdc.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
             
             {% trans 'Published' as key_value %}
@@ -72,27 +79,63 @@
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-category' val_value=bdc.category.label key_value=key_value uni_value='' ico_class=bicons.category val_class='' border='bottom' liner='oneline' %}
 
             {% trans 'Execution Location' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-location' val_value=bdc.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-location' val_value=bdc.location key_value=key_value uni_value='' ico_class=bicons.location val_class='fw-bold' border='bottom' liner='oneline' %}
 
-            {% if bdc.nature %}
+            {% trans 'Public Client' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-client' val_value=bdc.client.name key_value=key_value uni_value='' ico_class=bicons.client full_width='yes' val_class='' border='bottom' liner='twolines' %}
+
+             {% if bdc.nature %}
                 {% trans 'Nature of service' as key_value %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-nature' val_value=bdc.nature key_value=key_value uni_value='' ico_class=bicons.nature full_width='yes' val_class='' border='bottom' liner='twolines' %}
             {% endif %}
-        
-            {% timezone "Africa/Casablanca" %}
-                {% trans 'Deadline' as key_value %}
-                {% trans 'Morocco time' as unit %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-deadline' val_value=bdc.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' %}
-            {% endtimezone %}
             
-            {% trans 'Time to Deadline' as key_value %}
-            {% trans 'days' as unit %}
-            {% if bdc.days_to_go < 1 %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold text-danger' border='bottom' liner='oneline' %}
-            {% else %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold' border='bottom' liner='oneline' %}
-            {% endif %}
         </div>
+
+        
+        {% if bdc.expired %}
+            <div id="results" class="row gx-4">
+                {% if bdc.deliberated %}
+
+                    {% timezone "Africa/Casablanca" %}
+                        {% trans 'Results published' as key_value %}
+                        {% trans 'Morocco time' as unit %}
+                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-deliberated' val_value=bdc.deliberated key_value=key_value uni_value=unit ico_class=bicons.deliberated val_class='' border='bottom' liner='oneline' %}
+                    {% endtimezone %}
+
+                    {% trans 'Candidates' as key_value %}
+                    {% trans 'Bids received' as unit %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-bids_count' val_value=bdc.bids_count key_value=key_value uni_value=unit ico_class=bicons.count val_class='fw-bold' border='bottom' liner='oneline' %}
+                            
+                    
+                    {% if bdc.unsuccessful == True %}
+
+                        {% trans 'Result' as key_value %}
+                        {% trans 'UNSUCCESSFUL' as val_value %}
+                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-unsuccess' val_value=val_value key_value=key_value uni_value='' ico_class=bicons.unsuccessful val_class='fw-bold text-danger' border='bottom' liner='oneline' %}
+
+                    {% elif bdc.unsuccessful == False %}
+
+                        {% trans 'Winner amount' as key_value %}
+                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-winner_amount' val_value=bdc.winner_amount key_value=key_value uni_value='' ico_class=bicons.estimate val_class='fw-bold text-success' border='bottom' liner='oneline' %}
+
+                        {% trans 'Winner entity' as key_value %}
+                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-winner_entity' val_value=bdc.winner_entity key_value=key_value uni_value='' ico_class=bicons.winner val_class='fw-bold text-success' border='bottom' liner='oneline' %}
+
+                    {% else %}
+
+                        {% trans 'Result' as key_value %}
+                        {% trans 'Unknown' as val_value %}
+                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-unknown' val_value=val_value key_value=key_value uni_value='' ico_class='bi bi-check-circle' val_class='fw-bold text-secondary' border='bottom' liner='oneline' %}
+
+                    {% endif %}
+
+                {% else %}
+                    {% trans 'Awarding' as key_value %}
+                    {% trans 'No results found' as no_results %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-results' val_value=no_results key_value=key_value uni_value='' ico_class=bicons.deliberated val_class='fw-bold text-danger' border='bottom' liner='oneline' %}
+                {% endif %}
+            </div>
+        {% endif %}
 
 
         <div class="col-12">
@@ -115,7 +158,7 @@
                 <div class="oneline">
                     <span class="ms-1 text-muted">{{ article.rank }}.</span>
                     <span class="fw-bold">{{ article.title }}</span>
-                    <span class="ms-1 badge bg-secondary">{{ article.quantity }} x {{ article.uom }}</span>
+                    <span class="ms-1 badge bg-secondary">{{ article.quantity|floatformat:"-0" }} x {{ article.uom }}</span>
                 </div> 
             </div>
             {% empty %}
@@ -141,13 +184,6 @@
                 </span>
             </div>
         {% endif %}
-
-        <div id="results" class="row gx-4 gy-0">
-            <div class="my-4">
-                Results: Under construction
-            </div>
-        </div>
-
     </div>
 
     {% include 'bdc/snippets/bdcs/bdc-actions.html' %}

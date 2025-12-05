@@ -349,17 +349,22 @@ def bdc_details(request, pk=None):
     # all_articles = bdc.articles
     featured = bdc.articles.all()[:first_articles] #if 
     extra = bdc.articles.count() - first_articles
+    ddl_classes = 'fw-bold'
+    if bdc.days_to_go < full_bar_days / 5:
+        ddl_classes += ' text-danger'
+    if bdc.days_to_go >= full_bar_days:
+        ddl_classes += ' text-success'
 
     pinned = bdc.stickies.filter(user=user).first()
-    # empties = ['-', '--', '_', '__', '---', '/', '?', ' ', '']
 
     context = {
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,
-        # 'empties'       : empties,
+        # 'empties'       : ['-', '--', '_', '__', '---', '/', '?', ' ', ''],
         'pinned'        : pinned,
         'featured'      : featured,
         'extra'         : extra,
+        'ddl_classes'   : ddl_classes,
         }
 
     logger = logging.getLogger('portal')

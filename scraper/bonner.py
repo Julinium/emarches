@@ -139,8 +139,7 @@ def get_bdc(card):
     if html:
 
         soup = BeautifulSoup(html, "lxml")
-        for br in soup.find_all("br"):
-            br.replace_with("\n")
+        for br in soup.find_all("br"): br.replace_with("\n")
             
         box = soup.select_one("div.py-3.content__subBox.devisAccordionStyle")
 
@@ -349,6 +348,8 @@ def save_results(published_since_days=1):
             break
 
         soup = BeautifulSoup(html, "lxml")
+        for br in soup.find_all("br"): br.replace_with("\n")
+
         container = soup.select_one("div.mt-4.py-3.content__subBox")
 
         if not container:
@@ -458,6 +459,8 @@ def save_bdcs(published_since_days=1):
             break
 
         soup = BeautifulSoup(html, "lxml")
+        for br in soup.find_all("br"): br.replace_with("\n")
+            
         container = soup.select_one("div.mt-4.py-3.content__subBox")
 
         if not container:
@@ -472,7 +475,7 @@ def save_bdcs(published_since_days=1):
             print('Items count exception: \n', xc)
             items_count = 0
 
-        printMessage('INFO', 'b.save_results', f"Found PO items count: { items_count }")
+        printMessage('INFO', 'b.save_results', f"Found POs count: { items_count }")
 
         cards = container.select(".entreprise__card")
         i = 0
