@@ -1,0 +1,39 @@
+{% load i18n %}
+
+<div class="list-group my-3 shadow-sm">
+    {% for article in bdc.articles.all %}
+    <div class="list-group-item list-group-item-action">
+        <div class="">
+            <span class="me-1 text-muted">#{{ article.number }}.</span>
+            <span class="fw-bold">{{ article.title }}</span>
+            <span class="ms-1 badge bg-secondary">{{ article.quantity|floatformat:"-0" }} x {{ article.uom }}</span>
+            <span class="ms-1 badge text-bg-warning">{% trans "VAT" %}={{ article.vat_percent|floatformat:"-0" }}%</span>
+        </div>
+        {% if article.specifications %}
+            <div class="d-flex small text-muted ms-2 mt-2">
+                <div class="">
+                    <i class="{{ bicons.specs }}"></i>
+                </div>
+                <div class="w-100 ms-2">
+                    <span class="">{{ article.specifications }} </span>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if article.warranties %}
+            <div class="d-flex small text-muted ms-2 mt-2">
+                <div class="">
+                    <i class="{{ bicons.warranties }}"></i>
+                </div>
+                <div class="w-100 ms-2">
+                    <span class="">{{ article.warranties }} </span>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% empty %}
+        <div class="list-group-item text-danger small">{% trans "No items found" %}</div>
+    {% endfor %}
+</div>
+
+

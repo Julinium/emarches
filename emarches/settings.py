@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django_cleanup',
     'debug_toolbar',
 
+    # 'easy_pdf',
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',

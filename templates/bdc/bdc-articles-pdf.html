@@ -1,0 +1,85 @@
+
+{% load static %}
+{% load i18n static humanize tz %}
+{% get_current_language_bidi as LB %}
+
+<!DOCTYPE html>
+<html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
+	<head>
+		{% include 'base/includes/head.html' %}
+        <title>{{ title|default:"PDF" }}</title>
+        <style>
+            @page {
+                size: A4;
+                margin: 20mm 15mm;
+                @bottom-center {
+                    content: "{{ crm }}  |   Page : " counter(page) "/" counter(pages);
+                    font-size: 10pt;
+                    color: #666;
+                }
+            }
+            body {
+                font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
+                line-height: 1.5;
+            }
+            /* .modal-content { box-shadow: none; border: 1px solid #ddd; } */
+        </style>
+	</head>
+	<body>
+
+        <div class="text-center">
+            <div>
+                <span class="h1">{% trans "Purchase Order" %}</span>
+            </div>
+        </div>
+
+        {% if bdc %}
+            <div class="my-3" id="bdc-details">
+
+                <div class="row gx-4 gy-0">
+                    
+                    {% trans 'Object' as key_value %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-title' val_value=bdc.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
+
+                    {% trans 'Reference' as key_value %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-reference' val_value=bdc.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
+
+                    {% trans 'Execution Location' as key_value %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-location' val_value=bdc.location key_value=key_value uni_value='' ico_class=bicons.location val_class='fw-bold' border='bottom' liner='oneline' %}
+
+                    {% if bdc.nature %}
+                        {% trans 'Nature of service' as key_value %}
+                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-nature' val_value=bdc.nature key_value=key_value uni_value='' ico_class=bicons.nature full_width='yes' val_class='' border='bottom' liner='twolines' %}
+                    {% endif %}
+
+                </div>
+
+                <div class="col-12">
+                    <div class="d-flex mt-3">
+                        <div>
+                            <i class="{{ bicons.articles}}"></i>
+                        </div>
+                        <div class="ms-2 w-100">                    
+                            <span class="text-muted small fw-light">
+                                {% trans "Items" %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                {% if bdc.articles.all %}
+                    {% include 'bdc/snippets/articles/articles-details-list.html' %}
+                {% endif %}
+
+            </div>
+        {% else %}
+            <div class="my-3" id="bdc-error">
+                <div class="row gx-4 gy-0 text-danger">
+                    {% trans "Error: Purchase Order or items not found." %}:
+                </div>
+            </div>
+        {% endif %}
+
+	</body>
+</html>
+
