@@ -345,20 +345,21 @@ def bdc_details(request, pk=None):
     us = pro_context['user_settings']
     full_bar_days = int(us.p_orders_full_bar_days) if us.p_orders_full_bar_days else BDC_FULL_PROGRESS_DAYS
     first_articles = int(us.p_orders_first_articles) if us.p_orders_first_articles else BDC_FIRST_ARTICLES
-    
 
     # all_articles = bdc.articles
-    f_articles = bdc.articles[:first_articles] if bdc.articles.count() > first_articles else None
-    
-    pinned = bdc.stickies.filter(user=user).first()
-    empties = ['-', '---', '/', '?', ' ', '']
+    featured = bdc.articles.all()[:first_articles] #if 
+    extra = bdc.articles.count() - first_articles
 
-    context = { 
+    pinned = bdc.stickies.filter(user=user).first()
+    # empties = ['-', '--', '_', '__', '---', '/', '?', ' ', '']
+
+    context = {
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,
-        'empties'       : empties,
+        # 'empties'       : empties,
         'pinned'        : pinned,
-        'f_articles'    : f_articles,
+        'featured'      : featured,
+        'extra'         : extra,
         }
 
     logger = logging.getLogger('portal')

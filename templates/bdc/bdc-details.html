@@ -84,56 +84,68 @@
                 {% trans 'Morocco time' as unit %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-deadline' val_value=bdc.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' %}
             {% endtimezone %}
-
+            
             {% trans 'Time to Deadline' as key_value %}
             {% trans 'days' as unit %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold' border='bottom' liner='oneline' %}
-            
+            {% if bdc.days_to_go < 1 %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold text-danger' border='bottom' liner='oneline' %}
+            {% else %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='fw-bold' border='bottom' liner='oneline' %}
+            {% endif %}
         </div>
 
 
-        <div class="row gx-4 gy-0">
-
+        <div class="col-12">
+            <div class="d-flex mt-3">
+                <div>
+                    <i class="{{ bicons.articles}}"></i>
+                </div>
+                <div class="ms-2 w-100">                    
+                    <span class="text-muted small fw-light">
+                        {% trans "Items" %}
+                    </span>
+                </div>
+            </div>
         </div>
 
+        <div id="articles-digest" class="list-group mb-3 shadow-sm">
 
-        <div class="list-group my-3 shadow-sm">
-            {% for article in bdc.articles.all %}
+            {% for article in featured %}
             <div class="list-group-item list-group-item-action">
-                <div class="">
-                    <span class="me-1 text-muted">#{{ article.number }}.</span>
+                <div class="oneline">
+                    <span class="ms-1 text-muted">{{ article.rank }}.</span>
                     <span class="fw-bold">{{ article.title }}</span>
                     <span class="ms-1 badge bg-secondary">{{ article.quantity }} x {{ article.uom }}</span>
                 </div> 
-                {% if article.specifications %}
-                    {% if article.specifications != article.title and article.specifications not in empties %}
-                        <div class="d-flex small text-muted ms-2 mt-2">
-                            <div class="">
-                                <i class="{{ bicons.specs }}"></i>
-                            </div>
-                            <div class="w-100 ms-2">
-                                <span class="">{{ article.specifications }}  </span>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
-
-                {% if article.warranties %}
-                    {% if article.warranties != article.title and article.warranties not in empties %}
-                        <div class="d-flex small text-muted ms-2 mt-2">
-                            <div class="">
-                                <i class="{{ bicons.warranties }}"></i>
-                            </div>
-                            <div class="w-100 ms-2">
-                                <span class="">{{ article.warranties }}  </span>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endif %}
             </div>
             {% empty %}
-                <div class="list-group-item text-danger small">{% trans "No articles found" %}</div>
+                <div class="list-group-item text-danger small">{% trans "No items found" %}</div>
             {% endfor %}
+            {% if extra > 0 %}
+                <div class="list-group-item text-muted small text-center">
+                    <span class="">+{{ extra }} {% trans "more" %} ...</span>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if bdc.articles.all %}
+            <div id="articles-details" class="text-center">
+                <button type="button" class="mb-1 btn btn-outline-secondary" 
+                        data-bs-toggle="modal" data-bs-target="#b{{ bdc.chrono }}m">
+                    <span><i class="{{ bicons.articles }}"></i></span>
+                    <span class="fw-bold">{{ bdc.articles.all|length }}</span>
+                    <span class="ms-1">{% trans "Items details" %}</span>
+                </button>
+                <span class="text-start">
+                    {% include 'bdc/snippets/articles/articles-details.html' %}
+                </span>
+            </div>
+        {% endif %}
+
+        <div id="results" class="row gx-4 gy-0">
+            <div class="my-4">
+                Results: Under construction
+            </div>
         </div>
 
     </div>

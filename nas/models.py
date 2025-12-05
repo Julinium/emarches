@@ -11,7 +11,10 @@ from base.models import Agrement, Tender, Qualif, Change
 from bdc.models import PurchaseOrder
 from .imaging import squarify_image
 from .iceberg import get_ice_checkup
-from .choices import ItemsPerPage, OrderingField, PurchaseOrderOrderingField, PurchaseOrderFullBarDays, FullBarDays
+from .choices import (
+    ItemsPerPage, OrderingField, PurchaseOrderOrderingField, 
+    PurchaseOrderFullBarDays, FullBarDays, FirstArticles
+    )
 
 class Profile(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -458,7 +461,7 @@ class UserSetting(models.Model):
     p_orders_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Items per page'))
     p_orders_full_bar_days  = models.CharField(max_length=16, choices=PurchaseOrderFullBarDays.choices, default=PurchaseOrderFullBarDays.FBD_015, verbose_name=_('Full progress bar days'))
     p_orders_show_expired   = models.BooleanField(default=True, verbose_name=_("Show today's expired items"))
-    p_orders_first_articles = models.CharField(max_length=16, choices=FirstArticles.choices, default=FirstArticles.ATS_010, verbose_name=_('First articles to show'))
+    p_orders_first_articles = models.CharField(max_length=16, choices=FirstArticles.choices, default=FirstArticles.ATS_005, verbose_name=_('First articles to show'))
 
     general_wrap_long_text = models.BooleanField(default=False, verbose_name=_("Do not wrap long text"))
     general_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_020, verbose_name=_('List items per page'))
