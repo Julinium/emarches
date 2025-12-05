@@ -76,6 +76,17 @@ def main():
     else:
         saving_errors = True
         helper.printMessage('ERROR', 'worker', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
+    
+    def handle_bdcs():
+        print('\n\n======================================================')
+        helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
+        bonner.save_bdcs(30)
+        bonner.save_results()
+        print('\n======================================================\n')
+    
+    if not C.IMPORT_LINKS:
+        handle_bdcs()
+
 
     helper.printMessage('===', 'worker', f"◀◀◀ Saving data finished.", 1)
 
@@ -130,16 +141,6 @@ def main():
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
     
-    
-    def handle_bdcs():
-        print('\n\n\n\n======================================================')
-        helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
-        bonner.save_bdcs(30)
-        bonner.save_results()
-        print('\n\n======================================================\n\n')
-    
-    handle_bdcs()
-
 
 if __name__ == '__main__':
     main()

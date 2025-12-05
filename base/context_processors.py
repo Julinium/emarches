@@ -145,6 +145,7 @@ def portal_context(request):
         'nature'          : 'bi bi-tags',
 
         'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
+        'ongoing'         : 'bi bi-calendar2-check',
 
         # 'Fournitures'     : 'bi bi-box-seam',
         # 'Travaux'         : 'bi bi-cone-striped',
