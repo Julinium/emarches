@@ -7,78 +7,244 @@
 <html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
 	<head>
 		{% include 'base/includes/head.html' %}
-        <title>{{ title|default:"PDF" }}</title>
+
+        <title> eMarches.com : {{ bdc.title }}</title>
+
+        <meta name="dcterms.created" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
+        <meta name="dcterms.modified" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
+        <meta name="generator" content="eMarches.com">
         <style>
+
+            @font-face {
+                font-family: "Naskh";
+                src: url("{% static 'fonts/NotoNaskhArabic-VariableFont_wght.ttf' %}") format("ttf");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            @font-face {
+                font-family: "Ubuntu";
+                src: url("{% static 'fonts/Ubuntu-Medium.ttf' %}") format("ttf");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            body {
+                font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                unicode-bidi: plaintext;
+                line-height: 1.5;
+            }
+
             @page {
                 size: A4;
-                margin: 20mm 15mm;
+                margin: 0;
+
+                margin-top: 20mm;
+                margin-bottom: 30mm;
+                margin-left: 15mm;
+                margin-right: 15mm;
+
                 @bottom-center {
                     content: "{{ crm }}  |   Page : " counter(page) "/" counter(pages);
                     font-size: 10pt;
                     color: #666;
                 }
+
+                @top-center {
+                    content: element(header);
+                    vertical-align: bottom;
+                    padding-bottom: 2mm;
+                }
+
+                background: 
+                    url("{% static 'brand/insi-wm.svg' %}")
+                    center center / 20mm auto;
+                    background-repeat: repeat;
             }
-            body {
-                font-family: "DejaVu Sans", "Liberation Sans", Arial, sans-serif;
-                line-height: 1.5;
+
+            #header-svg {
+                position: running(header);
+                text-align: center;
+                width: 100%;
+                top: 0;
+                left: 0;
             }
-            /* .modal-content { box-shadow: none; border: 1px solid #ddd; } */
+
+            /* To hide it on the HTML page when viewed in browser */
+            /* @media screen {
+                #header-svg { display: none; }
+            } */
+
+            body, div, table, p, .list-group, .list-group-item {
+                background-color: transparent;
+            }
+
         </style>
 	</head>
+
 	<body>
 
-        <div class="text-center">
-            <div>
-                <span class="h1">{% trans "Purchase Order" %}</span>
-            </div>
+        <div class="text-center border border-2 rounded bg-white">
+            <h2 class="mt-0 pt-2">
+                <span class="fw-bold">{% trans "Purchase Order Items" %}</span>
+            </h2>            
         </div>
 
         {% if bdc %}
-            <div class="my-3" id="bdc-details">
+            <div class="mb-3" id="bdc-details">
+                <div id="header-svg">
+                    <img src="{% static 'brand/insi-brand.svg' %}"
+                        class="img-fluid" alt="eMarches.com"
+                        style="height: 8mm; width: auto;">
+                </div>
 
-                <div class="row gx-4 gy-0">
-                    
-                    {% trans 'Object' as key_value %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-title' val_value=bdc.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
+                <div class="row gx-2 gy-0">
 
-                    {% trans 'Reference' as key_value %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-reference' val_value=bdc.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
+                    <div class="col-12">
+                        <div class="d-flex my-3">
+                            <div>
+                                <i class="bi bi-card-heading"></i>
+                            </div>
+                            <div class="ms-2 w-100 border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Object" %}
+                                </div>
+                                <div class="">
+                                    <span class="fw-bold">{{ bdc.title }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    {% trans 'Execution Location' as key_value %}
-                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-location' val_value=bdc.location key_value=key_value uni_value='' ico_class=bicons.location val_class='fw-bold' border='bottom' liner='oneline' %}
+                    <div class="col-6">
+                        <div class="d-flex my-3">
+                            <div>
+                                <i class="bi bi-tag"></i>
+                            </div>
+                            <div class="ms-2 w-100 border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Reference" %}
+                                </div>
+                                <div class="">
+                                    <span class="fw-bold">{{ bdc.reference }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    {% if bdc.nature %}
-                        {% trans 'Nature of service' as key_value %}
-                        {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-nature' val_value=bdc.nature key_value=key_value uni_value='' ico_class=bicons.nature full_width='yes' val_class='' border='bottom' liner='twolines' %}
-                    {% endif %}
+                    <div class="col-6">
+                        <div class="d-flex my-3">
+                            <div>
+                                <i class="bi bi-pin-map"></i>
+                            </div>
+                            <div class="ms-2 w-100 border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Execution Location" %}
+                                </div>
+                                <div class="">
+                                    <span class="fw-bold">{{ bdc.location }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
                 <div class="col-12">
                     <div class="d-flex mt-3">
                         <div>
-                            <i class="{{ bicons.articles}}"></i>
+                            <i class="bi bi-list-check"></i>
                         </div>
-                        <div class="ms-2 w-100">                    
+                        <div class="ms-2 mb-2 w-100">                    
                             <span class="text-muted small fw-light">
-                                {% trans "Items" %}
+                                {% trans "Items details" %}
                             </span>
                         </div>
                     </div>
                 </div>
 
                 {% if bdc.articles.all %}
-                    {% include 'bdc/snippets/articles/articles-details-list.html' %}
+                    {% for article in bdc.articles.all %}
+                        <div class="list-group mb-3">
+                            <div class="list-group-item">
+                                <div class="">
+                                    <span class="me-3">
+                                        <span class="small text-muted">{% trans "Item number" %}:</span>
+                                        <span class="">{{ article.number }}</span>
+                                    </span>
+                                    <span class="me-3">
+                                        <span class="small text-muted">{% trans "Quantity" %}:</span>
+                                        <span class="fw-bold">{{ article.quantity|floatformat:"-0" }}</span>
+                                        {% if article.uom %}
+                                            <span class="small text-muted">x</span>
+                                            <span class="fw-bold">{{ article.uom }}</span>
+                                        {% endif %}
+                                    </span>
+                                    <span class="me-3">
+                                        <span class="small text-muted">{% trans "VAT" %}:</span>
+                                        <span class="">{{ article.vat_percent|floatformat:"-0" }}%</span>
+                                    </span>
+                                </div>
+
+                                <div class="mt-2">
+                                    <span class="fw-bold">{{ article.title }}</span>
+                                </div>
+
+                                <div class="d-flex text-muted ms-2 mt-2">
+                                    <div class="">
+                                        <i class="bi bi-card-list"></i>
+                                    </div>
+                                    <div class="w-100 ms-2">
+                                        <span class="small me-1">{% trans "Specifications" %}:</span>
+                                        <span class="">{{ article.specifications|default:'?' }} </span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex text-muted ms-2 mt-2">
+                                    <div class="">
+                                        <i class="bi bi-exclamation-diamond"></i>
+                                    </div>
+                                    <div class="w-100 ms-2">
+                                        <span class="small me-1">{% trans "Warranties" %}:</span>
+                                        <span class="">{{ article.warranties|default:'?' }} </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-danger small">{% trans "No items found" %}</div>
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="my-3" id="bdc-error">
+                        <div class="row gx-4 gy-0 text-danger">
+                            {% trans "Items not found." %}
+                        </div>
+                    </div>
+
                 {% endif %}
 
             </div>
         {% else %}
             <div class="my-3" id="bdc-error">
                 <div class="row gx-4 gy-0 text-danger">
-                    {% trans "Error: Purchase Order or items not found." %}:
+                    {% trans "Error: Purchase Order not found." %}
                 </div>
             </div>
         {% endif %}
+
+        <div class="text-center mt-3">
+            <div class="img-fluid">
+                <img src="{{ qr_code }}"
+                    class="img-fluid" alt="QR Code"
+                    style="height: 40mm; width: auto;">
+            </div>
+            <div class="small mt-0 text-muted">{% trans "Scan for details" %}</div>
+        </div>
 
 	</body>
 </html>

@@ -156,9 +156,10 @@
             {% for article in featured %}
             <div class="list-group-item list-group-item-action">
                 <div class="oneline">
-                    <span class="ms-1 text-muted">{{ article.rank }}.</span>
-                    <span class="fw-bold">{{ article.title }}</span>
-                    <span class="ms-1 badge bg-secondary">{{ article.quantity|floatformat:"-0" }} x {{ article.uom }}</span>
+                    <span class="me-1 text-muted">{{ article.rank }}.</span>
+                    <span class="me-1 fw-bold">{{ article.title }}</span>
+                    <span class="me-1 badge bg-secondary">{{ article.quantity|floatformat:"-0" }} x {{ article.uom }}</span>
+                    <span class="me-1 badge bg-warning">{{ article.vat_percent|floatformat:"-0" }}%</span>
                 </div> 
             </div>
             {% empty %}

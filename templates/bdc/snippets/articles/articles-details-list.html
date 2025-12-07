@@ -3,33 +3,50 @@
 <div class="list-group my-3 shadow-sm">
     {% for article in bdc.articles.all %}
     <div class="list-group-item list-group-item-action">
-        <div class="">
-            <span class="me-1 text-muted">#{{ article.number }}.</span>
-            <span class="fw-bold">{{ article.title }}</span>
-            <span class="ms-1 badge bg-secondary">{{ article.quantity|floatformat:"-0" }} x {{ article.uom }}</span>
-            <span class="ms-1 badge text-bg-warning">{% trans "VAT" %}={{ article.vat_percent|floatformat:"-0" }}%</span>
-        </div>
-        {% if article.specifications %}
-            <div class="d-flex small text-muted ms-2 mt-2">
-                <div class="">
-                    <i class="{{ bicons.specs }}"></i>
-                </div>
-                <div class="w-100 ms-2">
-                    <span class="">{{ article.specifications }} </span>
-                </div>
-            </div>
-        {% endif %}
 
-        {% if article.warranties %}
-            <div class="d-flex small text-muted ms-2 mt-2">
-                <div class="">
-                    <i class="{{ bicons.warranties }}"></i>
-                </div>
-                <div class="w-100 ms-2">
-                    <span class="">{{ article.warranties }} </span>
-                </div>
+        <div class="mt-2">
+            <span class="me-3">
+                <span class="small text-muted">{% trans "Item number" %}:</span>
+                <span class="">{{ article.number }}</span>
+            </span>
+            <span class="me-3">
+                <span class="small text-muted">{% trans "Quantity" %}:</span>
+                <span class="fw-bold">{{ article.quantity|floatformat:"-0" }}</span>
+                {% if article.uom %}
+                    <span class="small text-muted">x</span>
+                    <span class="fw-bold">{{ article.uom }}</span>
+                {% endif %}
+            </span>
+            <span class="me-3">
+                <span class="small text-muted">{% trans "VAT" %}:</span>
+                <span class="">{{ article.vat_percent|floatformat:"-0" }}%</span>
+            </span>
+        </div>
+
+        <div class="mt-2">
+            <span class="fw-bold">{{ article.title }}</span>
+        </div>
+
+        <div class="d-flex text-muted ms-2 mt-2">
+            <div class="">
+                <i class="bi bi-card-list"></i>
             </div>
-        {% endif %}
+            <div class="w-100 ms-2">
+                <span class="small me-1">{% trans "Specifications" %}:</span>
+                <span class="">{{ article.specifications|default:'?' }} </span>
+            </div>
+        </div>
+
+        <div class="d-flex text-muted ms-2 mt-2 mb-2">
+            <div class="">
+                <i class="bi bi-exclamation-diamond"></i>
+            </div>
+            <div class="w-100 ms-2">
+                <span class="small me-1">{% trans "Warranties" %}:</span>
+                <span class="">{{ article.warranties|default:'?' }} </span>
+            </div>
+        </div>
+
     </div>
     {% empty %}
         <div class="list-group-item text-danger small">{% trans "No items found" %}</div>
