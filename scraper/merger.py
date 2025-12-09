@@ -110,10 +110,10 @@ def save(tender_data):
     changed_fields = []
 
     # Step x: Handle foreign key relationships (category, client, kind, mode, procedure)
-    category_data = formatted_data['category']
-    client_data = formatted_data['client']
-    kind_data = formatted_data['kind']
-    mode_data = formatted_data['mode']
+    category_data  = formatted_data['category']
+    client_data    = formatted_data['client']
+    kind_data      = formatted_data['kind']
+    mode_data      = formatted_data['mode']
     procedure_data = formatted_data['procedure']
 
     ## Handle Category

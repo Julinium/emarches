@@ -80,11 +80,12 @@ def main():
     def handle_bdcs():
         print('\n\n======================================================')
         helper.printMessage('===', 'worker', f"▶▶▶▶▶ Now, let's do some Purchase orders ◀◀◀◀◀", 1, 1)
-        bonner.save_bdcs(30)
+        bonner.save_bdcs()
         bonner.save_results()
         print('\n======================================================\n')
     
-    if not C.IMPORT_LINKS:
+    # if not C.IMPORT_LINKS:
+    if al == 'Crawl':
         handle_bdcs()
 
 
@@ -108,7 +109,7 @@ def main():
                 helper.printMessage('INFO', 'worker', f"◀◀ DCE download for { d.chrono } was successfull.")
             else:
                 files_failed += 1
-                helper.printMessage('WARN', 'worker', f"⬢⬢ Something went wrong whith DCE download for { d.chrono }.")
+                helper.printMessage('WARN', 'worker', f"⬢⬢⬢⬢⬢ Something went wrong whith DCE download for { d.chrono }.")
 
             hceed = files_downloaded + files_failed
             if hceed > 0:

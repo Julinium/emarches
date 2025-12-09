@@ -1,4 +1,4 @@
-import os, logging, json, random
+import os, logging, json, random, csv
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
@@ -24,7 +24,6 @@ from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse, FileResponse, JsonResponse
 
-from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils import timezone
 from weasyprint import HTML
@@ -387,7 +386,7 @@ def bdc_details(request, pk=None):
 
 
 @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_items_pdf(request, pk=None):
 
     user = request.user
@@ -426,6 +425,41 @@ def bdc_items_pdf(request, pk=None):
     pdf_file_name = f'eMarches.com-{ bdc.chrono }.pdf'
     response = HttpResponse(pdf_bytes, content_type="application/pdf")
     response["Content-Disposition"] = f'attachment; filename="{ pdf_file_name }"'
+    return response
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_items_csv(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+    
+    bdc = get_object_or_404(PurchaseOrder.objects.prefetch_related('articles'), id=pk)
+    
+    csv_file_name = f'eMarches.com-{ bdc.chrono }.csv'
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="{ csv_file_name }"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        trans('Number'), trans('Title'), trans('UOM'), 
+        trans('Quantity'), trans('VAT') + '%', 
+        trans('Specifications'), trans('Warranties')
+        ])
+
+    for item in bdc.articles.all():
+        writer.writerow([
+            item.number,
+            item.title,
+            item.uom,
+            item.quantity,
+            item.vat_percent,
+            item.specifications,
+            item.warranties,
+        ])
+
     return response
 
 

@@ -65,6 +65,7 @@ def getEmpties(past_days=C.CLEAN_DCE_AFTER_DAYS, batch_size=1000):
     return current_tenders.filter(id__in=tenders_without_files)
     helper.printMessage("DEBUG", 'd.getEmpties', f"Found {current_tenders.count()} items ...")
 
+
 def is_empty_or_nonexistent(folder_path):
     """
     Check if a folder_path is empty or does not exist.
@@ -92,6 +93,7 @@ def getDCE(tender):
         if type == 'file':  return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={chrono}&orgAcronym={acro}'
                                  # f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadReglement&reference=OTQ1Mzcx&orgAcronyme={acro}'
         return None 
+
 
     def get_filename(cd):
         if not cd: return None
@@ -273,3 +275,5 @@ def getDCE(tender):
         return 1
 
     return 0
+
+

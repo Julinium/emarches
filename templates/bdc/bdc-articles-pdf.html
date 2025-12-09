@@ -13,15 +13,8 @@
         <meta name="dcterms.created" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="dcterms.modified" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="generator" content="eMarches.com">
-        <style>
 
-            @font-face {
-                font-family: "Naskh";
-                src: url("{% static 'fonts/NotoNaskhArabic-VariableFont_wght.ttf' %}") format("ttf");
-                font-weight: 400;
-                font-style: normal;
-                font-display: swap;
-            }
+        <style>
 
             @font-face {
                 font-family: "Ubuntu";
@@ -31,8 +24,16 @@
                 font-display: swap;
             }
 
+            @font-face {
+                font-family: "Naskh";
+                src: url("{% static 'fonts/NotoNaskhArabic-VariableFont_wght.ttf' %}") format("ttf");
+                font-weight: 400;
+                font-style: normal;
+                font-display: swap;
+            }
+
             body {
-                font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                font-family: "Ubuntu", sans-serif, serif, "Naskh";
                 unicode-bidi: plaintext;
                 line-height: 1.5;
             }
@@ -58,10 +59,8 @@
                     padding-bottom: 2mm;
                 }
 
-                background: 
-                    url("{% static 'brand/insi-wm.svg' %}")
-                    center center / 20mm auto;
-                    background-repeat: repeat;
+                background: url("{% static 'brand/insi-wm.svg' %}") center center / 20mm auto;
+                background-repeat: repeat;
             }
 
             #header-svg {
@@ -78,6 +77,7 @@
             } */
 
             body, div, table, p, .list-group, .list-group-item {
+                font-family: "Ubuntu", "Naskh", sans-serif, serif;
                 background-color: transparent;
             }
 
@@ -108,44 +108,60 @@
                                 <i class="bi bi-card-heading"></i>
                             </div>
                             <div class="ms-2 w-100 border-0 border-bottom">
-                                <div class="text-muted small fw-light">
-                                    {% trans "Object" %}
-                                </div>
-                                <div class="">
+                                <span class="text-muted small fw-light me-2">
+                                    {% trans "Object" %}:
+                                </span>
+                                <span class="">
                                     <span class="fw-bold">{{ bdc.title }}</span>
-                                </div>
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-6">
-                        <div class="d-flex my-3">
+                    <!-- <div class="col-12">
+                        <div class="d-flex mb-3">
                             <div>
                                 <i class="bi bi-tag"></i>
                             </div>
                             <div class="ms-2 w-100 border-0 border-bottom">
-                                <div class="text-muted small fw-light">
-                                    {% trans "Reference" %}
-                                </div>
-                                <div class="">
+                                <span class="text-muted small fw-light me-2">
+                                    {% trans "Reference" %}:
+                                </span>
+                                <span class="">
                                     <span class="fw-bold">{{ bdc.reference }}</span>
-                                </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div class="col-12">
+                        <div class="d-flex mb-3">
+                            <div>
+                                <i class="bi bi-briefcase"></i>
+                            </div>
+                            <div class="ms-2 w-100 border-0 border-bottom">
+                                <span class="text-muted small fw-light me-2">
+                                    {% trans "Public Client" %}:
+                                </span>
+                                <span class="">
+                                    <span class="fw-bold">{{ bdc.client }}</span>
+                                </span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-6">
-                        <div class="d-flex my-3">
+                    <div class="col-12">
+                        <div class="d-flex mb-3">
                             <div>
                                 <i class="bi bi-pin-map"></i>
                             </div>
                             <div class="ms-2 w-100 border-0 border-bottom">
-                                <div class="text-muted small fw-light">
-                                    {% trans "Execution Location" %}
-                                </div>
-                                <div class="">
+                                <span class="text-muted small fw-light me-2">
+                                    {% trans "Execution Location" %}:
+                                </span>
+                                <span class="">
                                     <span class="fw-bold">{{ bdc.location }}</span>
-                                </div>
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -192,25 +208,29 @@
                                     <span class="fw-bold">{{ article.title }}</span>
                                 </div>
 
-                                <div class="d-flex text-muted ms-2 mt-2">
-                                    <div class="">
-                                        <i class="bi bi-card-list"></i>
+                                {% if article.specifications %}
+                                    <div class="d-flex text-muted ms-2 mt-2">
+                                        <div class="">
+                                            <i class="bi bi-card-list"></i>
+                                        </div>
+                                        <div class="w-100 ms-2">
+                                            <span class="small me-1">{% trans "Specifications" %}:</span>
+                                            <span class="">{{ article.specifications|default:'?' }} </span>
+                                        </div>
                                     </div>
-                                    <div class="w-100 ms-2">
-                                        <span class="small me-1">{% trans "Specifications" %}:</span>
-                                        <span class="">{{ article.specifications|default:'?' }} </span>
+                                {% endif %}
+                                
+                                {% if article.warranties %}
+                                    <div class="d-flex text-muted ms-2 mt-2">
+                                        <div class="">
+                                            <i class="bi bi-exclamation-diamond"></i>
+                                        </div>
+                                        <div class="w-100 ms-2">
+                                            <span class="small me-1">{% trans "Warranties" %}:</span>
+                                            <span class="">{{ article.warranties|default:'?' }} </span>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="d-flex text-muted ms-2 mt-2">
-                                    <div class="">
-                                        <i class="bi bi-exclamation-diamond"></i>
-                                    </div>
-                                    <div class="w-100 ms-2">
-                                        <span class="small me-1">{% trans "Warranties" %}:</span>
-                                        <span class="">{{ article.warranties|default:'?' }} </span>
-                                    </div>
-                                </div>
+                                {% endif %}
 
                             </div>
                         </div>

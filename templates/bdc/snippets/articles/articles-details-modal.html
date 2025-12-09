@@ -13,8 +13,20 @@
         {% include "bdc/snippets/articles/articles-details-list.html" %}
     </div>
     <div class="modal-footer py-2">
-        <a href="{% url 'bdc_articles_pdf' bdc.id %}" class="btn btn-outline-primary" disabled>{% trans 'PDF' %}</a>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+        <a href="{% url 'bdc_articles_csv' bdc.id %}" 
+           class="btn btn-outline-primary">
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i>
+            {% trans 'Export' %}
+        </a>
+        <a href="{% url 'bdc_articles_pdf' bdc.id %}" 
+           class="btn btn-outline-primary">
+            <i class="bi bi-file-earmark-pdf me-1"></i>
+            {% trans 'Print' %}
+        </a>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-lg me-1"></i>
+            {% trans 'Close' %}
+        </button>
     </div>
     </div>
 </div>
