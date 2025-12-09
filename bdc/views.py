@@ -54,6 +54,7 @@ BDC_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = True
 
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
+empty_items = ['-', '--', '_', '__', '---', '/', '?', ' ', '.', '']
 
 
 @login_required(login_url="account_login")
@@ -369,14 +370,19 @@ def bdc_details(request, pk=None):
 
     pinned = bdc.stickies.filter(user=user).first()
 
+    show_export = 'yes'
+    show_print = 'yes'
+
     context = {
         'bdc'           : bdc,
-        'full_bar_days' : full_bar_days,
-        # 'empties'       : ['-', '--', '_', '__', '---', '/', '?', ' ', ''],
+        'full_bar_days' : full_bar_days,        
         'pinned'        : pinned,
         'featured'      : featured,
         'extra'         : extra,
         'ddl_classes'   : ddl_classes,
+        'show_export'   : show_export,
+        'show_print'    : show_print,
+        'empty_items'   : empty_items,
         }
 
     logger = logging.getLogger('portal')
@@ -411,6 +417,7 @@ def bdc_items_pdf(request, pk=None):
 
     context = {
         "bdc": bdc,
+        'empty_items'  : empty_items,
         "crm": crm + ' ' + 'eMarches.com',
         "qr_code": qr_data_uri,
     }

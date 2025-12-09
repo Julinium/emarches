@@ -154,6 +154,7 @@ def portal_context(request):
     }
 
     context['bicons']        = bicons
+    # context['empty_items']   = ['-', '--', '_', '__', '---', '/', '?', ' ', '.', '']
 
     context['categories'] = Category.objects.all().order_by('label')
 

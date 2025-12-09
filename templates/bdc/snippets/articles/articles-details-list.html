@@ -27,25 +27,39 @@
             <span class="fw-bold">{{ article.title }}</span>
         </div>
 
-        <div class="d-flex text-muted ms-2 mt-2">
-            <div class="">
-                <i class="bi bi-card-list"></i>
-            </div>
-            <div class="w-100 ms-2">
-                <span class="small me-1">{% trans "Specifications" %}:</span>
-                <span class="">{{ article.specifications|default:'?' }} </span>
-            </div>
-        </div>
-
-        <div class="d-flex text-muted ms-2 mt-2 mb-2">
-            <div class="">
-                <i class="bi bi-exclamation-diamond"></i>
-            </div>
-            <div class="w-100 ms-2">
-                <span class="small me-1">{% trans "Warranties" %}:</span>
-                <span class="">{{ article.warranties|default:'?' }} </span>
-            </div>
-        </div>
+        {% if article.specifications %}
+            {% if not article.specifications in empty_items %}
+                {% if article.specifications != article.title %}
+                    <div class="d-flex text-muted ms-2 mt-2">
+                        <div class="">
+                            <i class="bi bi-card-list"></i>
+                        </div>
+                        <div class="w-100 ms-2">
+                            <span class="small me-1">{% trans "Specifications" %}:</span>
+                            <span class="">{{ article.specifications|default:'?' }} </span>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        
+        {% if article.warranties %}
+            {% if not article.warranties in empty_items %}
+                {% if article.warranties != article.title %}
+                    {% if article.warranties != article.specifications %}
+                        <div class="d-flex text-muted ms-2 mt-2 mb-2">
+                            <div class="">
+                                <i class="bi bi-exclamation-diamond"></i>
+                            </div>
+                            <div class="w-100 ms-2">
+                                <span class="small me-1">{% trans "Warranties" %}:</span>
+                                <span class="">{{ article.warranties|default:'?' }} </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% endif %}
 
     </div>
     {% empty %}
