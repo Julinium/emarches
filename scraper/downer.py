@@ -62,8 +62,8 @@ def getEmpties(past_days=C.CLEAN_DCE_AFTER_DAYS, batch_size=1000):
             if is_empty_or_nonexistent(f"{C.MEDIA_ROOT}/dce/{C.DL_PATH_PREFIX}{chrono}"):
                 tenders_without_files.append(tender_id)
 
-    return current_tenders.filter(id__in=tenders_without_files)
     helper.printMessage("DEBUG", 'd.getEmpties', f"Found {current_tenders.count()} items ...")
+    return current_tenders.filter(id__in=tenders_without_files)
 
 
 def is_empty_or_nonexistent(folder_path):

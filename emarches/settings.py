@@ -17,7 +17,6 @@ DEBUG = ENVIRONMENT != 'production'
 
 DEBUG = True
 
-
 ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 
 
@@ -168,8 +167,7 @@ LANGUAGES = [
     ("es", _("Spanish")),
     ("de", _("German")),
     ]
-    
-# SESSION_LANGUAGE_KEY = 'django_language'
+
 
 LOCALE_PATHS = [BASE_DIR / "locale", ]
 USE_THOUSAND_SEPARATOR = True
@@ -275,8 +273,9 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
-
-
+CELERY_TASK_TIME_LIMIT = 20 * 60
+CELERY_TASK_SOFT_TIME_LIMIT = 18 * 60
+# -- CELERY THINGS --
 
 
 MESSAGE_TAGS = {
@@ -300,13 +299,6 @@ INTERNAL_IPS = [
 ]
 
 
-# MODELTRANSLATION_FALLBACK_LANGUAGES = ('fr', 'en')
-
-
-
-# from .loggino import LOGGING_CONFIG
-# import logging.config
-# logging.config.dictConfig(LOGGING_CONFIG)
 from .loggino import JsonFormatter
 LOGGING = {
     'version': 1,
@@ -355,8 +347,8 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        'portal': {  # Your app
-            'handlers': ['console', 'portal_file'],
+        'portal': {
+            'handlers': ['portal_file'],
             'level': 'INFO',
             'propagate': False,
         },
