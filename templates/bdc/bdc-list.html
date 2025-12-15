@@ -42,7 +42,7 @@
     </div>
     
     {% if page_obj %}
-        <!-- include 'bdc/snippets/bdcs/bdc-legend.html' -->
+        {% include 'bdc/snippets/bdcs/bdc-legend.html' %}
         {% include 'base/snippets/paginator.html' %}
     {% else %}
         {% include 'base/snippets/empty-list.html' %}

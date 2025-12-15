@@ -13,317 +13,187 @@
             </span>
         </div>
     {% endif %}
-    <div class="shadow-sm">
-        <div class="">
-            <button class="btn btn-outline-light py-1 text-start text-muted w-100 collapsed" 
-                    type="button"
-                    data-bs-toggle="collapse" data-bs-target="#collapseLegend" 
-                    aria-expanded="false" aria-controls="collapseLegend">
-                <span class=""><i class="bi bi-key"></i></span>
-                <span class="ms-1 small">{% translate "Legend" %} ...</span>
-            </button>
-        </div>
-        <div id="collapseLegend" class="collapse">
-            <div class="card-body pb-2 px-3">
 
-                <div class="d-flex-inline my-1 border-0 border-bottom">
-                    <div class="d-flex justify-content-between">
-                        <div class="text-muted small fw-light">
-                            {% trans 'Days to Deadline (%)' %}                            
+    <div class="accordion" id="accoLegend">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                        data-bs-target="#bdcLegendCollapse" aria-expanded="false" 
+                        aria-controls="bdcLegendCollapse">
+                    <span class=""><i class="bi bi-key"></i></span>
+                    <span class="ms-1 small">{% translate "Legend" %}</span>
+                </button>
+            </h2>
+            <div id="bdcLegendCollapse" class="accordion-collapse collapse" data-bs-parent="#accoLegend">
+                <div class="accordion-body">
+                    <div class="d-flex-inline my-1 border-0 border-bottom">
+                        <div class="d-flex justify-content-between">
+                            <div class="text-muted small fw-light">
+                                {% trans 'Days to Deadline (%)' %}                            
+                            </div>
+                            <div class="text-muted small fw-bold">
+                                100% = {{ full_bar_days }}+
+                            </div>
                         </div>
-                        <div class="text-muted small fw-bold">
-                            {{ full_bar_days }} {% trans 'days' %}                            
+                        <div class="progress bg-danger p-0 m-0 mb-2" style="height: 0.25rem;">
+                            <div class="progress-bar bg-success" 
+                                    role="progressbar" style="width: 35%;" 
+                                    aria-valuenow="35" aria-valuemin="0" 
+                                    aria-valuemax="100">
+                            </div>
                         </div>
                     </div>
-                    <div class="progress bg-danger p-0 m-0 mb-2" style="height: 0.25rem;">
-                        <div class="progress-bar bg-success" 
-                                role="progressbar" style="width: 35%;" 
-                                aria-valuenow="35" aria-valuemin="0" 
-                                aria-valuemax="100">
-                        </div>
-                    </div>
-                </div>
-                <div class="row gx-4 gy-0">
+                    <div class="row gx-4 gy-0">
 
-                    {% if query_dict.filters > 0 %}
+                        {% if query_dict.filters > 0 %}
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex-inline my-1 border-0 border-bottom">
+                                    <span class="small">
+                                        <i class="pe-1 {{ bicons.filters }}"></i>
+                                    </span>
+                                    <span class="text-muted small fw-light">
+                                        {% trans 'Results are filtered' %}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% for category in categories %}
+                            <div class="col-12 col-md-6">
+                                <div class="d-flex-inline my-1 border-0 border-bottom">
+                                    <span class="small">
+                                        <i class="pe-1 bi bi-{{ category.icon_bs_class}}"></i>
+                                    </span>
+                                    <span class="text-muted small fw-light">
+                                        {% trans 'Main category' %}: {{ category.label }}
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+
                         <div class="col-12 col-md-6">
                             <div class="d-flex-inline my-1 border-0 border-bottom">
-                                <span class="small">
-                                    <i class="pe-1 {{ bicons.filters }}"></i>
+                                <span class="small text-muted">
+                                    <i class="pe-1 {{ bicons.articles }}"></i>
                                 </span>
                                 <span class="text-muted small fw-light">
-                                    {% trans 'Results are filtered' %}
+                                    {% trans 'Number of items' %}
                                 </span>
                             </div>
                         </div>
-                    {% endif %}
 
-                    {% for category in categories %}
                         <div class="col-12 col-md-6">
                             <div class="d-flex-inline my-1 border-0 border-bottom">
-                                <span class="small">
-                                    <i class="pe-1 bi bi-{{ category.icon_bs_class}}"></i>
+                                <span class="small text-muted">
+                                    <i class="pe-1 {{ bicons.location }}"></i>
                                 </span>
                                 <span class="text-muted small fw-light">
-                                    {% trans 'Main category' %}: {{ category.label }}
+                                    {% trans 'Execution Location' %}
                                 </span>
                             </div>
                         </div>
-                    {% endfor %}
 
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.multi_lots }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Tender is allotted' %}
-                            </span>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small text-muted">
+                                    <i class="pe-1 {{ bicons.client }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Public Client' %}
+                                </span>
+                            </div>
                         </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.expired }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Item deadline expired' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.count }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Number of received bids' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.deliberated }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Item is Deliberated' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.winner }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Winner entity name' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.estimate }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Winner amount' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.unsuccessful }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Result is unsuccessful' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.expired }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Item deadline expired' %}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex-inline my-1 border-0 border-bottom">
+                                <span class="small">
+                                    <i class="pe-1 {{ bicons.deliberated }}"></i>
+                                </span>
+                                <span class="text-muted small fw-light">
+                                    {% trans 'Item is Deliberated' %}
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <!-- <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.deadline }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Bidding deadline' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.reference }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Tender reference' %}
-                            </span>
-                        </div>
-                    </div> -->
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.location }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Execution Location' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.client }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Public Client' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.restricted }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Procedure may be restricted' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.ebid_req }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Electronic bidding is required' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.ebid_opt }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Electronic bidding is optional' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.ebid_na }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Electronic bidding is not applicable' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.esign_req }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Electronic signature is required' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.esign_opt }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Electronic signature is optional' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.esign_na }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Electronic signature is not applicable' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.reserved }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Reserved to SMBs, individuals, Unions, ...' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.has_agrements }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Licenses required' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.has_qualifs }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Qualifications required' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.has_samples }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Samples required' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.has_visits }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'In-site visits scheduled' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.has_meetings }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Meetings scheduled' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small">
-                                <i class="pe-1 {{ bicons.variant }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Variants accepted' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.changes }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Tender Changes' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.favorites }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Tender Favorites' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.downloads }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Tender Downloads' %}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6">
-                        <div class="d-flex-inline my-1 border-0 border-bottom">
-                            <span class="small text-muted">
-                                <i class="pe-1 {{ bicons.comments }}"></i>
-                            </span>
-                            <span class="text-muted small fw-light">
-                                {% trans 'Tender Comments' %}
-                            </span>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

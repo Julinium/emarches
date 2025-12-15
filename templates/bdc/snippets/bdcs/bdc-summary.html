@@ -48,18 +48,20 @@
                 </div>
             </div>
 
-            <div class="progress bg-danger p-0 mx-0 mb-1" 
-                    style="height: 0.25rem;"
-                    data-bs-toggle="tooltip"
-                    title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }}">
-                {% with bdc.days_to_go|progrefy:full_bar_days as green %}
-                    <div class="progress-bar bg-success" 
-                            role="progressbar" style="width: {{ green }}%;" 
-                            aria-valuenow="{{ green }}" aria-valuemin="0" 
-                            aria-valuemax="100">
-                    </div>
-                {% endwith %}
-            </div>
+            {% timezone "Africa/Casablanca" %}
+                <div class="progress bg-danger p-0 mx-0 mb-1" 
+                        style="height: 0.25rem;"
+                        data-bs-toggle="tooltip"
+                        title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }} {% trans 'Morocco time' %}">
+                    {% with bdc.days_to_go|progrefy:full_bar_days as green %}
+                        <div class="progress-bar bg-success" 
+                                role="progressbar" style="width: {{ green }}%;" 
+                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                aria-valuemax="100">
+                        </div>
+                    {% endwith %}
+                </div>
+            {% endtimezone %}
 
             <div class="card-body px-3 py-2">
 

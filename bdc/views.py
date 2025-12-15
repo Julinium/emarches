@@ -38,7 +38,7 @@ from django.contrib.auth.models import User
 # from easy_pdf.views import PDFTemplateView
 
 from bdc.models import PurchaseOrder
-from base.models import Category, Client
+from base.models import Category, Client, Crawler
 from nas.models import Sticky
 from bdc.models import PurchaseOrder
 from base.texter import normalize_text
@@ -223,6 +223,10 @@ def bdc_list(request):
         context['full_bar_days']      = BDC_FULL_PROGRESS_DAYS
 
         return context
+         
+    last_crawler = Crawler.objects.filter(saving_errors=False, import_links=False).order_by('finished').last()
+    last_updated = last_crawler.finished if last_crawler else None
+    
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
@@ -261,7 +265,8 @@ def bdc_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
-    context['page_obj'] = page_obj
+    context['page_obj']     = page_obj
+    context['last_updated'] = last_updated
 
     logger = logging.getLogger('portal')
     logger.info(f"Purchase Orders List view")
