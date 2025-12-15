@@ -111,8 +111,10 @@ def portal_context(request):
         'shopping'        : 'bi bi-cart4',
         'simulator'       : 'bi bi-dpad',
 
-        'tenders'         : 'bi bi-rocket-takeoff',
-                            # megaphone
+        'tenders'         : 'bi bi-rocket', 
+                            # megaphone 
+                            # radioactive
+                            # shop-window
         'bdc'             : 'bi bi-basket',
                             # bar-chart-steps
                             # controller
