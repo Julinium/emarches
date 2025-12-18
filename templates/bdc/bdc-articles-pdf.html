@@ -54,11 +54,11 @@
                 }
 
                 @bottom-left {
-                    content: "{% now 'Y-m-d H:i:s' %}";
+                    content: "{% now 'Y-m-d—H:i:s' %}";
                     font-family: "Ubuntu", "Naskh", sans-serif, serif;
                     font-size: 9pt;
                     color: #666;
-                    padding-bottom: 2mm;
+                    padding-bottom: 7mm;
                 }
 
                 @bottom-right {
@@ -66,13 +66,13 @@
                     font-family: "Ubuntu", "Naskh", sans-serif, serif;
                     font-size: 10pt;
                     color: #666;
-                    padding-bottom: 2mm;
+                    padding-bottom: 7mm;
                 }
 
                 @bottom-center {
                     content: element(footer);
-                    vertical-align: top;
-                    padding-top: 2mm;
+                    vertical-align: bottom;
+                    padding-bottom: 13mm;
                 }
 
                 background: url("{% static 'brand/insi-wm.svg' %}") center center / 20mm auto;
@@ -90,7 +90,7 @@
             #footer-svg {
                 position: running(footer);
                 text-align: center;
-                width: 30mm;
+                height: 7mm;
                 bottom: 0;
                 left: 0;
             }
@@ -124,58 +124,74 @@
                             style="height: auto; width: auto;">
                 </div>
 
-                <div class="row gx-2 gy-0">
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1">
+                        
+                        <div class="row gx-2 gy-0">
 
-                    <div class="col-12">
-                        <div class="d-flex my-3">
-                            <div>
-                                <i class="bi bi-card-heading"></i>
-                            </div>
-                            <div class="ms-2 w-100 border-0 border-bottom">
-                                <span class="text-muted small fw-light me-2">
-                                    {% trans "Object" %}:
-                                </span>
-                                <span class="">
-                                    <span class="fw-bold">{{ bdc.title }}</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12">
-                        <div class="d-flex mb-3">
-                            <div>
-                                <i class="bi bi-briefcase"></i>
-                            </div>
-                            <div class="ms-2 w-100 border-0 border-bottom">
-                                <span class="text-muted small fw-light me-2">
-                                    {% trans "Public Client" %}:
-                                </span>
-                                <span class="">
-                                    <span class="fw-bold">{{ bdc.client }}</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    {% if bdc.location %}
-                        <div class="col-12">
-                            <div class="d-flex mb-3">
-                                <div>
-                                    <i class="bi bi-pin-map"></i>
-                                </div>
-                                <div class="ms-2 w-100 border-0 border-bottom">
-                                    <span class="text-muted small fw-light me-2">
-                                        {% trans "Execution Location" %}:
-                                    </span>
-                                    <span class="">
-                                        <span class="fw-bold">{{ bdc.location }}</span>
-                                    </span>
+                            <div class="col-12">
+                                <div class="d-flex my-3">
+                                    <div>
+                                        <i class="bi bi-card-heading"></i>
+                                    </div>
+                                    <div class="ms-2 w-100 border-0 border-bottom">
+                                        <span class="text-muted small fw-light me-2">
+                                            {% trans "Object" %}:
+                                        </span>
+                                        <span class="">
+                                            <span class="fw-bold">{{ bdc.title }}</span>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {% endif %}
 
+                            <div class="col-12">
+                                <div class="d-flex mb-3">
+                                    <div>
+                                        <i class="bi bi-briefcase"></i>
+                                    </div>
+                                    <div class="ms-2 w-100 border-0 border-bottom">
+                                        <span class="text-muted small fw-light me-2">
+                                            {% trans "Public Client" %}:
+                                        </span>
+                                        <span class="">
+                                            <span class="fw-bold">{{ bdc.client }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if bdc.location %}
+                                <div class="col-12">
+                                    <div class="d-flex mb-3">
+                                        <div>
+                                            <i class="bi bi-pin-map"></i>
+                                        </div>
+                                        <div class="ms-2 w-100 border-0 border-bottom">
+                                            <span class="text-muted small fw-light me-2">
+                                                {% trans "Execution Location" %}:
+                                            </span>
+                                            <span class="">
+                                                <span class="fw-bold">{{ bdc.location }}</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-end">
+                        <div class="">
+                            <img src="{{ qr_code }}"
+                                class="img-fluid" alt="QR Code"
+                                style="height: 30mm; width: 30mm;">
+                        </div>
+                    </div>
                 </div>
+
+
 
                 <div class="col-12">
                     <div class="d-flex mt-3">
@@ -190,27 +206,30 @@
                     </div>
                 </div>
 
+
                 {% if bdc.articles.all %}
                     {% for article in bdc.articles.all %}
                         <div class="list-group mb-3">
                             <div class="list-group-item">
-                                <div class="">
-                                    <span class="me-3">
-                                        <span class="small text-muted">{% trans "Item number" %}:</span>
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <span class="small text-muted">#:</span>
                                         <span class="">{{ article.number }}</span>
-                                    </span>
-                                    <span class="me-3">
-                                        <span class="small text-muted">{% trans "Quantity" %}:</span>
-                                        <span class="fw-bold">{{ article.quantity|floatformat:"-0" }}</span>
-                                        {% if article.uom %}
-                                            <span class="small text-muted">x</span>
-                                            <span class="fw-bold">{{ article.uom }}</span>
-                                        {% endif %}
-                                    </span>
-                                    <span class="me-3">
+                                    </div>
+                                    <div class="">
+                                        <span class="me-3">
+                                            <span class="small text-muted">{% trans "Quantity" %}:</span>
+                                            <span class="fw-bold">{{ article.quantity|floatformat:"-0" }}</span>
+                                            {% if article.uom %}
+                                                <span class="small text-muted">x</span>
+                                                <span class="fw-bold">{{ article.uom }}</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="">
                                         <span class="small text-muted">{% trans "VAT" %}:</span>
                                         <span class="">{{ article.vat_percent|floatformat:"-0" }}%</span>
-                                    </span>
+                                    </div>
                                 </div>
 
                                 <div class="mt-2">
@@ -220,11 +239,11 @@
                                 {% if article.specifications %}
                                     {% if not article.specifications in empty_items %}
                                         {% if article.specifications != article.title %}
-                                            <div class="d-flex text-muted fw-light ms-2 mt-2">
-                                                <div class="">
+                                            <div class="text-muted fw-light ms-2 mt-2">
+                                                <div class="float-start me-2">
                                                     <i class="bi bi-card-list"></i>
                                                 </div>
-                                                <div class="w-100 ms-2">
+                                                <div class="ms-4">
                                                     <span class="small me-1">{% trans "Specifications" %}:</span>
                                                     <span class="">{{ article.specifications|default:'?' }} </span>
                                                 </div>
@@ -237,11 +256,11 @@
                                     {% if not article.warranties in empty_items %}
                                         {% if article.warranties != article.title %}
                                             {% if article.warranties != article.specifications %}
-                                                <div class="d-flex text-muted fw-light ms-2 mt-2">
-                                                    <div class="">
+                                                <div class="text-muted fw-light ms-2 mt-2">
+                                                    <div class="float-start me-2">
                                                         <i class="bi bi-exclamation-diamond"></i>
                                                     </div>
-                                                    <div class="w-100 ms-2">
+                                                    <div class="ms-4">
                                                         <span class="small me-1">{% trans "Warranties" %}:</span>
                                                         <span class="">{{ article.warranties|default:'?' }} </span>
                                                     </div>
@@ -253,6 +272,7 @@
 
                             </div>
                         </div>
+                        
                     {% empty %}
                         <div class="text-danger small">{% trans "No items found" %}</div>
                     {% endfor %}
@@ -274,6 +294,7 @@
                 </div>
 
             </div>
+
         {% else %}
             <div class="my-3" id="bdc-error">
                 <div class="row gx-4 gy-0 text-danger">
@@ -281,15 +302,6 @@
                 </div>
             </div>
         {% endif %}
-
-        <div class="text-center mt-3">
-            <div class="img-fluid">
-                <img src="{{ qr_code }}"
-                    class="img-fluid" alt="QR Code"
-                    style="height: 35mm; width: auto;">
-            </div>
-            <div class="small mt-0 text-muted">{% trans "Scan for details" %}</div>
-        </div>
 
 	</body>
 </html>
