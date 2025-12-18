@@ -55,7 +55,7 @@ BDC_ORDERING_FIELD = 'deadline'
 SHOW_TODAYS_EXPIRED = True
 
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
-empty_items = ['-', '--', '_', '__', '---', '/', '?', ' ', '.', '']
+empty_items = ['-', '--', '_', '__', '---', '***', '/', '?', '??', '???', ' ', '.', '..', '...', '']
 
 
 @login_required(login_url="account_login")
