@@ -43,13 +43,8 @@ def create_bdc_items_pdf(bdc):
     static_dir  = Path(settings.BASE_DIR) / "static"
     static_uri  = static_dir.resolve().as_uri()
 
-    # html_string = html_string.replace('href="/static/', f'href="{static_uri}/').replace('src="/static/', f'src="{static_uri}/')
     html_string = html_string.replace('/static/', f'{static_uri}/')
 
     HTML(string=html_string).write_pdf(target=output_path)
     
-    # print("\t========== uri ==========\n")
-    # print(static_uri)
-    # print("\n\t===============================")
-
     return output_path
