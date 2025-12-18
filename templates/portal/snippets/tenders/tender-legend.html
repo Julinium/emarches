@@ -2,15 +2,12 @@
 
 <div class="my-3">
     {% if last_updated %}
-        <div class="my-4">
+        <div class="my-4 text-muted">
             <span class="small fw-light"><i class="bi bi-arrow-repeat"></i></span>
             <span class="small fw-light">{% trans 'Updated since' %}</span>
             {% timezone "UTC" %}
-                <span class="small text-muted">{{ last_updated }} ({% trans 'UTC' %}):</span>
+                <span class="small">{{ last_updated }} {% trans 'UTC' %}</span>
             {% endtimezone %}
-            <span class="small fw-bold">
-                {{ last_updated|timesince }}
-            </span>
         </div>
     {% endif %}
 

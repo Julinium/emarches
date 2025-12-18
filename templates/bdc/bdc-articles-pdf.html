@@ -43,20 +43,36 @@
                 margin: 0;
 
                 margin-top: 20mm;
-                margin-bottom: 30mm;
+                margin-bottom: 20mm;
                 margin-left: 15mm;
                 margin-right: 15mm;
-
-                @bottom-center {
-                    content: "{{ crm }}  |   Page : " counter(page) "/" counter(pages);
-                    font-size: 10pt;
-                    color: #666;
-                }
 
                 @top-center {
                     content: element(header);
                     vertical-align: bottom;
                     padding-bottom: 2mm;
+                }
+
+                @bottom-left {
+                    content: "{% now 'Y-m-d H:i:s' %}";
+                    font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                    font-size: 9pt;
+                    color: #666;
+                    padding-bottom: 2mm;
+                }
+
+                @bottom-right {
+                    content: "PAGE " counter(page) "/" counter(pages);
+                    font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                    font-size: 10pt;
+                    color: #666;
+                    padding-bottom: 2mm;
+                }
+
+                @bottom-center {
+                    content: element(footer);
+                    vertical-align: top;
+                    padding-top: 2mm;
                 }
 
                 background: url("{% static 'brand/insi-wm.svg' %}") center center / 20mm auto;
@@ -68,6 +84,14 @@
                 text-align: center;
                 width: 100%;
                 top: 0;
+                left: 0;
+            }
+
+            #footer-svg {
+                position: running(footer);
+                text-align: center;
+                width: 30mm;
+                bottom: 0;
                 left: 0;
             }
 
@@ -133,22 +157,23 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="col-12">
-                        <div class="d-flex mb-3">
-                            <div>
-                                <i class="bi bi-pin-map"></i>
-                            </div>
-                            <div class="ms-2 w-100 border-0 border-bottom">
-                                <span class="text-muted small fw-light me-2">
-                                    {% trans "Execution Location" %}:
-                                </span>
-                                <span class="">
-                                    <span class="fw-bold">{{ bdc.location }}</span>
-                                </span>
+                    {% if bdc.location %}
+                        <div class="col-12">
+                            <div class="d-flex mb-3">
+                                <div>
+                                    <i class="bi bi-pin-map"></i>
+                                </div>
+                                <div class="ms-2 w-100 border-0 border-bottom">
+                                    <span class="text-muted small fw-light me-2">
+                                        {% trans "Execution Location" %}:
+                                    </span>
+                                    <span class="">
+                                        <span class="fw-bold">{{ bdc.location }}</span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
 
                 </div>
 
@@ -241,6 +266,12 @@
                     </div>
 
                 {% endif %}
+
+                <div id="footer-svg">
+                    <img src="{% static 'brand/insi-footer.png' %}"
+                            class="img-fluid" alt="MODE-777.com"
+                            style="height: auto; width: auto;">
+                </div>
 
             </div>
         {% else %}

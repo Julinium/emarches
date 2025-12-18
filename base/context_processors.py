@@ -111,7 +111,7 @@ def portal_context(request):
         'shopping'        : 'bi bi-cart4',
         'simulator'       : 'bi bi-dpad',
 
-        'tenders'         : 'bi bi-rocket', 
+        'tenders'         : 'bi bi-rocket-takeoff', 
                             # megaphone 
                             # radioactive
                             # shop-window

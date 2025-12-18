@@ -8,5 +8,23 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.stdout.write(self.style.WARNING(f"Started doing the work ..."))
         
+        ############################################
+        from bdc.models import PurchaseOrder
+        from datetime import datetime
+
+        assa = datetime.now()
+        pos = PurchaseOrder.objects.filter(deadline__date__gte=assa).order_by('-published')
+
+        pc = pos.count()
+
+        print(f"Found items: { pc }")
+        i = 0
+        for po in pos:
+            i += 1
+            print(f"\tWorink on item { i } / { pc } ...")
+            po.save()
+
+        ############################################
+
 
         self.stdout.write(self.style.SUCCESS("Processing finished successfully."))

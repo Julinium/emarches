@@ -6,14 +6,15 @@ from django.utils.translation import gettext_lazy as _
 from base.texter import normalize_text as nt
 from base.models import Category, Client
 
-# Create your models here.
+CREATE_ITEMS_PDF = True
+
 
 class PurchaseOrder(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     chrono = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Portal Id"))
     title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
     reference = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Reference"))
-    published = models.DateField(blank=True, null=True, verbose_name=_("Date published"))
+    published = models.DateTimeField(blank=True, null=True, verbose_name=_("Date published"))
     deadline = models.DateTimeField(blank=True, null=True, verbose_name=_("Bid deadline"))
     location = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Works execution location"))
 
@@ -35,8 +36,7 @@ class PurchaseOrder(models.Model):
     cliwords = models.TextField(blank=True, null=True, editable=False)
     refwords = models.TextField(blank=True, null=True, editable=False)
     locwords = models.TextField(blank=True, null=True, editable=False)
-    # artwords = models.TextField(blank=True, null=True, editable=False)
-
+    
 
     class Meta:
         db_table = 'base_purchase_order'
@@ -77,8 +77,13 @@ class PurchaseOrder(models.Model):
         self.updated = None
         if self.pk is not None:
             self.updated = timezone.now()
-
+    
         super().save(*args, **kwargs)
+
+        if CREATE_ITEMS_PDF == True:
+            from .weasy import create_bdc_items_pdf
+            create_bdc_items_pdf(self)
+
 
 
 class Article(models.Model):

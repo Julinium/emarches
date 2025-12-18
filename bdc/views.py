@@ -10,6 +10,7 @@ from django.db.models import Count, Sum, Q
 from django.db.models.functions import Lower
 
 from django.conf import settings
+from pathlib import Path
 
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as trans
@@ -378,6 +379,12 @@ def bdc_details(request, pk=None):
     show_export = 'yes'
     show_print = 'yes'
 
+    pdf_file_name = f'eMarches.com-{ bdc.chrono }-items.pdf'
+    pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
+    pdf_file_path = pdf_file_dir / f"{ pdf_file_name }"
+
+    show_print = "yes" if pdf_file_path.exists() else "no"
+
     context = {
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,        
@@ -388,6 +395,8 @@ def bdc_details(request, pk=None):
         'show_export'   : show_export,
         'show_print'    : show_print,
         'empty_items'   : empty_items,
+        'pdf_file_name' : pdf_file_name,
+        # 'pdf_file_path' : pdf_file_path,
         }
 
     logger = logging.getLogger('portal')
@@ -398,7 +407,46 @@ def bdc_details(request, pk=None):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bdc_items_pdf(request, pk=None):
+def bdc_items_pdf(request, pk=None, fn=None):
+
+    if request.method != 'GET': return HttpResponse(status=405)
+    if pk == None or fn == None: return HttpResponse(status=404)
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    bdc = get_object_or_404(PurchaseOrder, id=pk)
+    if not bdc : return HttpResponse(status=404)
+    
+    # dce_dir = os.path.join(os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), settings.DL_PATH_PREFIX + tender.chrono)
+    # file_path = os.path.join(os.path.join('dce', settings.DL_PATH_PREFIX + tender.chrono), fn)
+    # file_fp = os.path.join(dce_dir, fn)
+
+
+    # pdf_file_name = f'eMarches.com-{ bdc.chrono }-items.pdf'
+    pdf_file_name = fn
+    pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
+    pdf_file_path = pdf_file_dir / f"{ pdf_file_name }"
+
+    if os.path.exists(pdf_file_path):
+        file_size = os.path.getsize(pdf_file_path)
+        response = HttpResponse()
+        response['Content-Type'] = 'application/octet-stream'
+        response['X-Accel-Redirect'] = f'/items/{ bdc.id }/{ pdf_file_name }'
+        response['Content-Disposition'] = f'attachment; filename="{ pdf_file_name }"'
+        response['Content-Length'] = file_size
+
+        logger = logging.getLogger('portal')
+        logger.info(f"User: { user.id }: PO items pdf File Download: {bdc.id} (={file_size}B)")
+        return response
+
+    return HttpResponse(status=404)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bdc_generate_items_pdf(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
