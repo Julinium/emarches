@@ -7,10 +7,8 @@ urlpatterns = [
     
     path('',                            views.bdc_list,                 name='bdc_bdc_list'),
     path('details/<uuid:pk>/',          views.bdc_details,              name='bdc_bdc_detail'),
-    # path('pdf/<uuid:pk>/',     views.bdc_items_pdf,            name='bdc_articles_pdf'),
-    path('pdf/<uuid:pk>/<str:fn>/',     views.bdc_items_pdf,            name='bdc_articles_pdf'),
-    # path('dce/<uuid:pk>/<str:fn>/',     views.tender_get_file,          name='portal_tender_get_file'),
-    path('csv/<uuid:pk>/<str:fn>/',     views.bdc_items_csv,            name='bdc_articles_csv'),
+    path('print/<uuid:pk>/<str:fn>/',   views.bdc_items_pdf,            name='bdc_articles_pdf'),
+    path('export/<uuid:pk>/<str:fn>/',  views.bdc_items_csv,            name='bdc_articles_csv'),
 
     path('locations/',                  views.locations_list,           name='bdc_locations_list'),
     path('clients/',                    views.client_list,              name='bdc_client_list'),

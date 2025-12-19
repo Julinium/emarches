@@ -13,7 +13,7 @@ class Command(BaseCommand):
         from datetime import datetime, timedelta
 
         assa = datetime.now() - timedelta(days=5)
-        pos = PurchaseOrder.objects.all.order_by('-deadline')
+        pos = PurchaseOrder.objects.all().order_by('-deadline')
 
         pc = pos.count()
 
@@ -21,7 +21,8 @@ class Command(BaseCommand):
         i = 0
         for po in pos:
             i += 1
-            print(f"\tWorink on item { i } / { pc } ...")
+            p = 100 * i / pc
+            print(f"{ round(p, 2) }% \tWorink on item { i } / { pc } ...")
             po.save()
 
         ############################################
