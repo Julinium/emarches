@@ -13,20 +13,6 @@
         {% include "bdc/snippets/articles/articles-details-list.html" %}
     </div>
     <div class="modal-footer py-2">
-        {% if show_export == 'yes' %}
-            <a href="{% url 'bdc_articles_csv' bdc.id csv_file_name %}" 
-            class="btn btn-outline-primary">
-                <i class="bi bi-file-earmark-spreadsheet me-1"></i>
-                {% trans 'Export' %}
-            </a>
-        {% endif %}
-        {% if show_print == 'yes' %}
-            <a href="{% url 'bdc_articles_pdf' bdc.id pdf_file_name %}" 
-            class="btn btn-outline-primary">
-                <i class="bi bi-file-earmark-pdf me-1"></i>
-                {% trans 'Print' %}
-            </a>
-        {% endif %}
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
             <i class="bi bi-x-lg me-1"></i>
             {% trans 'Close' %}
