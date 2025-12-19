@@ -69,12 +69,15 @@
             {% trans 'days' as unit %}
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_to_go' val_value=bdc.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class=ddl_classes border='bottom' liner='oneline' %}
 
-           {% trans 'Reference' as key_value %}
+            {% trans 'Reference' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-reference' val_value=bdc.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
             
-            {% trans 'Published' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-published' val_value=bdc.published key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='oneline' %}
-
+            {% timezone "UTC" %}
+                {% trans 'Published' as key_value %}
+                {% trans 'UTC' as unit %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-published' val_value=bdc.published key_value=key_value uni_value=unit ico_class=bicons.published val_class='' border='bottom' liner='oneline' %}
+            {% endtimezone %}
+            
             {% trans 'Category' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-category' val_value=bdc.category.label key_value=key_value uni_value='' ico_class=bicons.category val_class='' border='bottom' liner='oneline' %}
 
@@ -173,18 +176,62 @@
         </div>
 
         {% if bdc.articles.all %}
-            <div id="articles-details" class="text-center">
+            <div id="articles-details" class="text-end">
                 <button type="button" class="mb-1 btn btn-outline-secondary" 
                         data-bs-toggle="modal" data-bs-target="#b{{ bdc.chrono }}m">
                     <span><i class="{{ bicons.articles }}"></i></span>
                     <span class="fw-bold">{{ bdc.articles.all|length }}</span>
-                    <span class="ms-1">{% trans "Items details" %}</span>
+                    <span class="d-none d-md-inline ms-1">{% trans "Details" %}</span>
                 </button>
+
+                {% if show_export == 'yes' %}
+                    <a href="{% url 'bdc_articles_csv' bdc.id csv_file_name  %}" 
+                    class="mb-1 btn btn-outline-secondary">
+                        <span><i class="bi bi-file-earmark-spreadsheet me-1"></i></span>
+                        <span class="fw-bold">CSV</span>
+                        <span class="d-none d-md-inline ms-1">{% trans "Export" %}</span>
+                    </a>
+                {% endif %}
+                {% if show_print == 'yes' %}
+                    <a href="{% url 'bdc_articles_pdf' bdc.id pdf_file_name %}" 
+                    class="mb-1 btn btn-outline-secondary">                        
+                        <span><i class="bi bi-file-earmark-pdf me-1"></i></span>
+                        <span class="fw-bold">PDF</span>
+                        <span class="d-none d-md-inline ms-1">{% trans "Print" %}</span>
+                    </a>
+                {% endif %}
+
                 <span class="text-start">
                     {% include 'bdc/snippets/articles/articles-details-modal.html' %}
                 </span>
             </div>
         {% endif %}
+        
+        <div id="extra-details" class="small mt-3">
+            <div class="row gx-4 gy-0">
+
+                {% timezone "UTC" %}
+                    {% trans 'Created' as key_value %}
+                    {% trans 'UTC' as unit %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-created' val_value=bdc.created key_value=key_value uni_value=unit  val_class='small' border='bottom' liner='oneline' %}
+                {% endtimezone %}
+                    
+                {% timezone "UTC" %}
+                    {% trans 'Updated' as key_value %}
+                    {% trans 'UTC' as unit %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-updated' val_value=bdc.updated key_value=key_value uni_value=unit val_class='small' border='bottom' liner='oneline' %}
+                {% endtimezone %}
+
+                {% trans 'ID' as key_value %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-id' val_value=bdc.id key_value=key_value uni_value=''  val_class='small' border='bottom' liner='oneline' %}
+                            
+                {% trans 'Display time' as key_value %}
+                {% trans 'days' as unit %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_span' val_value=bdc.days_span key_value=key_value uni_value=unit val_class='small' border='bottom' liner='oneline' %}
+
+            </div>
+        </div>
+
     </div>
 
     {% include 'bdc/snippets/bdcs/bdc-actions.html' %}

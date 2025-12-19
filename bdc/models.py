@@ -64,7 +64,7 @@ class PurchaseOrder(models.Model):
     @property
     def days_span(self):
         try:
-            delta_span = self.deadline.date() - self.published
+            delta_span = self.deadline.date() - self.published.date()
             return 1 + delta_span.days
         except: return 0
 
@@ -80,6 +80,9 @@ class PurchaseOrder(models.Model):
     
         super().save(*args, **kwargs)
 
+        from .weasy import bdc_generate_items_csv
+        bdc_generate_items_csv(self)
+        
         if CREATE_ITEMS_PDF == True:
             from .weasy import create_bdc_items_pdf
             create_bdc_items_pdf(self)

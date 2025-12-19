@@ -10,10 +10,10 @@ class Command(BaseCommand):
         
         ############################################
         from bdc.models import PurchaseOrder
-        from datetime import datetime
+        from datetime import datetime, timedelta
 
-        assa = datetime.now()
-        pos = PurchaseOrder.objects.filter(deadline__date__gte=assa).order_by('-published')
+        assa = datetime.now() - timedelta(days=5)
+        pos = PurchaseOrder.objects.all.order_by('-deadline')
 
         pc = pos.count()
 

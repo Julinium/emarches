@@ -1,6 +1,8 @@
 
+import csv
+
 from django.template.loader import render_to_string
-# from django.utils import timezone
+
 from weasyprint import HTML
 
 from django.conf import settings
@@ -12,7 +14,10 @@ import base64
 
 from django.utils.translation import gettext_lazy as trans
 
-empty_items = ['-', '--', '_', '__', '---', '/', '?', ' ', '.', '']
+empty_items = ['-', '--', '_', '__', '---', '***', '/', 
+    '?', '??', '???', ' ', '.', '..', '...', '',
+    'Aucune', 'Non'
+]
 
 def create_bdc_items_pdf(bdc):
 
@@ -48,3 +53,35 @@ def create_bdc_items_pdf(bdc):
     HTML(string=html_string).write_pdf(target=output_path)
     
     return output_path
+
+
+def bdc_generate_items_csv(bdc):
+
+    csv_file_name = f'eMarches.com-{ bdc.chrono }-items.csv'
+    output_dir = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"{ csv_file_name }"
+    
+
+    with open(output_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            trans('Number'), trans('Title'), trans('UOM'), 
+            trans('Quantity'), trans('VAT') + '%', 
+            trans('Specifications'), trans('Warranties')
+            ])
+
+        for item in bdc.articles.all():
+            writer.writerow([
+                item.number,
+                item.title,
+                item.uom,
+                item.quantity,
+                item.vat_percent,
+                item.specifications,
+                item.warranties,
+            ])
+
+    return output_path
+
+
