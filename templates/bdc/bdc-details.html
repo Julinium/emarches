@@ -227,7 +227,7 @@
                             
                 {% trans 'Display time' as key_value %}
                 {% trans 'days' as unit %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_span' val_value=bdc.days_span key_value=key_value uni_value=unit val_class='small' border='bottom' liner='oneline' %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=bdc.chrono|add:'-days_span' val_value=bdc.days_span key_value=key_value uni_value=unit|add:' ±' val_class='small' border='bottom' liner='oneline' %}
 
             </div>
         </div>

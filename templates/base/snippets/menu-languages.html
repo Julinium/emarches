@@ -8,7 +8,7 @@
 {% get_language_info for current_language as lang_info %}
 
 
-<div class="nav-item dropdown">
+<li class="nav-item dropdown">
     <a class="btn px-1 py-1 nav-link dropdown-toggle text-end" 
        href="#" id="languageDropdown" role="button" 
        data-bs-toggle="dropdown" aria-expanded="false">
@@ -31,8 +31,7 @@
                         {% switch_language lang.code%}
                       {% endif %}"
                 data-bs-toggle="tooltip" 
-                title="{{ lang.name_translated|capfirst }}" 
-                type="button">
+                title="{{ lang.name_translated|capfirst }}">
                 <span>
                     <img height="20" 
                          src="{% static 'flags/' %}{{ lang.code }}.svg" 
@@ -43,4 +42,4 @@
         </li>
         {% endfor %}
     </ul>
-</div>
+</li>

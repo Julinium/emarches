@@ -2,11 +2,11 @@
 
 <li class="nav-item dropdown">
     <a class="nav-link py-2 dropdown-toggle"
-        href="#" id="portalScrollingDropdown" role="button" 
+        href="#" id="bdcDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
     <i class="{{ bicons.bdc }} me-1"></i> {% trans 'P. Orders' %}
     </a>
-    <ul class="dropdown-menu shadow" aria-labelledby="portalScrollingDropdown">
+    <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bdc_bdc_list' %}">
                 <i class="{{ bicons.ongoing }} me-2"></i>
@@ -49,7 +49,7 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" href="{% url 'bdc_client_list' %}" disabled>
+            <a class="dropdown-item py-2" href="{% url 'bdc_client_list' %}">
                 <i class="{{ bicons.client }} me-2"></i>
                 {% trans 'Clients' %}
             </a>

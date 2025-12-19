@@ -2,14 +2,11 @@
 
 <li class="nav-item dropdown">
     <a class="nav-link py-2 dropdown-toggle" 
-        href="#" id="portalScrollingDropdown" role="button" 
+        href="#" id="tenderDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
     <i class="{{ bicons.tenders }} me-1"></i> {% trans 'Tenders' %}
-        <!-- {% if faved_ids %}
-            <span class="badge mb-2 px-1 text-white bg-primary"> </span>
-        {% endif %} -->
     </a>
-    <ul class="dropdown-menu shadow" aria-labelledby="portalScrollingDropdown">
+    <ul class="dropdown-menu shadow" aria-labelledby="tenderDropdown">
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'portal_tender_list' %}">
                 <i class="{{ bicons.ongoing }} me-2"></i>
@@ -52,14 +49,14 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'portal_client_list' %}" disabled>
+            <a class="dropdown-item py-2"  href="{% url 'portal_client_list' %}">
                 <i class="{{ bicons.client }} me-2"></i>
                 {% trans 'Clients' %}
             </a>
         </li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="{% url 'portal_locations_list' %}">
+            <a class="dropdown-item py-2"  href="{% url 'portal_locations_list' %}">
                 <i class="{{ bicons.location }} me-2"></i>
                 {% trans 'Locations' %}
             </a>
@@ -68,7 +65,7 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" aria-disabled="true" href="#">
+            <a class="dropdown-item py-2"  href="#">
                 <i class="{{ bicons.insights }} me-2"></i>
                 {% trans 'Insights' %}
             </a>

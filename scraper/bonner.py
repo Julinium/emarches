@@ -33,10 +33,10 @@ def get_headers():
         "User-Agent": getUa(),
         "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8"
     }
-    
+
 
 def safe_text(elem):
-    return elem.get_text(strip=True) if elem else ""
+    return elem.get_text().strip(" ") if elem else ""
 
 
 def fetch_page(url, params={}, retries=3):
@@ -61,13 +61,7 @@ def get_bdc(card):
     """
     Extracts data from a single item card
     """
-    
-    # count_text = card.select_one(".entreprise__middleSubCard a.table__links")
-    # try: items_count = count_text.get_text(strip=True).replace("Nombre de résultats : ", "").strip()
-    # except Exception as xc: 
-    #     print('Items count exception: \n', xc)
-    #     items_count = None 
-    
+        
     ref_text = card.select_one(".entreprise__middleSubCard a.table__links")
     try: reference = ref_text.get_text(strip=True).replace("Référence :", "").strip()
     except Exception as xc: 

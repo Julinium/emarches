@@ -2,7 +2,7 @@
 {% load static %}
 
 
-<div class="nav-item dropdown">
+<li class="nav-item dropdown">
     {% if request.user.is_authenticated %}
         <a class="btn px-1 py-1 nav-link dropdown-toggle text-end" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <span><img class="rounded-circle" height="24" width="24" src="{{ request.user.profile.avatar }}" alt="Avatar"></span>
@@ -16,13 +16,13 @@
     <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
         {% if user.is_authenticated %}
             <li>
-                <a href="{% url 'nas_profile_view' %}" class="p-2 dropdown-item" type="button">
+                <a href="{% url 'nas_profile_view' %}" class="p-2 dropdown-item">
                     <span><i class="bi bi-person-vcard me-2"></i></span>
                     <span class="">{% trans "Profile" %}</span>
                 </a>
             </li>
             <li>
-                <a href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}" class="p-2 dropdown-item" type="button">
+                <a href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}" class="p-2 dropdown-item">
                     <span><i class="bi bi-gear me-2"></i></span>
                     <span class="">{% trans "Preferences" %}</span>
                 </a>
@@ -30,25 +30,16 @@
             <!-- {% url 'account_email' as email_url_ %}
             {% if email_url_ %}
                 <li>
-                    <a href="{{ email_url_ }}" class="p-2 dropdown-item" type="button">
+                    <a href="{{ email_url_ }}" class="p-2 dropdown-item">
                         <span><i class="bi bi-envelope-check me-2"></i></span>
                         <span class="ms-1">{% trans "Change Email" %}</span>
-                    </a>
-                </li>
-            {% endif %} -->
-            <!-- {% url 'account_change_password' as change_password_url_ %}
-            {% if change_password_url_ %}
-                <li>
-                    <a href="{{ change_password_url_ }}" class="p-2 dropdown-item" type="button">
-                        <span><i class="bi bi-person-lock me-2"></i></span>
-                        <span class="ms-1">{% trans "Change Password" %}</span>
                     </a>
                 </li>
             {% endif %} -->
             <!-- {% url 'socialaccount_connections' as connections_url_ %}
             {% if connections_url_ %}
                 <li>
-                    <a href="{{ connections_url_ }}" class="p-2 dropdown-item" type="button">
+                    <a href="{{ connections_url_ }}" class="p-2 dropdown-item">
                         <span><i class="bi bi-plug me-2"></i></span>
                         <span class="ms-1">{% trans "Account Connections" %}</span>
                     </a>
@@ -57,7 +48,7 @@
             {% url 'mfa_index' as mfa_url_ %}
             {% if mfa_url_ %}
                 <li>
-                    <a href="{{ mfa_url_ }}" class="p-2 dropdown-item" type="button">
+                    <a href="{{ mfa_url_ }}" class="p-2 dropdown-item">
                         <span><i class="bi bi-fingerprint me-2"></i></span>
                         <span class="">{% trans "Two-Factor Authentication" %}</span>
                     </a>
@@ -66,7 +57,7 @@
             {% url 'usersessions_list' as usersessions_list_url_ %}
             {% if usersessions_list_url_ %}
                 <li>
-                    <a href="{{ usersessions_list_url_ }}" class="p-2 dropdown-item" type="button">
+                    <a href="{{ usersessions_list_url_ }}" class="p-2 dropdown-item">
                         <span><i class="bi bi-database-lock me-2"></i></span>
                         <span class="">{% trans "Sessions" %}</span>
                     </a>
@@ -101,7 +92,7 @@
             {% url 'account_logout' as logout_url_ %}
             {% if logout_url_ %}
                 <li>
-                    <a href="{{ logout_url_ }}" class="p-2 dropdown-item text-danger fw-bold" type="button">
+                    <a href="{{ logout_url_ }}" class="p-2 dropdown-item text-danger fw-bold">
                         <span><i class="bi bi-door-open me-2"></i></span>
                         <span class="">{% trans "Sign Out" %}</span>
                     </a>
@@ -111,16 +102,27 @@
             {% url 'account_login' as login_url_ %}
             {% if login_url_ %}
                 <li>
-                    <a href="{{ login_url_ }}" class="p-2 dropdown-item" type="button">
+                    <a href="{{ login_url_ }}" class="p-2 dropdown-item">
                         <span><i class="bi bi-box-arrow-in-right me-2"></i></span>
                         <span class="">{% trans "Sign In" %}</span>
                     </a>
                 </li>
             {% endif %}
+
+            <!-- {% url 'account_change_password' as change_password_url_ %}
+            {% if change_password_url_ %}
+                <li>
+                    <a href="{{ change_password_url_ }}" class="p-2 dropdown-item">
+                        <span><i class="bi bi-person-lock me-2"></i></span>
+                        <span class="ms-1">{% trans "Change Password" %}</span>
+                    </a>
+                </li>
+            {% endif %} -->
+
             {% url 'account_signup' as signup_url_ %}
             {% if signup_url_ %}
                 <li>
-                    <a href="{{ signup_url_ }}" class="p-2 dropdown-item" type="button">
+                    <a href="{{ signup_url_ }}" class="p-2 dropdown-item">
                         <span><i class="bi bi-slash-square me-2"></i></span>
                         <span class="">{% trans "Sign Up" %}</span>
                     </a>
@@ -128,4 +130,4 @@
             {% endif %}
         {% endif %}
     </ul>
-</div>
+</li>

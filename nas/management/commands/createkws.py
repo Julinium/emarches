@@ -11,19 +11,23 @@ class Command(BaseCommand):
         ############################################
         from bdc.models import PurchaseOrder
         from datetime import datetime, timedelta
+        from django.db.models import Count 
 
         assa = datetime.now() - timedelta(days=5)
-        pos = PurchaseOrder.objects.all().order_by('-deadline')
+        pos = PurchaseOrder.objects.annotate(item_count=Count('articles')).filter(item_count__gt=0).order_by('-deadline')
 
         pc = pos.count()
 
-        print(f"Found items: { pc }")
+        print(f"Found POs: { pc }")
         i = 0
         for po in pos:
             i += 1
             p = 100 * i / pc
-            print(f"{ round(p, 2) }% \tWorink on item { i } / { pc } ...")
-            po.save()
+            if po.articles.count() > 0:                
+                print(f"{ round(p, 2) }% \tWorink on PO { i } / { pc }: { po.articles.count() } items ...")
+                po.save()
+            else:
+                print(f"{ round(p, 2) }% \tSkipping PO { i } / { pc }: No items ...")
 
         ############################################
 
