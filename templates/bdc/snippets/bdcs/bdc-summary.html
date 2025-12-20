@@ -5,7 +5,7 @@
 <div class="my-3">
     <div class="card shadow">
         <a class="btn p-0 w-100 text-start" href="{% url 'bdc_bdc_detail' bdc.id %}">           
-            <div class="card-header px-3 py-1">
+            <div class="card-header px-2 py-1">
                 <div class="d-flex justify-content-between">
 
                     <div class="d-flex align-items-center">
@@ -48,22 +48,24 @@
                 </div>
             </div>
 
-            {% timezone "Africa/Casablanca" %}
-                <div class="progress bg-danger p-0 mx-0 mb-1" 
-                        style="height: 0.25rem;"
-                        data-bs-toggle="tooltip"
-                        title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }} {% trans 'Morocco time' %}">
-                    {% with bdc.days_to_go|progrefy:full_bar_days as green %}
-                        <div class="progress-bar bg-success" 
-                                role="progressbar" style="width: {{ green }}%;" 
-                                aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                aria-valuemax="100">
-                        </div>
-                    {% endwith %}
-                </div>
-            {% endtimezone %}
+            {% if not bdc.expired %}
+                {% timezone "Africa/Casablanca" %}
+                    <div class="progress bg-danger p-0 mx-0 mb-1" 
+                            style="height: 0.25rem;"
+                            data-bs-toggle="tooltip"
+                            title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }} {% trans 'Morocco time' %}">
+                        {% with bdc.days_to_go|progrefy:full_bar_days as green %}
+                            <div class="progress-bar bg-success" 
+                                    role="progressbar" style="width: {{ green }}%;" 
+                                    aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                    aria-valuemax="100">
+                            </div>
+                        {% endwith %}
+                    </div>
+                {% endtimezone %}
+            {% endif %}
 
-            <div class="card-body px-3 py-2">
+            <div class="card-body px-2 py-2">
 
                 <div id="t{{ bdc.chrono }}t" class="{% if wrap_text == False %}twolines{% endif %}">
                     <div data-bs-toggle="tooltip"
@@ -84,7 +86,7 @@
             </div> 
 
             {% if bdc.deliberated %}
-                <div class="card-footer px-3 py-2">
+                <div class="card-footer px-2 py-1">
                     <div class="row gx-3">
                         <div class="col-12 col-md-6 oneline">
                             {% timezone "Africa/Casablanca" %}

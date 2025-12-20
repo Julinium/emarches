@@ -5,7 +5,7 @@
     <div class="card shadow">
         <a class="btn p-0 w-100 text-start" 
            href="{% url 'portal_tender_detail' tender.id %}">
-            <div class="card-header px-3 py-1">
+            <div class="card-header px-2 pt-1 pb-1">
 
                 <div class="d-flex justify-content-between">
 
@@ -62,8 +62,23 @@
                     </div>
                 </div>
             </div>
+            
+            {% if not tender.expired %}
+                <div class="progress bg-danger p-0 m-0" 
+                        style="height: 0.25rem;"
+                        data-bs-toggle="tooltip"
+                        title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
+                    {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                        <div class="progress-bar bg-success" 
+                                role="progressbar" style="width: {{ green }}%;" 
+                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                aria-valuemax="100">
+                        </div>
+                    {% endwith %}
+                </div>
+            {% endif %}
 
-            <div class="card-body px-3 pt-2 pb-0">
+            <div class="card-body px-2 py-2">
 
                 <div id="t{{ tender.chrono }}t" class="{% if wrap_text == False %}twolines{% endif %}">
                     <div data-bs-toggle="tooltip"
@@ -85,7 +100,7 @@
                     </div>
                 </div>
 
-                <div class="progress bg-danger p-0 mx-0 my-1" 
+                <!-- <div class="progress bg-danger p-0 mx-0 my-1" 
                         style="height: 0.25rem;"
                         data-bs-toggle="tooltip"
                         title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
@@ -96,9 +111,12 @@
                                 aria-valuemax="100">
                         </div>
                     {% endwith %}
-                </div>
+                </div> -->
+                
+            </div> 
 
-                <div id="t{{ tender.chrono }}f" class="d-flex justify-content-between mb-2">
+            <div class="card-footer px-2 py-1">
+                <div id="t{{ tender.chrono }}f" class="d-flex justify-content-between">
                     <div class="me-2 small fw-light">
 
                         {% if tender.procedure.restricted %}
@@ -268,7 +286,6 @@
 
                     </div>
                 </div>
-                
             </div> 
                     
         </a>
