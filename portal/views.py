@@ -77,7 +77,8 @@ def tender_list(request):
             k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
         }
         
-        if not 'ddlnn' in query_dict:
+        # if not 'ddlnn' in query_dict:
+        if query_dict == {}:
             query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
         
         if not 'sort' in query_dict:

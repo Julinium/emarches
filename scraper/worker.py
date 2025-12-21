@@ -118,6 +118,11 @@ def main():
                     helper.printMessage('INFO', 'worker', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
                     helper.sleepRandom(10, 30)
 
+
+    ############## Get results
+
+
+
     finished_time = datetime.now()
 
     crawler = Crawler(

@@ -3,19 +3,10 @@ from bs4 import BeautifulSoup, Comment
 
 from scraper import helper
 from scraper import constants as C
-
-# import os
-# import django
-# from django.conf import settings
-
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "scraper.settings")
-# django.setup()
-
-
 from base.models import Tender
 
-# NA_PLH = C.NA_PLH
 NA_PLH = None
+
 
 def getJson(link_item, skipExisting=False):
 
@@ -76,7 +67,31 @@ def getJson(link_item, skipExisting=False):
         helper.printMessage('WARN', 'g.getJson', f'Exception raised while getting file size at {str(dce_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         # return None
 
-    try: request_cons = sessiono.get(cons_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
+    try: 
+
+
+        #####################
+        # qs_chro = "page=entreprise.ExtraitPV&refConsultation"
+        # qs_acro = "orgAcronyme"
+        # digest_link = f"{C.SITE_INDEX}?{qs_chro}={link_item[0]}&{ qs_acro }={link_item[1]}"
+        # request_digest = sessiono.get(digest_link, headers=headino, timeout=C.REQ_TIMEOUT)
+        # pot = BeautifulSoup(request_digest.text, 'html.parser')
+        # bowl = pot.find(id='ctl0_CONTENU_PAGE_mainPart')
+
+        # request_digest = sessiono.get(digest_link, headers=headino, timeout=C.REQ_TIMEOUT)
+
+        # if bowl: 
+        #     print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n")
+        #     print(bowl)
+        #     print("\nYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n")
+        # else:
+        #     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+        #####################
+
+
+
+        request_cons = sessiono.get(cons_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
     except Exception as x:
         helper.printMessage('ERROR', 'g.getJson', f'Exception raised while getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         return None
@@ -273,35 +288,44 @@ def getJson(link_item, skipExisting=False):
                     "variant": cons_varia,
                     }
                 ]
+        #####################################
+        # has_results = False
+        # # has_results = ...
+        # if has_results:
+        #     results = getResults(cons_idddd, link_item[1])
+        # else:
+        #     results = {}
+        #####################################
 
         cons_dict = {
-            "published": cons_pub_d,
-            "deadline": cons_deadl,
-            "cancelled": cons_cance,
-            "reference": cons_refce,
-            "category": category,
-            "title": cons_objet,
-            "lots_count": cons_nbrlo,
-            "location": cons_lexec,
-            "client": client,
-            "kind": kind,
-            "procedure": procedure,
-            "mode": mode,
-            "ebid_esign": cons_repec,
-            "lots": cons_lots,
-            "plans_price": cons_plans,
-            "domains": domains,
+            "published"         : cons_pub_d,
+            "deadline"          : cons_deadl,
+            "cancelled"         : cons_cance,
+            "reference"         : cons_refce,
+            "category"          : category,
+            "title"             : cons_objet,
+            "lots_count"        : cons_nbrlo,
+            "location"          : cons_lexec,
+            "client"            : client,
+            "kind"              : kind,
+            "procedure"         : procedure,
+            "mode"              : mode,
+            "ebid_esign"        : cons_repec,
+            "lots"              : cons_lots,
+            "plans_price"       : cons_plans,
+            "domains"           : domains,
             "address_withdrawal": cons_add_r,
-            "address_bidding": cons_add_d,
-            "address_opening": cons_add_o,
-            "contact_name": cons_adm_n,
-            "contact_email": cons_adm_m,
-            "contact_phone": cons_adm_t,
-            "contact_fax": cons_adm_f,
-            "chrono": cons_idddd,
-            "link": cons_uri,
-            "size_read": cons_sized,
-            "size_bytes": cons_bytes,
+            "address_bidding"   : cons_add_d,
+            "address_opening"   : cons_add_o,
+            "contact_name"      : cons_adm_n,
+            "contact_email"     : cons_adm_m,
+            "contact_phone"     : cons_adm_t,
+            "contact_fax"       : cons_adm_f,
+            "chrono"            : cons_idddd,
+            "link"              : cons_uri,
+            "size_read"         : cons_sized,
+            "size_bytes"        : cons_bytes,
+            # "results"           : results,
             }
 
         helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_item[0]}')
@@ -520,3 +544,285 @@ def getLots(lots_href):
             lots.append(current_lot)
             i += 1
     return lots
+
+
+def getMinutes(chro='', acro=''):
+    digest = {}
+    if chro == '' or acro == '' : return digest
+    qs_chro = "page=entreprise.ExtraitPV&refConsultation"
+    qs_acro = "orgAcronyme"
+    digest_link = f"{C.SITE_INDEX}?{qs_chro}={chro}&{ qs_acro }={acro}"
+
+    helper.printMessage('DEBUG', 'g.getMinutes', f'Digest link: {digest_link.replace(C.SITE_INDEX, '[...]')}.')
+    # print(digest_link)
+
+    rua = helper.getUa()
+    rua_label = "Random"
+    try:
+        start_delimiter = "Mozilla/5.0 ("
+        end_delimiter = "; "
+        start_index = rua.index(start_delimiter) + len(start_delimiter)
+        end_index = rua.index(end_delimiter, start_index)
+        rua_label = rua[start_index:end_index]
+    except ValueError as ve:
+        helper.printMessage('ERROR', 'g.getMinutes', f'Error trimming UA: {ve}')
+    
+    helper.printMessage('DEBUG', 'g.getMinutes', f'Using UA: {rua_label}.')
+    headino = {"User-Agent": rua}
+    sessiono = requests.Session()
+
+    helper.printMessage('DEBUG', 'g.getMinutes', 'Getting Digest page ...')
+    try:
+        request_digest = sessiono.get(digest_link, headers=headino, timeout=C.REQ_TIMEOUT)
+    except Exception as x:
+        helper.printMessage('ERROR', 'g.getMinutes', f'Exception raised while getting Digest at {str(digest_link.replace(C.SITE_INDEX, '[...]'))}: { x }')
+        return None
+    if request_digest.status_code != 200 :
+        helper.printMessage('ERROR', 'g.getMinutes', f'Request to Digest page returned a {request_digest.status_code} status code.')
+        if request_digest.status_code == 429:
+            helper.printMessage('ERROR', 'g.getMinutes', f'Too many Requests, said the server: {request_digest.status_code} !')
+            helper.sleepRandom(300, 900)
+        return None
+    else:
+        helper.printMessage('DEBUG', 'g.getMinutes', 'Digest page returned status code 200')
+
+    pot = BeautifulSoup(request_digest.text, 'html.parser')
+    bowl = pot.find(id='ctl0_CONTENU_PAGE_mainPart')
+
+    if not bowl: return digest
+
+
+    bidders = []
+    try:
+        bidders_element = bowl.find(id='entreprisesParticipantesIn')
+        table = bidders_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            td = tr.find("td")
+            if td: bidders.append({"name": td.get_text(strip=True)})
+    except Exception: pass
+
+
+    rejected_da = []
+    try:
+        rejected_da_element = bowl.find(id='entreprisesEcarteesDA')
+        table = rejected_da_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                bidder_td = tr.find("td")
+                if not bidder_td: continue
+
+                bidder_name = bidder_td.get_text(strip=True)
+
+                try:
+                    ids_td = tr.find("div").find("td")
+                    raw_ids = ids_td.get_text(strip=True)
+                    rejected_lots = [ x.strip() for x in raw_ids.split(",")]
+                except Exception: rejected_lots = [""]
+
+                rejected_da.append({"name": bidder_name, "lots": rejected_lots})
+
+            except Exception as xc:
+                print(f"rejected_da inner Exception: { xc }")
+                continue
+    except Exception: pass
+
+
+    accepted_da = []
+    try:
+        accepted_da_element = bowl.find(id='entreprisesAdmisDA')
+        table = accepted_da_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                bidder_td = tr.find("td")
+                if not bidder_td: continue
+
+                bidder_name = bidder_td.get_text(strip=True)
+
+                try:
+                    ids_td = tr.find("div").find("td")
+                    raw_ids = ids_td.get_text(strip=True)
+                    accepted_lots = [ x.strip() for x in raw_ids.split(",")]
+                except Exception: accepted_lots = [""]
+
+                accepted_da.append({"name": bidder_name, "lots": accepted_lots})
+
+            except Exception as xc:
+                print(f"accepted_da inner Exception: { xc }")
+                continue
+    except Exception: pass
+
+
+    reserved_da = []
+    try:
+        reserved_da_element = bowl.find(id='entreprisesAdmisSousReserveDA')
+        table = reserved_da_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                bidder_td = tr.find("td")
+                if not bidder_td: continue
+
+                bidder_name = bidder_td.get_text(strip=True)
+
+                try:
+                    ids_td = tr.find("div").find("td")
+                    raw_ids = ids_td.get_text(strip=True)
+                    reserved_lots = [ x.strip() for x in raw_ids.split(",")]
+                except Exception: reserved_lots = [""]
+
+                reserved_da.append({"name": bidder_name, "lots": reserved_lots})
+
+            except Exception as xc:
+                print(f"reserved_da inner Exception: { xc }")
+                continue
+    except Exception: pass
+
+
+    rejected_dt = []
+    try:
+        rejected_dt_element = bowl.find(id='entreprisesEcarteesDT')
+        table = rejected_dt_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                bidder_td = tr.find("td")
+                if not bidder_td: continue
+
+                bidder_name = bidder_td.get_text(strip=True)
+                rejected_lots = [""]
+                try:
+                    tds = tr.find_all("div")
+                    ids_td = tds[1] if len(tds) > 1 else None
+
+                    if ids_td:
+                        raw_ids = ids_td.get_text(strip=True)
+                        rejected_lots = [ x.strip() for x in raw_ids.split(",")]
+                except Exception: pass
+
+                rejected_dt.append({"name": bidder_name, "lots": rejected_lots})
+
+            except Exception as xc:
+                print(f"rejected_dt inner Exception: { xc }")
+                continue
+    except Exception: pass
+
+
+    financial_offers = []
+    try:
+        financial_offers_element = bowl.find(id='ctl0_CONTENU_PAGE_entreprisesMontantActesEngagements')
+        table = financial_offers_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                tds = tr.find_all("td")
+
+                bidder_td = tds[0]
+                lot_td = None
+                i = 0
+                if len(tds) > 3:
+                    lot_td = tds[1]
+                    i = 1
+                amount_before_td = tds[1 + i]
+                amount_after_td = tds[2 + i]
+
+                bidder_name = bidder_td.get_text(strip=True)
+                lot_number = lot_td.get_text(strip=True) if lot_td else ""
+                amount_before = amount_before_td.get_text(strip=True)
+                amount_after = amount_after_td.get_text(strip=True)
+
+                financial_offers.append({"name": bidder_name, "lot": lot_number, 
+                    "pre_amount": amount_before, "amount": amount_after})
+
+            except Exception as xc:
+                print(f"financial_offers inner Exception: { xc }")
+                continue
+    except Exception as xv: pass
+
+
+    winner_offers = []
+    try:
+        winner_offers_element = bowl.find(id='ctl0_CONTENU_PAGE_entreprisesRetenues')
+        table = winner_offers_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                tds = tr.find_all("td")
+
+                bidder_td = tds[0]
+                lot_td = None
+                i = 0
+                if len(tds) > 2:
+                    lot_td = tds[1]
+                    i = 1
+                amount_winner_td = tds[1 + i]
+
+                bidder_name = bidder_td.get_text(strip=True)
+                lot_number = lot_td.get_text(strip=True) if lot_td else ""
+                amount_winner = amount_winner_td.get_text(strip=True)
+
+                winner_offers.append({"lot": lot_number, "name": bidder_name, "amount": amount_winner})
+
+            except Exception as xc:
+                print(f"winner_offers inner Exception: { xc }")
+                continue
+    except Exception: pass
+
+
+    winner_justifs = []
+    try:
+        winner_justifs_element = bowl.find(id='ctl0_CONTENU_PAGE_justificatifs')
+        table = winner_justifs_element.find("table")
+        for tr in table.select("tr:not(thead tr)"):
+            try:
+                tds = tr.find_all("td")
+
+                lot_td = None
+                i = 0
+                if len(tds) > 1:
+                    lot_td = tds[0]
+                    i = 1
+                winner_justif_td = tds[0 + i]
+                
+                lot_number = lot_td.get_text(strip=True) if lot_td else ""
+                winner_justif = winner_justif_td.get_text(strip=True)
+
+                winner_justifs.append({"lot": lot_number, "justif": winner_justif})
+
+            except Exception as xc:
+                print(f"winner_justifs inner Exception: { xc }")
+                continue
+    except Exception: pass
+
+
+    failures_text = None
+    failed_lots = []
+    try:
+        failed_lots_element = bowl.find(id='ctl0_CONTENU_PAGE_declarationsInfructueux')
+        failures_text = failed_lots_element.get_text(strip=True)
+        if failures_text != "Néant":
+            failed_list = failures_text.split(":")[1].strip()
+            failed_lots = [ x.strip() for x in failed_list.split(",")]
+
+    except Exception: pass
+
+
+    date_finished = None
+    try:
+        date_finished_element = bowl.find(id='ctl0_CONTENU_PAGE_dateAchevement').find(class_="margin-left-10")
+        date_finished = date_finished_element.get_text(strip=True)
+    except Exception: pass
+
+
+    digest = {
+        "bidders" : bidders,
+        "rejected_da" : rejected_da,
+        "accepted_da" : accepted_da,
+        "reserved_da" : reserved_da,
+        "rejected_dt" : rejected_dt,
+        "financial_offers" : financial_offers,
+        "winner_offers" : winner_offers,
+        "winner_justifs": winner_justifs,
+        "failures_text": failures_text,
+        "failed_lots": failed_lots,
+        "date_finished": date_finished
+    }
+
+    return digest
+
+

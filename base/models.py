@@ -569,3 +569,57 @@ class Crawler(models.Model):
         return None
 
 
+class Concurrent(models.Model):
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    active    = models.BooleanField(null=True, default=True, editable=False)
+    name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
+    ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="ICE")
+    city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
+    country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
+    date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
+    phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
+    email     = models.EmailField(blank=True, verbose_name=_('Email'))
+    activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
+    sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
+    
+    created   = models.DateTimeField(auto_now_add=True, editable=False)
+    updated   = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        db_table = 'base_concurrent'
+        ordering = ['name']
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Minutes(models.Model):
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tender    = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
+    failure   = models.CharField(max_length=255)
+    date_end  = models.DateField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_minutes'
+        ordering = ['-date_end']
+
+
+class Bid(models.Model):
+    class Flags(models.TextChoices):
+        GREEN = 'G'
+        RED   = 'R'
+        WHITE = 'W'
+        NONE  = ''
+
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bids")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+    admin_flag = models.CharField(max_length=1, choices=Flags.choices, default=Flags.NONE)
+    tech_flag  = models.CharField(max_length=1, choices=Flags.choices, default=Flags.NONE)
+    pre_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+    amount_fin = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+    winner     = models.BooleanField(blank=True, null=True, default=False)
+    win_jusify = models.CharField(max_length=512, verbose_name=_('Awarding justification'))
+
+
+

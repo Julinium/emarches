@@ -5,6 +5,7 @@ class ItemsPerPage(models.TextChoices):
     IPP_005 = '5',   "5"
     IPP_010 = '10',  "10"
     IPP_020 = '20',  "20"
+    IPP_025 = '25',  "25"
     IPP_030 = '30',  "30"
     IPP_050 = '50',  "50"
     IPP_100 = '100', "100"

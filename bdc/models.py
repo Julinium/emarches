@@ -88,7 +88,6 @@ class PurchaseOrder(models.Model):
             create_bdc_items_pdf(self)
 
 
-
 class Article(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     purchase_order = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name="articles", blank=True, null=True, verbose_name=_("Purchase Order"))

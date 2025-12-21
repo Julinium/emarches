@@ -32,7 +32,7 @@ def format(tender_json):
         j["deadline"] = helper.getDateTime(j["deadline"])
         j["cancelled"] = j["cancelled"] == "Oui"
         j["plans_price"] = helper.getAmount(j["plans_price"])
-        j["acronym"] = j["link"].split("=")[1]  
+        j["acronym"] = j["link"].split("=")[1]
 
         ebs = j["ebid_esign"] # 1: Required, 0: Not required, Else: NA
         match ebs:  # Look at the image ...
