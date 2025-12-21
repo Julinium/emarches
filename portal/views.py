@@ -77,8 +77,8 @@ def tender_list(request):
             k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
         }
         
-        # if not 'ddlnn' in query_dict:
-        if query_dict == {}:
+        if not 'ddlnn' in query_dict:
+        # if query_dict == {}:
             query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
         
         if not 'sort' in query_dict:
@@ -371,11 +371,11 @@ def tender_details(request, pk=None):
                     files_info.append({"name": entry, "size": sizens})
         
     files_count = len(files_info)
-    if tender.address_withdrawal == tender.address_bidding and \
-        tender.address_withdrawal == tender.address_opening:
-        addresses = [tender.address_withdrawal]
-    else:
-        addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
+    # if tender.address_withdrawal == tender.address_bidding and \
+    #     tender.address_withdrawal == tender.address_opening:
+    #     addresses = [tender.address_withdrawal]
+    # else:
+    #     addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
 
     favorited = tender.favorites.filter(user=user).first()
     # form = FavoriteForm(user=user, tender=tender, instance=favorited)
@@ -390,7 +390,7 @@ def tender_details(request, pk=None):
         'total_size'    : total_size,
         'files_info'    : files_info,
         'dce_modal'     : DCE_SHOW_MODAL,
-        'addresses'     : addresses,
+        # 'addresses'     : addresses,
         'full_bar_days' : full_bar_days,
         'favorited'     : favorited,
         }

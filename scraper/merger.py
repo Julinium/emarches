@@ -11,7 +11,8 @@ from scraper import helper
 from base.models import (
     Tender, Lot, Agrement, Qualif, Kind, Domain, Mode, Procedure, 
     Category, Change, Client, Meeting, Sample, Visit, FileToGet,
-    RelAgrementLot, RelDomainTender, RelQualifLot
+    RelAgrementLot, RelDomainTender, RelQualifLot,
+    Concurrent, Minutes, Bidder, AdminReject, AdminAccept, AdminReserve, TechReject
 )
 
 from scraper.serializers import (
@@ -569,6 +570,113 @@ def save(tender_data):
     return tender, tender_create
 
 
+
+@transaction.atomic
+def mergeResults(digest):
+    
+    chro = digest.get('chrono', '?')
+    acro = digest.get('acronym', '?')    
+    tender = Tender.objects.filter(chrono=chro, acronym=acro).first()
+    if not tender: return None
+
+    failures_text = digest.get('failures_text', '-')
+    date_str = digest.get('date_finished', '')
+    try: 
+        date_finished = datetime.strptime(date_str, "%d/%m/%Y").date()
+    except Exception as xc:
+        date_finished = None
+        print(xc)
+
+    minutes, created = Minutes.objects.update_or_create(
+        tender = tender,
+        defaults = {
+        'failure' : failures_text,
+        'date_end' : date_finished,}
+        )
+
+    candidates = digest.get('bidders', [])
+    if len(candidates) > 0:
+        for candidate in candidates:
+            concurrent, created = Concurrent.objects.get_or_create(name = candidate['name'])
+            bidder, created = Bidder.objects.get_or_create(
+                minutes = minutes,
+                concurrent = concurrent,
+                )
+
+    da_rejects = digest.get('rejected_da', [])
+    if len(da_rejects) > 0:
+        for da_reject in da_rejects:
+            concurrent, created = Concurrent.objects.get_or_create(name = da_reject['name'])
+            lots = da_reject.get('lots', [''])
+            if lots == ['']:
+                admin_reject = AdminReject.objects.get_or_create(
+                    minutes = minutes, 
+                    concurrent = concurrent,
+                    lot_number = 1,
+                )
+            else:
+                for lot in lots:
+                    admin_reject = AdminReject.objects.get_or_create(
+                        minutes = minutes, 
+                        concurrent = concurrent,
+                        lot_number = int(lot),
+                    )
+
+    da_accepts = digest.get('accepted_da', [])
+    if len(da_accepts) > 0:
+        for da_accept in da_accepts:
+            concurrent, created = Concurrent.objects.get_or_create(name = da_accept['name'])
+            lots = da_accept.get('lots', [''])
+            if lots == ['']:
+                admin_accept = AdminAccept.objects.get_or_create(
+                    minutes = minutes, 
+                    concurrent = concurrent,
+                    lot_number = 1,
+                )
+            else:
+                for lot in lots:
+                    admin_accept = AdminAccept.objects.get_or_create(
+                        minutes = minutes, 
+                        concurrent = concurrent,
+                        lot_number = int(lot),
+                    )
+
+    dt_rejects = digest.get('rejected_da', [])
+    if len(dt_rejects) > 0:
+        for dt_reject in dt_rejects:
+            concurrent, created = Concurrent.objects.get_or_create(name = dt_reject['name'])
+            lots = dt_reject.get('lots', [''])
+            if lots == ['']:
+                tech_reject = TechReject.objects.get_or_create(
+                    minutes = minutes, 
+                    concurrent = concurrent,
+                    lot_number = 1,
+                )
+            else:
+                for lot in lots:
+                    tech_reject = TechReject.objects.get_or_create(
+                        minutes = minutes, 
+                        concurrent = concurrent, 
+                        lot_number = int(lot), 
+                    )
+
+    digest = {
+        # "chrono"            : chro,
+        # "acronym"           : acro,
+        # "bidders"           : bidders,
+        # "rejected_da"       : rejected_da,
+        # "accepted_da"       : accepted_da,
+        # "reserved_da"       : reserved_da,
+        # "rejected_dt"       : rejected_dt,
+        "financial_offers"  : financial_offers,
+        "winner_offers"     : winner_offers,
+        "winner_justifs"    : winner_justifs,
+        # "failures_text"     : failures_text,
+        "failed_lots"       : failed_lots,
+        # "date_finished"     : date_finished
+    }
+
+
 def ensure_dt_rabat(snap, default_time=time(0,0)):
     rabat_tz = pytz.timezone("Africa/Casablanca")
     if not isinstance(snap, datetime):
@@ -576,3 +684,158 @@ def ensure_dt_rabat(snap, default_time=time(0,0)):
         return rabat_tz.localize(naive_dt)
     return snap
 
+
+
+
+
+digest = {
+    'chrono': '929833', 
+    'acronym': 'q9t', 
+    
+    'bidders': [
+        {'name': 'FERIMED'}, 
+        {'name': 'MEDPRO SYSTEMS'}, 
+        {'name': 'BEL MEDIC'}, 
+        {'name': 'CYBERNETIC MEDICAL'}, 
+        {'name': 'GLOBALE TECHNIQUE SANTE (GTS S'}, 
+        {'name': 'MEGAFLEX'}, 
+        {'name': 'STE MEDICAL SYSTEMS'}, 
+        {'name': 'MABIOTECH'}, 
+        {'name': 'LA MAISON DU MEDICAL ET DU LAB'}, 
+        {'name': 'PROMEDSTORE'}, 
+        {'name': 'STE USAGE MEDICAL'}, 
+        {'name': 'NS MEDICAL'}, 
+        {'name': 'NS DENTAL'}, 
+        {'name': 'SAYTECK'}, 
+        {'name': 'DELTATEC'}, 
+        {'name': 'SCRIM'}, 
+        {'name': 'ABMED'}, 
+        {'name': 'CLAES MEDICAL SERVICE'}, 
+        {'name': 'SIEL MED'}, 
+        {'name': 'TECHNIQUES SCIENCE SANTE'}, 
+        {'name': 'SIGMA MEDICAL'}, 
+        {'name': 'RELAIS MEDICAL'}, 
+        {'name': 'NUMELEC MAROC'}, 
+        {'name': 'MDBIOMEDICAL'}, 
+        {'name': 'REACTING'}, 
+        {'name': 'METEC DIAGNOSTIC'}, 
+        {'name': '3Medical'}, 
+        {'name': 'ULTRANET MULTIMEDIA'}
+    ], 
+
+    'rejected_da': [
+        {'name': '3Medical', 'lots': ['9', '18']}, 
+        {'name': 'ABMED', 'lots': ['7', '8']}, 
+        {'name': 'BEL MEDIC', 'lots': ['8']}, 
+        {'name': 'CLAES MEDICAL SERVICE', 'lots': ['10']}, 
+        {'name': 'DELTATEC', 'lots': ['5', '6', '9', '10']}, 
+        {'name': 'GLOBALE TECHNIQUE SANTE (GTS S', 'lots': ['10', '11']}, 
+        {'name': 'LA MAISON DU MEDICAL ET DU LAB', 'lots': ['14']}, 
+        {'name': 'MDBIOMEDICAL', 'lots': ['11']}, 
+        {'name': 'MEGAFLEX', 'lots': ['14']}, 
+        {'name': 'METEC DIAGNOSTIC', 'lots': ['3', '10']}, 
+        {'name': 'NS DENTAL', 'lots': ['6', '8', '10', '11']}, 
+        {'name': 'NS MEDICAL', 'lots': ['6', '8', '10', '11']}, 
+        {'name': 'NUMELEC MAROC', 'lots': ['10']}, 
+        {'name': 'PROMEDSTORE', 'lots': ['3', '10']}, 
+        {'name': 'RELAIS MEDICAL', 'lots': ['5']}, 
+        {'name': 'SAYTECK', 'lots': ['6', '8', '10', '11']}, 
+        {'name': 'SIEL MED', 'lots': ['8']}, 
+        {'name': 'SIGMA MEDICAL', 'lots': ['11']}, 
+        {'name': 'STE USAGE MEDICAL', 'lots': ['11']}, 
+        {'name': 'ULTRANET MULTIMEDIA', 'lots': ['3', '10']}
+    ], 
+
+    'accepted_da': [
+        {'name': 'CYBERNETIC MEDICAL', 'lots': ['4']}, 
+        {'name': 'DELTATEC', 'lots': ['3', '8']}, 
+        {'name': 'FERIMED', 'lots': ['7']}, 
+        {'name': 'MABIOTECH', 'lots': ['14']}, 
+        {'name': 'MEDPRO SYSTEMS', 'lots': ['16']}, 
+        {'name': 'METEC DIAGNOSTIC', 'lots': ['11']}, 
+        {'name': 'NS DENTAL', 'lots': ['3']}, 
+        {'name': 'NS MEDICAL', 'lots': ['3']}, 
+        {'name': 'NUMELEC MAROC', 'lots': ['3']}, 
+        {'name': 'PROMEDSTORE', 'lots': ['7']}, 
+        {'name': 'REACTING', 'lots': ['11']}, 
+        {'name': 'RELAIS MEDICAL', 'lots': ['7']}, 
+        {'name': 'SAYTECK', 'lots': ['3']}, 
+        {'name': 'SCRIM', 'lots': ['1', '2', '3', '6', '8', '9', '10', '11']}, 
+        {'name': 'SIEL MED', 'lots': ['3', '7']}, 
+        {'name': 'SIGMA MEDICAL', 'lots': ['5', '7']}, 
+        {'name': 'STE MEDICAL SYSTEMS', 'lots': ['8']}, 
+        {'name': 'TECHNIQUES SCIENCE SANTE', 'lots': ['3', '9', '10']}
+    ], 
+
+    'reserved_da': [], 
+    'rejected_dt': [], 
+
+    'financial_offers': [
+        {'name': 'FERIMED', 'lot': '7', 'pre_amount': '92 640,00', 'amount': '92 640,00'}, 
+        {'name': 'MEDPRO SYSTEMS', 'lot': '16', 'pre_amount': '92 502,00', 'amount': '92 502,00'}, 
+        {'name': 'CYBERNETIC MEDICAL', 'lot': '4', 'pre_amount': '218 280,00', 'amount': '218 280,00'}, 
+        {'name': 'STE MEDICAL SYSTEMS', 'lot': '8', 'pre_amount': '44 550,00', 'amount': '44 550,00'}, 
+        {'name': 'MABIOTECH', 'lot': '14', 'pre_amount': '241 080,00', 'amount': '241 080,00'}, 
+        {'name': 'PROMEDSTORE', 'lot': '7', 'pre_amount': '84 000,00', 'amount': '84 000,00'}, 
+        {'name': 'NS MEDICAL', 'lot': '3', 'pre_amount': '777 924,00', 'amount': '777 924,00'}, 
+        {'name': 'NS DENTAL', 'lot': '3', 'pre_amount': '922 278,00', 'amount': '922 278,00'}, 
+        {'name': 'SAYTECK', 'lot': '3', 'pre_amount': '921 984,00', 'amount': '921 984,00'}, 
+        {'name': 'DELTATEC', 'lot': '3', 'pre_amount': '719 594,40', 'amount': '719 594,40'}, 
+        {'name': 'DELTATEC', 'lot': '8', 'pre_amount': '43 531,20', 'amount': '43 531,20'}, 
+        {'name': 'SCRIM', 'lot': '1', 'pre_amount': '837 900,00', 'amount': '837 900,00'}, 
+        {'name': 'SCRIM', 'lot': '2', 'pre_amount': '234 000,00', 'amount': '234 000,00'}, 
+        {'name': 'SCRIM', 'lot': '3', 'pre_amount': '758 520,00', 'amount': '758 520,00'}, 
+        {'name': 'SCRIM', 'lot': '6', 'pre_amount': '2 032 800,00', 'amount': '2 032 800,00'}, 
+        {'name': 'SCRIM', 'lot': '8', 'pre_amount': '45 120,00', 'amount': '45 120,00'}, 
+        {'name': 'SCRIM', 'lot': '9', 'pre_amount': '1 016 400,00', 'amount': '1 016 400,00'}, 
+        {'name': 'SCRIM', 'lot': '10', 'pre_amount': '1 083 600,00', 'amount': '1 083 600,00'}, 
+        {'name': 'SCRIM', 'lot': '11', 'pre_amount': '1 437 720,00', 'amount': '1 437 720,00'}, 
+        {'name': 'SIEL MED', 'lot': '3', 'pre_amount': '784 980,00', 'amount': '784 980,00'}, 
+        {'name': 'SIEL MED', 'lot': '7', 'pre_amount': '93 600,00', 'amount': '93 600,00'}, 
+        {'name': 'TECHNIQUES SCIENCE SANTE', 'lot': '3', 'pre_amount': '883 176,00', 'amount': '883 176,00'}, 
+        {'name': 'TECHNIQUES SCIENCE SANTE', 'lot': '9', 'pre_amount': '1 192 800,00', 'amount': '1 192 800,00'}, 
+        {'name': 'TECHNIQUES SCIENCE SANTE', 'lot': '10', 'pre_amount': '1 194 480,00', 'amount': '1 194 480,00'}, 
+        {'name': 'SIGMA MEDICAL', 'lot': '5', 'pre_amount': '160 296,00', 'amount': '160 296,00'}, 
+        {'name': 'SIGMA MEDICAL', 'lot': '7', 'pre_amount': '96 864,00', 'amount': '96 864,00'}, 
+        {'name': 'RELAIS MEDICAL', 'lot': '7', 'pre_amount': '95 040,00', 'amount': '95 040,00'}, 
+        {'name': 'NUMELEC MAROC', 'lot': '3', 'pre_amount': '762 974,10', 'amount': '762 974,10'}, 
+        {'name': 'REACTING', 'lot': '11', 'pre_amount': '1 399 800,00', 'amount': '1 399 800,00'}, 
+        {'name': 'METEC DIAGNOSTIC', 'lot': '11', 'pre_amount': '1 449 192,00', 'amount': '1 449 192,00'}
+    ], 
+
+    'winner_offers': [
+        {'lot': '1', 'name': 'SCRIM', 'amount': '837 900,00'}, 
+        {'lot': '2', 'name': 'SCRIM', 'amount': '234 000,00'}, 
+        {'lot': '3', 'name': 'SIEL MED', 'amount': '784 980,00'}, 
+        {'lot': '4', 'name': 'CYBERNETIC MEDICAL', 'amount': '218 280,00'}, 
+        {'lot': '5', 'name': 'SIGMA MEDICAL', 'amount': '160 296,00'}, 
+        {'lot': '6', 'name': 'SCRIM', 'amount': '2 032 800,00'}, 
+        {'lot': '7', 'name': 'SIEL MED', 'amount': '93 600,00'}, 
+        {'lot': '8', 'name': 'STE MEDICAL SYSTEMS', 'amount': '44 550,00'}, 
+        {'lot': '9', 'name': 'SCRIM', 'amount': '1 016 400,00'}, 
+        {'lot': '10', 'name': 'SCRIM', 'amount': '1 083 600,00'}, 
+        {'lot': '11', 'name': 'SCRIM', 'amount': '1 437 720,00'}, 
+        {'lot': '14', 'name': 'MABIOTECH', 'amount': '241 080,00'}, 
+        {'lot': '16', 'name': 'MEDPRO SYSTEMS', 'amount': '92 502,00'}
+    ], 
+
+    'winner_justifs': [
+        {'lot': '1', 'justif': 'Mieux disant.'}, 
+        {'lot': '2', 'justif': 'Mieux disant.'}, 
+        {'lot': '3', 'justif': 'Mieux disant.'}, 
+        {'lot': '4', 'justif': 'Mieux disant.'}, 
+        {'lot': '5', 'justif': 'Mieux disant.'}, 
+        {'lot': '6', 'justif': 'Mieux disant.'}, 
+        {'lot': '7', 'justif': 'Mieux disant.'}, 
+        {'lot': '8', 'justif': 'Mieux disant.'}, 
+        {'lot': '9', 'justif': 'Mieux disant.'}, 
+        {'lot': '10', 'justif': 'Mieux disant.'}, 
+        {'lot': '11', 'justif': 'Mieux disant.'}, 
+        {'lot': '14', 'justif': 'Mieux disant.'}, 
+        {'lot': '16', 'justif': 'Mieux disant.'}
+    ], 
+
+    'failures_text': 'Néant', 
+    'failed_lots': [], 
+    'date_finished': '01/12/2025'
+}

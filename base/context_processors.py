@@ -162,9 +162,7 @@ def portal_context(request):
 
     user = request.user
     if not user or not user.is_authenticated:
-        return context
-        
-    # user_settings = UserSetting.objects.get_or_create(user = request.user)
+        return context        
 
     user_settings = UserSetting.objects.filter(user = request.user).first()
     if not user_settings: user_settings = UserSetting.objects.create(user=request.user)

@@ -101,7 +101,7 @@
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-location' val_value=tender.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
         </div>
 
-        <div>
+        <div id="collapseAdvanced">
             <div class="row gx-4 gy-0">
                 {% trans 'Procedure' as key_value %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-procedure' val_value=tender.procedure.name key_value=key_value uni_value='' ico_class=bicons.procedure val_class='' border='bottom' liner='' %}
@@ -158,6 +158,11 @@
                     {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-plans_price' val_value=tender.plans_price key_value=key_value uni_value='' ico_class=bicons.plans_price val_class='' border='bottom' liner='' %}
                 {% endif %}
 
+                {% if tender.domains.all %}
+                    {% trans 'Domains of activity' as key_value %}
+                    {% include 'base/snippets/ico-key-list.html' with id_value=tender.chrono|add:'-domain' items=tender.domains.all key_value=key_value uni_value='' full_width='yes' ico_class=bicons.domains val_class='small' border='bottom' liner='' %}
+                {% endif %}
+
 
                 {% if tender.lots.count == 1 %}
                     {% if tender.lots.first.agrements.all %}
@@ -189,219 +194,84 @@
                     {% endtimezone %}
                 {% endif %}
 
-
                 {% if tender.lots_count > 1 %}
-                    <div class="accordion my-3" id="accordionLots">
-                        <div class="accordion-item shadow-sm">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lotsCollapse" aria-expanded="true" aria-controls="lotsCollapse">
-                                    <span><i class="{{ bicons.multi_lots }}"></i></span>
-                                    <span class="fw-bold ms-1">{{ tender.lots_count }}</span>
-                                    <span class="ms-2 fw-light">{% trans "Lots details" %}</span>
-                                </button>
-                            </h2>
-                            <div id="lotsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionLots">
-                                <div class="accordion-body p-0">
-                                                                        
-                                    <table class="table table-hover mb-0">
-                                        <tbody>
-                                            {% for lot in tender.lots.all %}
-                                                <tr>
-                                                    <td class="p-3">
-                                                        {% include 'portal/snippets/lots/lot-details.html' with lot=lot %}
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                    
-                                </div>
-                            </div>
-                        </div>
+                    <div>
+                        <button type="button" class="m-1 btn btn-outline-secondary" 
+                                data-bs-toggle="modal" data-bs-target="#t{{ tender.chrono }}m">
+                            <span><i class="{{ bicons.multi_lots }}"></i></span>
+                            <span class="fw-bold">{{ tender.lots_count }}</span>
+                            <span class="ms-1">{% trans "Lots details" %}</span>
+                        </button>
+                        <span class="text-start">
+                            {% include 'portal/snippets/lots/lots-details.html' with chrono=tender.chrono lots=tender.lots.all %}
+                        </span>
                     </div>
                 {% endif %}
 
-                {% if tender.domains.all %}
-                    <div class="accordion my-3" id="accordionDomains">
-                        <div class="accordion-item shadow-sm">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#domainsCollapse" aria-expanded="true" aria-controls="domainsCollapse">
-                                    <span><i class="{{ bicons.domains }}"></i></span>
-                                    <span class="fw-bold ms-1">{{ tender.domains.count }}</span>
-                                    <span class="ms-2 fw-light">{% trans "Domains of activity" %}</span>
-                                </button>
-                            </h2>
-                            <div id="domainsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionDomains">
-                                <div class="accordion-body p-0">
-                                    <table class="table table-hover small mb-0">
-                                        <tbody>
-                                            {% for domain in tender.domains.all %}
-                                                <tr>
-                                                    <td class="p-3">
-                                                        <span>{{ domain.name }}</span>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>                             
-                                </div>
-                            </div>
+                {% trans 'Withdrawal, Bidding & Awarding addresses' as key_value %}
+                {% include 'base/snippets/ico-key-list.html' with id_value=tender.chrono|add:'-address' items=addresses key_value=key_value uni_value='' full_width='yes' ico_class=bicons.address val_class='small' border='bottom' liner='' %}
+                
+                <div class="col-12">
+                    <div class="d-flex my-3">
+                        <div>
+                            <i class="{{ bicons.contact }}"></i>
                         </div>
-                    </div>
-
-                {% endif %}
-
-
-                <div class="accordion my-3" id="accordionContact">
-                    <div class="accordion-item shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#contactCollapse" aria-expanded="true" aria-controls="contactCollapse">
-                                <span><i class="{{ bicons.address }}"></i></span>
-                                <span><i class="{{ bicons.contact }}"></i></span>
-                                <span class="ms-2 fw-light">{% trans "Addresses and Contact" %}</span>
-                            </button>
-                        </h2>
-                        <div id="contactCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionContact">
-                            <div class="accordion-body py-0 px-3">
-                                <div class="row gx-3 gy-1 small">
-                                    {% trans 'Withdrawal Address' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_withdrawal|add:'-withdrawal' val_value=tender.address_withdrawal key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner='' %}
-                                    
-                                    {% trans 'Bidding Address' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_bidding|add:'-bidding' val_value=tender.address_bidding key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner='' %}
-                                    
-                                    {% trans 'Opening Address' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_opening|add:'-opening' val_value=tender.address_opening key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner='' %}
-                                    
-                                    {% trans 'Person' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_name' val_value=tender.contact_name key_value=key_value uni_value=uni_value ico_class=bicons.contact val_class='' border='bottom' liner='' %}
-                                    
-                                    {% if tender.contact_phone and tender.contact_phone != '-' %}                                        
-                                        {% trans 'Phone' as key_value %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_phone' val_value=tender.contact_phone key_value=key_value uni_value=uni_value ico_class='bi bi-telephone' val_class='' border='bottom' liner='' %}
-                                    {% endif %}
-
-                                    {% if tender.contact_email and tender.contact_email != '-' %}                                        
-                                        {% trans 'Email' as key_value %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_email' val_value=tender.contact_email key_value=key_value uni_value=uni_value ico_class='bi bi-envelope' val_class='' border='bottom' liner='' %}
-                                    {% endif %}
-
-                                    {% if tender.contact_fax and tender.contact_fax != '-' %}                                        
-                                        {% trans 'Fax' as key_value %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_fax' val_value=tender.contact_fax key_value=key_value uni_value=uni_value ico_class='bi bi-printer' val_class='' border='bottom' liner='' %}
-                                    {% endif %}
-
-                                </div>
-                                
+                        <div class="ms-2 w-100 border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans 'Public Client Contact' %}
+                            </div>
+                            <div class="" id="public-contact">
+                                {% if tender.contact_name and tender.contact_name != '-' %}
+                                    <span class="me-1 mb-1 small">{{ tender.contact_name }}</span>
+                                {% endif %}
+                                {% if tender.contact_phone and tender.contact_phone != '-' %}
+                                    <span class="me-1 small">
+                                        <a href="tel:{{ tender.contact_phone }}" 
+                                        class="">
+                                            <i class="bi bi-telephone"></i>
+                                            {{ tender.contact_phone }}
+                                        </a>
+                                    </span>
+                                {% endif %}
+                                {% if tender.contact_email and tender.contact_email != '-' %}
+                                    <span class="me-1 small">
+                                        <a href="mailto:{{ tender.contact_email }}" 
+                                        class="">
+                                            <i class="bi bi-envelope"></i>
+                                            {{ tender.contact_email }}
+                                        </a>
+                                    </span>
+                                {% endif %}
+                                {% if tender.contact_fax and tender.contact_fax != '-' %}
+                                    <span class="me-1 small">
+                                        <a href="tel:{{ tender.contact_fax }}" 
+                                        class="">
+                                            <i class="bi bi-printer"></i>
+                                            {{ tender.contact_fax }}
+                                        </a>
+                                    </span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="accordion my-3" id="accordionMeta">
-                    <div class="accordion-item shadow-sm">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#metaCollapse" aria-expanded="true" aria-controls="metaCollapse">
-                                <span><i class="{{ bicons.database }}"></i></span>
-                                <span class="ms-2 fw-light">{% trans "Advanced data" %}</span>
-                            </button>
-                        </h2>
-                        <div id="metaCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionMeta">
-                            <div class="accordion-body py-0 px-3">
-                                <div class="row gx-3 gy-1">
-                                    {% timezone "UTC" %}
-                                        {% trans 'Created' as key_value %}
-                                        {% trans 'UTC' as unit %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-created' val_value=tender.created key_value=key_value uni_value=unit ico_class=bicons.created val_class='text-muted small' border='bottom' liner='' %}
-                                    {% endtimezone %}
-                                    
-                                    {% timezone "UTC" %}
-                                        {% trans 'UTC' as unit %}
-                                        {% trans 'Last updated' as key_value %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-updated' val_value=tender.updated key_value=key_value uni_value=unit ico_class=bicons.updated val_class='text-muted small' border='bottom' liner='' %}
-                                    {% endtimezone %}
-
-                                    {% trans 'Time on display' as key_value %}
-                                    {% trans 'days' as uni_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_span' val_value=tender.days_span key_value=key_value uni_value=uni_value ico_class=bicons.days_span val_class='text-muted small' border='bottom' liner='' %}
-
-                                    {% trans 'Guarantee ratio' as key_value %}
-                                    {% with tender.bond_ratio|floatformat:3 as val_value %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' %}
-                                    {% endwith %}
-
-                                    {% trans 'Database ID' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
-                                    
-
-                                    {% trans 'Views' as key_value %}
-                                    {% with count=tender.views.all|length|metrify:0 %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-views' val_value=count key_value=key_value uni_value='' ico_class=bicons.views val_class='text-muted small' border='bottom' liner='' %}
-                                    {% endwith %}
-                                    {% if tender.views.all %}
-                                        {% trans 'Latest view since' as key_value %}
-                                        {% with latest=tender.views.first.when|timesince %}
-                                            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
-                                        {% endwith %}
-                                    {% endif %}
-
-                                    {% trans 'Downloads' as key_value %}
-                                    {% with count=tender.downloads.all|length|metrify:0 %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-downloads' val_value=count key_value=key_value uni_value='' ico_class=bicons.downloads val_class='text-muted small' border='bottom' liner='' %}
-                                    {% endwith %}
-                                    {% if tender.downloads.all %}
-                                        {% trans 'Latest download since' as key_value %}
-                                        {% with latest=tender.downloads.first.when|timesince %}
-                                            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
-                                        {% endwith %}
-                                    {% endif %}
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div id="tender-extras" class="text-center">
+                    <a class="m-1 btn btn-outline-secondary" 
+                        type="button" data-bs-toggle="modal" 
+                        data-bs-target="#advancedModal">
+                        <span><i class="{{ bicons.database }}"></i></span>
+                        <span class="ms-1">{% trans 'Advanced data' %}</span>
+                    </a>
+                    {% if tender.changes.all %}
+                        <a class="m-1 btn btn-outline-secondary" 
+                            type="button" data-bs-toggle="modal" 
+                            data-bs-target="#changesModal">
+                            <span><i class="{{ bicons.changes }}"></i></span>
+                            <span class="ms-1">{% trans 'Changes' %}</span>
+                        </a>
+                    {% endif %}
                 </div>
-
-                {% if tender.changes.all %}
-                    <div class="accordion my-3" id="accordionChanges">
-                        <div class="accordion-item shadow-sm">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#changesCollapse" aria-expanded="true" aria-controls="changesCollapse">
-                                    <span><i class="{{ bicons.changes }}"></i></span>
-                                    <span class="fw-bold ms-1">{{ tender.changes.count }}</span>
-                                    <span class="ms-2 fw-light">{% trans "Changes" %}</span>
-                                    <span><i class="bi bi-exclamation-diamond px-1 ms-2 small fw-light text-warning"> {% trans "Experimental" %}</i></span>
-                                </button>
-                            </h2>
-                            <div id="changesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionChanges">
-                                <div class="accordion-body small p-0">
-                                    <table class="table table-hover small mb-0">
-                                        <tbody>
-                                            {% trans 'None' as empty %}
-                                            {% for change in tender.changes.all %}
-                                                {% for mod in change.changes|dictify %}
-                                                    <tr>
-                                                        <td class="p-3">
-                                                            <i class="bi bi-clock"></i>
-                                                            <span>{{ change.reported }}</span>
-                                                            <i class="{{ bicons.changes }} ms-2"></i>
-                                                            <span class="fw-bold">{{ mod.field }}</span>
-                                                            <i class="bi bi-eraser ms-2"></i>
-                                                            <span class="text-muted">{{ mod.old_value|default:empty }}</span>
-                                                            <i class="bi bi-pen ms-2"></i>
-                                                            <span class="fw-bold">{{ mod.new_value|default:empty }}</span>
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>                                                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endif %}
-
             </div>
         </div>
     </div>
@@ -595,6 +465,7 @@
                         <div class="mb-3 p-1 border rounded bg-warning-subtle shadow shadow-sm">
                             <span><i class="bi bi-exclamation-diamond px-1"></i></span>
                             <span class="small fw-light text-muted">{% trans 'Changes are collected independantly and are prone to inaccuracies' %}.</span>
+
                         </div>
                         <table class="table table-hover small">
                             <tbody>

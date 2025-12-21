@@ -596,7 +596,7 @@ class Concurrent(models.Model):
 class Minutes(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tender    = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
-    failure   = models.CharField(max_length=255)
+    failure   = models.CharField(max_length=512, blank=True, null=True)
     date_end  = models.DateField(blank=True, null=True)
 
     class Meta:
@@ -604,22 +604,93 @@ class Minutes(models.Model):
         ordering = ['-date_end']
 
 
-class Bid(models.Model):
-    class Flags(models.TextChoices):
-        GREEN = 'G'
-        RED   = 'R'
-        WHITE = 'W'
-        NONE  = ''
-
+class Bidder(models.Model):    
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bids")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-    admin_flag = models.CharField(max_length=1, choices=Flags.choices, default=Flags.NONE)
-    tech_flag  = models.CharField(max_length=1, choices=Flags.choices, default=Flags.NONE)
-    pre_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
-    amount_fin = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
-    winner     = models.BooleanField(blank=True, null=True, default=False)
-    win_jusify = models.CharField(max_length=512, verbose_name=_('Awarding justification'))
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_accepts")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_accepts")
 
+    class Meta:
+        db_table = 'base_bidder'
+        ordering = ['-concurrent']
+
+
+class AdminReject(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_rejects")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_rejects")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_admin_reject'
+        ordering = ['-concurrent']
+
+
+class AdminAccept(models.Model):    
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_accepts")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_accepts")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_admin_accept'
+        ordering = ['-concurrent']
+
+
+class AdminReserve(models.Model):    
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_reserves")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_reserves")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_admin_reserve'
+        ordering = ['-concurrent']
+
+
+class TechReject(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="tech_rejects")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="tech_rejects")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_tech_reject'
+        ordering = ['-concurrent']
+
+
+class BidAccepted(models.Model):
+    id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent    = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bid_accepteds")
+    minutes       = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bid_accepteds")
+    lot_number    = models.SmallIntegerField(blank=True, null=True)
+    amount_before = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+    amount_after  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+
+    class Meta:
+        db_table = 'base_bid_accepted'
+        ordering = ['amount_after']
+
+
+class BidWinner(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bid_winners")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bid_winners")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_bid_winner'
+        ordering = ['-concurrent']
+
+
+class WinJustif(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="win_justifs")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="win_justifs")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+    justif     = models.CharField(max_length=512, blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_win_justif'
+        ordering = ['-concurrent']
 
 

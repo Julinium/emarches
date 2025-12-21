@@ -24,7 +24,8 @@ def getJson(link_item, skipExisting=False):
     if link_item == None or len(link_item) < 3:
         helper.printMessage('ERROR', 'g.getJson', 'Got an invalid link item.')
         return None
-    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = {link_item[0]}')
+    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = 
+    {link_item[0]}')
     if skipExisting:
         e = Tender.objects.filter(chrono=link_item[0])
         if e.first():
@@ -798,7 +799,6 @@ def getMinutes(chro='', acro=''):
         if failures_text != "Néant":
             failed_list = failures_text.split(":")[1].strip()
             failed_lots = [ x.strip() for x in failed_list.split(",")]
-
     except Exception: pass
 
 
@@ -810,17 +810,19 @@ def getMinutes(chro='', acro=''):
 
 
     digest = {
-        "bidders" : bidders,
-        "rejected_da" : rejected_da,
-        "accepted_da" : accepted_da,
-        "reserved_da" : reserved_da,
-        "rejected_dt" : rejected_dt,
-        "financial_offers" : financial_offers,
-        "winner_offers" : winner_offers,
-        "winner_justifs": winner_justifs,
-        "failures_text": failures_text,
-        "failed_lots": failed_lots,
-        "date_finished": date_finished
+        "chrono"            : chro,
+        "acronym"           : acro,
+        "bidders"           : bidders,
+        "rejected_da"       : rejected_da,
+        "accepted_da"       : accepted_da,
+        "reserved_da"       : reserved_da,
+        "rejected_dt"       : rejected_dt,
+        "financial_offers"  : financial_offers,
+        "winner_offers"     : winner_offers,
+        "winner_justifs"    : winner_justifs,
+        "failures_text"     : failures_text,
+        "failed_lots"       : failed_lots,
+        "date_finished"     : date_finished
     }
 
     return digest
