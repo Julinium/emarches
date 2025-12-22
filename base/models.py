@@ -582,8 +582,8 @@ class Concurrent(models.Model):
     activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
     sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
     
-    created   = models.DateTimeField(auto_now_add=True, editable=False)
-    updated   = models.DateTimeField(auto_now=True, editable=False)
+    # created   = models.DateTimeField(auto_now_add=True, editable=False)
+    # updated   = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         db_table = 'base_concurrent'
@@ -606,8 +606,8 @@ class Minutes(models.Model):
 
 class Bidder(models.Model):    
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_accepts")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_accepts")
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bidders")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bidders")
 
     class Meta:
         db_table = 'base_bidder'
@@ -658,39 +658,49 @@ class TechReject(models.Model):
         ordering = ['-concurrent']
 
 
-class BidAccepted(models.Model):
+class SelectedBid(models.Model):
     id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent    = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bid_accepteds")
-    minutes       = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bid_accepteds")
+    concurrent    = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="selected_bids")
+    minutes       = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="selected_bids")
     lot_number    = models.SmallIntegerField(blank=True, null=True)
     amount_before = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
     amount_after  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
 
     class Meta:
-        db_table = 'base_bid_accepted'
+        db_table = 'base_selected_bid'
         ordering = ['amount_after']
 
 
-class BidWinner(models.Model):
+class WinnerBid(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bid_winners")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bid_winners")
+    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="winner_bids")
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="winner_bids")
     lot_number = models.SmallIntegerField(blank=True, null=True)
+    amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
 
     class Meta:
-        db_table = 'base_bid_winner'
+        db_table = 'base_winner_bid'
         ordering = ['-concurrent']
 
 
 class WinJustif(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="win_justifs")
     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="win_justifs")
     lot_number = models.SmallIntegerField(blank=True, null=True)
     justif     = models.CharField(max_length=512, blank=True, null=True)
 
     class Meta:
         db_table = 'base_win_justif'
-        ordering = ['-concurrent']
+        ordering = ['lot_number']
+
+
+class FailedLot(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="failed_lots")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_failed_lot'
+        ordering = ['lot_number']
 
 

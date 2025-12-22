@@ -24,8 +24,7 @@ def getJson(link_item, skipExisting=False):
     if link_item == None or len(link_item) < 3:
         helper.printMessage('ERROR', 'g.getJson', 'Got an invalid link item.')
         return None
-    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = 
-    {link_item[0]}')
+    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = {link_item[0]}')
     if skipExisting:
         e = Tender.objects.filter(chrono=link_item[0])
         if e.first():

@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('clients/',                    views.client_list,              name='portal_client_list'),
     path('locations/',                  views.locations_list,           name='portal_locations_list'),
+    path('domains/',                    views.domain_list,              name='portal_domain_list'),
     
     path('favorites/',                  views.tender_favorite_list,     name='portal_tender_favorite_list'),
     path('favorites/clean/<str:span>/', views.tender_favorite_clean,    name='portal_tender_favorite_clean'),

@@ -29,7 +29,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth.models import User
 
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
-from base.models import Tender, Category, Client, Lot, Procedure, Crawler, Agrement, Qualif
+from base.models import Tender, Category, Client, Domain, Lot, Procedure, Crawler, Agrement, Qualif
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
@@ -71,6 +71,7 @@ def tender_list(request):
             'category', 'procedure', 'ebid', 'esign', 
             'pme', 'variant', 'agrements', 'qualifs',
             'samples', 'meetings', 'visits', 'page', 'sort',
+            'exact',
             ]
 
         query_dict = {
@@ -131,7 +132,10 @@ def tender_list(request):
                     case 'reference':
                         tenders = afas(tenders, ['refwords'], q)
                     case 'domains':
-                        tenders = afas(tenders, ['domwords'], q)
+                        if 'exact' in params:
+                            tenders=tenders.filter(domains__name=q)
+                        else : 
+                            tenders = afas(tenders, ['domwords'], q)
                     case _:
                         tenders = afas(tenders, ['keywords'], q)
             else:
@@ -371,16 +375,8 @@ def tender_details(request, pk=None):
                     files_info.append({"name": entry, "size": sizens})
         
     files_count = len(files_info)
-    # if tender.address_withdrawal == tender.address_bidding and \
-    #     tender.address_withdrawal == tender.address_opening:
-    #     addresses = [tender.address_withdrawal]
-    # else:
-    #     addresses = [tender.address_withdrawal, tender.address_bidding, tender.address_opening]
-
     favorited = tender.favorites.filter(user=user).first()
-    # form = FavoriteForm(user=user, tender=tender, instance=favorited)
 
-    # us = get_user_settings(request)
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
@@ -390,7 +386,6 @@ def tender_details(request, pk=None):
         'total_size'    : total_size,
         'files_info'    : files_info,
         'dce_modal'     : DCE_SHOW_MODAL,
-        # 'addresses'     : addresses,
         'full_bar_days' : full_bar_days,
         'favorited'     : favorited,
         }
@@ -649,7 +644,6 @@ def client_list(request):
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
     CLIENTS_ORDERING_FIELD = 'tenders_count'
-    # CLIENTS_ORDERING_FIELD = 'name'
 
     def get_req_params(req):
         allowed_keys = [
@@ -692,7 +686,6 @@ def client_list(request):
         return context
 
     query_dict, query_string, query_unsorted = get_req_params(request)
-    # all_clients = Tender.objects.all()
     assa = timezone.now()
     all_clients = Client.objects.annotate(
         tenders_count=Count('tenders', filter=Q(
@@ -743,3 +736,103 @@ def client_list(request):
 
     return render(request, 'portal/clients-list.html', context)
 
+
+def domain_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+    
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    if us: 
+        CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+        SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+        SHOW_CANCELLED = us.tenders_show_cancelled
+    CLIENTS_ORDERING_FIELD = 'tenders_count'
+
+    def get_req_params(req):
+        allowed_keys = [
+            'q', 'page', 'sort',
+            ]
+
+        query_dict = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
+        }
+        if not 'sort' in query_dict:
+            query_dict['sort'] = CLIENTS_ORDERING_FIELD
+            
+        query_string = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
+        }
+
+        query_unsorted = {
+            k: v for k, v in req.GET.items()
+            if k in allowed_keys and v != '' and k not in ('page', 'sort')
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_domains(domains, params):
+        ff = 0
+        if not params : return domains.distinct(), ff
+
+        if 'q' in params:
+            ff += 1
+            q = params['q']
+            domains = domains.filter(name__icontains=q)
+        return domains.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context['query_string']       = urlencode(query_string)
+        context['query_unsorted']     = urlencode(query_unsorted)
+        context['query_dict']         = query_dict
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+    assa = timezone.now()
+    
+    if SHOW_CANCELLED: silter = Q(tenders__deadline__gte=assa)
+    else: silter = Q(tenders__deadline__gte=assa, tenders__cancelled=False)
+
+    all_domains = Domain.objects.annotate(
+        tenders_count=Count('tenders', filter=silter),
+        total_estimate=Sum('tenders__estimate', filter=silter)
+    ).filter(tenders_count__gt=0)
+
+
+    domains, filters = filter_domains(all_domains, query_dict)
+
+    sort = query_dict['sort']
+
+    if sort and sort != '':
+        ordering = [sort]
+        if sort == 'tenders_count': ordering = ['-tenders_count']
+        if sort == '-tenders_count': ordering = ['tenders_count']
+        if sort == 'total_estimate': ordering = ['-total_estimate']
+        if sort == '-total_estimate': ordering = ['total_estimate']
+    else: ordering = []
+
+    query_dict['filters'] = filters
+
+    domains = domains.order_by(*ordering)
+
+    context = define_context(request)
+
+    paginator = Paginator(domains, CLIENTS_ITEMS_PER_PAGE)
+    page_number = request.GET['page'] if 'page' in request.GET else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context['page_obj'] = page_obj
+    context['domains'] = domains
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Domains List view")
+
+    return render(request, 'portal/domains-list.html', context)

@@ -141,70 +141,47 @@
         {% endif %}
 
 
-        <div class="col-12">
-            <div class="d-flex mt-3">
-                <div>
-                    <i class="{{ bicons.articles}}"></i>
-                </div>
-                <div class="ms-2 w-100">                    
-                    <span class="text-muted small fw-light">
-                        {% trans "Items" %}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <div id="articles-digest" class="list-group mb-3 shadow-sm">
-
-            {% for article in featured %}
-            <div class="list-group-item list-group-item-action">
-                <div class="oneline">
-                    <span class="me-1 text-muted">{{ article.rank }}.</span>
-                    <span class="me-1 fw-bold">{{ article.title }}</span>
-                    <span class="me-1 badge bg-secondary">{{ article.quantity|floatformat:"-0" }} x {{ article.uom }}</span>
-                    <span class="me-1 badge bg-warning">{{ article.vat_percent|floatformat:"-0" }}%</span>
-                </div> 
-            </div>
-            {% empty %}
-                <div class="list-group-item text-danger small">{% trans "No items found" %}</div>
-            {% endfor %}
-            {% if extra > 0 %}
-                <div class="list-group-item text-muted small text-center">
-                    <span class="">+{{ extra }} {% trans "more" %} ...</span>
-                </div>
-            {% endif %}
-        </div>
 
         {% if bdc.articles.all %}
-            <div id="articles-details" class="text-end">
-                <button type="button" class="mb-1 btn btn-outline-secondary" 
-                        data-bs-toggle="modal" data-bs-target="#b{{ bdc.chrono }}m">
-                    <span><i class="{{ bicons.articles }}"></i></span>
-                    <span class="fw-bold">{{ bdc.articles.all|length }}</span>
-                    <span class="d-none d-md-inline ms-1">{% trans "Details" %}</span>
-                </button>
 
-                {% if show_export == 'yes' %}
-                    <a href="{% url 'bdc_articles_csv' bdc.id csv_file_name  %}" 
-                    class="mb-1 btn btn-outline-secondary">
-                        <span><i class="bi bi-file-earmark-spreadsheet me-1"></i></span>
-                        <span class="fw-bold">CSV</span>
-                        <span class="d-none d-md-inline ms-1">{% trans "Export" %}</span>
-                    </a>
-                {% endif %}
-                {% if show_print == 'yes' %}
-                    <a href="{% url 'bdc_articles_pdf' bdc.id pdf_file_name %}" 
-                    class="mb-1 btn btn-outline-secondary">                        
-                        <span><i class="bi bi-file-earmark-pdf me-1"></i></span>
-                        <span class="fw-bold">PDF</span>
-                        <span class="d-none d-md-inline ms-1">{% trans "Print" %}</span>
-                    </a>
-                {% endif %}
-
-                <span class="text-start">
-                    {% include 'bdc/snippets/articles/articles-details-modal.html' %}
-                </span>
+            <div class="accordion my-3" id="accordionItems">
+                <div class="accordion-item shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#itemsCollapse" aria-expanded="true" aria-controls="itemsCollapse">
+                            <span><i class="{{ bicons.articles }}"></i></span>
+                            <span class="fw-bold ms-1">{{ bdc.articles.all|length }}</span>
+                            <span class="ms-2 fw-light">{% trans "Items Details" %}</span>
+                        </button>
+                    </h2>
+                    <div id="itemsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionItems">
+                        <div class="accordion-body p-0">
+                            {% include "bdc/snippets/articles/articles-details-list.html" %}                            
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            {% if show_export == 'yes' or show_print == 'yes' %}
+                <div id="articles-details" class="text-end">
+                    {% if show_export == 'yes' %}
+                        <a href="{% url 'bdc_articles_csv' bdc.id csv_file_name  %}" 
+                        class="mb-1 btn btn-outline-secondary">
+                            <span><i class="bi bi-file-earmark-spreadsheet me-1"></i></span>
+                            <span class="fw-bold">CSV</span>
+                            <span class="d-none d-md-inline ms-1">{% trans "Export" %}</span>
+                        </a>
+                    {% endif %}
+                    {% if show_print == 'yes' %}
+                        <a href="{% url 'bdc_articles_pdf' bdc.id pdf_file_name %}" 
+                        class="mb-1 btn btn-outline-secondary">                        
+                            <span><i class="bi bi-file-earmark-pdf me-1"></i></span>
+                            <span class="fw-bold">PDF</span>
+                            <span class="d-none d-md-inline ms-1">{% trans "Print" %}</span>
+                        </a>
+                    {% endif %}
+                </div>
+            {% endif %}
+
         {% endif %}
         
         <div id="extra-details" class="small mt-3">

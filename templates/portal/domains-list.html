@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% load i18n static %}
+{% load humanize %}
+
+{% block title %}
+    {% trans "Domains of activity" %}
+{% endblock title %}
+
+{% block content %}
+    <div class="d-flex align-items-center justify-content-between px-0">
+        <div class="">
+            <span class="h3 me-1">{% trans "Domains of activity" %}</span>
+        </div>
+        <div class="d-flex align-items-top">            
+            {% include 'portal/snippets/domains/domain-search-form.html' %}
+            {% include 'portal/snippets/domains/domain-menu-sort.html' %}
+        </div>
+    </div>
+
+
+    <div class="fw-light mx-2 mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="" data-bs-toggle="tooltip" 
+                  title="{% trans 'Results are filtered' %}">
+                <i class="{{ bicons.filters }}"></i>
+            </span>
+        {% endif %}
+        <span class="fw-bold">
+            {{ page_obj.paginator.count }} 
+        </span>
+        <span class="small text-muted">{% trans "Items found" %}.</span>
+        {% if page_obj.has_other_pages %}
+            <span class="small text-muted">{% trans "Showing" %}:</span>
+            <span class="small">
+                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
+            </span>
+        {% endif %}
+    </div>
+
+
+    {% if page_obj %}
+        <div class="container py-4 px-0">
+            {% for domain in page_obj %}
+                <a href="{% url 'portal_tender_list' %}?&q={{ domain.name }}&f=domains&exact=yes" 
+                    class="btn text-start w-100 p-0 mb-2">
+                    <div class="card shadow py-2 px-3">
+                        <div class="{% if wrap_text == False %}threelines{% endif %}">
+                            <span><i class="{{ bicons.domains }} me-2"></i></span>
+                            {{ domain.name }}
+                        </div>
+                        <div class="ms-2 text-end">
+                            <span class="badge bg-secondary"><i class="{{ bicons.count }} me-1"></i>{{ domain.tenders_count }}</span>
+                            <span class="badge bg-success ms-1"><i class="{{ bicons.estimate }} me-1"></i>{{ domain.total_estimate|metrify }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+
+        {% include 'base/snippets/paginator.html' %}
+
+    {% else %}
+        {% include 'base/snippets/empty-list.html' %}
+    {% endif %}
+{% endblock content %}
+
+

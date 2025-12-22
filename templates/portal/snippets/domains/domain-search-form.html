@@ -1,0 +1,64 @@
+{% load i18n %}
+{% load paraminos %}
+
+<button class="btn btn-light py-1 mx-1" type="button" 
+        data-bs-toggle="modal" data-bs-target="#searchModal"
+        data-bs-toggle="tooltip"
+        title="{% trans 'Serach Domains' %}">
+    <i class="{{ bicons.search }}"></i>
+</button>
+
+
+<form action="{% url 'portal_domain_list' %}?{{ query_string }}&sort={{ query_string.sorter }}">
+    <div class="modal fade" id="searchModal" tabindex="-1" 
+        aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Domains Search' %}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body pb-0">
+
+                    <div class="row gx-3">
+                            
+                        <div class="col-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
+                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="domains" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
+                            </div>
+                            <datalist id="domains">
+                                {% for domain in domains %}
+                                    <option value="{{ domain.name }}">
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    
+                    <a href="{% url 'portal_domain_list' %}" type="button" class="btn btn-outline-secondary">
+                        <i class="{{ bicons.backspace }} me-1"></i>
+                        {% trans 'Reset' %}
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="{{ bicons.search }} me-1"></i>
+                        {% trans 'Submit' %}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    const myModal = document.getElementById('searchModal');
+    myModal.addEventListener('shown.bs.modal', function () {
+        document.getElementById('search_input').focus();
+    });
+</script>

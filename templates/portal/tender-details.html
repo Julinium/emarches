@@ -330,9 +330,10 @@
                                         {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' %}
                                     {% endwith %}
 
-                                    {% trans 'Database ID' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
-                                    
+                                    {% if aliens_attack %}
+                                        {% trans 'Database ID' as key_value %}
+                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
+                                    {% endif %}
 
                                     {% trans 'Views' as key_value %}
                                     {% with count=tender.views.all|length|metrify:0 %}
