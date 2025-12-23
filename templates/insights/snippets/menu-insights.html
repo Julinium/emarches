@@ -1,0 +1,45 @@
+{% load i18n %}
+
+<li class="nav-item dropdown">
+    <a class="nav-link py-2 dropdown-toggle"
+        href="#" id="bdcDropdown" role="button" 
+        data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="{{ bicons.insights }} me-1"></i> {% trans 'Insights' %}
+    </a>
+    <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
+        <li class="">
+            <a class="dropdown-item py-2" href="{% url 'insights_dashboard' %}">
+                <i class="{{ bicons.ongoing }} me-2"></i>
+                {% trans 'Dashboard' %}
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="{% url 'insights_bidders_list' %}">
+                <i class="{{ bicons.ongoing }} me-2"></i>
+                {% trans 'Concurrence' %}
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="#">
+                <i class="{{ bicons.tenders }} me-2"></i>
+                {% trans 'Tenders' %}
+            </a>
+        </li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="#">
+                <i class="{{ bicons.bdc }} me-2"></i>
+                {% trans 'P. Orders' %}
+            </a>
+        </li>
+    </ul>
+</li>
+
+
+

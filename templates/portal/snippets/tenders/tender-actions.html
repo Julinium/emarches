@@ -77,12 +77,14 @@
         </a>
 
     {% endif %}
-
-    <a class="m-1 btn btn-outline-primary" 
-        type="button" data-bs-toggle="modal" 
-        data-bs-target="#bidConfirmModal">
-        <span><i class="{{ bicons.bidding }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
-    </a>
+    
+    {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
+        <a class="m-1 btn btn-outline-primary"
+            type="button" data-bs-toggle="modal" 
+            data-bs-target="#bidConfirmModal">
+            <span><i class="{{ bicons.bidding }}"></i></span>
+            <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
+        </a>
+    {% endif %}
     
 </div>

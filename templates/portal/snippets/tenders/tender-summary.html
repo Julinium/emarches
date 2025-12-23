@@ -87,12 +87,6 @@
                         {% if tender.cancelled %}
                             <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
                         {% endif %}
-                        <!-- {% if tender.expired %}
-                            <span class="badge bg-secondary me-2 fst-italic">
-                                <i class="{{ bicons.expired }} me-1"></i>
-                                {% trans "EXPIRED" %}
-                            </span>
-                        {% endif %} -->
                         <span class="text-wrap 
                                      {% if tender.expired %}text-secondary fst-italic{% endif %}
                                      {% if tender.cancelled %}text-danger{% endif %}">
@@ -101,7 +95,7 @@
                     </div>
                 </div>
                 
-            </div> 
+            </div>
 
             <div class="card-footer px-2 py-1">
                 <div id="t{{ tender.chrono }}f" class="oneline">
@@ -125,7 +119,7 @@
                                                 {% endif %}
                                                 <span class="fw-bold">{{ minute.amount_won|metrify }}</span>
                                                 {% for concurrent, _ in grouped_wb.items %}
-                                                    <span><i class="bi bi-dash-lg"></i>{{ concurrent }}{% if not forloop.last %}, {% endif %}</span>
+                                                    <span><i class="bi bi-dash-lg ms-1"></i>{{ concurrent }}</span>
                                                 {% endfor %}
                                             </span>
                                         {% else %}

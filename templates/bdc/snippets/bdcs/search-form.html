@@ -44,24 +44,24 @@
                                 </select>
                             </div>
                         </div>
+                                                        
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
+                                <input type="date" class="form-control text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" placeholder="{% trans 'Min' %}" aria-label="deadline_min">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
+                                <input type="date" class="form-control text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" placeholder="{% trans 'Max' %}" aria-label="deadline_max">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="collapse" id="collapseAdvanced">
 
                         <div class="row gx-3 mb-2">
-                                                        
-                            <div class="col-12 col-md-6">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
-                                    <input type="date" class="form-control text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" placeholder="{% trans 'Min' %}" aria-label="deadline_min">
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
-                                    <input type="date" class="form-control text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" placeholder="{% trans 'Max' %}" aria-label="deadline_max">
-                                </div>
-                            </div>
                             
                             <div class="col-12 col-md-6">
                                 <div class="input-group mb-3">

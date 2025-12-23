@@ -600,7 +600,7 @@ class Minutes(models.Model):
     has_tech  = models.BooleanField(blank=True, null=True, default=True)
     failure   = models.TextField(blank=True, null=True)
     date_end  = models.DateField(blank=True, null=True)
-
+    
     @property
     def outcome(self):
         if self.winner_bids.count() == self.tender.lots_count: return 's'

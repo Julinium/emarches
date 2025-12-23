@@ -2,13 +2,16 @@
 
 <div class="my-3">
     {% if last_updated %}
-        <div class="my-4 text-muted">
-            <span class="small fw-light"><i class="bi bi-arrow-repeat"></i></span>
-            <span class="small fw-light">{% trans 'Updated since' %}</span>
-            {% timezone "UTC" %}
-                <span class="small">{{ last_updated }} {% trans 'UTC' %}</span>
-            {% endtimezone %}
-        </div>
+        {% timezone "UTC" %}
+            <div class="my-4 text-muted"
+                data-bs-toggle="tooltip"
+                title="{{ last_updated }} {% trans 'UTC' %}">
+                <span class="small fw-light"><i class="bi bi-arrow-repeat"></i></span>
+                <span class="small fw-light">{% trans 'Updated since' %}</span>
+                    <span class=" small fw-bold">{{ last_updated|timesince }}</span>
+                    <!-- <span class="small">{{ last_updated }} {% trans 'UTC' %}</span> -->
+            </div>
+        {% endtimezone %}
     {% endif %}
 
     <div class="accordion" id="accordionLegend">
@@ -18,7 +21,7 @@
                         data-bs-target="#tenderLegendCollapse" aria-expanded="false" 
                         aria-controls="tenderLegendCollapse">
                     <span class=""><i class="bi bi-key"></i></span>
-                    <span class="ms-1 small">{% translate "Legend" %}</span>
+                    <span class="ms-1 small">{% translate "Symbols legend" %}</span>
                 </button>
             </h2>
             <div id="tenderLegendCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionLegend">

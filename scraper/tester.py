@@ -18,20 +18,17 @@ def main():
         assa = datetime.now().date()
 
         tenders = Tender.objects.filter(
-            deadline__date__lte=assa,
-            minutes__isnull=True,
-            ).order_by('published')
-        # tenders = Tender.objects.filter(lots_count__gte=5).order_by('deadline')
+            deadline__date__lte=assa, 
+            # minutes__isnull=True, 
+            ).order_by('-deadline')
         count = tenders.count()
 
         i = 0
         for tender in tenders:
             i += 1
-            if i % 25 == 0:
-                print("\n\n")
+            if i % 50 == 0:
                 helper.sleepRandom(30, 35)
-                print("\n\n")
-            # print(f"\tWorking on item { i }/{ count } = {tender.chrono}&{tender.acronym}\n")
+            print(f"\tWorking on item { i }/{ count } = {tender.chrono}&{tender.acronym}\n")
             result = getter.getMinutes(tender.chrono, tender.acronym)
             # print(f"Result = {result}\n\n")
             if result and result != {}:
@@ -44,10 +41,7 @@ def main():
                     traceback.print_exc()
             else:
                 print(f"\tItem { i }/{ count } is negative \n")
-
             
-
-
         print('\n\n======================================================\n\n')
     
     get_results()

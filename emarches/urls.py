@@ -21,14 +21,15 @@ from nas import views as nas_views
 
 urlpatterns = i18n_patterns(
 
-    path('', include('base.urls')),
-    path('admin/', admin.site.urls),
+    path('',                include('base.urls')),
+    path('admin/',          admin.site.urls),
     path('@<str:username>', nas_views.username_view, name='nas_at_username'),
-    path('profiles/', include('authy.urls')),
-    path('accounts/', include('allauth.urls')),
-    path('user/', include('nas.urls')),
-    path('tenders/', include('portal.urls')),
-    path('bdc/', include('bdc.urls')),
+    path('profiles/',       include('authy.urls')),
+    path('accounts/',       include('allauth.urls')),
+    path('user/',           include('nas.urls')),
+    path('tenders/',        include('portal.urls')),
+    path('bdc/',            include('bdc.urls')),
+    path('insights/',       include('insights.urls')),
 
     path('__debug__/', include('debug_toolbar.urls')),
 )
