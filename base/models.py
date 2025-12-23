@@ -596,8 +596,16 @@ class Concurrent(models.Model):
 class Minutes(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tender    = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
+    has_tech  = models.BooleanField(blank=True, null=True, default=True)
     failure   = models.CharField(max_length=512, blank=True, null=True)
     date_end  = models.DateField(blank=True, null=True)
+
+    @property
+    def outcome(self):
+        if self.winner_bids.count() == self.tender.lots_count: return 's'
+        if not self.winner_bids : return 'f'
+        return 'p'
+    
 
     class Meta:
         db_table = 'base_minutes'
@@ -611,7 +619,7 @@ class Bidder(models.Model):
 
     class Meta:
         db_table = 'base_bidder'
-        ordering = ['-concurrent']
+        ordering = ['concurrent']
 
 
 class AdminReject(models.Model):
@@ -622,7 +630,7 @@ class AdminReject(models.Model):
 
     class Meta:
         db_table = 'base_admin_reject'
-        ordering = ['-concurrent']
+        ordering = ['concurrent', 'lot_number']
 
 
 class AdminAccept(models.Model):    
@@ -633,10 +641,10 @@ class AdminAccept(models.Model):
 
     class Meta:
         db_table = 'base_admin_accept'
-        ordering = ['-concurrent']
+        ordering = ['concurrent', 'lot_number']
 
 
-class AdminReserve(models.Model):    
+class AdminReserve(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_reserves")
     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_reserves")
@@ -644,7 +652,7 @@ class AdminReserve(models.Model):
 
     class Meta:
         db_table = 'base_admin_reserve'
-        ordering = ['-concurrent']
+        ordering = ['concurrent', 'lot_number']
 
 
 class TechReject(models.Model):
@@ -655,7 +663,7 @@ class TechReject(models.Model):
 
     class Meta:
         db_table = 'base_tech_reject'
-        ordering = ['-concurrent']
+        ordering = ['concurrent', 'lot_number']
 
 
 class SelectedBid(models.Model):
@@ -666,9 +674,22 @@ class SelectedBid(models.Model):
     amount_before = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
     amount_after  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
 
+
+    @property
+    def is_winner(self):
+        return self.minutes.winner_bids.filter(
+            concurrent=self.concurrent, 
+            lot_number=self.lot_number, 
+            amount=self.amount_after, 
+        ).count() == 1
+
+        if self.winner_bids.count() == self.tender.lots_count: return 's'
+        if not self.winner_bids : return 'f'
+        return 'p'
+
     class Meta:
         db_table = 'base_selected_bid'
-        ordering = ['amount_after']
+        ordering = ['lot_number', 'amount_after']
 
 
 class WinnerBid(models.Model):
@@ -680,7 +701,7 @@ class WinnerBid(models.Model):
 
     class Meta:
         db_table = 'base_winner_bid'
-        ordering = ['-concurrent']
+        ordering = ['lot_number']
 
 
 class WinJustif(models.Model):

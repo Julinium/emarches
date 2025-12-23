@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as trans
 
 from django.db import models
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, Q, Exists, OuterRef
 from urllib.parse import urlencode
 
 from decimal import Decimal
@@ -29,7 +29,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth.models import User
 
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
-from base.models import Tender, Category, Client, Domain, Lot, Procedure, Crawler, Agrement, Qualif
+from base.models import Tender, Category, Client, Domain, Lot, Procedure, Crawler, Agrement, Qualif, WinnerBid, FailedLot
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
@@ -71,7 +71,7 @@ def tender_list(request):
             'category', 'procedure', 'ebid', 'esign', 
             'pme', 'variant', 'agrements', 'qualifs',
             'samples', 'meetings', 'visits', 'page', 'sort',
-            'exact',
+            'results', 'exact',
             ]
 
         query_dict = {
@@ -124,10 +124,8 @@ def tender_list(request):
             if 'f' in params:
                 match params['f']:
                     case 'client':
-                        # tenders = afas(tenders, ['cliwords'], q)
                         tenders = tenders.filter(client__name__icontains=q)
                     case 'location':
-                        # tenders = afas(tenders, ['locwords'], q)
                         tenders = tenders.filter(location__icontains=q)
                     case 'reference':
                         tenders = afas(tenders, ['refwords'], q)
@@ -255,6 +253,33 @@ def tender_list(request):
                     user_qualifs = Qualif.objects.filter(companies__user=user)
                     tenders = tenders.filter(lots__qualifs__in=user_qualifs)
 
+        if 'results' in params:
+            ff += 1
+            results = params['results']
+            if results == 'with_minutes': tenders = tenders.filter(minutes__isnull=False)
+            if results == 'no_minutes': tenders = tenders.filter(minutes__isnull=True)
+
+            winner_exists = WinnerBid.objects.filter(minutes__tender=OuterRef("pk")).values("pk")
+            # failed_lots_count = FailedLot.objects.filter(minutes__tender=OuterRef("pk")).values("pk")
+
+            if results == 'successful':
+                tenders = tenders.annotate(
+                    has_winner=Exists(winner_exists),
+                    failed_lots=Count("minutes__failed_lots", distinct=True)
+                ).filter(has_winner=True, failed_lots=0)
+
+            if results == 'unsuccessful':
+                tenders = tenders.annotate(
+                    has_winner=Exists(winner_exists)
+                ).filter(minutes__isnull=False, has_winner=False)
+
+            if results == 'partial':
+                tenders = tenders.annotate(
+                    has_winner=Exists(winner_exists),
+                    failed_lots=Count("minutes__failed_lots", distinct=True)
+                ).filter(has_winner=True, failed_lots__gt=0)
+
+
         return tenders.distinct(), ff
 
     def define_context(request):
@@ -270,7 +295,6 @@ def tender_list(request):
         context['query_unsorted']     = urlencode(query_unsorted)
         context['query_dict']         = query_dict
 
-        # context['categories']         = all_categories
         context['procedures']         = all_procedures
         context['full_bar_days']      = TENDER_FULL_PROGRESS_DAYS
         context['last_updated']       = last_updated
@@ -298,7 +322,7 @@ def tender_list(request):
         ).select_related(
             'client', 'category', 'mode', 'procedure'
         ).prefetch_related(
-            'favorites', 'views',
+            'favorites', 'views', 'minutes',
             'downloads', 'comments', 'changes',
             )
 

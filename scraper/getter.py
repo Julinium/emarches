@@ -676,6 +676,7 @@ def getMinutes(chro='', acro=''):
                 continue
     except Exception: pass
 
+    has_tech = bowl.find(id="ctl0_CONTENU_PAGE_dossierTechnique") != None
 
     rejected_dt = []
     try:
@@ -812,6 +813,7 @@ def getMinutes(chro='', acro=''):
         "chrono"            : chro,
         "acronym"           : acro,
         "bidders"           : bidders,
+        'has_tech'          : has_tech,
         "rejected_da"       : rejected_da,
         "accepted_da"       : accepted_da,
         "reserved_da"       : reserved_da,

@@ -588,12 +588,16 @@ def mergeResults(digest):
     except Exception as xc:
         date_finished = None
         print(xc)
-
+    has_tech = digest.get('has_tech', None)
+    # print('\n\n\n\t================================', has_tech)
+    # print('\t================================\n\n\n')
+    
     minutes, created = Minutes.objects.update_or_create(
         tender = tender,
         defaults = {
-        'failure' : failures_text,
-        'date_end' : date_finished,}
+            'has_tech' : has_tech,
+            'failure' : failures_text,
+            'date_end' : date_finished,}
         )
 
     candidates = digest.get('bidders', [])
@@ -687,8 +691,8 @@ def mergeResults(digest):
             concurrent, created = Concurrent.objects.get_or_create(name = fi_offer['name'])
             lot_str = fi_offer.get('lot', '')
             lot_number = int(lot_str) if lot_str != '' else 1
-            amount_before = helper.getAmount(fi_offer.get('amount_before', '0'))
-            amount_after = helper.getAmount(fi_offer.get('amount_after', '0'))
+            amount_before = helper.getAmount(fi_offer.get('pre_amount', '0'))
+            amount_after = helper.getAmount(fi_offer.get('amount', '0'))
 
             selected_bid = SelectedBid.objects.get_or_create(
                 minutes = minutes, concurrent = concurrent, lot_number = lot_number, 

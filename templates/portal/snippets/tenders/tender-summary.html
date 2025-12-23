@@ -119,6 +119,14 @@
                 <div id="t{{ tender.chrono }}f" class="d-flex justify-content-between">
                     <div class="me-2 small fw-light">
 
+                        {% for minute in tender.minutes.all %}
+                            <span class="small me-2"
+                                data-bs-toggle="tooltip"
+                                title="{% trans 'Awarding minutes found' %}: {{ minute.date_end }}">
+                                <i class="{{ bicons.deliberated }}"></i>
+                            </span>
+                        {% endfor %}
+
                         {% if tender.procedure.restricted %}
                             <span class="small me-2"
                                 data-bs-toggle="tooltip"

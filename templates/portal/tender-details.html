@@ -3,6 +3,7 @@
 {% load paraminos %}
 {% load humanize %}
 {% load tz %}
+{% load groupify %}
 
 {% block title %}
     {% trans "Tender Details" %}
@@ -406,6 +407,32 @@
             </div>
         </div>
     </div>
+
+    {% if tender.expired %}
+        {% if tender.minutes %}
+            <div class="accordion my-3" id="accordionResults">
+                <div class="accordion-item shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resultsCollapse" aria-expanded="true" aria-controls="resultsCollapse">
+                            <span><i class="{{ bicons.deliberated }}"></i></span>
+                            <span class="ms-2 fw-light">{% trans "Awarding Minutes" %}</span>
+                        </button>
+                    </h2>
+                    <div id="resultsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionResults">
+                        <div class="accordion-body pt-0 px-3">
+                            {% include 'portal/snippets/tenders/results-digest.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="my-3">
+                {% trans 'Awarding Minutes' as key_value %}
+                {% trans 'No Minutes found' as value %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_bidding|add:'-no-result' val_value=value key_value=key_value uni_value='' ico_class=bicons.deliberated val_class='text-danger small fw-light' full_width='yes' border='bottom' liner='' %}
+            </div>
+        {% endif %}
+    {% endif %}
 
 
     {% if tender.cancelled %}

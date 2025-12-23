@@ -14,7 +14,7 @@ def main():
         print('\n\n\n\n======================================================')
         helper.printMessage('===', 'tester', f"▶▶▶▶▶ Now, let's get some Results ◀◀◀◀◀", 1, 1)
         
-        tenders = Tender.objects.all().order_by('deadline')
+        tenders = Tender.objects.all().order_by('published')
         # tenders = Tender.objects.filter(lots_count__gte=5).order_by('deadline')
         count = tenders.count()
 
@@ -27,6 +27,7 @@ def main():
                 print("\n\n")
             print(f"\tWorking on item { i }/{ count } = {tender.chrono}&{tender.acronym}\n")
             result = getter.getMinutes(tender.chrono, tender.acronym)
+            print(f"Result = {result}\n\n")
             if result != {}:
                 print(f"\tItem { i }/{ count } is positive \n")
                 try: 

@@ -44,6 +44,19 @@
                                 </select>
                             </div>
                         </div>
+                            
+                            <div class="col-12 col-md-6">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
+                                    <input type="date" class="form-control text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" placeholder="{% trans 'Min' %}" aria-label="deadline_min">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
+                                    <input type="date" class="form-control text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" placeholder="{% trans 'Max' %}" aria-label="deadline_max">
+                                </div>
+                            </div>
 
                     </div>
 
@@ -74,19 +87,6 @@
                                 <div class="input-group mb-3">
                                     <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Guarantee Max" %}</span></span>
                                     <input type="number" step="any" class="form-control text-end" name="bondx" value="{{ query_dict.bondx }}" placeholder="{% trans 'Max' %}" aria-label="guarantee_max">
-                                </div>
-                            </div>
-                            
-                            <div class="col-12 col-md-6">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
-                                    <input type="date" class="form-control text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" placeholder="{% trans 'Min' %}" aria-label="deadline_min">
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
-                                    <input type="date" class="form-control text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" placeholder="{% trans 'Max' %}" aria-label="deadline_max">
                                 </div>
                             </div>
                             
@@ -217,6 +217,19 @@
                                         <option {% if query_dict.qualifs == 'required' %} selected {% endif %} value="required">{% trans 'Required' %} - {% trans 'Any' %}</option>
                                         <option {% if query_dict.qualifs == 'na' %} selected {% endif %} value="na">{% trans 'None required' %}</option>
                                         <option {% if query_dict.qualifs == 'companies' %} selected {% endif %} value="companies">{% trans "From My Companies" %}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Results" %}</span></span>
+                                    <select class="form-select" name="results" aria-label="results">
+                                        <option {% if query_dict.results == '' %} selected {% endif %} value="">--</option>
+                                        <option {% if query_dict.results == 'with_minutes' %} selected {% endif %} value="with_minutes">{% trans 'With Minutes' %}</option>
+                                        <option {% if query_dict.results == 'no_minutes' %} selected {% endif %} value="no_minutes">{% trans 'No Minutes' %}</option>
+                                        <option {% if query_dict.results == 'successful' %} selected {% endif %} value="successful">{% trans 'Successful' %}</option>
+                                        <option {% if query_dict.results == 'unsuccessful' %} selected {% endif %} value="unsuccessful">{% trans 'Unsuccessful' %}</option>
+                                        <option {% if query_dict.results == 'partial' %} selected {% endif %} value="partial">{% trans 'Partial Success' %}</option>
                                     </select>
                                 </div>
                             </div>
