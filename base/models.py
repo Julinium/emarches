@@ -598,7 +598,7 @@ class Minutes(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tender    = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
     has_tech  = models.BooleanField(blank=True, null=True, default=True)
-    failure   = models.CharField(max_length=512, blank=True, null=True)
+    failure   = models.TextField(blank=True, null=True)
     date_end  = models.DateField(blank=True, null=True)
 
     @property
@@ -720,7 +720,7 @@ class WinJustif(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="win_justifs")
     lot_number = models.SmallIntegerField(blank=True, null=True)
-    justif     = models.CharField(max_length=512, blank=True, null=True)
+    justif     = models.TextField(blank=True, null=True)
 
     class Meta:
         db_table = 'base_win_justif'

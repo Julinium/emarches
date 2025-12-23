@@ -9,12 +9,18 @@ django.setup()
 def main():
     from scraper import helper, getter, merger
     from base.models import Tender
+    from datetime import datetime
     
     def get_results():
         print('\n\n\n\n======================================================')
         helper.printMessage('===', 'tester', f"▶▶▶▶▶ Now, let's get some Results ◀◀◀◀◀", 1, 1)
         
-        tenders = Tender.objects.all().order_by('published')
+        assa = datetime.now().date()
+
+        tenders = Tender.objects.filter(
+            deadline__date__lte=assa,
+            minutes__isnull=True,
+            ).order_by('published')
         # tenders = Tender.objects.filter(lots_count__gte=5).order_by('deadline')
         count = tenders.count()
 
@@ -25,10 +31,10 @@ def main():
                 print("\n\n")
                 helper.sleepRandom(30, 35)
                 print("\n\n")
-            print(f"\tWorking on item { i }/{ count } = {tender.chrono}&{tender.acronym}\n")
+            # print(f"\tWorking on item { i }/{ count } = {tender.chrono}&{tender.acronym}\n")
             result = getter.getMinutes(tender.chrono, tender.acronym)
-            print(f"Result = {result}\n\n")
-            if result != {}:
+            # print(f"Result = {result}\n\n")
+            if result and result != {}:
                 print(f"\tItem { i }/{ count } is positive \n")
                 try: 
                     if merger.mergeResults(result) == 0:

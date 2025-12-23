@@ -87,12 +87,12 @@
                         {% if tender.cancelled %}
                             <span class="badge bg-danger me-2">{% trans "CANCELLED" %}</span>
                         {% endif %}
-                        {% if tender.expired %}
+                        <!-- {% if tender.expired %}
                             <span class="badge bg-secondary me-2 fst-italic">
                                 <i class="{{ bicons.expired }} me-1"></i>
                                 {% trans "EXPIRED" %}
                             </span>
-                        {% endif %}
+                        {% endif %} -->
                         <span class="text-wrap 
                                      {% if tender.expired %}text-secondary fst-italic{% endif %}
                                      {% if tender.cancelled %}text-danger{% endif %}">
@@ -100,19 +100,6 @@
                         </span>
                     </div>
                 </div>
-
-                <!-- <div class="progress bg-danger p-0 mx-0 my-1" 
-                        style="height: 0.25rem;"
-                        data-bs-toggle="tooltip"
-                        title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                    {% with tender.days_to_go|progrefy:full_bar_days as green %}
-                        <div class="progress-bar bg-success" 
-                                role="progressbar" style="width: {{ green }}%;" 
-                                aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                aria-valuemax="100">
-                        </div>
-                    {% endwith %}
-                </div> -->
                 
             </div> 
 
@@ -153,7 +140,7 @@
                                 <span class="small me-2 text-warning"
                                     data-bs-toggle="tooltip"
                                     title="{% trans 'No minutes found' %}">
-                                    <i class="{{ bicons.deliberated }} me-1"></i>
+                                    <i class="{{ bicons.expired }} me-1"></i>
                                     <span>{% trans "No results" %}</span>
                                 </span>
                             {% endif %}

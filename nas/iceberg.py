@@ -2,6 +2,7 @@ import requests, json
 
 host = "https://www.icemaroc.com/api/search.php"
 
+
 def get_company(ice=None):
     if not ice : return {}
     
@@ -28,6 +29,37 @@ def get_company(ice=None):
             return data
     except: pass
     return {}
+
+
+def get_concurrent(rs=None):
+    if not rs : return {}
+    
+    url = f"{ host }?query={ rs }"
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+
+        data_list = response.json()
+
+        if data_list:
+            entry = data_list[0]
+            name = entry.get('raison_sociale')
+            if lower(name.strip()) == lower(rs.strip()):
+                data = {
+                    'status': entry.get('statut'), 
+                    'name': entry.get('raison_sociale'), 
+                    'ice': entry.get('ice'), 
+                    'capital': entry.get('capital'), 
+                    'rc': str(entry.get('num_rc')), 
+                    'city': entry.get('ville_rc'), 
+                    'type': entry.get('forme'), 
+                    'established': entry.get('dateCreation'), 
+                    'activity': entry.get('activite'), 
+                }
+                return data
+    except: pass
+    return None
+
 
 def get_ice_checkup(ice):
     sj = None
