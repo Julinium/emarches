@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as trans
 
 from django.db import models
-from django.db.models import Count, Sum, Q, Exists, OuterRef
+from django.db.models import Count, Sum, F, Q, Exists, OuterRef
 from urllib.parse import urlencode
 
 from decimal import Decimal
@@ -65,6 +65,7 @@ def tender_list(request):
         SHOW_CANCELLED = us.tenders_show_cancelled
 
     def get_req_params(req):
+        query_pars = req.GET.items()
         allowed_keys = [
             'q', 'f', 'estin', 'estix', 'bondn', 'bondx', 
             'ddlnn', 'ddlnx', 'publn', 'publx', 'allotted',
@@ -75,12 +76,8 @@ def tender_list(request):
             ]
 
         query_dict = {
-            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
-        }
-        
-        if not 'ddlnn' in query_dict:
-        # if query_dict == {}:
-            query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
+            k: v for k, v in query_pars if k in allowed_keys and v != ''
+        }        
         
         if not 'sort' in query_dict:
             query_dict['sort'] = TENDERS_ORDERING_FIELD
@@ -93,6 +90,15 @@ def tender_list(request):
             k: v for k, v in req.GET.items()
             if k in allowed_keys and v != '' and k not in ('page', 'sort')
         }
+
+        if not 'ddlnn' in query_dict:
+        # if query_unsorted == {}:
+            query_dict['ddlnn'] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
+
+        # print('\n\t========== query_dict', query_dict)
+        # print('\n\t========== query_string', query_string)
+        # print('\n\t========== query_unsorted', query_unsorted)
+        # print('\n\t========== query_pars', dict(query_pars))
 
         return query_dict, query_string, query_unsorted
 
@@ -260,7 +266,6 @@ def tender_list(request):
             if results == 'no_minutes': tenders = tenders.filter(minutes__isnull=True)
 
             winner_exists = WinnerBid.objects.filter(minutes__tender=OuterRef("pk")).values("pk")
-            # failed_lots_count = FailedLot.objects.filter(minutes__tender=OuterRef("pk")).values("pk")
 
             if results == 'successful':
                 tenders = tenders.annotate(
@@ -316,6 +321,9 @@ def tender_list(request):
     ordering.append('-created')
 
     query_dict['filters'] = filters
+
+    if 'minutes_end' in ordering or '-minutes_end' in ordering:
+        tenders = tenders.annotate(minutes_end=F('minutes__date_end'))
 
     tenders = tenders.order_by(
             *ordering

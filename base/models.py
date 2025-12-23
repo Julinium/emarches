@@ -5,7 +5,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-# from django.contrib.postgres.indexes import GinIndex
+
+from django.db.models import Sum, Count
 
 from .texter import normalize_text as nt
 
@@ -606,6 +607,17 @@ class Minutes(models.Model):
         if not self.winner_bids : return 'f'
         return 'p'
     
+    @property
+    def amount_won(self):
+        return self.winner_bids.aggregate(total=Sum("amount"))["total"] or 0
+    
+    @property
+    def won_lots(self):
+        return self.winner_bids.aggregate(won_lots=Count("lot_number", distinct = True))["won_lots"]
+    
+    @property
+    def total_win(self):
+        return self.won_lots == self.tender.lots_count
 
     class Meta:
         db_table = 'base_minutes'
@@ -683,9 +695,9 @@ class SelectedBid(models.Model):
             amount=self.amount_after, 
         ).count() == 1
 
-        if self.winner_bids.count() == self.tender.lots_count: return 's'
-        if not self.winner_bids : return 'f'
-        return 'p'
+    #     if self.winner_bids.count() == self.tender.lots_count: return 's'
+    #     if not self.winner_bids : return 'f'
+    #     return 'p'
 
     class Meta:
         db_table = 'base_selected_bid'
@@ -701,7 +713,7 @@ class WinnerBid(models.Model):
 
     class Meta:
         db_table = 'base_winner_bid'
-        ordering = ['lot_number']
+        ordering = ['lot_number', 'concurrent']
 
 
 class WinJustif(models.Model):

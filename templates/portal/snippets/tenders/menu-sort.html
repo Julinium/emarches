@@ -21,15 +21,20 @@
                 {% trans 'Estimate' as caption %}
                 {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='estimate' icon=bicons.estimate %}
             </li>
-                        
+            
             <li>
                 {% trans 'Guarantee' as caption %}
                 {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='bond' icon=bicons.bond %}
             </li>
-                        
+            
             <li>
                 {% trans 'Published' as caption %}
                 {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='published' icon=bicons.published %}
+            </li>
+            
+            <li>
+                {% trans 'Minutes finished' as caption %}
+                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='minutes_end' icon=bicons.deliberated %}
             </li>
 
             <li><hr class="dropdown-divider"></li>
