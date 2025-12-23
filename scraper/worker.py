@@ -187,7 +187,9 @@ def main():
 
 
     ##### Get Tenders results:
-    results_saved, results_searched = handle_results()
+    results_saved, results_searched = 0, 0
+    if links_source == 'Crawl':
+        results_saved, results_searched = handle_results()
 
 
 
