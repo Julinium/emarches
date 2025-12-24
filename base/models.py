@@ -589,31 +589,36 @@ class Concurrent(models.Model):
 
     @property
     def bidders_sum(self):
-        return self.selected_bids.aggregate(total=Sum("amount_after"))["total"] or 0
+        return self.selected_bids.aggregate(total=Sum('amount_after'))['total'] or 0
 
     @property
     def winner_bids_sum(self):
-        return self.winner_bids.aggregate(total=Sum("amount"))["total"] or 0
+        return self.winner_bids.aggregate(total=Sum('amount'))['total'] or 0
 
     @property
     def selected_bids_count(self):
-        return self.selected_bids.aggregate(efectif=Count("lot_number", distinct=True))["efectif"] or 0
+        return self.selected_bids.aggregate(efectif=Count('id'))['efectif'] or 0
 
     @property
     def winner_bids_count(self):
-        return self.winner_bids.aggregate(efectif=Count("lot_number", distinct=True))["efectif"] or 0
+        return self.winner_bids.aggregate(efectif=Count('id'))['efectif'] or 0
 
     @property
     def highest_win(self):
-        return self.winner_bids.aggregate(max_amount=Max("amount"))["max_amount"] or None
+        return self.winner_bids.aggregate(max_amount=Max('amount'))['max_amount'] or None
 
     @property
     def lowest_win(self):
-        return self.winner_bids.aggregate(min_amount=Min("amount"))["min_amount"] or None
+        return self.winner_bids.aggregate(min_amount=Min('amount'))['min_amount'] or None
 
     @property
     def latest_win(self):
         lwb = self.winner_bids.order_by('minutes').first()
+        return lwb.minutes.date_end if lwb else None
+
+    @property
+    def first_win(self):
+        lwb = self.winner_bids.order_by('-minutes').first()
         return lwb.minutes.date_end if lwb else None
 
     @property
@@ -658,7 +663,7 @@ class Minutes(models.Model):
 
     class Meta:
         db_table = 'base_minutes'
-        ordering = ['-date_end']
+        ordering = ['-date_end', 'tender']
 
 
 class Bidder(models.Model):

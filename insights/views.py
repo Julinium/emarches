@@ -89,12 +89,12 @@ def bidders_list(request):
             # admin_accepts_count  = Count('admin_accepts__minutes', distinct=True),
             # admin_reserves_count = Count('admin_reserves__minutes', distinct=True),
             # tech_rejects_count   = Count('tech_rejects__minutes', distinct=True),
-            bids_count  = Count('selected_bids__minutes', distinct=True),
-            wins_count    = Count('winner_bids__minutes', distinct=True),
+            bids_count   = Count('selected_bids__minutes', distinct=True),
+            wins_count   = Count('winner_bids__minutes', distinct=True),
 
-            bids_sum     = Sum('selected_bids__amount_after'),
-            wins_sum     = Sum('winner_bids__amount'),
-        ).filter(wins_sum__isnull=False).order_by('-wins_sum')
+            bids_sum     = Sum('selected_bids__amount_after', distinct=True),
+            wins_sum     = Sum('winner_bids__amount', distinct=True),
+        ).order_by('wins_sum')
 
     #     # .prefetch_related(
     #     #     'bidders', 'admin_rejects', 'admin_accepts', 

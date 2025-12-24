@@ -2,28 +2,26 @@
 {% load groupify %}
 
 {% for minute in tender.minutes.all %}
-
-    <div class="row gx-3 gy-1 small">
-        {% trans 'Date Finished' as key_value %}
-        {% include 'base/snippets/ico-key-val.html' with id_value=minute.id|add:'0' val_value=minute.date_end key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
-        {% trans 'Unsuccessful declaration' as key_value %}
-        {% include 'base/snippets/ico-key-val.html' with id_value=minute.id|add:'1' val_value=minute.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
-    </div>
     
     <div class="mt-4 mb-1 small">
         <span><i class="bi bi-building-up me-1"></i></span>
         <span class="">{% trans 'Bidders' %}</span>
         <span class="">({{ minute.bidders.all|length }})</span>
     </div>
-    <div class="list-group small ms-3">
-        <div class="list-group-item">
-            {% for bidder in minute.bidders.all %}
+    <div class="ms-3">
+        {% for bidder in minute.bidders.all %}
+            <a href="{% url 'insights_bidder_details' bidder.concurrent.id %}" 
+                target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
                 <span><i class="bi bi-dash-lg"></i></span>
                 <span class="me-2">{{ bidder.concurrent.name }}</span>
-            {% empty %}
-                {% trans 'None' %}
-            {% endfor %}
-        </div>
+            </a>
+        {% empty %}
+            <div class="list-group small">
+                <div class="list-group-item">
+                    {% trans 'None' %}
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
     {% group_lots minute.admin_rejects.all as grouped_ad_rej %}
@@ -217,6 +215,14 @@
         {% empty %}
         <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
         {% endfor %}
+    </div>
+
+
+    <div class="row gx-3 gy-1 mt-2 small">
+        {% trans 'Date Finished' as key_value %}
+        {% include 'base/snippets/ico-key-val.html' with id_value=minute.id|add:'0' val_value=minute.date_end key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
+        {% trans 'Unsuccessful declaration' as key_value %}
+        {% include 'base/snippets/ico-key-val.html' with id_value=minute.id|add:'1' val_value=minute.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
     </div>
 
 {% endfor %}
