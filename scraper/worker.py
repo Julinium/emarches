@@ -95,7 +95,9 @@ def main():
                         results_saved += 1
                         helper.printMessage('DEBUG', 'worker', f"\tSaved Minutes for item { i }/{ count }")
                 except Exception as xc : 
-                    helper.printMessage('ERROR', 'worker', f"\tError saving Minutes for item { i }/{ count }: \n\n { result }\n\n")
+                    helper.printMessage('ERROR', 'worker', f"\tError saving Minutes for item { i }/{ count }")
+                    helper.printMessage('DEBUG', 'worker', f"Received object: \n{ result }\n")
+                    helper.printMessage('DEBUG', 'worker', f"Raised Exception: \n{ xc }\n")
                     traceback.print_exc()
             else:
                 helper.printMessage('INFO', 'worker', f"\tMinutes emty or not found for item { i }/{ count }")

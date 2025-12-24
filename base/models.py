@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Max, Min
 
 from .texter import normalize_text as nt
 
@@ -573,8 +573,9 @@ class Crawler(models.Model):
 class Concurrent(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     active    = models.BooleanField(null=True, default=True, editable=False)
+    short     = models.CharField(max_length=255, default="M7", verbose_name=_('Acronym'))
     name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
-    ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="ICE")
+    ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="I.C.E")
     city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
     country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
     date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
@@ -586,6 +587,42 @@ class Concurrent(models.Model):
     # created   = models.DateTimeField(auto_now_add=True, editable=False)
     # updated   = models.DateTimeField(auto_now=True, editable=False)
 
+    @property
+    def bidders_sum(self):
+        return self.selected_bids.aggregate(total=Sum("amount_after"))["total"] or 0
+
+    @property
+    def winner_bids_sum(self):
+        return self.winner_bids.aggregate(total=Sum("amount"))["total"] or 0
+
+    @property
+    def selected_bids_count(self):
+        return self.selected_bids.aggregate(efectif=Count("lot_number", distinct=True))["efectif"] or 0
+
+    @property
+    def winner_bids_count(self):
+        return self.winner_bids.aggregate(efectif=Count("lot_number", distinct=True))["efectif"] or 0
+
+    @property
+    def highest_win(self):
+        return self.winner_bids.aggregate(max_amount=Max("amount"))["max_amount"] or None
+
+    @property
+    def lowest_win(self):
+        return self.winner_bids.aggregate(min_amount=Min("amount"))["min_amount"] or None
+
+    @property
+    def latest_win(self):
+        lwb = self.winner_bids.order_by('minutes').first()
+        return lwb.minutes.date_end if lwb else None
+
+    @property
+    def success_rate(self):
+        ws = self.winner_bids_sum
+        bs = self.bidders_sum
+        success_rate = ws / bs if bs > 0 else None
+        return round(100 * success_rate, 2) if success_rate else None
+
     class Meta:
         db_table = 'base_concurrent'
         ordering = ['name']
@@ -595,17 +632,17 @@ class Concurrent(models.Model):
 
 
 class Minutes(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    tender    = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
-    has_tech  = models.BooleanField(blank=True, null=True, default=True)
-    failure   = models.TextField(blank=True, null=True)
-    date_end  = models.DateField(blank=True, null=True)
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tender     = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
+    has_tech   = models.BooleanField(blank=True, null=True, default=True)
+    failure    = models.TextField(blank=True, null=True)
+    date_end   = models.DateField(blank=True, null=True)
     
-    @property
-    def outcome(self):
-        if self.winner_bids.count() == self.tender.lots_count: return 's'
-        if not self.winner_bids : return 'f'
-        return 'p'
+    # # @property
+    # def outcome(self):
+    #     if self.winner_bids.count() == self.tender.lots_count: return 's'
+    #     if not self.winner_bids : return 'f'
+    #     return 'p'
     
     @property
     def amount_won(self):
@@ -624,14 +661,14 @@ class Minutes(models.Model):
         ordering = ['-date_end']
 
 
-class Bidder(models.Model):    
+class Bidder(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bidders")
     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bidders")
 
     class Meta:
         db_table = 'base_bidder'
-        ordering = ['concurrent']
+        ordering = ['minutes', 'concurrent']
 
 
 class AdminReject(models.Model):
@@ -642,7 +679,7 @@ class AdminReject(models.Model):
 
     class Meta:
         db_table = 'base_admin_reject'
-        ordering = ['concurrent', 'lot_number']
+        ordering = ['minutes', 'concurrent', 'lot_number']
 
 
 class AdminAccept(models.Model):    
@@ -653,7 +690,7 @@ class AdminAccept(models.Model):
 
     class Meta:
         db_table = 'base_admin_accept'
-        ordering = ['concurrent', 'lot_number']
+        ordering = ['minutes', 'concurrent', 'lot_number']
 
 
 class AdminReserve(models.Model):
@@ -664,7 +701,7 @@ class AdminReserve(models.Model):
 
     class Meta:
         db_table = 'base_admin_reserve'
-        ordering = ['concurrent', 'lot_number']
+        ordering = ['minutes', 'concurrent', 'lot_number']
 
 
 class TechReject(models.Model):
@@ -675,7 +712,7 @@ class TechReject(models.Model):
 
     class Meta:
         db_table = 'base_tech_reject'
-        ordering = ['concurrent', 'lot_number']
+        ordering = ['minutes', 'concurrent', 'lot_number']
 
 
 class SelectedBid(models.Model):
@@ -701,7 +738,7 @@ class SelectedBid(models.Model):
 
     class Meta:
         db_table = 'base_selected_bid'
-        ordering = ['lot_number', 'amount_after']
+        ordering = ['minutes', 'lot_number', 'amount_after']
 
 
 class WinnerBid(models.Model):
@@ -713,7 +750,7 @@ class WinnerBid(models.Model):
 
     class Meta:
         db_table = 'base_winner_bid'
-        ordering = ['lot_number', 'concurrent']
+        ordering = ['minutes', 'lot_number', 'concurrent']
 
 
 class WinJustif(models.Model):
@@ -724,7 +761,7 @@ class WinJustif(models.Model):
 
     class Meta:
         db_table = 'base_win_justif'
-        ordering = ['lot_number']
+        ordering = ['minutes', 'lot_number']
 
 
 class FailedLot(models.Model):
@@ -734,6 +771,6 @@ class FailedLot(models.Model):
 
     class Meta:
         db_table = 'base_failed_lot'
-        ordering = ['lot_number']
+        ordering = ['minutes', 'lot_number']
 
 
