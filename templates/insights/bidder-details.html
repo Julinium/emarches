@@ -17,6 +17,7 @@
 
     <div class="my-3" id="bidder-details">
 
+
         <div class="row gx-4 gy-0" id="bidderDigest">
 
             <div class="col-12" 
@@ -89,6 +90,7 @@
 
         
         </div>
+
 
         <div class="accordion my-3" id="accordionBidders">
             <div class="accordion-item shadow-sm">
@@ -285,9 +287,8 @@
                                             {% if sel.minutes.tender.lots_count > 1 %}
                                                 <span class="fw-light small">Lot {{ sel.lot_number }}:</span>
                                             {% endif %}
-                                            <span class="fw-bold ms-2">{{ sel.amount }}</span>
-                                        </span>
-                                        
+                                            <span class="fw-bold ms-2">{{ sel.amount_after }}</span>
+                                        </span>                                        
                                     </div>
                                 </a>
                             {% empty %}
