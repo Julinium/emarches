@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load i18n static %}
+{% load i18n l10n static %}
 {% load humanize %}
 
 {% block title %}
@@ -44,21 +44,48 @@
                     <a href="{% url 'insights_bidder_details' bidder.id %}" 
                        class="btn text-start w-100 p-0 mb-2">
                         <div class="card shadow py-2 px-3">
-                            <div class="{% if wrap_text == False %}threelines{% endif %}">{{ bidder.name }}</div>
-                            <div class="ms-2 float-end text-end">
+                            <div class="{% if wrap_text == False %}oneline{% endif %}">
+                                <span>{{ bidder.name }}</span>
+                                <span class="badge bg-secondary-subtle text-success ms-1 float-end text-end"
+                                      style="min-width: 4rem;">
+                                    <i class="{{ bicons.estimate }} me-1"></i>
+                                    <span>{{ bidder.winner_bids_sum|metrify }}</span>
+
+                                    <div class="progress bg-warning mt-1"
+                                            style="height: 0.2rem;"
+                                            data-bs-toggle="tooltip"
+                                            title="{% trans 'Success rate' %}: {{ bidder.success_rate|default:'0' }}%">
+                                        <div class="progress-bar bg-success" 
+                                                role="progressbar" style="width: {{ bidder.success_rate|unlocalize|default:'0' }}%;" 
+                                                aria-valuenow="{{ bidder.success_rate|unlocalize }}" aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                        </div>
+                                    </div>
+
+                                    <!-- <span>/</span>
+                                    <span>{{ bidder.bidders_sum|metrify }}</span> -->
+                                </span>
+                            </div>
+                            <!-- <div class="ms-2 text-end">
                                 <span class="badge bg-secondary">
                                     <i class="{{ bicons.count }} me-1"></i>
                                     <span>{{ bidder.winner_bids_count }}</span>
                                     <span>/</span>
                                     <span>{{ bidder.selected_bids_count }}</span>
                                 </span>
-                                <span class="badge bg-success ms-1">
-                                    <i class="{{ bicons.estimate }} me-1"></i>
-                                    <span>{{ bidder.winner_bids_sum|metrify }}</span>
-                                    <span>/</span>
-                                    <span>{{ bidder.bidders_sum|metrify }}</span>
-                                </span>
-                            </div>
+                            </div>                             -->
+                            <!-- {% if bidder.success_rate %}
+                                <div class="progress bg-warning p-0 m-0"
+                                        style="height: 0.25rem;"
+                                        data-bs-toggle="tooltip"
+                                        title="{% trans 'Success rate' %}: {{ bidder.success_rate }}%">
+                                    <div class="progress-bar bg-success" 
+                                            role="progressbar" style="width: {{ bidder.success_rate|unlocalize }}%;" 
+                                            aria-valuenow="{{ bidder.success_rate|unlocalize }}" aria-valuemin="0" 
+                                            aria-valuemax="100">
+                                    </div>
+                                </div>
+                            {% endif %} -->
                         </div>
                     </a>
                 {% endfor %}

@@ -50,6 +50,7 @@
                     </div>
                 </div>
             </div>
+            
 
             {% if bidder.winner_bids.all|length > 2 %}
                 <div class="col-12 col-md-6"
@@ -270,6 +271,7 @@
                         <span><i class="{{ bicons.estimate }} me-1"></i></span>
                         <span class="fw-light">{% trans "SELECTED OFFERS" %}</span>
                         <span class="small fw-bold ps-2">{{ bidder.selected_bids.all|length }}</span>
+                        <span class="small fw-light ps-2">= {{ bidder.bidders_sum }}</span>
                     </button>
                 </h2>
                 <div id="selrctsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionSelects">
@@ -310,6 +312,7 @@
                         <span><i class="bi bi-trophy me-1"></i></span>
                         <span class="fw-light">{% trans "WINNERS" %}</span>
                         <span class="small fw-bold ps-2 {% if bidder.winner_bids.all|length > 0 %}text-success{% endif %}">{{ bidder.winner_bids.all|length }}</span>
+                        <span class="small fw-light ps-2">= {{ bidder.winner_bids_sum }}</span>
                     </button>
                 </h2>
                 <div id="winsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionWins">

@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from django.db.models import Count, Sum
+from django.db.models import F, Count, Sum
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
@@ -83,18 +83,14 @@ def bidders_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     all_bidders = Concurrent.objects.annotate(
-
-            # bidders_count        = Count('bidders__minutes', distinct=True),
-            # admin_rejects_count  = Count('admin_rejects__minutes', distinct=True),
-            # admin_accepts_count  = Count('admin_accepts__minutes', distinct=True),
-            # admin_reserves_count = Count('admin_reserves__minutes', distinct=True),
-            # tech_rejects_count   = Count('tech_rejects__minutes', distinct=True),
             bids_count   = Count('selected_bids__minutes', distinct=True),
             wins_count   = Count('winner_bids__minutes', distinct=True),
-
             bids_sum     = Sum('selected_bids__amount_after', distinct=True),
             wins_sum     = Sum('winner_bids__amount', distinct=True),
-        ).order_by('wins_sum')
+        ).order_by(
+            F("wins_sum").asc(nulls_first=True), 
+            'name', 
+        )
 
     #     # .prefetch_related(
     #     #     'bidders', 'admin_rejects', 'admin_accepts', 
@@ -176,6 +172,10 @@ def bidder_details(request, pk=None):
         , id=pk)
 
     if not bidder : return HttpResponse(status=404)
+    # bidder = bidder.annotate(
+    #         bids_sum     = Sum('selected_bids__amount_after', distinct=True),
+    #         wins_sum     = Sum('winner_bids__amount', distinct=True),
+    # )
 
     # lwb = bidder.winner_bids.order_by('minutes').first()
     # latest_win = lwb.minutes.date_end if lwb else None

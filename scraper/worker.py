@@ -100,7 +100,7 @@ def main():
                     helper.printMessage('DEBUG', 'worker', f"Raised Exception: \n{ xc }\n")
                     traceback.print_exc()
             else:
-                helper.printMessage('INFO', 'worker', f"\tMinutes emty or not found for item { i }/{ count }")
+                helper.printMessage('INFO', 'worker', f"\tMinutes empty or not found for item { i }/{ count }")
         
         return results_saved, i
 
