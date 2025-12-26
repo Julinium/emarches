@@ -589,8 +589,7 @@ def mergeResults(digest):
         date_finished = None
         print(xc)
     has_tech = digest.get('has_tech', None)
-    # print('\n\n\n\t================================', has_tech)
-    # print('\t================================\n\n\n')
+    
     
     minutes, created = Minutes.objects.update_or_create(
         tender = tender,
@@ -603,7 +602,9 @@ def mergeResults(digest):
     candidates = digest.get('bidders', [])
     if len(candidates) > 0:
         for candidate in candidates:
-            concurrent, created = Concurrent.objects.get_or_create(name = candidate['name'])
+            concurrent, created = Concurrent.objects.get_or_create(
+                name = candidate['name']
+                )
             bidder, created = Bidder.objects.get_or_create(
                 minutes = minutes,
                 concurrent = concurrent,
@@ -668,8 +669,6 @@ def mergeResults(digest):
 
     dt_rejects = digest.get('rejected_dt', [])
     if len(dt_rejects) > 0:
-        # print('======dt_rejects======: ', f"{ dt_rejects }")
-        # print('======da_rejects======: ', f"{ da_rejects }")
         for dt_reject in dt_rejects:
             concurrent, created = Concurrent.objects.get_or_create(name = dt_reject['name'])
             lots = dt_reject.get('lots', [''])

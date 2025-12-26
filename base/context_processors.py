@@ -173,7 +173,7 @@ def portal_context(request):
     context['user_settings'] = user_settings
     context['faved_ids']     = faved_ids
     context['pinned_ids']    = pinned_ids
-    context['wrap_text']     = user_settings.general_wrap_long_text != False
+    context['wrap_text']     = user_settings.general_wrap_long_text == True
 
     return context
 

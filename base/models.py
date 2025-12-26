@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from django.db.models import Sum, Count, Max, Min
+from django.db.models import Sum, Count, Max, Min, Q
 
 from .texter import normalize_text as nt
 
@@ -618,15 +618,56 @@ class Concurrent(models.Model):
 
     @property
     def first_win(self):
-        lwb = self.winner_bids.order_by('-minutes').first()
-        return lwb.minutes.date_end if lwb else None
+        fwb = self.winner_bids.order_by('-minutes').first()
+        return fwb.minutes.date_end if fwb else None
 
     @property
     def success_rate(self):
-        ws = self.winner_bids_sum
-        bs = self.bidders_sum
-        success_rate = ws / bs if bs > 0 else None
-        return round(100 * success_rate, 2) if success_rate else None
+        if self.bidders_sum == 0 : return None
+        return round(100 * self.winner_bids_sum / self.bidders_sum, 1)
+
+    @property
+    def bid_domains(self):
+        return Domain.objects.filter(
+            tenders__minutes__bidders__concurrent=self
+        ).annotate(
+                bidders_count=Count(
+                    "tenders__minutes__bidders",
+                    filter=Q(tenders__minutes__bidders__concurrent=self),
+                    distinct=True,
+                )
+            ).order_by("-bidders_count", 'name')
+
+    @property
+    def bid_licences(self):
+        return (
+            Agrement.objects
+            .filter(lots__tender__minutes__bidders__concurrent=self)
+            .annotate(
+                bidders_count=Count(
+                    "lots__tender__minutes__bidders",
+                    filter=Q(lots__tender__minutes__bidders__concurrent=self),
+                    distinct=True,
+                )
+            )
+            .order_by("-bidders_count", 'short')
+        )
+
+    @property
+    def bid_qualifs(self):
+        return (
+            Qualif.objects
+            .filter(lots__tender__minutes__bidders__concurrent=self)
+            .annotate(
+                bidders_count=Count(
+                    "lots__tender__minutes__bidders",
+                    filter=Q(lots__tender__minutes__bidders__concurrent=self),
+                    distinct=True,
+                )
+            )
+            .order_by("-bidders_count", 'short')
+        )
+    
 
     class Meta:
         db_table = 'base_concurrent'
@@ -642,12 +683,6 @@ class Minutes(models.Model):
     has_tech   = models.BooleanField(blank=True, null=True, default=True)
     failure    = models.TextField(blank=True, null=True)
     date_end   = models.DateField(blank=True, null=True)
-    
-    # # @property
-    # def outcome(self):
-    #     if self.winner_bids.count() == self.tender.lots_count: return 's'
-    #     if not self.winner_bids : return 'f'
-    #     return 'p'
     
     @property
     def amount_won(self):
@@ -737,9 +772,25 @@ class SelectedBid(models.Model):
             amount=self.amount_after, 
         ).count() == 1
 
-    #     if self.winner_bids.count() == self.tender.lots_count: return 's'
-    #     if not self.winner_bids : return 'f'
-    #     return 'p'
+    @property
+    def lot(self):
+        return Lot.objects.filter(
+            # tender__minutes__bidders__concurrent=self.concurrent, 
+            tender = self.minutes.tender,
+            number = self.lot_number
+            ).first()
+
+    @property
+    def offset(self):
+        e = self.lot.estimate
+        return round(100 * (self.amount_after - e) / e, 1) if e > 0 else None
+        return Lot.objects.filter(
+            # tender__minutes__bidders__concurrent=self.concurrent, 
+            tender = self.minutes.tender,
+            number = self.lot_number
+            ).first()
+    
+
 
     class Meta:
         db_table = 'base_selected_bid'

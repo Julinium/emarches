@@ -14,9 +14,9 @@ from base.context_processors import portal_context
 from base.models import Concurrent
 
 
-BIDDERS_ITEMS_PER_PAGE = 20
-SHOW_TODAYS_EXPIRED = True
-SHOW_CANCELLED = True
+BIDDERS_ITEMS_PER_PAGE = 25
+# SHOW_TODAYS_EXPIRED = True
+# SHOW_CANCELLED = True
 
 
 @login_required(login_url="account_login")
@@ -36,8 +36,8 @@ def bidders_list(request):
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     if us: 
-        BIDDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-        SHOW_TODAYS_EXPIRED = us.tenders_show_expired
+        BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+        # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
     BIDDERS_ORDERING_FIELD = 'name' #'bidders_count'
 
     def get_req_params(req):
@@ -89,7 +89,7 @@ def bidders_list(request):
             wins_sum     = Sum('winner_bids__amount', distinct=True),
         ).order_by(
             F("wins_sum").asc(nulls_first=True), 
-            'name', 
+            'name',
         )
 
     #     # .prefetch_related(

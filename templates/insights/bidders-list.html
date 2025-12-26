@@ -11,7 +11,7 @@
         <div class="">
             <span class="h3 me-1">{% trans "Concurrents list" %}</span>
         </div>
-        <div class="d-flex align-items-top">            
+        <div class="d-flex align-items-top">
             {% include 'portal/snippets/clients/client-search-form.html' %}
             {% include 'portal/snippets/clients/client-menu-sort.html' %}
         </div>
@@ -46,12 +46,18 @@
                         <div class="card shadow py-2 px-3">
                             <div class="{% if wrap_text == False %}oneline{% endif %}">
                                 <span>{{ bidder.name }}</span>
-                                <span class="badge bg-secondary-subtle text-success ms-1 float-end text-end"
+                                <span class="small ms-1 float-end text-end"
                                       style="min-width: 4rem;">
-                                    <i class="{{ bicons.estimate }} me-1"></i>
-                                    <span>{{ bidder.winner_bids_sum|metrify }}</span>
+                                    <i class="small text-success me-1 
+                                        {% if bidder.winner_bids_sum > 0 %}
+                                            {{ bicons.winner }}
+                                        {% else %}
+                                            bi bi-trophy
+                                        {% endif %}">
+                                    </i>
+                                    <span class="small fw-bold">{{ bidder.winner_bids_sum|metrify }}</span>
 
-                                    <div class="progress bg-warning mt-1"
+                                    <div class="progress bg-warning"
                                             style="height: 0.2rem;"
                                             data-bs-toggle="tooltip"
                                             title="{% trans 'Success rate' %}: {{ bidder.success_rate|default:'0' }}%">
