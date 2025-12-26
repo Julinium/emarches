@@ -589,7 +589,7 @@ class Concurrent(models.Model):
 
     @property
     def bidders_sum(self):
-        return self.selected_bids.aggregate(total=Sum('amount_after'))['total'] or 0
+        return self.selected_bids.aggregate(total=Sum('amount_before'))['total'] or 0
 
     @property
     def winner_bids_sum(self):

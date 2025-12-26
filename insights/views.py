@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from django.db.models import F, Count, Sum, Min, Max
+from django.db.models import F, Q, Count, Sum, Min, Max, FloatField, ExpressionWrapper
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
@@ -38,11 +38,11 @@ def bidders_list(request):
     if us: 
         BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
         # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-    BIDDERS_ORDERING_FIELD = 'name' #'bidders_count'
+    BIDDERS_ORDERING_FIELD = '-last_win' #'bidders_count'
 
     def get_req_params(req):
         allowed_keys = [
-            'q', 'page', 'sort',
+            'q', 'w', 'n', 'x', 'p', 's', 'page', 'sort',
             ]
 
         query_dict = {
@@ -70,6 +70,51 @@ def bidders_list(request):
             ff += 1
             q = params['q']
             bidders = bidders.filter(name__icontains=q)
+
+        if 'n' in params:
+            ff += 1
+            n = params['n']
+            bidders = bidders.filter(wins_sum__gte=n)
+
+        if 'x' in params:
+            ff += 1
+            x = params['x']
+            bidders = bidders.filter(wins_sum__lte=x)
+
+        if 'w' in params:
+            ff += 1
+            w = params['w']
+            if w == "0":
+                bidders = bidders.filter(wins_count=0)
+            elif w == "1":
+                bidders = bidders.filter(wins_count=1)
+            elif w == "2":
+                bidders = bidders.filter(wins_count__gte=1)
+            elif w == "11":
+                bidders = bidders.filter(wins_count__gte=10)
+
+        if 'p' in params:
+            ff += 1
+            p = params['p']
+            if p == "0":
+                bidders = bidders.filter(part_count=0)
+            elif p == "1":
+                bidders = bidders.filter(part_count=1)
+            elif p == "2":
+                bidders = bidders.filter(part_count__gte=1)
+            elif p == "11":
+                bidders = bidders.filter(part_count__gte=10)
+
+        if 's' in params:
+            ff += 1
+            s = params['s']
+            if s == "1":
+                bidders = bidders.filter(succ_rate=100)
+            elif s == "6":
+                bidders = bidders.filter(succ_rate__gte=50)
+            elif s == "4":
+                bidders = bidders.filter(succ_rate__lte=50)
+
         return bidders.distinct(), ff
 
     def define_context(request):
@@ -83,13 +128,20 @@ def bidders_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     all_bidders = Concurrent.objects.annotate(
-            bids_count   = Count('selected_bids__minutes', distinct=True),
-            wins_count   = Count('winner_bids__minutes', distinct=True),
-            bids_sum     = Sum('selected_bids__amount_after', distinct=True),
-            wins_sum     = Sum('winner_bids__amount', distinct=True),
-        ).order_by(
-            F("wins_sum").asc(nulls_first=True), 
-            'name',
+            part_count = Count('bidders__minutes', distinct=True),
+            bids_count = Count('selected_bids__minutes', distinct=True),
+            wins_count = Count('winner_bids__minutes', distinct=True),
+            bids_sum   = Sum('selected_bids__amount_before', distinct=True),
+            wins_sum   = Sum('winner_bids__amount', distinct=True),
+            last_win   = Max('winner_bids__minutes__date_end'),
+            last_part  = Max('bidders__minutes__date_end'),
+        ).filter(
+            bids_sum__gt=0,
+        ).annotate(
+            succ_rate  = ExpressionWrapper(
+                F("wins_sum") * 100.0 / F("bids_sum"),
+                output_field=FloatField(),
+            )
         )
 
     #     # .prefetch_related(
@@ -104,19 +156,13 @@ def bidders_list(request):
     #             'selected_bids', 'winner_bids'
     #         )
 
-    # all_bidders = Concurrent.objects.all()
 
     bidders, filters = filter_bidders(all_bidders, query_dict)
 
     sort = query_dict['sort']
 
     if sort and sort != '':
-        # ordering = ['bidders_count']
         ordering = [sort]
-        # if sort == 'tenders_count': ordering = ['-tenders_count']
-        # if sort == '-tenders_count': ordering = ['tenders_count']
-        # if sort == 'total_estimate': ordering = ['-total_estimate']
-        # if sort == '-total_estimate': ordering = ['total_estimate']
     else: ordering = []
 
     ordering.append('-wins_sum')
@@ -125,7 +171,7 @@ def bidders_list(request):
 
     # if ordering == []: ordering = ['-name']
 
-    # bidders = bidders.order_by(*ordering)
+    bidders = bidders.order_by(*ordering)
     # bidders = bidders.order_by('-wins_sum')
 
     context = define_context(request)

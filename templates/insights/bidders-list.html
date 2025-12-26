@@ -48,6 +48,7 @@
                                 <span>{{ bidder.name }}</span>
                                 <span class="small ms-1 float-end text-end"
                                       style="min-width: 4rem;">
+                                    <span class="small fw-light">{{ bidder.winner_bids_count }}</span>
                                     <i class="small text-success me-1 
                                         {% if bidder.winner_bids_sum > 0 %}
                                             {{ bicons.winner }}
@@ -71,15 +72,15 @@
                                     <!-- <span>/</span>
                                     <span>{{ bidder.bidders_sum|metrify }}</span> -->
                                 </span>
+                            </div>                        
+                            <div class="mt-2 text-danger">
+                                part_count = {{ bidder.part_count }}<br>
+                                bids_count = {{ bidder.bids_count }}<br>
+                                wins_count = {{ bidder.wins_count }}<br>
+                                bids_sum = {{ bidder.bids_sum }}<br>
+                                wins_sum = {{ bidder.wins_sum }}<br>
+                                succ_rate = {{ bidder.succ_rate }}<br>
                             </div>
-                            <!-- <div class="ms-2 text-end">
-                                <span class="badge bg-secondary">
-                                    <i class="{{ bicons.count }} me-1"></i>
-                                    <span>{{ bidder.winner_bids_count }}</span>
-                                    <span>/</span>
-                                    <span>{{ bidder.selected_bids_count }}</span>
-                                </span>
-                            </div>                             -->
                             <!-- {% if bidder.success_rate %}
                                 <div class="progress bg-warning p-0 m-0"
                                         style="height: 0.25rem;"

@@ -102,7 +102,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#biddersCollapse" aria-expanded="true" aria-controls="biddersCollapse">
                         <span><i class="bi bi-building-up me-1"></i></span>
-                        <span class="fw-light">{% trans "PARTICIPATIONS" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Participations" %}</span>
                         <span class="small fw-bold ps-2">{{ bidder.bidders.all|length }}</span>
                     </button>
                 </h2>
@@ -140,7 +140,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminRejectsCollapse" aria-expanded="true" aria-controls="adminRejectsCollapse">
                         <span><i class="bi bi-x-octagon me-1"></i></span>
-                        <span class="fw-light">{% trans "ADMIN REJECTS" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Admin Rejects" %}</span>
                         <span class="small fw-bold ps-2 
                                     {% if bidder.admin_rejects.all|length > 0 %}
                                         text-danger
@@ -192,7 +192,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminAcceptsCollapse" aria-expanded="true" aria-controls="adminAcceptsCollapse">
                         <span><i class="bi bi-fast-forward me-1"></i></span>
-                        <span class="fw-light">{% trans "ADMIN ACCEPTS" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Admin Accepts" %}</span>
                         <span class="small fw-bold ps-2 
                                     {% if bidder.admin_accepts.all|length == 0 %}
                                         text-danger
@@ -243,7 +243,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminReservesCollapse" aria-expanded="true" aria-controls="adminReservesCollapse">
                         <span><i class="bi bi-fast-forward-circle me-1"></i></span>
-                        <span class="fw-light">{% trans "ADMIN RESERVES" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Admin Reserves" %}</span>
                         <span class="small fw-bold ps-2">
                             {{ bidder.admin_reserves.all|length }}
                         </span>
@@ -290,7 +290,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#techRejectsCollapse" aria-expanded="true" aria-controls="techRejectsCollapse">
                         <span><i class="bi bi-x-octagon me-1"></i></span>
-                        <span class="fw-light">{% trans "TECH REJECTS" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Tech Rejects" %}</span>
                         <span class="small fw-bold ps-2 
                                     {% if bidder.tech_rejects.all|length > 0 %}
                                         text-danger
@@ -344,7 +344,7 @@
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
-                                <span class="fw-light">{% trans "SELECTED OFFERS" %}</span>
+                                <span class="fw-light text-uppercase">{% trans "Selected Offers" %}</span>
                                 <span class="small fw-bold ps-2">{{ bidder.selected_bids.all|length }}</span>
                             </span>
                             <span class="small px-2 float-end text-end">{{ bidder.bidders_sum }}</span>
@@ -373,7 +373,10 @@
                                             <span class="fw-light">{{ sel.lot.estimate }}</span>
                                             <span>+</span>
                                         {% endif %}
-                                        <span class="badge small text-bg-secondary">{{ sel.offset|default_if_none:'?'|floatformat:1 }}%</span>
+                                        {% if sel.amount_after != sel.amount_before %}
+                                            <span class="small fw-light text-decoration-line-through">{{ sel.amount_before }}</span>
+                                        {% endif %}
+                                        <span class="badge small text-bg-secondary">{{ sel.offset|default:'0'|floatformat:1 }}%</span>
                                         <span>=</span>
                                         {% if sel.is_winner %}
                                             <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
@@ -400,7 +403,7 @@
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.winner }} text-success me-1"></i></span>
-                                <span class="fw-bold">{% trans "WINNERS" %}</span>
+                                <span class="fw-bold text-uppercase">{% trans "Winners" %}</span>
                                 <span class="small fw-bold ps-2 {% if bidder.winner_bids.all|length > 0 %}text-success{% endif %}">{{ bidder.winner_bids.all|length }}</span>                                
                             </span>
                             <span class="small fw-bold px-2 float-end text-end">{{ bidder.winner_bids_sum }}</span>
@@ -451,7 +454,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#domainsCollapse" aria-expanded="true" aria-controls="domainsCollapse">
                         <span><i class="{{ bicons.domains }} me-1"></i></span>
-                        <span class="fw-light">{% trans "TOP DOMAINS" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Domains" %}</span>
                         <span class="small fw-bold ps-2 {% if bidder.bid_domains.all|length > 0 %}text-success{% endif %}">{{ bidder.bid_domains.all|length }}</span>
                     </button>
                 </h2>
@@ -486,7 +489,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qualifsCollapse" aria-expanded="true" aria-controls="qualifsCollapse">
                         <span><i class="{{ bicons.qualifs_ico }} me-1"></i></span>
-                        <span class="fw-light">{% trans "TOP QUALIFS" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Qualifs" %}</span>
                         <span class="small fw-bold ps-2 {% if bidder.bid_qualifs.all|length > 0 %}text-success{% endif %}">{{ bidder.bid_qualifs.all|length }}</span>
                     </button>
                 </h2>
@@ -524,7 +527,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#licencesCollapse" aria-expanded="true" aria-controls="licencesCollapse">
                         <span><i class="{{ bicons.agrements_ico }} me-1"></i></span>
-                        <span class="fw-light">{% trans "TOP LICENCES" %}</span>
+                        <span class="fw-light text-uppercase">{% trans "Licences" %}</span>
                         <span class="small fw-bold ps-2 {% if bidder.bid_agrements.all|length > 0 %}text-success{% endif %}">{{ bidder.bid_agrements.all|length }}</span>
                     </button>
                 </h2>
