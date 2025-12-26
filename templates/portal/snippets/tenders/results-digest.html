@@ -141,17 +141,22 @@
                             <div class="list-group-item disabled ps-2">
                                 <span class="fw-light">{% trans 'Lot' %}</span>
                                 <span class="">{{ selected_bid.lot_number }}:</span>
+                                <span class="fw-light">{{ selected_bid.lot.estimate }}</span>
                             </div>
                         {% endif%}
                     {% endifchanged %}
                     <div class="list-group-item list-group-item-action">
-                        <span class="{% if selected_bid.is_winner %} fw-bold {% endif%}">{{ selected_bid.concurrent.name }} </span>
+                        <span class="">{{ selected_bid.concurrent.name }} </span>
                         {% if selected_bid.amount_after != selected_bid.amount_before %}
                             <span class="fw-light ms-1">({{ selected_bid.amount_before }} {% trans 'Before correction' %})</span>
                         {% endif %}
                         <span class="float-end ms-2">
-                            {% if selected_bid.is_winner %}<i class="bi bi-trophy me-1 small"></i>{% endif%}
-                            {{ selected_bid.amount_after }}
+                            <span class="badge small text-bg-secondary">{{ selected_bid.offset|default_if_none:'?'|floatformat:1 }}%</span>
+                            <span>=</span>
+                            {% if selected_bid.is_winner %}
+                                <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                            {% endif %}
+                            <span class="{% if selected_bid.is_winner %}text-success{% endif %}">{{ selected_bid.amount_after }}</span>
                         </span>
                     </div>
                 {% endfor %}

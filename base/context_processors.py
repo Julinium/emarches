@@ -147,9 +147,14 @@ def portal_context(request):
         'nature'          : 'bi bi-tags',
 
         'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
-        'ongoing'         : 'bi bi-calendar2-check',
+        'ongoing'         : 'bi bi-hourglass-top', 
+                            # calendar2-check
+        'concurrence'     : 'bi bi-bar-chart-steps',
+                            # filter-left 
+                            # sort-up 
+                            # list-ol 
 
-        # 'Fournitures'     : 'bi bi-box-seam',
+        # 'Fournitures'     : 'bi bi-box-seam', 
         # 'Travaux'         : 'bi bi-cone-striped',
         # 'Services'        : 'bi bi-gear', 
                             # 

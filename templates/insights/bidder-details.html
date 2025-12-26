@@ -115,8 +115,12 @@
                                     <div>
                                         <span class="fw-bold small">{{ bid.minutes.date_end }}</span>
                                     </div>
-                                    <div class="threelines">
-                                        <span>{{ bid.minutes.tender.title }}</span>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ bid.minutes.tender.category.icon_bs_class }}"></i></span>
+                                        {% if bid.minutes.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ bid.minutes.tender.title }}</span>
                                     </div>
                                 </a>
                             {% empty %}
@@ -154,7 +158,13 @@
                                     href="{% url 'portal_tender_detail' admin_reject.minutes.tender.id %}">
                                     {% ifchanged admin_reject.minutes.tender %}
                                         <div class="fw-light small">{{ admin_reject.minutes.date_end }}</div>
-                                        <div class="threelines">{{ admin_reject.minutes.tender.title }}</div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ admin_reject.minutes.tender.category.icon_bs_class }}"></i></span>
+                                            {% if admin_reject.minutes.tender.lots_count > 1 %}
+                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            <span class="">{{ admin_reject.minutes.tender.title }}</span>
+                                        </div>
                                     {% endifchanged %}
                                     <div>
                                         <span class="float-end">
@@ -200,7 +210,13 @@
                                     href="{% url 'portal_tender_detail' admin_accept.minutes.tender.id %}">
                                     {% ifchanged admin_accept.minutes.tender %}
                                         <div class="fw-light small">{{ admin_accept.minutes.date_end }}</div>
-                                        <div class="threelines">{{ admin_accept.minutes.tender.title }}</div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ admin_accept.minutes.tender.category.icon_bs_class }}"></i></span>
+                                            {% if admin_accept.minutes.tender.lots_count > 1 %}
+                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            <span class="">{{ admin_accept.minutes.tender.title }}</span>
+                                        </div>
                                     {% endifchanged %}
                                     <div>
                                         <span class="float-end">
@@ -241,7 +257,13 @@
                                     href="{% url 'portal_tender_detail' admin_reserve.minutes.tender.id %}">
                                     {% ifchanged admin_reserve.minutes.tender %}
                                         <div class="fw-light small">{{ admin_reserve.minutes.date_end }}</div>
-                                        <div class="threelines">{{ admin_reserve.minutes.tender.title }}</div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ admin_reserve.minutes.tender.category.icon_bs_class }}"></i></span>
+                                            {% if admin_reserve.minutes.tender.lots_count > 1 %}
+                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            <span class="">{{ admin_reserve.minutes.tender.title }}</span>
+                                        </div>
                                     {% endifchanged %}
                                     <div>
                                         <span class="float-end">
@@ -286,7 +308,13 @@
                                     href="{% url 'portal_tender_detail' tech_reject.minutes.tender.id %}">
                                     {% ifchanged tech_reject.minutes.tender %}
                                         <div class="fw-light small">{{ tech_reject.minutes.date_end }}</div>
-                                        <div class="threelines">{{ tech_reject.minutes.tender.title }}</div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ tech_reject.minutes.tender.category.icon_bs_class }}"></i></span>
+                                            {% if tech_reject.minutes.tender.lots_count > 1 %}
+                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            <span class="">{{ tech_reject.minutes.tender.title }}</span>
+                                        </div>
                                     {% endifchanged %}
                                     <div>
                                         <span class="float-end">
@@ -332,7 +360,7 @@
                                     {% ifchanged sel.minutes.tender %}
                                         <div class="fw-light small">{{ sel.minutes.date_end }}</div>
                                         <div class="twolines">
-                                                <span class="small me-1"><i class="{{ sel.minutes.tender.category.icon_bs_class }}"></i></span>
+                                            <span class="small me-1"><i class="{{ sel.minutes.tender.category.icon_bs_class }}"></i></span>
                                             {% if sel.minutes.tender.lots_count > 1 %}
                                                 <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
                                             {% endif %}
@@ -342,37 +370,16 @@
                                     <span class="small float-end ms-2">
                                         {% if sel.minutes.tender.lots_count > 1 %}
                                             <span class="fw-light small">{% trans 'Lot' %} {{ sel.lot_number }}: </span>
+                                            <span class="fw-light">{{ sel.lot.estimate }}</span>
+                                            <span>+</span>
                                         {% endif %}
-                                        <span class="fw-light">{{ sel.lot.estimate }}</span>
-                                        <span>+</span>
-                                        <span class="badge small text-bg-secondary">{{ sel.offset|default:'?' }}%</span>
+                                        <span class="badge small text-bg-secondary">{{ sel.offset|default_if_none:'?'|floatformat:1 }}%</span>
                                         <span>=</span>
                                         {% if sel.is_winner %}
                                             <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
                                         {% endif %}
                                         <span class="fw-bold {% if sel.is_winner %}text-success{% endif %}">{{ sel.amount_after }}</span>
                                     </span>
-                                    <!-- <span class="d-block text-end">
-                                        {% if sel.minutes.tender.lots_count > 1 %}
-                                            <span class="fw-light small">{% trans 'Lot' %} {{ sel.lot_number }}</span>
-                                        {% endif %}
-                                        <span class="ms-2">
-                                            <span class="small fw-light">{% trans 'Estimate' %} = </span>
-                                            <span class="fw-light">{{ sel.lot.estimate }}</span>
-                                        </span>
-                                    </span>
-                                    <span class="d-block text-end">
-                                        <span class="ms-2">
-                                            <span class="small">{% trans 'Bid Offset' %} = </span>
-                                            <span class="fw-bold">{{ sel.offset|default:'?' }}%</span>
-                                        </span>
-                                    </span>
-                                    <span class="d-block text-end">
-                                        <span class="ms-2">
-                                            <span class="small">{% trans 'Bid Amount' %} = </span>
-                                            <span class="fw-bold">{{ sel.amount_after }}</span>
-                                        </span>
-                                    </span> -->
                                 </a>
                             {% empty %}
                                 <div class="list-group-item">
@@ -408,7 +415,13 @@
                                     href="{% url 'portal_tender_detail' win.minutes.tender.id %}">
                                     {% ifchanged win.minutes.tender %}
                                         <div class="fw-light small">{{ win.minutes.date_end }}</div>
-                                        <div class="twolines">{{ win.minutes.tender.title }}</div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ win.minutes.tender.category.icon_bs_class }}"></i></span>
+                                            {% if win.minutes.tender.lots_count > 1 %}
+                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            <span class="">{{ win.minutes.tender.title }}</span>
+                                        </div>
                                     {% endifchanged %}
                                     <div>
                                         <span class="float-end">

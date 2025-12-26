@@ -64,6 +64,7 @@
 
     {% include 'portal/snippets/tenders/tender-actions.html' %}
 
+
     <div class="my-3" id="tender-details">
         <div class="row gx-4 gy-0">
             
@@ -413,12 +414,12 @@
             <div class="accordion my-3" id="accordionResults">
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
-                        <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resultsCollapse" aria-expanded="true" aria-controls="resultsCollapse">
+                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#resultsCollapse" aria-expanded="true" aria-controls="resultsCollapse">
                             <span><i class="{{ bicons.deliberated }}"></i></span>
                             <span class="ms-2 fw-light">{% trans "Awarding Minutes" %}</span>
                         </button>
                     </h2>
-                    <div id="resultsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionResults">
+                    <div id="resultsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionResults">
                         <div class="accordion-body pt-0 px-3">
                             {% include 'portal/snippets/tenders/results-digest.html' %}
                         </div>

@@ -783,7 +783,7 @@ class SelectedBid(models.Model):
     @property
     def offset(self):
         e = self.lot.estimate
-        return round(100 * (self.amount_after - e) / e, 1) if e > 0 else None
+        return round(100 * (self.amount_after - e) / e, 3) if e > 0 else None
         return Lot.objects.filter(
             # tender__minutes__bidders__concurrent=self.concurrent, 
             tender = self.minutes.tender,

@@ -13,6 +13,22 @@
                 {% trans 'Ongoing' %}
             </a>
         </li>
+
+        <li class="">
+            <a class="dropdown-item py-2"  href="{% url 'portal_tender_list' %}?&ddlnn=1970-01-01&results=with_minutes">
+                <i class="{{ bicons.deliberated }} me-2"></i>
+                {% trans 'Results' %}
+            </a>
+        </li>
+
+        <li class="">
+            <a class="dropdown-item py-2 fw-bold" href="{% url 'insights_bidders_list' %}">
+                <i class="{{ bicons.concurrence }} me-2"></i>
+                {% trans 'Concurrence' %}
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
         
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'portal_tender_favorite_list' %}">
@@ -62,20 +78,11 @@
             </a>
         </li>
 
-        <li class="">
-            <a class="dropdown-item py-2"  href="{% url 'portal_domain_list' %}">
-                <i class="{{ bicons.domains }} me-2"></i>
-                {% trans 'Domains' %}
-            </a>
-        </li>
-
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
+        <!-- <li class="">
             <a class="dropdown-item py-2"  href="#">
                 <i class="{{ bicons.insights }} me-2"></i>
                 {% trans 'Insights' %}
             </a>
-        </li>
+        </li> -->
     </ul>
 </li>

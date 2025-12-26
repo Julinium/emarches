@@ -34,49 +34,65 @@
         <span class="d-none d-md-inline ms-1">{% trans 'Share' %}</span>
     </a>
 
-    {% if files_info|length == 1 and not dce_modal %}
-        {% with files_info|first as f %}
-            <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
-                    class="m-1 btn btn-outline-primary" type="button">
-                <span class="fw-bold">{{ total_size|metrify:1 }}</span>
+    {% if total_size > 0 %}
+        {% if files_info|length == 1 and not dce_modal %}
+            {% with files_info|first as f %}
+                <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
+                        class="m-1 btn btn-outline-primary" type="button">
+                    <span class="fw-bold">{{ total_size|metrify:1 }}</span>
+                    <span><i class="{{ bicons.downloads }}"></i></span>
+                    <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
+                </a>
+            {% endwith %}
+        {% else %}
+            <button class="m-1 btn 
+                        {% if files_info|length == 0 %}
+                                btn-outline-secondary
+                        {% else %}
+                                btn-outline-primary 
+                        {% endif %}" 
+                    type="button" 
+                    data-bs-toggle="modal" data-bs-target="#dceModal">
                 <span><i class="{{ bicons.downloads }}"></i></span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
-            </a>
-        {% endwith %}
-    {% else %}
-        <button class="m-1 btn 
-                       {% if files_info|length == 0 %}
-                            btn-outline-secondary
-                       {% else %}
-                            btn-outline-primary 
-                       {% endif %}" 
-                type="button" 
-                data-bs-toggle="modal" data-bs-target="#dceModal">
-            <span><i class="{{ bicons.downloads }}"></i></span>
-            <span class="d-none d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
-        </button>
+                <span class="d-none d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
+                <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
+            </button>
+        {% endif %}
     {% endif %}
+    
 
-    {% if tender.lots_count < 2 %}
-        <button class="m-1 btn btn-outline-primary
-                {% if tender.estimate == 0 %} disabled {% endif %}" 
-                type="button"
-                data-bs-toggle="modal" data-bs-target="#modalSimulator">
-            <span><i class="{{ bicons.simulator }}"></i></span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
-        </button>
-
-    {% else %}
-        <a class="m-1 btn btn-outline-primary
-           {% if tender.estimate == 0 %} disabled {% endif %}" 
-           type="button" data-bs-toggle="modal" 
-           data-bs-target="#lotSelctModal">
-            <span><i class="{{ bicons.simulator }}"></i></span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
+    {% if tender.minutes.all|length > 0 %}
+        <a class="btn btn-outline-success" href="#accordionMeta">
+            <span><i class="{{ bicons.deliberated }}"></i></span>
+            <span class="d-none d-md-inline ms-1">{% trans 'Results' %}</span>
         </a>
+    {% endif %}
+
+        
+    {% if tender.expired == False %}
+
+        {% if tender.lots_count < 2 %}
+            <button class="m-1 btn btn-outline-primary
+                    {% if tender.estimate == 0 %} disabled {% endif %}" 
+                    type="button"
+                    data-bs-toggle="modal" data-bs-target="#modalSimulator">
+                <span><i class="{{ bicons.simulator }}"></i></span>
+                <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
+            </button>
+
+        {% else %}
+            <a class="m-1 btn btn-outline-primary
+            {% if tender.estimate == 0 %} disabled {% endif %}" 
+            type="button" data-bs-toggle="modal" 
+            data-bs-target="#lotSelctModal">
+                <span><i class="{{ bicons.simulator }}"></i></span>
+                <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
+            </a>
+        {% endif %}
 
     {% endif %}
+
+
     
     {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
         <a class="m-1 btn btn-outline-primary"

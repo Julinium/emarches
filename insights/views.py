@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from django.db.models import F, Count, Sum
+from django.db.models import F, Count, Sum, Min, Max
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
