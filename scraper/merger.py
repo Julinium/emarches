@@ -332,8 +332,12 @@ def save(tender_data):
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
             if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
-                lot = Lot.objects.get(title=lot_title, number=lot_number, tender=tender)
+                lot = Lot.objects.get(
+                    title=lot_title, number=lot_number, tender=tender, 
+                    # estimate=lot_data["estimate"], bond=lot_data["bond"]
+                    )
                 lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
+                lot_serializer.save()
             else:
                 lot_serializer = LotSerializer(data=lot_data)
                 helper.printMessage('TRACE', 'm.save', f"#### Lot to be created: {lot_title[:C.TRUNCA]}...")

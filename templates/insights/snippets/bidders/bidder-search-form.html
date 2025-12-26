@@ -4,19 +4,19 @@
 <button class="btn btn-light py-1 mx-1" type="button" 
         data-bs-toggle="modal" data-bs-target="#searchModal"
         data-bs-toggle="tooltip"
-        title="{% trans 'Serach Clients' %}">
+        title="{% trans 'Serach Concurrents' %}">
     <i class="{{ bicons.search }}"></i>
 </button>
 
 
-<form action="{% url 'portal_client_list' %}?{{ query_string }}&sort={{ query_string.sorter }}">
+<form action="{% url 'insights_bidders_list' %}?{{ query_string }}&sort={{ query_string.sorter }}">
     <div class="modal fade" id="searchModal" tabindex="-1" 
         aria-labelledby="searchModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Clients Search' %}</h1>
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Concurrents Search' %}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -24,23 +24,74 @@
 
                     <div class="row gx-3">
                             
-                        <div class="col-12">
+                        <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
-                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="clients" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
+                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
                             </div>
-                            <datalist id="clients">
-                                {% for client in clients %}
-                                    <option value="{{ client.name }}">
+                            <datalist id="bidders">
+                                {% for bidder in bidders %}
+                                    <option value="{{ bidder.name }}">
                                 {% endfor %}
                             </datalist>
                         </div>
+
+                        <!-- <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline period" %}</span></span>
+                                <select class="form-select" name="deadline_period" aria-label="deadline_period">
+                                    <option {% if query_dict.deadline_period == '' %} selected {% endif %} value="">--</option>
+                                    <option {% if query_dict.deadline_period == 'year' %} selected {% endif %} value="year">{% trans 'This year' %}</option>
+                                    <option {% if query_dict.deadline_period == 'quarter' %} selected {% endif %} value="quarter">{% trans 'This quarter' %}</option>
+                                    <option {% if query_dict.deadline_period == 'd365' %} selected {% endif %} value="d365">{% trans 'Last 365 days' %}</option>
+                                    <option {% if query_dict.deadline_period == 'y5' %} selected {% endif %} value="y5">{% trans 'Last 5 years' %}</option>
+                                </select>
+                            </div>
+                        </div> -->
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Category" %}</span></span>
+                                <select class="form-select" name="category" aria-label="category">
+                                    <option {% if query_dict.category == '' %} selected {% endif %} value="">--</option>
+                                    {% for c in categories %}
+                                        <option {% if query_dict.category == c.id|stringify %} selected {% endif %} value="{{ c.id }}">{{ c.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
+                                <input type="date" class="form-control text-end" name="ddlnn" value="{{ query_dict.ddlnn }}" aria-label="deadline_min">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
+                                <input type="date" class="form-control text-end" name="ddlnx" value="{{ query_dict.ddlnx }}" aria-label="deadline_max">
+                            </div>
+                        </div>
+                            
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Min Amount won" %}</span></span>
+                                <input type="number" step="any" class="form-control text-end" name="winmin" value="{{ query_dict.winmin }}" placeholder="{% trans 'Min' %}" aria-label="winmin">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Max Amount won" %}</span></span>
+                                <input type="number" step="any" class="form-control text-end" name="winmax" value="{{ query_dict.winmax }}" placeholder="{% trans 'Max' %}" aria-label="winmax">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    
-                    <a href="{% url 'portal_client_list' %}" type="button" class="btn btn-outline-secondary">
+                    <a href="{% url 'insights_bidders_list' %}" type="button" class="btn btn-outline-secondary">
                         <i class="{{ bicons.backspace }} me-1"></i>
                         {% trans 'Reset' %}
                     </a>
