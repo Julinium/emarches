@@ -13,13 +13,13 @@ from .texter import normalize_text as nt
 
 class Agrement(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
+    short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
 
     class Meta:
         db_table = 'base_agrement'
         ordering = ['name']
-        verbose_name = _("License")
+        verbose_name = "License"
     
     def __str__(self):
         return self.name
@@ -36,13 +36,13 @@ class Agrement(models.Model):
 
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    label = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Name"))
+    label = models.CharField(max_length=128, blank=True, null=True, verbose_name="Name")
     
     class Meta:
         db_table = 'base_category'
         ordering = ['label']
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
     
     def __str__(self):
         return self.label
@@ -60,15 +60,14 @@ class Category(models.Model):
 
 class Change(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="changes", db_column='tender', blank=True, null=True, verbose_name=_("Tender"))    
-    reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Date Reported"))
-    changes = models.TextField(blank=True, null=True, verbose_name=_("Changes"))
-    # changed_field = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("Changed field"))
+    tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="changes", db_column='tender', blank=True, null=True, verbose_name="Tender")
+    reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Date Reported")
+    changes = models.TextField(blank=True, null=True, verbose_name="Changes")
 
     class Meta:
         db_table = 'base_change'
         ordering = ['-reported', 'tender']
-        verbose_name = _("Change")
+        verbose_name = "Change"
     
     def __str__(self):
         return f"{self.tender.chrono} - {self.reported}"
@@ -76,17 +75,17 @@ class Change(models.Model):
 
 class Client(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
-    ministery = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Sector"))
+    short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+    ministery = models.CharField(max_length=256, blank=True, null=True, verbose_name="Sector")
 
     keywords = models.TextField(blank=True, null=True, editable=False)
 
     class Meta:
         db_table = 'base_client'
         ordering = ['ministery', 'name']
-        verbose_name = _("Public Client")
-        # verbose_name_plural = _("")
+        verbose_name = "Public Client"
+        # verbose_name_plural = "")
     
     def __str__(self):
         return self.name
@@ -114,14 +113,13 @@ class Client(models.Model):
 
 class Domain(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Acronym"))
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
+    short = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Acronym")
+    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
 
     class Meta:
         db_table = 'base_domain'
         ordering = ['name']
-        verbose_name = _("Domain")
-        # verbose_name_plural = _("")
+        verbose_name = "Domain"
     
     def __str__(self):
         return self.name
@@ -139,14 +137,13 @@ class Domain(models.Model):
 
 class Kind(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
-    name = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Name"))
+    short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+    name = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Name")
 
     class Meta:
         db_table = 'base_kind'
         ordering = ['name']
-        verbose_name = _("Type")
-        # verbose_name_plural = _("")
+        verbose_name = "Type"
     
     def __str__(self):
         return self.name
@@ -154,14 +151,14 @@ class Kind(models.Model):
 
 class Meeting(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    when = models.DateTimeField(blank=True, null=True, verbose_name=_("Date"))
-    description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
-    lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="meetings", db_column='lot', blank=True, null=True, verbose_name=_("Lot"))
+    when = models.DateTimeField(blank=True, null=True, verbose_name="Date")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
+    lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="meetings", db_column='lot', blank=True, null=True, verbose_name="Lot")
 
     class Meta:
         db_table = 'base_meeting'
         ordering = ['-when']
-        verbose_name = _("Meeting")
+        verbose_name = "Meeting"
     
     def __str__(self):
         return f"{ self.when.date() } - { self.description }"
@@ -176,14 +173,13 @@ class Meeting(models.Model):
 
 class Mode(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
+    short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
 
     class Meta:
         db_table = 'base_mode'
         ordering = ['name']
-        verbose_name = _("Awarding Mode")
-        # verbose_name_plural = _("")
+        verbose_name = "Awarding Mode"
     
     def __str__(self):
         return self.name
@@ -191,14 +187,14 @@ class Mode(models.Model):
 
 class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
-    restricted = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Restricted"))
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
+    short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+    restricted = models.BooleanField(blank=True, null=True, default=False, verbose_name="Restricted")
+    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
 
     class Meta:
         db_table = 'base_procedure'
         ordering = ['name']
-        verbose_name = _("Procedure")
+        verbose_name = "Procedure"
     
     def __str__(self):
         return self.name
@@ -214,16 +210,16 @@ class Procedure(models.Model):
 
 class Qualif(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    short = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Acronym"))
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name=_("Name"))
-    domain = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Domain"))
-    classe = models.CharField(max_length=16, blank=True, null=True, verbose_name=_("Class"))
+    short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+    domain = models.CharField(max_length=128, blank=True, null=True, verbose_name="Domain")
+    classe = models.CharField(max_length=16, blank=True, null=True, verbose_name="Class")
 
     class Meta:
         db_table = 'base_qualif'
         ordering = ['name']
-        verbose_name = _("Qualification")
-        # verbose_name_plural = _("")
+        verbose_name = "Qualification"
+        # verbose_name_plural = "")
     
     def __str__(self):
         return self.name
@@ -274,54 +270,54 @@ class Qualif(models.Model):
 
 class Tender(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    chrono = models.CharField(max_length=16, blank=True, null=True, verbose_name=_("Portal Id"))
-    title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
-    reference = models.CharField(max_length=512, blank=True, null=True, verbose_name=_("Reference"))
-    published = models.DateField(blank=True, null=True, verbose_name=_("Date published"))
-    deadline = models.DateTimeField(blank=True, null=True, verbose_name=_("Bid deadline"))
+    chrono = models.CharField(max_length=16, blank=True, null=True, verbose_name="Portal Id")
+    title = models.TextField(blank=True, null=True, verbose_name="Title")
+    reference = models.CharField(max_length=512, blank=True, null=True, verbose_name="Reference")
+    published = models.DateField(blank=True, null=True, verbose_name="Date published")
+    deadline = models.DateTimeField(blank=True, null=True, verbose_name="Bid deadline")
 
-    lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name=_("Lots count"))
-    estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Total estimate"))
-    bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Total bond"))
-    plans_price = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Plans price"))
+    lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name="Lots count")
+    estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total estimate")
+    bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total bond")
+    plans_price = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Plans price")
 
-    reserved = models.BooleanField(blank=True, null=True, verbose_name=_("Reserved to SMB+"))
-    variant = models.BooleanField(blank=True, null=True, verbose_name=_("Variants accepted"))
-    has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Licenses required"))
-    has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Qualifications required"))
-    has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
-    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("In-site visits scheduled"))
-    has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
+    reserved = models.BooleanField(blank=True, null=True, verbose_name="Reserved to SMB+")
+    variant = models.BooleanField(blank=True, null=True, verbose_name="Variants accepted")
+    has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name="Licenses required")
+    has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name="Qualifications required")
+    has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name="Samples required")
+    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="In-site visits scheduled")
+    has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
 
-    location = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Works execution location"))
-    ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name=_("Electronic bid"))  # 1: Required, 0: Not required, Else: NA'
-    esign = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name=_("Electronic signature")) # 1: Required, 0: Not required, Else: NA'
-    size_read = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Files read size"))
-    size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name=_("Files size (bytes)"))
-    address_withdrawal = models.TextField(blank=True, null=True, verbose_name=_("Withdrawal address"))
-    address_bidding = models.TextField(blank=True, null=True, verbose_name=_("Bidding address"))
-    address_opening = models.TextField(blank=True, null=True, verbose_name=_("Awarding address"))
-    contact_name = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact name"))
-    contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact phone"))
-    contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact email"))
-    contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact fax"))
-    created = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Date created"))
-    updated = models.DateTimeField(blank=True, null=True, verbose_name=_("Date updated"))
-    cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Cancelled"))
-    deleted = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Deleted"))
-    link = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Official link"))
+    location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Works execution location")
+    ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bid")  # 1: Required, 0: Not required, Else: NA'
+    esign = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic signature") # 1: Required, 0: Not required, Else: NA'
+    size_read = models.CharField(max_length=128, blank=True, null=True, verbose_name="Files read size")
+    size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name="Files size (bytes)")
+    address_withdrawal = models.TextField(blank=True, null=True, verbose_name="Withdrawal address")
+    address_bidding = models.TextField(blank=True, null=True, verbose_name="Bidding address")
+    address_opening = models.TextField(blank=True, null=True, verbose_name="Awarding address")
+    contact_name = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact name")
+    contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact phone")
+    contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact email")
+    contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact fax")
+    created = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Date created")
+    updated = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+    cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name="Cancelled")
+    deleted = models.BooleanField(blank=True, null=True, default=False, verbose_name="Deleted")
+    link = models.CharField(max_length=256, blank=True, null=True, verbose_name="Official link")
     acronym = models.CharField(max_length=8, blank=True, null=True)
 
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="tenders", db_column='category', blank=True, null=True, verbose_name=_("Category"))
-    mode = models.ForeignKey(Mode, on_delete=models.DO_NOTHING, related_name='tenders', db_column='mode', blank=True, null=True, verbose_name=_("Awarding mode"))
-    procedure = models.ForeignKey(Procedure, on_delete=models.DO_NOTHING, related_name='tenders', db_column='procedure', blank=True, null=True, verbose_name=_("Procedure"))
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, related_name='tenders', db_column='client', blank=True, null=True, verbose_name=_("Public client"))
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="tenders", db_column='category', blank=True, null=True, verbose_name="Category")
+    mode = models.ForeignKey(Mode, on_delete=models.DO_NOTHING, related_name='tenders', db_column='mode', blank=True, null=True, verbose_name="Awarding mode")
+    procedure = models.ForeignKey(Procedure, on_delete=models.DO_NOTHING, related_name='tenders', db_column='procedure', blank=True, null=True, verbose_name="Procedure")
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, related_name='tenders', db_column='client', blank=True, null=True, verbose_name="Public client")
     kind = models.ForeignKey(Kind, on_delete=models.DO_NOTHING, related_name='tenders', db_column='kind', blank=True, null=True)
     ###### /!\ If you get the following error when migrating for the first time:
     # django.core.exceptions.FieldDoesNotExist: RelDomainTender has no field named 'tender'
     # Comment out the 'domains' field in 'Tender' class and the whole 'RelDomainTender' class definition.
     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
-    domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name=_("Domains of activity"))
+    domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name="Domains of activity")
 
     keywords = models.TextField(blank=True, null=True, editable=False)
     cliwords = models.TextField(blank=True, null=True, editable=False)
@@ -392,15 +388,15 @@ class Tender(models.Model):
 
 class Lot(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    number = models.SmallIntegerField(blank=True, null=True, verbose_name=_("Number"))
-    title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
-    description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
+    number = models.SmallIntegerField(blank=True, null=True, verbose_name="Number")
+    title = models.TextField(blank=True, null=True, verbose_name="Title")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
 
-    estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Estimate"))
-    bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond"))
-    reserved = models.BooleanField(blank=True, null=True, verbose_name=_("Reserved to SMB+"))
-    variant = models.BooleanField(blank=True, null=True, verbose_name=_("Variants accepted"))
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="lots", db_column='category', blank=True, null=True, verbose_name=_("Category"))
+    estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name="Estimate")
+    bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name="Bond")
+    reserved = models.BooleanField(blank=True, null=True, verbose_name="Reserved to SMB+")
+    variant = models.BooleanField(blank=True, null=True, verbose_name="Variants accepted")
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="lots", db_column='category', blank=True, null=True, verbose_name="Category")
 
     tender = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="lots", db_column='tender', blank=True, null=True)
     agrements = models.ManyToManyField(Agrement, through='RelAgrementLot', related_name='lots')
@@ -476,14 +472,14 @@ class RelQualifLot(models.Model):
 
 class Sample(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    when = models.DateTimeField(blank=True, null=True, verbose_name=_("Date"))
-    description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
-    lot = models.ForeignKey(Lot, on_delete=models.CASCADE, related_name="samples", db_column='lot', blank=True, null=True, verbose_name=_("Lot"))
+    when = models.DateTimeField(blank=True, null=True, verbose_name="Date")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
+    lot = models.ForeignKey(Lot, on_delete=models.CASCADE, related_name="samples", db_column='lot', blank=True, null=True, verbose_name="Lot")
 
     class Meta:
         db_table = 'base_sample'
         ordering = ['-when']
-        # verbose_name = _("Sample")
+        # verbose_name = "Sample")
     
     def __str__(self):
         return f"{ self.when.date() } - { self.description }"
@@ -498,14 +494,14 @@ class Sample(models.Model):
 
 class Visit(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    when = models.DateTimeField(blank=True, null=True, verbose_name=_("Date"))
-    description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
-    lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="visits", db_column='lot', blank=True, null=True, verbose_name=_("Lot"))
+    when = models.DateTimeField(blank=True, null=True, verbose_name="Date")
+    description = models.TextField(blank=True, null=True, verbose_name="Description")
+    lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="visits", db_column='lot', blank=True, null=True, verbose_name="Lot")
 
     class Meta:
         db_table = 'base_visit'
         ordering = ['-when']
-        # verbose_name = _("Visit")
+        # verbose_name = "Visit")
     
     def __str__(self):
         return f"{ self.when.date() } - { self.description }"
@@ -529,8 +525,8 @@ class FileToGet(models.Model):
     class Meta:
         db_table = 'base_file_to_get'
         ordering = ['-closed', 'created']
-        # verbose_name = _("File to get")
-        # verbose_name_plural = _("Files to get")
+        # verbose_name = "File to get")
+        # verbose_name_plural = "Files to get")
 
     def save(self, *args, **kwargs):
         if self.pk is not None:
@@ -540,8 +536,8 @@ class FileToGet(models.Model):
 
 class Crawler(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    started = models.DateTimeField(blank=True, null=True, verbose_name=_("Started"))
-    finished = models.DateTimeField(blank=True, null=True, verbose_name=_("Finished"))
+    started = models.DateTimeField(blank=True, null=True, verbose_name="Started")
+    finished = models.DateTimeField(blank=True, null=True, verbose_name="Finished")
     
     import_links = models.BooleanField(blank=True, null=True, default=False)
 
@@ -572,20 +568,34 @@ class Crawler(models.Model):
 
 class Concurrent(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active    = models.BooleanField(null=True, default=True, editable=False)
-    short     = models.CharField(max_length=255, default="M7", verbose_name=_('Acronym'))
     name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
-    ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="I.C.E")
-    city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
-    country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
-    date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
-    phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
-    email     = models.EmailField(blank=True, verbose_name=_('Email'))
-    activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
-    sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
-    
-    # created   = models.DateTimeField(auto_now_add=True, editable=False)
-    # updated   = models.DateTimeField(auto_now=True, editable=False)
+    # active    = models.BooleanField(null=True, default=True, editable=False)
+    # short     = models.CharField(max_length=255, default="M7", verbose_name=_('Acronym'))
+    # ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="I.C.E")
+    # city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
+    # country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
+    # date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
+    # phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
+    # email     = models.EmailField(blank=True, verbose_name=_('Email'))
+    # activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
+    # sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
+
+    # p_c       = models.SmallIntegerField(blank=True, null=True, editable=False, default=0, verbose_name=_('Parcticipations count'))
+    # b_c       = models.SmallIntegerField(blank=True, null=True, editable=False, default=0, verbose_name=_('Bids count'))
+    # w_c       = models.SmallIntegerField(blank=True, null=True, editable=False, default=0, verbose_name=_('Wins count'))
+
+    # b_s       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, default=0, verbose_name=_('Bids total'))
+    # w_s       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, default=0, verbose_name=_('Wins total'))
+
+    # w_n       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, verbose_name=_('Hugest win'))
+    # w_x       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, verbose_name=_('Smallest win'))
+
+    # p_l       = models.DateField(blank=True, null=True, verbose_name=_('Latest participation'))
+    # b_l       = models.DateField(blank=True, null=True, verbose_name=_('Latest bid'))
+    # w_l       = models.DateField(blank=True, null=True, verbose_name=_('Latest win'))
+
+    # w_r       = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True, editable=False, default=0, verbose_name=_('Win ratio'))
+
 
     @property
     def bidders_sum(self):
@@ -824,5 +834,48 @@ class FailedLot(models.Model):
     class Meta:
         db_table = 'base_failed_lot'
         ordering = ['minutes', 'lot_number']
+
+
+class Opening(models.Model):
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="openings", blank=True, null=True)
+    has_tech   = models.BooleanField(blank=True, null=True, default=True)
+    failure    = models.TextField(blank=True, null=True)
+    date       = models.DateField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_opening'
+        ordering = ['-date', 'tender']
+
+
+class Deposit(models.Model):
+    class Admin(models.TextChoices):
+        ACCEPTED = 'a', 'Accepted'
+        RESERVE  = 'r', 'Reserve'
+        REJECTED = 'x', 'Rejected'
+
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    opening    = models.ForeignKey(Opening, on_delete=models.CASCADE, related_name="deposits", blank=True, null=True)
+    concurrent = models.ForeignKey(Concurrent, on_delete=models.CASCADE, related_name="deposits")
+    lot_number = models.SmallIntegerField(blank=True, null=True)
+    admin      = models.CharField(max_length=1,blank=True, null=True, choices=Admin.choices, verbose_name='Admin Result')
+    reject_t   = models.BooleanField(blank=True, null=True)
+    amount_b   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    winner     = models.BooleanField(blank=True, null=True)
+    justif     = models.TextField(blank=True, null=True)
+    date       = models.DateField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_deposit'
+        ordering = ['opening', 'lot_number', 'amount']
+
+    
+
+
+    
+
+
+
 
 
