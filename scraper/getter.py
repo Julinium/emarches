@@ -617,7 +617,9 @@ def getMinutes(chro='', acro=''):
                     ids_td = tr.find("div").find("td")
                     raw_ids = ids_td.get_text(strip=True)
                     rejected_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception: rejected_lots = [""]
+                except Exception: 
+                    # rejected_lots = [""]
+                    traceback.print_exc()
 
                 rejected_da.append({"name": bidder_name, "lots": rejected_lots})
 
@@ -642,7 +644,9 @@ def getMinutes(chro='', acro=''):
                     ids_td = tr.find("div").find("td")
                     raw_ids = ids_td.get_text(strip=True)
                     accepted_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception: accepted_lots = [""]
+                except Exception: 
+                    # accepted_lots = [""]
+                    traceback.print_exc()
 
                 accepted_da.append({"name": bidder_name, "lots": accepted_lots})
 
@@ -667,7 +671,9 @@ def getMinutes(chro='', acro=''):
                     ids_td = tr.find("div").find("td")
                     raw_ids = ids_td.get_text(strip=True)
                     reserved_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception: reserved_lots = [""]
+                except Exception: 
+                    # reserved_lots = [""]
+                    traceback.print_exc()
 
                 reserved_da.append({"name": bidder_name, "lots": reserved_lots})
 
@@ -696,7 +702,8 @@ def getMinutes(chro='', acro=''):
                     if ids_td:
                         raw_ids = ids_td.get_text(strip=True)
                         rejected_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception: pass
+                except Exception: 
+                    traceback.print_exc()
 
                 rejected_dt.append({"name": bidder_name, "lots": rejected_lots})
 

@@ -579,14 +579,13 @@ def save(tender_data):
 
 @transaction.atomic
 def mergeResults(digest):
-
     chro = digest.get('chrono', '?')
     acro = digest.get('acronym', '?')    
     helper.printMessage('INFO', 'm.mergeResults', f"### Started merging results for {chro}&{acro}")
+    helper.printMessage('DEBUG', 'm.mergeResults', f"\tReceived result digest {digest}")
     tender = Tender.objects.filter(chrono=chro, acronym=acro).first()
     if not tender: 
         helper.printMessage('ERROR', 'm.mergeResults', f"### Error: Tender not found for {chro}&{acro}. No result saved", 1)
-        helper.printMessage('DEBUG', 'm.mergeResults', f"\tReceived result digest {digest}")
         return None
 
     failures_text = digest.get('failures_text', '-')
