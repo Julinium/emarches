@@ -111,13 +111,13 @@
                                             <span class="text-success">
                                                 <i class="{{ bicons.winner }} me-1"></i>
 
-                                                {% if opening.won_total == false %}
+                                                {% if opening.won_total is False %}
                                                     <span class="badge small text-bg-warning">
                                                         <i class="{{ bicons.lots }} small"></i>
                                                         <span>{{ opening.won_lots }}/{{ opening.tender.lots_count }}</span>
                                                     </span>
                                                 {% else %}
-                                                    <span class="badge small text-bg-secondary">{{ opening.win_offset|default:'0'|floatformat:1 }}%</span>
+                                                    <span class="badge small text-bg-secondary">{% if opening.win_offset >= 0 %}+{% endif %}{{ opening.win_offset|floatformat:1 }}%</span>
                                                 {% endif %}
                                                 <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
                                                 {% for concurrent in opening.winners.all %}

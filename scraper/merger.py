@@ -614,7 +614,7 @@ def mergeResults(digest):
 
     win_offset_t = None
     if won_total and tender.estimate > 0:
-        win_offset_t = 100 * (tender.estimate - won_amount) / tender.estimate
+        win_offset_t = 100 * (won_amount - tender.estimate) / tender.estimate
 
 
     # Create or update Opening                
@@ -673,24 +673,25 @@ def mergeResults(digest):
         if amount_b:
             helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found an offer with: { amount_b }")
             if lot_est and lot_est != 0:
-                dep_offset   = 100 * (lot_est - amount_b) / lot_est
+                dep_offset = 100 * (amount_b - lot_est) / lot_est
                 helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Calculated offer Offset percent: { dep_offset }")
-
-        
+        # print('\n\n\n\nooooooooooooooooooooooooooooo')
+        # helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Searching winners for { lot_str }/{ name } in: { winners }")
+        # print('ooooooooooooooooooooooooooooo\n\n\n\n')
         winner_item = next((item for item in winners if item.get("name") == name and item.get("lot") == lot_str), None)
         if winner_item:
             winner = True
             amount_w = helper.getAmount(winner_item.get('amount'))
             helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found a winner with: { amount_w }")
             if lot_est and lot_est > 0:
-                win_offset = 100 * (lot_est - amount_w) / lot_est
+                win_offset = 100 * (amount_w - lot_est) / lot_est
                 helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Calculated win Offset percent: { win_offset }")
 
 
-        justif_item = next((item for item in justifs if item.get("lot") == lot_str), None)
-        if justif_item:
-            justif = justif_item.get('justif')
-            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found win justif text: { justif }")
+            justif_item = next((item for item in justifs if item.get("lot") == lot_str), None)
+            if justif_item:
+                justif = justif_item.get('justif')
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found win justif text: { justif }")
 
         reject = next((item for item in rejects_tech if item.get("name") == name), None)
         if reject:

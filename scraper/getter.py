@@ -612,13 +612,12 @@ def getMinutes(chro='', acro=''):
                 if not bidder_td: continue
 
                 bidder_name = bidder_td.get_text(strip=True)
-
+                rejected_lots = ['1']
                 try:
                     ids_td = tr.find("div").find("td")
                     raw_ids = ids_td.get_text(strip=True)
                     rejected_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception: 
-                    # rejected_lots = [""]
+                except Exception:
                     traceback.print_exc()
 
                 rejected_da.append({"name": bidder_name, "lots": rejected_lots})
@@ -639,13 +638,12 @@ def getMinutes(chro='', acro=''):
                 if not bidder_td: continue
 
                 bidder_name = bidder_td.get_text(strip=True)
-
+                accepted_lots = ['1']
                 try:
                     ids_td = tr.find("div").find("td")
                     raw_ids = ids_td.get_text(strip=True)
                     accepted_lots = [ x.strip() for x in raw_ids.split(",")]
                 except Exception: 
-                    # accepted_lots = [""]
                     traceback.print_exc()
 
                 accepted_da.append({"name": bidder_name, "lots": accepted_lots})
@@ -666,13 +664,12 @@ def getMinutes(chro='', acro=''):
                 if not bidder_td: continue
 
                 bidder_name = bidder_td.get_text(strip=True)
-
+                reserved_lots = ['1']
                 try:
                     ids_td = tr.find("div").find("td")
                     raw_ids = ids_td.get_text(strip=True)
                     reserved_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception: 
-                    # reserved_lots = [""]
+                except Exception:
                     traceback.print_exc()
 
                 reserved_da.append({"name": bidder_name, "lots": reserved_lots})
@@ -731,7 +728,7 @@ def getMinutes(chro='', acro=''):
                 amount_after_td = tds[2 + i]
 
                 bidder_name = bidder_td.get_text(strip=True)
-                lot_number = lot_td.get_text(strip=True) if lot_td else ""
+                lot_number = lot_td.get_text(strip=True) if lot_td else '1'
                 amount_before = amount_before_td.get_text(strip=True)
                 amount_after = amount_after_td.get_text(strip=True)
 
@@ -761,7 +758,7 @@ def getMinutes(chro='', acro=''):
                 amount_winner_td = tds[1 + i]
 
                 bidder_name = bidder_td.get_text(strip=True)
-                lot_number = lot_td.get_text(strip=True) if lot_td else ""
+                lot_number = lot_td.get_text(strip=True) if lot_td else '1'
                 amount_winner = amount_winner_td.get_text(strip=True)
 
                 winner_offers.append({"lot": lot_number, "name": bidder_name, "amount": amount_winner})
@@ -787,7 +784,7 @@ def getMinutes(chro='', acro=''):
                     i = 1
                 winner_justif_td = tds[0 + i]
                 
-                lot_number = lot_td.get_text(strip=True) if lot_td else ""
+                lot_number = lot_td.get_text(strip=True) if lot_td else '1'
                 winner_justif = winner_justif_td.get_text(strip=True)
 
                 winner_justifs.append({"lot": lot_number, "justif": winner_justif})

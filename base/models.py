@@ -676,7 +676,7 @@ class Opening(models.Model):
     win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     @property
-    def winners_(self): 
+    def winners(self): 
         return Concurrent.objects.filter(
             deposits__opening=self,
             deposits__winner=True,
