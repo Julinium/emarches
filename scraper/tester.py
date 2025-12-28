@@ -12,55 +12,20 @@ def main():
     from scraper import constants as C
     from datetime import datetime
     
-    # def get_results():
-    #     print('\n\n\n\n======================================================')
-    #     helper.printMessage('===', 'tester', f"▶▶▶▶▶ Now, let's get some Results ◀◀◀◀◀", 1, 1)
-        
-    #     assa = datetime.now().date()
 
-    #     tenders = Tender.objects.filter(
-    #         deadline__date__lte=assa, 
-    #         # minutes__isnull=True, 
-    #         ).order_by('-deadline')
-    #     count = tenders.count()
+    def handle_results():
 
-    #     i = 0
-    #     for tender in tenders:
-    #         i += 1
-    #         if i % 50 == 0:
-    #             helper.sleepRandom(30, 35)
-    #         print(f"\tWorking on item { i }/{ count } = {tender.chrono}&{tender.acronym}\n")
-    #         result = getter.getMinutes(tender.chrono, tender.acronym)
-    #         # print(f"Result = {result}\n\n")
-    #         if result and result != {}:
-    #             print(f"\tItem { i }/{ count } is positive \n")
-    #             try: 
-    #                 if merger.mergeResults(result) == 0:
-    #                     print(f"\tItem { i }/{ count } succeeded \n")
-    #             except Exception as xc : 
-    #                 print(f"Result = {result}\n\n")
-    #                 traceback.print_exc()
-    #         else:
-    #             print(f"\tItem { i }/{ count } is negative \n")
-            
-    #     print('\n\n======================================================\n\n')
-
-
-
-
-    def handle_results_for_all():
-
-        results_saved = 0
+        results_saved, results_searched = 0, 0
         helper.printMessage('INFO', 'worker', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 2, 1)
         assa = datetime.now().date()
-
 
         tenders = Tender.objects.filter(
             deadline__date__lte=assa,
             # minutes__isnull=True, 
-            ).order_by('-deadline')
+            ).order_by('published')
         count = tenders.count()
 
+        helper.printMessage('INFO', 'worker', f"###Getting Results for { count } items ...", 3)
         i = 0
         for tender in tenders:
             i += 1
@@ -82,12 +47,10 @@ def main():
             else:
                 helper.printMessage('INFO', 'worker', f"\tMinutes empty or not found for item { i }/{ count }")
         
-        helper.printMessage('INFO', 'worker', f"Finished handling Results Minutes. Failures: { i - results_saved }")
-        helper.printMessage('INFO', 'worker', f"\t Saved { results_saved } items over { i } handled.")
         return results_saved, i
 
 
-    handle_results_for_all()
+    handle_results()
 
 
 if __name__ == '__main__':

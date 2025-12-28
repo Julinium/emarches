@@ -102,23 +102,25 @@
                         
                     {% if tender.expired %}
                         <div class="d-inline me-2">
-                            {% if tender.minutes.all|length > 0 %}
-                                {% for minute in tender.minutes.all %}
+                            {% if tender.openings.all|length > 0 %}
+                                {% for opening in tender.openings.all %}
                                     <span class="small me-2" data-bs-toggle="tooltip"
-                                          title="{% trans 'Awarding minutes found' %}: {{ minute.date_end }}">
+                                          title="{% trans 'Awarding minutes found' %}: {{ opening.date_end }}">
                                         
-                                        {% group_lots minute.winner_bids.all as grouped_wb %}
-                                        {% if grouped_wb|length > 0 %}
+                                        {% if opening.won_lots > 0 %}
                                             <span class="text-success">
                                                 <i class="{{ bicons.winner }} me-1"></i>
-                                                {% if not minute.total_win %}
+
+                                                {% if opening.won_total == false %}
                                                     <span class="badge small text-bg-warning">
                                                         <i class="{{ bicons.lots }} small"></i>
-                                                        <span>{{ minute.won_lots }}/{{ minute.tender.lots_count }}</span>
+                                                        <span>{{ opening.won_lots }}/{{ opening.tender.lots_count }}</span>
                                                     </span>
+                                                {% else %}
+                                                    <span class="badge small text-bg-secondary">{{ opening.win_offset|default:'0'|floatformat:1 }}%</span>
                                                 {% endif %}
-                                                <span class="fw-bold">{{ minute.amount_won|metrify }}</span>
-                                                {% for concurrent, _ in grouped_wb.items %}
+                                                <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
+                                                {% for concurrent in opening.winners.all %}
                                                     <span><i class="bi bi-dash-lg ms-1"></i>{{ concurrent }}</span>
                                                 {% endfor %}
                                             </span>

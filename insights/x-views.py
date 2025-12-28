@@ -7,8 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
 from django.db.models import F, Q, Count, Sum, Min, Max, FloatField, ExpressionWrapper
-from django.db.models.functions import NullIf
-
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
@@ -130,18 +128,34 @@ def bidders_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     all_bidders = Concurrent.objects.annotate(
-            part_count = Count('deposits', distinct=True), 
-            wins_count = Count('deposits', filter(Q(winner=True)), distinct=True), 
-            bids_sum   = Sum('deposits__amount_b', filter(Q(amount_b__isnull=False)), distinct=True), 
-            wins_sum   = Sum('deposits__amount_w', filter(Q(winner=True)), distinct=True), 
-            last_win   = Max('deposits__date', filter(Q(winner=True))), 
-            last_part  = Max('deposits__date', filter(Q(amount_b__isnull=False))), 
+            part_count = Count('bidders__minutes', distinct=True),
+            bids_count = Count('selected_bids__minutes', distinct=True),
+            wins_count = Count('winner_bids__minutes', distinct=True),
+            bids_sum   = Sum('selected_bids__amount_before', distinct=True),
+            wins_sum   = Sum('winner_bids__amount', distinct=True),
+            last_win   = Max('winner_bids__minutes__date_end'),
+            last_part  = Max('bidders__minutes__date_end'),
+        ).filter(
+            bids_sum__gt=0,
         ).annotate(
-            succ_rate = ExpressionWrapper(
-                F("wins_sum") * 100.0 / NullIf(F("bids_sum"), 0),
+            succ_rate  = ExpressionWrapper(
+                F("wins_sum") * 100.0 / F("bids_sum"),
                 output_field=FloatField(),
             )
         )
+
+    #     # .prefetch_related(
+    #     #     'bidders', 'admin_rejects', 'admin_accepts', 
+    #     #     'admin_reserves', 'tech_rejects', 
+    #     #     'selected_bids', 'winner_bids'
+    #     # )
+
+    # all_bidders = Concurrent.objects.all().prefetch_related(
+    #             'bidders', 'admin_rejects', 'admin_accepts', 
+    #             'admin_reserves', 'tech_rejects', 
+    #             'selected_bids', 'winner_bids'
+    #         )
+
 
     bidders, filters = filter_bidders(all_bidders, query_dict)
 
@@ -155,7 +169,10 @@ def bidders_list(request):
 
     query_dict['filters'] = filters
 
+    # if ordering == []: ordering = ['-name']
+
     bidders = bidders.order_by(*ordering)
+    # bidders = bidders.order_by('-wins_sum')
 
     context = define_context(request)
 
@@ -168,6 +185,8 @@ def bidders_list(request):
     page_obj = paginator.page(page_number)
 
     context['page_obj'] = page_obj
+    # context['bidders'] = bidders
+
 
     logger = logging.getLogger('portal')
     logger.info(f"Bidders List view")
@@ -183,26 +202,40 @@ def bidder_details(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
 
-    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
+    bidder = get_object_or_404(
+        Concurrent.objects.prefetch_related(
+            'bidders', 
+            'admin_rejects', 
+            'admin_accepts', 
+            'admin_reserves', 
+            'tech_rejects', 
+            'selected_bids', 
+            'winner_bids' 
+        # ).annotate(
+        #     bidders_sum     = Sum('selected_bids__amount_after'),
+        #     winner_bids_sum = Sum('winner_bids__amount'),
+        )
+        , id=pk)
 
     if not bidder : return HttpResponse(status=404)
+    # bidder = bidder.annotate(
+    #         bids_sum     = Sum('selected_bids__amount_after', distinct=True),
+    #         wins_sum     = Sum('winner_bids__amount', distinct=True),
+    # )
 
-    admin_rejects  = bidder.deposits.filter(admin='x')
-    admin_accepts  = bidder.deposits.filter(admin='a')
-    admin_reserves = bidder.deposits.filter(admin='r')
-    tech_rejects   = bidder.deposits.filter(reject_t=True)
-    selects        = bidder.deposits.filter(amount_b__isnull=False)
-    winners        = bidder.deposits.filter(amount_w__isnull=False)
+    # lwb = bidder.winner_bids.order_by('minutes').first()
+    # latest_win = lwb.minutes.date_end if lwb else None
+    # bs = bidder.bidders_sum if bidder.bidders_sum else 0
+    # ws = bidder.winner_bids_sum if bidder.winner_bids_sum else 0
+
+    # success_rate = ws / bs if bs > 0 else None
+    # success_rate = round(100 * success_rate, 2) if success_rate else None
 
     context = { 
-        'bidder'         : bidder,
-        'admin_rejects'  : admin_rejects,
-        'admin_accepts'  : admin_accepts,
-        'admin_reserves' : admin_reserves,
-        'tech_rejects'   : tech_rejects,
-        'selects'        : selects,
-        'winners'        : winners,
-    }
+            'bidder'        : bidder,
+            # 'success_rate'  : round(100 * success_rate, 2) if success_rate else None,
+            # 'latest_win'    : latest_win,
+            }
 
     logger = logging.getLogger('portal')
     logger.info(f"Bidder details view: {bidder.id}")

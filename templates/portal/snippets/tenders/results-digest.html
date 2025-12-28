@@ -1,16 +1,16 @@
 {% load i18n %}
 {% load groupify %}
 
-{% for minute in tender.minutes.all %}
+{% for opening in tender.openings.all %}
 
     <div id="participations">
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-building-up me-1"></i></span>
             <span class="">{% trans 'Participations' %}</span>
-            <span class="">({{ minute.bidders.all|length }})</span>
+            <span class="">({{ opening.bidders.all|length }})</span>
         </div>
         <div class="ms-3">
-            {% for bidder in minute.bidders.all %}
+            {% for bidder in opening.bidders.all %}
                 <a href="{% url 'insights_bidder_details' bidder.concurrent.id %}" 
                     target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
                     <span><i class="bi bi-dash-lg"></i></span>
@@ -27,7 +27,7 @@
     </div>
 
     <div id="admin-rejects">
-        {% group_lots minute.admin_rejects.all as grouped_ad_rej %}
+        {% group_lots opening.admin_rejects.all as grouped_ad_rej %}
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-x-octagon me-1"></i></span>
             <span class="">{% trans 'Admin Rejects' %}</span>
@@ -52,7 +52,7 @@
     </div>    
 
     <div id="admin-accepts">
-        {% group_lots minute.admin_accepts.all as grouped_ad_acc %}
+        {% group_lots opening.admin_accepts.all as grouped_ad_acc %}
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-fast-forward me-1"></i></span>
             <span class="">{% trans 'Admin Accepts' %}</span>
@@ -77,7 +77,7 @@
     </div>
 
     <div id="admin-reserves">
-        {% group_lots minute.admin_reserves.all as grouped_ad_res %}
+        {% group_lots opening.admin_reserves.all as grouped_ad_res %}
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-fast-forward-circle me-1"></i></span>
             <span class="">{% trans 'Admin Reserves' %}</span>
@@ -102,8 +102,8 @@
     </div>
 
     <div id="tech-rejects">
-        {% if minute.has_tech %}
-            {% group_lots minute.tech_rejects.all as grouped_te_rej %}
+        {% if opening.has_tech %}
+            {% group_lots opening.tech_rejects.all as grouped_te_rej %}
             <div class="mt-4 mb-1 small">
                 <span><i class="bi bi-x-octagon me-1"></i></span>
                 <span class="">{% trans 'Tech Rejects' %}</span>
@@ -133,9 +133,9 @@
             <span><i class="{{ bicons.estimate }} me-1"></i></span>
             <span class="">{% trans 'Financial Offers' %}</span>
         </div>
-        {% if minute.selected_bids.all|length > 0 %}
+        {% if opening.selected_bids.all|length > 0 %}
             <div class="list-group small ms-3">
-                {% for selected_bid in minute.selected_bids.all %}
+                {% for selected_bid in opening.selected_bids.all %}
                     {% ifchanged selected_bid.lot_number %}
                         {% if tender.lots_count > 1 %}
                             <div class="list-group-item disabled ps-2">
@@ -171,14 +171,14 @@
     <div id="winner-bids">
         <div class="mt-4 mb-1 small">
             <span><i class="{{ bicons.winner }} me-1"></i></span>
-            {% if minute.winner_bids.all|length == 1 %}
+            {% if opening.winner_bids.all|length == 1 %}
                 <span class="">{% trans 'Selected Bid' %}</span>
             {% else %}
                 <span class="">{% trans 'Selected Bids' %}</span>
             {% endif %}
         </div>
         <div class="list-group small ms-3">
-            {% for winner_bid in minute.winner_bids.all %}
+            {% for winner_bid in opening.winner_bids.all %}
                 <div class="list-group-item list-group-item-action">
                     <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
                         <span class="fw-light">{% trans 'Lot' %}</span>
@@ -199,7 +199,7 @@
             <span class="">{% trans 'Selection Justification' %}</span>
         </div>
         <div class="list-group small ms-3">
-            {% for win_justif in minute.win_justifs.all %}
+            {% for win_justif in opening.win_justifs.all %}
                 <div class="list-group-item list-group-item-action">
                     <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
                         <span class="fw-light">{% trans 'Lot' %}</span>
@@ -216,9 +216,9 @@
     <div id="meta-info">
         <div class="row gx-3 gy-1 mt-2 small">
             {% trans 'Date Finished' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=minute.id|add:'0' val_value=minute.date_end key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'0' val_value=opening.date_end key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
             {% trans 'Unsuccessful declaration' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=minute.id|add:'1' val_value=minute.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'1' val_value=opening.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
         </div>
     </div>
 

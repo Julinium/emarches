@@ -577,172 +577,6 @@ def save(tender_data):
     return tender, tender_create
 
 
-
-@transaction.atomic
-def xxxmergeResults(digest):
-    
-    chro = digest.get('chrono', '?')
-    acro = digest.get('acronym', '?')    
-    tender = Tender.objects.filter(chrono=chro, acronym=acro).first()
-    if not tender: return None
-
-    failures_text = digest.get('failures_text', '-')
-    date_str = digest.get('date_finished', '')
-    try: 
-        date_finished = datetime.strptime(date_str, "%d/%m/%Y").date()
-    except Exception as xc:
-        date_finished = None
-        print(xc)
-    has_tech = digest.get('has_tech', None)
-    
-    
-    minutes, created = Minutes.objects.update_or_create(
-        tender = tender,
-        defaults = {
-            'has_tech' : has_tech,
-            'failure' : failures_text,
-            'date_end' : date_finished,}
-        )
-
-    candidates = digest.get('bidders', [])
-    if len(candidates) > 0:
-        for candidate in candidates:
-            concurrent, created = Concurrent.objects.get_or_create(
-                name = candidate['name']
-                )
-            bidder, created = Bidder.objects.get_or_create(
-                minutes = minutes,
-                concurrent = concurrent,
-                )
-
-    da_rejects = digest.get('rejected_da', [])
-    if len(da_rejects) > 0:
-        for da_reject in da_rejects:
-            concurrent, created = Concurrent.objects.get_or_create(name = da_reject['name'])
-            lots = da_reject.get('lots', [''])
-            if lots == ['']:
-                admin_reject = AdminReject.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
-            else:
-                for lot in lots:
-                    admin_reject = AdminReject.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent,
-                        lot_number = int(lot),
-                    )
-
-    da_accepts = digest.get('accepted_da', [])
-    if len(da_accepts) > 0:
-        for da_accept in da_accepts:
-            concurrent, created = Concurrent.objects.get_or_create(name = da_accept['name'])
-            lots = da_accept.get('lots', [''])
-            if lots == ['']:
-                admin_accept = AdminAccept.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
-            else:
-                for lot in lots:
-                    admin_accept = AdminAccept.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent,
-                        lot_number = int(lot),
-                    )
-
-    da_reserves = digest.get('reserved_da', [])
-    if len(da_reserves) > 0:
-        for da_reserve in da_reserves:
-            concurrent, created = Concurrent.objects.get_or_create(name = da_reserve['name'])
-            lots = da_reserve.get('lots', [''])
-            if lots == ['']:
-                admin_reserve = AdminReserve.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
-            else:
-                for lot in lots:
-                    admin_reserve = AdminReserve.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent,
-                        lot_number = int(lot),
-                    )
-
-    dt_rejects = digest.get('rejected_dt', [])
-    if len(dt_rejects) > 0:
-        for dt_reject in dt_rejects:
-            concurrent, created = Concurrent.objects.get_or_create(name = dt_reject['name'])
-            lots = dt_reject.get('lots', [''])
-            if lots == ['']:
-                tech_reject = TechReject.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
-            else:
-                for lot in lots:
-                    tech_reject = TechReject.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent, 
-                        lot_number = int(lot), 
-                    )
-
-    fi_offers = digest.get('financial_offers', [])
-    if len(fi_offers) > 0:
-        for fi_offer in fi_offers:
-            concurrent, created = Concurrent.objects.get_or_create(name = fi_offer['name'])
-            lot_str = fi_offer.get('lot', '')
-            lot_number = int(lot_str) if lot_str != '' else 1
-            amount_before = helper.getAmount(fi_offer.get('pre_amount', '0'))
-            amount_after = helper.getAmount(fi_offer.get('amount', '0'))
-
-            selected_bid = SelectedBid.objects.get_or_create(
-                minutes = minutes, concurrent = concurrent, lot_number = lot_number, 
-                amount_before = amount_before, amount_after = amount_after
-                )
-
-    winners = digest.get('winner_offers', [])
-    if len(winners) > 0:
-        for winner in winners:
-            concurrent, created = Concurrent.objects.get_or_create(name = winner['name'])
-            lot_str = winner.get('lot', '')
-            lot_number = int(lot_str) if lot_str != '' else 1
-            amount = helper.getAmount(winner.get('amount', '0'))
-
-            winner_bid = WinnerBid.objects.get_or_create(
-                minutes = minutes, concurrent = concurrent, 
-                lot_number = lot_number, amount = amount
-                )
-
-    win_justifs = digest.get('winner_justifs', [])
-    if len(win_justifs) > 0:
-        for win_justif in win_justifs:
-            lot_str = win_justif.get('lot', '')
-            lot_number = int(lot_str) if lot_str != '' else 1
-            justif = win_justif.get('justif', '')
-
-            win_justif = WinJustif.objects.get_or_create(
-                minutes = minutes,
-                lot_number = lot_number, justif = justif
-                )
-
-    lot_fails = digest.get('failed_lots', [])
-    if len(lot_fails) > 0:
-        for lot_fail in lot_fails:
-            lot_number = int(lot_fail) if lot_fail != '' else 1
-
-            failed_lot = FailedLot.objects.get_or_create(
-                minutes = minutes, lot_number = lot_number
-                )
-
-    return 0
-
-
-
 @transaction.atomic
 def mergeResults(digest):
 
@@ -758,170 +592,188 @@ def mergeResults(digest):
     failures_text = digest.get('failures_text', '-')
     date_str = digest.get('date_finished', '')
     try: 
-        date_finished = datetime.strptime(date_str, "%d/%m/%Y").date()
+        date = datetime.strptime(date_str, "%d/%m/%Y").date()
     except Exception as xc:
-        date_finished = None
-        helper.printMessage('ERROR', 'm.mergeResults', f"\tCould not extract date from {date_finished}")
+        date = None
+        helper.printMessage('ERROR', 'm.mergeResults', f"\tCould not extract date from {date}")
         helper.printMessage('DEBUG', 'm.mergeResults', f"\tRaised exception: {xc}")
     has_tech = digest.get('has_tech', None)
     
-    
+
+    candidates = digest.get('bidders', [])
+    fi_offers = digest.get('financial_offers', [])
+    winners = digest.get('winner_offers', [])
+    justifs = digest.get('winner_justifs', [])
+    rejects_tech = digest.get('rejected_dt', [])  
+    accepts_adm = digest.get('accepted_da', [])
+    won_amount, won_lots = 0, 0
+    for w in winners: 
+        won_amount += helper.getAmount(w.get('amount'))
+        won_lots += 1
+
+    won_total = won_lots == tender.lots_count
+
+    win_offset_t = None
+    if won_total and tender.estimate > 0:
+        win_offset_t = 100 * (tender.estimate - won_amount) / tender.estimate
+
+
+    # Create or update Opening                
     opening, created = Opening.objects.update_or_create(
         tender = tender,
         defaults = {
             'has_tech' : has_tech,
             'failure' : failures_text,
-            'date_end' : date_finished,}
+            'date' : date,
+            'won_amount'   : won_amount,
+            'won_lots'     : won_lots,
+            'won_total'    : won_total,
+            'win_offset'   : win_offset_t,
+            }
         )
     if created: 
         helper.printMessage('DEBUG', 'm.mergeResults', f"Created results digest for {chro}&{acro}")
     else: 
         helper.printMessage('DEBUG', 'm.mergeResults', f"Updated results digest for {chro}&{acro}")
 
-    candidates = digest.get('bidders', [])
-    cl = len(candidates)
-    if cl > 0:
-        for candidate in candidates:
-            helper.printMessage('DEBUG', 'm.mergeResults', f"### Started merging results for {chro}&{acro}")
-            concurrent, created = Concurrent.objects.get_or_create(
-                name = candidate['name']
-                )
+    handled = []
 
-            if created: 
-                helper.printMessage('DEBUG', 'm.mergeResults', f"Created concurrent: {candidate['name']}")
-            else: 
-                helper.printMessage('DEBUG', 'm.mergeResults', f"Found concurrent: {candidate['name']}")
+    for fi in fi_offers:
+        name    = fi.get('name')
+        lot_str = fi.get('lot', '1')
+        helper.printMessage('DEBUG', 'm.mergeResults', f"\t##Handling Lot { lot_str} for { name }")
+        concurrent, created_c = Concurrent.objects.get_or_create(
+            name = name,
+        )
+        if created_c:
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Concurrent { name }")
+        else:
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found existing Concurrent { name }")
 
+        winner = None
+        win_offset = None
+        amount_w = None
+        justif = None
+        reject_t = None
+        admin = None
+
+        # if not lot_str : lot_str = '1'
+        if not lot_str.isdigit(): lot_str = '1'
+
+        lot_number = int(lot_str)
+        pre_amount = fi.get('pre_amount', None)
+        pos_amount = fi.get('amount', None)
+
+        amount_b   = helper.getAmount(pre_amount) if pre_amount else None
+        amount_a   = helper.getAmount(pos_amount) if pos_amount else None
+
+
+        lot_obj = tender.lots.filter(number=lot_number).first()
+        lot_est = lot_obj.estimate if lot_obj else None
+        helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Read Lot estimate: { lot_est }")
+        if amount_b:
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found an offer with: { amount_b }")
+            if lot_est and lot_est != 0:
+                dep_offset   = 100 * (lot_est - amount_b) / lot_est
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Calculated offer Offset percent: { dep_offset }")
+
+        
+        winner_item = next((item for item in winners if item.get("name") == name and item.get("lot") == lot_str), None)
+        if winner_item:
+            winner = True
+            amount_w = helper.getAmount(winner_item.get('amount'))
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found a winner with: { amount_w }")
+            if lot_est and lot_est > 0:
+                win_offset = 100 * (lot_est - amount_w) / lot_est
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Calculated win Offset percent: { win_offset }")
+
+
+        justif_item = next((item for item in justifs if item.get("lot") == lot_str), None)
+        if justif_item:
+            justif = justif_item.get('justif')
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found win justif text: { justif }")
+
+        reject = next((item for item in rejects_tech if item.get("name") == name), None)
+        if reject:
+            reject_t = lot_str in reject.get('lots', [])
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found Tech Reject.")
+
+        accept_item = next((item for item in accepts_adm if item.get("name") == name), None)
+        if accept_item:
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found Admin Accept: { accept_item }")
+            lots_a_a = accept_item.get('lots', [])
+            if lot_str in lots_a_a:
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Lot { lot_str } is in Admin Accept Lots { lots_a_a }")
+                admin = 'a'
+            else:
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\txxLot not found in Admin Accept. Searching Reserves")
+                reserves_adm = digest.get('reserved_da', [])
+                reserve_item = next((item for item in reserves_adm if item.get("name") == name), None)
+                if reserve_item:
+                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found Admin Reserve { reserve_item }")
+                    lots_a_r = reserve_item.get('lots', [])
+                    if lot_str in lots_a_r:
+                        helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Lot { lot_str } is in Admin Reserves Lots { lots_a_r }")
+                        admin = 'r'
+                    else:
+                        helper.printMessage('DEBUG', 'm.mergeResults', f"\txxLot not found in Admin Reserve. Searching Rejects")
+                        rejects_adm = digest.get('rejected_da', [])
+                        reject_item = next((item for item in rejects_adm if item.get("name") == name), None)
+                        if reject_item:
+                            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found Admin Reject { reject_item }")
+                            lots_a_x = reject_item.get('lots', [])
+                            if lot_str in lots_a_x:
+                                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Lot { lot_str } is in Admin Rejects Lots { lots_a_x }")
+                                admin = 'x'
+                            else:
+                                helper.printMessage('DEBUG', 'm.mergeResults', f"\txxLot not found in Admin Rejects. Skipping Admin")
+        
+        deposit, created_d = Deposit.objects.get_or_create(
+            opening=opening,
+            concurrent=concurrent,
+            defaults={
+                'lot_number'   : lot_number,
+                'amount_b'     : amount_b,
+                'amount_a'     : amount_a,
+                'amount_w'     : amount_w,
+                'date'         : date,
+                'dep_offset'   : dep_offset,
+                'winner'       : winner, 
+                'win_offset'   : win_offset,
+                'justif'       : justif,
+                'reject_t'     : reject_t,
+                'admin'        : admin,
+            }
+        )
+
+        if created_d:
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Deposit instance, Lot { lot_number}, for { name }")
+        else:
+            helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Updated existing Deposit instance, Lot { lot_number}, for { name }")
+        handled.append(name)
+    
+
+    for candidate in candidates:
+        name = candidate.get('name')
+        if not name in handled:
+            concurrent, created_e = Concurrent.objects.get_or_create(
+                name = name,
+            )
             
-            deposit = None
-    else:
-        helper.printMessage('DEBUG', 'm.mergeResults', f"--- Received digest with no candidates for {chro}&{acro}")
-
-
-
-    da_rejects = digest.get('rejected_da', [])
-    if len(da_rejects) > 0:
-        for da_reject in da_rejects:
-            concurrent, created = Concurrent.objects.get_or_create(name = da_reject['name'])
-            lots = da_reject.get('lots', [''])
-            if lots == ['']:
-                admin_reject = AdminReject.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
+            if created_e:
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Ghost Concurrent { name }")
             else:
-                for lot in lots:
-                    admin_reject = AdminReject.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent,
-                        lot_number = int(lot),
-                    )
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found existing Ghost Concurrent { name }")
 
-    da_accepts = digest.get('accepted_da', [])
-    if len(da_accepts) > 0:
-        for da_accept in da_accepts:
-            concurrent, created = Concurrent.objects.get_or_create(name = da_accept['name'])
-            lots = da_accept.get('lots', [''])
-            if lots == ['']:
-                admin_accept = AdminAccept.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
+            deposit, created_f = Deposit.objects.get_or_create(
+                opening=opening,
+                concurrent=concurrent,
+            )
+            
+            if created_f:
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Ghost Deposit for { name }")
             else:
-                for lot in lots:
-                    admin_accept = AdminAccept.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent,
-                        lot_number = int(lot),
-                    )
-
-    da_reserves = digest.get('reserved_da', [])
-    if len(da_reserves) > 0:
-        for da_reserve in da_reserves:
-            concurrent, created = Concurrent.objects.get_or_create(name = da_reserve['name'])
-            lots = da_reserve.get('lots', [''])
-            if lots == ['']:
-                admin_reserve = AdminReserve.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
-            else:
-                for lot in lots:
-                    admin_reserve = AdminReserve.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent,
-                        lot_number = int(lot),
-                    )
-
-    dt_rejects = digest.get('rejected_dt', [])
-    if len(dt_rejects) > 0:
-        for dt_reject in dt_rejects:
-            concurrent, created = Concurrent.objects.get_or_create(name = dt_reject['name'])
-            lots = dt_reject.get('lots', [''])
-            if lots == ['']:
-                tech_reject = TechReject.objects.get_or_create(
-                    minutes = minutes, 
-                    concurrent = concurrent,
-                    lot_number = 1,
-                )
-            else:
-                for lot in lots:
-                    tech_reject = TechReject.objects.get_or_create(
-                        minutes = minutes, 
-                        concurrent = concurrent, 
-                        lot_number = int(lot), 
-                    )
-
-    fi_offers = digest.get('financial_offers', [])
-    if len(fi_offers) > 0:
-        for fi_offer in fi_offers:
-            concurrent, created = Concurrent.objects.get_or_create(name = fi_offer['name'])
-            lot_str = fi_offer.get('lot', '')
-            lot_number = int(lot_str) if lot_str != '' else 1
-            amount_before = helper.getAmount(fi_offer.get('pre_amount', '0'))
-            amount_after = helper.getAmount(fi_offer.get('amount', '0'))
-
-            selected_bid = SelectedBid.objects.get_or_create(
-                minutes = minutes, concurrent = concurrent, lot_number = lot_number, 
-                amount_before = amount_before, amount_after = amount_after
-                )
-
-    winners = digest.get('winner_offers', [])
-    if len(winners) > 0:
-        for winner in winners:
-            concurrent, created = Concurrent.objects.get_or_create(name = winner['name'])
-            lot_str = winner.get('lot', '')
-            lot_number = int(lot_str) if lot_str != '' else 1
-            amount = helper.getAmount(winner.get('amount', '0'))
-
-            winner_bid = WinnerBid.objects.get_or_create(
-                minutes = minutes, concurrent = concurrent, 
-                lot_number = lot_number, amount = amount
-                )
-
-    win_justifs = digest.get('winner_justifs', [])
-    if len(win_justifs) > 0:
-        for win_justif in win_justifs:
-            lot_str = win_justif.get('lot', '')
-            lot_number = int(lot_str) if lot_str != '' else 1
-            justif = win_justif.get('justif', '')
-
-            win_justif = WinJustif.objects.get_or_create(
-                minutes = minutes,
-                lot_number = lot_number, justif = justif
-                )
-
-    lot_fails = digest.get('failed_lots', [])
-    if len(lot_fails) > 0:
-        for lot_fail in lot_fails:
-            lot_number = int(lot_fail) if lot_fail != '' else 1
-
-            failed_lot = FailedLot.objects.get_or_create(
-                minutes = minutes, lot_number = lot_number
-                )
+                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found existing Ghost Deposit for { name }")
 
     return 0
 

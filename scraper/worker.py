@@ -61,20 +61,6 @@ def main():
         helper.printMessage('INFO', 'worker', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 2, 1)
         assa = datetime.now().date()
 
-
-        # @property
-        # def won_lots(self):
-        #     return self.winner_bids.aggregate(won_lots=Count("lot_number", distinct = True))["won_lots"]
-        
-        # @property
-        # def total_win(self):
-        #     return self.won_lots == self.tender.lots_count
-
-        # tenders = Tender.objects.annotate(
-        #     won_lots = Count("minutes__winner_bids__lot_number", distinct = True)
-        # )
-
-
         tenders = Tender.objects.filter(
             deadline__date__lte=assa,
             minutes__isnull=True, 
@@ -190,8 +176,8 @@ def main():
 
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
-    if links_source == 'Crawl':
-        results_saved, results_searched = handle_results()
+    # if links_source == 'Crawl':
+    #     results_saved, results_searched = handle_results()
 
 
 

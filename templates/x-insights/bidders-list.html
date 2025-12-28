@@ -48,15 +48,15 @@
                                 <span>{{ bidder.name }}</span>
                                 <span class="small ms-1 float-end text-end"
                                       style="min-width: 4rem;">
-                                    <span class="small fw-light">{{ bidder.winners_count }}</span>
+                                    <span class="small fw-light">{{ bidder.winner_bids_count }}</span>
                                     <i class="small text-success me-1 
-                                        {% if bidder.winners_sum > 0 %}
+                                        {% if bidder.winner_bids_sum > 0 %}
                                             {{ bicons.winner }}
                                         {% else %}
                                             bi bi-trophy
                                         {% endif %}">
                                     </i>
-                                    <span class="small fw-bold">{{ bidder.winners_sum|metrify }}</span>
+                                    <span class="small fw-bold">{{ bidder.winner_bids_sum|metrify }}</span>
 
                                     <div class="progress bg-warning"
                                             style="height: 0.2rem;"
@@ -70,16 +70,16 @@
                                     </div>
 
                                     <!-- <span>/</span>
-                                    <span>{{ bidder.deposits_sum|metrify }}</span> -->
+                                    <span>{{ bidder.bidders_sum|metrify }}</span> -->
                                 </span>
                             </div>                        
                             <div class="mt-2 text-danger">
-                                <!-- part_count = {{ bidder.part_count }}<br>
+                                part_count = {{ bidder.part_count }}<br>
                                 bids_count = {{ bidder.bids_count }}<br>
                                 wins_count = {{ bidder.wins_count }}<br>
                                 bids_sum = {{ bidder.bids_sum }}<br>
                                 wins_sum = {{ bidder.wins_sum }}<br>
-                                succ_rate = {{ bidder.succ_rate }}<br> -->
+                                succ_rate = {{ bidder.succ_rate }}<br>
                             </div>
                             <!-- {% if bidder.success_rate %}
                                 <div class="progress bg-warning p-0 m-0"

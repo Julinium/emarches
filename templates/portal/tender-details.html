@@ -411,7 +411,7 @@
     </div>
 
     {% if tender.expired %}
-        {% if tender.minutes.all|length > 0 %}
+        {% if tender.openings.all|length > 0 %}
             <div class="accordion my-3" id="accordionResults">
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">

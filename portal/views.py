@@ -29,7 +29,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth.models import User
 
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
-from base.models import Tender, Category, Client, Domain, Lot, Procedure, Crawler, Agrement, Qualif, WinnerBid, FailedLot
+from base.models import Tender, Category, Client, Domain, Lot, Procedure, Crawler, Agrement, Qualif, Deposit
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
@@ -262,27 +262,27 @@ def tender_list(request):
         if 'results' in params:
             ff += 1
             results = params['results']
-            if results == 'with_minutes': tenders = tenders.filter(minutes__isnull=False)
-            if results == 'no_minutes': tenders = tenders.filter(minutes__isnull=True)
+            if results == 'with_minutes': tenders = tenders.filter(openings__isnull=False)
+            if results == 'no_minutes': tenders = tenders.filter(openings__isnull=True)
 
-            winner_exists = WinnerBid.objects.filter(minutes__tender=OuterRef("pk")).values("pk")
+            winners = Deposit.objects.filter(opening__tender=OuterRef("pk"), winner=True).values("pk")
 
             if results == 'successful':
                 tenders = tenders.annotate(
-                    has_winner=Exists(winner_exists),
-                    failed_lots=Count("minutes__failed_lots", distinct=True)
+                    has_winner=Exists(winners), 
+                    failed_lots=Count("openings", filter=Q(openings__deposits__winner__isnull=True), distinct=True),
                 ).filter(has_winner=True, failed_lots=0)
 
             if results == 'unsuccessful':
                 tenders = tenders.annotate(
-                    has_winner=Exists(winner_exists)
-                ).filter(minutes__isnull=False, has_winner=False)
+                    has_winner=Exists(winners), 
+                ).filter(has_winner=False)
 
             if results == 'partial':
                 tenders = tenders.annotate(
-                    has_winner=Exists(winner_exists),
-                    failed_lots=Count("minutes__failed_lots", distinct=True)
-                ).filter(has_winner=True, failed_lots__gt=0)
+                    has_winner=Exists(winners), 
+                    failed_lots=Count("openings", filter=Q(openings__deposits__winner__isnull=True), distinct=True)
+                ).filter(has_winner=True, failed_lots__gt=0) 
 
 
         return tenders.distinct(), ff
@@ -323,14 +323,14 @@ def tender_list(request):
     query_dict['filters'] = filters
 
     if 'minutes_end' in ordering or '-minutes_end' in ordering:
-        tenders = tenders.annotate(minutes_end=F('minutes__date_end'))
+        tenders = tenders.annotate(minutes_end=F('opening__date'))
 
     tenders = tenders.order_by(
             *ordering
         ).select_related(
             'client', 'category', 'mode', 'procedure'
         ).prefetch_related(
-            'favorites', 'views', 'minutes',
+            'favorites', 'views', 'openings',
             'downloads', 'comments', 'changes',
             )
 

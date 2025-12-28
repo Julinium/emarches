@@ -30,7 +30,37 @@
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
                                 <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
                             </div>
+                            <!-- <datalist id="bidders">
+                                {% for bidder in bidders %}
+                                    <option value="{{ bidder.name }}">
+                                {% endfor %}
+                            </datalist> -->
                         </div>
+
+                        <!-- <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Category" %}</span></span>
+                                <select class="form-select" name="c" aria-label="c">
+                                    <option {% if query_dict.c == '' %} selected {% endif %} value="">--</option>
+                                    {% for c in categories %}
+                                        <option {% if query_dict.c == c.id|stringify %} selected {% endif %} value="{{ c.id }}">{{ c.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div> -->
+
+                        <!-- <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Min" %}</span></span>
+                                <input type="date" class="form-control text-end" name="dn" value="{{ query_dict.dn }}" aria-label="deadline_min">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Deadline Max" %}</span></span>
+                                <input type="date" class="form-control text-end" name="dx" value="{{ query_dict.dx }}" aria-label="deadline_max">
+                            </div>
+                        </div> -->
                             
                         <div class="col-12 col-md-6">
                             <div class="input-group mb-3">

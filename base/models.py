@@ -569,113 +569,90 @@ class Crawler(models.Model):
 class Concurrent(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
-    # active    = models.BooleanField(null=True, default=True, editable=False)
-    # short     = models.CharField(max_length=255, default="M7", verbose_name=_('Acronym'))
-    # ice       = models.CharField(max_length=64, blank=True, default='77777777777777', verbose_name="I.C.E")
-    # city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
-    # country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
-    # date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
-    # phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
-    # email     = models.EmailField(blank=True, verbose_name=_('Email'))
-    # activity  = models.CharField(max_length=128, blank=True, verbose_name=_('Activity'))
-    # sector    = models.CharField(max_length=128, blank=True, verbose_name=_('Sector'))
-
-    # p_c       = models.SmallIntegerField(blank=True, null=True, editable=False, default=0, verbose_name=_('Parcticipations count'))
-    # b_c       = models.SmallIntegerField(blank=True, null=True, editable=False, default=0, verbose_name=_('Bids count'))
-    # w_c       = models.SmallIntegerField(blank=True, null=True, editable=False, default=0, verbose_name=_('Wins count'))
-
-    # b_s       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, default=0, verbose_name=_('Bids total'))
-    # w_s       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, default=0, verbose_name=_('Wins total'))
-
-    # w_n       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, verbose_name=_('Hugest win'))
-    # w_x       = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, editable=False, verbose_name=_('Smallest win'))
-
-    # p_l       = models.DateField(blank=True, null=True, verbose_name=_('Latest participation'))
-    # b_l       = models.DateField(blank=True, null=True, verbose_name=_('Latest bid'))
-    # w_l       = models.DateField(blank=True, null=True, verbose_name=_('Latest win'))
-
-    # w_r       = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True, editable=False, default=0, verbose_name=_('Win ratio'))
-
 
     @property
-    def bidders_sum(self):
-        return self.selected_bids.aggregate(total=Sum('amount_before'))['total'] or 0
+    def deposits_sum(self):
+        return self.deposits.aggregate(total=Sum('amount_b'))['total'] or 0
 
     @property
-    def winner_bids_sum(self):
-        return self.winner_bids.aggregate(total=Sum('amount'))['total'] or 0
+    def winners_sum(self): 
+        return self.deposits.aggregate(total=Sum('amount_w'))['total'] or 0
 
     @property
-    def selected_bids_count(self):
-        return self.selected_bids.aggregate(efectif=Count('id'))['efectif'] or 0
+    def selects_count(self):
+        return self.deposits.aggregate(
+            effectif=Count('id',
+                filter(Q(amount_b__isnull=False))
+            )
+        )['effectif'] or 0
 
     @property
-    def winner_bids_count(self):
-        return self.winner_bids.aggregate(efectif=Count('id'))['efectif'] or 0
+    def winners_count(self):
+        return self.deposits.aggregate(effectif=Count('id', filter(Q(amount_w__isnull=False))))['effectif'] or 0
 
     @property
     def highest_win(self):
-        return self.winner_bids.aggregate(max_amount=Max('amount'))['max_amount'] or None
+        return self.deposits.aggregate(max_amount=Max('amount_w', filter(Q(amount_w__isnull=False))))['max_amount'] or None
 
     @property
     def lowest_win(self):
-        return self.winner_bids.aggregate(min_amount=Min('amount'))['min_amount'] or None
+        return self.deposits.aggregate(min_amount=Min('amount_w', filter(Q(amount_w__isnull=False))))['min_amount'] or None
 
     @property
     def latest_win(self):
-        lwb = self.winner_bids.order_by('minutes').first()
-        return lwb.minutes.date_end if lwb else None
+        lwb = self.deposits.order_by('-date').first()
+        return lwb.date if lwb else None
 
     @property
     def first_win(self):
-        fwb = self.winner_bids.order_by('-minutes').first()
-        return fwb.minutes.date_end if fwb else None
+        fwb = self.deposits.order_by('date').first()
+        return fwb.date if fwb else None
 
     @property
     def success_rate(self):
-        if self.bidders_sum == 0 : return None
-        return round(100 * self.winner_bids_sum / self.bidders_sum, 1)
+        if self.deposits_sum == 0 : return None
+        return round(100 * self.winners_sum / self.deposits_sum, 1)
 
     @property
-    def bid_domains(self):
+    def domains(self):
         return Domain.objects.filter(
-            tenders__minutes__bidders__concurrent=self
+            tenders__deposits__concurrent=self
         ).annotate(
-                bidders_count=Count(
-                    "tenders__minutes__bidders",
-                    filter=Q(tenders__minutes__bidders__concurrent=self),
+                deposits_count=Count(
+                    "tenders__deposits",
+                    filter=Q(tenders__deposits__concurrent=self),
                     distinct=True,
                 )
-            ).order_by("-bidders_count", 'name')
+            ).order_by("-deposits_count", 'name')
 
     @property
-    def bid_licences(self):
+    def qualifs(self):
         return (
-            Agrement.objects
-            .filter(lots__tender__minutes__bidders__concurrent=self)
-            .annotate(
-                bidders_count=Count(
-                    "lots__tender__minutes__bidders",
-                    filter=Q(lots__tender__minutes__bidders__concurrent=self),
+            Qualif.objects.filter(
+                lots__tender__deposits__concurrent=self
+            ).annotate(
+                deposits_count=Count(
+                    "lots__tender__deposits",
+                    filter=Q(lots__tender__deposits__concurrent=self),
                     distinct=True,
                 )
             )
-            .order_by("-bidders_count", 'short')
+            .order_by("-deposits_count", 'short')
         )
 
     @property
-    def bid_qualifs(self):
+    def licences(self):
         return (
-            Qualif.objects
-            .filter(lots__tender__minutes__bidders__concurrent=self)
-            .annotate(
-                bidders_count=Count(
-                    "lots__tender__minutes__bidders",
-                    filter=Q(lots__tender__minutes__bidders__concurrent=self),
+            Agrement.objects.filter(
+                lots__tender__deposits__concurrent=self
+            ).annotate(
+                deposits_count=Count(
+                    "lots__tender__deposits",
+                    filter=Q(lots__tender__deposits__concurrent=self),
                     distinct=True,
                 )
             )
-            .order_by("-bidders_count", 'short')
+            .order_by("-deposits_count", 'short')
         )
     
 
@@ -687,161 +664,24 @@ class Concurrent(models.Model):
         return f'{self.name}'
 
 
-class Minutes(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    tender     = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
-    has_tech   = models.BooleanField(blank=True, null=True, default=True)
-    failure    = models.TextField(blank=True, null=True)
-    date_end   = models.DateField(blank=True, null=True)
-    
-    @property
-    def amount_won(self):
-        return self.winner_bids.aggregate(total=Sum("amount"))["total"] or 0
-    
-    @property
-    def won_lots(self):
-        return self.winner_bids.aggregate(won_lots=Count("lot_number", distinct = True))["won_lots"]
-    
-    @property
-    def total_win(self):
-        return self.won_lots == self.tender.lots_count
-
-    class Meta:
-        db_table = 'base_minutes'
-        ordering = ['-date_end', 'tender']
-
-
-class Bidder(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bidders")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bidders")
-
-    class Meta:
-        db_table = 'base_bidder'
-        ordering = ['minutes', 'concurrent']
-
-
-class AdminReject(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_rejects")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_rejects")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'base_admin_reject'
-        ordering = ['minutes', 'concurrent', 'lot_number']
-
-
-class AdminAccept(models.Model):    
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_accepts")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_accepts")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'base_admin_accept'
-        ordering = ['minutes', 'concurrent', 'lot_number']
-
-
-class AdminReserve(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_reserves")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_reserves")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'base_admin_reserve'
-        ordering = ['minutes', 'concurrent', 'lot_number']
-
-
-class TechReject(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="tech_rejects")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="tech_rejects")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'base_tech_reject'
-        ordering = ['minutes', 'concurrent', 'lot_number']
-
-
-class SelectedBid(models.Model):
-    id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent    = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="selected_bids")
-    minutes       = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="selected_bids")
-    lot_number    = models.SmallIntegerField(blank=True, null=True)
-    amount_before = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
-    amount_after  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
-
-
-    @property
-    def is_winner(self):
-        return self.minutes.winner_bids.filter(
-            concurrent=self.concurrent, 
-            lot_number=self.lot_number, 
-            amount=self.amount_after, 
-        ).count() == 1
-
-    @property
-    def lot(self):
-        lots = Lot.objects.filter(
-            # tender__minutes__bidders__concurrent=self.concurrent, 
-            tender = self.minutes.tender,
-            number = self.lot_number
-            )
-        return lots.first() if lots.count() == 1 else None
-
-    @property
-    def offset(self):
-        e = self.lot.estimate
-        return round(100 * (self.amount_after - e) / e, 3) if e > 0 else None
-    
-
-
-    class Meta:
-        db_table = 'base_selected_bid'
-        ordering = ['minutes', 'lot_number', 'amount_after']
-
-
-class WinnerBid(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="winner_bids")
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="winner_bids")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-    amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
-
-    class Meta:
-        db_table = 'base_winner_bid'
-        ordering = ['minutes', 'lot_number', 'concurrent']
-
-
-class WinJustif(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="win_justifs")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-    justif     = models.TextField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'base_win_justif'
-        ordering = ['minutes', 'lot_number']
-
-
-class FailedLot(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="failed_lots")
-    lot_number = models.SmallIntegerField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'base_failed_lot'
-        ordering = ['minutes', 'lot_number']
-
-
 class Opening(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="openings", blank=True, null=True)
     has_tech   = models.BooleanField(blank=True, null=True, default=True)
     failure    = models.TextField(blank=True, null=True)
     date       = models.DateField(blank=True, null=True)
+    won_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    won_lots   = models.SmallIntegerField(blank=True, default=0)
+    won_total  = models.BooleanField(blank=True, null=True, default=False)
+    win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+
+    @property
+    def winners_(self): 
+        return Concurrent.objects.filter(
+            deposits__opening=self,
+            deposits__winner=True,
+        )
+        # return self.deposits.concurrent(total=Sum('amount_w'))['total'] or 0
 
     class Meta:
         db_table = 'base_opening'
@@ -856,24 +696,180 @@ class Deposit(models.Model):
 
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     opening    = models.ForeignKey(Opening, on_delete=models.CASCADE, related_name="deposits", blank=True, null=True)
-    concurrent = models.ForeignKey(Concurrent, on_delete=models.CASCADE, related_name="deposits")
+    concurrent = models.ForeignKey(Concurrent, on_delete=models.CASCADE, related_name="deposits", blank=True, null=True)
     lot_number = models.SmallIntegerField(blank=True, null=True)
     admin      = models.CharField(max_length=1,blank=True, null=True, choices=Admin.choices, verbose_name='Admin Result')
     reject_t   = models.BooleanField(blank=True, null=True)
     amount_b   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
-    amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    amount_a   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    amount_w   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     winner     = models.BooleanField(blank=True, null=True)
     justif     = models.TextField(blank=True, null=True)
     date       = models.DateField(blank=True, null=True)
+    win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+    dep_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     class Meta:
         db_table = 'base_deposit'
-        ordering = ['opening', 'lot_number', 'amount']
+        ordering = ['opening', 'lot_number', 'amount_a']
+
+    # get_lot
+        # get_estimate
+        # get_bond
+        # get_offset
 
     
 
 
+
+
+# class Minutes(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     tender     = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="minutes", blank=True, null=True)
+#     has_tech   = models.BooleanField(blank=True, null=True, default=True)
+#     failure    = models.TextField(blank=True, null=True)
+#     date_end   = models.DateField(blank=True, null=True)
     
+#     @property
+#     def amount_won(self):
+#         return self.winner_bids.aggregate(total=Sum("amount"))["total"] or 0
+    
+#     @property
+#     def won_lots(self):
+#         return self.winner_bids.aggregate(won_lots=Count("lot_number", distinct = True))["won_lots"]
+    
+#     @property
+#     def total_win(self):
+#         return self.won_lots == self.tender.lots_count
+
+#     class Meta:
+#         db_table = 'base_minutes'
+#         ordering = ['-date_end', 'tender']
+
+
+# class Bidder(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="bidders")
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="bidders")
+
+#     class Meta:
+#         db_table = 'base_bidder'
+#         ordering = ['minutes', 'concurrent']
+
+
+# class AdminReject(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_rejects")
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_rejects")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'base_admin_reject'
+#         ordering = ['minutes', 'concurrent', 'lot_number']
+
+
+# class AdminAccept(models.Model):    
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_accepts")
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_accepts")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'base_admin_accept'
+#         ordering = ['minutes', 'concurrent', 'lot_number']
+
+
+# class AdminReserve(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="admin_reserves")
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="admin_reserves")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'base_admin_reserve'
+#         ordering = ['minutes', 'concurrent', 'lot_number']
+
+
+# class TechReject(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="tech_rejects")
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="tech_rejects")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'base_tech_reject'
+#         ordering = ['minutes', 'concurrent', 'lot_number']
+
+
+# class SelectedBid(models.Model):
+#     id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent    = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="selected_bids")
+#     minutes       = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="selected_bids")
+#     lot_number    = models.SmallIntegerField(blank=True, null=True)
+#     amount_before = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+#     amount_after  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+
+
+#     @property
+#     def is_winner(self):
+#         return self.minutes.winner_bids.filter(
+#             concurrent=self.concurrent, 
+#             lot_number=self.lot_number, 
+#             amount=self.amount_after, 
+#         ).count() == 1
+
+#     @property
+#     def lot(self):
+#         lots = Lot.objects.filter(
+#             # tender__minutes__bidders__concurrent=self.concurrent, 
+#             tender = self.minutes.tender,
+#             number = self.lot_number
+#             )
+#         return lots.first() if lots.count() == 1 else None
+
+#     @property
+#     def offset(self):
+#         e = self.lot.estimate
+#         return round(100 * (self.amount_after - e) / e, 3) if e > 0 else None
+    
+
+
+#     class Meta:
+#         db_table = 'base_selected_bid'
+#         ordering = ['minutes', 'lot_number', 'amount_after']
+
+
+# class WinnerBid(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     concurrent = models.ForeignKey('Concurrent', on_delete=models.CASCADE, related_name="winner_bids")
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="winner_bids")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+#     amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0)
+
+#     class Meta:
+#         db_table = 'base_winner_bid'
+#         ordering = ['minutes', 'lot_number', 'concurrent']
+
+
+# class WinJustif(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="win_justifs")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+#     justif     = models.TextField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'base_win_justif'
+#         ordering = ['minutes', 'lot_number']
+
+
+# class FailedLot(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     minutes    = models.ForeignKey('Minutes', on_delete=models.CASCADE, related_name="failed_lots")
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+
+#     class Meta:
+#         db_table = 'base_failed_lot'
+#         ordering = ['minutes', 'lot_number']
 
 
 
