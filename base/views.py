@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from datetime import datetime, timedelta
 
 VPS_SERVER_MONTH = 64
 
@@ -20,6 +20,22 @@ VPS_SERVER_MONTH = 64
 def home(request):
     target = 0
     mail_server = VPS_SERVER_MONTH
+
+    today = datetime.now().date()
+    epoch_zero=today
+    epoch_zero.day=1
+    epoch_zero.month=1
+    run_days = today - epoch_zero
+    
+
+    period_name = today.strftime('%Y')
+    period_progress = 23
+    amount_progress = 34
+
+    amount_funded   = 1300
+    amount_goal     = 5700
+
+
     context = {}
 
     return render(request, 'base/home.html')

@@ -13,7 +13,7 @@ from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
 
-from base.models import Concurrent
+from base.models import Concurrent, Tender
 
 
 BIDDERS_ITEMS_PER_PAGE = 25
@@ -211,6 +211,8 @@ def bidder_details(request, pk=None):
     tech_rejects   = bidder.deposits.filter(reject_t=True)
     selects        = bidder.deposits.filter(amount_b__isnull=False)
     winners        = bidder.deposits.filter(amount_w__isnull=False)
+    particips      = bidder.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
+
 
     context = { 
         'bidder'         : bidder,
@@ -220,6 +222,7 @@ def bidder_details(request, pk=None):
         'tech_rejects'   : tech_rejects,
         'selects'        : selects,
         'winners'        : winners,
+        'particips'      : particips,
     }
 
     logger = logging.getLogger('portal')

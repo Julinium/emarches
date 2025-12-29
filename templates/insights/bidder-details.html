@@ -102,27 +102,30 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#depositsCollapse" aria-expanded="true" aria-controls="depositsCollapse">
                         <span><i class="bi bi-building-up me-1"></i></span>
-                        <span class="fw-light text-uppercase">{% trans "Participations" %}</span>
-                        <span class="small fw-bold ps-2">{{ bidder.deposits.all|length }}</span>
+                        <span class="fw-light text-uppercase">{% trans "Tenders" %}</span>
+                        <span class="small fw-bold ps-2">{{ particips.all|length }}</span>
                     </button>
                 </h2>
                 <div id="depositsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionBidders">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for bid in bidder.deposits.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' bid.opening.tender.id %}">
-                                    <div>
-                                        <span class="fw-bold small">{{ bid.opening.date }}</span>
-                                    </div>
-                                    <div class="twolines">
-                                        <span class="small me-1"><i class="{{ bid.opening.tender.category.icon_bs_class }}"></i></span>
-                                        {% if bid.opening.tender.lots_count > 1 %}
-                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                        {% endif %}
-                                        <span class="">{{ bid.opening.tender.title }}</span>
-                                    </div>
-                                </a>
+                            {% for bid in particips.all %}
+                                {% ifchanged bid.tender %}
+                                    {{ bid.tender.chrono }}
+                                {% endifchanged %}
+                                    <a class="list-group-item list-group-item-action" target="_blank" 
+                                        href="{% url 'portal_tender_detail' bid.opening.tender.id %}#resultsBookmark">
+                                        <div>
+                                            <span class="fw-bold small">{{ bid.opening.date }}</span>
+                                        </div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ bid.opening.tender.category.icon_bs_class }}"></i></span>
+                                            {% if bid.opening.tender.lots_count > 1 %}
+                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            <span class="">{{ bid.opening.tender.title }}</span>
+                                        </div>
+                                    </a>
                             {% empty %}
                                 <div class="list-group-item">
                                     <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
@@ -155,7 +158,7 @@
                         <div class="list-group">
                             {% for admin_reject in admin_rejects.all %}
                                 <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' admin_reject.opening.tender.id %}">
+                                    href="{% url 'portal_tender_detail' admin_reject.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged admin_reject.opening.tender %}
                                         <div class="fw-light small">{{ admin_reject.opening.date }}</div>
                                         <div class="twolines">
@@ -203,7 +206,7 @@
                         <div class="list-group">
                             {% for admin_accept in admin_accepts.all %}
                                 <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' admin_accept.opening.tender.id %}">
+                                    href="{% url 'portal_tender_detail' admin_accept.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged admin_accept.opening.tender %}
                                         <div class="fw-light small">{{ admin_accept.opening.date }}</div>
                                         <div class="twolines">
@@ -250,7 +253,7 @@
                         <div class="list-group">
                             {% for admin_reserve in admin_reserves.all %}
                                 <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' admin_reserve.opening.tender.id %}">
+                                    href="{% url 'portal_tender_detail' admin_reserve.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged admin_reserve.opening.tender %}
                                         <div class="fw-light small">{{ admin_reserve.opening.date }}</div>
                                         <div class="twolines">
@@ -301,7 +304,7 @@
                         <div class="list-group">
                             {% for tech_reject in tech_rejects.all %}
                                 <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' tech_reject.opening.tender.id %}">
+                                    href="{% url 'portal_tender_detail' tech_reject.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged tech_reject.opening.tender %}
                                         <div class="fw-light small">{{ tech_reject.opening.date }}</div>
                                         <div class="twolines">
@@ -352,7 +355,7 @@
                         <div class="list-group">
                             {% for sel in selects.all %}
                                 <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' sel.opening.tender.id %}">
+                                    href="{% url 'portal_tender_detail' sel.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged sel.opening.tender %}
                                         <div class="fw-light small">{{ sel.opening.date }}</div>
                                         <div class="twolines">
@@ -412,7 +415,7 @@
                         <div class="list-group">
                             {% for win in winners.all %}
                                 <a class="list-group-item list-group-item-action" target="_blank" 
-                                    href="{% url 'portal_tender_detail' win.opening.tender.id %}">
+                                    href="{% url 'portal_tender_detail' win.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged win.opening.tender %}
                                         <div class="fw-light small">{{ win.opening.date }}</div>
                                         <div class="twolines">
@@ -462,7 +465,7 @@
                                    href="{% url 'portal_tender_list' %}?&q={{ dom.name }}&f=domains&exact=yes">
                                     <div class="">{{ dom.name }}</div>
                                     <div>
-                                        <span class="float-end">
+                                        <span class="float-end small">
                                                 <span class="fw-light small">{% trans 'Bids' %}:</span>
                                             <span class="fw-bold ms-2">{{ dom.deposits_count }}</span>
                                         </span>
@@ -500,9 +503,9 @@
                                         <span>{{ qua.name }}</span>
                                     </div>
                                     <div>
-                                        <span class="float-end">
-                                                <span class="fw-light small">{% trans 'Bids' %}:</span>
-                                            <span class="fw-bold ms-2">{{ qua.bidders_count }}</span>
+                                        <span class="float-end small">
+                                            <span class="fw-light small">{% trans 'Bids' %}:</span>
+                                            <span class="fw-bold ms-2">{{ qua.deposits_count }}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -516,7 +519,7 @@
                 </div> 
             </div>
         </div>
-        
+    
 
         <div class="accordion my-3" id="accordionLicences">
             <div class="accordion-item shadow-sm">
@@ -540,7 +543,7 @@
                                     <div>
                                         <span class="float-end">
                                                 <span class="fw-light small">{% trans 'Bids' %}:</span>
-                                            <span class="fw-bold ms-2">{{ agr.bidders_count }}</span>
+                                            <span class="fw-bold ms-2">{{ agr.deposits_count }}</span>
                                         </span>
                                     </div>
                                 </div>

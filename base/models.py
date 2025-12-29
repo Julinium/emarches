@@ -736,9 +736,6 @@ class Opening(models.Model):
             opening=self,
             reject_t=True,
         )
-    
-    
-
 
     class Meta:
         db_table = 'base_opening'
