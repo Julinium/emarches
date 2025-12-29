@@ -144,18 +144,36 @@ def bidders_list(request):
         )
 
     bidders, filters = filter_bidders(all_bidders, query_dict)
+    query_dict['filters'] = filters
+
+# 
+    # HALF_OUTER = 125.66
+    # HALF_INNER = 87.96
+    # for b in bidders:
+    #     try:
+    #         b.win_arc = HALF_INNER * (b.wins_sum / b.bids_sum) if b.bids_sum else 0
+    #         b.par_arc = HALF_OUTER * (b.wins_count / b.part_count) if b.part_count else 0
+    #     except:
+    #         b.win_arc, b.par_arc = 0, 0
+
+# 
+
+
 
     sort = query_dict['sort']
 
     if sort and sort != '':
-        ordering = [sort]
-    else: ordering = []
+        ordering = sort
+    else: ordering = 'wins_sum'
 
-    ordering.append('-wins_sum')
+    if ordering == '-name' or ordering == 'name':
+        bidders = bidders.order_by(ordering)
+    elif ordering[0] == '-':
+        ordering = ordering[1:]
+        bidders = bidders.order_by(F(ordering).asc(nulls_last=True))
+    else:
+        bidders = bidders.order_by(F(ordering).desc(nulls_last=True))
 
-    query_dict['filters'] = filters
-
-    bidders = bidders.order_by(*ordering)
 
     context = define_context(request)
 

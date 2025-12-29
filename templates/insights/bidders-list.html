@@ -47,8 +47,8 @@
                             <div class="{% if wrap_text == False %}oneline{% endif %}">
                                 <span>{{ bidder.name }}</span>
                                 <span class="small ms-1 float-end text-end"
-                                      style="min-width: 4rem;">
-                                    <span class="small fw-light">{{ bidder.winners_count }}</span>
+                                      style="min-width: 5rem;">
+                                    <span class="small fw-light">{{ bidder.wins_count }}/{{ bidder.part_count }}</span>
                                     <i class="small text-success me-1 
                                         {% if bidder.winners_sum > 0 %}
                                             {{ bicons.winner }}
@@ -58,7 +58,7 @@
                                     </i>
                                     <span class="small fw-bold">{{ bidder.winners_sum|metrify }}</span>
 
-                                    <div class="progress bg-warning"
+                                    <!-- <div class="progress bg-warning"
                                             style="height: 0.2rem;"
                                             data-bs-toggle="tooltip"
                                             title="{% trans 'Success rate' %}: {{ bidder.success_rate|default:'0' }}%">
@@ -67,36 +67,32 @@
                                                 aria-valuenow="{{ bidder.success_rate|unlocalize }}" aria-valuemin="0" 
                                                 aria-valuemax="100">
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- <span>/</span>
                                     <span>{{ bidder.deposits_sum|metrify }}</span> -->
                                 </span>
                             </div>
 
-                            <!-- <div class="mt-2 text-danger">
-                                part_count : {{ bidder.part_count }}<br>
-                                wins_count : {{ bidder.wins_count }}<br>
-                                bids_sum   : {{ bidder.bids_sum }}<br>
-                                wins_sum   : {{ bidder.wins_sum }}<br>
-                                last_win   : {{ bidder.last_win }}<br>
-                                last_part  : {{ bidder.last_part }}<br>
-                                succ_rate  : {{ bidder.succ_rate }}<br>
+                            <div class="mt-2 text-danger small">
+                                <span>{{ bidder.wins_count }}/{{ bidder.part_count }}</span>
+                                <span class="ms-2">{{ bidder.wins_sum }}/{{ bidder.bids_sum }} = {{ bidder.succ_rate|floatformat:2 }}%</span>   
+                                <span class="ms-2">-{{ bidder.last_part }} -{{ bidder.last_win }}</span>
 
-                            </div> -->
+                            </div>
 
-                            <!-- {% if bidder.success_rate %}
+                            {% if bidder.succ_rate %}
                                 <div class="progress bg-warning p-0 m-0"
                                         style="height: 0.25rem;"
                                         data-bs-toggle="tooltip"
-                                        title="{% trans 'Success rate' %}: {{ bidder.success_rate }}%">
+                                        title="{% trans 'Success rate' %}: {{ bidder.succ_rate }}%">
                                     <div class="progress-bar bg-success" 
-                                            role="progressbar" style="width: {{ bidder.success_rate|unlocalize }}%;" 
-                                            aria-valuenow="{{ bidder.success_rate|unlocalize }}" aria-valuemin="0" 
+                                            role="progressbar" style="width: {{ bidder.succ_rate|unlocalize }}%;" 
+                                            aria-valuenow="{{ bidder.succ_rate|unlocalize }}" aria-valuemin="0" 
                                             aria-valuemax="100">
                                     </div>
                                 </div>
-                            {% endif %} -->
+                            {% endif %}
                             
                         </div>
                     </a>

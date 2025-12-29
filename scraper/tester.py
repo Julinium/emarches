@@ -52,6 +52,11 @@ def main():
 
     handle_results()
 
+    # from base.models import Concurrent
+    # ghosts = Concurrent.objects.filter(deposits__isnull=True)
+    # n = ghosts.count()
+    # ghosts.delete()
+    # print(f'================ Deleted {n} ghosts')
 
 if __name__ == '__main__':
     main()
