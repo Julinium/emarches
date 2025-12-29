@@ -579,24 +579,28 @@ class Concurrent(models.Model):
         return self.deposits.aggregate(total=Sum('amount_w'))['total'] or 0
 
     @property
+    def selects(self):
+        return self.deposits.filter(amount_b__isnull=False)        
+
+    @property
     def selects_count(self):
         return self.deposits.aggregate(
             effectif=Count('id',
-                filter(Q(amount_b__isnull=False))
+                filter=Q(amount_b__isnull=False)
             )
         )['effectif'] or 0
 
     @property
     def winners_count(self):
-        return self.deposits.aggregate(effectif=Count('id', filter(Q(amount_w__isnull=False))))['effectif'] or 0
+        return self.deposits.aggregate(effectif=Count('id', filter=Q(amount_w__isnull=False)))['effectif'] or 0
 
     @property
     def highest_win(self):
-        return self.deposits.aggregate(max_amount=Max('amount_w', filter(Q(amount_w__isnull=False))))['max_amount'] or None
+        return self.deposits.aggregate(max_amount=Max('amount_w', filter=Q(amount_w__isnull=False)))['max_amount'] or None
 
     @property
     def lowest_win(self):
-        return self.deposits.aggregate(min_amount=Min('amount_w', filter(Q(amount_w__isnull=False))))['min_amount'] or None
+        return self.deposits.aggregate(min_amount=Min('amount_w', filter=Q(amount_w__isnull=False)))['min_amount'] or None
 
     @property
     def latest_win(self):
@@ -616,11 +620,11 @@ class Concurrent(models.Model):
     @property
     def domains(self):
         return Domain.objects.filter(
-            tenders__deposits__concurrent=self
+            tenders__openings__deposits__concurrent=self
         ).annotate(
                 deposits_count=Count(
-                    "tenders__deposits",
-                    filter=Q(tenders__deposits__concurrent=self),
+                    "tenders__openings__deposits",
+                    # filter=Q(tenders__openings__deposits=self),
                     distinct=True,
                 )
             ).order_by("-deposits_count", 'name')
@@ -629,11 +633,11 @@ class Concurrent(models.Model):
     def qualifs(self):
         return (
             Qualif.objects.filter(
-                lots__tender__deposits__concurrent=self
+                lots__tender__openings__deposits__concurrent=self
             ).annotate(
                 deposits_count=Count(
-                    "lots__tender__deposits",
-                    filter=Q(lots__tender__deposits__concurrent=self),
+                    "lots__tender__openings__deposits",
+                    # filter=Q(lots__tender__openings__deposits__concurrent=self),
                     distinct=True,
                 )
             )
@@ -644,11 +648,11 @@ class Concurrent(models.Model):
     def licences(self):
         return (
             Agrement.objects.filter(
-                lots__tender__deposits__concurrent=self
+                lots__tender__openings__deposits__concurrent=self
             ).annotate(
                 deposits_count=Count(
-                    "lots__tender__deposits",
-                    filter=Q(lots__tender__deposits__concurrent=self),
+                    "lots__tender__openings__deposits",
+                    # filter=Q(lots__tender__openings__deposits__concurrent=self),
                     distinct=True,
                 )
             )
@@ -681,7 +685,60 @@ class Opening(models.Model):
             deposits__opening=self,
             deposits__winner=True,
         )
-        # return self.deposits.concurrent(total=Sum('amount_w'))['total'] or 0
+
+    @property
+    def bidders(self): 
+        return Concurrent.objects.filter(
+            deposits__opening=self,
+        ).order_by('name').distinct('name')
+    
+    @property
+    def selected_bids(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            amount_a__isnull=False,
+        )
+
+    @property
+    def winner_bids(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            amount_w__isnull=False,
+        )
+
+    @property
+    def win_justifs(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            justif__isnull=False,
+        )
+
+    def admin_accepts(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            admin='a',
+        )
+
+    def admin_reserves(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            admin='r',
+        )
+
+    def admin_rejects(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            admin='x',
+        )
+
+    def tech_rejects(self): 
+        return Deposit.objects.filter(
+            opening=self,
+            reject_t=True,
+        )
+    
+    
+
 
     class Meta:
         db_table = 'base_opening'

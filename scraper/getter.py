@@ -620,7 +620,8 @@ def getMinutes(chro='', acro=''):
                 except Exception:
                     traceback.print_exc()
 
-                rejected_da.append({"name": bidder_name, "lots": rejected_lots})
+                for rejected_lot in rejected_lots:
+                    rejected_da.append({"name": bidder_name, "lot": rejected_lot})
 
             except Exception as xc:
                 print(f"rejected_da inner Exception: { xc }")
@@ -645,8 +646,8 @@ def getMinutes(chro='', acro=''):
                     accepted_lots = [ x.strip() for x in raw_ids.split(",")]
                 except Exception: 
                     traceback.print_exc()
-
-                accepted_da.append({"name": bidder_name, "lots": accepted_lots})
+                for accepted_lot in accepted_lots:
+                    accepted_da.append({"name": bidder_name, "lot": accepted_lot})
 
             except Exception as xc:
                 print(f"accepted_da inner Exception: { xc }")
@@ -672,7 +673,8 @@ def getMinutes(chro='', acro=''):
                 except Exception:
                     traceback.print_exc()
 
-                reserved_da.append({"name": bidder_name, "lots": reserved_lots})
+                for reserved_lot in reserved_lots:
+                    reserved_da.append({"name": bidder_name, "lot": reserved_lot})
 
             except Exception as xc:
                 print(f"reserved_da inner Exception: { xc }")
@@ -691,7 +693,7 @@ def getMinutes(chro='', acro=''):
                 if not bidder_td: continue
 
                 bidder_name = bidder_td.get_text(strip=True)
-                rejected_lots = [""]
+                rejected_lots = ['1']
                 try:
                     tds = tr.find_all("div")
                     ids_td = tds[1] if len(tds) > 1 else None
@@ -702,7 +704,8 @@ def getMinutes(chro='', acro=''):
                 except Exception: 
                     traceback.print_exc()
 
-                rejected_dt.append({"name": bidder_name, "lots": rejected_lots})
+                for rejected_lot in rejected_lots:
+                    rejected_dt.append({"name": bidder_name, "lot": rejected_lot})
 
             except Exception as xc:
                 print(f"rejected_dt inner Exception: { xc }")

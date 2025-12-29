@@ -39,6 +39,8 @@ packaging==25.0
 pillow==11.3.0
 prometheus_client==0.23.1
 prompt_toolkit==3.0.52
+psycopg==3.3.2
+psycopg-binary==3.3.2
 psycopg2==2.9.10
 pycparser==2.23
 pydyf==0.12.1

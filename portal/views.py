@@ -323,7 +323,7 @@ def tender_list(request):
     query_dict['filters'] = filters
 
     if 'minutes_end' in ordering or '-minutes_end' in ordering:
-        tenders = tenders.annotate(minutes_end=F('opening__date'))
+        tenders = tenders.annotate(minutes_end=F('openings__date'))
 
     tenders = tenders.order_by(
             *ordering
@@ -381,7 +381,7 @@ def tender_details(request, pk=None):
     tender = get_object_or_404(Tender.objects.select_related(
                 'client', 'category', 'mode', 'procedure'
             ).prefetch_related(
-                'downloads', 'views', 'favorites',
+                'downloads', 'views', 'favorites', 'openings',
                 'domains', 'lots', 'lots__agrements', 'lots__qualifs',
                 'lots__meetings', 'lots__samples', 'lots__visits'
             ), id=pk)

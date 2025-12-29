@@ -8,23 +8,22 @@
         <div class="container mt-4">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-11 col-lg-10 col-xl-8">
-                    <div class="text-center">
+                    <div class="">
                         <div class="card shadow w-100">
+                            <div class="card-header bg-danger ">
+                                <span><i class="bi bi-5-circle-fill text-bg-danger fs-3"></i></span>
+                                <span><i class="bi bi-0-circle-fill text-bg-danger fs-3"></i></span>
+                                <span><i class="bi bi-0-circle-fill text-bg-danger fs-3"></i></span> 
+                            </div>
                             <div class="card-body">
-                                <div class="card-title">
-                                    <span><i class="bi bi-5-circle-fill text-danger display-5"></i></span>
-                                    <span><i class="bi bi-0-circle-fill text-danger display-5"></i></span>
-                                    <span><i class="bi bi-0-circle-fill text-danger display-5"></i></span>                                    
-                                    <h3 class="text-danger">{% trans 'SERVER ERROR' %}</h3>
-                                </div>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">
+                                <!-- <h6 class="card-subtitle mb-2 text-body-secondary">
                                     {% trans 'aka error 500' %}
-                                </h6>
-                                <p class="card-text">
-                                    {% trans 'Sorry, our server ran into an error.' %}
+                                </h6> -->
+                                <p class="card-text text-danger">
+                                    {% trans 'Sorry, something went wrong.' %}
                                 </p>
                                 <p class="card-text text-muted small fw-light mb-4">
-                                    {% trans 'Please try again later. If this problem persists, please let us know.' %}
+                                    {% trans 'Please check the resource you requested and try again. If this problem persists for too long, please let us know.' %}
                                 </p>
                             </div>
                         </div>

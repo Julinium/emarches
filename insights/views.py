@@ -40,7 +40,7 @@ def bidders_list(request):
     if us: 
         BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
         # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-    BIDDERS_ORDERING_FIELD = '-last_win' #'bidders_count'
+    BIDDERS_ORDERING_FIELD = 'last_win' #'bidders_count'
 
     def get_req_params(req):
         allowed_keys = [
@@ -131,11 +131,11 @@ def bidders_list(request):
 
     all_bidders = Concurrent.objects.annotate(
             part_count = Count('deposits', distinct=True), 
-            wins_count = Count('deposits', filter(Q(winner=True)), distinct=True), 
-            bids_sum   = Sum('deposits__amount_b', filter(Q(amount_b__isnull=False)), distinct=True), 
-            wins_sum   = Sum('deposits__amount_w', filter(Q(winner=True)), distinct=True), 
-            last_win   = Max('deposits__date', filter(Q(winner=True))), 
-            last_part  = Max('deposits__date', filter(Q(amount_b__isnull=False))), 
+            wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
+            bids_sum   = Sum('deposits__amount_b', filter=Q(deposits__amount_b__isnull=False), distinct=True), 
+            wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True), distinct=True), 
+            last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
+            last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
         ).annotate(
             succ_rate = ExpressionWrapper(
                 F("wins_sum") * 100.0 / NullIf(F("bids_sum"), 0),

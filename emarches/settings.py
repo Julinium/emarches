@@ -70,10 +70,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    # 'nas.middleware.UserLanguageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',    
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'emarches.middleware.CustomLoggingMiddleware',
 ]
 
@@ -91,10 +90,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
 
                 'base.context_processors.portal_context',
-                
             ],
         },
     },

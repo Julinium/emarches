@@ -336,18 +336,18 @@
         <div class="accordion my-3" id="accordionSelects">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
-                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#selrctsCollapse" aria-expanded="true" aria-controls="selrctsCollapse">
+                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#selectsCollapse" aria-expanded="true" aria-controls="selectsCollapse">
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
                                 <span class="fw-light text-uppercase">{% trans "Selected Offers" %}</span>
                                 <span class="small fw-bold ps-2">{{ selects.all|length }}</span>
                             </span>
-                            <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
+                            <span class="small px-2 float-end text-end">{{ selects.all|length }}</span>
                         </div>
                     </button>
                 </h2>
-                <div id="selrctsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionSelects">
+                <div id="selectsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionSelects">
                     <div class="accordion-body p-0">
                         <div class="list-group">
                             {% for sel in selects.all %}
@@ -367,12 +367,13 @@
                                         {% if sel.opening.tender.lots_count > 1 %}
                                             <span class="fw-light small">{% trans 'Lot' %} {{ sel.lot_number }}: </span>
                                             <span class="fw-light">{{ sel.lot.estimate }}</span>
-                                            <span>+</span>
+                                        {% else %}
+                                            <span class="fw-light">{{ sel.opening.tender.estimate }}</span>
                                         {% endif %}
                                         {% if sel.amount_a != sel.amount_b %}
                                             <span class="small fw-light text-decoration-line-through">{{ sel.amount_b }}</span>
                                         {% endif %}
-                                        <span class="badge small text-bg-secondary">{{ sel.dep_offset|default:'0'|floatformat:1 }}%</span>
+                                        <span class="badge small text-bg-secondary">{% if sel.dep_offset >= 0 %}+{% endif %}{{ sel.dep_offset|default:'0'|floatformat:1 }}%</span>
                                         <span>=</span>
                                         {% if sel.winner %}
                                             <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
@@ -450,20 +451,20 @@
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#domainsCollapse" aria-expanded="true" aria-controls="domainsCollapse">
                         <span><i class="{{ bicons.domains }} me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Domains" %}</span>
-                        <span class="small fw-bold ps-2 {% if bidder.domains.all|length > 0 %}text-success{% endif %}">{{ bidder.domains.all|length }}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.domains|length > 0 %}text-success{% endif %}">{{ bidder.domains|length }}</span>
                     </button>
                 </h2>
                 <div id="domainsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionDomains">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for dom in bidder.domains.all %}
+                            {% for dom in bidder.domains %}
                                 <a class="list-group-item list-group-item-action" target="_blank"
                                    href="{% url 'portal_tender_list' %}?&q={{ dom.name }}&f=domains&exact=yes">
                                     <div class="">{{ dom.name }}</div>
                                     <div>
                                         <span class="float-end">
                                                 <span class="fw-light small">{% trans 'Bids' %}:</span>
-                                            <span class="fw-bold ms-2">{{ dom.bidders_count }}</span>
+                                            <span class="fw-bold ms-2">{{ dom.deposits_count }}</span>
                                         </span>
                                     </div>
                                 </a>
@@ -485,13 +486,13 @@
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qualifsCollapse" aria-expanded="true" aria-controls="qualifsCollapse">
                         <span><i class="{{ bicons.qualifs_ico }} me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Qualifs" %}</span>
-                        <span class="small fw-bold ps-2 {% if bidder.qualifs.all|length > 0 %}text-success{% endif %}">{{ bidder.qualifs.all|length }}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.qualifs|length > 0 %}text-success{% endif %}">{{ bidder.qualifs|length }}</span>
                     </button>
                 </h2>
                 <div id="qualifsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionQualifs">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for qua in bidder.qualifs.all %}
+                            {% for qua in bidder.qualifs %}
                                 <div class="list-group-item list-group-item-action">
                                     <div class="small">
                                         <span class="fw-bold">{{ qua.short }}. {% trans 'Class' %} {{ qua.classe }}</span>
@@ -523,13 +524,13 @@
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#licencesCollapse" aria-expanded="true" aria-controls="licencesCollapse">
                         <span><i class="{{ bicons.agrements_ico }} me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Licences" %}</span>
-                        <span class="small fw-bold ps-2 {% if bidder.licences.all|length > 0 %}text-success{% endif %}">{{ bidder.licences.all|length }}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.licences|length > 0 %}text-success{% endif %}">{{ bidder.licences|length }}</span>
                     </button>
                 </h2>
                 <div id="licencesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionLicences">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for agr in bidder.licences.all %}
+                            {% for agr in bidder.licences %}
                                 <div class="list-group-item list-group-item-action">
                                     <div class="small">
                                         <span class="fw-bold">{{ arg.short }}</span>

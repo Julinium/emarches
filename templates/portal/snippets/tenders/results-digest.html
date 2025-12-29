@@ -11,10 +11,10 @@
         </div>
         <div class="ms-3">
             {% for bidder in opening.bidders.all %}
-                <a href="{% url 'insights_bidder_details' bidder.concurrent.id %}" 
+                <a href="{% url 'insights_bidder_details' bidder.id %}" 
                     target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
                     <span><i class="bi bi-dash-lg"></i></span>
-                    <span class="me-2">{{ bidder.concurrent.name }}</span>
+                    <span class="me-2">{{ bidder.name }}</span>
                 </a>
             {% empty %}
                 <div class="list-group small">
@@ -27,7 +27,7 @@
     </div>
 
     <div id="admin-rejects">
-        {% group_lots opening.admin_rejects.all as grouped_ad_rej %}
+        {% group_lots opening.admin_rejects as grouped_ad_rej %}
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-x-octagon me-1"></i></span>
             <span class="">{% trans 'Admin Rejects' %}</span>
@@ -52,7 +52,7 @@
     </div>    
 
     <div id="admin-accepts">
-        {% group_lots opening.admin_accepts.all as grouped_ad_acc %}
+        {% group_lots opening.admin_accepts as grouped_ad_acc %}
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-fast-forward me-1"></i></span>
             <span class="">{% trans 'Admin Accepts' %}</span>
@@ -77,7 +77,7 @@
     </div>
 
     <div id="admin-reserves">
-        {% group_lots opening.admin_reserves.all as grouped_ad_res %}
+        {% group_lots opening.admin_reserves as grouped_ad_res %}
         <div class="mt-4 mb-1 small">
             <span><i class="bi bi-fast-forward-circle me-1"></i></span>
             <span class="">{% trans 'Admin Reserves' %}</span>
@@ -103,7 +103,7 @@
 
     <div id="tech-rejects">
         {% if opening.has_tech %}
-            {% group_lots opening.tech_rejects.all as grouped_te_rej %}
+            {% group_lots opening.tech_rejects as grouped_te_rej %}
             <div class="mt-4 mb-1 small">
                 <span><i class="bi bi-x-octagon me-1"></i></span>
                 <span class="">{% trans 'Tech Rejects' %}</span>
@@ -133,9 +133,9 @@
             <span><i class="{{ bicons.estimate }} me-1"></i></span>
             <span class="">{% trans 'Financial Offers' %}</span>
         </div>
-        {% if opening.selected_bids.all|length > 0 %}
+        {% if opening.selected_bids|length > 0 %}
             <div class="list-group small ms-3">
-                {% for selected_bid in opening.selected_bids.all %}
+                {% for selected_bid in opening.selected_bids %}
                     {% ifchanged selected_bid.lot_number %}
                         {% if tender.lots_count > 1 %}
                             <div class="list-group-item disabled ps-2">
@@ -171,14 +171,14 @@
     <div id="winner-bids">
         <div class="mt-4 mb-1 small">
             <span><i class="{{ bicons.winner }} me-1"></i></span>
-            {% if opening.winner_bids.all|length == 1 %}
+            {% if opening.winner_bids|length == 1 %}
                 <span class="">{% trans 'Selected Bid' %}</span>
             {% else %}
                 <span class="">{% trans 'Selected Bids' %}</span>
             {% endif %}
         </div>
         <div class="list-group small ms-3">
-            {% for winner_bid in opening.winner_bids.all %}
+            {% for winner_bid in opening.winner_bids %}
                 <div class="list-group-item list-group-item-action">
                     <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
                         <span class="fw-light">{% trans 'Lot' %}</span>
@@ -199,7 +199,7 @@
             <span class="">{% trans 'Selection Justification' %}</span>
         </div>
         <div class="list-group small ms-3">
-            {% for win_justif in opening.win_justifs.all %}
+            {% for win_justif in opening.win_justifs %}
                 <div class="list-group-item list-group-item-action">
                     <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
                         <span class="fw-light">{% trans 'Lot' %}</span>

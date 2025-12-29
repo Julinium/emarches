@@ -72,15 +72,19 @@
                                     <!-- <span>/</span>
                                     <span>{{ bidder.deposits_sum|metrify }}</span> -->
                                 </span>
-                            </div>                        
-                            <div class="mt-2 text-danger">
-                                <!-- part_count = {{ bidder.part_count }}<br>
-                                bids_count = {{ bidder.bids_count }}<br>
-                                wins_count = {{ bidder.wins_count }}<br>
-                                bids_sum = {{ bidder.bids_sum }}<br>
-                                wins_sum = {{ bidder.wins_sum }}<br>
-                                succ_rate = {{ bidder.succ_rate }}<br> -->
                             </div>
+
+                            <!-- <div class="mt-2 text-danger">
+                                part_count : {{ bidder.part_count }}<br>
+                                wins_count : {{ bidder.wins_count }}<br>
+                                bids_sum   : {{ bidder.bids_sum }}<br>
+                                wins_sum   : {{ bidder.wins_sum }}<br>
+                                last_win   : {{ bidder.last_win }}<br>
+                                last_part  : {{ bidder.last_part }}<br>
+                                succ_rate  : {{ bidder.succ_rate }}<br>
+
+                            </div> -->
+
                             <!-- {% if bidder.success_rate %}
                                 <div class="progress bg-warning p-0 m-0"
                                         style="height: 0.25rem;"
@@ -93,6 +97,7 @@
                                     </div>
                                 </div>
                             {% endif %} -->
+                            
                         </div>
                     </a>
                 {% endfor %}
