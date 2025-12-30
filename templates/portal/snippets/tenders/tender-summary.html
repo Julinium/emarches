@@ -121,7 +121,9 @@
                                                 {% endif %}
                                                 <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
                                                 {% for concurrent in opening.winners.all %}
-                                                    <span><i class="bi bi-dash-lg ms-1"></i>{{ concurrent }}</span>
+                                                    {% ifchanged concurrent %}
+                                                        <span><i class="bi bi-dash-lg ms-1"></i>{{ concurrent }}</span>
+                                                    {% endifchanged %}
                                                 {% endfor %}
                                             </span>
                                         {% else %}

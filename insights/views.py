@@ -146,19 +146,6 @@ def bidders_list(request):
     bidders, filters = filter_bidders(all_bidders, query_dict)
     query_dict['filters'] = filters
 
-# 
-    # HALF_OUTER = 125.66
-    # HALF_INNER = 87.96
-    # for b in bidders:
-    #     try:
-    #         b.win_arc = HALF_INNER * (b.wins_sum / b.bids_sum) if b.bids_sum else 0
-    #         b.par_arc = HALF_OUTER * (b.wins_count / b.part_count) if b.part_count else 0
-    #     except:
-    #         b.win_arc, b.par_arc = 0, 0
-
-# 
-
-
 
     sort = query_dict['sort']
 
@@ -205,24 +192,21 @@ def bidder_details(request, pk=None):
 
     if not bidder : return HttpResponse(status=404)
 
-    admin_rejects  = bidder.deposits.filter(admin='x')
-    admin_accepts  = bidder.deposits.filter(admin='a')
-    admin_reserves = bidder.deposits.filter(admin='r')
-    tech_rejects   = bidder.deposits.filter(reject_t=True)
-    selects        = bidder.deposits.filter(amount_b__isnull=False)
-    winners        = bidder.deposits.filter(amount_w__isnull=False)
-    particips      = bidder.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
-
+    # admin_rejects  = bidder.deposits.filter(admin='x')
+    # admin_accepts  = bidder.deposits.filter(admin='a')
+    # admin_reserves = bidder.deposits.filter(admin='r')
+    # tech_rejects   = bidder.deposits.filter(reject_t=True)
+    # selects        = bidder.deposits.filter(amount_b__isnull=False)
+    # winners        = bidder.deposits.filter(amount_w__isnull=False)
 
     context = { 
         'bidder'         : bidder,
-        'admin_rejects'  : admin_rejects,
-        'admin_accepts'  : admin_accepts,
-        'admin_reserves' : admin_reserves,
-        'tech_rejects'   : tech_rejects,
-        'selects'        : selects,
-        'winners'        : winners,
-        'particips'      : particips,
+        # 'admin_rejects'  : admin_rejects,
+        # 'admin_accepts'  : admin_accepts,
+        # 'admin_reserves' : admin_reserves,
+        # 'tech_rejects'   : tech_rejects,
+        # 'selects'        : selects,
+        # 'winners'        : winners,
     }
 
     logger = logging.getLogger('portal')

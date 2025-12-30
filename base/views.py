@@ -22,10 +22,11 @@ def home(request):
     mail_server = VPS_SERVER_MONTH
 
     today = datetime.now().date()
-    epoch_zero=today
-    epoch_zero.day=1
-    epoch_zero.month=1
-    run_days = today - epoch_zero
+    # epoch_zero=today
+    # epoch_zero.day=1
+    # epoch_zero.month=1
+    epoch_zero = datetime(today.year, 1, 1)
+    run_days = today - epoch_zero.date()
     
 
     period_name = today.strftime('%Y')

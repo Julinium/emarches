@@ -655,6 +655,7 @@ def mergeResults(digest):
             helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Found existing Concurrent { name }")
 
         for lot in tender_lots:
+            found_depots = 0
             lot_obj = tender.lots.filter(number=lot).first()
             lot_est = lot_obj.estimate if lot_obj else None
             lot = str(lot)
@@ -668,55 +669,63 @@ def mergeResults(digest):
             winner = None
             dep_offset = None
                         
-            if next((item for item in accepts_admin if item.get("name") == name and item.get("lot") == lot), None): admin = 'a'
-            if next((item for item in reserves_admin if item.get("name") == name and item.get("lot") == lot), None): admin = 'r'
-            if next((item for item in rejects_admin if item.get("name") == name and item.get("lot") == lot), None): admin = 'x'
+            if next((item for item in accepts_admin if item.get("name") == name and item.get("lot") == lot), None): 
+                admin = 'a'
+                found_depots += 1
+            if next((item for item in reserves_admin if item.get("name") == name and item.get("lot") == lot), None): 
+                admin = 'r'
+                found_depots += 1
+            if next((item for item in rejects_admin if item.get("name") == name and item.get("lot") == lot), None): 
+                admin = 'x'
+                found_depots += 1
             
-            if next((item for item in rejects_tech if item.get("name") == name and item.get("lot") == lot), None): reject_t = True
-            
+            if next((item for item in rejects_tech if item.get("name") == name and item.get("lot") == lot), None): 
+                reject_t = True
+                found_depots += 1            
             
             winner_item = next((item for item in winners if item.get("name") == name and item.get("lot") == lot), None)
             if winner_item:
                 amount_w = helper.getAmount(winner_item.get("amount"))
                 winner = True
+                found_depots += 1
                 if lot_est and lot_est != 0:
                     win_offset = round(100 * (amount_w - lot_est) / lot_est, 3)
                 
                 justifs = digest.get('winner_justifs', [])
                 justif_item = next((item for item in justifs if item.get("lot") == lot), None)
                 if justif_item:
-                    justif = justif_item.get("justif", '?')
+                    justif = justif_item.get("justif", '')
             
             offer_item = next((item for item in fi_offers if item.get("name") == name and item.get("lot") == lot), None)
             if offer_item:
                 amount_b = helper.getAmount(offer_item.get("pre_amount"))
                 amount_a = helper.getAmount(offer_item.get("amount"))
+                found_depots += 1
                 if lot_est and lot_est != 0:
                     dep_offset = round(100 * (amount_a - lot_est) / lot_est, 3)
+            if found_depots > 0:                
+                deposit, created_d = Deposit.objects.get_or_create(
+                    opening=opening,
+                    concurrent=concurrent,
+                    lot_number=lot,
+                    defaults={
+                        'date'         : date,
+                        'amount_b'     : amount_b,
+                        'amount_a'     : amount_a,
+                        'dep_offset'   : dep_offset,
+                        'amount_w'     : amount_w,
+                        'winner'       : winner, 
+                        'win_offset'   : win_offset,
+                        'justif'       : justif,
+                        'reject_t'     : reject_t, 
+                        'admin'        : admin, 
+                    }
+                )
 
-            deposit, created_d = Deposit.objects.get_or_create(
-                opening=opening,
-                concurrent=concurrent,
-                lot_number=lot,
-                defaults={
-                    'date'         : date,
-                    'amount_b'     : amount_b,
-                    'amount_a'     : amount_a,
-                    'dep_offset'   : dep_offset,
-                    'amount_w'     : amount_w,
-                    'winner'       : winner, 
-                    'win_offset'   : win_offset,
-                    'justif'       : justif,
-                    'reject_t'     : reject_t, 
-                    'admin'        : admin, 
-                }
-            )
-
-            if created_d:
-                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Deposit instance, Lot { lot}, for { name }")
-            else:
-                helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Updated existing Deposit instance, Lot { lot}, for { name }")
-            # handled.append(name)
+                if created_d:
+                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Deposit instance, Lot { lot}, for { name }")
+                else:
+                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Updated existing Deposit instance, Lot { lot}, for { name }")
       
     return 0
 

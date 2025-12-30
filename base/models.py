@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from django.db.models import Sum, Count, Max, Min, Q
+from django.db.models import Sum, Count, Max, Min, F, Q
 
 from .texter import normalize_text as nt
 
@@ -578,9 +578,36 @@ class Concurrent(models.Model):
     def winners_sum(self): 
         return self.deposits.aggregate(total=Sum('amount_w'))['total'] or 0
 
+    # admin_rejects  = bidder.deposits.filter(admin='x')
+    # admin_accepts  = bidder.deposits.filter(admin='a')
+    # admin_reserves = bidder.deposits.filter(admin='r')
+    # tech_rejects   = bidder.deposits.filter(reject_t=True)
+    # selects        = bidder.deposits.filter(amount_b__isnull=False) ##########
+    # winners        = bidder.deposits.filter(amount_w__isnull=False) ##########
+
+    @property
+    def admin_rejects(self):
+        return self.deposits.filter(admin='x')
+
+    @property
+    def admin_accepts(self):
+        return self.deposits.filter(admin='a')
+
+    @property
+    def admin_reserves(self):
+        return self.deposits.filter(admin='r')
+
+    @property
+    def tech_rejects(self):
+        return self.deposits.filter(reject_t=True)
+
     @property
     def selects(self):
-        return self.deposits.filter(amount_b__isnull=False)        
+        return self.deposits.filter(amount_b__isnull=False)    
+
+    @property
+    def winners(self): 
+        return self.deposits.filter(amount_w__isnull=False)    
 
     @property
     def selects_count(self):
@@ -616,6 +643,10 @@ class Concurrent(models.Model):
     def success_rate(self):
         if self.deposits_sum == 0 : return None
         return round(100 * self.winners_sum / self.deposits_sum, 1)
+
+    @property
+    def tenders(self): 
+        return self.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
 
     @property
     def domains(self):
@@ -666,6 +697,7 @@ class Concurrent(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
 
 
 class Opening(models.Model):

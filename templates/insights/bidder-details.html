@@ -1,21 +1,19 @@
 {% extends 'base/base.html' %}
-{% load i18n l10n static %}
-{% load humanize %}
-{% load tz %}
+{% load i18n l10n static humanize groupify tz %}
 
 {% block title %}
     {% trans "Concurrent details" %}: {{ bidder.name }}
 {% endblock title %}
 
 {% block content %}
-    <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 
-        <div class="mb-3">
-            <span class="h3">{% trans "Concurrent details" %}</span>
-        </div>
-        <div class="card bg-secondary-subtle shadow shadow-sm">
-            <div class="px-2 py-1 fs-5 fw-bold">{{ bidder.name }}</div>
-        </div>
+    <div class="mb-3">
+        <span class="h3">{% trans "Concurrent details" %}</span>
+    </div>
+    <div class="card bg-secondary-subtle shadow shadow-sm">
+        <div class="px-2 py-1 fs-5 fw-bold">{{ bidder.name }}</div>
+    </div>
+
 
     <div class="my-3" id="bidder-details">
 
@@ -56,7 +54,7 @@
             </div>
             
 
-            {% if winners.all|length > 2 %}
+            {% if bidder.winners.all|length > 2 %}
                 <div class="col-12 col-md-6"
                     data-bs-toggle="tooltip"
                     title="{% trans 'Wins range' %}: {{ bidder.lowest_win }} - {{ bidder.highest_win }}">
@@ -103,17 +101,14 @@
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#depositsCollapse" aria-expanded="true" aria-controls="depositsCollapse">
                         <span><i class="bi bi-building-up me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Tenders" %}</span>
-                        <span class="small fw-bold ps-2">{{ particips.all|length }}</span>
+                        <span class="small fw-bold ps-2">{{ bidder.tenders.all|length }}</span>
                     </button>
                 </h2>
                 <div id="depositsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionBidders">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for bid in particips.all %}
-                                {% ifchanged bid.tender %}
-                                    {{ bid.tender.chrono }}
-                                {% endifchanged %}
-                                    <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for bid in bidder.tenders.all %}
+                                    <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                         href="{% url 'portal_tender_detail' bid.opening.tender.id %}#resultsBookmark">
                                         <div>
                                             <span class="fw-bold small">{{ bid.opening.date }}</span>
@@ -145,19 +140,19 @@
                         <span><i class="bi bi-x-octagon me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Admin Rejects" %}</span>
                         <span class="small fw-bold ps-2 
-                                    {% if admin_rejects.all|length > 0 %}
+                                    {% if bidder.admin_rejects.all|length > 0 %}
                                         text-danger
                                     {% endif %}
                                     ">
-                            {{ admin_rejects.all|length }}
+                            {{ bidder.admin_rejects.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="adminRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminRejects">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for admin_reject in admin_rejects.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for admin_reject in bidder.admin_rejects.all %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                     href="{% url 'portal_tender_detail' admin_reject.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged admin_reject.opening.tender %}
                                         <div class="fw-light small">{{ admin_reject.opening.date }}</div>
@@ -197,15 +192,15 @@
                         <span><i class="bi bi-fast-forward me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Admin Accepts" %}</span>
                         <span class="small fw-bold ps-2">
-                            {{ admin_accepts.all|length }}
+                            {{ bidder.admin_accepts.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="adminAcceptsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminAccepts">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for admin_accept in admin_accepts.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for admin_accept in bidder.admin_accepts.all %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                     href="{% url 'portal_tender_detail' admin_accept.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged admin_accept.opening.tender %}
                                         <div class="fw-light small">{{ admin_accept.opening.date }}</div>
@@ -237,6 +232,32 @@
         </div>
 
 
+        <!-- <div id="admin-accepts" class="text-danger fw-bold">
+            {% group_lots bidder.admin_accepts as grouped_ad_acc %}
+            <div class="mt-4 mb-1 small">
+                <span><i class="bi bi-fast-forward me-1"></i></span>
+                <span class="">{% trans 'Admin Accepts' %}</span>
+            </div>
+            <div class="list-group small ms-3">
+                {% for concurrent, lots in grouped_ad_acc.items %}
+                    <div class="list-group-item list-group-item-action">
+                        <span>{{ concurrent }}</span>
+                        <span class="float-end ms-2 {% if tender.lots_count < 2 %} d-none{% endif%}">
+                            <span class="fw-light">{% trans 'Lots' %}: </span> 
+                            <span>
+                                {% for lot in lots %}
+                                    {{ lot }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </span>
+                        </span>
+                    </div>
+                {% empty %}
+                <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+                {% endfor %}
+            </div>
+        </div> -->
+
+
         <div class="accordion my-3" id="accordionAdminReserves">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
@@ -244,15 +265,15 @@
                         <span><i class="bi bi-fast-forward-circle me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Admin Reserves" %}</span>
                         <span class="small fw-bold ps-2">
-                            {{ admin_reserves.all|length }}
+                            {{ bidder.admin_reserves.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="adminReservesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminReserves">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for admin_reserve in admin_reserves.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for admin_reserve in bidder.admin_reserves.all %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                     href="{% url 'portal_tender_detail' admin_reserve.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged admin_reserve.opening.tender %}
                                         <div class="fw-light small">{{ admin_reserve.opening.date }}</div>
@@ -291,19 +312,19 @@
                         <span><i class="bi bi-x-octagon me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Tech Rejects" %}</span>
                         <span class="small fw-bold ps-2 
-                                    {% if tech_rejects.all|length > 0 %}
+                                    {% if bidder.tech_rejects.all|length > 0 %}
                                         text-danger
                                     {% endif %}
                                     ">
-                            {{ tech_rejects.all|length }}
+                            {{ bidder.tech_rejects.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="techRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTechRejects">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for tech_reject in tech_rejects.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for tech_reject in bidder.tech_rejects.all %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                     href="{% url 'portal_tender_detail' tech_reject.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged tech_reject.opening.tender %}
                                         <div class="fw-light small">{{ tech_reject.opening.date }}</div>
@@ -344,7 +365,7 @@
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
                                 <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
-                                <span class="small fw-bold ps-2">{{ selects.all|length }}</span>
+                                <span class="small fw-bold ps-2">{{ bidder.selects.all|length }}</span>
                             </span>
                             <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
                         </div>
@@ -353,8 +374,8 @@
                 <div id="selectsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionSelects">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for sel in selects.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for sel in bidder.selects.all %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                     href="{% url 'portal_tender_detail' sel.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged sel.opening.tender %}
                                         <div class="fw-light small">{{ sel.opening.date }}</div>
@@ -404,7 +425,7 @@
                             <span>
                                 <span><i class="{{ bicons.winner }} text-success me-1"></i></span>
                                 <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
-                                <span class="small fw-bold ps-2 {% if winners.all|length > 0 %}text-success{% endif %}">{{ winners.all|length }}</span>                                
+                                <span class="small fw-bold ps-2 {% if bidder.winners.all|length > 0 %}text-success{% endif %}">{{ bidder.winners.all|length }}</span>                                
                             </span>
                             <span class="small fw-bold px-2 float-end text-end">{{ bidder.winners_sum }}</span>
                         </div>
@@ -413,8 +434,8 @@
                 <div id="winsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionWins">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for win in winners.all %}
-                                <a class="list-group-item list-group-item-action" target="_blank" 
+                            {% for win in bidder.winners.all %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                     href="{% url 'portal_tender_detail' win.opening.tender.id %}#resultsBookmark">
                                     {% ifchanged win.opening.tender %}
                                         <div class="fw-light small">{{ win.opening.date }}</div>
@@ -433,11 +454,11 @@
                                         </div>
                                     {% endifchanged %}
                                     <div>
-                                        <span class="float-end">
+                                        <span class="float-end small">
                                             {% if win.opening.tender.lots_count > 1 %}
                                                 <span class="fw-light small">{% trans 'Lot' %} {{ win.lot_number }}:</span>
                                             {% endif %}
-                                            <span class="fw-bold ms-2">{{ win.amount_w }}</span>
+                                            <span class="fw-bold">{{ win.amount_w }}</span>
                                         </span>
                                         
                                     </div>
@@ -467,13 +488,13 @@
                     <div class="accordion-body p-0">
                         <div class="list-group">
                             {% for dom in bidder.domains %}
-                                <a class="list-group-item list-group-item-action" target="_blank"
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank"
                                    href="{% url 'portal_tender_list' %}?&q={{ dom.name }}&f=domains&exact=yes">
                                     <div class="">{{ dom.name }}</div>
                                     <div>
                                         <span class="float-end small">
                                                 <span class="fw-light small">{% trans 'Bids' %}:</span>
-                                            <span class="fw-bold ms-2">{{ dom.deposits_count }}</span>
+                                            <span class="fw-bold">{{ dom.deposits_count }}</span>
                                         </span>
                                     </div>
                                 </a>
@@ -511,7 +532,7 @@
                                     <div>
                                         <span class="float-end small">
                                             <span class="fw-light small">{% trans 'Bids' %}:</span>
-                                            <span class="fw-bold ms-2">{{ qua.deposits_count }}</span>
+                                            <span class="fw-bold">{{ qua.deposits_count }}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -539,17 +560,17 @@
                 <div id="licencesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionLicences">
                     <div class="accordion-body p-0">
                         <div class="list-group">
-                            {% for agr in bidder.licences %}
+                            {% for lic in bidder.licences %}
                                 <div class="list-group-item list-group-item-action">
                                     <div class="small">
-                                        <span class="fw-bold">{{ arg.short }}</span>
+                                        <span class="fw-bold">{{ lic.short }}</span>
                                         <span>:</span>
-                                        <span>{{ arg.name }}</span>
+                                        <span>{{ lic.name }}</span>
                                     </div>
                                     <div>
                                         <span class="float-end">
                                                 <span class="fw-light small">{% trans 'Bids' %}:</span>
-                                            <span class="fw-bold ms-2">{{ agr.deposits_count }}</span>
+                                            <span class="fw-bold">{{ lic.deposits_count }}</span>
                                         </span>
                                     </div>
                                 </div>

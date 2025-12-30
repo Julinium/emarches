@@ -197,10 +197,12 @@
         <div class="list-group small ms-3">
             {% for win_justif in opening.win_justifs %}
                 <div class="list-group-item list-group-item-action">
-                    <span class="{% if tender.lots_count < 2 %} text-danger{% endif%}">
-                        <span class="fw-light">{% trans 'Lot' %}</span>
-                        <span class="">{{ win_justif.lot_number }}:</span>
-                    </span>
+                    {% if tender.lots_count < 2 %}
+                        <span class="">
+                            <span class="fw-light">{% trans 'Lot' %}</span>
+                            <span class="">{{ win_justif.lot_number }}:</span>
+                        </span>
+                    {% endif%}
                     <span class="">{{ win_justif.justif }}</span>
                 </div>
             {% empty %}
