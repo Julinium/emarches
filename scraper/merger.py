@@ -633,7 +633,7 @@ def mergeResults(digest):
 
 
     fi_offers = digest.get('financial_offers', [])
-    justifs = digest.get('winner_justifs', [])
+    # justifs = digest.get('winner_justifs', [])
     rejects_tech = digest.get('rejected_dt', [])
     rejects_admin = digest.get('rejected_da', [])
     reserves_admin = digest.get('reserved_da', [])
@@ -674,9 +674,6 @@ def mergeResults(digest):
             
             if next((item for item in rejects_tech if item.get("name") == name and item.get("lot") == lot), None): reject_t = True
             
-            justif_item = next((item for item in justifs if item.get("name") == name and item.get("lot") == lot), None)
-            if justif_item:
-                justif = justif_item.get("justif", '?')
             
             winner_item = next((item for item in winners if item.get("name") == name and item.get("lot") == lot), None)
             if winner_item:
@@ -684,6 +681,11 @@ def mergeResults(digest):
                 winner = True
                 if lot_est and lot_est != 0:
                     win_offset = round(100 * (amount_w - lot_est) / lot_est, 3)
+                
+                justifs = digest.get('winner_justifs', [])
+                justif_item = next((item for item in justifs if item.get("lot") == lot), None)
+                if justif_item:
+                    justif = justif_item.get("justif", '?')
             
             offer_item = next((item for item in fi_offers if item.get("name") == name and item.get("lot") == lot), None)
             if offer_item:

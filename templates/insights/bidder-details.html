@@ -343,10 +343,10 @@
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
-                                <span class="fw-light text-uppercase">{% trans "Selected Offers" %}</span>
+                                <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
                                 <span class="small fw-bold ps-2">{{ selects.all|length }}</span>
                             </span>
-                            <span class="small px-2 float-end text-end">{{ selects.all|length }}</span>
+                            <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
                         </div>
                     </button>
                 </h2>
@@ -403,7 +403,7 @@
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.winner }} text-success me-1"></i></span>
-                                <span class="fw-bold text-uppercase">{% trans "Winners" %}</span>
+                                <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
                                 <span class="small fw-bold ps-2 {% if winners.all|length > 0 %}text-success{% endif %}">{{ winners.all|length }}</span>                                
                             </span>
                             <span class="small fw-bold px-2 float-end text-end">{{ bidder.winners_sum }}</span>
@@ -422,6 +422,12 @@
                                             <span class="small me-1"><i class="{{ win.opening.tender.category.icon_bs_class }}"></i></span>
                                             {% if win.opening.tender.lots_count > 1 %}
                                                 <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                            {% endif %}
+                                            {% if win.opening.tender.has_qualifs %}
+                                                <span class="small me-1"><i class="{{ bicons.qualifs_ico }}"></i></span>
+                                            {% endif %}
+                                            {% if win.opening.tender.has_agrements %}
+                                                <span class="small me-1"><i class="{{ bicons.agrements_ico }}"></i></span>
                                             {% endif %}
                                             <span class="">{{ win.opening.tender.title }}</span>
                                         </div>

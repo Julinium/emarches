@@ -763,10 +763,15 @@ class Deposit(models.Model):
     win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
     dep_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
+    @property
+    def lot(self):
+        return self.opening.tender.lots.filter(number=self.lot_number).first()
+
     class Meta:
         db_table = 'base_deposit'
         ordering = ['opening', 'lot_number', 'amount_a']
 
+    
     # get_lot
         # get_estimate
         # get_bond

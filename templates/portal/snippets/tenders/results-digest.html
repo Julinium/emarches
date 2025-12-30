@@ -148,15 +148,15 @@
                     <div class="list-group-item list-group-item-action">
                         <span class="">{{ selected_bid.concurrent.name }} </span>
                         <span class="float-end ms-2">
-                            {% if selected_bid.amount_after != selected_bid.amount_before %}
-                                <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_before }}</span>
+                            {% if selected_bid.amount_a != selected_bid.amount_b %}
+                                <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
                             {% endif %}
-                            <span class="badge small text-bg-secondary">{{ selected_bid.offset|default:'0'|floatformat:1 }}%</span>
+                            <span class="badge small text-bg-secondary">{% if selected_bid.dep_offset >= 0 %}+{% endif %}{{ selected_bid.dep_offset|default:'0'|floatformat:1 }}%</span>
                             <span>=</span>
-                            {% if selected_bid.is_winner %}
+                            {% if selected_bid.winner %}
                                 <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
                             {% endif %}
-                            <span class="{% if selected_bid.is_winner %}text-success{% endif %}">{{ selected_bid.amount_after }}</span>
+                            <span class="{% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
                         </span>
                     </div>
                 {% endfor %}
@@ -171,11 +171,7 @@
     <div id="winner-bids">
         <div class="mt-4 mb-1 small">
             <span><i class="{{ bicons.winner }} me-1"></i></span>
-            {% if opening.winner_bids|length == 1 %}
-                <span class="">{% trans 'Selected Bid' %}</span>
-            {% else %}
-                <span class="">{% trans 'Selected Bids' %}</span>
-            {% endif %}
+            <span class="">{% trans 'Awards' %}</span>
         </div>
         <div class="list-group small ms-3">
             {% for winner_bid in opening.winner_bids %}
@@ -185,7 +181,7 @@
                         <span class="">{{ winner_bid.lot_number }}:</span>
                     </span>
                     <span class="text-success fw-bold">{{ winner_bid.concurrent.name }}</span>
-                    <span class="float-end ms-2 fw-bold">{{ winner_bid.amount }}</span>
+                    <span class="float-end ms-2 fw-bold">{{ winner_bid.amount_w }}</span>
                 </div>
             {% empty %}
             <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
@@ -201,7 +197,7 @@
         <div class="list-group small ms-3">
             {% for win_justif in opening.win_justifs %}
                 <div class="list-group-item list-group-item-action">
-                    <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
+                    <span class="{% if tender.lots_count < 2 %} text-danger{% endif%}">
                         <span class="fw-light">{% trans 'Lot' %}</span>
                         <span class="">{{ win_justif.lot_number }}:</span>
                     </span>
@@ -216,7 +212,7 @@
     <div id="meta-info">
         <div class="row gx-3 gy-1 mt-2 small">
             {% trans 'Date Finished' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'0' val_value=opening.date_end key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'0' val_value=opening.date key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
             {% trans 'Unsuccessful declaration' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'1' val_value=opening.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
         </div>
