@@ -446,12 +446,14 @@
             </div>
         </div>
     {% endif %}
-
-    <div class="my-3" id="tender-actions" >
-        <div class="text-center">
-            {% include 'portal/snippets/tenders/tender-actions.html' %}
+    
+    {% with 'bottom' as position %}
+        <div class="my-3" id="tender-actions" >
+            <div class="text-center">
+                {% include 'portal/snippets/tenders/tender-actions.html' %}
+            </div>
         </div>
-    </div>
+    {% endwith %}
 
 
     <div id="tender-modals">

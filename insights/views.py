@@ -13,12 +13,10 @@ from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
 
-from base.models import Concurrent, Tender
+from base.models import Concurrent
 
 
 BIDDERS_ITEMS_PER_PAGE = 25
-# SHOW_TODAYS_EXPIRED = True
-# SHOW_CANCELLED = True
 
 
 @login_required(login_url="account_login")
@@ -39,7 +37,6 @@ def bidders_list(request):
     us = pro_context['user_settings']
     if us: 
         BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-        # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
     BIDDERS_ORDERING_FIELD = 'last_win' #'bidders_count'
 
     def get_req_params(req):
@@ -132,8 +129,8 @@ def bidders_list(request):
     all_bidders = Concurrent.objects.annotate(
             part_count = Count('deposits', distinct=True), 
             wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
-            bids_sum   = Sum('deposits__amount_b', filter=Q(deposits__amount_b__isnull=False), distinct=True), 
-            wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True), distinct=True), 
+            bids_sum   = Sum('deposits__amount_b', filter=Q(deposits__amount_b__isnull=False)), 
+            wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True)), 
             last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
             last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
         ).annotate(
@@ -142,6 +139,7 @@ def bidders_list(request):
                 output_field=FloatField(),
             )
         )
+
 
     bidders, filters = filter_bidders(all_bidders, query_dict)
     query_dict['filters'] = filters
@@ -192,21 +190,8 @@ def bidder_details(request, pk=None):
 
     if not bidder : return HttpResponse(status=404)
 
-    # admin_rejects  = bidder.deposits.filter(admin='x')
-    # admin_accepts  = bidder.deposits.filter(admin='a')
-    # admin_reserves = bidder.deposits.filter(admin='r')
-    # tech_rejects   = bidder.deposits.filter(reject_t=True)
-    # selects        = bidder.deposits.filter(amount_b__isnull=False)
-    # winners        = bidder.deposits.filter(amount_w__isnull=False)
-
     context = { 
         'bidder'         : bidder,
-        # 'admin_rejects'  : admin_rejects,
-        # 'admin_accepts'  : admin_accepts,
-        # 'admin_reserves' : admin_reserves,
-        # 'tech_rejects'   : tech_rejects,
-        # 'selects'        : selects,
-        # 'winners'        : winners,
     }
 
     logger = logging.getLogger('portal')

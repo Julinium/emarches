@@ -60,12 +60,14 @@
         {% endif %}
     {% endif %}
     
-
-    {% if tender.openings.all|length > 0 %}
-        <a class="btn btn-outline-success" href="#resultsBookmark">
-            <span><i class="{{ bicons.deliberated }}"></i></span>
-            <span class="d-none d-md-inline ms-1">{% trans 'Results' %}</span>
-        </a>
+    
+    {% if position != 'bottom' %}
+        {% if tender.openings.all|length > 0 %}
+            <a class="btn btn-outline-success" href="#resultsBookmark">
+                <span><i class="{{ bicons.deliberated }}"></i></span>
+                <span class="d-none d-md-inline ms-1">{% trans 'Results' %}</span>
+            </a>
+        {% endif %}
     {% endif %}
 
         

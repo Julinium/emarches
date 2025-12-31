@@ -64,7 +64,7 @@ def getJson(link_item, skipExisting=False):
                 helper.printMessage('WARN', 'g.getJson', f'Too many Requests, said the server: {dce_head.status_code} !')
                 helper.sleepRandom(300, 600)
     except Exception as x:
-        helper.printMessage('WARN', 'g.getJson', f'Exception raised while getting file size at {str(dce_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
+        helper.printMessage('WARN', 'g.getJson', f'Exception getting file size at {str(dce_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         # return None
 
     try: 
@@ -93,7 +93,7 @@ def getJson(link_item, skipExisting=False):
 
         request_cons = sessiono.get(cons_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
     except Exception as x:
-        helper.printMessage('ERROR', 'g.getJson', f'Exception raised while getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
+        helper.printMessage('ERROR', 'g.getJson', f'Exception getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         return None
     helper.printMessage('DEBUG', 'g.getJson', f'Getting Tender page : {request_cons}')
     if request_cons.status_code != 200 :
@@ -359,7 +359,7 @@ def getLots(lots_href):
 
     try: request_lots = sessiono.get(lots_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
     except Exception as x:
-        helper.printMessage('ERROR', 'g.getLots', f'Exception raised while getting lots at {str(lots_link)}: {str(x)}')
+        helper.printMessage('ERROR', 'g.getLots', f'Exception getting lots at {str(lots_link)}: {str(x)}')
         return None
     helper.printMessage('DEBUG', 'g.getLots', f'Getting Lots page : {request_lots}')
     if request_lots.status_code != 200 :
@@ -553,8 +553,7 @@ def getMinutes(chro='', acro=''):
     qs_acro = "orgAcronyme"
     digest_link = f"{C.SITE_INDEX}?{qs_chro}={chro}&{ qs_acro }={acro}"
 
-    helper.printMessage('DEBUG', 'g.getMinutes', f'Digest link: {digest_link.replace(C.SITE_INDEX, '[...]')}.')
-    # print(digest_link)
+    helper.printMessage('DEBUG', 'g.getMinutes', f'Made digest link for {chro}&{acro}.')
 
     rua = helper.getUa()
     rua_label = "Random"
@@ -575,7 +574,7 @@ def getMinutes(chro='', acro=''):
     try:
         request_digest = sessiono.get(digest_link, headers=headino, timeout=C.REQ_TIMEOUT)
     except Exception as x:
-        helper.printMessage('ERROR', 'g.getMinutes', f'Exception raised while getting Digest at {str(digest_link.replace(C.SITE_INDEX, '[...]'))}: { x }')
+        helper.printMessage('ERROR', 'g.getMinutes', f'Exception getting Digest at {str(digest_link.replace(C.SITE_INDEX, '[...]'))}: { x }')
         return None
     if request_digest.status_code != 200 :
         helper.printMessage('ERROR', 'g.getMinutes', f'Request to Digest page returned a {request_digest.status_code} status code.')

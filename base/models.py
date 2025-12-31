@@ -576,14 +576,7 @@ class Concurrent(models.Model):
 
     @property
     def winners_sum(self): 
-        return self.deposits.aggregate(total=Sum('amount_w'))['total'] or 0
-
-    # admin_rejects  = bidder.deposits.filter(admin='x')
-    # admin_accepts  = bidder.deposits.filter(admin='a')
-    # admin_reserves = bidder.deposits.filter(admin='r')
-    # tech_rejects   = bidder.deposits.filter(reject_t=True)
-    # selects        = bidder.deposits.filter(amount_b__isnull=False) ##########
-    # winners        = bidder.deposits.filter(amount_w__isnull=False) ##########
+        return self.deposits.aggregate(total=Sum('amount_w', filter=Q(winner=True)))['total'] or 0
 
     @property
     def admin_rejects(self):
@@ -646,7 +639,8 @@ class Concurrent(models.Model):
 
     @property
     def tenders(self): 
-        return self.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
+        benders = self.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
+        return benders #.order_by('-date')
 
     @property
     def domains(self):

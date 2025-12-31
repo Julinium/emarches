@@ -31,7 +31,7 @@ def main():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'worker', f"Working on item { i }/{ count } = {tender.chrono}&{tender.acronym}")
+            helper.printMessage('INFO', 'worker', f"Working on item { i }/{ count } = {tender.chrono}&{tender.acronym}",2)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
                 helper.printMessage('INFO', 'worker', f"\tMinutes found for item { i }/{ count }")

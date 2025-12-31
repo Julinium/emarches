@@ -95,29 +95,37 @@
         </div>
 
 
-        <div class="accordion my-3" id="accordionBidders">
+        <div class="accordion my-3" id="accordionTenders">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
-                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#depositsCollapse" aria-expanded="true" aria-controls="depositsCollapse">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tendersCollapse" aria-expanded="true" aria-controls="tendersCollapse">
                         <span><i class="bi bi-building-up me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Tenders" %}</span>
                         <span class="small fw-bold ps-2">{{ bidder.tenders.all|length }}</span>
                     </button>
                 </h2>
-                <div id="depositsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionBidders">
+                <div id="tendersCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTenders">
                     <div class="accordion-body p-0">
                         <div class="list-group">
                             {% for bid in bidder.tenders.all %}
                                     <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
                                         href="{% url 'portal_tender_detail' bid.opening.tender.id %}#resultsBookmark">
                                         <div>
-                                            <span class="fw-bold small">{{ bid.opening.date }}</span>
+                                            <span class="small">{{ bid.opening.date }}</span>
+                                            <span class="small">
+                                                <i class="bi bi-three-dots-vertical mx-1"></i>
+                                                {% if bid.opening.tender.lots_count > 1 %}
+                                                    <span class="small me-1">
+                                                        <span>{{ bid.opening.tender.lots_count }}</span>
+                                                        <i class="{{ bicons.multi_lots }}"></i>
+                                                    </span>
+                                                    <i class="bi bi-three-dots-vertical mx-1"></i>
+                                                {% endif %}
+                                                <span class="fw-bold">{{ bid.opening.tender.estimate|metrify }}</span>
+                                            </span>
                                         </div>
                                         <div class="twolines">
                                             <span class="small me-1"><i class="{{ bid.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if bid.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
                                             <span class="">{{ bid.opening.tender.title }}</span>
                                         </div>
                                     </a>
@@ -150,27 +158,30 @@
                 </h2>
                 <div id="adminRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminRejects">
                     <div class="accordion-body p-0">
+                        {% group_tenders bidder.admin_rejects as grouped_ad_rej %}
                         <div class="list-group">
-                            {% for admin_reject in bidder.admin_rejects.all %}
+                            {% for opening, lots in grouped_ad_rej.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' admin_reject.opening.tender.id %}#resultsBookmark">
-                                    {% ifchanged admin_reject.opening.tender %}
-                                        <div class="fw-light small">{{ admin_reject.opening.date }}</div>
-                                        <div class="twolines">
-                                            <span class="small me-1"><i class="{{ admin_reject.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if admin_reject.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
-                                            <span class="">{{ admin_reject.opening.tender.title }}</span>
-                                        </div>
-                                    {% endifchanged %}
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
                                     <div>
-                                        <span class="float-end">
-                                            {% if admin_reject.opening.tender.lots_count > 1 %}
-                                                <span class="fw-light small">{% trans 'Lot' %} {{ admin_reject.lot_number }}</span>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
                                             {% endif %}
                                         </span>
-                                        
                                     </div>
                                 </a>
                             {% empty %}
@@ -179,6 +190,7 @@
                                 </div>
                             {% endfor %}
                         </div>
+
                     </div> 
                 </div> 
             </div>
@@ -198,24 +210,28 @@
                 </h2>
                 <div id="adminAcceptsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminAccepts">
                     <div class="accordion-body p-0">
+                        {% group_tenders bidder.admin_accepts as grouped_ad_acc %}
                         <div class="list-group">
-                            {% for admin_accept in bidder.admin_accepts.all %}
+                            {% for opening, lots in grouped_ad_acc.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' admin_accept.opening.tender.id %}#resultsBookmark">
-                                    {% ifchanged admin_accept.opening.tender %}
-                                        <div class="fw-light small">{{ admin_accept.opening.date }}</div>
-                                        <div class="twolines">
-                                            <span class="small me-1"><i class="{{ admin_accept.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if admin_accept.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
-                                            <span class="">{{ admin_accept.opening.tender.title }}</span>
-                                        </div>
-                                    {% endifchanged %}
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
                                     <div>
-                                        <span class="float-end">
-                                            {% if admin_accept.opening.tender.lots_count > 1 %}
-                                                <span class="fw-light small">{% trans 'Lot' %} {{ admin_accept.lot_number }}</span>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
                                             {% endif %}
                                         </span>
                                     </div>
@@ -226,36 +242,11 @@
                                 </div>
                             {% endfor %}
                         </div>
+
                     </div> 
                 </div> 
             </div>
         </div>
-
-
-        <!-- <div id="admin-accepts" class="text-danger fw-bold">
-            {% group_lots bidder.admin_accepts as grouped_ad_acc %}
-            <div class="mt-4 mb-1 small">
-                <span><i class="bi bi-fast-forward me-1"></i></span>
-                <span class="">{% trans 'Admin Accepts' %}</span>
-            </div>
-            <div class="list-group small ms-3">
-                {% for concurrent, lots in grouped_ad_acc.items %}
-                    <div class="list-group-item list-group-item-action">
-                        <span>{{ concurrent }}</span>
-                        <span class="float-end ms-2 {% if tender.lots_count < 2 %} d-none{% endif%}">
-                            <span class="fw-light">{% trans 'Lots' %}: </span> 
-                            <span>
-                                {% for lot in lots %}
-                                    {{ lot }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </span>
-                        </span>
-                    </div>
-                {% empty %}
-                <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-                {% endfor %}
-            </div>
-        </div> -->
 
 
         <div class="accordion my-3" id="accordionAdminReserves">
@@ -271,24 +262,28 @@
                 </h2>
                 <div id="adminReservesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminReserves">
                     <div class="accordion-body p-0">
+                        {% group_tenders bidder.admin_reserves as grouped_ad_res %}
                         <div class="list-group">
-                            {% for admin_reserve in bidder.admin_reserves.all %}
+                            {% for opening, lots in grouped_ad_res.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' admin_reserve.opening.tender.id %}#resultsBookmark">
-                                    {% ifchanged admin_reserve.opening.tender %}
-                                        <div class="fw-light small">{{ admin_reserve.opening.date }}</div>
-                                        <div class="twolines">
-                                            <span class="small me-1"><i class="{{ admin_reserve.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if admin_reserve.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
-                                            <span class="">{{ admin_reserve.opening.tender.title }}</span>
-                                        </div>
-                                    {% endifchanged %}
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
                                     <div>
-                                        <span class="float-end">
-                                            {% if admin_reserve.opening.tender.lots_count > 1 %}
-                                                <span class="fw-light small">{% trans 'Lot' %} {{ admin_reserve.lot_number }}</span>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
                                             {% endif %}
                                         </span>
                                     </div>
@@ -299,6 +294,7 @@
                                 </div>
                             {% endfor %}
                         </div>
+
                     </div> 
                 </div> 
             </div>
@@ -322,27 +318,30 @@
                 </h2>
                 <div id="techRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTechRejects">
                     <div class="accordion-body p-0">
+                        {% group_tenders bidder.tech_rejects as grouped_tech_rej %}
                         <div class="list-group">
-                            {% for tech_reject in bidder.tech_rejects.all %}
+                            {% for opening, lots in grouped_tech_rej.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' tech_reject.opening.tender.id %}#resultsBookmark">
-                                    {% ifchanged tech_reject.opening.tender %}
-                                        <div class="fw-light small">{{ tech_reject.opening.date }}</div>
-                                        <div class="twolines">
-                                            <span class="small me-1"><i class="{{ tech_reject.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if tech_reject.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
-                                            <span class="">{{ tech_reject.opening.tender.title }}</span>
-                                        </div>
-                                    {% endifchanged %}
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
                                     <div>
-                                        <span class="float-end">
-                                            {% if tech_reject.opening.tender.lots_count > 1 %}
-                                                <span class="fw-light small">{% trans 'Lot' %} {{ tech_reject.lot_number }}</span>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
                                             {% endif %}
                                         </span>
-                                        
                                     </div>
                                 </a>
                             {% empty %}
@@ -351,59 +350,65 @@
                                 </div>
                             {% endfor %}
                         </div>
+
                     </div> 
                 </div> 
             </div>
         </div>
 
 
-        <div class="accordion my-3" id="accordionSelects">
+        <div class="accordion my-3" id="accordionFinancials">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
-                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#selectsCollapse" aria-expanded="true" aria-controls="selectsCollapse">
+                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#financialsCollapse" aria-expanded="true" aria-controls="financialsCollapse">
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
                                 <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
                                 <span class="small fw-bold ps-2">{{ bidder.selects.all|length }}</span>
                             </span>
-                            <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
+                            {% if bidder.deposits_sum != 0 %}
+                                <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
+                            {% endif %}
                         </div>
                     </button>
                 </h2>
-                <div id="selectsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionSelects">
+                <div id="financialsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionFinancials">
                     <div class="accordion-body p-0">
+                        {% group_depos bidder.selects as grouped_selects %}
                         <div class="list-group">
-                            {% for sel in bidder.selects.all %}
+                            {% for opening, depos in grouped_selects.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' sel.opening.tender.id %}#resultsBookmark">
-                                    {% ifchanged sel.opening.tender %}
-                                        <div class="fw-light small">{{ sel.opening.date }}</div>
-                                        <div class="twolines">
-                                            <span class="small me-1"><i class="{{ sel.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if sel.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
-                                            <span class="">{{ sel.opening.tender.title }}</span>
-                                        </div>
-                                    {% endifchanged %}
-                                    <span class="small float-end ms-2">
-                                        {% if sel.opening.tender.lots_count > 1 %}
-                                            <span class="fw-light small">{% trans 'Lot' %} {{ sel.lot_number }}: </span>
-                                            <span class="fw-light">{{ sel.lot.estimate }}</span>
-                                        {% else %}
-                                            <span class="fw-light">{{ sel.opening.tender.estimate }}</span>
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
                                         {% endif %}
-                                        {% if sel.amount_a != sel.amount_b %}
-                                            <span class="small fw-light text-decoration-line-through">{{ sel.amount_b }}</span>
-                                        {% endif %}
-                                        <span class="badge small text-bg-secondary">{% if sel.dep_offset >= 0 %}+{% endif %}{{ sel.dep_offset|default:'0'|floatformat:1 }}%</span>
-                                        <span>=</span>
-                                        {% if sel.winner %}
-                                            <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
-                                        {% endif %}
-                                        <span class="fw-bold {% if sel.winner %}text-success{% endif %}">{{ sel.amount_a }}</span>
-                                    </span>
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div class="mt-1">
+                                        {% for depo in depos %}                                           
+                                            <div class="small text-end {% if depos|length > 1 %}py-1 border-top{% endif %}">
+                                                {% if opening.tender.lots_count > 1 %}
+                                                    <span class="fw-light small">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                                                    <span class="fw-light">{{ depo.lot.estimate|metrify }}</span>
+                                                {% else %}
+                                                    <span class="fw-light">{{ opening.tender.estimate|metrify }}</span>
+                                                {% endif %}
+                                                {% if depo.amount_a != depo.amount_b %}
+                                                    <span class="small fw-light text-decoration-line-through">{{ depo.amount_b }}</span>
+                                                {% endif %}
+                                                <span class="badge small text-bg-secondary">{% if depo.dep_offset >= 0 %}+{% endif %}{{ depo.dep_offset|default:'0'|floatformat:1 }}%</span>
+                                                <span>=</span>
+                                                {% if depo.winner %}
+                                                    <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                                                {% endif %}
+                                                <span class="fw-bold {% if depo.winner %}text-success{% endif %}">{{ depo.amount_a }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
                                 </a>
                             {% empty %}
                                 <div class="list-group-item">
@@ -411,6 +416,7 @@
                                 </div>
                             {% endfor %}
                         </div>
+
                     </div> 
                 </div> 
             </div>
@@ -420,47 +426,43 @@
         <div class="accordion my-3" id="accordionWins">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
-                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#winsCollapse" aria-expanded="true" aria-controls="winsCollapse">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#winsCollapse" aria-expanded="false" aria-controls="winsCollapse">
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.winner }} text-success me-1"></i></span>
                                 <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
                                 <span class="small fw-bold ps-2 {% if bidder.winners.all|length > 0 %}text-success{% endif %}">{{ bidder.winners.all|length }}</span>                                
                             </span>
-                            <span class="small fw-bold px-2 float-end text-end">{{ bidder.winners_sum }}</span>
+                            {% if bidder.winners_sum != 0 %}
+                                <span class="small fw-bold px-2 float-end text-end">{{ bidder.winners_sum }}</span>
+                            {% endif %}
                         </div>
                     </button>
                 </h2>
                 <div id="winsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionWins">
                     <div class="accordion-body p-0">
+                        {% group_depos bidder.winners as grouped_winners %}
                         <div class="list-group">
-                            {% for win in bidder.winners.all %}
+                            {% for opening, depos in grouped_winners.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' win.opening.tender.id %}#resultsBookmark">
-                                    {% ifchanged win.opening.tender %}
-                                        <div class="fw-light small">{{ win.opening.date }}</div>
-                                        <div class="twolines">
-                                            <span class="small me-1"><i class="{{ win.opening.tender.category.icon_bs_class }}"></i></span>
-                                            {% if win.opening.tender.lots_count > 1 %}
-                                                <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
-                                            {% endif %}
-                                            {% if win.opening.tender.has_qualifs %}
-                                                <span class="small me-1"><i class="{{ bicons.qualifs_ico }}"></i></span>
-                                            {% endif %}
-                                            {% if win.opening.tender.has_agrements %}
-                                                <span class="small me-1"><i class="{{ bicons.agrements_ico }}"></i></span>
-                                            {% endif %}
-                                            <span class="">{{ win.opening.tender.title }}</span>
-                                        </div>
-                                    {% endifchanged %}
-                                    <div>
-                                        <span class="float-end small">
-                                            {% if win.opening.tender.lots_count > 1 %}
-                                                <span class="fw-light small">{% trans 'Lot' %} {{ win.lot_number }}:</span>
-                                            {% endif %}
-                                            <span class="fw-bold">{{ win.amount_w }}</span>
-                                        </span>
-                                        
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div class="mt-1">
+                                        {% for depo in depos %}
+                                            <div class="small text-end {% if depos|length > 1 %}py-1 border-top{% endif %}">
+                                                {% if opening.tender.lots_count > 1 %}
+                                                    <span class="fw-light small">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                                                {% endif %}
+                                                <span class="fw-bold">{{ depo.amount_w }}</span>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 </a>
                             {% empty %}
@@ -469,6 +471,7 @@
                                 </div>
                             {% endfor %}
                         </div>
+
                     </div> 
                 </div> 
             </div>

@@ -105,7 +105,7 @@
                             {% if tender.openings.all|length > 0 %}
                                 {% for opening in tender.openings.all %}
                                     <span class="small me-2" data-bs-toggle="tooltip"
-                                          title="{% trans 'Awarding minutes found' %}: {{ opening.date_end }}">
+                                          title="{% trans 'Awarding minutes found' %}: {{ opening.date }}">
                                         
                                         {% if opening.won_lots > 0 %}
                                             <span class="text-success">
