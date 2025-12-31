@@ -36,12 +36,25 @@ def group_depos(items):
 
     return dict(grouped)
 
-@register.simple_tag
-def referefy(estimate, offers):
+# @register.simple_tag
+# def referefy(estimate, offers):
 
-    amounts = [o.get("amount_w") for o in offers if o.get("amount_w") is not None]
+#     amounts = [o.get("amount_w") for o in offers if o.get("amount_w") is not None]
+#     if not amounts:
+#         return None, None
+#     M = sum(amounts) / len(amounts)
+#     R = (estimate + M) / 2
+#     return M, R
+
+
+@register.simple_tag
+def offer_stats(estimate, offers):
+    amounts = list(offers.values_list("amount_a", flat=True))
+
     if not amounts:
-        return None, None
-    M = sum(amounts) / len(amounts)
-    R = (estimate + M) / 2
-    return M, R
+        return {"mean": None, "mid": None}
+
+    mean = sum(amounts) / len(amounts)
+    mid = (estimate + mean) / 2
+
+    return {"mean": mean, "mid": mid}
