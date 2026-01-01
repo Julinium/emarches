@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from django import template
 
 register = template.Library()
@@ -36,25 +36,56 @@ def group_depos(items):
 
     return dict(grouped)
 
-# @register.simple_tag
-# def referefy(estimate, offers):
-
-#     amounts = [o.get("amount_w") for o in offers if o.get("amount_w") is not None]
-#     if not amounts:
-#         return None, None
-#     M = sum(amounts) / len(amounts)
-#     R = (estimate + M) / 2
-#     return M, R
-
 
 @register.simple_tag
-def offer_stats(estimate, offers):
-    amounts = list(offers.values_list("amount_a", flat=True))
+def offsettify(optimal, amount):
+    o, r = None, None
+    if optimal != None and amount != None : 
+        if optimal != 0 : 
+            o = amount - optimal
+            r = 100 * ((amount - optimal) / optimal)
 
-    if not amounts:
-        return {"mean": None, "mid": None}
+    return {"slip": o, "ratio": r}
 
-    mean = sum(amounts) / len(amounts)
-    mid = (estimate + mean) / 2
 
-    return {"mean": mean, "mid": mid}
+@register.filter
+def group_by(queryset, field_name):
+    """
+    Groups a queryset by a model field.
+
+    Usage:
+        {% for group in queryset|group_by:"field1" %}
+            {{ group.field1 }}
+            {% for item in group.items %}
+                {{ item }} ...
+            {% endfor %}
+        {% endfor %}
+    """
+
+    def statify(estimate, offers):
+        amounts = [o.amount_a for o in offers]
+        mean = sum(amounts) / len(amounts) if amounts else None
+        mid = (estimate + mean) / 2 if amounts else None
+
+        return [mean, mid]
+
+    groups = OrderedDict()
+
+    for obj in queryset:
+        key = getattr(obj, field_name)
+        groups.setdefault(key, []).append(obj)
+
+    return [
+        {
+            field_name: key,
+            "averaum": statify(items[0].lot.estimate, items)[0],
+            "optimum": statify(items[0].lot.estimate, items)[1],
+            "amzgaro": items[0],
+            "qahnsen": items,
+        }
+        for key, items in groups.items()
+    ]
+
+
+
+    

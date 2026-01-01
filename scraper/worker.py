@@ -87,7 +87,7 @@ def main():
                     traceback.print_exc()
             else:
                 helper.printMessage('INFO', 'worker', f"\tMinutes empty or not found for item { i }/{ count }")
-        
+
         return results_saved, i
 
 
@@ -176,8 +176,8 @@ def main():
 
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
-    # if links_source == 'Crawl':
-    #     results_saved, results_searched = handle_results()
+    if links_source == 'Crawl':
+        results_saved, results_searched = handle_results()
 
 
 
