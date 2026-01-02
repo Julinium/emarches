@@ -63,7 +63,7 @@ def main():
 
         tenders = Tender.objects.filter(
             deadline__date__lte=assa,
-            minutes__isnull=True, 
+            openings__isnull=True, 
             ).order_by('-deadline')
         count = tenders.count()
 

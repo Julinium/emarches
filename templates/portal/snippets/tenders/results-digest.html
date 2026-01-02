@@ -136,82 +136,40 @@
         {% endif %}
     </div>
 
-    <!-- <div id="xxx-fin-offers">
-        <div class="mt-4 mb-1 small">
-            <span><i class="{{ bicons.estimate }} me-1"></i></span>
-            <span class="">{% trans 'XXX Financial Offers' %}</span>
-        </div>
-        {% if opening.selected_bids|length > 0 %}
-            <div class="list-group small ms-3">
-                {% for selected_bid in opening.selected_bids %}
-                    {% ifchanged selected_bid.lot_number %}
-                        {% if tender.lots_count > 1 %}
-                            <div class="list-group-item disabled ps-2">
-                                <span class="fw-light">{% trans 'Lot' %}</span>
-                                <span class="">{{ selected_bid.lot_number }}:</span>
-                                <span class="fw-light">{{ selected_bid.lot.estimate }}</span>
-                            </div>
-                        {% endif%}
-                    {% endifchanged %}
-                    <div class="list-group-item list-group-item-action">
-                        <span class="">{{ selected_bid.concurrent.name }} </span>
-                        <span class="float-end ms-2">
-                            {% if selected_bid.amount_a != selected_bid.amount_b %}
-                                <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
-                            {% endif %}
-                            <span class="badge small text-bg-secondary">{% if selected_bid.dep_offset >= 0 %}+{% endif %}{{ selected_bid.dep_offset|default:'0'|floatformat:1 }}%</span>
-                            <span>=</span>
-                            {% if selected_bid.winner %}
-                                <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
-                            {% endif %}
-                            <span class="{% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
-                        </span>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="list-group small ms-3">
-                <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-            </div>
-        {% endif %}
-    </div> -->
-
     <div id="fin-offers">
         <div class="mt-4 mb-1 small">
             <span><i class="{{ bicons.estimate }} me-1"></i></span>
             <span class="">{% trans 'Financial Offers' %}</span>
         </div>
         {% if opening.selected_bids|length > 0 %}
-
                 {% for group in opening.selected_bids|group_by:"lot_number" %}
             <div class="list-group small ms-3 mb-2">
-
                     <div class="list-group-item disabled bg-secondary-subtle ps-2">
                         {% if tender.lots_count > 1 %}
                             <span class="fw-light">{% trans 'Lot' %}</span>
-                            <span class="">{{ group.lot_number }}:</span>
-                        {% endif%}
-                        <span class="fw-light me-2">E={{ group.amzgaro.lot.estimate }}</span>
-                        <span class="fw-light me-2">C={{ group.qahnsen|length }}</span>
-                        <span class="fw-light me-2" >M={{ group.averaum|floatformat:2 }}</span>
-                        <span class="fw-light text-success ms-2 float-end" >R={{ group.optimum|floatformat:2 }}</span>
+                            <span class="">{{ group.lot_number }}</span>
+                            <span class="small"><i class="bi bi-three-dots-vertical"></i></span>
+                        {% endif%}                        
+                        <span class="fw-light me-2">{% trans 'Offers' %}: {{ group.amzgaro.composits|length }}</span>
+                        <span class="float-end">
+                            <span class="fw-light ms-2">E={{ group.amzgaro.lot.estimate }}</span>
+                            <span class="small"><i class="bi bi-three-dots-vertical me-1"></i></span>
+                            <span class="fw-light text-success float-end" >R={{ group.amzgaro.optimum|floatformat:2 }}</span>
+                        </span>
                     </div>
                     {% for selected_bid in group.qahnsen %}
-                        <div class="list-group-item list-group-item-action {% if selected_bid.winner %} bg-success-subtle{% endif %}">
-                            {% if selected_bid.winner %}
-                                <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
-                            {% endif %}
+                        <div class="list-group-item list-group-item-action {% if selected_bid.winner %} text-success{% endif %}">
                             <span class="">{{ selected_bid.concurrent.name }} </span>
                             <span class="float-end ms-3">
                                 {% if selected_bid.amount_a != selected_bid.amount_b %}
                                     <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
                                 {% endif %}
-                                <span class="badge small text-bg-secondary">E{% if selected_bid.dep_offset >= 0 %}+{% endif %}{{ selected_bid.dep_offset|default:'0'|floatformat:2 }}%</span>
-                                {% offsettify group.optimum selected_bid.amount_a as ref_offset %}
-                                <!-- <span class="badge small text-bg-success">R{% if ref_offset.ratio >= 0 %}+{% endif %}{{ ref_offset.ratio|default:'0'|floatformat:2 }}%</span> -->
-                                <span class="badge small text-bg-success">R {% if ref_offset.slip >= 0 %}+{% endif %}{{ ref_offset.slip|default:'0'|floatformat:2 }}</span>
-                                <span>=</span>
-                                <span class="{% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
+                                {% if selected_bid.winner %}
+                                    <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                                {% endif %}
+                                <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
+                                <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-success bg-success-subtle">R {% if selected_bid.score >= 0 %}+{% endif %}{{ selected_bid.score|floatformat:2|default:'?' }}</span>
+                                <span class="float-end ms-2 {% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
                             </span>
                         </div>
                     {% empty %}

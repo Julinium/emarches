@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from django.db.models import Sum, Count, Max, Min, F, Q
+from django.db.models import Sum, Count, Max, Min, Avg, F, Q
 
 from .texter import normalize_text as nt
 
@@ -693,7 +693,6 @@ class Concurrent(models.Model):
         return f'{self.name}'
 
 
-
 class Opening(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="openings", blank=True, null=True)
@@ -792,6 +791,73 @@ class Deposit(models.Model):
     @property
     def lot(self):
         return self.opening.tender.lots.filter(number=self.lot_number).first()
+    
+    @property
+    def composits(self):
+        return Deposit.objects.filter(
+            opening=self.opening,
+            lot_number=self.lot_number,
+            amount_a__isnull=False,
+        )
+    
+    @property
+    def average(self):
+        compos = self.composits
+        return compos.aggregate(avg=Avg("amount_a"))["avg"]
+
+    @property
+    def optimum(self):
+        avg = self.average
+        if not avg: return None
+        esti = self.lot.estimate
+        if not esti: return None
+
+        return (avg + esti) / 2
+
+    @property
+    def offset(self):
+        esti = self.lot.estimate
+        if not esti: return None
+        offer = self.amount_a
+        if not offer: return None
+        if esti == 0 : return None
+
+        return 100 * ((offer - esti) / esti)
+
+    # @property
+    # def offset_str(self):
+    #     offset = self.offset
+    #     if not offset: return None
+    #     sign = ""
+    #     if offset >= 0: sign = "+"
+
+    #     return f"{sign}{offset:.2f}"
+
+
+    # @property
+    # def roffset(self):
+    #     esti = self.lot.estimate
+    #     if not esti: return None
+    #     offer = self.amount_a
+    #     if not offer: return None
+    #     if esti == 0 : return None
+
+    #     return round(100 * ((offer - esti) / esti), 3)
+
+    # @property
+    # def poffset(self):
+    #     return "+" if self.offset > 0.0 else ""
+
+    @property
+    def score(self):
+        opti = self.optimum
+        if not opti: return None
+        offer = self.amount_a
+        if not offer: return None
+
+        return offer - opti
+    
+
 
     class Meta:
         db_table = 'base_deposit'
