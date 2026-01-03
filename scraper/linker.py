@@ -13,7 +13,6 @@ from base.models import Tender
 
 REFRESH_SAVED = True
 
-
 def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
     assa = date.today()
     dt_ddl_start = assa - timedelta(days=back_days)
@@ -21,7 +20,7 @@ def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
 
     helper.printMessage('INFO', 'l.fillSearchForm', 'Submitting search form ...')
     try:
-        helper.printMessage('INFO', 'l.page2Links', f'Deadline backward days set to {C.PORTAL_DDL_PAST_DAYS} days.', 2)
+        helper.printMessage('INFO', 'l.fillSearchForm', f'Deadline backward days set to {C.PORTAL_DDL_PAST_DAYS} days.', 2)
         el_ddl_start = driver.find_element("id", "ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneStart")
         el_ddl_start.clear()
         el_ddl_start.send_keys(date_ddl_start)

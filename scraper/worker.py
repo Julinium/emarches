@@ -106,7 +106,7 @@ def main():
     links_crawled, links_imported, links_from_saved = 0,0,0
     links = []
     if not C.IMPORT_LINKS:
-        links = linker.getLinks()
+        links = linker.getLinks(400)
         links_crawled = len(links)
         links_saved = linker.getSavedLinks()
         links_from_saved = len(links_saved)
