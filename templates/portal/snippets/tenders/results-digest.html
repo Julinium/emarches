@@ -13,8 +13,7 @@
             {% for bidder in opening.bidders.all %}
                 <a href="{% url 'insights_bidder_details' bidder.id %}" 
                     target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
-                    <span><i class="bi bi-dash-lg"></i></span>
-                    <span class="me-2">{{ bidder.name }}</span>
+                    <span class="">{{ bidder.name }}</span>
                 </a>
             {% empty %}
                 <div class="list-group small">
@@ -29,7 +28,7 @@
     <div id="admin-rejects">
         {% group_lots opening.admin_rejects as grouped_ad_rej %}
         <div class="mt-4 mb-1 small">
-            <span><i class="bi bi-x-octagon me-1"></i></span>
+            <span><i class="bi bi-fast-forward me-1"></i></span>
             <span class="">{% trans 'Admin Rejects' %}</span>
         </div>
         <div class="list-group small ms-3">
@@ -37,11 +36,11 @@
                 <div class="list-group-item list-group-item-action">
                     <span class="text-danger">{{ concurrent }}</span>
                     {% if tender.lots_count > 1 %}
-                        <span class="float-end ms-2  d-none">
+                        <span class="float-end ms-2 ">
                             <span class="fw-light">{% trans 'Lots' %}: </span> 
-                            <span >
+                            <span>
                                 {% for lot in lots %}
-                                    {{ lot }}{% if not forloop.last %}, {% endif %}
+                                    <span class="text-danger fw-bold small">{{ lot }}</span>{% if not forloop.last %}, {% endif %}
                                 {% endfor %}
                             </span>
                         </span>

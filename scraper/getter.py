@@ -612,12 +612,14 @@ def getMinutes(chro='', acro=''):
 
                 bidder_name = bidder_td.get_text(strip=True)
                 rejected_lots = ['1']
-                try:
-                    ids_td = tr.find("div").find("td")
-                    raw_ids = ids_td.get_text(strip=True)
-                    rejected_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception:
-                    traceback.print_exc()
+                ids_div = tr.find("div")
+                if ids_div:
+                    try:
+                        ids_td = ids_div.find("td")
+                        raw_ids = ids_td.get_text(strip=True)
+                        rejected_lots = [ x.strip() for x in raw_ids.split(",")]
+                    except Exception:
+                        traceback.print_exc()
 
                 for rejected_lot in rejected_lots:
                     rejected_da.append({"name": bidder_name, "lot": rejected_lot})
@@ -640,11 +642,14 @@ def getMinutes(chro='', acro=''):
                 bidder_name = bidder_td.get_text(strip=True)
                 accepted_lots = ['1']
                 try:
-                    ids_td = tr.find("div").find("td")
-                    raw_ids = ids_td.get_text(strip=True)
-                    accepted_lots = [ x.strip() for x in raw_ids.split(",")]
+                    ids_div = tr.find("div")
+                    if ids_div:
+                        ids_td = ids_div.find("td")
+                        raw_ids = ids_td.get_text(strip=True)
+                        accepted_lots = [ x.strip() for x in raw_ids.split(",")]
                 except Exception: 
                     traceback.print_exc()
+
                 for accepted_lot in accepted_lots:
                     accepted_da.append({"name": bidder_name, "lot": accepted_lot})
 
@@ -665,12 +670,14 @@ def getMinutes(chro='', acro=''):
 
                 bidder_name = bidder_td.get_text(strip=True)
                 reserved_lots = ['1']
-                try:
-                    ids_td = tr.find("div").find("td")
-                    raw_ids = ids_td.get_text(strip=True)
-                    reserved_lots = [ x.strip() for x in raw_ids.split(",")]
-                except Exception:
-                    traceback.print_exc()
+                ids_div = tr.find("div")
+                if ids_div:
+                    try:
+                        ids_td = ids_div.find("td")
+                        raw_ids = ids_td.get_text(strip=True)
+                        reserved_lots = [ x.strip() for x in raw_ids.split(",")]
+                    except Exception:
+                        traceback.print_exc()
 
                 for reserved_lot in reserved_lots:
                     reserved_da.append({"name": bidder_name, "lot": reserved_lot})

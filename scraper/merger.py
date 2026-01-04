@@ -732,6 +732,7 @@ def mergeResults(digest):
 
 def ensure_dt_rabat(snap, default_time=time(0,0)):
     rabat_tz = pytz.timezone("Africa/Casablanca")
+    if not snap: return None
     if not isinstance(snap, datetime):
         naive_dt = datetime.combine(snap, default_time)
         return rabat_tz.localize(naive_dt)
