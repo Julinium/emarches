@@ -147,12 +147,16 @@
                         {% if tender.lots_count > 1 %}
                             <span class="fw-light">{% trans 'Lot' %}</span>
                             <span class="">{{ group.lot_number }}</span>
-                            <span class="small"><i class="bi bi-three-dots-vertical"></i></span>
-                        {% endif%}                        
+                            <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
+                        {% endif%}
+
+                        <span class="fw-light ms-2">E={{ group.amzgaro.lot.estimate }}</span>
+                        <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
+
                         <span class="fw-light me-2">{% trans 'Offers' %}: {{ group.amzgaro.composits|length }}</span>
                         <span class="float-end">
-                            <span class="fw-light ms-2">E={{ group.amzgaro.lot.estimate }}</span>
-                            <span class="small"><i class="bi bi-three-dots-vertical me-1"></i></span>
+                            <span class="fw-light ms-2" >M={{ group.amzgaro.average|floatformat:2 }}</span>
+                            <span class="small"><i class="bi bi-three-dots-vertical text-secondary me-1"></i></span>
                             <span class="fw-light text-success float-end" >R={{ group.amzgaro.optimum|floatformat:2 }}</span>
                         </span>
                     </div>
