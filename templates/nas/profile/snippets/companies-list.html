@@ -17,28 +17,30 @@
             <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Add Company" %}</a>
         </div>
     {% else %}
-        <div class="mt-3">
+        <div class="row g-4">
             {% for company in companies.all|slice:":4" %}
-                <div class="mt-3 border border-bottom border-0">
-                    <div class="d-flex">
-                        <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 1.5rem; max-height: 1.5rem;">
-                            <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
-                        </div>
-                        <div class="ms-2">
-                            <div class="mt-0 fw-bold oneline">
-                                {% if company.verified %}
-                                    <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID look fine' %}">
-                                        <i class="small bi bi-patch-check-fill text-primary"></i>
-                                    </span>
-                                {% else %}
-                                    <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID could not be verified' %}">
-                                        <i class="small bi bi-patch-exclamation-fill text-danger"></i>
-                                    </span>
-                                {% endif %}
-                                <span class="me-1">{{ company.name|default:'--' }}</span>
+                <div class="col-md-6 col-12">
+                    <div class="mt-3 border border-bottom border-0">
+                        <div class="d-flex">
+                            <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 1.5rem; max-height: 1.5rem;">
+                                <img id="image-preview" src="{{ company.logo }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
                             </div>
-                            <div class="mt-0 small {% if company.iceberg %}text-muted{% else %}text-danger{% endif %}">                              
-                                <span class="me-1">{{ company.ice|default:'--' }}</span>
+                            <div class="ms-2">
+                                <div class="mt-0 fw-bold oneline">
+                                    {% if company.verified %}
+                                        <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID look fine' %}">
+                                            <i class="small bi bi-patch-check-fill text-primary"></i>
+                                        </span>
+                                    {% else %}
+                                        <span data-bs-toggle="tooltip" title="{% trans 'Name, ICE and Commerce Register ID could not be verified' %}">
+                                            <i class="small bi bi-patch-exclamation-fill text-danger"></i>
+                                        </span>
+                                    {% endif %}
+                                    <span class="me-1">{{ company.name|default:'--' }}</span>
+                                </div>
+                                <div class="mt-0 small {% if company.iceberg %}text-muted{% else %}text-danger{% endif %}">                              
+                                    <span class="me-1">{{ company.ice|default:'--' }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>

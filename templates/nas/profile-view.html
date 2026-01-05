@@ -18,26 +18,26 @@
 
         {% include 'nas/snippets/private-data.html' %}
 
-        <div class="row gx-4">
-            <div class="col-md-6 col-12">
+        <div class="">
+            <div class="">
                 <div class="mt-5">
                     {% include 'nas/profile/snippets/user-details.html' with user=user profile=user.profile %}
                 </div>
             </div>
 
-            <div class="col-md-6 col-12">
+            <div class="">
                 <div class="mt-5">
                     {% include 'nas/profile/snippets/companies-list.html' with companies=user.companies %}
                 </div>
             </div>
 
-            <div class="col-md-6 col-12">
+            <div class="">
                 <div class="mt-5">
                     {% include 'nas/profile/snippets/notifications.html' with notifications=user.notifications %}
                 </div>
             </div>
 
-            <div class="col-md-6 col-12">
+            <div class="">
                 <div class="mt-5">
                     {% include 'nas/profile/snippets/newsletters.html' with newsletters=user.newsletters %}
                 </div>

@@ -151,14 +151,14 @@ def bidders_list(request):
         ordering = sort
     else: ordering = 'wins_sum'
 
-    if ordering == '-name' or ordering == 'name':
-        bidders = bidders.order_by(ordering)
-    elif ordering[0] == '-':
-        ordering = ordering[1:]
-        bidders = bidders.order_by(F(ordering).asc(nulls_last=True))
+    if ordering == '-name' or ordering == 'name': 
+        bidders = bidders.order_by(ordering, 'id')
     else:
-        bidders = bidders.order_by(F(ordering).desc(nulls_last=True))
-
+        if ordering[0] == '-':
+            ordering = ordering[1:]
+            bidders = bidders.order_by(F(ordering).asc(nulls_last=True), 'name')
+        else:
+            bidders = bidders.order_by(F(ordering).desc(nulls_last=True), 'name')
 
     context = define_context(request)
 

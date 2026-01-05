@@ -10,26 +10,37 @@
     </div>
 </div>
 <div class="ms-4">
-    <div id="details" class="mt-3">
-        <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Email" %}</div>
-            <div class="mx-3">{{ user.email |default:'-' }}</div>
+    <div id="details" class="row gx-4">
+
+        <div class="col-md-6 col-12">
+            <div class="mt-3 border border-bottom border-0">
+                <div class="small text-muted fw-light me-2">{% trans "Email" %}</div>
+                <div class="mx-3">{{ user.email |default:'-' }}</div>
+            </div>
         </div>
-        <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Full Name" %}</div>
-            <div class="mx-3">{{ user.first_name|default:'-' }} {{ user.last_name|upper|default:'-' }}</div>
+        <div class="col-md-6 col-12">
+            <div class="mt-3 border border-bottom border-0">
+                <div class="small text-muted fw-light me-2">{% trans "Full Name" %}</div>
+                <div class="mx-3">{{ user.first_name|default:'-' }} {{ user.last_name|upper|default:'-' }}</div>
+            </div>
         </div>
-        <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Phone" %}</div>
-            <div class="mx-3">{{ profile.phone|default:'-' }}</div>
+        <div class="col-md-6 col-12">
+            <div class="mt-3 border border-bottom border-0">
+                <div class="small text-muted fw-light me-2">{% trans "Phone" %}</div>
+                <div class="mx-3">{{ profile.phone|default:'-' }}</div>
+            </div>
         </div>
-        <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "Whatsapp" %}</div>
-            <div class="mx-3">{{ profile.whatsapp|default:'-' }}</div>
+        <div class="col-md-6 col-12">
+            <div class="mt-3 border border-bottom border-0">
+                <div class="small text-muted fw-light me-2">{% trans "Whatsapp" %}</div>
+                <div class="mx-3">{{ profile.whatsapp|default:'-' }}</div>
+            </div>
         </div>
-        <div class="mt-3 border border-bottom border-0">
-            <div class="small text-muted fw-light me-2">{% trans "About" %}</div>
-            <div class="mx-3">{{ profile.about|default:'-' }}</div>
+        <div class="col-12">
+            <div class="mt-3 border border-bottom border-0">
+                <div class="small text-muted fw-light me-2">{% trans "About" %}</div>
+                <div class="mx-3">{{ profile.about|default:'-' }}</div>
+            </div>
         </div>
-    </div>                    
+    </div>
 </div>
