@@ -78,6 +78,7 @@ def getAmount(texte: str) -> Decimal:
 
 
 def text2Alphanum(text, allCapps=True, dash='-', minLen=8, firstAlpha='M', fillerChar='0'):
+    printMessage('TRACE', 'h.text2Alphanum', f'Cleanung file name from: {text}.', 1)
     normalized = unicodedata.normalize('NFKD', text).encode('ASCII', 'ignore').decode()
     cleaned = re.sub(r'[^A-Za-z0-9]', '-', normalized)
     cleaned = re.sub(r'-+', '-', cleaned)
@@ -87,7 +88,7 @@ def text2Alphanum(text, allCapps=True, dash='-', minLen=8, firstAlpha='M', fille
         cleaned = cleaned.ljust(minLen, fillerChar)
     if not cleaned[0].isalpha():
         cleaned = firstAlpha + cleaned[1:]
-
+    printMessage('TRACE', 'h.text2Alphanum', f'Cleaned file name: {cleaned}.', 1)
     return cleaned
 
 

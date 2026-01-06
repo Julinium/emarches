@@ -205,7 +205,7 @@ def getDCE(tender):
         helper.printMessage('ERROR', 'd.getDCE', 'Exception raised while submitting form.')
         helper.printMessage('ERROR', 'd.getDCE', str(xc)) 
         return 1
-    
+
     if request_form.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Form submission: Response Status Code: {request_form.status_code} !')
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
@@ -220,7 +220,7 @@ def getDCE(tender):
     except Exception as xc: 
         helper.printMessage('ERROR', 'd.getDCE', str(xc))
         return 1
-    
+
     if request_file.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Getting file: Response Status Code: {request_file.status_code} !')
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
@@ -238,7 +238,7 @@ def getDCE(tender):
     fiel_name_base = os.path.splitext(filename_cd)[0]
     file_extension = os.path.splitext(filename_cd)[1]
     cleaned_name = helper.text2Alphanum(fiel_name_base, allCapps=True, dash='-', minLen=8, firstAlpha='M', fillerChar='0')
-    
+
     filename_base = f'{C.FILE_PREFIX}-{cleaned_name}{file_extension}'
     filename = os.path.join(con_path, filename_base)
     helper.printMessage('DEBUG', 'd.getDCE', f'Writing file content to {filename_base} ... ')
@@ -247,7 +247,6 @@ def getDCE(tender):
         with open(filename, 'wb') as file:
             bytes_written = file.write(request_file.content)
             helper.printMessage('DEBUG', 'd.getDCE', f'... Bytes written: {bytes_written}/{len(request_file.content)}.')
-        # Verify the file size
         if bytes_written == len(request_file.content):
             try:
                 helper.printMessage('DEBUG', 'd.getDCE', f'Trying to remove file request for {chrono}.')
