@@ -1,94 +1,121 @@
 {% load i18n %}
 {% load groupify humanize %}
 
-{% for opening in tender.openings.all %}
 
-    <div id="participations">
-        <div class="mt-4 mb-1 small">
-            <span><i class="bi bi-building-up me-1"></i></span>
-            <span class="">{% trans 'Participations' %}</span>
-            <span class="">({{ opening.bidders.all|length }})</span>
-        </div>
-        <div class="ms-3">
-            {% for bidder in opening.bidders.all %}
-                <a href="{% url 'insights_bidder_details' bidder.id %}" 
-                    target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
-                    <span class="">{{ bidder.name }}</span>
-                </a>
-            {% empty %}
-                <div class="list-group small">
-                    <div class="list-group-item">
-                        {% trans 'None' %}
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+<div id="participations">
+    <div class="mt-4 mb-1 small">
+        <span><i class="bi bi-building-up me-1"></i></span>
+        <span class="">{% trans 'Participations' %}</span>
+        <span class="">({{ tender.openings.last.bidders.all|length }})</span>
     </div>
+    <div class="ms-3">
+        {% for bidder in tender.openings.last.bidders.all %}
+            <a href="{% url 'insights_bidder_details' bidder.id %}" 
+                target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
+                <span class="">{{ bidder.name }}</span>
+            </a>
+        {% empty %}
+            <div class="list-group small">
+                <div class="list-group-item">
+                    {% trans 'None' %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 
-    <div id="admin-rejects">
-        {% group_lots opening.admin_rejects as grouped_ad_rej %}
+<div id="admin-rejects">
+    {% group_lots tender.openings.last.admin_rejects as grouped_ad_rej %}
+    <div class="mt-4 mb-1 small">
+        <span><i class="bi bi-fast-forward me-1"></i></span>
+        <span class="">{% trans 'Admin Rejects' %}</span>
+    </div>
+    <div class="list-group small ms-3">
+        {% for concurrent, lots in grouped_ad_rej.items %}
+            <div class="list-group-item list-group-item-action">
+                <span class="text-danger">{{ concurrent }}</span>
+                {% if tender.lots_count > 1 %}
+                    <span class="float-end ms-2 ">
+                        <span class="fw-light">{% trans 'Lots' %}: </span> 
+                        <span>
+                            {% for lot in lots %}
+                                <span class="text-danger fw-bold small">{{ lot }}</span>{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </span>
+                {% endif%}
+            </div>
+        {% empty %}
+        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        {% endfor %}
+    </div>
+</div>    
+
+<div id="admin-accepts">
+    {% group_lots tender.openings.last.admin_accepts as grouped_ad_acc %}
+    <div class="mt-4 mb-1 small">
+        <span><i class="bi bi-fast-forward me-1"></i></span>
+        <span class="">{% trans 'Admin Accepts' %}</span>
+    </div>
+    <div class="list-group small ms-3">
+        {% for concurrent, lots in grouped_ad_acc.items %}
+            <div class="list-group-item list-group-item-action">
+                <span>{{ concurrent }}</span>
+                {% if tender.lots_count > 1 %}
+                    <span class="float-end ms-2 ">
+                        <span class="fw-light">{% trans 'Lots' %}: </span> 
+                        <span>
+                            {% for lot in lots %}
+                                {{ lot }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </span>
+                {% endif%}
+            </div>
+        {% empty %}
+        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="admin-reserves">
+    {% group_lots tender.openings.last.admin_reserves as grouped_ad_res %}
+    <div class="mt-4 mb-1 small">
+        <span><i class="bi bi-fast-forward-circle me-1"></i></span>
+        <span class="">{% trans 'Admin Reserves' %}</span>
+    </div>
+    <div class="list-group small ms-3">
+        {% for concurrent, lots in grouped_ad_res.items %}
+            <div class="list-group-item list-group-item-action">
+                <span>{{ concurrent }}</span>
+                {% if tender.lots_count > 1 %}
+                    <span class="float-end ms-2">
+                        <span class="fw-light">{% trans 'Lots' %}: </span> 
+                        <span>
+                            {% for lot in lots %}
+                                {{ lot }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </span>
+                {% endif%}
+            </div>
+        {% empty %}
+        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="tech-rejects">
+    {% if tender.openings.last.has_tech %}
+        {% group_lots tender.openings.last.tech_rejects as grouped_te_rej %}
         <div class="mt-4 mb-1 small">
-            <span><i class="bi bi-fast-forward me-1"></i></span>
-            <span class="">{% trans 'Admin Rejects' %}</span>
+            <span><i class="bi bi-x-octagon me-1"></i></span>
+            <span class="">{% trans 'Tech Rejects' %}</span>
         </div>
         <div class="list-group small ms-3">
-            {% for concurrent, lots in grouped_ad_rej.items %}
+            {% for concurrent, lots in grouped_te_rej.items %}
                 <div class="list-group-item list-group-item-action">
                     <span class="text-danger">{{ concurrent }}</span>
-                    {% if tender.lots_count > 1 %}
-                        <span class="float-end ms-2 ">
-                            <span class="fw-light">{% trans 'Lots' %}: </span> 
-                            <span>
-                                {% for lot in lots %}
-                                    <span class="text-danger fw-bold small">{{ lot }}</span>{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </span>
-                        </span>
-                    {% endif%}
-                </div>
-            {% empty %}
-            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-            {% endfor %}
-        </div>
-    </div>    
-
-    <div id="admin-accepts">
-        {% group_lots opening.admin_accepts as grouped_ad_acc %}
-        <div class="mt-4 mb-1 small">
-            <span><i class="bi bi-fast-forward me-1"></i></span>
-            <span class="">{% trans 'Admin Accepts' %}</span>
-        </div>
-        <div class="list-group small ms-3">
-            {% for concurrent, lots in grouped_ad_acc.items %}
-                <div class="list-group-item list-group-item-action">
-                    <span>{{ concurrent }}</span>
-                    {% if tender.lots_count > 1 %}
-                        <span class="float-end ms-2 ">
-                            <span class="fw-light">{% trans 'Lots' %}: </span> 
-                            <span>
-                                {% for lot in lots %}
-                                    {{ lot }}{% if not forloop.last %}, {% endif %}
-                                {% endfor %}
-                            </span>
-                        </span>
-                    {% endif%}
-                </div>
-            {% empty %}
-            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <div id="admin-reserves">
-        {% group_lots opening.admin_reserves as grouped_ad_res %}
-        <div class="mt-4 mb-1 small">
-            <span><i class="bi bi-fast-forward-circle me-1"></i></span>
-            <span class="">{% trans 'Admin Reserves' %}</span>
-        </div>
-        <div class="list-group small ms-3">
-            {% for concurrent, lots in grouped_ad_res.items %}
-                <div class="list-group-item list-group-item-action">
-                    <span>{{ concurrent }}</span>
                     {% if tender.lots_count > 1 %}
                         <span class="float-end ms-2">
                             <span class="fw-light">{% trans 'Lots' %}: </span> 
@@ -104,141 +131,115 @@
             <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
             {% endfor %}
         </div>
-    </div>
+    {% endif %}
+</div>
 
-    <div id="tech-rejects">
-        {% if opening.has_tech %}
-            {% group_lots opening.tech_rejects as grouped_te_rej %}
-            <div class="mt-4 mb-1 small">
-                <span><i class="bi bi-x-octagon me-1"></i></span>
-                <span class="">{% trans 'Tech Rejects' %}</span>
-            </div>
-            <div class="list-group small ms-3">
-                {% for concurrent, lots in grouped_te_rej.items %}
-                    <div class="list-group-item list-group-item-action">
-                        <span class="text-danger">{{ concurrent }}</span>
-                        {% if tender.lots_count > 1 %}
-                            <span class="float-end ms-2">
-                                <span class="fw-light">{% trans 'Lots' %}: </span> 
-                                <span>
-                                    {% for lot in lots %}
-                                        {{ lot }}{% if not forloop.last %}, {% endif %}
-                                    {% endfor %}
-                                </span>
-                            </span>
-                        {% endif%}
-                    </div>
-                {% empty %}
-                <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
+<div id="fin-offers">
+    <div class="mt-4 mb-1 small">
+        <span><i class="{{ bicons.estimate }} me-1"></i></span>
+        <span class="">{% trans 'Financial Offers' %}</span>
     </div>
-
-    <div id="fin-offers">
-        <div class="mt-4 mb-1 small">
-            <span><i class="{{ bicons.estimate }} me-1"></i></span>
-            <span class="">{% trans 'Financial Offers' %}</span>
-        </div>
-        {% if opening.selected_bids|length > 0 %}
-                {% for group in opening.selected_bids|group_by:"lot_number" %}
-            <div class="list-group small ms-3 mb-2">
-                    <div class="list-group-item disabled bg-secondary-subtle ps-2">
+    {% if tender.openings.last.selected_bids|length > 0 %}
+            {% for group in tender.openings.last.selected_bids|group_by:"lot_number" %}
+        <div class="list-group small ms-3 mb-2">
+                <div class="list-group-item disabled bg-secondary-subtle ps-2">
+                    <span class="ms-2">
                         {% if tender.lots_count > 1 %}
                             <span class="fw-light">{% trans 'Lot' %}</span>
                             <span class="">{{ group.lot_number }}</span>
                             <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
                         {% endif%}
-
-                        <span class="fw-light ms-2">E={{ group.amzgaro.lot.estimate }}</span>
+                        <span class="fw-light">E={{ group.amzgaro.lot.estimate }}</span>
                         <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
 
                         <span class="fw-light me-2">{% trans 'Offers' %}: {{ group.amzgaro.composits|length }}</span>
+                    </span>
+                    {% if group.amzgaro.composits|length > 1 %}
                         <span class="float-end">
                             <span class="fw-light ms-2" >M={{ group.amzgaro.average|floatformat:2 }}</span>
                             <span class="small"><i class="bi bi-three-dots-vertical text-secondary me-1"></i></span>
                             <span class="fw-light text-success float-end" >R={{ group.amzgaro.optimum|floatformat:2 }}</span>
                         </span>
-                    </div>
-                    {% for selected_bid in group.qahnsen %}
-                        <div class="list-group-item list-group-item-action {% if selected_bid.winner %} text-success{% endif %}">
-                            <span class="">{{ selected_bid.concurrent.name }} </span>
-                            <span class="float-end ms-3">
-                                {% if selected_bid.amount_a != selected_bid.amount_b %}
-                                    <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
-                                {% endif %}
-                                {% if selected_bid.winner %}
-                                    <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
-                                {% endif %}
-                                <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
-                                <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-success bg-success-subtle">R {% if selected_bid.score >= 0 %}+{% endif %}{{ selected_bid.score|floatformat:2|default:'?' }}</span>
-                                <span class="float-end ms-2 {% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
-                            </span>
-                        </div>
-                    {% empty %}
-                        <div class="list-group small ms-3">
-                            <div class="list-group-item text-danger fw-light">{% trans 'None' %}</div>
-                        </div>
-                    {% endfor %}
-            </div>
-                {% endfor %}
-        {% else %}
-            <div class="list-group small ms-3">
-                <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-            </div>
-        {% endif %}
-    </div>
-
-    <div id="winner-bids">
-        <div class="mt-4 mb-1 small">
-            <span><i class="{{ bicons.winner }} me-1"></i></span>
-            <span class="">{% trans 'Awards' %}</span>
-        </div>
-        <div class="list-group small ms-3">
-            {% for winner_bid in opening.winner_bids %}
-                <div class="list-group-item list-group-item-action">
-                    <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
-                        <span class="fw-light">{% trans 'Lot' %}</span>
-                        <span class="">{{ winner_bid.lot_number }}:</span>
-                    </span>
-                    <span class="text-success fw-bold">{{ winner_bid.concurrent.name }}</span>
-                    <span class="float-end ms-2 fw-bold">{{ winner_bid.amount_w }}</span>
+                    {% endif %}
                 </div>
-            {% empty %}
-            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
-            {% endfor %}
-        </div>
-    </div>
-
-    <div id="win-justifs">
-        <div class="mt-4 mb-1 small">
-            <span><i class="bi bi-question-square me-1"></i></span>
-            <span class="">{% trans 'Selection Justification' %}</span>
-        </div>
-        <div class="list-group small ms-3">
-            {% for win_justif in opening.win_justifs %}
-                <div class="list-group-item list-group-item-action">
-                    {% if tender.lots_count > 1 %}
-                        <span class="">
-                            <span class="fw-light">{% trans 'Lot' %}</span>
-                            <span class="">{{ win_justif.lot_number }}:</span>
+                {% for selected_bid in group.qahnsen %}
+                    <div class="list-group-item list-group-item-action {% if selected_bid.winner %} text-success{% endif %}">
+                        <span class="">{{ selected_bid.concurrent.name }} </span>
+                        <span class="float-end ms-3">
+                            {% if selected_bid.amount_a != selected_bid.amount_b %}
+                                <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
+                            {% endif %}
+                            {% if selected_bid.winner %}
+                                <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                            {% endif %}
+                            <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
+                            <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-success bg-success-subtle">R {% if selected_bid.score >= 0 %}+{% endif %}{{ selected_bid.score|floatformat:2|default:'?' }}</span>
+                            <span class="float-end ms-2 {% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
                         </span>
-                    {% endif%}
-                    <span class="">{{ win_justif.justif }}</span>
-                </div>
-            {% empty %}
-            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+                    </div>
+                {% empty %}
+                    <div class="list-group small ms-3">
+                        <div class="list-group-item text-danger fw-light">{% trans 'None' %}</div>
+                    </div>
+                {% endfor %}
+        </div>
             {% endfor %}
+    {% else %}
+        <div class="list-group small ms-3">
+            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
         </div>
-    </div>
+    {% endif %}
+</div>
 
-    <div id="meta-info">
-        <div class="row gx-3 gy-1 mt-2 small">
-            {% trans 'Date Finished' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'0' val_value=opening.date key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
-            {% trans 'Unsuccessful declaration' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=opening.id|add:'1' val_value=opening.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
-        </div>
+<div id="winner-bids">
+    <div class="mt-4 mb-1 small">
+        <span><i class="{{ bicons.winner }} me-1"></i></span>
+        <span class="">{% trans 'Awards' %}</span>
     </div>
+    <div class="list-group small ms-3">
+        {% for winner_bid in tender.openings.last.winner_bids %}
+            <div class="list-group-item list-group-item-action">
+                <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
+                    <span class="fw-light">{% trans 'Lot' %}</span>
+                    <span class="">{{ winner_bid.lot_number }}:</span>
+                </span>
+                <span class="text-success fw-bold">{{ winner_bid.concurrent.name }}</span>
+                <span class="float-end ms-2 fw-bold">{{ winner_bid.amount_w }}</span>
+            </div>
+        {% empty %}
+        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        {% endfor %}
+    </div>
+</div>
 
-{% endfor %}
+<div id="win-justifs">
+    <div class="mt-4 mb-1 small">
+        <span><i class="bi bi-question-square me-1"></i></span>
+        <span class="">{% trans 'Selection Justification' %}</span>
+    </div>
+    <div class="list-group small ms-3">
+        {% for win_justif in tender.openings.last.win_justifs %}
+            <div class="list-group-item list-group-item-action">
+                {% if tender.lots_count > 1 %}
+                    <span class="">
+                        <span class="fw-light">{% trans 'Lot' %}</span>
+                        <span class="">{{ win_justif.lot_number }}:</span>
+                    </span>
+                {% endif%}
+                <span class="">{{ win_justif.justif }}</span>
+            </div>
+        {% empty %}
+        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="meta-info">
+    <div class="row gx-3 gy-1 mt-2 small">
+        {% trans 'Date Finished' as key_value %}
+        {% include 'base/snippets/ico-key-val.html' with id_value=tender.openings.last.id|add:'0' val_value=tender.openings.last.date key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='' %}
+        {% trans 'Unsuccessful declaration' as key_value %}
+        {% include 'base/snippets/ico-key-val.html' with id_value=tender.openings.last.id|add:'1' val_value=tender.openings.last.failure key_value=key_value uni_value='' val_class='' border='bottom' liner='' %}
+    </div>
+</div>
+

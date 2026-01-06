@@ -54,7 +54,7 @@
             </div>
             
 
-            {% if bidder.winners.all|length > 2 %}
+            {% if bidder.winners.all|length > 0 %}
                 <div class="col-12 col-md-6"
                     data-bs-toggle="tooltip"
                     title="{% trans 'Wins range' %}: {{ bidder.lowest_win }} - {{ bidder.highest_win }}">
@@ -91,7 +91,6 @@
                 </div>
             {% endif %}
 
-        
         </div>
 
 
@@ -588,6 +587,10 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="my-3" id="bidder-actions">
+        {% include 'insights/snippets/bidders/bidder-actions.html' %}
     </div>
 
 

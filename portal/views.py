@@ -267,22 +267,22 @@ def tender_list(request):
 
             winners = Deposit.objects.filter(opening__tender=OuterRef("pk"), winner=True).values("pk")
 
-            if results == 'successful':
-                tenders = tenders.annotate(
-                    has_winner=Exists(winners), 
-                    failed_lots=Count("openings", filter=Q(openings__deposits__winner__isnull=True), distinct=True),
-                ).filter(has_winner=True, failed_lots=0)
-
-            if results == 'unsuccessful':
-                tenders = tenders.annotate(
-                    has_winner=Exists(winners), 
-                ).filter(has_winner=False)
+            # if results == 'successful':
+            #     tenders = tenders.annotate(
+            #         has_winner=Exists(winners), 
+            #         failed_lots=Count("openings", filter=Q(openings__deposits__winner__isnull=True), distinct=True),
+            #     ).filter(has_winner=True, failed_lots=0)
 
             if results == 'partial':
-                tenders = tenders.annotate(
+                tenders = tenders.filter(openings__isnull=False).annotate(
                     has_winner=Exists(winners), 
-                    failed_lots=Count("openings", filter=Q(openings__deposits__winner__isnull=True), distinct=True)
-                ).filter(has_winner=True, failed_lots__gt=0) 
+                    failed_lots=Count("openings", filter=~Q(openings__deposits__winner=True), distinct=True)
+                ).filter(has_winner=True, failed_lots__gt=0)
+
+            if results == 'unsuccessful':
+                tenders = tenders.filter(openings__isnull=False).annotate(
+                    has_winner=Exists(winners), 
+                ).filter(has_winner=False)
 
 
         return tenders.distinct(), ff
@@ -421,7 +421,6 @@ def tender_details(request, pk=None):
         'full_bar_days' : full_bar_days,
         'favorited'     : favorited,
         }
-    
     TenderView.objects.create(
         tender=tender, 
         user=user, )
@@ -429,8 +428,9 @@ def tender_details(request, pk=None):
     logger = logging.getLogger('portal')
     logger.info(f"Tender details view: {tender.id}")
 
-    tolerance_dn = 20.0
-    tolerance_up = 20.0    
+    tolerance_dn = 25.0
+    if tender.category.label == 'Travaux': tolerance_dn = 20.0
+    tolerance_up = 20.0
     offers_count = 1
     
     context['offer_litteral'] = trans('OFFER')
