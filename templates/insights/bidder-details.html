@@ -2,7 +2,7 @@
 {% load i18n l10n static humanize groupify tz %}
 
 {% block title %}
-    {% trans "Concurrent details" %}: {{ bidder.name }}
+    {% trans "Concurrent details" %}: {% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}
 {% endblock title %}
 
 {% block content %}
@@ -11,7 +11,7 @@
         <span class="h3">{% trans "Concurrent details" %}</span>
     </div>
     <div class="card bg-secondary-subtle shadow shadow-sm">
-        <div class="px-2 py-1 fs-5 fw-bold">{{ bidder.name }}</div>
+        <div class="px-2 py-1 fs-5 fw-bold">{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</div>
     </div>
 
 

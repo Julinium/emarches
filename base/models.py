@@ -571,6 +571,13 @@ class Concurrent(models.Model):
     name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
 
     @property
+    def pseudo(self):
+        aydi = str(self.id)
+        if len(aydi) > 8:
+            aydi = aydi[-8:]
+        return aydi.upper()
+
+    @property
     def deposits_sum(self):
         return self.deposits.aggregate(total=Sum('amount_b'))['total'] or 0
 

@@ -12,7 +12,7 @@
         {% for bidder in tender.openings.last.bidders.all %}
             <a href="{% url 'insights_bidder_details' bidder.id %}" 
                 target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
-                <span class="">{{ bidder.name }}</span>
+                <span class="">{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</span>
             </a>
         {% empty %}
             <div class="list-group small">
@@ -33,7 +33,7 @@
     <div class="list-group small ms-3">
         {% for concurrent, lots in grouped_ad_rej.items %}
             <div class="list-group-item list-group-item-action">
-                <span class="text-danger">{{ concurrent }}</span>
+                <span class="text-danger">{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                 {% if tender.lots_count > 1 %}
                     <span class="float-end ms-2 ">
                         <span class="fw-light">{% trans 'Lots' %}: </span> 
@@ -60,7 +60,7 @@
     <div class="list-group small ms-3">
         {% for concurrent, lots in grouped_ad_acc.items %}
             <div class="list-group-item list-group-item-action">
-                <span>{{ concurrent }}</span>
+                <span>{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                 {% if tender.lots_count > 1 %}
                     <span class="float-end ms-2 ">
                         <span class="fw-light">{% trans 'Lots' %}: </span> 
@@ -87,7 +87,7 @@
     <div class="list-group small ms-3">
         {% for concurrent, lots in grouped_ad_res.items %}
             <div class="list-group-item list-group-item-action">
-                <span>{{ concurrent }}</span>
+                <span>{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                 {% if tender.lots_count > 1 %}
                     <span class="float-end ms-2">
                         <span class="fw-light">{% trans 'Lots' %}: </span> 
@@ -115,7 +115,7 @@
         <div class="list-group small ms-3">
             {% for concurrent, lots in grouped_te_rej.items %}
                 <div class="list-group-item list-group-item-action">
-                    <span class="text-danger">{{ concurrent }}</span>
+                    <span class="text-danger">{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                     {% if tender.lots_count > 1 %}
                         <span class="float-end ms-2">
                             <span class="fw-light">{% trans 'Lots' %}: </span> 
@@ -164,7 +164,9 @@
                 </div>
                 {% for selected_bid in group.qahnsen %}
                     <div class="list-group-item list-group-item-action {% if selected_bid.winner %} text-success{% endif %}">
-                        <span class="">{{ selected_bid.concurrent.name }} </span>
+                        <span class="">
+                            {% if show_bidders_names %}{{ selected_bid.concurrent.name }}{% else %}{{ selected_bid.concurrent.pseudo }}{% endif %}
+                        </span>
                         <span class="float-end ms-3">
                             {% if selected_bid.amount_a != selected_bid.amount_b %}
                                 <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
@@ -203,7 +205,9 @@
                     <span class="fw-light">{% trans 'Lot' %}</span>
                     <span class="">{{ winner_bid.lot_number }}:</span>
                 </span>
-                <span class="text-success fw-bold">{{ winner_bid.concurrent.name }}</span>
+                <span class="text-success fw-bold">
+                    {% if show_bidders_names %}{{ winner_bid.concurrent.name }}{% else %}{{ winner_bid.concurrent.pseudo }}{% endif %}
+                </span>
                 <span class="float-end ms-2 fw-bold">{{ winner_bid.amount_w }}</span>
             </div>
         {% empty %}

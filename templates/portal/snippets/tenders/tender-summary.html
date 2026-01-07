@@ -120,11 +120,15 @@
                                                     <span class="badge small text-bg-secondary">{% if opening.win_offset >= 0 %}+{% endif %}{{ opening.win_offset|floatformat:1 }}%</span>
                                                 {% endif %}
                                                 <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
-                                                {% for concurrent in opening.winners.all %}
-                                                    {% ifchanged concurrent %}
-                                                        <span><i class="bi bi-dash-lg ms-1"></i>{{ concurrent }}</span>
-                                                    {% endifchanged %}
-                                                {% endfor %}
+                                                {% if show_bidders_names %}
+                                                    {% for concurrent in opening.winners.all %}
+                                                        {% ifchanged concurrent %}
+                                                            <span><i class="bi bi-dash-lg ms-1"></i>{{ concurrent.name }}</span>
+                                                        {% endifchanged %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <span class="text-danger"><i class="bi bi-lock-fill ms-1">{% trans 'LOCKED' %}!</i></span>
+                                                {% endif %}
                                             </span>
                                         {% else %}
                                             <span class="text-danger">

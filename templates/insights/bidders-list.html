@@ -45,7 +45,7 @@
                        class="btn text-start w-100 p-0 mb-2">
                         <div class="card shadow py-2 px-3">
                             <div class="{% if wrap_text == False %}oneline{% endif %}">
-                                <span>{{ bidder.name }}</span>
+                                <span>{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</span>
                                 <span class="small ms-1 float-end text-end"
                                       style="min-width: 5rem;">
                                     <span class="small fw-light">{{ bidder.wins_count }}/{{ bidder.deposits.all|length }}</span>
