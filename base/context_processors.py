@@ -177,6 +177,9 @@ def portal_context(request):
 
     # TODO: Permission logic
     show_bidders_names = False
+    user = request.user
+    if user and user.is_superuser:
+        show_bidders_names = True
 
 
     context['user_settings'] = user_settings
