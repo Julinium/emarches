@@ -476,5 +476,25 @@ class UserSetting(models.Model):
         return f'Settings for {self.user.username}'
 
 
+class Asset(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    serial = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Serial Number"))
+    issuer = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
+    holder = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
+    owner  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Owner"))
+    issued = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Validity start"))
+    expiry = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Expiry date"))
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="assets", blank=True, null=True, verbose_name=_("Company"))
+
+    class Meta:
+        db_table = 'base_asset'
+        ordering = ['name']
+        verbose_name = _("Asset")
+    
+    def __str__(self):
+        return self.name
+
+
 
 

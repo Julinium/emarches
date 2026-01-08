@@ -50,52 +50,12 @@ def username_view(request, username):
             'companies',            # Company
             'newsletters',          # NewsletterSubscription
             'notifications',        # NotificationSubscription
-            # 'folders',              # Folder
-            # 'favorites',            # Fovorite
-            # 'downloads',            # Download
-            # 'letters',              # Letter
-            # 'sent_letters',         # LetterSent
-            # 'sent_notifications',   # NotificationSent
-            # 'comments',             # Comment
-            # 'reactions',            # Reaction
-            # 'settings',             # UserSetting
-
-            # ---- nested / filtered prefetch ----
-            # Prefetch(
-            #     'posts',
-            #     queryset=Post.objects.select_related('category')
-            #                         .filter(is_published=True)
-            #                         .order_by('-created_at'),
-            #     to_attr='published_posts'   # optional custom attribute
-            # ),
         )
         .get(username=request.user.username)
     )
 
-    # try:
-    #     profile = user.profile
-    # except:
-    #     profile = Profile(user=user)
-    #     profile.save()
-
-    # companies = user.companies
-    # subscribeUserToNotifications(user)
-    # subscribeUserToNewsletters(user)
-    # noti_subs = user.notifications.all()
-    # newl_subs = user.newsletters.all()
-
-    # nofif_disabled = noti_subs.filter(active=False).first() != None
-    # newsl_disabled = newl_subs.filter(active=False).first() != None
-
-
     context = {
         'user': user,
-        # 'profile': user.profile,
-        # 'companies': companies,
-        # 'notifications': noti_subs,
-        # 'notif_disabled': nofif_disabled,
-        # 'newsletters': newl_subs,
-        # 'newsl_disabled': newsl_disabled
     }
     return render(request, 'nas/profile-view.html', context)
 
@@ -117,13 +77,8 @@ def profile_edit(request):
             return redirect('nas_profile_view')
         else:
             show_form_errors(form, request)
-            # for field, errors in form.errors.items():
-            #     for error in errors:
-            #         messages.error(request, f"{field}: {error}")
     else:
         form = UserProfileForm(instance=profile)
-    # messages.success(request, "Your personal data is kept private.")
-    # messages.success(request, "Only your username and avatar may be seen by other users.")
     return render(request, 'nas/profile-edit.html', {'form': form})
 
 
@@ -334,7 +289,6 @@ def manage_company_agrements(request, pk):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def accept_iced_company(request, pk):
     company = get_object_or_404(Company, id=pk)
-    # all_qualifs = Qualif.objects.all()
     if company.iced_company:
         if request.method == "POST":
             try:
