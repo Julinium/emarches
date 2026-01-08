@@ -6,8 +6,10 @@ from urllib.parse import urlencode
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from django.db.models import F, Q, Count, Sum, Min, Max, FloatField, ExpressionWrapper
-from django.db.models.functions import NullIf
+from django.db.models import F, Q, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
+# from django.db.models.expressions import OrderBy
+from django.db.models.functions import NullIf, Round
+from decimal import Decimal
 
 from django.core.paginator import Paginator
 
@@ -129,14 +131,14 @@ def bidders_list(request):
     all_bidders = Concurrent.objects.annotate(
             part_count = Count('deposits', distinct=True), 
             wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
-            bids_sum   = Sum('deposits__amount_b', filter=Q(deposits__amount_b__isnull=False)), 
+            bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
             wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True)), 
             last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
             last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
         ).annotate(
             succ_rate = ExpressionWrapper(
-                F("wins_sum") * 100.0 / NullIf(F("bids_sum"), 0),
-                output_field=FloatField(),
+                Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 3),
+                output_field=DecimalField(max_digits=8, decimal_places=3),
             )
         )
 
@@ -156,9 +158,17 @@ def bidders_list(request):
     else:
         if ordering[0] == '-':
             ordering = ordering[1:]
-            bidders = bidders.order_by(F(ordering).asc(nulls_last=True), 'name')
+            bidders = bidders.order_by(
+                # OrderBy(F(ordering), nulls_last=True),
+                # OrderBy(F("last_win")),
+                F(ordering).asc(nulls_last=True), '-last_win', 'name'
+                )
         else:
-            bidders = bidders.order_by(F(ordering).desc(nulls_last=True), 'name')
+            bidders = bidders.order_by(
+                # OrderBy(F(ordering), descending=True, nulls_last=True),
+                # OrderBy(F("last_win")),
+                F(ordering).desc(nulls_last=True), '-last_win', 'name'
+                )
 
     context = define_context(request)
 
