@@ -103,6 +103,15 @@ def format(tender_json):
 @transaction.atomic
 def save(tender_data):    
 
+    def lottify(lot_no_str, default_int):
+        try:
+            s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
+            n = int(s.strip())
+            if n > 0: return n
+        except: pass
+        return default_int
+
+
     formatted_data = format(tender_data)
     helper.printMessage('DEBUG', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
 
@@ -328,8 +337,9 @@ def save(tender_data):
             lot_data['category'] = lot_category
 
             # Match Lot by title
-            lot_title = lot_data.get('title')
-            lot_number = lot_data.get('number')
+            lot_title  = lot_data.get('title')
+            lot_number_text = lot_data.get('number')
+            lot_number = lottify(lot_number_text, i)
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
             if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
