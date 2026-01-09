@@ -1,6 +1,50 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+class CivilityChoices(models.TextChoices):
+    CIV_MR  = '10R',   _("Mr.")
+    CIV_MLE = '20L',   _("Mle")
+    CIV_MME = '30M',   _("Mme")
+    CIV_DR  = '40D',   _("Dr.")
+    CIV_PR  = '50P',   _("Pr.")
+
+class BidStatus(models.TextChoices):
+    BID_PREPARING = '10U',   _("Preparing")
+    BID_READY     = '20R',   _("Ready")
+    BID_SUBMITTED = '30S',   _("Submitted")
+    BID_FINISHED  = '40F',   _("Finished")
+    BID_CANCELLED = '50X',   _("Cancelled")
+
+class BidResults(models.TextChoices):
+    BID_UNKNOWN   = '10X',   _("Unknown")
+    BID_AWARDED   = '20A',   _("Awarded")
+    BID_REJECT_A  = '30D',   _("Admin Rejected")
+    BID_REJECT_T  = '40T',   _("Tech Rejected")
+    BID_LOST      = '50U',   _("Unselected")
+
+class ContractStatus(models.TextChoices):
+    CONTRACT_PREPARING  = '10P',   _("Preparing")
+    CONTRACT_SIGNED     = '20S',   _("Signed")
+    CONTRACT_EXECUTION  = '30E',   _("Executing")
+    CONTRACT_FINISHED   = '40U',   _("Finished")
+    CONTRACT_CLOSED     = '50C',   _("Closed")
+    CONTRACT_CANCELLED  = '60X',   _("Cancelled")
+
+class TaskEmergency(models.TextChoices):
+    TASK_TERTIARY  = '10T',   _("Tertiary")
+    TASK_SECONDARY = '20S',   _("Secondary")
+    TASK_NORMAL    = '30N',   _("Normal")
+    TASK_URGENT    = '40U',   _("Urgent")
+    TASK_CRITICAL  = '50C',   _("Critical")
+
+class TaskStatus(models.TextChoices):
+    TASK_PENDING   = '10P',   _("Pending")
+    TASK_STARTED   = '20S',   _("Started")
+    TASK_STALLED   = '30S',   _("Stalled")
+    TASK_FINISHED  = '40E',   _("Finished")
+    TASK_CANCELLED = '50X',   _("Cancelled")
+   
+
 class ItemsPerPage(models.TextChoices):
     IPP_005 = '5',   "5"
     IPP_010 = '10',  "10"

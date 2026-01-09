@@ -15,7 +15,6 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = ENVIRONMENT != 'production'
 
-# DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 
@@ -23,7 +22,6 @@ ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 SITE_ID = 1
 
 INSTALLED_APPS = [
-    # 'modeltranslation',
     
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,6 +40,7 @@ INSTALLED_APPS = [
     'portal',
     'bdc',
     'insights',
+    'bidding',
 
     'django_cleanup',
     'debug_toolbar',
