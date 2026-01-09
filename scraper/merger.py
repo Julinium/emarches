@@ -291,7 +291,6 @@ def save(tender_data):
     json_lot_keys = set()
     new_lots = []
 
-
     estimate_total, bond_total = 0, 0
     reserved_tender, variant_tender = False, False
     ll = len(lots_data) if lots_data else 0
@@ -304,6 +303,8 @@ def save(tender_data):
 
         for lot_data in lots_data:
             i += 1
+            lot_number_text = lot_data['number']
+            lot_data['number'] = lottify(lot_number_text, i)
             helper.printMessage('DEBUG', 'm.save', f"#### Handling Lot {i}/{ll} ... ")
             # Update Tender fields
             estimate_total += lot_data["estimate"]
@@ -338,8 +339,8 @@ def save(tender_data):
 
             # Match Lot by title
             lot_title  = lot_data.get('title')
-            lot_number_text = lot_data.get('number')
-            lot_number = lottify(lot_number_text, i)
+            lot_number = lot_data.get('number', 1)
+            # lot_number = lottify(lot_number_text, i)
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
             if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
