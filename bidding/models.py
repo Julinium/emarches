@@ -155,6 +155,7 @@ class Task(models.Model):
     deatils        = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     assignee       = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_('Assigned to'), related_name='tasks')
     emergency      = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
+    milestone      = models.BooleanField(null=True, default=True)
     status         = models.CharField(max_length=16, choices=ContractStatus.choices, default=ContractStatus.TASK_PENDING, verbose_name=_('Status'))
 
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='tasks')
@@ -168,17 +169,6 @@ class Task(models.Model):
         return self.title
 
 
-MILESTONE
-    • → Contract ?
-    • → Bid ?
-    • Margin (safe days)
-    • Date due
-    • → Contact
-    • Note
-    • Status
-    • Users
-
-
 EXPENSE
     • Date
     • Object
@@ -187,6 +177,8 @@ EXPENSE
     • Source/Mean
     • Reference
     • File
+    • → Company ?
+    • → Contact ?
     • → Contract ?
     • → Bid ?
 
@@ -213,5 +205,5 @@ PAYMENT
     • → Bid ?
 
 
-
+ACCOUNT ?
 
