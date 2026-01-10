@@ -7,14 +7,13 @@ from django.utils.translation import gettext_lazy as _
 
 from django.core.validators import FileExtensionValidator
 
-# from django.conf import settings
-
 from base.models import Lot, Tender
 from nas.models import Company
 from nas.imaging import squarify_image
-# from .iceberg import get_ice_checkup
+
 from nas.choices import (
-    CivilityChoices, BidStatus, BidResults, ContractStatus
+    CivilityChoices, BidStatus, BidResults, ContractStatus, 
+    TaskEmergency, TaskStatus, ExpenseStatus, ReceptionStatus, 
     )
 
 EXTENSIONS_VALIDATORS = [
@@ -26,7 +25,7 @@ EXTENSIONS_VALIDATORS = [
     ]
 
 class Team(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id   = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='teams')
     active    = models.BooleanField(null=True, default=True)
     image     = models.ImageField(upload_to='bidding/teams/', null=True, blank=True, verbose_name=_('Avatar'))
@@ -87,7 +86,7 @@ class Bid(models.Model):
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     lot             = models.ForeignKey(Lot, on_delete=models.DO_NOTHING, editable=False, related_name='bids')
     team            = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='bids')
-    company         = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='bids')
+    company         = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='bids')
 
     date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Status'))
@@ -146,17 +145,18 @@ class Contract(models.Model):
 
 
 class Task(models.Model):
-    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    bid            = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='tasks')
-    contract       = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='tasks')
-    title          = models.CharField(max_length=255, blank=True, default=_('Task'), verbose_name=_('Title'))
-    date_due       = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
-    contact        = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
-    deatils        = models.TextField(blank=True, null=True, verbose_name=_('Details'))
-    assignee       = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_('Assigned to'), related_name='tasks')
-    emergency      = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
-    milestone      = models.BooleanField(null=True, default=True)
-    status         = models.CharField(max_length=16, choices=ContractStatus.choices, default=ContractStatus.TASK_PENDING, verbose_name=_('Status'))
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    bid       = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='tasks')
+    contract  = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='tasks')
+    title     = models.CharField(max_length=255, blank=True, default=_('Task'), verbose_name=_('Title'))
+    date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
+    reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
+    contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
+    deatils   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    assignee  = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_('Assigned to'), related_name='assigned_tasks')
+    emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
+    milestone = models.BooleanField(null=True, default=True)
+    status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, verbose_name=_('Status'))
 
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='tasks')
     created   = models.DateTimeField(auto_now_add=True, editable=False)
@@ -169,41 +169,108 @@ class Task(models.Model):
         return self.title
 
 
-EXPENSE
-    • Date
-    • Object
-    • Amount
-    • Payee
-    • Source/Mean
-    • Reference
-    • File
-    • → Company ?
-    • → Contact ?
-    • → Contract ?
-    • → Bid ?
+class Expense(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    bid          = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='expenses')
+    contract     = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='expenses')
+    company      = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='expenses')
+    title        = models.CharField(max_length=255, blank=True, default=_('Expense'), verbose_name=_('Object'))
+    reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
+    bill_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Bill Number'))
+    bill_date    = models.DateTimeField(blank=True, null=True, verbose_name="Bill Date")
+    date_paid    = models.DateTimeField(blank=True, null=True, verbose_name="Paid Date")
+    channel      = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payment Mean'))
+    mean_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Mean Reference'))
 
-RECEPTION
-    • → Contract
-    • Date Scheduled
-    • Date ended
-    • Progress (%)
-    • Manager
-    • → Contact
-    • Location
-    • Result (Success, Fail, Retake, …)
-    • Files
-
-PAYMENT
-    • Date
-    • Object
-    • Amount
-    • Payee
-    • Source/Mean
-    • Reference
-    • File
-    • → Contract ?
-    • → Bid ?
+    amount_paid  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Paid Amount, incl. Taxes"))
+    amount_vat   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Taxes Amount"))
+    
+    payee        = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payee'))
+    payee_ice    = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Payee ICE'))
+    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='expenses')
 
 
-ACCOUNT ?
+    deatils      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))
+
+    file         = models.FileField(upload_to='bidding/expenses/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
+
+    creator      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='expenses')
+    created      = models.DateTimeField(auto_now_add=True, editable=False)
+    updated      = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        db_table = 'bidding_expense'
+
+    def __str__(self):
+        return self.title
+
+
+class Reception(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    contract     = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='receptions')
+    title        = models.CharField(max_length=255, blank=True, default=_('Reception'), verbose_name=_('Object'))
+    reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
+    date_sched   = models.DateTimeField(blank=True, null=True, verbose_name="Scheduled Date")
+    date_subm    = models.DateTimeField(blank=True, null=True, verbose_name="Submitted Date")
+
+    client       = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Client'))
+    client_ice   = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Client ICE'))
+    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='receptions')
+    location     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Location'))
+
+    deatils      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    status       = models.CharField(max_length=16, choices=ReceptionStatus.choices, default=ReceptionStatus.RCP_PENDING, verbose_name=_('Status'))
+
+    file         = models.FileField(upload_to='bidding/receptions/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
+
+    creator      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='receptions')
+    created      = models.DateTimeField(auto_now_add=True, editable=False)
+    updated      = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        db_table = 'bidding_reception'
+
+    def __str__(self):
+        return self.title
+
+
+class Income(models.Model):
+    id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    bid          = models.ForeignKey(Bid,       on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'),       related_name='incomes')
+    contract     = models.ForeignKey(Contract,  on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'),  related_name='incomes')
+    company      = models.ForeignKey(Company,   on_delete=models.DO_NOTHING,            verbose_name=_('Company'),   related_name='incomes')
+    reception    = models.ForeignKey(Reception, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Reception'), related_name='incomes')
+
+    title        = models.CharField(max_length=255, blank=True, default=_('Expense'), verbose_name=_('Object'))
+    reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
+    bill_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Bill Number'))
+    bill_date    = models.DateTimeField(blank=True, null=True, verbose_name="Bill Date")
+    date_paid    = models.DateTimeField(blank=True, null=True, verbose_name="Paid Date")
+    channel      = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payment Mean'))
+    channel_ref  = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Mean Reference'))
+
+    amount_paid  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Paid Amount, incl. Taxes"))
+    amount_vat   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Taxes Amount"))
+
+    client       = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Client'))
+    client_ice   = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Client ICE'))
+    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='incomes')
+
+    deatils      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))
+
+    file         = models.FileField(upload_to='bidding/incomes/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
+
+    creator      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='incomes')
+    created      = models.DateTimeField(auto_now_add=True, editable=False)
+    updated      = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta:
+        db_table = 'bidding_income'
+
+    def __str__(self):
+        return self.title
+
 

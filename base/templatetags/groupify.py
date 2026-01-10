@@ -2,6 +2,7 @@ from collections import defaultdict, OrderedDict
 from django.forms.models import model_to_dict
 
 from django import template
+from decimal import Decimal
 
 register = template.Library()
 
@@ -59,6 +60,33 @@ def group_by(queryset, field_name):
     ]
 
 
+
+@register.simple_tag
+def progrefy(R, D):
+
+    R = Decimal(R)
+    D = Decimal(D)
+
+    if R == 0: return 0
+
+    # delta = R * Decimal("0.25")
+    min_val = R - R * Decimal("0.26")
+    max_val = R + R * Decimal("0.21")
+
+    if D < min_val:
+        D = min_val
+    elif D > max_val:
+        D = max_val
+    d_percent = ((D - min_val) / (max_val - min_val)) * Decimal("100")
+
+    return round(d_percent)
+
+    # return {
+    #     "reference": Decimal("50"),
+    #     "value": round(d_percent, 2),
+    #     "min": min_val,
+    #     "max": max_val,
+    # }
 
 
 

@@ -188,7 +188,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         i += 1
         links += page2Links(driver, i, pages)
         helper.printMessage('TRACE', 'l.getLinks', f'### Looking for next page {i+1:03} ... ')
-            
+
         try :
             next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
             helper.printMessage('TRACE', 'l.getLinks', f'+++ Next page found {i+1:03}')

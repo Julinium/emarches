@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n l10n %}
 {% load groupify humanize %}
 
 
@@ -16,7 +16,7 @@
             </a>
         {% empty %}
             <div class="list-group small">
-                <div class="list-group-item">
+                <div class="list-group-item p-2">
                     {% trans 'None' %}
                 </div>
             </div>
@@ -32,7 +32,7 @@
     </div>
     <div class="list-group small ms-3">
         {% for concurrent, lots in grouped_ad_rej.items %}
-            <div class="list-group-item list-group-item-action">
+            <div class="list-group-item p-2 list-group-item-action">
                 <span class="text-danger">{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                 {% if tender.lots_count > 1 %}
                     <span class="float-end ms-2 ">
@@ -46,7 +46,7 @@
                 {% endif%}
             </div>
         {% empty %}
-        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
         {% endfor %}
     </div>
 </div>    
@@ -59,7 +59,7 @@
     </div>
     <div class="list-group small ms-3">
         {% for concurrent, lots in grouped_ad_acc.items %}
-            <div class="list-group-item list-group-item-action">
+            <div class="list-group-item p-2 list-group-item-action">
                 <span>{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                 {% if tender.lots_count > 1 %}
                     <span class="float-end ms-2 ">
@@ -73,7 +73,7 @@
                 {% endif%}
             </div>
         {% empty %}
-        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
         {% endfor %}
     </div>
 </div>
@@ -86,7 +86,7 @@
     </div>
     <div class="list-group small ms-3">
         {% for concurrent, lots in grouped_ad_res.items %}
-            <div class="list-group-item list-group-item-action">
+            <div class="list-group-item p-2 list-group-item-action">
                 <span>{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                 {% if tender.lots_count > 1 %}
                     <span class="float-end ms-2">
@@ -100,7 +100,7 @@
                 {% endif%}
             </div>
         {% empty %}
-        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
         {% endfor %}
     </div>
 </div>
@@ -114,7 +114,7 @@
         </div>
         <div class="list-group small ms-3">
             {% for concurrent, lots in grouped_te_rej.items %}
-                <div class="list-group-item list-group-item-action">
+                <div class="list-group-item p-2 list-group-item-action">
                     <span class="text-danger">{% if show_bidders_names %}{{ concurrent.name }}{% else %}{{ concurrent.pseudo }}{% endif %}</span>
                     {% if tender.lots_count > 1 %}
                         <span class="float-end ms-2">
@@ -128,7 +128,7 @@
                     {% endif%}
                 </div>
             {% empty %}
-            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+            <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
             {% endfor %}
         </div>
     {% endif %}
@@ -140,55 +140,117 @@
         <span class="">{% trans 'Financial Offers' %}</span>
     </div>
     {% if tender.openings.last.selected_bids|length > 0 %}
-            {% for group in tender.openings.last.selected_bids|group_by:"lot_number" %}
-        <div class="list-group small ms-3 mb-2">
-                <div class="list-group-item disabled bg-secondary-subtle ps-2">
-                    <span class="ms-2">
-                        {% if tender.lots_count > 1 %}
-                            <span class="fw-light">{% trans 'Lot' %}</span>
-                            <span class="">{{ group.lot_number }}</span>
+        {% for group in tender.openings.last.selected_bids|group_by:"lot_number" %}
+            <div class="list-group small ms-3 mb-2">
+                <div class="list-group-item p-2 disabled bg-secondary-subtle">
+                    <div class="row">
+                        <div class="col-12 col-md-6">
+                            {% if tender.lots_count > 1 %}
+                                <span class="fw-light">{% trans 'Lot' %}</span>
+                                <span class="">{{ group.lot_number }}</span>
+                                <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
+                            {% endif%}
+                            <span class="fw-light">E=<span class="fw-bold">{{ group.amzgaro.lot.estimate }}</span></span>
                             <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
-                        {% endif%}
-                        <span class="fw-light">E={{ group.amzgaro.lot.estimate }}</span>
-                        <span class="small"><i class="bi bi-three-dots-vertical text-secondary"></i></span>
 
-                        <span class="fw-light me-2">{% trans 'Offers' %}: {{ group.amzgaro.composits|length }}</span>
-                    </span>
-                    {% if group.amzgaro.composits|length > 1 %}
-                        <span class="float-end">
-                            <span class="fw-light ms-2" >M={{ group.amzgaro.average|floatformat:2 }}</span>
-                            <span class="small"><i class="bi bi-three-dots-vertical text-secondary me-1"></i></span>
-                            <span class="fw-light text-success float-end" >R={{ group.amzgaro.optimum|floatformat:2 }}</span>
-                        </span>
+                            <span class="fw-light me-2">{% trans 'Offers' %}:<span class="fw-bold">{{ group.amzgaro.composits|length }}</span></span>
+                        </div>
+                        {% if group.qahnsen|length > 1 %}
+                            <div class="col-12 col-md-6 text-end">
+                                <span class="fw-light text-primary ms-2" >M=<span class="fw-bold">{{ group.amzgaro.average|floatformat:2 }}</span></span>
+                                <span class="small"><i class="bi bi-three-dots-vertical text-secondary me-1"></i></span>
+                                <span class="fw-light text-success float-end" >R=<span class="fw-bold">{{ group.amzgaro.optimum|floatformat:2 }}</span></span>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% if group.qahnsen|length > 1 %}
+                        <div id="bars" class="">
+                            {% if group.amzgaro.lot.estimate %}
+                                <div class="progress bg-light py-0 mt-1"
+                                        style="height: 0.2rem;">
+                                    <div class="progress-bar bg-secondary" 
+                                            role="progressbar" style="width: 50%;" 
+                                            aria-valuenow="50" aria-valuemin="0" 
+                                            aria-valuemax="100">
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            {% if group.amzgaro.lot.estimate and group.amzgaro.average %}
+                                {% progrefy group.amzgaro.lot.estimate group.amzgaro.average as avg_bar %}
+                                <div class="progress bg-light py-0 mt-1"
+                                        style="height: 0.2rem;">
+                                    <div class="progress-bar bg-primary" 
+                                            role="progressbar" style="width: {{ avg_bar|unlocalize }}%;" 
+                                            aria-valuenow="{{ avg_bar|unlocalize }}" aria-valuemin="0" 
+                                            aria-valuemax="100">
+                                    </div>
+                                </div> 
+                            {% endif %}                   
+                            
+                            {% if group.amzgaro.lot.estimate and group.amzgaro.optimum %}
+                                {% progrefy group.amzgaro.lot.estimate group.amzgaro.optimum as ref_bar %}
+                                <div class="progress bg-light py-0 mt-1"
+                                        style="height: 0.2rem;">
+                                    <div class="progress-bar bg-success" 
+                                            role="progressbar" style="width: {{ ref_bar|unlocalize }}%;" 
+                                            aria-valuenow="{{ ref_bar|unlocalize }}" aria-valuemin="0" 
+                                            aria-valuemax="100">
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% endif %}
+                    
                 </div>
                 {% for selected_bid in group.qahnsen %}
-                    <div class="list-group-item list-group-item-action {% if selected_bid.winner %} text-success{% endif %}">
-                        <span class="">
-                            {% if show_bidders_names %}{{ selected_bid.concurrent.name }}{% else %}{{ selected_bid.concurrent.pseudo }}{% endif %}
-                        </span>
-                        <span class="float-end ms-3">
-                            {% if selected_bid.amount_a != selected_bid.amount_b %}
-                                <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
-                            {% endif %}
-                            {% if selected_bid.winner %}
-                                <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
-                            {% endif %}
-                            <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
-                            <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-success bg-success-subtle">R {% if selected_bid.score >= 0 %}+{% endif %}{{ selected_bid.score|floatformat:2|default:'?' }}</span>
-                            <span class="float-end ms-2 {% if selected_bid.winner %}text-success{% endif %}">{{ selected_bid.amount_a }}</span>
-                        </span>
+                    <div class="list-group-item p-2 list-group-item-action">
+                        <div class="row">
+                            <div class="col-12 col-md-6">
+                                <span class="{% if selected_bid.winner %} text-success fw-bold{% endif %}">
+                                    {% if show_bidders_names %}{{ selected_bid.concurrent.name }}{% else %}{{ selected_bid.concurrent.pseudo }}{% endif %}
+                                </span>
+                            </div>
+                            <div class="col-12 col-md-6 text-end">
+                                {% if selected_bid.amount_a != selected_bid.amount_b %}
+                                    <span class="small fw-light text-decoration-line-through ms-1">{{ selected_bid.amount_b }}</span>
+                                {% endif %}
+                                {% if selected_bid.winner %}
+                                    <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                                {% endif %}
+                                {% if group.qahnsen|length > 1 %}
+                                    <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
+                                    <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-success bg-success-subtle">R {% if selected_bid.score >= 0 %}+{% endif %}{{ selected_bid.score|floatformat:2|default:'?' }}</span>
+                                {% endif %}
+                                <span class="float-end ms-2">{{ selected_bid.amount_a }}</span>
+                            </div>
+                        </div>
+                        {% if group.qahnsen|length > 1 %}
+                            <div class="">
+                                {% if group.amzgaro.lot.estimate and selected_bid.amount_a %}
+                                    {% progrefy group.amzgaro.lot.estimate selected_bid.amount_a as bid_bar %}
+                                    <div class="progress bg-secondary-subtle py-0 mt-1"
+                                            style="height: 0.1rem;">
+                                        <div class="progress-bar bg-warning" 
+                                                role="progressbar" style="width: {{ bid_bar|unlocalize }}%;" 
+                                                aria-valuenow="{{ bid_bar|unlocalize }}" aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
                     </div>
                 {% empty %}
                     <div class="list-group small ms-3">
-                        <div class="list-group-item text-danger fw-light">{% trans 'None' %}</div>
+                        <div class="list-group-item p-2 text-danger fw-light">{% trans 'None' %}</div>
                     </div>
                 {% endfor %}
-        </div>
-            {% endfor %}
+            </div>
+        {% endfor %}
     {% else %}
         <div class="list-group small ms-3">
-            <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+            <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
         </div>
     {% endif %}
 </div>
@@ -200,7 +262,7 @@
     </div>
     <div class="list-group small ms-3">
         {% for winner_bid in tender.openings.last.winner_bids %}
-            <div class="list-group-item list-group-item-action">
+            <div class="list-group-item p-2 list-group-item-action">
                 <span class="{% if tender.lots_count < 2 %} d-none{% endif%}">
                     <span class="fw-light">{% trans 'Lot' %}</span>
                     <span class="">{{ winner_bid.lot_number }}:</span>
@@ -211,7 +273,7 @@
                 <span class="float-end ms-2 fw-bold">{{ winner_bid.amount_w }}</span>
             </div>
         {% empty %}
-        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
         {% endfor %}
     </div>
 </div>
@@ -223,7 +285,7 @@
     </div>
     <div class="list-group small ms-3">
         {% for win_justif in tender.openings.last.win_justifs %}
-            <div class="list-group-item list-group-item-action">
+            <div class="list-group-item p-2 list-group-item-action">
                 {% if tender.lots_count > 1 %}
                     <span class="">
                         <span class="fw-light">{% trans 'Lot' %}</span>
@@ -233,7 +295,7 @@
                 <span class="">{{ win_justif.justif }}</span>
             </div>
         {% empty %}
-        <div class="list-group-item text-secondary fw-light">{% trans 'None' %}</div>
+        <div class="list-group-item p-2 text-secondary fw-light">{% trans 'None' %}</div>
         {% endfor %}
     </div>
 </div>

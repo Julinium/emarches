@@ -43,7 +43,19 @@ class TaskStatus(models.TextChoices):
     TASK_STALLED   = '30S',   _("Stalled")
     TASK_FINISHED  = '40E',   _("Finished")
     TASK_CANCELLED = '50X',   _("Cancelled")
-   
+
+class ExpenseStatus(models.TextChoices):
+    XPS_PENDING   = '10P',   _("Pending")
+    XPS_PAID      = '20D',   _("Paid")
+    XPS_CONFIRMED = '30C',   _("Confirmed")
+    XPS_CANCELLED = '40X',   _("Cancelled")
+
+class ReceptionStatus(models.TextChoices):
+    RCP_PENDING   = '10P',   _("Pending")
+    RCP_SUBMITTED = '20S',   _("Submitted")
+    RCP_ACCEPTED  = '30A',   _("Accepted")
+    RCP_CANCELLED = '40X',   _("Cancelled")
+
 
 class ItemsPerPage(models.TextChoices):
     IPP_005 = '5',   "5"
