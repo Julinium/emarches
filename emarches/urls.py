@@ -20,7 +20,6 @@ from nas import views as nas_views
 # urlpatterns = []
 
 urlpatterns = i18n_patterns(
-
     path('',                include('base.urls')),
     path('admin/',          admin.site.urls),
     path('@<str:username>', nas_views.username_view, name='nas_at_username'),
@@ -30,9 +29,9 @@ urlpatterns = i18n_patterns(
     path('tenders/',        include('portal.urls')),
     path('bdc/',            include('bdc.urls')),
     path('insights/',       include('insights.urls')),
-
+    path('bidding/',        include('bidding.urls')),
+    
     path('__debug__/', include('debug_toolbar.urls')),
-    # prefix_default_language = False
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

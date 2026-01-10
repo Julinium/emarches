@@ -1,0 +1,66 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Order items by' %}">
+            <i class="{{ bicons.sort }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Ordering' %}</span>
+            </div>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Latest Win' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='last_win' icon=bicons.history %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Latest participation' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='last_part' icon=bicons.history %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Amount won' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='wins_sum' icon=bicons.estimate %}
+            </li>
+
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Wins count' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='wins_count' icon=bicons.deliberated %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Success rate' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='succ_rate' icon=bicons.ratio %}
+            </li>
+
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Participations count' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='part_count' icon=bicons.deliberated %}
+            </li>
+
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Name' as caption %}
+                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='name' icon=bicons.title %}
+            </li>
+        </ul>
+    </div>
+</div>
+

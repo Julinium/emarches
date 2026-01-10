@@ -4,7 +4,8 @@
     <a class="nav-link py-2 dropdown-toggle" 
         href="#" id="tenderDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
-    <i class="{{ bicons.tenders }} me-1"></i> {% trans 'Tenders' %}
+        <!-- <i class="{{ bicons.tenders }} me-1"></i> -->
+        <span>{% trans 'Tenders' %}</span>
     </a>
     <ul class="dropdown-menu shadow" aria-labelledby="tenderDropdown">
         <li class="">
@@ -21,7 +22,7 @@
             </a>
         </li>
 
-        <li class="">
+        <!-- <li class="">
             <a class="dropdown-item py-2 fw-bold" href="{% url 'insights_bidders_list' %}">
                 <i class="{{ bicons.concurrence }} me-2"></i>
                 {% trans 'Concurrence' %}
@@ -40,7 +41,7 @@
                     </span>
                 {% endif %}
             </a>
-        </li>
+        </li> -->
 
         {% if categories %}
             <li><hr class="dropdown-divider"></li>

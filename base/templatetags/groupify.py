@@ -60,7 +60,6 @@ def group_by(queryset, field_name):
     ]
 
 
-
 @register.simple_tag
 def progrefy(R, D):
 
@@ -68,10 +67,9 @@ def progrefy(R, D):
     D = Decimal(D)
 
     if R == 0: return 0
-
-    # delta = R * Decimal("0.25")
+    
     min_val = R - R * Decimal("0.26")
-    max_val = R + R * Decimal("0.21")
+    max_val = R + R * Decimal("0.26")
 
     if D < min_val:
         D = min_val
@@ -80,16 +78,6 @@ def progrefy(R, D):
     d_percent = ((D - min_val) / (max_val - min_val)) * Decimal("100")
 
     return round(d_percent)
-
-    # return {
-    #     "reference": Decimal("50"),
-    #     "value": round(d_percent, 2),
-    #     "min": min_val,
-    #     "max": max_val,
-    # }
-
-
-
 
 
 

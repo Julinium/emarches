@@ -1,0 +1,599 @@
+{% extends 'base/base.html' %}
+{% load i18n l10n static humanize groupify tz %}
+
+{% block title %}
+    {% trans "Concurrent details" %}: {% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}
+{% endblock title %}
+
+{% block content %}
+
+    <div class="mb-3">
+        <span class="h3">{% trans "Concurrent details" %}</span>
+    </div>
+    <div class="card bg-secondary-subtle shadow shadow-sm">
+        <div class="px-2 py-1 fs-5 fw-bold">{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</div>
+    </div>
+
+
+    <div class="my-3" id="bidder-details">
+
+
+        <div class="row gx-4 gy-0" id="bidderDigest">
+
+            <div class="col-12" 
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Won offers' %} :{{ bidder.winners_sum }} / {{ bidder.deposits_sum }}">
+                <div class="d-flex my-3">
+                    <div><i class="bi bi-pie-chart"></i></div>
+                    <div class="ms-2 w-100 {% if not bidder.success_rate %}border border-0 border-bottom{% endif %}">
+                        <div class="text-muted small fw-light">
+                            {% trans "Success rate" %}
+                        </div>
+                        <div id="main-value" class="">
+                            <span class="fw-bold">{{ bidder.winners_sum|metrify }}</span>
+                            <span class="fw-light">/</span>
+                            <span class="">{{ bidder.deposits_sum|metrify }}</span>
+                            <span class="small ms-2 {% if not bidder.success_rate >= 0 %}fw-light text-secondary{% endif %} float-end">{{ bidder.success_rate }}
+                                {% if bidder.success_rate >= 0 %}%{% endif %}
+                            </span>
+                        </div>
+                        {% if bidder.success_rate %}
+                            <div class="progress bg-warning p-0 m-0"
+                                    style="height: 0.25rem;"
+                                    data-bs-toggle="tooltip"
+                                    title="{% trans 'Success rate' %}: {{ bidder.success_rate }}%">
+                                <div class="progress-bar bg-success" 
+                                        role="progressbar" style="width: {{ bidder.success_rate|unlocalize }}%;" 
+                                        aria-valuenow="{{ bidder.success_rate|unlocalize }}" aria-valuemin="0" 
+                                        aria-valuemax="100">
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+
+            {% if bidder.winners.all|length > 0 %}
+                <div class="col-12 col-md-6"
+                    data-bs-toggle="tooltip"
+                    title="{% trans 'Wins range' %}: {{ bidder.lowest_win }} - {{ bidder.highest_win }}">
+                    <div class="d-flex my-3">
+                        <div><i class="bi bi-sort-up"></i></div>
+                        <div class="ms-2 w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Wins range" %}
+                            </div>
+                            <div id="" class="small">
+                                <span class="">{{ bidder.lowest_win|metrify }}</span>
+                                <span class="fw-light">-</span>
+                                <span class="">{{ bidder.highest_win|metrify }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6"
+                    data-bs-toggle="tooltip"
+                    title="{% trans 'Wins period' %}: {{ bidder.first_win }} - {{ bidder.latest_win }}">
+                    <div class="d-flex my-3">
+                        <div><i class="bi bi-calendar2-check"></i></div>
+                        <div class="ms-2 w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Wins period" %}
+                            </div>
+                            <div id="" class="small">
+                                <span class="">{{ bidder.first_win|date:'SHORT_DATE_FORMAT' }}</span>
+                                <span class="fw-light">-</span>
+                                <span class="">{{ bidder.latest_win|date:'SHORT_DATE_FORMAT' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+
+        <div class="accordion my-3" id="accordionTenders">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tendersCollapse" aria-expanded="true" aria-controls="tendersCollapse">
+                        <span><i class="bi bi-building-up me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Tenders" %}</span>
+                        <span class="small fw-bold ps-2">{{ bidder.tenders.all|length }}</span>
+                    </button>
+                </h2>
+                <div id="tendersCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTenders">
+                    <div class="accordion-body p-0">
+                        <div class="list-group">
+                            {% for bid in bidder.tenders.all %}
+                                    <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                        href="{% url 'portal_tender_detail' bid.opening.tender.id %}#resultsBookmark">
+                                        <div>
+                                            <span class="small">{{ bid.opening.date }}</span>
+                                            <span class="small">
+                                                <i class="bi bi-three-dots-vertical mx-1"></i>
+                                                {% if bid.opening.tender.lots_count > 1 %}
+                                                    <span class="small me-1">
+                                                        <span>{{ bid.opening.tender.lots_count }}</span>
+                                                        <i class="{{ bicons.multi_lots }}"></i>
+                                                    </span>
+                                                    <i class="bi bi-three-dots-vertical mx-1"></i>
+                                                {% endif %}
+                                                <span class="fw-bold">{{ bid.opening.tender.estimate|metrify }}</span>
+                                            </span>
+                                        </div>
+                                        <div class="twolines">
+                                            <span class="small me-1"><i class="{{ bid.opening.tender.category.icon_bs_class }}"></i></span>
+                                            <span class="">{{ bid.opening.tender.title }}</span>
+                                        </div>
+                                    </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionAdminRejects">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminRejectsCollapse" aria-expanded="true" aria-controls="adminRejectsCollapse">
+                        <span><i class="bi bi-x-octagon me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Admin Rejects" %}</span>
+                        <span class="small fw-bold ps-2 
+                                    {% if bidder.admin_rejects.all|length > 0 %}
+                                        text-danger
+                                    {% endif %}
+                                    ">
+                            {{ bidder.admin_rejects.all|length }}
+                        </span>
+                    </button>
+                </h2>
+                <div id="adminRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminRejects">
+                    <div class="accordion-body p-0">
+                        {% group_tenders bidder.admin_rejects as grouped_ad_rej %}
+                        <div class="list-group">
+                            {% for opening, lots in grouped_ad_rej.items %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionAdminAccepts">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminAcceptsCollapse" aria-expanded="true" aria-controls="adminAcceptsCollapse">
+                        <span><i class="bi bi-fast-forward me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Admin Accepts" %}</span>
+                        <span class="small fw-bold ps-2">
+                            {{ bidder.admin_accepts.all|length }}
+                        </span>
+                    </button>
+                </h2>
+                <div id="adminAcceptsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminAccepts">
+                    <div class="accordion-body p-0">
+                        {% group_tenders bidder.admin_accepts as grouped_ad_acc %}
+                        <div class="list-group">
+                            {% for opening, lots in grouped_ad_acc.items %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionAdminReserves">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminReservesCollapse" aria-expanded="true" aria-controls="adminReservesCollapse">
+                        <span><i class="bi bi-fast-forward-circle me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Admin Reserves" %}</span>
+                        <span class="small fw-bold ps-2">
+                            {{ bidder.admin_reserves.all|length }}
+                        </span>
+                    </button>
+                </h2>
+                <div id="adminReservesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminReserves">
+                    <div class="accordion-body p-0">
+                        {% group_tenders bidder.admin_reserves as grouped_ad_res %}
+                        <div class="list-group">
+                            {% for opening, lots in grouped_ad_res.items %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionTechRejects">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#techRejectsCollapse" aria-expanded="true" aria-controls="techRejectsCollapse">
+                        <span><i class="bi bi-x-octagon me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Tech Rejects" %}</span>
+                        <span class="small fw-bold ps-2 
+                                    {% if bidder.tech_rejects.all|length > 0 %}
+                                        text-danger
+                                    {% endif %}
+                                    ">
+                            {{ bidder.tech_rejects.all|length }}
+                        </span>
+                    </button>
+                </h2>
+                <div id="techRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTechRejects">
+                    <div class="accordion-body p-0">
+                        {% group_tenders bidder.tech_rejects as grouped_tech_rej %}
+                        <div class="list-group">
+                            {% for opening, lots in grouped_tech_rej.items %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="float-end small">
+                                            {% if opening.tender.lots_count > 1 %}
+                                                <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                                                <span>
+                                                    {% for lot in lots %}
+                                                        {{ lot }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionFinancials">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#financialsCollapse" aria-expanded="true" aria-controls="financialsCollapse">
+                        <div class="w-100">
+                            <span>
+                                <span><i class="{{ bicons.estimate }} me-1"></i></span>
+                                <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
+                                <span class="small fw-bold ps-2">{{ bidder.selects.all|length }}</span>
+                            </span>
+                            {% if bidder.deposits_sum != 0 %}
+                                <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
+                            {% endif %}
+                        </div>
+                    </button>
+                </h2>
+                <div id="financialsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionFinancials">
+                    <div class="accordion-body p-0">
+                        {% group_depos bidder.selects as grouped_selects %}
+                        <div class="list-group">
+                            {% for opening, depos in grouped_selects.items %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div class="mt-1">
+                                        {% for depo in depos %}                                           
+                                            <div class="small text-end {% if depos|length > 1 %}py-1 border-top{% endif %}">
+                                                {% if opening.tender.lots_count > 1 %}
+                                                    <span class="fw-light small">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                                                    <span class="fw-light">{{ depo.lot.estimate|metrify }}</span>
+                                                {% else %}
+                                                    <span class="fw-light">{{ opening.tender.estimate|metrify }}</span>
+                                                {% endif %}
+                                                {% if depo.amount_a != depo.amount_b %}
+                                                    <span class="small fw-light text-decoration-line-through">{{ depo.amount_b }}</span>
+                                                {% endif %}
+                                                <span class="badge small text-bg-secondary">{% if depo.dep_offset >= 0 %}+{% endif %}{{ depo.dep_offset|default:'0'|floatformat:1 }}%</span>
+                                                <span>=</span>
+                                                {% if depo.winner %}
+                                                    <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                                                {% endif %}
+                                                <span class="fw-bold {% if depo.winner %}text-success{% endif %}">{{ depo.amount_a }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionWins">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#winsCollapse" aria-expanded="false" aria-controls="winsCollapse">
+                        <div class="w-100">
+                            <span>
+                                <span><i class="{{ bicons.winner }} text-success me-1"></i></span>
+                                <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
+                                <span class="small fw-bold ps-2 {% if bidder.winners.all|length > 0 %}text-success{% endif %}">{{ bidder.winners.all|length }}</span>                                
+                            </span>
+                            {% if bidder.winners_sum != 0 %}
+                                <span class="small fw-bold px-2 float-end text-end">{{ bidder.winners_sum }}</span>
+                            {% endif %}
+                        </div>
+                    </button>
+                </h2>
+                <div id="winsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionWins">
+                    <div class="accordion-body p-0">
+                        {% group_depos bidder.winners as grouped_winners %}
+                        <div class="list-group">
+                            {% for opening, depos in grouped_winners.items %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    <div class="fw-light small">{{ opening.date }}</div>
+                                    <div class="twolines">
+                                        <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                                        {% if opening.tender.lots_count > 1 %}
+                                            <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                                        {% endif %}
+                                        <span class="">{{ opening.tender.title }}</span>
+                                    </div>
+                                    <div class="mt-1">
+                                        {% for depo in depos %}
+                                            <div class="small text-end {% if depos|length > 1 %}py-1 border-top{% endif %}">
+                                                {% if opening.tender.lots_count > 1 %}
+                                                    <span class="fw-light small">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                                                {% endif %}
+                                                <span class="fw-bold">{{ depo.amount_w }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion mt-4 mb-3" id="accordionDomains">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#domainsCollapse" aria-expanded="true" aria-controls="domainsCollapse">
+                        <span><i class="{{ bicons.domains }} me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Domains" %}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.domains|length > 0 %}text-success{% endif %}">{{ bidder.domains|length }}</span>
+                    </button>
+                </h2>
+                <div id="domainsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionDomains">
+                    <div class="accordion-body p-0">
+                        <div class="list-group">
+                            {% for dom in bidder.domains %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank"
+                                   href="{% url 'portal_tender_list' %}?&q={{ dom.name }}&f=domains&exact=yes">
+                                    <div class="">{{ dom.name }}</div>
+                                    <div>
+                                        <span class="float-end small">
+                                                <span class="fw-light small">{% trans 'Bids' %}:</span>
+                                            <span class="fw-bold">{{ dom.deposits_count }}</span>
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionQualifs">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qualifsCollapse" aria-expanded="true" aria-controls="qualifsCollapse">
+                        <span><i class="{{ bicons.qualifs_ico }} me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Qualifs" %}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.qualifs|length > 0 %}text-success{% endif %}">{{ bidder.qualifs|length }}</span>
+                    </button>
+                </h2>
+                <div id="qualifsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionQualifs">
+                    <div class="accordion-body p-0">
+                        <div class="list-group">
+                            {% for qua in bidder.qualifs %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="small">
+                                        <span class="fw-bold">{{ qua.short }}. {% trans 'Class' %} {{ qua.classe }}</span>
+                                        <span>:</span>
+                                        <span>{{ qua.name }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="float-end small">
+                                            <span class="fw-light small">{% trans 'Bids' %}:</span>
+                                            <span class="fw-bold">{{ qua.deposits_count }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+    
+
+        <div class="accordion my-3" id="accordionLicences">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#licencesCollapse" aria-expanded="true" aria-controls="licencesCollapse">
+                        <span><i class="{{ bicons.agrements_ico }} me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Licences" %}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.licences|length > 0 %}text-success{% endif %}">{{ bidder.licences|length }}</span>
+                    </button>
+                </h2>
+                <div id="licencesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionLicences">
+                    <div class="accordion-body p-0">
+                        <div class="list-group">
+                            {% for lic in bidder.licences %}
+                                <div class="list-group-item list-group-item-action">
+                                    <div class="small">
+                                        <span class="fw-bold">{{ lic.short }}</span>
+                                        <span>:</span>
+                                        <span>{{ lic.name }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="float-end">
+                                                <span class="fw-light small">{% trans 'Bids' %}:</span>
+                                            <span class="fw-bold">{{ lic.deposits_count }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+    </div>
+
+    <div class="my-3" id="bidder-actions">
+        {% include 'insights/snippets/bidders/bidder-actions.html' %}
+    </div>
+
+
+
+
+{% endblock content %}
