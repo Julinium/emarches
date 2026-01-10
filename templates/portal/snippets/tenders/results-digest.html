@@ -167,7 +167,7 @@
                         <div id="bars" class="">
                             {% if group.amzgaro.lot.estimate %}
                                 <div class="progress bg-light py-0 mt-1"
-                                        style="height: 0.2rem;">
+                                        style="height: 0.25rem;">
                                     <div class="progress-bar bg-secondary" 
                                             role="progressbar" style="width: 50%;" 
                                             aria-valuenow="50" aria-valuemin="0" 
@@ -179,7 +179,7 @@
                             {% if group.amzgaro.lot.estimate and group.amzgaro.average %}
                                 {% progrefy group.amzgaro.lot.estimate group.amzgaro.average as avg_bar %}
                                 <div class="progress bg-light py-0 mt-1"
-                                        style="height: 0.2rem;">
+                                        style="height: 0.25rem;">
                                     <div class="progress-bar bg-primary" 
                                             role="progressbar" style="width: {{ avg_bar|unlocalize }}%;" 
                                             aria-valuenow="{{ avg_bar|unlocalize }}" aria-valuemin="0" 
@@ -191,7 +191,7 @@
                             {% if group.amzgaro.lot.estimate and group.amzgaro.optimum %}
                                 {% progrefy group.amzgaro.lot.estimate group.amzgaro.optimum as ref_bar %}
                                 <div class="progress bg-light py-0 mt-1"
-                                        style="height: 0.2rem;">
+                                        style="height: 0.25rem;">
                                     <div class="progress-bar bg-success" 
                                             role="progressbar" style="width: {{ ref_bar|unlocalize }}%;" 
                                             aria-valuenow="{{ ref_bar|unlocalize }}" aria-valuemin="0" 
@@ -230,8 +230,8 @@
                                 {% if group.amzgaro.lot.estimate and selected_bid.amount_a %}
                                     {% progrefy group.amzgaro.lot.estimate selected_bid.amount_a as bid_bar %}
                                     <div class="progress bg-secondary-subtle py-0 mt-1"
-                                            style="height: 0.1rem;">
-                                        <div class="progress-bar bg-warning" 
+                                            style="height: 0.15rem;">
+                                        <div class="progress-bar bg-secondary" 
                                                 role="progressbar" style="width: {{ bid_bar|unlocalize }}%;" 
                                                 aria-valuenow="{{ bid_bar|unlocalize }}" aria-valuemin="0" 
                                                 aria-valuemax="100">
