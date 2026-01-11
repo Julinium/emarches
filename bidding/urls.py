@@ -6,10 +6,11 @@ from . import views
 urlpatterns = [
 
     path('dashboard',               views.dashboard,        name='bidding_dashboard'),
-    
+
     path('bids/',                   views.bids_list,        name='bidding_bids_list'),
     path('bids/<uuid:pk>/',         views.bid_details,      name='bidding_bid_details'),
-    path('bids/<uuid:pk>/edit',     views.bid_edit,         name='bidding_bid_edit'),
+    path('bids/create/<uuid:tk>/',  views.bid_edit,         name='bidding_bid_create'),
+    path('bids/edit/<uuid:pk>/',    views.bid_edit,         name='bidding_bid_edit'),
 
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),

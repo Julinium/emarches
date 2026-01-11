@@ -84,22 +84,22 @@ class Contact(models.Model):
 
 class Bid(models.Model):
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    lot             = models.ForeignKey(Lot, on_delete=models.DO_NOTHING, editable=False, related_name='bids')
-    team            = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='bids')
+    lot             = models.ForeignKey(Lot, on_delete=models.DO_NOTHING, related_name='bids')
     company         = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='bids')
 
     date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Status'))
-
+    deatils         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    
     amount_s        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount Submitted"))
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount Corrected"))
     bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Bond"))
-    file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Bond file"))
-    bond_returned   = models.BooleanField(null=True, default=False, verbose_name=_("Bond returned"))
-    
-    file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Submission file"))
-    file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Receipt file"))
-    file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Other file"))
+    file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
+    bond_returned   = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Bond returned"))
+
+    file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Submission file"))
+    file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
+    file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Other file"))
 
     result          = models.CharField(max_length=16, choices=BidResults.choices, default=BidResults.BID_UNKNOWN, verbose_name=_('Result'))
 
@@ -114,10 +114,10 @@ class Bid(models.Model):
     def __str__(self):
         return self.lot.tender.title
 
-    def save(self, *args, **kwargs):
-        if self.id:
-            self.image = squarify_image(self.image, str(self.id).split('-')[0])
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if self.id:
+    #         self.image = squarify_image(self.image, str(self.id).split('-')[0])
+    #     super().save(*args, **kwargs)
 
 
 class Contract(models.Model):
@@ -126,6 +126,7 @@ class Contract(models.Model):
     bid            = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='contracts')
     client         = models.CharField(max_length=255, blank=True, default='?', verbose_name=_('Client'))
     title          = models.CharField(max_length=255, blank=True, default='?', verbose_name=_('Title'))
+    deatils        = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     date_signed    = models.DateTimeField(blank=True, null=True, verbose_name="Date Signed")
     date_finish    = models.DateTimeField(blank=True, null=True, verbose_name="Finish Date")
     amount         = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount"))

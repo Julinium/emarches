@@ -529,16 +529,23 @@
                             <span class="ms-1">{% trans 'Support' %}</span>
                         </a>
                     </div>
+                    <!-- bidding_bid_create -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <span><i class="{{ bicons.close }}"></i></span>
                             <span class="ms-1">{% trans 'Cancel' %}</span>
                         </button>
+                        <a href="{% url 'bidding_bid_create' tender.id %}"
+                           class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
+                           onclick="window.open(this.href, '_blank');">
+                            <span><i class="{{ bicons.bidding }}"></i></span>
+                            <span class="ms-1">{% trans 'Create Bid' %}</span>
+                        </a>
                         <a href="{{ link_prefix }}{{ tender.link }}"
                            class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
                            onclick="window.open(this.href, '_blank');">
                             <span><i class="{{ bicons.bidding }}"></i></span>
-                            <span class="ms-1">{% trans 'Continue' %}</span>
+                            <span class="ms-1">{% trans 'Official Link' %}</span>
                         </a>
                     </div>
                 </div>

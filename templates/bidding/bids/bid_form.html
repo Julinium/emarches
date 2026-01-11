@@ -1,0 +1,182 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}
+    {% trans "Edit Bid" %}
+{% endblock title %}
+
+{% block content %}
+    <h3>{% trans "Edit Bid" %}</h3>
+    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        {% if form.errors %}
+            <div class="text-danger">
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    {% if field.errors %}
+                        {{ field.label }}: {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- <div class="mt-3">
+            <div class="text-center">
+                <div class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 12rem;">
+                    {% if form.instance.image %}
+                        <img id="image-preview" src="{{ form.instance.logo }}" alt="Logo" class="img-fluid rounded-circle object-fit-cover">
+                    {% else %}
+                        <img id="image-preview" src="{% static 'companies/default.svg' %}" alt="Default avatar" class="img-fluid rounded-circle object-fit-cover">
+                    {% endif %}
+                </div>
+
+                <div id="img-actions" class="mt-0">
+                    <input type="file" class="d-none" id="{{ form.image.id_for_label }}" name="{{ form.image.name }}" accept="image/*">
+                    <input type="hidden" id="{{ form.clear_image.id_for_label }}" name="{{ form.clear_image.name }}" value="0">
+                    <label for="{{ form.image.id_for_label }}" class="btn btn-lg p-1 px-2 btn-light" title="{% trans 'Upload Image' %}">
+                        <i class="bi bi-image text-primary"></i>
+                    </label>
+                    <button type="button" 
+                            class="btn btn-lg p-1 px-2 btn-light" 
+                            data-bs-toggle="popover" 
+                             data-bs-trigger="focus"
+                            data-bs-placement="top"
+                            title="{% trans 'Logo image' %}" 
+                            data-bs-content="
+                            {% trans 'Major image files up to 5MB are supported (PNG, JPG, JPEG, GIF, WEBP, AVIF, ...)' %}.
+                            {% trans 'SVG files are not allowed for security reasons' %}.
+                            {% trans 'We may crop and resize the image' %}.
+                            ">
+                        <i class="bi bi-info-circle text-success"></i>
+                    </button>
+                    <button type="button" class="btn btn-lg p-1 px-2 btn-light" title="{% trans 'Clear Image' %}" id="clear-image"><i class="bi bi-trash text-danger"></i></button>
+                </div>
+            </div>
+        </div> -->
+        
+        <!-- <div class="row gx-4 mt-1">
+            <div class="col-md-6 col-12">
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.name.errors %}border-2 border-danger{% endif %}" id="{{ form.name.id_for_label }}" name="{{ form.name.name }}" value="{{ form.name.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.forme.errors %}border-2 border-danger{% endif %}" id="{{ form.forme.id_for_label }}" name="{{ form.forme.name }}" value="{{ form.forme.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.forme.id_for_label }}">{{ form.forme.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="date" class="form-control {% if form.date_est.errors %}border-2 border-danger{% endif %}" id="{{ form.date_est.id_for_label }}" name="{{ form.date_est.name }}" value="{{ form.date_est.value|date:'Y-m-d' }}">
+                    <label class="text-muted small fw-light" for="{{ form.date_est.id_for_label }}">{{ form.date_est.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.activity.errors %}border-2 border-danger{% endif %}" id="{{ form.activity.id_for_label }}" name="{{ form.activity.name }}" value="{{ form.activity.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.activity.id_for_label }}">{{ form.activity.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.sector.errors %}border-2 border-danger{% endif %}" id="{{ form.sector.id_for_label }}" name="{{ form.sector.name }}" value="{{ form.sector.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.sector.id_for_label }}">{{ form.sector.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.ice.errors %}border-2 border-danger{% endif %}" id="{{ form.ice.id_for_label }}" name="{{ form.ice.name }}" value="{{ form.ice.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.ice.id_for_label }}">{{ form.ice.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.tp.errors %}border-2 border-danger{% endif %}" id="{{ form.tp.id_for_label }}" name="{{ form.tp.name }}" value="{{ form.tp.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.tp.id_for_label }}">{{ form.tp.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.rc.errors %}border-2 border-danger{% endif %}" id="{{ form.rc.id_for_label }}" name="{{ form.rc.name }}" value="{{ form.rc.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.rc.id_for_label }}">{{ form.rc.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.cnss.errors %}border-2 border-danger{% endif %}" id="{{ form.cnss.id_for_label }}" name="{{ form.cnss.name }}" value="{{ form.cnss.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.cnss.id_for_label }}">{{ form.cnss.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.website.errors %}border-2 border-danger{% endif %}" id="{{ form.website.id_for_label }}" name="{{ form.website.name }}" value="{{ form.website.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.website.id_for_label }}">{{ form.website.label }}</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.phone.errors %}border-2 border-danger{% endif %}" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.email.errors %}border-2 border-danger{% endif %}" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" value="{{ form.email.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.mobile.errors %}border-2 border-danger{% endif %}" id="{{ form.mobile.id_for_label }}" name="{{ form.mobile.name }}" value="{{ form.mobile.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.mobile.id_for_label }}">{{ form.mobile.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.whatsapp.errors %}border-2 border-danger{% endif %}" id="{{ form.whatsapp.id_for_label }}" name="{{ form.whatsapp.name }}" value="{{ form.whatsapp.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.whatsapp.id_for_label }}">{{ form.whatsapp.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.faximili.errors %}border-2 border-danger{% endif %}" id="{{ form.faximili.id_for_label }}" name="{{ form.faximili.name }}" value="{{ form.faximili.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.faximili.id_for_label }}">{{ form.faximili.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.address.errors %}border-2 border-danger{% endif %}" id="{{ form.address.id_for_label }}" name="{{ form.address.name }}" value="{{ form.address.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.address.id_for_label }}">{{ form.address.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.city.errors %}border-2 border-danger{% endif %}" id="{{ form.city.id_for_label }}" name="{{ form.city.name }}" value="{{ form.city.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.city.id_for_label }}">{{ form.city.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.zip_code.errors %}border-2 border-danger{% endif %}" id="{{ form.zip_code.id_for_label }}" name="{{ form.zip_code.name }}" value="{{ form.zip_code.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.zip_code.id_for_label }}">{{ form.zip_code.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.state.errors %}border-2 border-danger{% endif %}" id="{{ form.state.id_for_label }}" name="{{ form.state.name }}" value="{{ form.state.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.state.id_for_label }}">{{ form.state.label }}</label>
+                </div>
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control {% if form.country.errors %}border-2 border-danger{% endif %}" id="{{ form.country.id_for_label }}" name="{{ form.country.name }}" value="{{ form.country.value|default:'' }}">
+                    <label class="text-muted small fw-light" for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
+                </div>
+            </div>
+        </div> -->
+        <!-- <div class="form-floating mt-3">
+            <textarea class="form-control {% if form.note.errors %}border-2 border-danger{% endif %}" id="{{ form.note.id_for_label }}" name="{{ form.note.name }}" style="height: 5rem;">{{ form.note.value|default:'' }}</textarea>
+            <label class="text-muted small fw-light" for="{{ form.note.id_for_label }}">{{ form.note.label }}</label>
+        </div> -->
+
+        <div class="mt-3 text-center">
+            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
+            <!-- <a class="m-1 btn btn-outline-secondary" href="{% url 'bidding_bids_list' %}"><i class="me-2 bi bi-x-lg"></i>Cancel</a> -->
+        </div>
+    </form>
+
+    <!-- <script>
+        const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+        const imagePreview = document.getElementById('image-preview');
+        const clearButton = document.getElementById('clear-image');
+        const clearImageInput = document.getElementById('{{ form.clear_image.id_for_label }}');
+        const defaultImage = "{% static 'companies/default.svg' %}";
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    clearImageInput.value = '0'; // Reset clear_image when a new file is selected
+                };
+                imageInput.value = reader.readAsDataURL(file);
+
+            }
+        });
+
+        clearButton.addEventListener('click', function() {
+            imagePreview.src = defaultImage; // Reset to default avatar
+            clearImageInput.value = '1'; // Set clear_image to True
+            imageInput.value = ''; // Clear the file input
+        });
+    </script> -->
+
+{% endblock content %}

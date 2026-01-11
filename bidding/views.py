@@ -15,7 +15,9 @@ from django.core.paginator import Paginator
 from base.context_processors import portal_context
 
 from bidding.models import Bid
+from base.models import Tender
 
+from bidding.forms import BidForm
 
 BIDS_ITEMS_PER_PAGE = 25
 
@@ -168,13 +170,60 @@ def bids_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bid_details(request):
+def bid_details(request, pk=None):
     return HttpResponse('Bid Details')
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bid_details(request):
-    return HttpResponse('Bid Details')
+def bid_edit(request, pk=None, tk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    
+    bid = None
+
+    if pk:
+        bid = get_object_or_404(Bid, pk=pk)
+        tender = bid.tender
+    else:
+        tender = get_object_or_404(Tender, pk=tk)
+        # tender = get_object_or_404(Tender.objects.prefetch_related('lots'), id=tk)
+
+    if request.method == "POST":
+        form = BidForm(
+            request.POST,
+            instance=bid,
+            user=user,
+            tender=tender,
+        )
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.tender = tender  # enforced (immutable)
+            obj.save()
+            # return redirect("bidding_bids_list")
+            return redirect("bidding_bids_details", obj.pk)
+        # else:
+        #     return HttpResponse('Form not valid !')
+    else:
+        form = BidForm(
+            instance=bid,
+            user=user,
+            tender=tender,
+        )
+
+    return render(request, 'bidding/bids/bid_form.html', {
+        "form"  : form,
+        "object": bid,
+        "tender": tender,
+    })
+
+
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def bid_edit(request, pk=None):
+#     return HttpResponse('Bid Edit')
 
 
