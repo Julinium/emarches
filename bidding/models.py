@@ -95,6 +95,8 @@ class Bid(models.Model):
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount Corrected"))
     bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Bond"))
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Bond file"))
+    bond_returned   = models.BooleanField(null=True, default=False, verbose_name=_("Bond returned"))
+    
     file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Submission file"))
     file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Receipt file"))
     file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("Other file"))

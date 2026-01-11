@@ -1,13 +1,179 @@
-from django.shortcuts import render
+import logging
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from urllib.parse import urlencode
+
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_control
+
+from django.db.models import F # , Q, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
+# from django.db.models.functions import NullIf, Round
+# from decimal import Decimal
+
+from django.core.paginator import Paginator
+
+from base.context_processors import portal_context
+
+from bidding.models import Bid
 
 
+BIDS_ITEMS_PER_PAGE = 25
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     return HttpResponse('Dashboard')
 
-def bids_list(request):
-    return HttpResponse('Bids List')
 
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bids_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    if us: 
+        BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+    BIDS_ORDERING_FIELD = 'date_submitted'
+
+    def get_req_params(req):
+        allowed_keys = [
+            'q', 'w', 'n', 'x', 'p', 's', 'page', 'sort',
+            ]
+
+        query_dict = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
+        }
+        if not 'sort' in query_dict:
+            query_dict['sort'] = BIDS_ORDERING_FIELD
+            
+        query_string = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
+        }
+
+        query_unsorted = {
+            k: v for k, v in req.GET.items()
+            if k in allowed_keys and v != '' and k not in ('page', 'sort')
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_bids(bids, params):
+        ff = 0
+        if not params : return bids.distinct(), ff
+
+        if 'q' in params:
+            ff += 1
+            q = params['q']
+            bids = bids.filter(name__icontains=q)
+
+        if 'n' in params:
+            ff += 1
+            n = params['n']
+            bids = bids.filter(wins_sum__gte=n)
+
+        if 'x' in params:
+            ff += 1
+            x = params['x']
+            bids = bids.filter(wins_sum__lte=x)
+
+        if 'w' in params:
+            ff += 1
+            w = params['w']
+            if w == "0":
+                bids = bids.filter(wins_count=0)
+            elif w == "1":
+                bids = bids.filter(wins_count=1)
+            elif w == "2":
+                bids = bids.filter(wins_count__gte=1)
+            elif w == "11":
+                bids = bids.filter(wins_count__gte=10)
+
+        if 'p' in params:
+            ff += 1
+            p = params['p']
+            if p == "0":
+                bids = bids.filter(part_count=0)
+            elif p == "1":
+                bids = bids.filter(part_count=1)
+            elif p == "2":
+                bids = bids.filter(part_count__gte=1)
+            elif p == "11":
+                bids = bids.filter(part_count__gte=10)
+
+        if 's' in params:
+            ff += 1
+            s = params['s']
+            if s == "1":
+                bids = bids.filter(succ_rate=100)
+            elif s == "6":
+                bids = bids.filter(succ_rate__gte=50)
+            elif s == "4":
+                bids = bids.filter(succ_rate__lte=50)
+
+        return bids.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context['query_string']       = urlencode(query_string)
+        context['query_unsorted']     = urlencode(query_unsorted)
+        context['query_dict']         = query_dict
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+
+    all_bids = Bid.objects.all()
+
+    bids, filters = filter_bids(all_bids, query_dict)
+    query_dict['filters'] = filters
+
+    sort = query_dict['sort']
+
+    if sort and sort != '':
+        ordering = sort
+    else: ordering = BIDS_ORDERING_FIELD
+
+    if ordering[0] == '-':
+        ordering = ordering[1:]
+        bids = bids.order_by(
+            F(ordering).asc(nulls_last=True), BIDS_ORDERING_FIELD
+            )
+    else:
+        bids = bids.order_by(
+            F(ordering).desc(nulls_last=True), BIDS_ORDERING_FIELD
+            )
+
+    context = define_context(request)
+
+    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)
+    page_number = request.GET['page'] if 'page' in request.GET else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context['page_obj'] = page_obj
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Bids List view")
+
+    return render(request, 'bidding/bids-list.html', context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bid_details(request):
+    return HttpResponse('Bid Details')
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_details(request):
     return HttpResponse('Bid Details')
 

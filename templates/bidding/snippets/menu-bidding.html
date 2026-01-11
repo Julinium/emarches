@@ -16,7 +16,7 @@
             </a>
         </li>
 
-        <li><hr class="dropdown-divider"></li>
+        <!-- <li><hr class="dropdown-divider"></li>
         
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'portal_tender_favorite_list' %}">
@@ -28,12 +28,12 @@
                     </span>
                 {% endif %}
             </a>
-        </li>
+        </li> -->
 
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" href="#">
+            <a class="dropdown-item py-2" href="{% url 'bidding_bids_list' %}">
                 <i class="{{ bicons.ongoing }} me-2"></i>
                 <span>{% trans 'Bids' %}</span>
             </a>

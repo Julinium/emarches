@@ -41,6 +41,7 @@ def bidders_list(request):
         BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
     BIDDERS_ORDERING_FIELD = 'last_win' #'bidders_count'
 
+
     def get_req_params(req):
         allowed_keys = [
             'q', 'w', 'n', 'x', 'p', 's', 'page', 'sort',

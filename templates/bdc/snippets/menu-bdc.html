@@ -16,6 +16,15 @@
         </li>
         
         <li class="">
+            <a class="dropdown-item py-2"  href="{% url 'bdc_bdc_list' %}?&ddlnn=1970-01-01&results=deliberated">
+                <i class="{{ bicons.deliberated }} me-2"></i>
+                {% trans 'Results' %}
+            </a>
+        </li>
+        
+        <li><hr class="dropdown-divider"></li>
+        
+        <li class="">
             <a class="dropdown-item py-2" href="{% url 'bdc_bdc_favorite_list' %}">
                 <i class="{{ bicons.favorite }} me-2"></i>
                 {% trans 'Favourites' %}

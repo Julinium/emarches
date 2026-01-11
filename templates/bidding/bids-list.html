@@ -3,20 +3,19 @@
 {% load humanize %}
 
 {% block title %}
-    {% trans "Concurrents list" %}
+    {% trans "Bids list" %}
 {% endblock title %}
 
 {% block content %}
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
-            <span class="h3 me-1">{% trans "Concurrents list" %}</span>
+            <span class="h3 me-1">{% trans "Bids list" %}</span>
         </div>
         <div class="d-flex align-items-top">
-            {% include 'insights/snippets/bidders/bidder-search-form.html' %}
-            {% include 'insights/snippets/bidders/bidder-menu-sort.html' %}
+            {% include 'bidding/snippets/bids/bid-search-form.html' %}
+            {% include 'bidding/snippets/bids/bid-menu-sort.html' %}
         </div>
-    </div>    
-
+    </div>
 
     <div class="fw-light mx-2 mt-1">
         {% if query_dict.filters > 0 %}
@@ -38,71 +37,45 @@
     </div>
 
 
+    lot               team              result
+    amount_c          bond              
+    file_bond         file_submitted    file_receipt      file_other    
+    created           updated           creator
+
+
     {% if page_obj %}
         <div class="container py-4 px-0">
-                {% for bidder in page_obj %}
-                    <a href="{% url 'insights_bidder_details' bidder.id %}" 
-                       class="btn text-start w-100 p-0 mb-2">
-                        <div class="card shadow py-2 px-3">
-                            <div class="{% if wrap_text == False %}oneline{% endif %}">
-                                <span>{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</span>
-                                <span class="small ms-1 float-end text-end"
-                                      style="min-width: 5rem;">
-                                    <span class="small fw-light">{{ bidder.wins_count }}/{{ bidder.deposits.all|length }}</span>
-                                    <i class="small text-success me-1 
-                                        {% if bidder.winners_sum > 0 %}
-                                            {{ bicons.winner }}
-                                        {% else %}
-                                            bi bi-trophy
-                                        {% endif %}">
-                                    </i>
-                                    <span class="small fw-bold">{{ bidder.winners_sum|metrify }}</span>
-
-                                    <!-- <div class="progress bg-warning"
-                                            style="height: 0.2rem;"
-                                            data-bs-toggle="tooltip"
-                                            title="{% trans 'Success rate' %}: {{ bidder.success_rate|default:'0' }}%">
-                                        <div class="progress-bar bg-success" 
-                                                role="progressbar" style="width: {{ bidder.success_rate|unlocalize|default:'0' }}%;" 
-                                                aria-valuenow="{{ bidder.success_rate|unlocalize }}" aria-valuemin="0" 
-                                                aria-valuemax="100">
-                                        </div>
-                                    </div> -->
-
-                                    <!-- <span>/</span>
-                                    <span>{{ bidder.deposits_sum|metrify }}</span> -->
-                                </span>
-                            </div>
-
-                            {% if bidder.succ_rate %}
-                                <div class="progress bg-warning p-0 m-0"
-                                        style="height: 0.25rem;"
-                                        data-bs-toggle="tooltip"
-                                        title="{% trans 'Success rate' %}: {{ bidder.succ_rate }}%">
-                                    <div class="progress-bar bg-success" 
-                                            role="progressbar" style="width: {{ bidder.succ_rate|unlocalize }}%;" 
-                                            aria-valuenow="{{ bidder.succ_rate|unlocalize }}" aria-valuemin="0" 
-                                            aria-valuemax="100">
-                                    </div>
-                                </div>
-                            {% else %}
-                                <div class="progress bg-secondary p-0 m-0"style="height: 0.25rem;">
-                                </div>
-                            {% endif %}
-
-                            <div class="small">
-                                <span class="text-secondary">{% trans 'Bids' %}:</span>
-                                <span>{{ bidder.wins_count }}/{{ bidder.part_count }}</span>
-                                <span class="text-secondary ms-2">{% trans 'Wins' %}:</span>
-                                <span class="">{{ bidder.wins_sum|default:'-' }}/{{ bidder.bids_sum|default:'-' }}</span>
-                                <span class="text-secondary ms-2">{% trans 'Success' %}:</span>
-                                <span class="">{{ bidder.succ_rate|floatformat:2|default:'-' }}%</span>
-                                <!-- <span class="ms-2">-{{ bidder.last_part|default:'-' }} -{{ bidder.last_win|default:'-' }}</span> -->
-                            </div>
-                            
+            {% for bid in page_obj %}
+                <a href="{% url 'bidding_bid_details' bid.id %}" 
+                    class="btn text-start w-100 p-0 mb-2">
+                    <div class="card shadow py-2 px-3">
+                        <div class="{% if wrap_text == False %}oneline{% endif %}">
+                            <span>{{ bid.lot.tender.title }}</span>
+                            <span class="small ms-1 float-end text-end"
+                                    style="min-width: 5rem;">
+                                <span class="small fw-bold">{{ bid.amount_s|metrify }}</span>
+                            </span>
                         </div>
-                    </a>
-                {% endfor %}
+
+                        <div class="small">
+                            <span class="text-secondary">{% trans 'Sumbitted' %}:</span>
+                            <span>{{ bid.date_submitted }}</span>
+                            <span class="text-secondary ms-2">{% trans 'Company' %}:</span>
+                            <span class="">{{ bid.company.name }}</span>
+                            <span class="text-secondary ms-2">{% trans 'Status' %}:</span>
+                            <span class="">{{ bid.status }}</span>
+                            <span class="text-secondary ms-2">{% trans 'Bond' %}:</span>
+                            {% if bid.bond_returned != True %}
+                                <i class="bi bi-exclamation-diamond-fill"></i>
+                            {% else %}
+                                <i class="bi bi-check-square"></i>
+                            {% endif %}
+                            <span class="">{{ bid.bond|metrify }}</span>
+                        </div>
+                        
+                    </div>
+                </a>
+            {% endfor %}
         </div>
 
         {% include 'base/snippets/paginator.html' %}
