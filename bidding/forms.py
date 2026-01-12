@@ -4,12 +4,23 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 # from django.contrib.auth.models import User
 
-from .models import Bid
+from bidding.models import Bid
 from base.models import Lot
+from nas.models import Company
+
+
+class LotChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.number}: {obj.estimate} ({obj.bond})"
+
+class CompanyChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return f"{obj.name} ({obj.ice})"
 
 class BidForm(forms.ModelForm):
 
-    # clear_image = forms.BooleanField(required=False, widget=forms.HiddenInput)
+    lot = LotChoiceField(queryset=Lot.objects.none())
+    company = CompanyChoiceField(queryset=Lot.objects.none())
 
     class Meta:
         model = Bid
@@ -18,7 +29,7 @@ class BidForm(forms.ModelForm):
             'company',
             'date_submitted',
             'status',
-            'deatils',
+            'details',
             'amount_s',
             'amount_c',
             'bond',
@@ -47,55 +58,25 @@ class BidForm(forms.ModelForm):
         self.creator = user
 
         if tender:
-            self.fields["lot"].queryset = Lot.objects.filter(
-                tender=tender
-            )
+            lots = Lot.objects.filter(tender=tender)
+            lot_field = self.fields["lot"]
+            lot_field.queryset = lots
+            
+            if lots.count() == 1:
+                lot_field.initial = lots.first()
+                lot_field.widget = forms.HiddenInput()
         else:
             self.fields["lot"].queryset = Lot.objects.none()
+
+        if user:
+            comps = user.companies
+            company_field = self.fields["company"]
+            company_field.queryset = comps
+            if comps.count() == 1:
+                company_field.initial = comps.first()
+                company_field.widget = forms.HiddenInput()
+        else:
+            company_field.queryset = Company.objects.none()
+
+            
     
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     name = cleaned_data.get('name')
-    #     ice = cleaned_data.get('ice')
-    #     image = cleaned_data.get('image')
-    #     clear_image = cleaned_data.get('clear_image')
-
-    #     if clear_image:
-    #         cleaned_data['image'] = None
-
-    #     if name and self.user:
-    #         existing_company = Company.objects.filter(user=self.user, name=name).exclude(
-    #             pk=self.instance.pk if self.instance else None).exists()
-    #         if existing_company:
-    #             raise ValidationError({
-    #                 'name': _('The name is already taken.')
-    #             })
-                
-    #     if not ALLOW_INVALID_ICE:
-    #         if not self.ice_checkup_valid():
-    #             raise ValidationError({
-    #                 'ice': _('The ICE is not valid.')
-    #             })
-
-    #     return cleaned_data
-
-    # def save(self, commit=True):
-    #     company = super().save(commit=False)
-    #     if commit:
-    #         if self.cleaned_data.get('clear_image'):
-    #             company.image = None
-    #         company.save()
-    #     return company
-
-    # def clean_image(self):
-    #     image = self.cleaned_data.get('image')
-    #     return image
-    
-    # def ice_checkup_valid(self):
-    #     ice = self.cleaned_data.get('ice')
-    #     if not ice: return False
-    #     cj = get_ice_checkup(ice)
-    #     if not cj: return False
-    #     return cj.get('n2') == cj.get('cs')
-        
-

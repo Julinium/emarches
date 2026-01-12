@@ -7,20 +7,31 @@
 
 {% block content %}
     <h3>{% trans "Edit Bid" %}</h3>
+    <div class="mt-3 threelines">
+        <span class="text-muted small fw-light">{% trans 'Tender' %}:</span>
+        <span>{{ tender.title }}</span>
+    </div>
+    <div class="mb-3 text-end">
+        <a href="{% url 'portal_tender_detail' tender.id %}" 
+        target="_blank"
+        class="btn btn-sm btn-outline-secondary">
+            {% trans 'Tender Details' %}
+        </a>
+    </div>
+
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form.visible_fields %}
+            <div class="mb-2">
+            {{ field.label_tag }}
+            {{ field }}
 
-        {% if form.errors %}
-            <div class="text-danger">
-                {{ form.non_field_errors }}
-                {% for field in form %}
-                    {% if field.errors %}
-                        {{ field.label }}: {{ field.errors }}
-                    {% endif %}
-                {% endfor %}
+            {% for error in field.errors %}
+                <div class="error-text">{{ error }}</div>
+            {% endfor %}
             </div>
-        {% endif %}
+        {% endfor %}
+
         <!-- <div class="mt-3">
             <div class="text-center">
                 <div class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 12rem;">

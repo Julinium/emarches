@@ -1,7 +1,10 @@
 import logging
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from urllib.parse import urlencode
+from datetime import datetime
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
@@ -14,7 +17,7 @@ from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
 
-from bidding.models import Bid
+from bidding.models import Bid, Team
 from base.models import Tender
 
 from bidding.forms import BidForm
@@ -129,7 +132,8 @@ def bids_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    all_bids = Bid.objects.all()
+    # team = user.team
+    all_bids = Bid.objects.all() # Filter: creator in team
 
     bids, filters = filter_bids(all_bids, query_dict)
     query_dict['filters'] = filters
@@ -189,8 +193,7 @@ def bid_edit(request, pk=None, tk=None):
         bid = get_object_or_404(Bid, pk=pk)
         tender = bid.tender
     else:
-        tender = get_object_or_404(Tender, pk=tk)
-        # tender = get_object_or_404(Tender.objects.prefetch_related('lots'), id=tk)
+        tender = get_object_or_404(Tender, pk=tk)        
 
     if request.method == "POST":
         form = BidForm(
@@ -201,18 +204,34 @@ def bid_edit(request, pk=None, tk=None):
         )
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.tender = tender  # enforced (immutable)
+            obj.tender = tender
+            obj.creator = user
             obj.save()
-            # return redirect("bidding_bids_list")
-            return redirect("bidding_bids_details", obj.pk)
-        # else:
-        #     return HttpResponse('Form not valid !')
+            return redirect("bidding_bids_list")
+        else:
+            for field in form:
+                if field.errors:
+                    for error in field.errors:
+                        messages.error(request, f"{field.label}: {error}")
     else:
         form = BidForm(
             instance=bid,
             user=user,
             tender=tender,
         )
+        if bid is None:
+            lot = tender.lots.first()
+            form.fields["amount_s"].initial         = lot.estimate
+            # form.fields["amount_c"].initial         = lot.estimate
+            form.fields["bond"].initial             = lot.bond
+            form.fields["date_submitted"].initial   = datetime.now()
+            desc = lot.title
+            if lot.description: desc += '\n' + lot.description
+            form.fields["details"].initial          = desc
+            companies = user.companies
+            if companies.count() == 1:
+                form.fields["company"].initial      = companies.first()
+
 
     return render(request, 'bidding/bids/bid_form.html', {
         "form"  : form,
@@ -220,10 +239,5 @@ def bid_edit(request, pk=None, tk=None):
         "tender": tender,
     })
 
-
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bid_edit(request, pk=None):
-#     return HttpResponse('Bid Edit')
 
 

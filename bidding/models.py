@@ -89,11 +89,11 @@ class Bid(models.Model):
 
     date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Status'))
-    deatils         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     
-    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount Submitted"))
-    amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount Corrected"))
-    bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Bond"))
+    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Submitted"))
+    amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
+    bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond"))
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
     bond_returned   = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Bond returned"))
 
@@ -126,7 +126,7 @@ class Contract(models.Model):
     bid            = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='contracts')
     client         = models.CharField(max_length=255, blank=True, default='?', verbose_name=_('Client'))
     title          = models.CharField(max_length=255, blank=True, default='?', verbose_name=_('Title'))
-    deatils        = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    details        = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     date_signed    = models.DateTimeField(blank=True, null=True, verbose_name="Date Signed")
     date_finish    = models.DateTimeField(blank=True, null=True, verbose_name="Finish Date")
     amount         = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Amount"))
@@ -155,7 +155,7 @@ class Task(models.Model):
     date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
     reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
     contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
-    deatils   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     assignee  = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
     milestone = models.BooleanField(null=True, default=True)
@@ -193,7 +193,7 @@ class Expense(models.Model):
     contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='expenses')
 
 
-    deatils      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))
 
     file         = models.FileField(upload_to='bidding/expenses/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
@@ -222,7 +222,7 @@ class Reception(models.Model):
     contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='receptions')
     location     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Location'))
 
-    deatils      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     status       = models.CharField(max_length=16, choices=ReceptionStatus.choices, default=ReceptionStatus.RCP_PENDING, verbose_name=_('Status'))
 
     file         = models.FileField(upload_to='bidding/receptions/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
@@ -261,7 +261,7 @@ class Income(models.Model):
     client_ice   = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Client ICE'))
     contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='incomes')
 
-    deatils      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
+    details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))
 
     file         = models.FileField(upload_to='bidding/incomes/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
