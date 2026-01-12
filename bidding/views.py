@@ -220,14 +220,17 @@ def bid_edit(request, pk=None, tk=None):
             tender=tender,
         )
         if bid is None:
-            lot = tender.lots.first()
-            form.fields["amount_s"].initial         = lot.estimate
-            # form.fields["amount_c"].initial         = lot.estimate
-            form.fields["bond"].initial             = lot.bond
             form.fields["date_submitted"].initial   = datetime.now()
-            desc = lot.title
-            if lot.description: desc += '\n' + lot.description
-            form.fields["details"].initial          = desc
+
+            if tender.lots.count() == 1:
+                lot = tender.lots.first()
+                form.fields["lot"].initial              = lot
+                form.fields["amount_s"].initial         = lot.estimate
+                form.fields["bond"].initial             = lot.bond
+                if lot.description: 
+                    desc = lot.description
+                    form.fields["details"].initial          = desc
+
             companies = user.companies
             if companies.count() == 1:
                 form.fields["company"].initial      = companies.first()

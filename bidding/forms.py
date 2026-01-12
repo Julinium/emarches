@@ -11,7 +11,7 @@ from nas.models import Company
 
 class LotChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return f"{obj.number}: {obj.estimate} ({obj.bond})"
+        return _("Lot ") + str(obj.number) + ' : ' + str(obj.estimate)
 
 class CompanyChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -28,30 +28,26 @@ class BidForm(forms.ModelForm):
             'lot',
             'company',
             'date_submitted',
-            'status',
-            'details',
             'amount_s',
             'amount_c',
             'bond',
-            'file_bond',
             'bond_returned',
+            'file_bond',
             'file_submitted',
             'file_receipt',
             'file_other',
+            'status',
             'result',
             # 'created',
             # 'updated',
             # 'creator',
+            'details',
             ]
 
         widgets = {
             'date_submitted': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'deatils': forms.Textarea(attrs={'rows': 8}),
+            'deatils': forms.Textarea(attrs={'rows': '3'}),
         }
-    
-    # def __init__(self, *args, user=None, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.user = user
 
     def __init__(self, *args, tender=None, user=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,5 +74,10 @@ class BidForm(forms.ModelForm):
         else:
             company_field.queryset = Company.objects.none()
 
-            
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
+
+
+
     
