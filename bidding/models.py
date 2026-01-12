@@ -101,7 +101,7 @@ class Bid(models.Model):
     file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
     file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Other file"))
 
-    result          = models.CharField(max_length=16, choices=BidResults.choices, default=BidResults.BID_UNKNOWN, verbose_name=_('Result'))
+    result          = models.CharField(max_length=16, choices=BidResults.choices, blank=True, null=True, verbose_name=_('Result'))
 
     created         = models.DateTimeField(auto_now_add=True, editable=False)
     updated         = models.DateTimeField(auto_now=True, editable=False)
@@ -113,6 +113,32 @@ class Bid(models.Model):
 
     def __str__(self):
         return self.lot.tender.title
+
+    @property
+    def status_tint(self):
+        if self.status == BidStatus.BID_PREPARING:  return 'secondary'
+        if self.status == BidStatus.BID_READY:      return 'warning'
+        if self.status == BidStatus.BID_SUBMITTED:  return 'primary'
+        if self.status == BidStatus.BID_FINISHED:   return 'success'
+        if self.status == BidStatus.BID_CANCELLED:  return 'danger'
+        return 'secondary'
+
+    @property
+    def result_tint(self):
+        if self.result == BidResults.BID_UNKNOWN     :   return 'secondary'
+        if self.result == BidResults.BID_AWARDED     :   return 'success'
+        if self.result == BidResults.BID_REJECT_A    :   return 'danger'
+        if self.result == BidResults.BID_REJECT_T    :   return 'danger'
+        if self.result == BidResults.BID_LOST        :   return 'danger'
+        return 'secondary'
+
+    @property
+    def rebondable(self):
+        if self.bond_returned != True and self.bond > 0:
+            if self.status == BidStatus.BID_FINISHED or self.status == BidStatus.BID_CANCELLED:
+                return True
+        return False
+    
 
     # def save(self, *args, **kwargs):
     #     if self.id:

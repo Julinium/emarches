@@ -36,12 +36,10 @@
         {% endif %}
     </div>
 
-
-    lot               team              result
+    <!-- lot               team              result
     amount_c          bond              
     file_bond         file_submitted    file_receipt      file_other    
-    created           updated           creator
-
+    created           updated           creator -->
 
     {% if page_obj %}
         <div class="container py-4 px-0">
@@ -49,28 +47,36 @@
                 <a href="{% url 'bidding_bid_details' bid.id %}" 
                     class="btn text-start w-100 p-0 mb-2">
                     <div class="card shadow py-2 px-3">
-                        <div class="{% if wrap_text == False %}oneline{% endif %}">
-                            <span>{{ bid.lot.tender.title }}</span>
-                            <span class="small ms-1 float-end text-end"
-                                    style="min-width: 5rem;">
-                                <span class="small fw-bold">{{ bid.amount_s|metrify }}</span>
-                            </span>
+                        <div class="">
+                            {% if bid.lot.tender.lots_count > 1 %}
+                                <span class="fw-bold small">{% trans "Lot" %} {{ bid.lot.number }}: </span>
+                                <span>{{ bid.lot.title }}</span>
+                            {% else %}
+                                <span>{{ bid.lot.tender.title }}</span>
+                            {% endif %}
+                            <div class="text-end">   
+                                <span class="small badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span> 
+                                {% if bid.result %}
+                                    <span class="small badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
+                                {% endif %} 
+                                <span class="small badge bg-{% if bid.result %}{{ bid.result_tint }}{% else %}{{ bid.status_tint }}{% endif %}">{{ bid.amount_s }}</span>
+                            </div>
                         </div>
 
                         <div class="small">
-                            <span class="text-secondary">{% trans 'Sumbitted' %}:</span>
-                            <span>{{ bid.date_submitted }}</span>
+                            {% if bid.date_submitted %}
+                                <span class="text-secondary">{% trans 'Sumbitted' %}:</span>
+                                <span>{{ bid.date_submitted.date }}</span>
+                            {% endif %}
                             <span class="text-secondary ms-2">{% trans 'Company' %}:</span>
                             <span class="">{{ bid.company.name }}</span>
-                            <span class="text-secondary ms-2">{% trans 'Status' %}:</span>
-                            <span class="">{{ bid.status }}</span>
                             <span class="text-secondary ms-2">{% trans 'Bond' %}:</span>
-                            {% if bid.bond_returned != True %}
-                                <i class="bi bi-exclamation-diamond-fill"></i>
+                            {% if bid.rebondable == True %}
+                                <i class="bi bi-exclamation-diamond-fill text-danger"></i>
                             {% else %}
                                 <i class="bi bi-check-square"></i>
                             {% endif %}
-                            <span class="">{{ bid.bond|metrify }}</span>
+                            <span class="">{{ bid.bond }}</span>
                         </div>
                         
                     </div>

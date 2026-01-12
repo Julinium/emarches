@@ -175,7 +175,21 @@ def bids_list(request):
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_details(request, pk=None):
-    return HttpResponse('Bid Details')
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+    
+    bid = get_object_or_404(Bid, pk=pk)
+    corrected = bid.amount_c != None and bid.amount_c != bid.amount_s
+    context = {
+        "bid"       : bid,
+        "corrected" : corrected,
+    }
+
+    return render(request, 'bidding/bid-details.html', context)
+
+
 
 
 @login_required(login_url="account_login")
@@ -191,7 +205,7 @@ def bid_edit(request, pk=None, tk=None):
 
     if pk:
         bid = get_object_or_404(Bid, pk=pk)
-        tender = bid.tender
+        tender = bid.lot.tender
     else:
         tender = get_object_or_404(Tender, pk=tk)        
 
