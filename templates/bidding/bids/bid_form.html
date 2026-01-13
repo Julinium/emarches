@@ -12,15 +12,17 @@
             <span>{% trans 'Tender' %}</span>
         </div>
         <div class="ms-3">
-            <div class="form-control">{{ tender.title }}</div>
+            <div class="form-control">
+                <div>{{ tender.title }}</div>
+                <div class="my-1 text-end">
+                    <a href="{% url 'portal_tender_detail' tender.id %}" 
+                    target="_blank"
+                    class="btn btn-sm btn-outline-secondary">
+                        {% trans 'Tender Details' %}
+                    </a>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="mb-3 mt-1 text-end">
-        <a href="{% url 'portal_tender_detail' tender.id %}" 
-        target="_blank"
-        class="btn btn-sm btn-outline-secondary">
-            {% trans 'Tender Details' %}
-        </a>
     </div>
 
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
@@ -30,7 +32,11 @@
         {% endfor %}
         <div class="row g-3">
             {% for field in form.visible_fields %}
-                <div class="col-12 mt-4 {% if not 'textarea' in field.field.widget.template_name %}col-md-6{% endif %}">
+                <div class="col-12 mt-4 
+                            {% if not 'textarea' in field.field.widget.template_name %}
+                                {% if field.name != 'lot' and field.name != 'company' %}col-md-6{% endif %}
+                            {% endif %}
+                            ">
                     <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
                         <span>{{ field.label_tag }}</span>
                     </div>
@@ -39,7 +45,7 @@
                     {% for error in field.errors %}
                         <div class="ms-3 text-danger small">
                             <span><i class="bi bi-sign-stop"></i></span>
-                            <span class="fw-bold">{{ error }}</span>
+                            <span class="">{{ error }}</span>
                         </div>
                     {% endfor %}
                 </div>

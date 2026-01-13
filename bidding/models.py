@@ -119,7 +119,7 @@ class Bid(models.Model):
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     
-    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Submitted"))
+    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Amount Submitted"))
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
     bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond"))
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
@@ -127,7 +127,7 @@ class Bid(models.Model):
 
     file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Submission file"))
     file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
-    file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Other file"))
+    # file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Other file"))
 
     result          = models.CharField(max_length=16, choices=BidResults.choices, blank=True, null=True, verbose_name=_('Result'))
 

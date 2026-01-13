@@ -64,17 +64,17 @@
                         </div>
 
                         <div class="small">
+                            <span class="text-secondary">{% trans 'Company' %}:</span>
+                            <span class="fw-bold">{{ bid.company.name }}</span>
                             {% if bid.date_submitted %}
-                                <span class="text-secondary">{% trans 'Sumbitted' %}:</span>
+                                <span class="text-secondary ms-2">{% trans 'Sumbitted' %}:</span>
                                 <span>{{ bid.date_submitted.date }}</span>
                             {% endif %}
-                            <span class="text-secondary ms-2">{% trans 'Company' %}:</span>
-                            <span class="">{{ bid.company.name }}</span>
                             <span class="text-secondary ms-2">{% trans 'Bond' %}:</span>
                             {% if bid.rebondable == True %}
                                 <i class="bi bi-exclamation-diamond-fill text-danger"></i>
                             {% else %}
-                                <i class="bi bi-check-square"></i>
+                                <i class="bi bi-exclamation-diamond"></i>
                             {% endif %}
                             <span class="">{{ bid.bond }}</span>
                         </div>

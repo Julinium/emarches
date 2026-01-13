@@ -67,14 +67,17 @@ def portal_context(request):
         'esign_opt'       : 'bi bi-usb-drive text-success', 
         'esign_na'        : 'bi bi-usb-drive text-secondary',       
                             # 'device-ssd'
-        'bidding'         : 'bi bi-box-arrow-up-right',
+        'link'            : 'bi bi-box-arrow-up-right',
+        'bidding'         : 'bi bi-envelope-arrow-up',
                             # arrow-90deg-right
                             # send-check
                             # reply 
                             # handbag 
                             # arrow-up-right-square 
                             # check-square
-                            # envelope-arrow-up
+                            # 
+                            # box-arrow-in-up
+                            # box-arrow-in-up-right
         'search'          : 'bi bi-search',
         'sort'            : 'bi bi-arrow-down-up',
         'sort_up'         : 'bi bi-arrow-up',

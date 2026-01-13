@@ -141,12 +141,6 @@ def bids_list(request):
         )
         team.add_member(user, patron=True)
 
-        # teams = request.user.teams.all()
-
-        # Order.objects.filter(
-        #     user__teams__in=teams
-        # ).distinct()
-
     teams = user.teams.all()
 
     if teams:

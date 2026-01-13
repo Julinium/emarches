@@ -2,16 +2,22 @@ from django import forms
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
+from decimal import Decimal
 # from django.contrib.auth.models import User
 
 from bidding.models import Bid
 from base.models import Lot
 from nas.models import Company
 
+CHECK_BIDDING_DEADLINE = True
+CHECK_AMOUNT_MARGINS = True
+MARGIN_PERCENT_OVER = 20
+MARGIN_PERCENT_UNDER = 25
+
 
 class LotChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return _("Lot ") + str(obj.number) + ' : ' + str(obj.estimate)
+        return _("Lot ") + str(obj.number) + ' : ' + str(obj.estimate) + ' : ' + obj.title
 
 class CompanyChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -29,15 +35,14 @@ class BidForm(forms.ModelForm):
             'company',
             'date_submitted',
             'amount_s',
-            'amount_c',
             'bond',
-            'bond_returned',
             'file_bond',
             'file_submitted',
             'file_receipt',
-            'file_other',
             'status',
+            'amount_c',
             'result',
+            'bond_returned',
             # 'created',
             # 'updated',
             # 'creator',
@@ -46,7 +51,7 @@ class BidForm(forms.ModelForm):
 
         widgets = {
             'date_submitted': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'deatils': forms.Textarea(attrs={'rows': '3'}),
+            'details': forms.Textarea(attrs={'rows': '3'}),
         }
 
     def __init__(self, *args, tender=None, user=None, **kwargs):
@@ -70,7 +75,7 @@ class BidForm(forms.ModelForm):
             company_field.queryset = comps
             if comps.count() == 1:
                 company_field.initial = comps.first()
-                company_field.widget = forms.HiddenInput()
+                # company_field.widget = forms.HiddenInput()
         else:
             company_field.queryset = Company.objects.none()
 
@@ -78,6 +83,42 @@ class BidForm(forms.ModelForm):
             field.widget.attrs["class"] = "form-control"
             field.label_suffix = ""
 
+    def clean_date_submitted(self):
+        date_submitted = self.cleaned_data.get("date_submitted")
+        if CHECK_BIDDING_DEADLINE:
+            lot = self.cleaned_data.get("lot")
+            deadline = lot.tender.deadline
+            if deadline is not None:
+                if date_submitted is not None:
+                    if date_submitted.date() > deadline.date():
+                        raise forms.ValidationError(_("Submission date must be earlier than Tender deadline:") + f" {deadline.date()}")
+            published = lot.tender.published
+            if published is not None:
+                if date_submitted is not None:
+                    if date_submitted.date() < published:
+                        raise forms.ValidationError(_("Submission date must be later than Tender published date:") + f" {published}")
+
+        return date_submitted
+
+    def clean_amount_s(self):
+        amount_s = self.cleaned_data.get("amount_s")
+        if CHECK_AMOUNT_MARGINS:
+            lot = self.cleaned_data.get("lot")
+            estimate = lot.estimate
+
+            if lot.category.label != "Travaux": margin_bottom = 20
+            else: margin_bottom = MARGIN_PERCENT_UNDER
+
+            if estimate is not None:
+                if amount_s is not None:
+                    limit_top = round(Decimal(1 + MARGIN_PERCENT_OVER / 100) * estimate, 2)
+                    if amount_s > limit_top:
+                        raise forms.ValidationError(_("Submitted amount must fall under allowed top margin:") + f" E+{MARGIN_PERCENT_OVER}%: {limit_top}")
+                    limit_bottom = round(Decimal(1 - margin_bottom / 100) * estimate, 2)
+                    if amount_s < limit_bottom :
+                        raise forms.ValidationError(_("Submitted amount must fall over allowed bottom margin:") + f" E-{MARGIN_PERCENT_UNDER}%: {limit_bottom}")
+
+        return amount_s
 
 
     
