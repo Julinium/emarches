@@ -25,19 +25,28 @@ EXTENSIONS_VALIDATORS = [
     ]
 
 class Team(models.Model):
-    id   = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='teams')
     active    = models.BooleanField(null=True, default=True)
+    members   = models.ManyToManyField(User, through='TeamMember')
     image     = models.ImageField(upload_to='bidding/teams/', null=True, blank=True, verbose_name=_('Avatar'))
     name      = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Name'))
     created   = models.DateTimeField(auto_now_add=True, editable=False)
-    updated   = models.DateTimeField(auto_now=True, editable=False)
+    updated   = models.DateTimeField(auto_now=True, editable=False) 
 
     class Meta:
         db_table = 'bidding_team'
 
     def __str__(self):
         return self.name
+    
+
+    def add_member(self, user, patron=False):
+        return TeamMember.objects.create(
+            team=self,
+            user=user,
+            patron=patron,
+        )
     
     @property
     def avatar(self):
@@ -51,6 +60,25 @@ class Team(models.Model):
         if self.image:
             self.image = squarify_image(self.image, str(self.id).split('-')[0])
         super().save(*args, **kwargs)
+
+
+class TeamMember(models.Model):
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False)
+    team      = models.ForeignKey(Team, on_delete=models.DO_NOTHING, editable=False)
+    active    = models.BooleanField(null=True, default=True, editable=False)
+    patron    = models.BooleanField(null=True, default=False, editable=False)
+    joined    = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        db_table = 'bidding_team_member'
+        
+        constraints = [
+            models.UniqueConstraint(
+                fields=["team", "user"],
+                name="unique_team_member"
+            )
+        ]
 
 
 class Contact(models.Model):

@@ -6,6 +6,8 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+# from django.utils.translation import gettext_lazy as _
+
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
@@ -17,7 +19,7 @@ from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
 
-from bidding.models import Bid, Team
+from bidding.models import Bid, Team, TeamMember
 from base.models import Tender
 
 from bidding.forms import BidForm
@@ -132,9 +134,26 @@ def bids_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    # team = user.team
-    all_bids = Bid.objects.all() # Filter: creator in team
+    if user.teams.count() < 1:
+        team = Team.objects.create(
+            name=user.username.upper(),
+            creator=user,
+        )
+        team.add_member(user, patron=True)
 
+        # teams = request.user.teams.all()
+
+        # Order.objects.filter(
+        #     user__teams__in=teams
+        # ).distinct()
+
+    teams = user.teams.all()
+
+    if teams:
+        all_bids = Bid.objects.filter(creator__teams__in=teams)
+    else:
+        all_bids = Bid.objects.none()
+    
     bids, filters = filter_bids(all_bids, query_dict)
     query_dict['filters'] = filters
 
