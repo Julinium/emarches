@@ -29,7 +29,8 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth.models import User
 
 from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
-from base.models import Tender, Category, Client, Domain, Lot, Procedure, Crawler, Agrement, Qualif, Deposit
+from base.models import Tender, Category, Client, Domain, Procedure, Crawler, Agrement, Qualif, Deposit
+from bidding.models import Bid
 from base.texter import normalize_text
 from base.context_processors import portal_context
 
@@ -267,12 +268,6 @@ def tender_list(request):
 
             winners = Deposit.objects.filter(opening__tender=OuterRef("pk"), winner=True).values("pk")
 
-            # if results == 'successful':
-            #     tenders = tenders.annotate(
-            #         has_winner=Exists(winners), 
-            #         failed_lots=Count("openings", filter=Q(openings__deposits__winner__isnull=True), distinct=True),
-            #     ).filter(has_winner=True, failed_lots=0)
-
             if results == 'partial':
                 tenders = tenders.filter(openings__isnull=False).annotate(
                     has_winner=Exists(winners), 
@@ -365,7 +360,7 @@ def tender_details_chrono(request, ch=None):
 
     tender = get_object_or_404(Tender, chrono=ch)
 
-    if not tender : return HttpResponse(status=404)
+    # if not tender : return HttpResponse(status=404)
     
     return redirect('portal_tender_detail', tender.id)
 
@@ -412,6 +407,11 @@ def tender_details(request, pk=None):
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
+
+    bids = Bid.objects.filter(lot__tender=tender, 
+        creator__teams__members=user
+        ).distinct().order_by('lot', 'amount_s', 'date_submitted')
+
     context = { 
         'tender'        : tender,
         'link_prefix'   : LINK_PREFIX,
@@ -420,7 +420,9 @@ def tender_details(request, pk=None):
         'dce_modal'     : DCE_SHOW_MODAL,
         'full_bar_days' : full_bar_days,
         'favorited'     : favorited,
+        'bids'          : bids,
         }
+
     TenderView.objects.create(
         tender=tender, 
         user=user, )

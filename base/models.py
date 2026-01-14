@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from django.db.models import Sum, Count, Max, Min, Avg, F, Q
+# from bidding.models import Bid
 
 from .texter import normalize_text as nt
 

@@ -1,5 +1,6 @@
 
 import uuid
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
 from django.templatetags.static import static
@@ -7,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django.core.validators import FileExtensionValidator
 
-from base.models import Lot, Tender
+from base.models import Lot
 from nas.models import Company
 from nas.imaging import squarify_image
 
@@ -23,6 +24,7 @@ EXTENSIONS_VALIDATORS = [
             ]
         )
     ]
+
 
 class Team(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -118,7 +120,7 @@ class Bid(models.Model):
     date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
-    
+
     amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Amount Submitted"))
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
     bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond"))
@@ -134,13 +136,34 @@ class Bid(models.Model):
     created         = models.DateTimeField(auto_now_add=True, editable=False)
     updated         = models.DateTimeField(auto_now=True, editable=False)
     creator         = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='bids')
-    
+
 
     class Meta:
         db_table = 'bidding_bid'
 
     def __str__(self):
         return self.lot.tender.title
+
+    @property
+    def amount(self):
+        return self.amount_c if self.amount_c else self.amount_s
+
+    @property
+    def ratio_str(self):
+        if self.lot:
+            estimate = self.lot.estimate
+            if estimate != 0:
+                ratio = round(Decimal("100") * (self.amount - estimate) / estimate, 2)
+                if ratio >= 0 : return f"+{ratio}%"
+                return f"{ratio}%"
+        return None
+
+    @property
+    def rebondable(self):
+        if self.bond_returned != True and self.bond > 0:
+            if self.status == BidStatus.BID_FINISHED or self.status == BidStatus.BID_CANCELLED:
+                return True
+        return False
 
     @property
     def status_tint(self):
@@ -159,13 +182,6 @@ class Bid(models.Model):
         if self.result == BidResults.BID_REJECT_T    :   return 'danger'
         if self.result == BidResults.BID_LOST        :   return 'danger'
         return 'secondary'
-
-    @property
-    def rebondable(self):
-        if self.bond_returned != True and self.bond > 0:
-            if self.status == BidStatus.BID_FINISHED or self.status == BidStatus.BID_CANCELLED:
-                return True
-        return False
     
 
     # def save(self, *args, **kwargs):
