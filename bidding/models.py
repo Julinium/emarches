@@ -137,7 +137,7 @@ class Bid(models.Model):
     created         = models.DateTimeField(auto_now_add=True, editable=False)
     updated         = models.DateTimeField(auto_now=True, editable=False)
     creator         = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='bids')
-
+    # TODO: groupement = ???
 
     class Meta:
         db_table = 'bidding_bid'
@@ -159,12 +159,13 @@ class Bid(models.Model):
                 return f"{ratio}%"
         return None
 
-    # @property
-    # def rebondable(self):
-    #     if self.bond_amount > 0 and self.bond_status != BondStatus.BOND_RETURNED :
-    #         if self.status == BidStatus.BID_FINISHED or self.status == BidStatus.BID_CANCELLED:
-    #             return True
-    #     return False
+    @property
+    def duplicated(self):
+        clowns = Bid.objects.filter(
+                lot=self.lot,
+                company=self.company,
+            )
+        return clowns.count() > 1
 
     @property
     def status_tint(self):

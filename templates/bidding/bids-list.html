@@ -8,33 +8,27 @@
 
 
 {% block content %}
-
     <div class="my-5">
         <div><h4>Tenders</h4></div>
         {% for tender in bid_tenders %}
             <div class="mb-3 border-0 border-bottom">
                 <span class="text-secondary fw-light threelines">{{ tender.title }}</span>
                 {% for lot in tender.lots.all %}
-                    {% if lot.bids.all|length > 0 %}
+                    {% if lot.team_bids %}
                         {% if tender.lots_count > 1 %}
-                            <div class="ms-2">Lot {{ lot.number }}:</div>
+                            <div class="ms-2 oneline small fw-light text-secondary">Lot {{ lot.number }}: {{ lot.title }}</div>
                         {% endif %}
-                        {% for bid in lot.bids.all %}
-                            {% if bid.creator.teams.first == user.teams.first %}
-                                <div class="ms-4">
-                                    <span class="">{{ bid.company.name }}</span>
-                                    <span class="ms-2 fw-light">@</span>
-                                    <span>{{ bid.amount_s }}</span>
-                                    <span class="ms-2 fw-light">By</span>
-                                    <span>{{ bid.creator }}</span>
-                                    <span class="ms-2 fw-light">In:</span>
-                                    <span>
-                                        {% for team in bid.creator.teams.all %}
-                                            <span class="ms-1">-{{ team }}</span>
-                                        {% endfor %}
-                                    </span>
-                                </div>
-                            {% endif %}
+                        {% for bid in lot.team_bids %}
+                            <div class="ms-4">
+                                {% if bid.duplicated %}
+                                    <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
+                                {% endif %}
+                                <span class="">{{ bid.company.name }}</span>
+                                <span class="ms-2 fw-light">@</span>
+                                <span>{{ bid.amount_s }}</span>
+                                <span class="ms-2 fw-light">By</span>
+                                <span>{{ bid.creator }}</span>
+                            </div>
                         {% endfor %}
                     {% endif %}
                 {% endfor %}

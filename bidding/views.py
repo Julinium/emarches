@@ -142,25 +142,33 @@ def bids_list(request):
         team.add_member(user, patron=True)
 
     teams = user.teams.all()
+    # team  = 
+
+    colleagues = user.teams.first().members.all()
 
     if teams:
-        all_bids = Bid.objects.filter(creator__teams__in=teams)
+        all_bids = Bid.objects.filter(creator__in=colleagues)
+        # lottinos = Lot.objects.filter(creator__in=colleagues).distinct()
+
         bid_tenders = Tender.objects.filter(
-                lots__bids__creator__teams__in=teams,
+                lots__bids__creator__in=colleagues,
             # ).annotate(
-            #     bid_lots = Lot.objects.filter(bids__creator__teams__in=teams),
-            # ).prefetch_related(
-            #     Prefetch(
-            #         "lots",
-            #         queryset=Lot.objects.filter(
-            #             bids__creator__teams__in=teams,
-            #             bids__creator__username="admino",
-            #             ).distinct(),
-            #         to_attr="bidded_lots",
-            #     )
+            #     team_bids = Bid.objects.filter(creator__in=colleagues),
+            ).prefetch_related(
+                Prefetch(
+                    "lots__bids",
+                    queryset=Bid.objects.filter(
+                            creator__in=colleagues,
+                        ),
+                    to_attr="team_bids",
+                )
             ).order_by(
                 '-deadline',
             ).distinct()
+        # team_bids = Bid.objects.filter(
+        #         creator__in=colleagues,
+
+        #     )
     else:
         all_bids = Bid.objects.none()
         bid_tenders = Tender.objects.none()
@@ -194,8 +202,9 @@ def bids_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
+    context['colleagues']  = colleagues
     context['bid_tenders'] = bid_tenders
-    context['page_obj'] = page_obj
+    context['page_obj']    = page_obj
 
     logger = logging.getLogger('portal')
     logger.info(f"Bids List view")

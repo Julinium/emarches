@@ -27,6 +27,12 @@
 
             <div class="">
                 <div class="mt-5">
+                    {% include 'nas/profile/snippets/team.html' %}
+                </div>
+            </div>
+
+            <div class="">
+                <div class="mt-5">
                     {% include 'nas/profile/snippets/companies-list.html' with companies=user.companies %}
                 </div>
             </div>
