@@ -15,6 +15,12 @@ class BidStatus(models.TextChoices):
     BID_FINISHED  = '40F',   _("Finished")
     BID_CANCELLED = '50X',   _("Cancelled")
 
+class BondStatus(models.TextChoices):
+    # BOND_PREPARING = '10U',   _("Preparing")
+    BOND_FILED     = '20F',   _("Filed")
+    BOND_RETURNED  = '30R',   _("Returned")
+    BOND_LOST      = '40L',   _("Lost")
+
 class BidResults(models.TextChoices):
     BID_UNKNOWN   = '10X',   _("Unknown")
     BID_AWARDED   = '20A',   _("Awarded")

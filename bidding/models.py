@@ -13,7 +13,7 @@ from nas.models import Company
 from nas.imaging import squarify_image
 
 from nas.choices import (
-    CivilityChoices, BidStatus, BidResults, ContractStatus, 
+    CivilityChoices, BidStatus, BondStatus, BidResults, ContractStatus, 
     TaskEmergency, TaskStatus, ExpenseStatus, ReceptionStatus, 
     )
 
@@ -123,9 +123,10 @@ class Bid(models.Model):
 
     amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Amount Submitted"))
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
-    bond            = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond"))
+    bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
+    bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, blank=True, null=True, verbose_name=_('Bond Status'))
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
-    bond_returned   = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Bond returned"))
+    # bond_returned   = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Bond returned"))
 
     file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Submission file"))
     file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
@@ -158,12 +159,12 @@ class Bid(models.Model):
                 return f"{ratio}%"
         return None
 
-    @property
-    def rebondable(self):
-        if self.bond_returned != True and self.bond > 0:
-            if self.status == BidStatus.BID_FINISHED or self.status == BidStatus.BID_CANCELLED:
-                return True
-        return False
+    # @property
+    # def rebondable(self):
+    #     if self.bond_amount > 0 and self.bond_status != BondStatus.BOND_RETURNED :
+    #         if self.status == BidStatus.BID_FINISHED or self.status == BidStatus.BID_CANCELLED:
+    #             return True
+    #     return False
 
     @property
     def status_tint(self):
@@ -181,6 +182,13 @@ class Bid(models.Model):
         if self.result == BidResults.BID_REJECT_A    :   return 'danger'
         if self.result == BidResults.BID_REJECT_T    :   return 'danger'
         if self.result == BidResults.BID_LOST        :   return 'danger'
+        return 'secondary'
+
+    @property
+    def bond_tint(self):
+        if self.bond_status == BondStatus.BOND_FILED    :   return 'warning'
+        if self.bond_status == BondStatus.BOND_RETURNED :   return 'success'
+        if self.bond_status == BondStatus.BOND_LOST     :   return 'danger'
         return 'secondary'
     
 

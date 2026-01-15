@@ -145,9 +145,15 @@ def bids_list(request):
 
     if teams:
         all_bids = Bid.objects.filter(creator__teams__in=teams)
+        bid_tenders = Tender.objects.filter(
+                lots__bids__creator__teams__in=teams
+            ).order_by(
+                '-deadline',
+            ).distinct()
     else:
         all_bids = Bid.objects.none()
-    
+        bid_tenders = Tender.objects.none()
+
     bids, filters = filter_bids(all_bids, query_dict)
     query_dict['filters'] = filters
 
@@ -177,6 +183,7 @@ def bids_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
+    context['bid_tenders'] = bid_tenders
     context['page_obj'] = page_obj
 
     logger = logging.getLogger('portal')

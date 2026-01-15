@@ -72,11 +72,11 @@
                     <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#bidsCollapse" aria-expanded="true" aria-controls="bidsCollapse">
                         <span><i class="{{ bicons.bidding }}"></i></span>
                         <span class="ms-2 fw-light">{% trans "My Bids" %}:</span>
-                        <span class="fw-bold ms-1">{{ bid|length }}</span>
+                        <span class="fw-bold ms-1">{{ bids|length }}</span>
                     </button>
                 </h2>
                 <div id="bidsCollapse" class="accordion-collapse show" data-bs-parent="#accordionBids">
-                    <div class="accordion-body p-0">                                                                
+                    <div class="accordion-body p-0">
                         <div class="list-group small mb-0">
                             {% for bid in bids %}
                                 <a href="{% url 'bidding_bid_details' bid.id %}" target="_blank" class="text-decoration-none">

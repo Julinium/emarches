@@ -6,7 +6,31 @@
     {% trans "Bids list" %}
 {% endblock title %}
 
+
 {% block content %}
+
+    <div class="my-5">
+        <div><h4>Tenders</h4></div>
+        {% for tender in bid_tenders %}
+            <div class="mb-3 border-0 border-bottom">
+                <span class="text-secondary fw-light">{{tender.title}}</span>
+                {% for lot in tender.lots.all %}
+                    {% if lot.bids.all|length > 0 %}
+                        {% if tender.lots_count > 1 %}
+                            <div class="ms-2">Lot {{ lot.number }}:</div>
+                        {% endif %}
+                        {% for bid in lot.bids.all %}
+                            <div class="text-success fw-bold ms-4">-- {{ bid.company.name }} @ {{ bid.amount_s }} </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% empty %}
+            <div class="text-danger">No Tenders</div>
+        {% endfor %}
+    </div>
+
+    <hr>
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
             <span class="h3 me-1">{% trans "Bids list" %}</span>
@@ -36,11 +60,6 @@
         {% endif %}
     </div>
 
-    <!-- lot               team              result
-    amount_c          bond              
-    file_bond         file_submitted    file_receipt      file_other    
-    created           updated           creator -->
-
     {% if page_obj %}
         <div class="container py-4 px-0">
             {% for bid in page_obj %}
@@ -64,19 +83,19 @@
                         </div>
 
                         <div class="small">
-                            <span class="text-secondary">{% trans 'Company' %}:</span>
+                            <!-- <span class="text-secondary">{% trans 'Company' %}:</span> -->
+                            <i class="ms-2 bi bi-person"></i>
+                            <span class="fw-bold">{{ bid.creator.username }}</span>
+                            <img src="{{ bid.company.logo }}" class="img-fluid rounded ms-2" style="width: 1rem; height: 1rem;" alt="X">
                             <span class="fw-bold">{{ bid.company.name }}</span>
                             {% if bid.date_submitted %}
-                                <span class="text-secondary ms-2">{% trans 'Sumbitted' %}:</span>
+                                <!-- <span class="text-secondary ms-2">{% trans 'Sumbitted' %}:</span> -->
+                                <i class="ms-2 bi bi-{{ bicons.history }}"></i>
                                 <span>{{ bid.date_submitted.date }}</span>
                             {% endif %}
-                            <span class="text-secondary ms-2">{% trans 'Bond' %}:</span>
-                            {% if bid.rebondable == True %}
-                                <i class="bi bi-exclamation-diamond-fill text-danger"></i>
-                            {% else %}
-                                <i class="bi bi-exclamation-diamond"></i>
-                            {% endif %}
-                            <span class="">{{ bid.bond }}</span>
+                            <!-- <span class="text-secondary ms-2">{% trans 'Bond' %}:</span> -->
+                            <i class="ms-2 bi bi-{{ bicons.bond }} text-{{ bid.bond_tint }}"></i>
+                            <span class="">{{ bid.bond_amount|default:'-' }}</span>
                         </div>
                         
                     </div>
