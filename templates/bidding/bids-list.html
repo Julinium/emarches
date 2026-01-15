@@ -13,14 +13,26 @@
         <div><h4>Tenders</h4></div>
         {% for tender in bid_tenders %}
             <div class="mb-3 border-0 border-bottom">
-                <span class="text-secondary fw-light">{{tender.title}}</span>
-                {% for lot in tender.lots.all %}
+                <span class="text-secondary fw-light threelines">{{tender.title}}</span>
+                {% for lot in tender.bid_lots %}
                     {% if lot.bids.all|length > 0 %}
                         {% if tender.lots_count > 1 %}
                             <div class="ms-2">Lot {{ lot.number }}:</div>
                         {% endif %}
                         {% for bid in lot.bids.all %}
-                            <div class="text-success fw-bold ms-4">-- {{ bid.company.name }} @ {{ bid.amount_s }} </div>
+                            <div class="ms-4">
+                                <span class="">{{ bid.company.name }}</span>
+                                <span class="ms-2 fw-light">@</span>
+                                <span>{{ bid.amount_s }}</span>
+                                <span class="ms-2 fw-light">By</span>
+                                <span>{{ bid.creator }}</span>
+                                <span class="ms-2 fw-light">In:</span>
+                                <span>
+                                    {% for team in bid.creator.teams.all %}
+                                        <span class="ms-1">-{{ team }}</span>
+                                    {% endfor %}
+                                </span>
+                            </div>
                         {% endfor %}
                     {% endif %}
                 {% endfor %}

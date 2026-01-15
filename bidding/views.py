@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from django.db.models import F # , Q, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
+from django.db.models import F, Prefetch # , Q, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
 # from django.db.models.functions import NullIf, Round
 # from decimal import Decimal
 
@@ -20,7 +20,7 @@ from django.core.paginator import Paginator
 from base.context_processors import portal_context
 
 from bidding.models import Bid, Team, TeamMember
-from base.models import Tender
+from base.models import Tender, Lot
 
 from bidding.forms import BidForm
 
@@ -141,12 +141,20 @@ def bids_list(request):
         )
         team.add_member(user, patron=True)
 
-    teams = user.teams.all()
+    team = user.teams.all()
 
-    if teams:
-        all_bids = Bid.objects.filter(creator__teams__in=teams)
+    if team:
+        all_bids = Bid.objects.filter(creator__teams__first=team)
         bid_tenders = Tender.objects.filter(
-                lots__bids__creator__teams__in=teams
+                lots__bids__creator__teams__first=team,
+            # ).annotate(
+            #     bid_lots = Lot.objects.filter(bids__creator__teams__first=team),
+            ).prefetch_related(
+                Prefetch(
+                    "lots",
+                    queryset=Lot.objects.filter(bids__creator__teams__first=team).distinct(),
+                    to_attr="bid_lots",
+                )
             ).order_by(
                 '-deadline',
             ).distinct()
@@ -260,10 +268,10 @@ def bid_edit(request, pk=None, tk=None):
                 lot = tender.lots.first()
                 form.fields["lot"].initial              = lot
                 form.fields["amount_s"].initial         = lot.estimate
-                form.fields["bond"].initial             = lot.bond
+                form.fields["bond_amount"].initial      = lot.bond
                 if lot.description: 
                     desc = lot.description
-                    form.fields["details"].initial          = desc
+                    form.fields["details"].initial      = desc
 
             companies = user.companies
             if companies.count() == 1:
