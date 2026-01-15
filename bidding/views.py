@@ -141,20 +141,23 @@ def bids_list(request):
         )
         team.add_member(user, patron=True)
 
-    team = user.teams.all()
+    teams = user.teams.all()
 
-    if team:
-        all_bids = Bid.objects.filter(creator__teams__first=team)
+    if teams:
+        all_bids = Bid.objects.filter(creator__teams__in=teams)
         bid_tenders = Tender.objects.filter(
-                lots__bids__creator__teams__first=team,
+                lots__bids__creator__teams__in=teams,
             # ).annotate(
-            #     bid_lots = Lot.objects.filter(bids__creator__teams__first=team),
-            ).prefetch_related(
-                Prefetch(
-                    "lots",
-                    queryset=Lot.objects.filter(bids__creator__teams__first=team).distinct(),
-                    to_attr="bid_lots",
-                )
+            #     bid_lots = Lot.objects.filter(bids__creator__teams__in=teams),
+            # ).prefetch_related(
+            #     Prefetch(
+            #         "lots",
+            #         queryset=Lot.objects.filter(
+            #             bids__creator__teams__in=teams,
+            #             bids__creator__username="admino",
+            #             ).distinct(),
+            #         to_attr="bidded_lots",
+            #     )
             ).order_by(
                 '-deadline',
             ).distinct()
