@@ -148,27 +148,18 @@ def bids_list(request):
 
     if teams:
         all_bids = Bid.objects.filter(creator__in=colleagues)
-        # lottinos = Lot.objects.filter(creator__in=colleagues).distinct()
 
         bid_tenders = Tender.objects.filter(
                 lots__bids__creator__in=colleagues,
-            # ).annotate(
-            #     team_bids = Bid.objects.filter(creator__in=colleagues),
             ).prefetch_related(
                 Prefetch(
                     "lots__bids",
-                    queryset=Bid.objects.filter(
-                            creator__in=colleagues,
-                        ),
+                    queryset=Bid.objects.filter(creator__in=colleagues,),
                     to_attr="team_bids",
                 )
             ).order_by(
                 '-deadline',
             ).distinct()
-        # team_bids = Bid.objects.filter(
-        #         creator__in=colleagues,
-
-        #     )
     else:
         all_bids = Bid.objects.none()
         bid_tenders = Tender.objects.none()
@@ -202,8 +193,8 @@ def bids_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
-    context['colleagues']  = colleagues
-    context['bid_tenders'] = bid_tenders
+    # context['colleagues']  = colleagues
+    # context['bid_tenders'] = bid_tenders
     context['page_obj']    = page_obj
 
     logger = logging.getLogger('portal')
@@ -229,6 +220,26 @@ def bid_details(request, pk=None):
 
     return render(request, 'bidding/bid-details.html', context)
 
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bid_delete(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    bid = None
+
+    if pk:
+        bid = get_object_or_404(Bid, pk=pk)
+        tender = bid.lot.tender
+    else:
+        tender = get_object_or_404(Tender, pk=tk)        
+
+    if not bid:
+        return HttpResponse(status=404)
 
 
 

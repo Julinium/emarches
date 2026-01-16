@@ -126,11 +126,9 @@ class Bid(models.Model):
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, blank=True, null=True, verbose_name=_('Bond Status'))
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
-    # bond_returned   = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Bond returned"))
 
     file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Submission file"))
     file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
-    # file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Other file"))
 
     result          = models.CharField(max_length=16, choices=BidResults.choices, default=BidResults.BID_UNKNOWN, verbose_name=_('Result'))
 
@@ -234,19 +232,19 @@ class Contract(models.Model):
 
 class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    bid       = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='tasks')
-    contract  = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='tasks')
+    bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, verbose_name=_('Bid'), related_name='tasks')
+    contract  = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, verbose_name=_('Contract'), related_name='tasks')
     title     = models.CharField(max_length=255, blank=True, default=_('New Task'), verbose_name=_('Title'))
     date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
     reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
     contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
     details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
-    assignee  = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name=_('Assigned to'), related_name='assigned_tasks')
+    assignee  = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
     milestone = models.BooleanField(null=True, default=True)
     status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, verbose_name=_('Status'))
 
-    creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='tasks')
+    creator   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='tasks')
     created   = models.DateTimeField(auto_now_add=True, editable=False)
     updated   = models.DateTimeField(auto_now=True, editable=False)
 

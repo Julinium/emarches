@@ -247,6 +247,7 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
+
 LOGIN_REDIRECT_URL = 'nas_profile_view'
 LOGOUT_REDIRECT_URL = 'account_login'
 
@@ -268,7 +269,6 @@ ACCOUNT_EMAIL_VERIFICATION_BY_CODE_MAX_ATTEMPTS = 5
 ACCOUNT_EMAIL_VERIFICATION_BY_CODE_TIMEOUT = 900
 ACCOUNT_EMAIL_NOTIFICATIONS = True
 
-
 # CELERY THINGS
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND", "redis://localhost:6379/1")
@@ -287,6 +287,7 @@ MESSAGE_TAGS = {
         messages.ERROR: 'danger',
  }
 
+
 env_scraper_path = BASE_DIR / 'scraper/.env'
 load_dotenv(dotenv_path=env_scraper_path)
 DCE_MEDIA_ROOT = os.getenv("MEDIA_ROOT")
@@ -304,7 +305,6 @@ INTERNAL_IPS = [
 
 
 # ---------------
-
 
 from .loggino import JsonFormatter
 LOGGING = {
