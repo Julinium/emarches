@@ -32,9 +32,9 @@
                                         <span class="badge bg-danger">{% trans "Admin" %}</span>
                                     {% endif %}
                                 </div>
-                                <div class="mt-0 small">                              
-                                    <span class="me-1">Joined: {{ membership.joined|default:'--' }}</span>
-                                    <span class="me-1">Last login: {{ membership.user.last_login|default:'--' }}</span>
+                                <div class="mt-0 small">
+                                    <span class="me-1 small">Joined: {{ membership.joined.date|default:'--' }}</span>
+                                    <span class="me-1 small">Last login: {{ membership.user.last_login|default:'--' }}</span>
                                 </div>
                             </div>
                         </div>
