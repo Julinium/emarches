@@ -59,23 +59,36 @@
                                 {% endif %}
                             <div class="list-group">
                                 {% for bid in lot.team_bids %}
-                                    <a href="{% url 'bidding_bid_details' bid.id %}" target="_blank" 
-                                       class="w-100 text-decoration-none {% if forloop.last %}rounded-bottom{% endif %}">
+                                    <a href="{% url 'bidding_bid_details' bid.id %}" 
+                                       class="w-100 text-decoration-none
+                                              {% if forloop.last %}
+                                                rounded-bottom
+                                              {% endif %}">
                                         <div class="list-group-item list-group-item-action p-2">
-                                            <div class="row">
+                                            <div class="row g-3">
                                                 <div class="col-12 col-md-6">
+                                                    <div>
+                                                        <span class="badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span>
+                                                        {% if bid.date_submitted %}
+                                                            <span><i class="bi bi-clock small ms-2"></i></span>
+                                                            <span class="small">{{ bid.date_submitted.date }}</span>
+                                                        {% endif %}
+                                                    </div>
                                                     {% if bid.duplicated %}
                                                         <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
                                                     {% endif %}
-                                                    <span class="badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span>
                                                     <span class="">{{ bid.company.name }}</span>
                                                     <span class="ms-2 fw-light">By</span>
                                                     <span>{{ bid.creator }}</span>
+                                                    <div></div>
                                                 </div>
                                                 <div class="col-12 col-md-6 text-end">
-                                                    <span class="badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
-                                                    <!-- <span class="ms-1 fw-light">@</span> -->
-                                                    <span class="fw-bold">{{ bid.amount }}</span>
+                                                    <div>
+                                                        <span class="fw-bold">{{ bid.amount }}</span>
+                                                    </div>
+                                                    <div>
+                                                        <span class="badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
+                                                    </div>                                                    
                                                 </div>
                                             </div>
                                         </div>
