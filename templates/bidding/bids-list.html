@@ -11,7 +11,7 @@
 
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
-            <span class="h3 me-1">{% trans "Bids list" %}</span>
+            <span class="h3 me-1">{% trans "My Bids" %}</span>
         </div>
         <div class="d-flex align-items-top">
             {% include 'bidding/snippets/bids/bid-search-form.html' %}
@@ -29,15 +29,14 @@
         <span class="fw-bold">
             {{ page_obj.paginator.count }} 
         </span>
-        <span class="small text-muted">{% trans "Items found" %}.</span>
+        <span class="small text-muted">{% trans "Tenders found" %}.</span>
         {% if page_obj.has_other_pages %}
+        {% endif %}
             <span class="small text-muted">{% trans "Showing" %}:</span>
             <span class="small">
                 {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
-            </span>            
-        {% endif %}
+            </span>
     </div>
-
 
     {% if page_obj %}
         <div class="container py-4 px-0">
@@ -107,50 +106,6 @@
     {% else %}
         {% include 'base/snippets/empty-list.html' %}
     {% endif %}
-
-
-
-
-    <!-- <div class="my-5">
-        <div><h4>Tenders</h4></div>
-        {% for tender in page_obj %}
-            <div class="card shadow mb-3">
-                <div class="card-header small p-2">
-                    <span class="text-secondary fw-light twolines">{{ tender.title }}</span>
-                </div>
-                <div class="card-body p-0">
-                    {% for lot in tender.lots.all %}
-                        {% if lot.team_bids %}
-                            {% if tender.lots_count > 1 %}
-                                <div class="p-2 pb-0 oneline small fw-light text-secondary">Lot {{ lot.number }}: {{ lot.title }}</div>
-                            {% endif %}
-                            {% for bid in lot.team_bids %}
-                                <a class="p-2 border-0 border-top border-bottom"
-                                   href="{% url 'bidding_bid_details' bid.id %}">
-                                    {% if bid.duplicated %}
-                                        <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
-                                    {% endif %}
-                                    <span class="">{{ bid.company.name }}</span>
-                                    <span class="ms-2 fw-light">@</span>
-                                    <span>{{ bid.amount_s }}</span>
-                                    <span class="ms-2 fw-light">By</span>
-                                    <span>{{ bid.creator }}</span>
-                                    <span class="ms-2 fw-light">Status</span>
-                                    <span>{{ bid.tag_display }}</span>
-                                </a>
-                            {% endfor %}
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-        {% empty %}
-            <div class="text-danger">No Tenders</div>
-        {% endfor %}
-    </div> -->
-
-
-
-
     
 {% endblock content %}
 

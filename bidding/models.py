@@ -236,7 +236,7 @@ class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bid       = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='tasks')
     contract  = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='tasks')
-    title     = models.CharField(max_length=255, blank=True, default=_('Task'), verbose_name=_('Title'))
+    title     = models.CharField(max_length=255, blank=True, default=_('New Task'), verbose_name=_('Title'))
     date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
     reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
     contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')

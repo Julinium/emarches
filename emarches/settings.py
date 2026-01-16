@@ -263,6 +263,11 @@ ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = True
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_MAX_ATTEMPTS = 5
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_TIMEOUT = 900
+ACCOUNT_EMAIL_NOTIFICATIONS = True
+
 
 # CELERY THINGS
 CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL", "redis://localhost:6379/0")
@@ -296,6 +301,9 @@ TENDERS_ITEMS_PER_PAGE = 10
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
+
+
+# ---------------
 
 
 from .loggino import JsonFormatter
