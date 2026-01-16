@@ -132,7 +132,7 @@ class Bid(models.Model):
     file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
     # file_other      = models.FileField(upload_to='bidding/others/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Other file"))
 
-    result          = models.CharField(max_length=16, choices=BidResults.choices, blank=True, null=True, verbose_name=_('Result'))
+    result          = models.CharField(max_length=16, choices=BidResults.choices, default=BidResults.BID_UNKNOWN, verbose_name=_('Result'))
 
     created         = models.DateTimeField(auto_now_add=True, editable=False)
     updated         = models.DateTimeField(auto_now=True, editable=False)
@@ -141,6 +141,7 @@ class Bid(models.Model):
 
     class Meta:
         db_table = 'bidding_bid'
+        ordering = ['company', 'amount_s', 'date_submitted']
 
     def __str__(self):
         return self.lot.tender.title
@@ -186,17 +187,22 @@ class Bid(models.Model):
         return 'secondary'
 
     @property
+    def tag(self):
+        if self.status == BidStatus.BID_CANCELLED:  return BidStatus.BID_CANCELLED
+        if self.status == BidStatus.BID_SUBMITTED or self.status == BidStatus.BID_FINISHED:
+            return self.result
+        return self.status
+
+    @property
+    def tag_display(self):
+        return dict(self._meta.get_field("status").flatchoices).get(self.tag)
+
+    @property
     def bond_tint(self):
         if self.bond_status == BondStatus.BOND_FILED    :   return 'warning'
         if self.bond_status == BondStatus.BOND_RETURNED :   return 'success'
         if self.bond_status == BondStatus.BOND_LOST     :   return 'danger'
-        return 'secondary'
-    
-
-    # def save(self, *args, **kwargs):
-    #     if self.id:
-    #         self.image = squarify_image(self.image, str(self.id).split('-')[0])
-    #     super().save(*args, **kwargs)
+        return 'secondary'    
 
 
 class Contract(models.Model):
@@ -354,5 +360,7 @@ class Income(models.Model):
 
     def __str__(self):
         return self.title
+
+
 
 

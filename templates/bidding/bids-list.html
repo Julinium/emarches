@@ -8,37 +8,7 @@
 
 
 {% block content %}
-    <div class="my-5">
-        <div><h4>Tenders</h4></div>
-        {% for tender in bid_tenders %}
-            <div class="mb-3 border-0 border-bottom">
-                <span class="text-secondary fw-light threelines">{{ tender.title }}</span>
-                {% for lot in tender.lots.all %}
-                    {% if lot.team_bids %}
-                        {% if tender.lots_count > 1 %}
-                            <div class="ms-2 oneline small fw-light text-secondary">Lot {{ lot.number }}: {{ lot.title }}</div>
-                        {% endif %}
-                        {% for bid in lot.team_bids %}
-                            <div class="ms-4">
-                                {% if bid.duplicated %}
-                                    <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
-                                {% endif %}
-                                <span class="">{{ bid.company.name }}</span>
-                                <span class="ms-2 fw-light">@</span>
-                                <span>{{ bid.amount_s }}</span>
-                                <span class="ms-2 fw-light">By</span>
-                                <span>{{ bid.creator }}</span>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            </div>
-        {% empty %}
-            <div class="text-danger">No Tenders</div>
-        {% endfor %}
-    </div>
 
-    <hr>
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
             <span class="h3 me-1">{% trans "Bids list" %}</span>
@@ -68,46 +38,54 @@
         {% endif %}
     </div>
 
+
     {% if page_obj %}
         <div class="container py-4 px-0">
-            {% for bid in page_obj %}
-                <a href="{% url 'bidding_bid_details' bid.id %}" 
-                    class="btn text-start w-100 p-0 mb-2">
-                    <div class="card shadow py-2 px-3">
-                        <div class="">
-                            {% if bid.lot.tender.lots_count > 1 %}
-                                <span class="fw-bold small">{% trans "Lot" %} {{ bid.lot.number }}: </span>
-                                <span>{{ bid.lot.title }}</span>
-                            {% else %}
-                                <span>{{ bid.lot.tender.title }}</span>
-                            {% endif %}
-                            <div class="text-end">   
-                                <span class="small badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span> 
-                                {% if bid.result %}
-                                    <span class="small badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
-                                {% endif %} 
-                                <span class="small badge bg-{% if bid.result %}{{ bid.result_tint }}{% else %}{{ bid.status_tint }}{% endif %}">{{ bid.amount_s }}</span>
+            {% for tender in page_obj %}
+            <div class="card shadow mb-3">
+                <div class="card-header small p-2">
+                    <span class="text-secondary fw-light twolines">{{ tender.title }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% for lot in tender.lots.all %}
+                        {% if lot.team_bids %}
+                                {% if tender.lots_count > 1 %}
+                                    <div class=" mx-1 mt-1 p-2 pb-0">
+                                        <div class="oneline small fw-light text-secondary">
+                                            <span class="fw-bold">Lot {{ lot.number }}</span>
+                                            <span>: {{ lot.title }}</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            <div class="list-group">
+                                {% for bid in lot.team_bids %}
+                                    <a href="{% url 'bidding_bid_details' bid.id %}" target="_blank" 
+                                       class="w-100 text-decoration-none {% if forloop.last %}rounded-bottom{% endif %}">
+                                        <div class="list-group-item list-group-item-action p-2">
+                                            <div class="row">
+                                                <div class="col-12 col-md-6">
+                                                    {% if bid.duplicated %}
+                                                        <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
+                                                    {% endif %}
+                                                    <span class="badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span>
+                                                    <span class="">{{ bid.company.name }}</span>
+                                                    <span class="ms-2 fw-light">By</span>
+                                                    <span>{{ bid.creator }}</span>
+                                                </div>
+                                                <div class="col-12 col-md-6 text-end">
+                                                    <span class="badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
+                                                    <!-- <span class="ms-1 fw-light">@</span> -->
+                                                    <span class="fw-bold">{{ bid.amount }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                {% endfor %}
                             </div>
-                        </div>
-
-                        <div class="small">
-                            <!-- <span class="text-secondary">{% trans 'Company' %}:</span> -->
-                            <i class="ms-2 bi bi-person"></i>
-                            <span class="fw-bold">{{ bid.creator.username }}</span>
-                            <img src="{{ bid.company.logo }}" class="img-fluid rounded ms-2" style="width: 1rem; height: 1rem;" alt="X">
-                            <span class="fw-bold">{{ bid.company.name }}</span>
-                            {% if bid.date_submitted %}
-                                <!-- <span class="text-secondary ms-2">{% trans 'Sumbitted' %}:</span> -->
-                                <i class="ms-2 bi bi-{{ bicons.history }}"></i>
-                                <span>{{ bid.date_submitted.date }}</span>
-                            {% endif %}
-                            <!-- <span class="text-secondary ms-2">{% trans 'Bond' %}:</span> -->
-                            <i class="ms-2 bi bi-{{ bicons.bond }} text-{{ bid.bond_tint }}"></i>
-                            <span class="">{{ bid.bond_amount|default:'-' }}</span>
-                        </div>
-                        
-                    </div>
-                </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
             {% endfor %}
         </div>
 
@@ -116,6 +94,51 @@
     {% else %}
         {% include 'base/snippets/empty-list.html' %}
     {% endif %}
+
+
+
+
+    <!-- <div class="my-5">
+        <div><h4>Tenders</h4></div>
+        {% for tender in page_obj %}
+            <div class="card shadow mb-3">
+                <div class="card-header small p-2">
+                    <span class="text-secondary fw-light twolines">{{ tender.title }}</span>
+                </div>
+                <div class="card-body p-0">
+                    {% for lot in tender.lots.all %}
+                        {% if lot.team_bids %}
+                            {% if tender.lots_count > 1 %}
+                                <div class="p-2 pb-0 oneline small fw-light text-secondary">Lot {{ lot.number }}: {{ lot.title }}</div>
+                            {% endif %}
+                            {% for bid in lot.team_bids %}
+                                <a class="p-2 border-0 border-top border-bottom"
+                                   href="{% url 'bidding_bid_details' bid.id %}">
+                                    {% if bid.duplicated %}
+                                        <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
+                                    {% endif %}
+                                    <span class="">{{ bid.company.name }}</span>
+                                    <span class="ms-2 fw-light">@</span>
+                                    <span>{{ bid.amount_s }}</span>
+                                    <span class="ms-2 fw-light">By</span>
+                                    <span>{{ bid.creator }}</span>
+                                    <span class="ms-2 fw-light">Status</span>
+                                    <span>{{ bid.tag_display }}</span>
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-danger">No Tenders</div>
+        {% endfor %}
+    </div> -->
+
+
+
+
+    
 {% endblock content %}
 
 

@@ -194,7 +194,7 @@ def bids_list(request):
 
     context = define_context(request)
 
-    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)
+    paginator = Paginator(bid_tenders, BIDS_ITEMS_PER_PAGE)
     page_number = request.GET['page'] if 'page' in request.GET else 1
     if not str(page_number).isdigit():
         page_number = 1
