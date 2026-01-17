@@ -7,14 +7,10 @@
         <span class="d-none d-md-inline ms-1">{% trans 'Edit' %}</span>
     </a>
 
-    <a class="m-1 btn btn-outline-secondary" href="{% url 'bidding_bid_edit' bid.id %}">
-        <span><i class="bi bi-archive me-1"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Archive' %}</span>
-    </a>
-
-    <a class="m-1 btn btn-outline-danger" href="{% url 'bidding_bid_edit' bid.id %}">
-        <span><i class="bi bi-trash me-1"></i></span>
+    <button type="button" class="btn btn-outline-danger" 
+            data-bs-toggle="modal" data-bs-target="#bidDeleteModal">
+        <span><i class="{{ bicons.delete }}"></i></span>
         <span class="d-none d-md-inline ms-1">{% trans 'Delete' %}</span>
-    </a>
+    </button>
     
 </div>

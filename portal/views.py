@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as trans
 
 from django.db import models
-from django.db.models import Count, Sum, F, Q, Exists, OuterRef
+from django.db.models import Count, Sum, F, Q, Exists, OuterRef, Prefetch
 from urllib.parse import urlencode
 
 from decimal import Decimal
@@ -320,6 +320,8 @@ def tender_list(request):
     if 'minutes_end' in ordering or '-minutes_end' in ordering:
         tenders = tenders.annotate(minutes_end=F('openings__date'))
 
+    colleagues = user.teams.first().members.all()
+
     tenders = tenders.order_by(
             *ordering
         ).select_related(
@@ -327,7 +329,21 @@ def tender_list(request):
         ).prefetch_related(
             'favorites', 'views', 'openings',
             'downloads', 'comments', 'changes',
-            )
+        )    
+    
+    # tenders = tenders.order_by(
+    #         *ordering
+    #     ).select_related(
+    #         'client', 'category', 'mode', 'procedure'
+    #     ).prefetch_related(
+    #         Prefetch(
+    #                 "lots__bids",
+    #                 queryset=Bid.objects.filter(creator__in=colleagues,),
+    #                 to_attr="team_bids",
+    #             ),
+    #         'favorites', 'views', 'openings',
+    #         'downloads', 'comments', 'changes',
+    #     )
 
     context = define_context(request)
 
@@ -340,7 +356,7 @@ def tender_list(request):
     page_obj = paginator.page(page_number)
 
     context['page_obj'] = page_obj
-    # context['faved_ids'] = user.favorites.values_list('tender', flat=True)
+    context['colleagues'] = colleagues
 
     logger = logging.getLogger('portal')
     logger.info(f"Tender List view")
@@ -408,9 +424,9 @@ def tender_details(request, pk=None):
     us = pro_context['user_settings']
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
 
-    bids = Bid.objects.filter(lot__tender=tender, 
-        creator__teams__members=user
-        ).distinct().order_by('lot', 'amount_s', 'date_submitted')
+    colleagues = user.teams.first().members.all()
+
+    bids = Bid.objects.filter(lot__tender=tender, creator__in=colleagues).distinct().order_by('lot', 'amount_s', 'date_submitted')
 
     context = { 
         'tender'        : tender,

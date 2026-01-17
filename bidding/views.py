@@ -6,7 +6,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-# from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
@@ -18,6 +18,7 @@ from django.db.models import F, Prefetch # , Q, Count, Sum, Min, Max, DecimalFie
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
+from nas.choices import BidStatus, BondStatus
 
 from bidding.models import Bid, Team, TeamMember
 from base.models import Tender, Lot
@@ -230,17 +231,37 @@ def bid_delete(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
 
-    bid = None
+    if request.method == "POST":
 
-    if pk:
-        bid = get_object_or_404(Bid, pk=pk)
-        tender = bid.lot.tender
-    else:
-        tender = get_object_or_404(Tender, pk=tk)        
+        bid = None
+        if pk: bid = get_object_or_404(Bid, pk=pk)
+        if not bid: return HttpResponse(status=404)
 
-    if not bid:
-        return HttpResponse(status=404)
+        # TODO: Check if Team admin
+        # TODO: Logging
 
+        confirmed = request.POST.get('confirmed')
+        if confirmed != 'know' :
+            messages.error(request, _("Please confirm deletion first"))
+            return redirect("bidding_bid_details", bid.id)
+
+        if bid.status != BidStatus.BID_CANCELLED:
+            messages.error(request, _("You can not delete a bid unless it is Cancelled"))
+            return redirect("bidding_bid_details", bid.id)
+
+        if bid.bond_status == BondStatus.BOND_FILED:
+            messages.error(request, _("Please check the Bond status before deleting"))
+            return redirect("bidding_bid_details", bid.id)
+
+        try:
+            bid.delete()
+            messages.success(request, _("Bid deleted successfully"))
+            return redirect("bidding_bids_list")
+        except Exception as xc: 
+            return HttpResponse(status=403)
+
+
+    return HttpResponse(status=405)
 
 
 @login_required(login_url="account_login")

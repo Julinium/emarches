@@ -59,12 +59,12 @@
                             <div class="list-group">
                                 {% for bid in lot.team_bids %}
                                     <a href="{% url 'bidding_bid_details' bid.id %}" 
-                                       class="w-100 text-decoration-none
+                                       target="_parent" class="w-100 text-decoration-none
                                               {% if forloop.last %}
                                                 rounded-bottom
                                               {% endif %}">
                                         <div class="list-group-item list-group-item-action p-2">
-                                            <div class="row g-3">
+                                            <div class="row g-1 my-2">
                                                 <div class="col-12 col-md-6">
                                                     <div>
                                                         <span class="badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span>
@@ -87,6 +87,7 @@
                                                     </div>
                                                     <div>
                                                         <span class="badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
+                                                        <!-- <span class="badge bg-{{ bid.tag_tint }}">{{ bid.tag_display }}</span> -->
                                                     </div>                                                    
                                                 </div>
                                             </div>
@@ -107,6 +108,7 @@
         {% include 'base/snippets/empty-list.html' %}
     {% endif %}
     
+
 {% endblock content %}
 
 

@@ -99,6 +99,14 @@
 
             <div class="card-footer px-2 py-1">
                 <div id="t{{ tender.chrono }}f" class="oneline">
+                    <!-- {% if tender.team_bids.all|length > 0 %}
+                    {% endif %} -->
+                    {% for b in tender.team_bids.all %}
+                        <div class="d-inline">
+                            <i class="bi bi-check-square-fill"></i>
+                            <span class="fw-bold me-2">{{ b.amount }}</span>
+                        </div>
+                    {% endfor %}
                         
                     {% if tender.expired %}
                         <div class="d-inline me-2">
