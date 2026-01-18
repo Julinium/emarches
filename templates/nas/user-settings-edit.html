@@ -15,7 +15,7 @@
         {% csrf_token %}
 
         <div class="accordion mt-2" id="accordionPreferences">
-            <div class="accordion-item">
+            <div class="accordion-item" id="item-general">
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold buffered" type="button" 
                             id="collapseGeneral" style="scroll-margin-top: 90px;"
@@ -53,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item" id="item-tenders">
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold buffered" type="button" 
                             id="collapseTenders" style="scroll-margin-top: 90px;"
@@ -131,7 +131,7 @@
                     </div>
                 </div>
             </div>
-            <div class="accordion-item">
+            <div class="accordion-item" id="item-p-orders">
                 <h2 class="accordion-header">
                     <button class="accordion-button fw-bold buffered" type="button" 
                             id="collapsePurchaseOrders" style="scroll-margin-top: 90px;"
@@ -206,6 +206,40 @@
                                 >
                             <label class="form-check-label" for="id_p_orders_show_expired">
                                 {% trans "Show today's expired" %}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item" id="item-bidding">
+                <h2 class="accordion-header">
+                    <button class="accordion-button fw-bold buffered" type="button" 
+                            id="collapseBidding" style="scroll-margin-top: 90px;"
+                            data-bs-toggle="collapse" data-bs-target="#panelBidding" 
+                            aria-expanded="true" aria-controls="panelBidding">
+                        {% trans 'Bidding' %}
+                    </button>
+                </h2>
+                <div id="panelBidding" class="accordion-collapse collapse show">
+                    <div class="accordion-body">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="bidding_check_deadline" 
+                                id="id_bidding_check_deadline"
+                                {% if form.bidding_check_deadline.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_bidding_check_deadline">
+                                {% trans "Check deadline when editing" %}
+                            </label>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="bidding_check_amount" 
+                                id="id_bidding_check_amount"
+                                {% if form.bidding_check_amount.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_bidding_check_amount">
+                                {% trans "Check amount when editing" %}
                             </label>
                         </div>
                     </div>

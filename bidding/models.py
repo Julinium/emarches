@@ -123,8 +123,10 @@ class Bid(models.Model):
 
     amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Amount Submitted"))
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
+    
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, blank=True, null=True, verbose_name=_('Bond Status'))
+    bond_due_date   = models.DateTimeField(blank=True, null=True, verbose_name="Bond Due Date")
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
 
     file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Submission file"))

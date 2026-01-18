@@ -10,32 +10,25 @@
     <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
 
         <li class="">
-            <a class="dropdown-item py-2" href="{% url 'insights_bidders_list' %}">
+            <a class="dropdown-item py-2 fw-bold" href="{% url 'insights_bidders_list' %}">
                 <i class="{{ bicons.concurrence }} me-2"></i>
                 {% trans 'Concurrents' %}
             </a>
         </li>
 
-        <!-- <li><hr class="dropdown-divider"></li>
-        
-        <li class="">
-            <a class="dropdown-item py-2" href="{% url 'portal_tender_favorite_list' %}">
-                <i class="{{ bicons.favorite }} me-2"></i>
-                {% trans 'Favourites' %}
-                {% if faved_ids %}
-                    <span class="badge bg-primary text-white mx-1">
-                        {{ faved_ids.count|default:0 }}
-                    </span>
-                {% endif %}
-            </a>
-        </li> -->
-
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bidding_bids_list' %}">
-                <i class="{{ bicons.ongoing }} me-2"></i>
+                <i class="{{ bicons.bid }} me-2"></i>
                 <span>{% trans 'Bids' %}</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="#">
+                <i class="{{ bicons.bond }} me-2"></i>
+                <span>{% trans 'Cautions' %}</span>
             </a>
         </li>
 

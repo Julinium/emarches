@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as trans
 
 from django.db import models
-from django.db.models import Count, Sum, F, Q, Exists, OuterRef #, Prefetch
+from django.db.models import Count, Sum, F, Q, Exists, OuterRef
 from urllib.parse import urlencode
 
 from decimal import Decimal
@@ -322,28 +322,29 @@ def tender_list(request):
 
     colleagues = user.teams.first().members.all()
 
-    tenders = tenders.order_by(
-            *ordering
-        ).select_related(
-            'client', 'category', 'mode', 'procedure'
-        ).prefetch_related(
-            'favorites', 'views', 'openings',
-            'downloads', 'comments', 'changes',
-        )
-
-    # tenders = tenders.prefetch_related(
-    #         'favorites', 'views', 'openings',
-    #         'downloads', 'comments', 'changes',
-    #         Prefetch(
-    #                 "lots__bids",
-    #                 queryset=Bid.objects.filter(creator__in=colleagues,),
-    #                 to_attr="team_bids",
-    #             ),
+    # tenders = tenders.order_by(
+    #         *ordering
     #     ).select_related(
     #         'client', 'category', 'mode', 'procedure'
-    #     ).order_by(
-    #         *ordering
+    #     ).prefetch_related(
+    #         'favorites', 'views', 'openings',
+    #         'downloads', 'comments', 'changes',
     #     )
+
+    tenders = tenders.prefetch_related(
+            'favorites', 'views', 'openings',
+            'downloads', 'comments', 'changes',
+        ).select_related(
+            'client', 'category', 'mode', 'procedure'
+        ).annotate(
+            team_bids=Count(
+                "lots__bids",
+                filter=Q(lots__bids__creator__in=colleagues),
+                distinct=True,
+            )
+        ).order_by(
+            *ordering
+        )
 
     context = define_context(request)
 
@@ -627,14 +628,22 @@ def tender_favorite_list(request):
         id__in=faved_ids
     )
 
-    tenders = tenders.order_by(
-            *ordering
-        ).select_related(
+    colleagues = user.teams.first().members.all()
+
+    tenders = tenders.select_related(
             'client', 'category', 'mode', 'procedure'
         ).prefetch_related(
             'favorites', 'views',
             'downloads', 'comments', 'changes',
+        ).annotate(
+            team_bids=Count(
+                "lots__bids",
+                filter=Q(lots__bids__creator__in=colleagues),
+                distinct=True,
             )
+        ).order_by(
+            *ordering
+        )
 
     context = {}
     context['query_string']       = urlencode(query_string)

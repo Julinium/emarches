@@ -271,8 +271,10 @@ def bid_edit(request, pk=None, tk=None):
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
-
     
+    pro_context = portal_context(request)
+    us          = pro_context['user_settings']
+
     bid = None
 
     if pk:
@@ -287,12 +289,15 @@ def bid_edit(request, pk=None, tk=None):
             instance=bid,
             user=user,
             tender=tender,
+            usets=us,
         )
         if form.is_valid():
             obj = form.save(commit=False)
             obj.tender = tender
             obj.creator = user
             obj.save()
+            if request.META.HTTP_REFERER:
+                return redirect(request.META.HTTP_REFERER)
             return redirect("bidding_bids_list")
         else:
             for field in form:
@@ -304,6 +309,7 @@ def bid_edit(request, pk=None, tk=None):
             instance=bid,
             user=user,
             tender=tender,
+            usets=us,
         )
         if bid is None:
             form.fields["date_submitted"].initial   = datetime.now()

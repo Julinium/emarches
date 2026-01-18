@@ -18,20 +18,20 @@
             class="m-1 btn btn-outline-primary favorite-toggle
                 {% if favorited %}d-none{% endif %}">
         <span><i class="{{ bicons.favorite }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Favorite' %}</span>
+        <span class="d-none--d-md-inline ms-1">{% trans 'Favorite' %}</span>
     </button>
     <button onclick="heartToggle('unfav')"
             id="{{ tender.chrono }}-unfav"
             class="m-1 btn btn-outline-primary favorite-toggle
                 {% if not favorited %}d-none{% endif %}">
         <span><i class="{{ bicons.unfavorite }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Unfavorite' %}</span>
+        <span class="d-none--d-md-inline ms-1">{% trans 'Unfavorite' %}</span>
     </button>
 
     <a class="m-1 btn btn-outline-primary" 
        type="button" onclick="sharePage(`https://new.emarches.com`)">
         <span><i class="{{ bicons.share }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Share' %}</span>
+        <span class="d-none--d-md-inline ms-1">{% trans 'Share' %}</span>
     </a>
 
     {% if total_size > 0 %}
@@ -41,7 +41,7 @@
                         class="m-1 btn btn-outline-primary" type="button">
                     <span class="fw-bold">{{ total_size|metrify:1 }}</span>
                     <span><i class="{{ bicons.downloads }}"></i></span>
-                    <span class="d-none d-md-inline ms-1">{% trans 'Download' %}</span>
+                    <span class="d-none--d-md-inline ms-1">{% trans 'Download' %}</span>
                 </a>
             {% endwith %}
         {% else %}
@@ -54,8 +54,8 @@
                     type="button" 
                     data-bs-toggle="modal" data-bs-target="#dceModal">
                 <span><i class="{{ bicons.downloads }}"></i></span>
-                <span class="d-none d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Files' %}</span>
+                <span class="d-none--d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
+                <span class="d-none--d-md-inline ms-1">{% trans 'Files' %}</span>
             </button>
         {% endif %}
     {% endif %}
@@ -65,7 +65,7 @@
         {% if tender.openings.all|length > 0 %}
             <a class="btn btn-outline-success" href="#resultsBookmark">
                 <span><i class="{{ bicons.deliberated }}"></i></span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Results' %}</span>
+                <span class="d-none--d-md-inline ms-1">{% trans 'Results' %}</span>
             </a>
         {% endif %}
     {% endif %}
@@ -79,7 +79,7 @@
                     type="button"
                     data-bs-toggle="modal" data-bs-target="#modalSimulator">
                 <span><i class="{{ bicons.simulator }}"></i></span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
+                <span class="d-none--d-md-inline ms-1">{% trans 'Simulator' %}</span>
             </button>
 
         {% else %}
@@ -88,7 +88,7 @@
             type="button" data-bs-toggle="modal" 
             data-bs-target="#lotSelctModal">
                 <span><i class="{{ bicons.simulator }}"></i></span>
-                <span class="d-none d-md-inline ms-1">{% trans 'Simulator' %}</span>
+                <span class="d-none--d-md-inline ms-1">{% trans 'Simulator' %}</span>
             </a>
         {% endif %}
 
@@ -99,16 +99,8 @@
         class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
         onclick="window.open(this.href, '_blank');">
             <span><i class="{{ bicons.link }}"></i></span>
-            <span class="ms-1">{% trans 'Official Link' %}</span>
+            <span class="d-none--d-md-inline ms-1">{% trans 'Official Link' %}</span>
         </a>
     {% endif %}
-
-
-    <!-- <a class="m-1 btn btn-outline-primary"
-        type="button" data-bs-toggle="modal" 
-        data-bs-target="#bidConfirmModal">
-        <span><i class="{{ bicons.bidding }}"></i></span>
-        <span class="d-none d-md-inline ms-1">{% trans 'Bidding' %}</span>
-    </a> -->
     
 </div>

@@ -53,7 +53,18 @@
         </div>
 
         <div class="mt-3 text-center">
-            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
+
+            <a href="{% if request.META.HTTP_REFERER %}
+                        {{ request.META.HTTP_REFERER }}{% else %}
+                        javascript:history.back(){% endif %}" 
+                class="btn btn-outline-secondary m-1">
+                <i class="bi bi-backspace me-1"></i>
+                {% trans 'Cancel' %}
+            </a>
+            <button type="submit" class="btn btn-primary m-1">
+                <i class="bi bi-floppy me-1"></i>
+                <span>{% trans "Save" %}</span>
+            </button>
         </div>
     </form>
 

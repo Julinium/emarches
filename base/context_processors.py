@@ -152,15 +152,19 @@ def portal_context(request):
         'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
         'ongoing'         : 'bi bi-hourglass-top', 
                             # calendar2-check
+
         'concurrence'     : 'bi bi-bar-chart-steps',
                             # filter-left 
                             # sort-up 
                             # list-ol 
+                            
+        'company'         : 'bi bi-buildings',
+                            
+        'bid'             : 'bi bi-envelope-arrow-up',
+        'bid_fill'        : 'bi bi-envelope-arrow-up-fill text-primary',
 
-        # 'Fournitures'     : 'bi bi-box-seam', 
-        # 'Travaux'         : 'bi bi-cone-striped',
-        # 'Services'        : 'bi bi-gear', 
-                            # 
+        'vertical'        : 'bi bi-three-dots-vertical',
+
     }
 
     context['bicons']        = bicons

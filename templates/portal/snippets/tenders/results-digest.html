@@ -218,8 +218,8 @@
                                 {% if selected_bid.winner %}
                                     <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
                                 {% endif %}
+                                <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
                                 {% if group.qahnsen|length > 1 %}
-                                    <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-secondary bg-secondary-subtle">E {% if selected_bid.offset >= 0 %}+{% endif %}{{ selected_bid.offset|floatformat:1|default:'?' }}%</span>
                                     <span class="badge{% if selected_bid.winner == true %} fw-light{% else %} fw-bold{% endif %} text-success bg-success-subtle">R {% if selected_bid.score >= 0 %}+{% endif %}{{ selected_bid.score|floatformat:2|default:'?' }}</span>
                                 {% endif %}
                                 <span class="float-end ms-2">{{ selected_bid.amount_a }}</span>
