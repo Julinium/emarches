@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as trans
 
 from django.db import models
-from django.db.models import Count, Sum, F, Q, Exists, OuterRef, Prefetch
+from django.db.models import Count, Sum, F, Q, Exists, OuterRef #, Prefetch
 from urllib.parse import urlencode
 
 from decimal import Decimal
@@ -329,20 +329,20 @@ def tender_list(request):
         ).prefetch_related(
             'favorites', 'views', 'openings',
             'downloads', 'comments', 'changes',
-        )    
-    
-    # tenders = tenders.order_by(
-    #         *ordering
-    #     ).select_related(
-    #         'client', 'category', 'mode', 'procedure'
-    #     ).prefetch_related(
+        )
+
+    # tenders = tenders.prefetch_related(
+    #         'favorites', 'views', 'openings',
+    #         'downloads', 'comments', 'changes',
     #         Prefetch(
     #                 "lots__bids",
     #                 queryset=Bid.objects.filter(creator__in=colleagues,),
     #                 to_attr="team_bids",
     #             ),
-    #         'favorites', 'views', 'openings',
-    #         'downloads', 'comments', 'changes',
+    #     ).select_related(
+    #         'client', 'category', 'mode', 'procedure'
+    #     ).order_by(
+    #         *ordering
     #     )
 
     context = define_context(request)
