@@ -24,6 +24,7 @@ from bidding.models import Bid, Team, TeamMember
 from base.models import Tender, Lot
 
 from bidding.forms import BidForm
+from bidding.secu import is_team_admin
 
 BIDS_ITEMS_PER_PAGE = 25
 
@@ -231,6 +232,12 @@ def bid_delete(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
 
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
+
+
     if request.method == "POST":
 
         bid = None
@@ -243,19 +250,31 @@ def bid_delete(request, pk=None):
         confirmed = request.POST.get('confirmed')
         if confirmed != 'know' :
             messages.error(request, _("Please confirm deletion first"))
-            return redirect("bidding_bid_details", bid.id)
+            referer = request.META.get('HTTP_REFERER', None)
+            if referer:
+                return redirect(referer)
+            return redirect("bidding_bids_list")
 
         if bid.status != BidStatus.BID_CANCELLED:
             messages.error(request, _("You can not delete a bid unless it is Cancelled"))
-            return redirect("bidding_bid_details", bid.id)
+            referer = request.META.get('HTTP_REFERER', None)
+            if referer:
+                return redirect(referer)
+            return redirect("bidding_bids_list")
 
         if bid.bond_status == BondStatus.BOND_FILED:
             messages.error(request, _("Please check the Bond status before deleting"))
-            return redirect("bidding_bid_details", bid.id)
+            referer = request.META.get('HTTP_REFERER', None)
+            if referer:
+                return redirect(referer)
+            return redirect("bidding_bids_list")
 
         try:
             bid.delete()
             messages.success(request, _("Bid deleted successfully"))
+            referer = request.META.get('HTTP_REFERER', None)
+            if referer:
+                return redirect(referer)
             return redirect("bidding_bids_list")
         except Exception as xc: 
             return HttpResponse(status=403)
@@ -271,7 +290,7 @@ def bid_edit(request, pk=None, tk=None):
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
-    
+
     pro_context = portal_context(request)
     us          = pro_context['user_settings']
 
@@ -281,7 +300,7 @@ def bid_edit(request, pk=None, tk=None):
         bid = get_object_or_404(Bid, pk=pk)
         tender = bid.lot.tender
     else:
-        tender = get_object_or_404(Tender, pk=tk)        
+        tender = get_object_or_404(Tender, pk=tk)
 
     if request.method == "POST":
         form = BidForm(
@@ -296,8 +315,11 @@ def bid_edit(request, pk=None, tk=None):
             obj.tender = tender
             obj.creator = user
             obj.save()
-            if request.META.HTTP_REFERER:
-                return redirect(request.META.HTTP_REFERER)
+        # if pk:
+            # return redirect("bidding_bid_details", pk)
+            # referer = request.META.get('HTTP_REFERER', None)
+            # if referer:
+            #     return redirect(referer)
             return redirect("bidding_bids_list")
         else:
             for field in form:

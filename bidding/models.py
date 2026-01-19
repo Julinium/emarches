@@ -169,6 +169,12 @@ class Bid(models.Model):
         return clowns.count() > 1
 
     @property
+    def deletable(self):
+        if self.status != BidStatus.BID_CANCELLED: return False
+        if self.bond_amount != 0 and self.bond_status == BondStatus.BOND_FILED: return False
+        return True
+
+    @property
     def status_tint(self):
         if self.status == BidStatus.BID_PREPARING : return 'secondary'
         if self.status == BidStatus.BID_READY     : return 'warning'
@@ -199,18 +205,11 @@ class Bid(models.Model):
 
     @property
     def tag_tint(self):
-        # if self.tag == BidStatus.BID_PREPARING : return 'secondary'
         if self.tag == BidStatus.BID_READY     : return 'warning'
-
-        # if self.tag == BidResults.BID_UNKNOWN  : return 'secondary'
         if self.tag == BidResults.BID_AWARDED  : return 'success'
         if self.tag == BidResults.BID_REJECT_A : return 'danger'
         if self.tag == BidResults.BID_REJECT_T : return 'danger'
         if self.tag == BidResults.BID_LOST     : return 'danger'
-
-        # if self.tag == BidStatus.BID_SUBMITTED:  return 'primary'
-        # if self.tag == BidStatus.BID_FINISHED:   return 'success'
-        # if self.tag == BidStatus.BID_CANCELLED:  return 'danger'
         return 'secondary'
 
     @property

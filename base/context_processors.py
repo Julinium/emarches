@@ -164,6 +164,8 @@ def portal_context(request):
         'bid_fill'        : 'bi bi-envelope-arrow-up-fill text-primary',
 
         'vertical'        : 'bi bi-three-dots-vertical',
+        'details'         : 'bi bi-card-text',
+        'edit'            : 'bi bi-pencil',
 
     }
 

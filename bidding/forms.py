@@ -57,6 +57,7 @@ class BidForm(forms.ModelForm):
     def __init__(self, *args, tender=None, user=None, usets=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.creator = user
+        self.usets = usets
 
         if tender:
             lots = Lot.objects.filter(tender=tender)

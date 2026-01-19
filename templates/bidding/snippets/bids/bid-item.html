@@ -1,0 +1,64 @@
+{% load i18n %}
+
+<div>
+    <div class="list-group-item list-group-item-action p-0 {% if forloop.last %}rounded-bottom{% endif %}">
+        <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
+           role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
+           class="btn w-100">
+            <div class="row g-1 my-1">
+                <div class="col-12 col-md-6 text-start">
+                    <div>
+                        <span class="badge bg-{{ bid.status_tint }}">{{ bid.get_status_display }}</span>
+                        {% if bid.date_submitted %}
+                            <span><i class="bi bi-clock small ms-2"></i></span>
+                            <span class="small">{{ bid.date_submitted.date }}</span>
+                        {% endif %}
+                    </div>
+                    {% if bid.duplicated %}
+                        <span class="small text-danger"><i class="bi bi-layers-fill"></i></span>
+                    {% endif %}
+                    <span class="">{{ bid.company.name }}</span>
+                    <span class="ms-2 fw-light">By</span>
+                    <span>{{ bid.creator }}</span>
+                    <div></div>
+                </div>
+                <div class="col-12 col-md-6 text-end">
+                    <div>
+                        <span class="fw-bold">{{ bid.amount }}</span>
+                    </div>
+                    <div>
+                        <span class="badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
+                    </div>                                                    
+                </div>
+            </div>
+        </a>
+        <div class="collapse" id="bid-{{ bid.id }}-collapse">
+            <div class="text-center m-2">
+
+                <a class="m-1 btn btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
+                    <span><i class="{{ bicons.details }} me-1"></i></span>
+                    <span class="d-none d-md-inline ms-1">{% trans 'Deails' %}</span>
+                </a>
+
+                <a class="m-1 btn btn-outline-secondary" href="{% url 'bidding_bid_edit' bid.id %}">
+                    <span><i class="{{ bicons.edit }} me-1"></i></span>
+                    <span class="d-none d-md-inline ms-1">{% trans 'Edit' %}</span>
+                </a>
+
+                {% if bid.deletable %}
+                    <button type="button" class="btn btn-outline-danger"
+                            data-bs-toggle="modal" data-bs-target="#bidDeleteModal"
+                            data-amount="{{ bid.amount }}"
+                            data-company="{{ bid.company.name }}"
+                            data-result="{{ bid.get_result_display }}"
+                            data-url="{% url 'bidding_bid_delete' bid.id %}"
+                            >
+                        <span><i class="{{ bicons.delete }}"></i></span>
+                        <span class="d-none d-md-inline ms-1">{% trans 'Delete' %}</span>
+                    </button>
+                {% endif %}
+                
+            </div>
+        </div>
+    </div>
+</div>

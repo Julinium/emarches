@@ -322,15 +322,6 @@ def tender_list(request):
 
     colleagues = user.teams.first().members.all()
 
-    # tenders = tenders.order_by(
-    #         *ordering
-    #     ).select_related(
-    #         'client', 'category', 'mode', 'procedure'
-    #     ).prefetch_related(
-    #         'favorites', 'views', 'openings',
-    #         'downloads', 'comments', 'changes',
-    #     )
-
     tenders = tenders.prefetch_related(
             'favorites', 'views', 'openings',
             'downloads', 'comments', 'changes',
