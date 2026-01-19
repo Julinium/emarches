@@ -43,7 +43,12 @@
             {% for tender in page_obj %}
             <div class="card shadow mt-3" id="t-{{ tender.chrono }}-top">
                 <div class="card-header small p-2">
-                    <span class="text-secondary fw-light twolines">{{ tender.title }}</span>
+                    <span class=" twolines">
+                        {% if tender.openings.all|length > 0 %}
+                            <span><i class="{{ bicons.deliberated }} me-1"></i></span>
+                        {% endif %}
+                        <span class="text-secondary fw-light">{{ tender.title }}</span>
+                    </span>
                 </div>
                 <div class="card-body p-0">
                     {% for lot in tender.lots.all %}

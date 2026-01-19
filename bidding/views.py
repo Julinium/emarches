@@ -25,7 +25,7 @@ from bidding.models import Bid, Team, TeamMember
 from base.models import Tender, Lot
 
 from bidding.forms import BidForm
-from bidding.secu import is_team_admin
+from bidding.secu import is_team_admin, is_team_member
 
 BIDS_ITEMS_PER_PAGE = 25
 
@@ -43,6 +43,10 @@ def bids_list(request):
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+    if not is_team_member(user, team): return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -145,7 +149,6 @@ def bids_list(request):
         team.add_member(user, patron=True)
 
     teams = user.teams.all()
-    # team  = 
 
     colleagues = user.teams.first().members.all()
 
@@ -159,7 +162,8 @@ def bids_list(request):
                     "lots__bids",
                     queryset=Bid.objects.filter(creator__in=colleagues,),
                     to_attr="team_bids",
-                )
+                ),
+                'openings',
             ).order_by(
                 '-deadline',
             ).distinct()
@@ -196,8 +200,6 @@ def bids_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
-    # context['colleagues']  = colleagues
-    # context['bid_tenders'] = bid_tenders
     context['page_obj']    = page_obj
 
     logger = logging.getLogger('portal')
@@ -214,11 +216,15 @@ def bid_details(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
     
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+    if not is_team_member(user, team): return HttpResponse(status=403)
+    
     bid = get_object_or_404(Bid, pk=pk)
-    corrected = bid.amount_c != None and bid.amount_c != bid.amount_s
+    # corrected = bid.amount_c != None and bid.amount_c != bid.amount_s
     context = {
         "bid"       : bid,
-        "corrected" : corrected,
+        # "corrected" : corrected,
     }
 
     return render(request, 'bidding/bid-details.html', context)
@@ -235,7 +241,6 @@ def bid_delete(request, pk=None):
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
-
     if not is_team_admin(user, team): return HttpResponse(status=403)
 
 
@@ -302,6 +307,10 @@ def bid_edit(request, pk=None, tk=None):
         tender = bid.lot.tender
     else:
         tender = get_object_or_404(Tender, pk=tk)
+    
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+    if not is_team_member(user, team): return HttpResponse(status=403)
 
     redir = request.GET.get('redirect', None)
     if redir and not url_has_allowed_host_and_scheme(
@@ -366,5 +375,32 @@ def bid_edit(request, pk=None, tk=None):
         "redir" : redir,
     })
 
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bid_get_file(request, pk=None, path=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : return HttpResponse(status=403)
+
+    bid = None
+    if pk: bid = get_object_or_404(Bid, pk=pk)
+    if not bid : return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+    if not is_team_member(user, team): return HttpResponse(status=403)
+
+    if not path : return HttpResponse(status=403)
+
+    file_path = None
+    if path == 'bond': file_path = bid.file_bond.url
+    if path == 'submitted': file_path = bid.file_submitted.url
+    if path == 'receipt': file_path = bid.file_receipt.url
+    if not file_path : return HttpResponse(status=403)
+
+    response = HttpResponse()
+    response["X-Accel-Redirect"] = file_path # f"/protected/{file.path}"
+    return response
 
 

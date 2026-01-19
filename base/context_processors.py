@@ -166,6 +166,7 @@ def portal_context(request):
         'vertical'        : 'bi bi-three-dots-vertical',
         'details'         : 'bi bi-card-text',
         'edit'            : 'bi bi-pencil',
+        'goto'            : 'bi bi-cursor',
 
     }
 

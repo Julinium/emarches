@@ -66,39 +66,37 @@
 
 
     <div id="bids-digest">
-        {% if bids %}
-            <div class="accordion my-3" id="accordionBids">
-                <div class="accordion-item shadow-sm">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#bidsCollapse" aria-expanded="true" aria-controls="bidsCollapse">
-                            <span><i class="{{ bicons.bidding }}"></i></span>
-                            <span class="ms-2 fw-light">{% trans "My Bids" %}:</span>
-                            <span class="fw-bold ms-1">{{ bids|length }}</span>
-                        </button>
-                    </h2>
-                        <div id="bidsCollapse" class="accordion-collapse show" data-bs-parent="#accordionBids">
-                            <div class="accordion-body p-0">
-                                <div class="list-group small mb-0">
-                                    {% for bid in bids %}
-                                        <div>
-                                            <div class="list-group-item list-group-item-action">
-                                                {% include 'portal/snippets/tenders/bid-digest.html' with bid=bid %}
-                                            </div>
+        <div class="accordion my-3" id="accordionBids">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#bidsCollapse" aria-expanded="true" aria-controls="bidsCollapse">
+                        <span><i class="{{ bicons.bidding }}"></i></span>
+                        <span class="ms-2 fw-light">{% trans "My Bids" %}:</span>
+                        <span class="fw-bold ms-1">{{ bids|length }}</span>
+                    </button>
+                </h2>
+                    <div id="bidsCollapse" class="accordion-collapse show" data-bs-parent="#accordionBids">
+                        <div class="accordion-body p-0">
+                            <div class="list-group small mb-0">
+                                {% for bid in bids %}
+                                    <div>
+                                        <div class="list-group-item list-group-item-action">
+                                            {% include 'portal/snippets/tenders/bid-digest.html' with bid=bid %}
                                         </div>
-                                    {% endfor %}
-                                    <!-- <div class="list-group-item p-2 text-end">
-                                        <a href="{% url 'bidding_bid_create' tender.id %}" target="_blank" class="btn btn-sm btn-primary">
-                                            <span><i class="bi bi-plus"></i></span>
-                                            <span class="text-end">{% trans "Add Bid" %}</span>
-                                        </a>
-                                    </div> -->
+                                    </div>
+                                {% endfor %}
+                                <div class="list-group-item p-2 text-end">
+                                    <a href="{% url 'bidding_bid_create' tender.id %}" target="_blank" class="btn btn-sm btn-primary">
+                                        <span><i class="bi bi-plus"></i></span>
+                                        <span class="text-end">{% trans "Add Bid" %}</span>
+                                    </a>
                                 </div>
-                                
                             </div>
+                            
                         </div>
-                </div>
+                    </div>
             </div>
-        {% endif %}
+        </div>
     </div>
 
 
