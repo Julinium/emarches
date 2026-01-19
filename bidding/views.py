@@ -1,5 +1,6 @@
 import logging
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.http import HttpResponse
 from urllib.parse import urlencode
 from datetime import datetime
@@ -302,9 +303,18 @@ def bid_edit(request, pk=None, tk=None):
     else:
         tender = get_object_or_404(Tender, pk=tk)
 
-    if request.method == "POST":
+    redir = request.GET.get('redirect', None)
+    if redir and not url_has_allowed_host_and_scheme(
+        redir,
+        allowed_hosts={request.get_host()},
+        require_https=request.is_secure(),
+    ):
+        redir = None
+
+    if request.method == "POST":        
         form = BidForm(
-            request.POST,
+            request.POST, 
+            request.FILES,
             instance=bid,
             user=user,
             tender=tender,
@@ -315,11 +325,10 @@ def bid_edit(request, pk=None, tk=None):
             obj.tender = tender
             obj.creator = user
             obj.save()
-        # if pk:
-            # return redirect("bidding_bid_details", pk)
-            # referer = request.META.get('HTTP_REFERER', None)
-            # if referer:
-            #     return redirect(referer)
+
+            if redir:
+                return redirect(redir)
+
             return redirect("bidding_bids_list")
         else:
             for field in form:
@@ -354,6 +363,7 @@ def bid_edit(request, pk=None, tk=None):
         "form"  : form,
         "object": bid,
         "tender": tender,
+        "redir" : redir,
     })
 
 

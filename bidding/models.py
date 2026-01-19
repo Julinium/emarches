@@ -189,28 +189,32 @@ class Bid(models.Model):
         if self.result == BidResults.BID_AWARDED  : return 'success'
         if self.result == BidResults.BID_REJECT_A : return 'danger'
         if self.result == BidResults.BID_REJECT_T : return 'danger'
-        if self.result == BidResults.BID_LOST     : return 'danger'
+        if self.result == BidResults.BID_LOST     : return 'warning'
         return 'secondary'
 
     @property
     def tag(self):
         if self.status == BidStatus.BID_CANCELLED:  return BidStatus.BID_CANCELLED
         if self.status == BidStatus.BID_SUBMITTED or self.status == BidStatus.BID_FINISHED:
+            if self.result == BidResults.BID_UNKNOWN: return self.status
             return self.result
         return self.status
 
     @property
     def tag_display(self):
+        # if self.status == BidStatus.BID_SUBMITTED or self.status == BidStatus.BID_FINISHED:
+        if self.tag == self.result:
+            return dict(self._meta.get_field("result").flatchoices).get(self.tag)
         return dict(self._meta.get_field("status").flatchoices).get(self.tag)
 
     @property
     def tag_tint(self):
-        if self.tag == BidStatus.BID_READY     : return 'warning'
+        if self.tag == BidStatus.BID_READY     : return 'secondary'
         if self.tag == BidResults.BID_AWARDED  : return 'success'
         if self.tag == BidResults.BID_REJECT_A : return 'danger'
         if self.tag == BidResults.BID_REJECT_T : return 'danger'
-        if self.tag == BidResults.BID_LOST     : return 'danger'
-        return 'secondary'
+        if self.tag == BidResults.BID_LOST     : return 'warning'
+        return self.status_tint
 
     @property
     def bond_tint(self):

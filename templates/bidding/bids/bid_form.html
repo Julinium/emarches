@@ -27,9 +27,13 @@
 
     <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
+
+        <input type="hidden" class="d-none" name="redirect" value="{{ redir }}">
+
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
         {% endfor %}
+
         <div class="row g-3">
             {% for field in form.visible_fields %}
                 <div class="col-12 mt-4 
@@ -61,10 +65,12 @@
                 <i class="bi bi-backspace me-1"></i>
                 {% trans 'Cancel' %}
             </a>
+
             <button type="submit" class="btn btn-primary m-1">
                 <i class="bi bi-floppy me-1"></i>
                 <span>{% trans "Save" %}</span>
             </button>
+
         </div>
     </form>
 
