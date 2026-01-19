@@ -4,9 +4,10 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 
-from bidding.models import Bid
 from base.models import Lot
 from nas.models import Company
+from bidding.models import Bid
+from bidding.widgets import FilenameOnlyClearableFileInput
 
 # from base.context_processors import portal_context
 
@@ -51,7 +52,10 @@ class BidForm(forms.ModelForm):
 
         widgets = {
             'date_submitted': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'details': forms.Textarea(attrs={'rows': '3'}),
+            'details'       : forms.Textarea(attrs={'rows': '3'}),
+            "file_bond"     : FilenameOnlyClearableFileInput,
+            "file_submitted": FilenameOnlyClearableFileInput,
+            "file_receipt"  : FilenameOnlyClearableFileInput,
         }
 
     def __init__(self, *args, tender=None, user=None, usets=None, **kwargs):

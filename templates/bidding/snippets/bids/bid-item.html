@@ -48,31 +48,8 @@
             </div>
         </a>
         <div class="collapse" id="bid-{{ bid.id }}-collapse">
-            <div class="m-2" id="bid-files">
-                <div>
-                    {% if bid.file_bond %}
-                        <div>
-                            <span class="small fw-light me-2">{% trans "Bond" %}:</span>                    
-                            <span>{{ bid.file_bond.url }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if bid.file_submitted %}
-                        <div>
-                            <span class="small fw-light me-2">{% trans "Submitted" %}:</span>
-                            <span>{{ bid.file_submitted.url }}</span>
-                        </div>
-                    {% endif %}
-
-                    {% if bid.file_receipt %}
-                        <div>
-                            <span class="small fw-light me-2">{% trans "Receipt" %}:</span>
-                            <span>{{ bid.file_receipt.url }}</span>
-                        </div>
-                    {% endif %} 
-                </div>
-            </div>
-            <div class="text-center m-2">
+            
+            <div id="bid-details-actions" class="text-center m-2">
 
                 <a class="m-1 btn btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
                     <span><i class="{{ bicons.details }}"></i></span>

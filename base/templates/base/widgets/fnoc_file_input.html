@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<input
+    type="file"
+    name="{{ widget.name }}"
+    {% include "django/forms/widgets/attrs.html" %}
+>
+{% if widget.is_initial and not widget.required %}
+    
+    <div class="mt-1">
+        <input
+          type="checkbox"
+          name="{{ widget.checkbox_name }}"
+          id="{{ widget.checkbox_id }}"
+          class="form-check-input"
+        >
+        <label class="form-check-label" for="{{ widget.checkbox_id }}">
+            {% trans "Clear current" %}:
+        </label>
+        <span class="text-muted ms-1">{{ filename }}</span>
+    </div>
+
+{% endif %}

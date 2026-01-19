@@ -1,5 +1,5 @@
 
-import uuid
+import os, uuid
 from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
@@ -137,7 +137,6 @@ class Bid(models.Model):
     created         = models.DateTimeField(auto_now_add=True, editable=False)
     updated         = models.DateTimeField(auto_now=True, editable=False)
     creator         = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='bids')
-    # TODO: groupement = ???
 
     class Meta:
         db_table = 'bidding_bid'
@@ -173,6 +172,21 @@ class Bid(models.Model):
         if self.status != BidStatus.BID_CANCELLED: return False
         if self.bond_amount != 0 and self.bond_status == BondStatus.BOND_FILED: return False
         return True
+
+    @property
+    def file_bond_name(self):
+        if self.file_bond: return os.path.basename(self.file_bond.name)
+        return None
+
+    @property
+    def file_submitted_name(self):
+        if self.file_submitted: return os.path.basename(self.file_submitted.name)
+        return None
+
+    @property
+    def file_receipt_name(self):
+        if self.file_receipt: return os.path.basename(self.file_receipt.name)
+        return None
 
     @property
     def status_tint(self):

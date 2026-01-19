@@ -167,6 +167,7 @@ def portal_context(request):
         'details'         : 'bi bi-card-text',
         'edit'            : 'bi bi-pencil',
         'goto'            : 'bi bi-cursor',
+        'download'        : 'bi bi-download',
 
     }
 
