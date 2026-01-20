@@ -79,11 +79,12 @@
                         <div class="accordion-body p-0">
                             <div class="list-group small mb-0">
                                 {% for bid in bids %}
-                                    <div>
+                                    <a href="{% url 'bidding_bid_details' bid.id %}"
+                                       class="text-decoration-none" target="_blank">
                                         <div class="list-group-item list-group-item-action">
                                             {% include 'portal/snippets/tenders/bid-digest.html' with bid=bid %}
                                         </div>
-                                    </div>
+                                    </a>
                                 {% endfor %}
                                 <div class="list-group-item p-2 text-end">
                                     <a href="{% url 'bidding_bid_create' tender.id %}" target="_blank" class="btn btn-sm btn-primary">

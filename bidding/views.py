@@ -267,19 +267,19 @@ def bid_details(request, pk=None):
             "bicon" : bicons.get("bid"),
             "event": _("Bid Submitted")
             })
-    if bid.created:
-        timeline.append({
-            "date": bid.created.date(),        
-            "past": is_past(bid.created), 
-            "bicon" : bicons.get("created"),
-            "event": _("Bid created")
-            })
+    # if bid.created:
+    #     timeline.append({
+    #         "date": bid.created.date(),        
+    #         "past": is_past(bid.created), 
+    #         "bicon" : bicons.get("created"),
+    #         "event": _("Bid created")
+    #         })
     if bid.updated:
         timeline.append({
             "date": bid.updated.date(),        
             "past": is_past(bid.updated), 
             "bicon" : bicons.get("updated"),
-            "event": _("Bid updated")
+            "event": _("Latest Bid update")
             })
     if bid.bond_due_date:
         timeline.append({
@@ -298,15 +298,13 @@ def bid_details(request, pk=None):
             "event": _("Tender results published")
             })
 
-    # changes = tender.changes.distinct()
-    # for change in changes:
     change = tender.changes.last()
     if change:
         timeline.append({
             "date": change.reported.date(),    
             "past": is_past(change.reported), 
             "bicon" : bicons.get("changes"),
-            "event": _("Tender data changed")
+            "event": _("Latest Tender change")
             })
 
     samples = bid.lot.samples

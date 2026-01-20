@@ -359,7 +359,7 @@
         <div class="accordion my-3" id="accordionFinancials">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
-                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#financialsCollapse" aria-expanded="true" aria-controls="financialsCollapse">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#financialsCollapse" aria-expanded="true" aria-controls="financialsCollapse">
                         <div class="w-100">
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
@@ -372,7 +372,7 @@
                         </div>
                     </button>
                 </h2>
-                <div id="financialsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionFinancials">
+                <div id="financialsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionFinancials">
                     <div class="accordion-body p-0">
                         {% group_depos bidder.selects as grouped_selects %}
                         <div class="list-group">
@@ -476,9 +476,8 @@
             </div>
         </div>
 
-
         
-        <div class="accordion mt-4 mb-3" id="accordionClients">
+        <div class="accordion mb-3" id="accordionClients">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clientsCollapse" aria-expanded="true" aria-controls="clientsCollapse">
@@ -624,12 +623,6 @@
         </div>
 
     </div>
-
-    <div class="my-3" id="bidder-actions">
-        {% include 'insights/snippets/bidders/bidder-actions.html' %}
-    </div>
-
-
 
 
 {% endblock content %}

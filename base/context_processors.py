@@ -168,6 +168,7 @@ def portal_context(request):
         'edit'            : 'bi bi-pencil',
         'goto'            : 'bi bi-cursor',
         'download'        : 'bi bi-download',
+        'section'         : 'bi bi-play',
 
     }
 
