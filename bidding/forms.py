@@ -43,17 +43,19 @@ class BidForm(forms.ModelForm):
             'amount_s',
             'bond_amount',
             'bond_status',
-            'file_bond',
-            'file_submitted',
-            'file_receipt',
+            'bond_due_date',
             'status',
             'amount_c',
             'result',
+            'file_bond',
+            'file_submitted',
+            'file_receipt',
             'details',
             ]
 
         widgets = {
             'date_submitted': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'bond_due_date' : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
             'details'       : forms.Textarea(attrs={'rows': '3'}),
             "file_bond"     : FilenameOnlyClearableFileInput,
             "file_submitted": FilenameOnlyClearableFileInput,

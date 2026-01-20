@@ -48,6 +48,162 @@
             </div>
         </a>
         <div class="collapse" id="bid-{{ bid.id }}-collapse">
+
+            <div id="bid-{{ bid.id }}-details" class="my-2">
+                <div class="row gx-2 gy-0 px-2">
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Amount" %}
+                                </div>
+                                <div id="" class="">
+                                    <span class="fw-bold">{{ bid.amount }}</span>
+                                    <span class="small ms-1">{{ bid.get_status_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Bid Submitted" %}
+                                </div>
+                                <div id="" class="">
+                                    <span class="">{{ bid.date_submitted.date|default:'--' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Bond" %}
+                                </div>
+                                <div id="" class="">
+                                    <span class="fw-bold">{{ bid.bond_amount }}</span>
+                                    <span class="small ms-1">{{ bid.get_bond_status_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Bond return date" %}
+                                </div>
+                                <div id="" class="">
+                                    <span class="">{{ bid.bond_due_date.date }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Tender Deadline" %}
+                                </div>
+                                <div id="" class="">
+                                    <span class="">{{ bid.lot.tender.deadline.date }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Bid Result" %}
+                                </div>
+                                <div id="" class="">
+                                    <span class="">{{ bid.get_result_display }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if bid.file_bond %}
+                        <div class="col-12">
+                            <div class="d-flex my-3">
+                                <div><i class="bi bi-dash-lg"></i></div>
+                                <div class="ms-2 w-100 border border-0 border-bottom">
+                                    <div class="text-muted small fw-light">
+                                        {% trans "Bond file" %}
+                                    </div>
+                                    <div id="">
+                                        <a href="{% url 'bidding_bid_b_file' bid.id %}" 
+                                        class="text-decoration-none">
+                                            <span class="small"><i class="{{ bicons.download }}"></i></span>
+                                            <span class="">{{ bid.file_bond_name }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if bid.file_submitted %}
+                        <div class="col-12">
+                            <div class="d-flex my-3">
+                                <div><i class="bi bi-dash-lg"></i></div>
+                                <div class="ms-2 w-100 border border-0 border-bottom">
+                                    <div class="text-muted small fw-light">
+                                        {% trans "Submitted file" %}
+                                    </div>
+                                    <div id="">
+                                        <a href="{% url 'bidding_bid_s_file' bid.id %}" 
+                                        class="text-decoration-none">
+                                            <span class="small"><i class="{{ bicons.download }}"></i></span>
+                                            <span class="">{{ bid.file_submitted_name }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if bid.file_receipt %}
+                        <div class="col-12">
+                            <div class="d-flex my-3">
+                                <div><i class="bi bi-dash-lg"></i></div>
+                                <div class="ms-2 w-100 border border-0 border-bottom">
+                                    <div class="text-muted small fw-light">
+                                        {% trans "Receipt file" %}
+                                    </div>
+                                    <div id="">
+                                        <a href="{% url 'bidding_bid_r_file' bid.id  %}" 
+                                        class="text-decoration-none">
+                                            <span class="small"><i class="{{ bicons.download }}"></i></span>
+                                            <span class="">{{ bid.file_receipt_name }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div id="bid-{{ bid.id }}-dates" class="my-2">
+                
+            </div>
             
             <div id="bid-details-actions" class="text-center m-2">
 

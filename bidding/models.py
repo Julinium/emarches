@@ -118,7 +118,7 @@ class Bid(models.Model):
     company         = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='bids')
 
     date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
-    status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Status'))
+    status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Bid Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
 
     amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Amount Submitted"))

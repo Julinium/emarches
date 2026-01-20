@@ -24,11 +24,11 @@
                         <div><i class="bi bi-dash-lg"></i></div>
                         <div class="ms-2 w-100 border border-0 border-bottom">
                             <div class="text-muted small fw-light">
-                                {% trans "Amount" %}
+                                {% trans "Bid Amount" %}
                             </div>
-                            <div id="" class="">
-                                <span class="fw-bold">{{ bid.amount }}</span>
-                                <span class="small ms-1">{{ bid.get_status_display }}</span>
+                            <div id="" class="text-end">
+                                {% if bid.amount_c %}<span class="fw-bold">{{ bid.amount_c }}</span>{% endif %}
+                                <span class="{% if bid.amount_c %}small ms-1 fw-light text-decoration-linethrough{% else %}fw-bold{% endif %}">{{ bid.amount_s }}</span>
                             </div>
                         </div>
                     </div>
@@ -39,11 +39,38 @@
                         <div><i class="bi bi-dash-lg"></i></div>
                         <div class="ms-2 w-100 border border-0 border-bottom">
                             <div class="text-muted small fw-light">
-                                {% trans "Bond" %}
+                                {% trans "Bid status" %}
                             </div>
                             <div id="" class="">
+                                <span class="">{{ bid.get_status_display }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div><i class="bi bi-dash-lg"></i></div>
+                        <div class="ms-2 w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Bond amount" %}
+                            </div>
+                            <div id="" class="text-end">
                                 <span class="fw-bold">{{ bid.bond_amount }}</span>
-                                <span class="small ms-1">{{ bid.get_bond_status_display }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div><i class="bi bi-dash-lg"></i></div>
+                        <div class="ms-2 w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Bond status" %}
+                            </div>
+                            <div id="" class="">
+                                <span class="">{{ bid.get_bond_status_display }}</span>
                             </div>
                         </div>
                     </div>
@@ -63,7 +90,21 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div class="col-12">
+                    <div class="d-flex my-3">
+                        <div><i class="bi bi-dash-lg"></i></div>
+                        <div class="ms-2 w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Client" %}
+                            </div>
+                            <div id="" class="">
+                                <span class="">{{ bid.lot.tender.client.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div><i class="bi bi-dash-lg"></i></div>
                         <div class="ms-2 w-100 border border-0 border-bottom">
@@ -89,7 +130,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-12 col-md-6">
                     <div class="d-flex my-3">
@@ -164,6 +205,28 @@
                         </div>
                     </div>
                 {% endif %}
+
+                <div id="bid-tmeline" class="my-3">
+                    <div class="col-12">
+
+                        <div class="d-flex my-3">
+                            <div><i class="bi bi-dash-lg"></i></div>
+                            <div class="ms-2 w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Timeline" %}
+                                </div>
+                                <div id="">                                    
+                                    {% for item in timeline %}
+                                        <div class="mb-1">
+                                            <span>{{ item.date }}</span>
+                                            <span class="ms-2 fw-light small text-secondary">{{ item.event }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
 

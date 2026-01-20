@@ -220,14 +220,31 @@ def bid_details(request, pk=None):
     
     bid = get_object_or_404(Bid, pk=pk)
     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
-    # corrected = bid.amount_c != None and bid.amount_c != bid.amount_s
+
+    timeline = []
+
+    if bid.lot.tender.published:
+        timeline.append({"date": bid.lot.tender.published,       "event": _("Tender published")})
+    if bid.lot.tender.deadline:
+        timeline.append({"date": bid.lot.tender.deadline.date(), "event": _("Bidding deadline")})
+    if bid.date_submitted:
+        timeline.append({"date": bid.date_submitted.date(),      "event": _("Bid Submitted")})
+    if bid.created:
+        timeline.append({"date": bid.created.date(),             "event": _("Bid updated")})
+    if bid.updated:
+        timeline.append({"date": bid.updated.date(),             "event": _("Bid updated")})
+    if bid.bond_due_date:
+        timeline.append({"date": bid.bond_due_date.date(),       "event": _("Bond return date")})
+
+
+    timeline.sort(key=lambda e: e["date"])
+
     context = {
         "bid"       : bid,
-        # "corrected" : corrected,
+        "timeline"       : timeline,
     }
 
     return render(request, 'bidding/bid-details.html', context)
-
 
 
 @login_required(login_url="account_login")

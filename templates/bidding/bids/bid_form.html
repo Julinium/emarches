@@ -38,7 +38,7 @@
             {% for field in form.visible_fields %}
                 <div class="col-12 mt-4 
                             {% if not 'textarea' in field.field.widget.template_name %}
-                                {% if field.name != 'lot' and field.name != 'company' %}col-md-6{% endif %}
+                                {% if field.name != 'lot' and field.name != 'company' and field.name != 'file_bond' and field.name != 'file_submitted' and field.name != 'file_receipt' %}col-md-6{% endif %}
                             {% endif %}
                             ">
                     <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">

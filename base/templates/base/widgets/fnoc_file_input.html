@@ -1,13 +1,8 @@
 {% load i18n %}
 
-<input
-    type="file"
-    name="{{ widget.name }}"
-    {% include "django/forms/widgets/attrs.html" %}
->
 {% if widget.is_initial and not widget.required %}
     
-    <div class="mt-1">
+    <div class="my-1">
         <input
           type="checkbox"
           name="{{ widget.checkbox_name }}"
@@ -21,3 +16,9 @@
     </div>
 
 {% endif %}
+
+<input
+    type="file"
+    name="{{ widget.name }}"
+    {% include "django/forms/widgets/attrs.html" %}
+>
