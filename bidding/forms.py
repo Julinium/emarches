@@ -1,3 +1,5 @@
+import os, re
+
 from django import forms
 from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
@@ -93,18 +95,17 @@ class BidForm(forms.ModelForm):
         us = self.usets
         if us:
             if us.bidding_check_deadline != False:
-            # if CHECK_BIDDING_DEADLINE:
                 lot = self.cleaned_data.get("lot")
                 deadline = lot.tender.deadline
+                published = lot.tender.published
                 if deadline is not None:
                     if date_submitted is not None:
                         if date_submitted.date() > deadline.date():
-                            raise forms.ValidationError(_("Submission date must be earlier than Tender deadline:") + f" {deadline.date()}")
-                published = lot.tender.published
+                            raise forms.ValidationError(_("Allowed Submission date range:") + f" {published} - {deadline.date()}")
                 if published is not None:
                     if date_submitted is not None:
                         if date_submitted.date() < published:
-                            raise forms.ValidationError(_("Submission date must be later than Tender published date:") + f" {published}")
+                            raise forms.ValidationError(_("Allowed Submission date range:") + f" {published} - {deadline.date()}")
 
         return date_submitted
 
@@ -113,7 +114,6 @@ class BidForm(forms.ModelForm):
         us = self.usets
         if us:
             if us.bidding_check_amount != False:
-            # if CHECK_AMOUNT_MARGINS:
                 lot = self.cleaned_data.get("lot")
                 estimate = lot.estimate
 
@@ -131,5 +131,68 @@ class BidForm(forms.ModelForm):
 
         return amount_s
 
+    def clean_file_bond(self):
+        uploaded_file = self.cleaned_data['file_bond']
+        if uploaded_file:
+            original_name = uploaded_file.name
 
+            name = os.path.basename(original_name)
+            safe_name = re.sub(r'[^\w\-.]', '_', name)
+            safe_name = safe_name.strip(".")
+            safe_name = safe_name.replace("__", "_")
+            if len(safe_name) < 8:
+                safe_name = f"eMarches.com-{safe_name}"
+            
+            if not safe_name:
+                raise forms.ValidationError("Invalid file name.")
+            if len(safe_name) > 64:
+                raise forms.ValidationError("File name too long.")
+
+            uploaded_file.name = safe_name
+
+        return uploaded_file
     
+    def clean_file_submitted(self):
+        uploaded_file = self.cleaned_data['file_submitted']
+        if uploaded_file:
+            original_name = uploaded_file.name
+
+            name = os.path.basename(original_name)
+            safe_name = re.sub(r'[^\w\-.]', '_', name)
+            safe_name = safe_name.strip(".")
+            safe_name = safe_name.replace("__", "_")
+            if len(safe_name) < 8:
+                safe_name = f"eMarches.com-{safe_name}"
+            
+            if not safe_name:
+                raise forms.ValidationError("Invalid file name.")
+            if len(safe_name) > 64:
+                raise forms.ValidationError("File name too long.")
+
+            uploaded_file.name = safe_name
+
+        return uploaded_file
+    
+    def clean_file_receipt(self):
+        uploaded_file = self.cleaned_data['file_receipt']
+        if uploaded_file:
+            original_name = uploaded_file.name
+
+            name = os.path.basename(original_name)
+            safe_name = re.sub(r'[^\w\-.]', '_', name)
+            safe_name = safe_name.strip(".")
+            safe_name = safe_name.replace("__", "_")
+            if len(safe_name) < 8:
+                safe_name = f"eMarches.com-{safe_name}"
+            
+            if not safe_name:
+                raise forms.ValidationError("Invalid file name.")
+            if len(safe_name) > 64:
+                raise forms.ValidationError("File name too long.")
+
+            uploaded_file.name = safe_name
+
+        return uploaded_file
+    
+
+
