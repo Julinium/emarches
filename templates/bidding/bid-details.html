@@ -26,7 +26,7 @@
                             <div class="text-muted small fw-light">
                                 {% trans "Bid Amount" %}
                             </div>
-                            <div id="" class="text-end">
+                            <div id="" class="">
                                 {% if bid.amount_c %}<span class="fw-bold">{{ bid.amount_c }}</span>{% endif %}
                                 <span class="{% if bid.amount_c %}small ms-1 fw-light text-decoration-linethrough{% else %}fw-bold{% endif %}">{{ bid.amount_s }}</span>
                             </div>
@@ -55,7 +55,7 @@
                             <div class="text-muted small fw-light">
                                 {% trans "Bond amount" %}
                             </div>
-                            <div id="" class="text-end">
+                            <div id="" class="">
                                 <span class="fw-bold">{{ bid.bond_amount }}</span>
                             </div>
                         </div>
@@ -84,7 +84,14 @@
                                 {% trans "Object" %}
                             </div>
                             <div id="" class="">
-                                <span class="">{{ bid.lot.title }}</span>
+                                {% if bid.lot.tender.lots_count > 1 %}
+                                    <div class="mb-2">
+                                        <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ bid.lot.number }}</span>
+                                        <span class="">{{ bid.lot.title }}</span>
+                                    </div>
+                                <span class="badge bg-secondary me-1">{% trans "Tender" %}</span>
+                                {% endif %}
+                                <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %}">{{ bid.lot.tender.title }}</span>
                             </div>
                         </div>
                     </div>
@@ -217,9 +224,16 @@
                                 </div>
                                 <div id="">                                    
                                     {% for item in timeline %}
-                                        <div class="mb-1">
-                                            <span>{{ item.date }}</span>
-                                            <span class="ms-2 fw-light small text-secondary">{{ item.event }}</span>
+                                        <div class="mb-1 {% if item.past == True %}text-secondary{% endif %}">
+                                            <span><i class="small {% if item.bicon %}{{item.bicon}}{% else %}bi bi-dash-lg{% endif %}"></i></span>
+                                            <span><i class="bi bi-dash-lg"></i></span>
+                                            <span class="{% if item.past != True %}fw-bold{% endif %}">{{ item.date }}</span>
+                                            {% if item.past != True %}
+                                                <span class="badge small ms-1 bg-primary">{{ item.date|timeuntil }}</span>
+                                            {% else %}
+                                                <span class="badge small ms-1 bg-secondary-subtle text-secondary fw-light">{{ item.date|timesince }}</span>
+                                            {% endif %}
+                                            <span class="ms-2 small">{{ item.event }}</span>
                                         </div>
                                     {% endfor %}
                                 </div>

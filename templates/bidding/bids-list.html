@@ -41,35 +41,51 @@
     {% if page_obj %}
         <div class="container py-4 px-0">
             {% for tender in page_obj %}
-            <div class="card shadow mt-3" id="t-{{ tender.chrono }}-top">
-                <div class="card-header small p-2">
-                    <span class=" twolines">
-                        {% if tender.openings.all|length > 0 %}
-                            <span><i class="{{ bicons.deliberated }} me-1"></i></span>
-                        {% endif %}
-                        <span class="text-secondary fw-light">{{ tender.title }}</span>
-                    </span>
-                </div>
-                <div class="card-body p-0">
-                    {% for lot in tender.lots.all %}
-                        {% if lot.team_bids %}
-                                {% if tender.lots_count > 1 %}
-                                    <div class=" mx-1 mt-1 p-2 pb-0">
-                                        <div class="oneline small fw-light text-secondary">
-                                            <span class="fw-bold">Lot {{ lot.number }}</span>
-                                            <span>: {{ lot.title }}</span>
+                <div class="card shadow mb-4" id="t-{{ tender.chrono }}-top">
+                    <div class="card-header small p-2">
+                        <span class=" twolines">
+                            {% if tender.openings.all|length > 0 %}
+                                <span><i class="{{ bicons.deliberated }} me-1"></i></span>
+                            {% endif %}
+                            <span class="text-secondary fw-light">{{ tender.title }}</span>
+                        </span>
+                    </div>
+
+                    {% if not tender.expired %}
+                        <div class="progress bg-danger p-0 m-0" 
+                            style="max-height: 0.25rem;"
+                            data-bs-toggle="tooltip"
+                            title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
+                            {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                                <div class="progress-bar bg-success" 
+                                    role="progressbar" style="width: {{ green }}%;" 
+                                    aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                    aria-valuemax="100">
+                                </div>
+                            {% endwith %}
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body p-0">
+                        {% for lot in tender.lots.all %}
+                            {% if lot.team_bids %}
+                                    {% if tender.lots_count > 1 %}
+                                        <div class=" mx-1 mt-1 p-2 pb-0">
+                                            <div class="oneline small fw-light text-secondary">
+                                                <span class="fw-bold">Lot {{ lot.number }}</span>
+                                                <span>: {{ lot.title }}</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                {% endif %}
-                            <div class="list-group">
-                                {% for bid in lot.team_bids %}
-                                    {% include 'bidding/snippets/bids/bid-item.html' %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                                    {% endif %}
+                                <div class="list-group">
+                                    {% for bid in lot.team_bids %}
+                                        {% include 'bidding/snippets/bids/bid-item.html' %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
         <div id="common-modals">

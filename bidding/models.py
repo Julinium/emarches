@@ -125,7 +125,7 @@ class Bid(models.Model):
     amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
     
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
-    bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, blank=True, null=True, verbose_name=_('Bond Status'))
+    bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, default=BondStatus.BOND_PREPARING, verbose_name=_('Bond Status'))
     bond_due_date   = models.DateTimeField(blank=True, null=True, verbose_name="Bond Due Date")
     file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
 
@@ -190,7 +190,7 @@ class Bid(models.Model):
 
     @property
     def status_tint(self):
-        if self.status == BidStatus.BID_PREPARING : return 'secondary'
+        if self.status == BidStatus.BID_PREPARING : return 'warning'
         if self.status == BidStatus.BID_READY     : return 'warning'
         if self.status == BidStatus.BID_SUBMITTED : return 'primary'
         if self.status == BidStatus.BID_FINISHED  : return 'success'
@@ -199,11 +199,11 @@ class Bid(models.Model):
 
     @property
     def result_tint(self):
-        if self.result == BidResults.BID_UNKNOWN  : return 'secondary'
+        if self.result == BidResults.BID_UNKNOWN  : return 'warning'
         if self.result == BidResults.BID_AWARDED  : return 'success'
         if self.result == BidResults.BID_REJECT_A : return 'danger'
         if self.result == BidResults.BID_REJECT_T : return 'danger'
-        if self.result == BidResults.BID_LOST     : return 'warning'
+        if self.result == BidResults.BID_LOST     : return 'danger'
         return 'secondary'
 
     @property
@@ -223,18 +223,19 @@ class Bid(models.Model):
 
     @property
     def tag_tint(self):
-        if self.tag == BidStatus.BID_READY     : return 'secondary'
+        if self.tag == BidStatus.BID_READY     : return 'warning'
         if self.tag == BidResults.BID_AWARDED  : return 'success'
         if self.tag == BidResults.BID_REJECT_A : return 'danger'
         if self.tag == BidResults.BID_REJECT_T : return 'danger'
-        if self.tag == BidResults.BID_LOST     : return 'warning'
+        if self.tag == BidResults.BID_LOST     : return 'danger'
         return self.status_tint
 
     @property
     def bond_tint(self):
-        if self.bond_status == BondStatus.BOND_FILED    :   return 'warning'
-        if self.bond_status == BondStatus.BOND_RETURNED :   return 'success'
-        if self.bond_status == BondStatus.BOND_LOST     :   return 'danger'
+        if self.bond_status == BondStatus.BOND_PREPARING :   return 'secondary'
+        if self.bond_status == BondStatus.BOND_FILED     :   return 'warning'
+        if self.bond_status == BondStatus.BOND_RETURNED  :   return 'success'
+        if self.bond_status == BondStatus.BOND_LOST      :   return 'danger'
         return 'secondary'
 
 

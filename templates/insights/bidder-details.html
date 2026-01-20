@@ -79,12 +79,12 @@
                         <div><i class="bi bi-calendar2-check"></i></div>
                         <div class="ms-2 w-100 border border-0 border-bottom">
                             <div class="text-muted small fw-light">
-                                {% trans "Wins period" %}
+                                {% trans "Bids period" %}
                             </div>
                             <div id="" class="small">
-                                <span class="">{{ bidder.first_win|date:'SHORT_DATE_FORMAT' }}</span>
+                                <span class="">{{ bidder.first_win }}</span>
                                 <span class="fw-light">-</span>
-                                <span class="">{{ bidder.latest_win|date:'SHORT_DATE_FORMAT' }}</span>
+                                <span class="">{{ bidder.latest_win }}</span>
                             </div>
                         </div>
                     </div>
@@ -477,7 +477,43 @@
         </div>
 
 
-        <div class="accordion mt-4 mb-3" id="accordionDomains">
+        
+        <div class="accordion mt-4 mb-3" id="accordionClients">
+            <div class="accordion-item shadow-sm">
+                <h2 class="accordion-header">
+                    <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clientsCollapse" aria-expanded="true" aria-controls="clientsCollapse">
+                        <span><i class="{{ bicons.client }} me-1"></i></span>
+                        <span class="fw-light text-uppercase">{% trans "Clients" %}</span>
+                        <span class="small fw-bold ps-2 {% if bidder.clients|length > 0 %}text-success{% endif %}">{{ bidder.clients|length }}</span>
+                    </button>
+                </h2>
+                <div id="clientsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionClients">
+                    <div class="accordion-body p-0">
+                        <div class="list-group">
+                            {% for cli in bidder.clients %}
+                                <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank"
+                                   href="{% url 'portal_tender_list' %}?&q={{ cli.name }}&f=client&exact=yes">
+                                    <div class="">{{ cli.name }}</div>
+                                    <div>
+                                        <span class="float-end small">
+                                                <span class="fw-light small">{% trans 'Bids' %}:</span>
+                                            <span class="fw-bold">{{ cli.deposits_count }}</span>
+                                        </span>
+                                    </div>
+                                </a>
+                            {% empty %}
+                                <div class="list-group-item">
+                                    <div class="fw-light small text-danger my-2">{% trans 'None' %}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div> 
+                </div> 
+            </div>
+        </div>
+
+
+        <div class="accordion my-3" id="accordionDomains">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#domainsCollapse" aria-expanded="true" aria-controls="domainsCollapse">

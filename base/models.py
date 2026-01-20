@@ -651,13 +651,23 @@ class Concurrent(models.Model):
         return benders #.order_by('-date')
 
     @property
+    def clients(self):
+        return Client.objects.filter(
+            tenders__openings__deposits__concurrent=self
+        ).annotate(
+                deposits_count=Count(
+                    "tenders__openings",
+                    distinct=True,
+                )
+            ).order_by("-deposits_count", 'name')
+
+    @property
     def domains(self):
         return Domain.objects.filter(
             tenders__openings__deposits__concurrent=self
         ).annotate(
                 deposits_count=Count(
                     "tenders__openings__deposits",
-                    # filter=Q(tenders__openings__deposits=self),
                     distinct=True,
                 )
             ).order_by("-deposits_count", 'name')
@@ -670,7 +680,6 @@ class Concurrent(models.Model):
             ).annotate(
                 deposits_count=Count(
                     "lots__tender__openings__deposits",
-                    # filter=Q(lots__tender__openings__deposits__concurrent=self),
                     distinct=True,
                 )
             )

@@ -3,9 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.http import HttpResponse
 from urllib.parse import urlencode
-from datetime import datetime
+from datetime import datetime, date, timezone
 from django.contrib import messages
 from django.contrib.auth.models import User
+
+from django.conf import settings
 
 from django.utils.translation import gettext_lazy as _
 
@@ -27,6 +29,7 @@ from base.models import Tender, Lot
 from bidding.forms import BidForm
 from bidding.secu import is_team_admin, is_team_member
 
+TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 BIDS_ITEMS_PER_PAGE = 25
 
 
@@ -49,8 +52,10 @@ def bids_list(request):
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
+    
     if us: 
         BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+        TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
     BIDS_ORDERING_FIELD = 'date_submitted'
 
     def get_req_params(req):
@@ -132,9 +137,10 @@ def bids_list(request):
 
     def define_context(request):
         context = {}
-        context['query_string']       = urlencode(query_string)
-        context['query_unsorted']     = urlencode(query_unsorted)
-        context['query_dict']         = query_dict
+        context['query_string']   = urlencode(query_string)
+        context['query_unsorted'] = urlencode(query_unsorted)
+        context['query_dict']     = query_dict
+        context['full_bar_days']  = TENDER_FULL_PROGRESS_DAYS
 
         return context
 
@@ -211,6 +217,19 @@ def bids_list(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_details(request, pk=None):
 
+    def is_past(value):
+        if isinstance(value, datetime):
+            if value.tzinfo is None:
+                now = datetime.now()
+            else:
+                now = datetime.now(timezone.utc).astimezone(value.tzinfo)
+            return value < now
+
+        if isinstance(value, date):
+            return value < date.today()
+        
+        return False
+
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
@@ -220,22 +239,103 @@ def bid_details(request, pk=None):
     
     bid = get_object_or_404(Bid, pk=pk)
     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+    tender = bid.lot.tender
+    if not tender: return HttpResponse(status=404)
 
     timeline = []
+    pontext = portal_context(request)
+    bicons = pontext['bicons']
 
-    if bid.lot.tender.published:
-        timeline.append({"date": bid.lot.tender.published,       "event": _("Tender published")})
-    if bid.lot.tender.deadline:
-        timeline.append({"date": bid.lot.tender.deadline.date(), "event": _("Bidding deadline")})
+    if tender.published:
+        timeline.append({
+            "date": tender.published,          
+            "past": is_past(tender.published), 
+            "bicon" : bicons.get("published"),
+            "event": _("Tender published")
+            })
+    if tender.deadline:
+        timeline.append({
+            "date": tender.deadline.date(),    
+            "past": is_past(tender.deadline), 
+            "bicon" : bicons.get("deadline"),
+            "event": _("Bidding deadline")
+            })
     if bid.date_submitted:
-        timeline.append({"date": bid.date_submitted.date(),      "event": _("Bid Submitted")})
+        timeline.append({
+            "date": bid.date_submitted.date(), 
+            "past": is_past(bid.date_submitted), 
+            "bicon" : bicons.get("bid"),
+            "event": _("Bid Submitted")
+            })
     if bid.created:
-        timeline.append({"date": bid.created.date(),             "event": _("Bid updated")})
+        timeline.append({
+            "date": bid.created.date(),        
+            "past": is_past(bid.created), 
+            "bicon" : bicons.get("created"),
+            "event": _("Bid created")
+            })
     if bid.updated:
-        timeline.append({"date": bid.updated.date(),             "event": _("Bid updated")})
+        timeline.append({
+            "date": bid.updated.date(),        
+            "past": is_past(bid.updated), 
+            "bicon" : bicons.get("updated"),
+            "event": _("Bid updated")
+            })
     if bid.bond_due_date:
-        timeline.append({"date": bid.bond_due_date.date(),       "event": _("Bond return date")})
+        timeline.append({
+            "date": bid.bond_due_date.date(),
+            "past": is_past(bid.bond_due_date), 
+            "bicon" : bicons.get("deadline"),
+            "event": _("Bond return date")
+            })
 
+    openings = tender.openings.all()
+    for opening in openings:
+        timeline.append({
+            "date": opening.date,    
+            "past": is_past(opening.date), 
+            "bicon" : bicons.get("deliberated"),
+            "event": _("Tender results published")
+            })
+
+    # changes = tender.changes.distinct()
+    # for change in changes:
+    change = tender.changes.last()
+    if change:
+        timeline.append({
+            "date": change.reported.date(),    
+            "past": is_past(change.reported), 
+            "bicon" : bicons.get("changes"),
+            "event": _("Tender data changed")
+            })
+
+    samples = bid.lot.samples
+    for sample in samples.all():
+        timeline.append({
+            "date": sample.when.date(),    
+            "past": is_past(sample.when), 
+            "bicon" : bicons.get("samples_ico"),
+            "event": _("Samples deadline")
+            })
+
+    meetings = bid.lot.meetings
+    for meeting in meetings.all():
+        timeline.append({
+            "date": meeting.when.date(),    
+            "past": is_past(meeting.when), 
+            "bicon" : bicons.get("meetings_ico"),
+            "event": _("Meeting deadline")
+            })
+
+    visits = bid.lot.visits
+    for visit in visits.all():
+        timeline.append({
+            "date": visit.when.date(),    
+            "past": is_past(visit.when), 
+            "bicon" : bicons.get("visits_ico"),
+            "event": _("Site visit deadline")
+            })
+    
 
     timeline.sort(key=lambda e: e["date"])
 
