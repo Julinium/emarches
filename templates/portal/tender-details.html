@@ -65,8 +65,8 @@
     {% include 'portal/snippets/tenders/tender-actions.html' %}
 
 
-    <div id="bids-digest">
-        <div class="accordion my-3" id="accordionBids">
+    <div id="accordionBids">
+        <div class="accordion my-3">
             <div class="accordion-item shadow-sm">
                 <h2 class="accordion-header">
                     <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#bidsCollapse" aria-expanded="true" aria-controls="bidsCollapse">
@@ -80,20 +80,23 @@
                             <div class="list-group small mb-0">
                                 {% for bid in bids %}
                                     <a href="{% url 'bidding_bid_details' bid.id %}"
-                                       class="text-decoration-none" target="_blank">
+                                    class="text-decoration-none" target="_blank">
                                         <div class="list-group-item list-group-item-action">
                                             {% include 'portal/snippets/tenders/bid-digest.html' with bid=bid %}
                                         </div>
                                     </a>
                                 {% endfor %}
+                                
                                 <div class="list-group-item p-2 text-end">
-                                    <a href="{% url 'bidding_bid_create' tender.id %}" target="_blank" class="btn btn-sm btn-primary">
-                                        <span><i class="bi bi-plus"></i></span>
+                                    <a {% if tender.lots_count == 1 %}
+                                            href="{% url 'bidding_bid_create' tender.lots.first.id %}"
+                                            target="_blank" {% else %}href="#accordionLots"{% endif %}
+                                        class="btn btn-sm btn-primary">
+                                        <span><i class="{{ bicons.bid }} me-1"></i></span>
                                         <span class="text-end">{% trans "Add Bid" %}</span>
                                     </a>
                                 </div>
                             </div>
-                            
                         </div>
                     </div>
             </div>
@@ -101,7 +104,7 @@
     </div>
 
 
-    <div class="my-3" id="tender-details">
+    <div id="tender-details" class="my-3">
         <div class="row gx-4 gy-0">
             
             {% trans 'Object' as key_value %}
@@ -232,21 +235,29 @@
                     <div class="accordion my-3" id="accordionLots">
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lotsCollapse" aria-expanded="true" aria-controls="lotsCollapse">
+                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#lotsCollapse" aria-expanded="true" aria-controls="lotsCollapse">
                                     <span><i class="{{ bicons.multi_lots }}"></i></span>
                                     <span class="fw-bold ms-1">{{ tender.lots_count }}</span>
                                     <span class="ms-2 fw-light">{% trans "Lots details" %}</span>
                                 </button>
                             </h2>
-                            <div id="lotsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionLots">
+                            <div id="lotsCollapse" class="accordion-collapse collapse show" data-bs-parent="#accordionLots">
                                 <div class="accordion-body p-0">
-                                                                        
+
                                     <table class="table table-hover mb-0">
                                         <tbody>
                                             {% for lot in tender.lots.all %}
                                                 <tr>
                                                     <td class="p-3">
                                                         {% include 'portal/snippets/lots/lot-details.html' with lot=lot %}
+
+                                                        <div class="mb-0 mt-2 text-end">
+                                                            <a href="{% url 'bidding_bid_create' lot.id %}" target="_blank" 
+                                                            class="btn btn-sm btn-primary">
+                                                                <span><i class="{{ bicons.bid }} me-1"></i></span>
+                                                                <span class="text-end">{% trans "Add Bid" %}</span>
+                                                            </a>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             {% endfor %}
@@ -476,7 +487,7 @@
 
 
     {% if tender.cancelled %}
-        <div class="my-3" id="tender-cancelled-bottom" >
+        <div id="tender-cancelled-bottom class="my-3"" >
             <div class="text-bg-danger rounded text-center my-2">
                 <div class="fw-bold p-1">
                     {% trans 'CANCELLED' %}
@@ -486,7 +497,7 @@
     {% endif %}
     
     {% with 'bottom' as position %}
-        <div class="my-3" id="tender-actions" >
+        <div id="tender-actions" class="my-3" >
             <div class="text-center">
                 {% include 'portal/snippets/tenders/tender-actions.html' %}
             </div>
@@ -545,45 +556,6 @@
         </div>
 
         {% include 'portal/snippets/tenders/tender-simulator-modal.html' %}
-
-        <div id="bidConfirmModal" class="modal fade" 
-            tabindex="-1" aria-labelledby="bidConfirmModalLabel" 
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="bidConfirmModalLabel">{% trans "Bidding process" %}</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="small mb-2 text-muted">
-                            <p>
-                                {% trans "We do not process bids. We help manage your bids, bonds and contracts ..." %}
-                            </p>
-                            <p>
-                                {% trans "Please refer to Tender details and files for more information about bidding process." %}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="{% url 'bidding_bid_create' tender.id %}"
-                           class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
-                           onclick="window.open(this.href, '_blank');">
-                            <span><i class="{{ bicons.bidding }}"></i></span>
-                            <span class="ms-1">{% trans 'Create Bid' %}</span>
-                        </a>
-                        {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
-                            <a href="{{ link_prefix }}{{ tender.link }}"
-                            class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
-                            onclick="window.open(this.href, '_blank');">
-                                <span><i class="{{ bicons.link }}"></i></span>
-                                <span class="ms-1">{% trans 'Official Link' %}</span>
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div id="advancedModal" class="modal fade" 
             tabindex="-1" aria-labelledby="advancedModalLabel" 
@@ -701,7 +673,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 

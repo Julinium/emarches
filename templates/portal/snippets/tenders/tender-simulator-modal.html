@@ -1,13 +1,13 @@
 {% load i18n %}
 {% load l10n %}
 
-<div class="modal fade" id="lotSelctModal" 
-    tabindex="-1" aria-labelledby="lotSelctModalLabel" 
+<div class="modal fade" id="lotSelectModal" 
+    tabindex="-1" aria-labelledby="lotSelectModalLabel" 
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="lotSelctModalLabel">{% trans "Lot Selection" %}</h1>
+                <h1 class="modal-title fs-5" id="lotSelectModalLabel">{% trans "Lot Selection" %}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -171,7 +171,7 @@
                     </button>
                 {% else %}
                     <button class="btn btn-outline-primary" 
-                            data-bs-target="#lotSelctModal" 
+                            data-bs-target="#lotSelectModal" 
                             data-bs-toggle="modal">
                         <span><i class="{{ bicons.close }}"></i></span>
                         <span class="ms-1">{% trans 'Back' %}</span>

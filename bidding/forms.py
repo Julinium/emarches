@@ -31,13 +31,12 @@ class CompanyChoiceField(forms.ModelChoiceField):
 
 class BidForm(forms.ModelForm):
 
-    lot = LotChoiceField(queryset=Lot.objects.none())
     company = CompanyChoiceField(queryset=Lot.objects.none())
 
     class Meta:
         model = Bid
         fields = [
-            'lot',
+            # 'lot',
             'company',
             'date_submitted',
             'amount_s',
@@ -62,29 +61,18 @@ class BidForm(forms.ModelForm):
             "file_receipt"  : FilenameOnlyClearableFileInput,
         }
 
-    def __init__(self, *args, tender=None, user=None, usets=None, **kwargs):
+    def __init__(self, *args, lot=None, user=None, usets=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.creator = user
         self.usets = usets
-
-        if tender:
-            lots = Lot.objects.filter(tender=tender)
-            lot_field = self.fields["lot"]
-            lot_field.queryset = lots
-            
-            if lots.count() == 1:
-                lot_field.initial = lots.first()
-                lot_field.widget = forms.HiddenInput()
-        else:
-            self.fields["lot"].queryset = Lot.objects.none()
+        self.lot = lot
 
         if user:
-            comps = user.companies
+            fleet = user.teams.first().companies
             company_field = self.fields["company"]
-            company_field.queryset = comps
-            if comps.count() == 1:
-                company_field.initial = comps.first()
-                # company_field.widget = forms.HiddenInput()
+            company_field.queryset = fleet
+            if fleet.count() == 1:
+                company_field.initial = fleet.first()
         else:
             company_field.queryset = Company.objects.none()
 

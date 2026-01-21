@@ -154,7 +154,6 @@ def bids_list(request):
         team.add_member(user, patron=True)
 
     teams = user.teams.all()
-
     colleagues = user.teams.first().members.all()
 
     if teams:
@@ -242,6 +241,7 @@ def bid_details(request, pk=None):
     tender = bid.lot.tender
     if not tender: return HttpResponse(status=404)
 
+    # TODO: Move timeline to model as a @property
     timeline = []
     pontext = portal_context(request)
     bicons = pontext['bicons']
@@ -403,13 +403,104 @@ def bid_delete(request, pk=None):
     return HttpResponse(status=405)
 
 
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def bid_edit(request, pk=None, tk=None):
+
+#     user = request.user
+#     if not user or not user.is_authenticated : 
+#         return HttpResponse(status=403)
+
+#     pro_context = portal_context(request)
+#     us          = pro_context['user_settings']
+
+#     bid = None
+
+#     if pk:
+#         bid = get_object_or_404(Bid, pk=pk)
+#         tender = bid.lot.tender
+#     else:
+#         tender = get_object_or_404(Tender, pk=tk)
+    
+#     team = user.teams.first()
+#     if not team: return HttpResponse(status=403)
+#     if bid:
+#         if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+
+#     redir = request.GET.get('redirect', None)
+#     if redir and not url_has_allowed_host_and_scheme(
+#         redir,
+#         allowed_hosts={request.get_host()},
+#         require_https=request.is_secure(),
+#     ):
+#         redir = None
+
+#     if request.method == "POST":        
+#         form = BidForm(
+#             request.POST, 
+#             request.FILES,
+#             instance=bid,
+#             user=user,
+#             tender=tender,
+#             usets=us,
+#         )
+#         if form.is_valid():
+#             obj = form.save(commit=False)
+#             obj.tender = tender
+#             obj.creator = user
+#             obj.save()
+
+#             if redir:
+#                 return redirect(redir)
+
+#             return redirect("bidding_bids_list")
+#         else:
+#             for field in form:
+#                 if field.errors:
+#                     for error in field.errors:
+#                         messages.error(request, f"{field.label}: {error}")
+#     else:
+#         form = BidForm(
+#             instance=bid,
+#             user=user,
+#             tender=tender,
+#             usets=us,
+#         )
+#         if bid is None:
+#             form.fields["date_submitted"].initial   = datetime.now()
+
+#             if tender.lots.count() == 1:
+#                 lot = tender.lots.first()
+#                 form.fields["lot"].initial              = lot
+#                 form.fields["amount_s"].initial         = lot.estimate
+#                 form.fields["bond_amount"].initial      = lot.bond
+#                 if lot.description: 
+#                     desc = lot.description
+#                     form.fields["details"].initial      = desc
+
+#             companies = user.companies
+#             if companies.count() == 1:
+#                 form.fields["company"].initial      = companies.first()
+
+
+#     return render(request, 'bidding/bids/bid_form.html', {
+#         "form"  : form,
+#         "object": bid,
+#         "tender": tender,
+#         "redir" : redir,
+#     })
+
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bid_edit(request, pk=None, tk=None):
+def bid_edit(request, pk=None, lk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
+    
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us          = pro_context['user_settings']
@@ -418,35 +509,31 @@ def bid_edit(request, pk=None, tk=None):
 
     if pk:
         bid = get_object_or_404(Bid, pk=pk)
-        tender = bid.lot.tender
-    else:
-        tender = get_object_or_404(Tender, pk=tk)
-    
-    team = user.teams.first()
-    if not team: return HttpResponse(status=403)
-    if bid:
         if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+        lot = bid.lot
+        tender = lot.tender
+    else:
+        lot = get_object_or_404(Lot, pk=lk)
+        tender = lot.tender
 
     redir = request.GET.get('redirect', None)
     if redir and not url_has_allowed_host_and_scheme(
-        redir,
-        allowed_hosts={request.get_host()},
-        require_https=request.is_secure(),
-    ):
+        redir, allowed_hosts={request.get_host()},
+        require_https=request.is_secure()):
         redir = None
 
-    if request.method == "POST":        
+    if request.method == "POST":
         form = BidForm(
             request.POST, 
             request.FILES,
             instance=bid,
             user=user,
-            tender=tender,
+            lot=lot,
             usets=us,
         )
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.tender = tender
+            obj.lot = lot
             obj.creator = user
             obj.save()
 
@@ -463,20 +550,17 @@ def bid_edit(request, pk=None, tk=None):
         form = BidForm(
             instance=bid,
             user=user,
-            tender=tender,
+            lot=lot,
             usets=us,
         )
         if bid is None:
             form.fields["date_submitted"].initial   = datetime.now()
 
-            if tender.lots.count() == 1:
-                lot = tender.lots.first()
-                form.fields["lot"].initial              = lot
-                form.fields["amount_s"].initial         = lot.estimate
-                form.fields["bond_amount"].initial      = lot.bond
-                if lot.description: 
-                    desc = lot.description
-                    form.fields["details"].initial      = desc
+            form.fields["amount_s"].initial         = lot.estimate
+            form.fields["bond_amount"].initial      = lot.bond
+            if lot.description: 
+                desc = lot.description
+                form.fields["details"].initial      = desc
 
             companies = user.companies
             if companies.count() == 1:
@@ -487,6 +571,7 @@ def bid_edit(request, pk=None, tk=None):
         "form"  : form,
         "object": bid,
         "tender": tender,
+        "lot"   : lot,
         "redir" : redir,
     })
 

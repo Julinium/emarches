@@ -386,7 +386,7 @@ def tender_details(request, pk=None):
             ).prefetch_related(
                 'downloads', 'views', 'favorites', 'openings',
                 'domains', 'lots', 'lots__agrements', 'lots__qualifs',
-                'lots__meetings', 'lots__samples', 'lots__visits'
+                'lots__meetings', 'lots__samples', 'lots__visits', 'lots__bids'
             ), id=pk)
 
     if not tender : return HttpResponse(status=404)

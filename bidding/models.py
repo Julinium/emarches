@@ -49,6 +49,10 @@ class Team(models.Model):
             user=user,
             patron=patron,
         )
+
+    @property
+    def companies(self):
+        return Company.objects.filter(user__in=self.members.all())
     
     @property
     def avatar(self):

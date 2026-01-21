@@ -1,5 +1,5 @@
 {% extends 'base/base.html' %}
-{% load static i18n %}
+{% load static i18n l10n %}
 
 {% block title %}
     {% trans "Edit Bid" %}
@@ -7,25 +7,66 @@
 
 {% block content %}
     <h3>{% trans "Edit Bid" %}</h3>
-    <div class="mt-3">
+    <div class="my-3">
         <div class="small text-muted">
             <span>{% trans 'Tender' %}</span>
         </div>
         <div class="ms-3">
-            <div class="form-control">
+            <div class="form-control bg-secondary-subtle text-secondary">
                 <div>{{ tender.title }}</div>
-                <div class="my-1 text-end">
-                    <a href="{% url 'portal_tender_detail' tender.id %}" 
-                    target="_blank"
-                    class="btn btn-sm btn-outline-secondary">
-                        {% trans 'Tender Details' %}
-                    </a>
+            </div>
+        </div>
+    </div>
+
+    {% if tender.lots_count > 1 %}
+        <div class="my-3">
+            <div class="small text-muted">
+                <span>{% trans 'Lot' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ lot.number }}</span>
+                    <span class="">{{ lot.title }}</span>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row g-3 mb-3">
+        <div class="col-12 col-md-6">
+            <div class="small text-muted">
+                <span>{% trans 'Bidding deadline' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span class="">{{ tender.deadline }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="small text-muted">
+                <span>{% trans 'Estimate' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span>
+                        {% if tender.lots_count > 1 %}
+                            {{ lot.estimate }}
+                        {% else %}
+                            {{ tender.estimate }}
+                        {% endif %}
+                    </span>
+                        {% if tender.lots_count > 1 %}
+                            <input type="hidden" class="d-none" id="estimate" value="{{ lot.estimate|unlocalize }}">
+                        {% else %}
+                            <input type="hidden" class="d-none" id="estimate" value="{{ tender.estimate|unlocalize }}">
+                        {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <form method="post" enctype="multipart/form-data" class="needs-validation my-3" novalidate>
         {% csrf_token %}
 
         <input type="hidden" class="d-none" name="redirect" value="{{ redir }}">

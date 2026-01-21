@@ -9,7 +9,7 @@ urlpatterns = [
 
     path('bids/',                   views.bids_list,   name='bidding_bids_list'),
     path('bids/<uuid:pk>/details/', views.bid_details, name='bidding_bid_details'),
-    path('bids/<uuid:tk>/create/',  views.bid_edit,    name='bidding_bid_create'),
+    path('bids/<uuid:lk>/create/',  views.bid_edit,    name='bidding_bid_create'),
     path('bids/<uuid:pk>/edit/',    views.bid_edit,    name='bidding_bid_edit'),
     path('bids/<uuid:pk>/delete/',  views.bid_delete,  name='bidding_bid_delete'),
     path('bids/<uuid:pk>/files/b/', views.bid_b_file,  name='bidding_bid_b_file'),
