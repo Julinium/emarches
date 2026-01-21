@@ -125,9 +125,9 @@ class Bid(models.Model):
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Bid Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
 
-    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Amount Submitted"))
-    amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Amount Corrected"))
-    
+    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Bid Amount"))
+    amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Corrected Amount"))
+
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, default=BondStatus.BOND_PREPARING, verbose_name=_('Bond Status'))
     bond_due_date   = models.DateTimeField(blank=True, null=True, verbose_name="Bond Due Date")
@@ -220,7 +220,6 @@ class Bid(models.Model):
 
     @property
     def tag_display(self):
-        # if self.status == BidStatus.BID_SUBMITTED or self.status == BidStatus.BID_FINISHED:
         if self.tag == self.result:
             return dict(self._meta.get_field("result").flatchoices).get(self.tag)
         return dict(self._meta.get_field("status").flatchoices).get(self.tag)

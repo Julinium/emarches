@@ -51,16 +51,13 @@
                 <div class="form-control bg-secondary-subtle text-secondary">
                     <span>
                         {% if tender.lots_count > 1 %}
-                            {{ lot.estimate }}
+                            E = {{ lot.estimate }}
+                            <input type="hidden" class="d-none" id="estimate_raw" value="{{ lot.estimate|unlocalize }}">
                         {% else %}
-                            {{ tender.estimate }}
+                            E = {{ tender.estimate }}
+                            <input type="hidden" class="d-none" id="estimate_raw" value="{{ tender.estimate|unlocalize }}">
                         {% endif %}
                     </span>
-                        {% if tender.lots_count > 1 %}
-                            <input type="hidden" class="d-none" id="estimate" value="{{ lot.estimate|unlocalize }}">
-                        {% else %}
-                            <input type="hidden" class="d-none" id="estimate" value="{{ tender.estimate|unlocalize }}">
-                        {% endif %}
                 </div>
             </div>
         </div>
@@ -84,8 +81,11 @@
                             ">
                     <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
                         <span>{{ field.label_tag }}</span>
+                        {% if field.name == 'amount_s' %}
+                            <span id="beratio" class="fw-bold text-secondary"></span>
+                        {% endif %}
                     </div>
-                    <div class="ms-3">{{ field }}</div>                    
+                    <div class="ms-3">{{ field }}</div>
 
                     {% for error in field.errors %}
                         <div class="ms-3 text-danger small">
@@ -114,5 +114,40 @@
 
         </div>
     </form>
+
+    <script>
+        const amountInput = document.getElementById("id_amount_s");
+        const estimateInput = document.getElementById("estimate_raw");
+        const ratioSpan = document.getElementById("beratio");
+
+        function updateRatio() {
+            const amount = parseFloat(amountInput.value);
+            const estimate = parseFloat(estimateInput.value);
+
+            if (!isNaN(amount) && !isNaN(estimate) && estimate !== 0) {
+                const ratio = 100 * (amount - estimate) / estimate;
+                const sign = ratio >= 0 ? "+" : "";
+                ratioSpan.textContent = ` = E ${sign}${ratio.toFixed(2)}%`;
+                ratioSpan.style.display = "";
+                if (ratio >= 0){
+                    ratioSpan.classList.add("text-success");
+                    ratioSpan.classList.remove("text-danger");
+                }else{
+                    ratioSpan.classList.add("text-danger");
+                    ratioSpan.classList.remove("text-success");
+                }
+            } else {
+                ratioSpan.classList.remove("text-success", "text-danger");
+                ratioSpan.textContent = "";
+                ratioSpan.style.display = "none";
+            }
+        }
+
+        // Update on change
+        amountInput.addEventListener("input", updateRatio);
+
+        // Initial calculation
+        updateRatio();
+    </script>
 
 {% endblock content %}

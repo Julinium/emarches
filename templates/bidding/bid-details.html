@@ -28,7 +28,7 @@
                             </div>
                             <div id="" class="ms-2">
                                 {% if bid.amount_c %}<span class="fw-bold">{{ bid.amount_c }}</span>{% endif %}
-                                <span class="{% if bid.amount_c %}small ms-1 fw-light text-decoration-linethrough{% else %}fw-bold{% endif %}">{{ bid.amount_s }}</span>
+                                <span class="{% if bid.amount_c %}small ms-1 fw-light text-decoration-linethrough{% else %}fw-bold{% endif %}">{{ bid.amount_s|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                                 {% trans "Bid status" %}
                             </div>
                             <div id="" class="ms-2">
-                                <span class="">{{ bid.get_status_display }}</span>
+                                <span class="">{{ bid.get_status_display|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                                 {% trans "Bond amount" %}
                             </div>
                             <div id="" class="ms-2">
-                                <span class="fw-bold">{{ bid.bond_amount }}</span>
+                                <span class="fw-bold">{{ bid.bond_amount|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                                 {% trans "Bond status" %}
                             </div>
                             <div id="" class="ms-2">
-                                <span class="">{{ bid.get_bond_status_display }}</span>
+                                <span class="">{{ bid.get_bond_status_display|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -86,12 +86,12 @@
                             <div id="" class="ms-2">
                                 {% if bid.lot.tender.lots_count > 1 %}
                                     <div class="mb-2">
-                                        <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ bid.lot.number }}</span>
-                                        <span class="">{{ bid.lot.title }}</span>
+                                        <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ bid.lot.number|default:'--' }}</span>
+                                        <span class="">{{ bid.lot.title|default:'--' }}</span>
                                     </div>
                                 <span class="badge bg-secondary me-1">{% trans "Tender" %}</span>
                                 {% endif %}
-                                <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %}">{{ bid.lot.tender.title }}</span>
+                                <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %}">{{ bid.lot.tender.title|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -105,7 +105,7 @@
                                 {% trans "Client" %}
                             </div>
                             <div id="" class="ms-2">
-                                <span class="">{{ bid.lot.tender.client.name }}</span>
+                                <span class="">{{ bid.lot.tender.client.name|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                                 {% trans "Result" %}
                             </div>
                             <div id="" class="ms-2">
-                                <span class="">{{ bid.get_result_display }}</span>
+                                <span class="">{{ bid.get_result_display|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -230,32 +230,6 @@
 
         </div>
 
-        <div class="my-3" id="bid-files">
-
-            <div>
-                {% if bid.file_bond %}
-                    <div>
-                        <span class="small fw-light me-2">{% trans "Bond" %}:</span>                    
-                        <span>{{ bid.file_bond.url }}</span>
-                    </div>
-                {% endif %}
-                
-                {% if bid.file_submitted %}
-                    <div>
-                        <span class="small fw-light me-2">{% trans "Submitted" %}:</span>
-                        <span>{{ bid.file_submitted.url }}</span>
-                    </div>
-                {% endif %}
-
-                {% if bid.file_receipt %}
-                    <div>
-                        <span class="small fw-light me-2">{% trans "Receipt" %}:</span>
-                        <span>{{ bid.file_receipt.url }}</span>
-                    </div>
-                {% endif %} 
-            </div>
-        </div>
-
         <div class="my-3" id="bid-milestones">
             <h4>Tasks and Milestones</h4>
         </div>
@@ -268,6 +242,4 @@
 
 {% endblock content %}
 
-
-<!-- ################ -->
 

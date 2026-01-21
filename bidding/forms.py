@@ -85,7 +85,7 @@ class BidForm(forms.ModelForm):
         us = self.usets
         if us:
             if us.bidding_check_deadline != False:
-                lot = self.cleaned_data.get("lot")
+                lot = self.lot #cleaned_data.get("lot")
                 deadline = lot.tender.deadline
                 published = lot.tender.published
                 if deadline is not None:
@@ -104,7 +104,7 @@ class BidForm(forms.ModelForm):
         us = self.usets
         if us:
             if us.bidding_check_amount != False:
-                lot = self.cleaned_data.get("lot")
+                lot = self.lot #cleaned_data.get("lot")
                 estimate = lot.estimate
 
                 if lot.category.label != "Travaux": margin_bottom = 20

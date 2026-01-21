@@ -170,6 +170,14 @@ def portal_context(request):
         'download'        : 'bi bi-download',
         'section'         : 'bi bi-play',
 
+        'task'            : 'bi bi-journal-check',
+        'contract'        : 'bi bi-bag-check',
+        'expense'         : 'bi bi-credit-card',
+        'payment'         : 'bi bi-piggy-bank',
+        'reception'       : 'bi bi-check2-square',
+
+        'duplicate'       : 'bi bi-layers-fill',
+
     }
 
     context['bicons']        = bicons

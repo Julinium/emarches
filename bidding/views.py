@@ -168,6 +168,9 @@ def bids_list(request):
                     to_attr="team_bids",
                 ),
                 'openings',
+                "lots__bids__tasks",
+                "lots__bids__expenses",
+                "lots__bids__contracts",
             ).order_by(
                 '-deadline',
             ).distinct()
