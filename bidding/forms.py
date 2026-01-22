@@ -23,7 +23,7 @@ MARGIN_PERCENT_UNDER = 25
 
 class LotChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return _("Lot ") + str(obj.number) + ' : ' + str(obj.estimate) + ' : ' + obj.title
+        return _("Lot") + " " + str(obj.number) + ' : ' + str(obj.estimate) + ' : ' + obj.title
 
 class CompanyChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -36,8 +36,8 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = [
-            # 'lot',
             'company',
+            'title',
             'date_submitted',
             'amount_s',
             'bond_amount',
@@ -85,7 +85,7 @@ class BidForm(forms.ModelForm):
         us = self.usets
         if us:
             if us.bidding_check_deadline != False:
-                lot = self.lot #cleaned_data.get("lot")
+                lot = self.lot
                 deadline = lot.tender.deadline
                 published = lot.tender.published
                 if deadline is not None:

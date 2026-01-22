@@ -7,8 +7,8 @@ urlpatterns = [
 
     path('dashboard',               views.dashboard,    name='bidding_dashboard'),
 
-    path('tenders/',                views.tenders_list, name='bidding_tenders_list'),
-    path('bids/',                   views.bids_list,    name='bidding_bids_list'),
+    path('bids/',                   views.tenders_list, name='bidding_tenders_list'),
+    path('bonds/',                  views.bids_list,    name='bidding_bids_list'),
     path('bids/<uuid:pk>/details/', views.bid_details,  name='bidding_bid_details'),
     path('bids/<uuid:lk>/create/',  views.bid_edit,     name='bidding_bid_create'),
     path('bids/<uuid:pk>/edit/',    views.bid_edit,     name='bidding_bid_edit'),

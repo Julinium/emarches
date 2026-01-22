@@ -16,28 +16,28 @@
             
             <li>
                 {% trans 'Tender deadline' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='deadline' icon=bicons.deadline %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='lot__tender__deadline' icon=bicons.deadline %}
             </li>
             
             <hr class="dropdown-divider">
 
             <li>
                 {% trans 'Bid Status' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bid_status' icon=bicons.status %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='status' icon=bicons.status %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Bid Submitted' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bid_submitted' icon=bicons.bid %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='date_submitted' icon=bicons.bid %}
             </li>
             
             <hr class="dropdown-divider">
 
             <li>
                 {% trans 'Bid Amount' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bid_amount' icon=bicons.estimate %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='amount_s' icon=bicons.estimate %}
             </li>
 
             <hr class="dropdown-divider">
@@ -58,14 +58,14 @@
 
             <li>
                 {% trans 'Bid Created' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bid_created' icon=bicons.created %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='created' icon=bicons.created %}
             </li>
 
             <hr class="dropdown-divider">
 
             <li>
                 {% trans 'Bid Updated' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bid_updated' icon=bicons.updated %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='updated' icon=bicons.updated %}
             </li>
 
         </ul>

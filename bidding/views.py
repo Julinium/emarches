@@ -595,10 +595,17 @@ def bid_edit(request, pk=None, lk=None):
         )
         if bid is None:
             form.fields["date_submitted"].initial   = datetime.now()
-
             form.fields["amount_s"].initial         = lot.estimate
             form.fields["bond_amount"].initial      = lot.bond
-            if lot.description: 
+
+            client_short = lot.tender.client.short
+            if len(client_short) < 1: client_short = "-"
+            words = lot.title.split()
+            lot_title = text if len(words) <= 20 else " ".join(words[:n]) + " ..."
+            bid_title = lot.tender.reference + " | " + client_short + " | " + lot_title 
+
+            form.fields["title"].initial            = bid_title
+            if lot.description:
                 desc = lot.description
                 form.fields["details"].initial      = desc
 
@@ -682,7 +689,6 @@ def bid_r_file(request, pk=None):
     if pk: bid = get_object_or_404(Bid, pk=pk)
     if not bid : return HttpResponse(status=403)
 
-    # creator = bid.creator
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
     if not is_team_member(bid.creator, team): return HttpResponse(status=403)

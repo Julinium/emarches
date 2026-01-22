@@ -121,6 +121,7 @@ class Bid(models.Model):
     lot             = models.ForeignKey(Lot, on_delete=models.DO_NOTHING, related_name='bids')
     company         = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='bids')
 
+    title           = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('Bid Title'))
     date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Bid Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
