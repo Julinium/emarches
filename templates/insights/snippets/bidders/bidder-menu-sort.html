@@ -16,49 +16,49 @@
             
             <li>
                 {% trans 'Latest Win' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='last_win' icon=bicons.history %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='last_win' icon=bicons.history %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Latest participation' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='last_part' icon=bicons.history %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='last_part' icon=bicons.history %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Amount won' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='wins_sum' icon=bicons.estimate %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='wins_sum' icon=bicons.estimate %}
             </li>
 
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Wins count' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='wins_count' icon=bicons.deliberated %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='wins_count' icon=bicons.deliberated %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Success rate' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='succ_rate' icon=bicons.ratio %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='succ_rate' icon=bicons.ratio %}
             </li>
 
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Participations count' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='part_count' icon=bicons.deliberated %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='part_count' icon=bicons.deliberated %}
             </li>
 
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Name' as caption %}
-                {% include 'insights/snippets/bidders/menu-sort-item.html' with caption=caption field='name' icon=bicons.title %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='name' icon=bicons.title %}
             </li>
         </ul>
     </div>

@@ -12,7 +12,7 @@
                 <span class="">{% trans 'Clean Favorites' %}</span>
             </div>
 
-            <hr class="dropdown-divider">
+            <li><hr class="dropdown-divider"></li>
 
             <li>
                 <form method="POST" 
@@ -25,6 +25,8 @@
                 </form>
             </li>
 
+            <li><hr class="dropdown-divider"></li>
+
             <li>
                 <form method="POST" 
                       action="{% url 'portal_tender_favorite_clean' 'cancelled' %}">
@@ -36,6 +38,7 @@
                 </form>
             </li>
 
+            <li><hr class="dropdown-divider"></li>
             <li>
                 <form method="POST" 
                       action="{% url 'portal_tender_favorite_clean' 'all' %}">

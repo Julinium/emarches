@@ -4,70 +4,62 @@
     <a class="nav-link py-2 dropdown-toggle"
         href="#" id="bdcDropdown" role="button" 
         data-bs-toggle="dropdown" aria-expanded="false">
-        <!-- <i class="{{ bicons.bidding }} me-1"></i> -->
         <span>{% trans 'Bidding' %}</span>
     </a>
     <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
 
         <li class="">
-            <a class="dropdown-item py-2 fw-bold" href="{% url 'insights_bidders_list' %}">
-                <i class="{{ bicons.concurrence }} me-2"></i>
-                {% trans 'Concurrents' %}
+            <a class="dropdown-item py-2" href="{% url 'bidding_tenders_list' %}">
+                <i class="{{ bicons.bid }} me-2"></i>
+                <span>{% trans 'Tenders' %}</span>
             </a>
         </li>
 
-        <li><hr class="dropdown-divider"></li>
-
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bidding_bids_list' %}">
-                <i class="{{ bicons.bid }} me-2"></i>
+                <i class="{{ bicons.bond }} me-2"></i>
                 <span>{% trans 'Bids' %}</span>
             </a>
         </li>
 
         <li class="">
             <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.bond }} me-2"></i>
-                <span>{% trans 'Cautions' %}</span>
+                <i class="{{ bicons.expense }} me-2"></i>
+                <span>{% trans 'Expenses' %}</span>
             </a>
         </li>
 
+        <li><hr class="dropdown-divider"></li>
+
         <li class="">
             <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.tenders }} me-2"></i>
+                <i class="{{ bicons.contract }} me-2"></i>
                 <span>{% trans 'Contracts' %}</span>
             </a>
         </li>
 
-        <li class="">
-            <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.bdc }} me-2"></i>
-                <span>{% trans 'Finances' %}</span>
-            </a>
-        </li>
-
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
             <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.bdc }} me-2"></i>
-                <span>{% trans 'Analysis' %}</span>
-            </a>
-        </li>
-
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.bdc }} me-2"></i>
+                <i class="{{ bicons.task }} me-2"></i>
                 <span>{% trans 'Schedule' %}</span>
             </a>
         </li>
 
         <li class="">
             <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.bdc }} me-2"></i>
+                <i class="{{ bicons.contact }} me-2"></i>
                 <span>{% trans 'Contacts' %}</span>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="#">
+                <i class="{{ bicons.analysis }} me-2"></i>
+                <span>{% trans 'Analysis' %}</span>
             </a>
         </li>
     </ul>

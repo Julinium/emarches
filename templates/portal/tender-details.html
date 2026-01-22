@@ -30,7 +30,7 @@
                 style="max-height: 0.2rem;"
                 data-bs-toggle="tooltip"
                 title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                {% with tender.days_to_go|barify:full_bar_days as green %}
                     <div class="progress-bar bg-success" 
                         role="progressbar" style="width: {{ green }}%;" 
                         aria-valuenow="{{ green }}" aria-valuemin="0" 

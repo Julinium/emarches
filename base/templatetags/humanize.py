@@ -18,9 +18,11 @@ def metrify(value, precision=2):
 
 
 @register.filter
-def progrefy(value, full_bar=30):
+def barify(value, full_bar=30):
     if value is None or value == 0 or full_bar < 1:
         return 0
+    if value == '': return 0
+
     tg = int(value)
     fb = int(full_bar)
     try:

@@ -54,7 +54,7 @@
                             style="height: 0.25rem;"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Bidding deadline' %}: {{ bdc.deadline }} {% trans 'Morocco time' %}">
-                        {% with bdc.days_to_go|progrefy:full_bar_days as green %}
+                        {% with bdc.days_to_go|barify:full_bar_days as green %}
                             <div class="progress-bar bg-success" 
                                     role="progressbar" style="width: {{ green }}%;" 
                                     aria-valuenow="{{ green }}" aria-valuemin="0" 

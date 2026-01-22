@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 
-from django.db.models import F, Prefetch # , Q, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
+from django.db.models import F , Q, Prefetch #, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
 # from django.db.models.functions import NullIf, Round
 # from decimal import Decimal
 
@@ -30,6 +30,7 @@ from bidding.forms import BidForm
 from bidding.secu import is_team_admin, is_team_member
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
+TENDERS_ITEMS_PER_PAGE = 25
 BIDS_ITEMS_PER_PAGE = 25
 
 
@@ -37,6 +38,142 @@ BIDS_ITEMS_PER_PAGE = 25
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     return HttpResponse('Dashboard')
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tenders_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    
+    if us: 
+        TENDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+        TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+    TENDERS_ORDERING_FIELD = 'deadline'
+
+    def get_req_params(req):
+        allowed_keys = [
+            'q', 'page', 'sort',
+            ]
+
+        query_dict = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
+        }
+        if not 'sort' in query_dict:
+            query_dict['sort'] = TENDERS_ORDERING_FIELD
+            
+        query_string = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
+        }
+
+        query_unsorted = {
+            k: v for k, v in req.GET.items()
+            if k in allowed_keys and v != '' and k not in ('page', 'sort')
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_tenders(tenders, params):
+        ff = 0
+        if not params : return tenders.distinct(), ff
+
+        if 'q' in params:
+            ff += 1
+            q = params['q']
+            tenders = tenders.filter(
+                Q(title__icontains=q) | 
+                Q(reference__icontains=q) | 
+                Q(chrono__icontains=q) | 
+                Q(client__name__icontains=q) | 
+                Q(lots__title__icontains=q) | 
+                Q(lots__description__icontains=q)
+            )
+        
+        return tenders.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context['query_string']   = urlencode(query_string)
+        context['query_unsorted'] = urlencode(query_unsorted)
+        context['query_dict']     = query_dict
+        context['full_bar_days']  = TENDER_FULL_PROGRESS_DAYS
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+
+    if user.teams.count() < 1:
+        team = Team.objects.create(
+            name=user.username.upper(),
+            creator=user,
+        )
+        team.add_member(user, patron=True)
+
+    teams = user.teams.all()
+    colleagues = user.teams.first().members.all()
+
+    if teams:
+        bid_tenders = Tender.objects.filter(
+                lots__bids__creator__in=colleagues,
+            ).prefetch_related(
+                Prefetch(
+                    "lots__bids",
+                    queryset=Bid.objects.filter(creator__in=colleagues,),
+                    to_attr="team_bids",
+                ),
+                'openings',
+                "lots__bids__tasks",
+                "lots__bids__expenses",
+                "lots__bids__contracts",
+            ).order_by(
+                '-deadline',
+            ).distinct()
+    else:
+        bid_tenders = Tender.objects.none()
+
+    tenders, filters = filter_tenders(bid_tenders, query_dict)
+    query_dict['filters'] = filters
+
+    sort = query_dict['sort']
+
+    if sort and sort != '':
+        ordering = sort
+    else: ordering = TENDERS_ORDERING_FIELD
+
+    if ordering[0] == '-':
+        ordering = ordering[1:]
+        tenders = tenders.order_by(
+            F(ordering).asc(nulls_last=True), TENDERS_ORDERING_FIELD
+            )
+    else:
+        tenders = tenders.order_by(
+            F(ordering).desc(nulls_last=True), TENDERS_ORDERING_FIELD
+            )
+
+    context = define_context(request)
+
+    paginator = Paginator(tenders, TENDERS_ITEMS_PER_PAGE)
+    page_number = request.GET['page'] if 'page' in request.GET else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context['page_obj']    = page_obj
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Bid Tenders List view")
+
+    return render(request, 'bidding/tenders-bids-list.html', context)
 
 
 @login_required(login_url="account_login")
@@ -55,7 +192,7 @@ def bids_list(request):
     
     if us: 
         BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-        TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+        # TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
     BIDS_ORDERING_FIELD = 'date_submitted'
 
     def get_req_params(req):
@@ -157,26 +294,13 @@ def bids_list(request):
     colleagues = user.teams.first().members.all()
 
     if teams:
-        all_bids = Bid.objects.filter(creator__in=colleagues)
-
-        bid_tenders = Tender.objects.filter(
-                lots__bids__creator__in=colleagues,
-            ).prefetch_related(
-                Prefetch(
-                    "lots__bids",
-                    queryset=Bid.objects.filter(creator__in=colleagues,),
-                    to_attr="team_bids",
-                ),
-                'openings',
-                "lots__bids__tasks",
-                "lots__bids__expenses",
-                "lots__bids__contracts",
-            ).order_by(
-                '-deadline',
-            ).distinct()
+        all_bids = Bid.objects.filter(
+            creator__in=colleagues
+        # ).prefetch_related(
+        #     "tasks", "expenses", "contracts",
+        )
     else:
         all_bids = Bid.objects.none()
-        bid_tenders = Tender.objects.none()
 
     bids, filters = filter_bids(all_bids, query_dict)
     query_dict['filters'] = filters
@@ -199,7 +323,7 @@ def bids_list(request):
 
     context = define_context(request)
 
-    paginator = Paginator(bid_tenders, BIDS_ITEMS_PER_PAGE)
+    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)
     page_number = request.GET['page'] if 'page' in request.GET else 1
     if not str(page_number).isdigit():
         page_number = 1
@@ -212,7 +336,7 @@ def bids_list(request):
     logger = logging.getLogger('portal')
     logger.info(f"Bids List view")
 
-    return render(request, 'bidding/bids-list.html', context)
+    return render(request, 'bidding/tenders-bids-list.html', context)
 
 
 @login_required(login_url="account_login")
@@ -406,93 +530,6 @@ def bid_delete(request, pk=None):
     return HttpResponse(status=405)
 
 
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bid_edit(request, pk=None, tk=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated : 
-#         return HttpResponse(status=403)
-
-#     pro_context = portal_context(request)
-#     us          = pro_context['user_settings']
-
-#     bid = None
-
-#     if pk:
-#         bid = get_object_or_404(Bid, pk=pk)
-#         tender = bid.lot.tender
-#     else:
-#         tender = get_object_or_404(Tender, pk=tk)
-    
-#     team = user.teams.first()
-#     if not team: return HttpResponse(status=403)
-#     if bid:
-#         if not is_team_member(bid.creator, team): return HttpResponse(status=403)
-
-#     redir = request.GET.get('redirect', None)
-#     if redir and not url_has_allowed_host_and_scheme(
-#         redir,
-#         allowed_hosts={request.get_host()},
-#         require_https=request.is_secure(),
-#     ):
-#         redir = None
-
-#     if request.method == "POST":        
-#         form = BidForm(
-#             request.POST, 
-#             request.FILES,
-#             instance=bid,
-#             user=user,
-#             tender=tender,
-#             usets=us,
-#         )
-#         if form.is_valid():
-#             obj = form.save(commit=False)
-#             obj.tender = tender
-#             obj.creator = user
-#             obj.save()
-
-#             if redir:
-#                 return redirect(redir)
-
-#             return redirect("bidding_bids_list")
-#         else:
-#             for field in form:
-#                 if field.errors:
-#                     for error in field.errors:
-#                         messages.error(request, f"{field.label}: {error}")
-#     else:
-#         form = BidForm(
-#             instance=bid,
-#             user=user,
-#             tender=tender,
-#             usets=us,
-#         )
-#         if bid is None:
-#             form.fields["date_submitted"].initial   = datetime.now()
-
-#             if tender.lots.count() == 1:
-#                 lot = tender.lots.first()
-#                 form.fields["lot"].initial              = lot
-#                 form.fields["amount_s"].initial         = lot.estimate
-#                 form.fields["bond_amount"].initial      = lot.bond
-#                 if lot.description: 
-#                     desc = lot.description
-#                     form.fields["details"].initial      = desc
-
-#             companies = user.companies
-#             if companies.count() == 1:
-#                 form.fields["company"].initial      = companies.first()
-
-
-#     return render(request, 'bidding/bids/bid_form.html', {
-#         "form"  : form,
-#         "object": bid,
-#         "tender": tender,
-#         "redir" : redir,
-#     })
-
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -570,7 +607,7 @@ def bid_edit(request, pk=None, lk=None):
                 form.fields["company"].initial      = companies.first()
 
 
-    return render(request, 'bidding/bids/bid_form.html', {
+    return render(request, 'bidding/bid-form.html', {
         "form"  : form,
         "object": bid,
         "tender": tender,

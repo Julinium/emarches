@@ -16,14 +16,14 @@
             
             <li>
                 {% trans 'Client Name' as caption %}
-                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='name' icon=bicons.client %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='name' icon=bicons.client %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans "Active PO's count" as caption %}
-                {% include 'portal/snippets/tenders/menu-sort-item.html' with caption=caption field='bdcs_count' icon=bicons.count %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bdcs_count' icon=bicons.count %}
             </li>
         </ul>
     </div>

@@ -129,15 +129,7 @@
                 const sign = ratio >= 0 ? "+" : "";
                 ratioSpan.textContent = ` = E ${sign}${ratio.toFixed(2)}%`;
                 ratioSpan.style.display = "";
-                if (ratio >= 0){
-                    ratioSpan.classList.add("text-success");
-                    ratioSpan.classList.remove("text-danger");
-                }else{
-                    ratioSpan.classList.add("text-danger");
-                    ratioSpan.classList.remove("text-success");
-                }
             } else {
-                ratioSpan.classList.remove("text-success", "text-danger");
                 ratioSpan.textContent = "";
                 ratioSpan.style.display = "none";
             }

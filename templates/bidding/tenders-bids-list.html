@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block title %}
-    {% trans "Bids list" %}
+    {% trans "My Bid Tenders" %}
 {% endblock title %}
 
 
@@ -11,12 +11,12 @@
 
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
-            <span class="h3 me-1">{% trans "My Bids" %}</span>
+            <span class="h3 me-1">{% trans "My Bid Tenders" %}</span>
         </div>
-        <!-- <div class="d-flex align-items-top">
-            {% include 'bidding/snippets/bids/bid-search-form.html' %}
-            {% include 'bidding/snippets/bids/bid-menu-sort.html' %}
-        </div> -->
+        <div class="d-flex align-items-top">
+            {% include 'bidding/snippets/tenders/tender-search-form.html' %}
+            {% include 'bidding/snippets/tenders/tender-menu-sort.html' %}
+        </div>
     </div>
 
     <div class="fw-light mx-2 mt-1">
@@ -50,14 +50,13 @@
                                 <span class="small">{{ tender.client.name }}</span>
                             </div>
                         </div>
-                    
 
                     {% if not tender.expired %}
                         <div class="progress bg-danger p-0 m-0" 
                             style="max-height: 0.25rem;"
                             data-bs-toggle="tooltip"
                             title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                            {% with tender.days_to_go|progrefy:full_bar_days as green %}
+                            {% with tender.days_to_go|barify:full_bar_days as green %}
                                 <div class="progress-bar bg-success" 
                                     role="progressbar" style="width: {{ green }}%;" 
                                     aria-valuenow="{{ green }}" aria-valuemin="0" 
@@ -71,7 +70,7 @@
                         {% for lot in tender.lots.all %}
                             {% if lot.team_bids %}
                                     {% if tender.lots_count > 1 %}
-                                        <div class="px-2 pt-3 pb-0">
+                                        <div class="px-2 pt-3 pb-0 border-0 border-start border-end">
                                             <div class="oneline small fw-light text-secondary">
                                                 <span class="fw-bold">Lot {{ lot.number }}</span>
                                                 <span>: {{ lot.title }}</span>
@@ -171,17 +170,10 @@
         deleteModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
 
-            const amount = button.dataset.amount;
-            const company = button.dataset.company;
-            const result = button.dataset.result;
-            const url = button.dataset.url;
-
-            spanAmount.innerText = amount;
-            spanCompany.innerText = company;
-            spanResult.innerText = result;
-            
-            // deleteModal.querySelector('#delete-form').action = `/objects/${id}/delete/`;
-            deleteForm.action = url;
+            spanAmount.innerText = button.dataset.amount;
+            spanCompany.innerText = button.dataset.company;
+            spanResult.innerText = button.dataset.result;
+            deleteForm.action = button.dataset.url;
         });
     </script>
 

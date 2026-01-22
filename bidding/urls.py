@@ -5,16 +5,17 @@ from . import views
 
 urlpatterns = [
 
-    path('dashboard',               views.dashboard,   name='bidding_dashboard'),
+    path('dashboard',               views.dashboard,    name='bidding_dashboard'),
 
-    path('bids/',                   views.bids_list,   name='bidding_bids_list'),
-    path('bids/<uuid:pk>/details/', views.bid_details, name='bidding_bid_details'),
-    path('bids/<uuid:lk>/create/',  views.bid_edit,    name='bidding_bid_create'),
-    path('bids/<uuid:pk>/edit/',    views.bid_edit,    name='bidding_bid_edit'),
-    path('bids/<uuid:pk>/delete/',  views.bid_delete,  name='bidding_bid_delete'),
-    path('bids/<uuid:pk>/files/b/', views.bid_b_file,  name='bidding_bid_b_file'),
-    path('bids/<uuid:pk>/files/s/', views.bid_s_file,  name='bidding_bid_s_file'),
-    path('bids/<uuid:pk>/files/r/', views.bid_r_file,  name='bidding_bid_r_file'),
+    path('tenders/',                views.tenders_list, name='bidding_tenders_list'),
+    path('bids/',                   views.bids_list,    name='bidding_bids_list'),
+    path('bids/<uuid:pk>/details/', views.bid_details,  name='bidding_bid_details'),
+    path('bids/<uuid:lk>/create/',  views.bid_edit,     name='bidding_bid_create'),
+    path('bids/<uuid:pk>/edit/',    views.bid_edit,     name='bidding_bid_edit'),
+    path('bids/<uuid:pk>/delete/',  views.bid_delete,   name='bidding_bid_delete'),
+    path('bids/<uuid:pk>/files/b/', views.bid_b_file,   name='bidding_bid_b_file'),
+    path('bids/<uuid:pk>/files/s/', views.bid_s_file,   name='bidding_bid_s_file'),
+    path('bids/<uuid:pk>/files/r/', views.bid_r_file,   name='bidding_bid_r_file'),
 
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),

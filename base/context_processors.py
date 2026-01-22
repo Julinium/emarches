@@ -170,6 +170,7 @@ def portal_context(request):
         'download'        : 'bi bi-download',
         'section'         : 'bi bi-play',
 
+        'team'            : 'bi bi-diagram-3',
         'task'            : 'bi bi-journal-check',
         'contract'        : 'bi bi-bag-check',
         'expense'         : 'bi bi-credit-card',
@@ -177,6 +178,8 @@ def portal_context(request):
         'reception'       : 'bi bi-check2-square',
 
         'duplicate'       : 'bi bi-layers-fill',
+        'status'          : 'bi bi-bar-chart',
+        'analysis'        : 'bi bi-cpu',
 
     }
 
