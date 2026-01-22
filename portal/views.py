@@ -759,11 +759,7 @@ def client_list(request):
         if sort == '-total_estimate': ordering = ['total_estimate']
     else: ordering = []
 
-    # ordering.append('-created')
-
     query_dict['filters'] = filters
-
-
 
 
     clients = clients.order_by(*ordering)
@@ -795,7 +791,7 @@ def domain_list(request):
     
     pro_context = portal_context(request)
     us = pro_context['user_settings']
-    if us: 
+    if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
         SHOW_TODAYS_EXPIRED = us.tenders_show_expired
         SHOW_CANCELLED = us.tenders_show_cancelled

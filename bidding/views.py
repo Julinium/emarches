@@ -173,7 +173,7 @@ def tenders_list(request):
     logger = logging.getLogger('portal')
     logger.info(f"Bid Tenders List view")
 
-    return render(request, 'bidding/tenders-bids-list.html', context)
+    return render(request, 'bidding/tenders-list.html', context)
 
 
 @login_required(login_url="account_login")
@@ -336,7 +336,7 @@ def bids_list(request):
     logger = logging.getLogger('portal')
     logger.info(f"Bids List view")
 
-    return render(request, 'bidding/tenders-bids-list.html', context)
+    return render(request, 'bidding/bids-list.html', context)
 
 
 @login_required(login_url="account_login")

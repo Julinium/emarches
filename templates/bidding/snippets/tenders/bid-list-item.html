@@ -8,22 +8,7 @@
     <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
        role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
        class="text-decoration-none text-reset">
-        <div class="card-header p-2" data-bs-toggle="tooltip" title="
-             {% if bid.lot.tender.lots_count > 1 %}
-                 {{ bid.lot.title }}
-             {% else %}
-                 {{ bid.lot.tender.title }}
-             {% endif %}
-             ">
-            <div class="twolines">
-                {% if bid.lot.tender.lots_count > 1 %}
-                    {{ bid.lot.title }}
-                {% else %}
-                    {{ bid.lot.tender.title }}
-                {% endif %}
-            </div>
-        </div>
-        <div class=" card-body p-0">
+        <div class="list-group-item list-group-item-action p-0">
 
             <div id="bid-{{ bid.id }}-digest" class="p-2">
 
@@ -82,15 +67,9 @@
                     </a>
 
                     <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
-                        href="{% url 'bidding_bid_edit' bid.id %}?&redirect={{ request.build_absolute_uri|urlencode }}#bid-{{ bid.id }}-collapse">
+                        href="{% url 'bidding_bid_edit' bid.id %}?&redirect={{ request.build_absolute_uri|urlencode }}#t-{{ tender.chrono }}-top">
                         <span><i class="{{ bicons.edit }}"></i></span>
                         <span class="ms-1">{% trans 'Edit' %}</span>
-                    </a>
-
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank"
-                        href="{% url 'portal_tender_detail' bid.lot.tender.id %}">
-                        <span><i class="{{ bicons.goto }}"></i></span>
-                        <span class="ms-1">{% trans 'Tender' %}</span>
                     </a>
 
                     <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">

@@ -9,27 +9,28 @@ class CivilityChoices(models.TextChoices):
     CIV_PR  = '50P',   _("Pr.")
 
 class BidStatus(models.TextChoices):
-    BID_PREPARING = '10U',   _("Preparing")
+    BID_PREPARING = '10U',   _("Draft")
     BID_READY     = '20R',   _("Ready")
     BID_SUBMITTED = '30S',   _("Submitted")
     BID_FINISHED  = '40F',   _("Finished")
     BID_CANCELLED = '50X',   _("Cancelled")
 
 class BondStatus(models.TextChoices):
-    BOND_PREPARING = '10U',   _("Preparing")
+    BOND_PREPARING = '10U',   _("Draft")
     BOND_FILED     = '20F',   _("Filed")
+    BOND_CLAIMED   = '25C',   _("Claimed")
     BOND_RETURNED  = '30R',   _("Returned")
     BOND_LOST      = '40L',   _("Lost")
 
 class BidResults(models.TextChoices):
     BID_UNKNOWN   = '10X',   _("Unknown")
     BID_AWARDED   = '20A',   _("Awarded")
-    BID_REJECT_A  = '30D',   _("Admin Rejected")
-    BID_REJECT_T  = '40T',   _("Tech Rejected")
+    BID_REJECT_A  = '30D',   _("Admin Reject")
+    BID_REJECT_T  = '40T',   _("Tech Reject")
     BID_LOST      = '50U',   _("Unselected")
 
 class ContractStatus(models.TextChoices):
-    CONTRACT_PREPARING  = '10P',   _("Preparing")
+    CONTRACT_PREPARING  = '10P',   _("Draft")
     CONTRACT_SIGNED     = '20S',   _("Signed")
     CONTRACT_EXECUTION  = '30E',   _("Executing")
     CONTRACT_FINISHED   = '40U',   _("Finished")
