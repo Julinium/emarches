@@ -85,8 +85,6 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                    <a class="text-decoration-none" target="_blank"
-                       href="{% url 'portal_tender_detail' tender.id %}">
                         <div class="card-footer small text-secondary p-2">
                             <div class="twolines" data-bs-toggle="tooltip" title="{{ tender.title }}">
                                 {% if tender.openings.all|length > 0 %}
@@ -95,7 +93,6 @@
                                 <span class="fw-light">{{ tender.title }}</span>
                             </div>
                         </div>
-                    </a>
                 </div>
             {% endfor %}
         </div>

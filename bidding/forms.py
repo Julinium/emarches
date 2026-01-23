@@ -36,8 +36,8 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = [
-            'company',
             'title',
+            'company',
             'date_submitted',
             'amount_s',
             'bond_amount',

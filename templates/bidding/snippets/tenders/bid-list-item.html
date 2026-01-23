@@ -72,6 +72,12 @@
                         <span class="ms-1">{% trans 'Edit' %}</span>
                     </a>
 
+                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank"
+                        href="{% url 'portal_tender_detail' bid.lot.tender.id %}">
+                        <span><i class="{{ bicons.goto }}"></i></span>
+                        <span class="ms-1">{% trans 'Tender' %}</span>
+                    </a>
+
                     <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
                         <span><i class="{{ bicons.task }}"></i></span>
                         <span class="ms-1">{% trans 'Tasks' %}</span>
