@@ -599,10 +599,11 @@ def bid_edit(request, pk=None, lk=None):
             form.fields["bond_amount"].initial      = lot.bond
 
             client_short = lot.tender.client.short
-            if len(client_short) < 1: client_short = "-"
+            if len(client_short) < 1: client_short = "[?]"
             words = lot.title.split()
-            lot_title = text if len(words) <= 20 else " ".join(words[:n]) + " ..."
-            bid_title = lot.tender.reference + " | " + client_short + " | " + lot_title 
+            words_count = 8
+            lot_title = text if len(words) <= words_count else " ".join(words[:words_count]) + " ..."
+            bid_title = client_short + " | " + lot.tender.reference + " | " + lot_title 
 
             form.fields["title"].initial            = bid_title
             if lot.description:
