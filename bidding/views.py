@@ -42,7 +42,7 @@ def dashboard(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def tenders_list(request):
+def bids_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -173,12 +173,12 @@ def tenders_list(request):
     logger = logging.getLogger('portal')
     logger.info(f"Bid Tenders List view")
 
-    return render(request, 'bidding/tenders-list.html', context)
+    return render(request, 'bidding/bids-list.html', context)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bids_list(request):
+def bonds_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -336,7 +336,7 @@ def bids_list(request):
     logger = logging.getLogger('portal')
     logger.info(f"Bids List view")
 
-    return render(request, 'bidding/bids-list.html', context)
+    return render(request, 'bidding/bonds-list.html', context)
 
 
 @login_required(login_url="account_login")
@@ -626,7 +626,9 @@ def bid_edit(request, pk=None, lk=None):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bid_b_file(request, pk=None):
+def bid_file(request, pk=None, ft=None):
+
+    if not ft: return HttpResponse(status=404)
 
     user = request.user
     if not user or not user.is_authenticated : return HttpResponse(status=403)
@@ -635,73 +637,104 @@ def bid_b_file(request, pk=None):
     if pk: bid = get_object_or_404(Bid, pk=pk)
     if not bid : return HttpResponse(status=403)
 
-    # creator = bid.creator
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
 
-    file_path = bid.file_bond.url
+    if ft == 'bond': file_path = bid.file_bond.url
+    elif ft == 'receipt': file_path = bid.file_receipt.url
+    elif ft == 'submitted': file_path = bid.file_submitted.url
+    else: return HttpResponse(status=404)
+
     file_name = os.path.basename(file_path)
     if not file_name : return HttpResponse(status=403)
 
     response = HttpResponse()
     response['Content-Type'] = 'application/octet-stream'
-    response['X-Accel-Redirect'] = f"/bids/bonds/{file_name}"
+    response['X-Accel-Redirect'] = f"/bids/{ft}/{file_name}"
     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
     # response['Content-Length'] = os.path.getsize(file_path)
     return response
 
 
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bid_s_file(request, pk=None):
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def bid_b_file(request, pk=None):
 
-    user = request.user
-    if not user or not user.is_authenticated : return HttpResponse(status=403)
+#     user = request.user
+#     if not user or not user.is_authenticated : return HttpResponse(status=403)
 
-    bid = None
-    if pk: bid = get_object_or_404(Bid, pk=pk)
-    if not bid : return HttpResponse(status=403)
+#     bid = None
+#     if pk: bid = get_object_or_404(Bid, pk=pk)
+#     if not bid : return HttpResponse(status=403)
 
-    # creator = bid.creator
-    team = user.teams.first()
-    if not team: return HttpResponse(status=403)
-    if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+#     # creator = bid.creator
+#     team = user.teams.first()
+#     if not team: return HttpResponse(status=403)
+#     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
 
-    file_name = os.path.basename(bid.file_submitted.url)
-    if not file_name : return HttpResponse(status=403)
+#     file_path = bid.file_bond.url
+#     file_name = os.path.basename(file_path)
+#     if not file_name : return HttpResponse(status=403)
 
-    response = HttpResponse()
-    response['Content-Type'] = 'application/octet-stream'
-    response["X-Accel-Redirect"] =  f"/bids/submitted/{file_name}"
-    response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
-    # response['Content-Length'] = os.path.getsize(file_path)
-    return response
+#     response = HttpResponse()
+#     response['Content-Type'] = 'application/octet-stream'
+#     response['X-Accel-Redirect'] = f"/bids/bonds/{file_name}"
+#     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
+#     # response['Content-Length'] = os.path.getsize(file_path)
+#     return response
 
 
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bid_r_file(request, pk=None):
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def bid_s_file(request, pk=None):
 
-    user = request.user
-    if not user or not user.is_authenticated : return HttpResponse(status=403)
+#     user = request.user
+#     if not user or not user.is_authenticated : return HttpResponse(status=403)
 
-    bid = None
-    if pk: bid = get_object_or_404(Bid, pk=pk)
-    if not bid : return HttpResponse(status=403)
+#     bid = None
+#     if pk: bid = get_object_or_404(Bid, pk=pk)
+#     if not bid : return HttpResponse(status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(status=403)
-    if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+#     # creator = bid.creator
+#     team = user.teams.first()
+#     if not team: return HttpResponse(status=403)
+#     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
 
-    file_name = os.path.basename(bid.file_receipt.url)
-    if not file_name : return HttpResponse(status=403)
+#     file_name = os.path.basename(bid.file_submitted.url)
+#     if not file_name : return HttpResponse(status=403)
 
-    response = HttpResponse()
-    response['Content-Type'] = 'application/octet-stream'
-    response["X-Accel-Redirect"] =  f"/bids/receipts/{file_name}"
-    response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
-    # response['Content-Length'] = os.path.getsize(file_path)
-    return response
+#     response = HttpResponse()
+#     response['Content-Type'] = 'application/octet-stream'
+#     response["X-Accel-Redirect"] =  f"/bids/submitted/{file_name}"
+#     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
+#     # response['Content-Length'] = os.path.getsize(file_path)
+#     return response
+
+
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def bid_r_file(request, pk=None):
+
+#     user = request.user
+#     if not user or not user.is_authenticated : return HttpResponse(status=403)
+
+#     bid = None
+#     if pk: bid = get_object_or_404(Bid, pk=pk)
+#     if not bid : return HttpResponse(status=403)
+
+#     team = user.teams.first()
+#     if not team: return HttpResponse(status=403)
+#     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+
+#     file_name = os.path.basename(bid.file_receipt.url)
+#     if not file_name : return HttpResponse(status=403)
+
+#     response = HttpResponse()
+#     response['Content-Type'] = 'application/octet-stream'
+#     response["X-Accel-Redirect"] =  f"/bids/receipts/{file_name}"
+#     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
+#     # response['Content-Length'] = os.path.getsize(file_path)
+#     return response
 
 

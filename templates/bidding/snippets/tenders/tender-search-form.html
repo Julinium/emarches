@@ -9,7 +9,7 @@
 </button>
 
 
-<form action="{% url 'bidding_tenders_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
+<form action="{% url 'bidding_bids_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
         onsubmit="stripEmptyFields(this)">
     <div class="modal fade" id="searchModal" tabindex="-1" 
         aria-labelledby="searchModalLabel" aria-hidden="true">
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a href="{% url 'bidding_tenders_list' %}" type="button" class="btn btn-outline-secondary">
+                    <a href="{% url 'bidding_bids_list' %}" type="button" class="btn btn-outline-secondary">
                         <i class="{{ bicons.backspace }} me-1"></i>
                         {% trans 'Reset' %}
                     </a>

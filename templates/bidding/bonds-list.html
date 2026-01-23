@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block title %}
-    {% trans "My Bid Tenders" %}
+    {% trans "Bonds list" %}
 {% endblock title %}
 
 
@@ -11,11 +11,11 @@
 
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
-            <span class="h3 me-1">{% trans "My Bid Tenders" %}</span>
+            <span class="h3 me-1">{% trans "Bonds list" %}</span>
         </div>
         <div class="d-flex align-items-top">
-            {% include 'bidding/snippets/tenders/tender-search-form.html' %}
-            {% include 'bidding/snippets/tenders/tender-menu-sort.html' %}
+            {% include 'bidding/snippets/bids/bid-search-form.html' %}
+            {% include 'bidding/snippets/bids/bid-menu-sort.html' %}
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         <span class="fw-bold">
             {{ page_obj.paginator.count }} 
         </span>
-        <span class="small text-muted">{% trans "Tenders found" %}.</span>
+        <span class="small text-muted">{% trans "Bids found" %}.</span>
         {% if page_obj.has_other_pages %}
         {% endif %}
             <span class="small text-muted">{% trans "Showing" %}:</span>
@@ -39,63 +39,17 @@
     </div>
 
     {% if page_obj %}
+
         <div class="container py-4 px-0">
-            {% for tender in page_obj %}
-                <div class="card shadow mb-4" id="t-{{ tender.chrono }}-top">
-                    
-                        <div class="card-header p-2">
-                            <div class="twolines" data-bs-toggle="tooltip" 
-                                title="{{ tender.client.name }}">
-                                <span class="small"><i class="small {{ bicons.client }} me-1 text-secondary"></i></span>
-                                <span class="small">{{ tender.client.name }}</span>
-                            </div>
-                        </div>
-
-                    {% if not tender.expired %}
-                        <div class="progress bg-danger p-0 m-0" 
-                            style="max-height: 0.25rem;"
-                            data-bs-toggle="tooltip"
-                            title="{% trans 'Bidding deadline' %}: {{ tender.deadline }}">
-                            {% with tender.days_to_go|barify:full_bar_days as green %}
-                                <div class="progress-bar bg-success" 
-                                    role="progressbar" style="width: {{ green }}%;" 
-                                    aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                    aria-valuemax="100">
-                                </div>
-                            {% endwith %}
-                        </div>
-                    {% endif %}
-
-                    <div class="card-body p-0">
-                        {% for lot in tender.lots.all %}
-                            {% if lot.team_bids %}
-                                    {% if tender.lots_count > 1 %}
-                                        <div class="px-2 pt-3 pb-0 border-0 border-start border-end">
-                                            <div class="oneline small fw-light text-secondary">
-                                                <span class="fw-bold">Lot {{ lot.number }}</span>
-                                                <span>: {{ lot.title }}</span>
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                <div class="list-group">
-                                    {% for bid in lot.team_bids %}
-                                        {% include 'bidding/snippets/tenders/bid-list-item.html' %}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+            <div class="list-group">
+                {% for bid in page_obj %}
+                    <div class="card shadow mb-4" id="t-{{ tender.chrono }}-top">
+                        {% include 'bidding/snippets/bids/bid-item.html' %}                       
                     </div>
-                        <div class="card-footer small text-secondary p-2">
-                            <div class="twolines" data-bs-toggle="tooltip" title="{{ tender.title }}">
-                                {% if tender.openings.all|length > 0 %}
-                                    <span><i class="{{ bicons.deliberated }} me-1"></i></span>
-                                {% endif %}
-                                <span class="fw-light">{{ tender.title }}</span>
-                            </div>
-                        </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
+
         <div id="common-modals">
             <div id="bidDeleteModal" class="modal fade" 
                  tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
@@ -110,7 +64,6 @@
                             </div>
                             <div class="modal-body">
                                 <div class="my-2">
-                                    <!-- {% trans "Are you sure you want to delete this Bid ?" %} -->
                                     <div class="mb-2">
                                         <span class="small fw-light">{% trans "Amount" %}: </span>
                                         <span id="span-amount"></span>

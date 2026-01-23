@@ -148,7 +148,7 @@
                                     {% trans "Bond file" %}
                                 </div>
                                 <div id="">
-                                    <a href="{% url 'bidding_bid_b_file' bid.id %}" 
+                                    <a href="{% url 'bidding_bid_file' bid.id 'bond' %}" 
                                     class="text-decoration-none">
                                         <span class="small"><i class="{{ bicons.download }}"></i></span>
                                         <span class="">{{ bid.file_bond_name }}</span>
@@ -168,7 +168,7 @@
                                     {% trans "Submitted file" %}
                                 </div>
                                 <div id="" class="ms-2">
-                                    <a href="{% url 'bidding_bid_s_file' bid.id %}" 
+                                    <a href="{% url 'bidding_bid_file' bid.id 'submitted' %}" 
                                     class="text-decoration-none">
                                         <span class="small"><i class="{{ bicons.download }}"></i></span>
                                         <span class="">{{ bid.file_submitted_name }}</span>
@@ -188,7 +188,7 @@
                                     {% trans "Receipt file" %}
                                 </div>
                                 <div id="" class="ms-2">
-                                    <a href="{% url 'bidding_bid_r_file' bid.id  %}" 
+                                    <a href="{% url 'bidding_bid_file' bid.id 'receipt' %}" 
                                     class="text-decoration-none">
                                         <span class="small"><i class="{{ bicons.download }}"></i></span>
                                         <span class="">{{ bid.file_receipt_name }}</span>
