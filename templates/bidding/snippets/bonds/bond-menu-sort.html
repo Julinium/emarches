@@ -1,0 +1,74 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Order items by' %}">
+            <i class="{{ bicons.sort }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Ordering' %}</span>
+            </div>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Tender deadline' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='lot__tender__deadline' icon=bicons.deadline %}
+            </li>
+            
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bid Status' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='status' icon=bicons.status %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Bid Submitted' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='date_submitted' icon=bicons.bid %}
+            </li>
+            
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bid Amount' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='amount_s' icon=bicons.estimate %}
+            </li>
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bond Amount' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bond_amount' icon=bicons.bond %}
+            </li>
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bond Status' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bond_status' icon=bicons.status %}
+            </li>
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bid Created' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='created' icon=bicons.created %}
+            </li>
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bid Updated' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='updated' icon=bicons.updated %}
+            </li>
+
+        </ul>
+    </div>
+</div>
+

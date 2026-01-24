@@ -8,7 +8,12 @@
     <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
        role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
        class="text-decoration-none text-reset">
-        <div class="list-group-item list-group-item-action p-0">
+        <div class="card-header p-2 {% if bid.lot.tender.expired %} bg-warning-subtle{% endif %}" data-bs-toggle="tooltip" title="{{ bid.title }}">
+            <div class="twolines">
+                {{ bid.title|default:bid.lot.title }}
+            </div>
+        </div>
+        <div class=" card-body p-0">
 
             <div id="bid-{{ bid.id }}-digest" class="p-2">
 
@@ -17,7 +22,7 @@
                         <div data-bs-toggle="tooltip" 
                             title="{{ bid.company.name }}">
                             <span>
-                                <img src="{{ bid.company.logo }}" alt="X" 
+                                <img src="{{ bid.company.logo }}" alt="X"
                                     class="img-fluid rounded rounded-circle" 
                                     style="width: 1.5rem; height: 1.5rem;">
                             </span>
@@ -59,6 +64,20 @@
             </div>
 
             <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
+
+                <div id="bid-details-extended" class="mx-0 mb-3">
+                    <div class="small">
+                        <span class="fw-bold me-1">{% trans "Tender" %}:</span>
+                        <span class="text-secondary">{{ bid.lot.tender.title }}</span>
+                    </div>
+                    {% if bid.lot.tender.lots_count > 1 %}
+                        <div class="small">
+                            <span class="fw-bold me-1">{% trans "Lot" %}: {{ bid.lot.number }}</span>
+                            <span class="text-secondary">: {{ bid.lot.title }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+                
                 <div id="bid-details-actions" class="text-end mx-0 mb-3">
 
                     <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
@@ -67,7 +86,7 @@
                     </a>
 
                     <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
-                        href="{% url 'bidding_bid_edit' bid.id %}?&redirect={{ request.build_absolute_uri|urlencode }}#t-{{ tender.chrono }}-top">
+                        href="{% url 'bidding_bid_edit' bid.id %}?&redirect={{ request.build_absolute_uri|urlencode }}#bid-{{ bid.id }}-collapse">
                         <span><i class="{{ bicons.edit }}"></i></span>
                         <span class="ms-1">{% trans 'Edit' %}</span>
                     </a>

@@ -14,8 +14,8 @@
             <span class="h3 me-1">{% trans "Bids list" %}</span>
         </div>
         <div class="d-flex align-items-top">
-            {% include 'bidding/snippets/tenders/tender-search-form.html' %}
-            {% include 'bidding/snippets/tenders/tender-menu-sort.html' %}
+            {% include 'bidding/snippets/bids/bid-search-form.html' %}
+            {% include 'bidding/snippets/bids/bid-menu-sort.html' %}
         </div>
     </div>
 
@@ -79,7 +79,7 @@
                                     {% endif %}
                                 <div class="list-group">
                                     {% for bid in lot.team_bids %}
-                                        {% include 'bidding/snippets/tenders/bid-list-item.html' %}
+                                        {% include 'bidding/snippets/bids/bid-item.html' %}
                                     {% endfor %}
                                 </div>
                             {% endif %}

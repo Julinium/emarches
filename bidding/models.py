@@ -150,6 +150,10 @@ class Bid(models.Model):
     def __str__(self):
         return self.lot.tender.title
 
+    # @property
+    # def amount(self):
+    #     return self.amount_c if self.amount_c else self.amount_s
+
     @property
     def amount(self):
         return self.amount_c if self.amount_c else self.amount_s
@@ -208,7 +212,7 @@ class Bid(models.Model):
         if self.result == BidResults.BID_AWARDED  : return 'success'
         if self.result == BidResults.BID_REJECT_A : return 'danger'
         if self.result == BidResults.BID_REJECT_T : return 'danger'
-        if self.result == BidResults.BID_LOST     : return 'danger'
+        if self.result == BidResults.BID_LOST     : return 'secondary'
         return 'secondary'
 
     @property
@@ -231,7 +235,7 @@ class Bid(models.Model):
         if self.tag == BidResults.BID_AWARDED  : return 'success'
         if self.tag == BidResults.BID_REJECT_A : return 'danger'
         if self.tag == BidResults.BID_REJECT_T : return 'danger'
-        if self.tag == BidResults.BID_LOST     : return 'danger'
+        if self.tag == BidResults.BID_LOST     : return 'secondary'
         return self.status_tint
 
     @property

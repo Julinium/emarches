@@ -14,8 +14,8 @@
             <span class="h3 me-1">{% trans "Bonds list" %}</span>
         </div>
         <div class="d-flex align-items-top">
-            {% include 'bidding/snippets/bids/bid-search-form.html' %}
-            {% include 'bidding/snippets/bids/bid-menu-sort.html' %}
+            {% include 'bidding/snippets/bonds/bond-search-form.html' %}
+            {% include 'bidding/snippets/bonds/bond-menu-sort.html' %}
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         <span class="fw-bold">
             {{ page_obj.paginator.count }} 
         </span>
-        <span class="small text-muted">{% trans "Bids found" %}.</span>
+        <span class="small text-muted">{% trans "Bonds found" %}.</span>
         {% if page_obj.has_other_pages %}
         {% endif %}
             <span class="small text-muted">{% trans "Showing" %}:</span>
@@ -37,14 +37,14 @@
                 {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
             </span>
     </div>
-
+    
     {% if page_obj %}
 
         <div class="container py-4 px-0">
             <div class="list-group">
                 {% for bid in page_obj %}
                     <div class="card shadow mb-4" id="t-{{ tender.chrono }}-top">
-                        {% include 'bidding/snippets/bids/bid-item.html' %}                       
+                        {% include 'bidding/snippets/bonds/bond-item.html' %}                       
                     </div>
                 {% endfor %}
             </div>

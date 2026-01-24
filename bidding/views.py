@@ -176,6 +176,7 @@ def bids_list(request):
     return render(request, 'bidding/bids-list.html', context)
 
 
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bonds_list(request):
@@ -339,6 +340,7 @@ def bonds_list(request):
     return render(request, 'bidding/bonds-list.html', context)
 
 
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_details(request, pk=None):
@@ -470,6 +472,7 @@ def bid_details(request, pk=None):
     }
 
     return render(request, 'bidding/bid-details.html', context)
+
 
 
 @login_required(login_url="account_login")
@@ -624,6 +627,7 @@ def bid_edit(request, pk=None, lk=None):
     })
 
 
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_file(request, pk=None, ft=None):
@@ -655,6 +659,7 @@ def bid_file(request, pk=None, ft=None):
     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
     # response['Content-Length'] = os.path.getsize(file_path)
     return response
+
 
 
 # @login_required(login_url="account_login")

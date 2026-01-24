@@ -1,0 +1,120 @@
+{% load i18n %}
+{% load paraminos %}
+
+<button class="btn btn-light py-1 mx-1" type="button" 
+        data-bs-toggle="modal" data-bs-target="#searchModal"
+        data-bs-toggle="tooltip"
+        title="{% trans 'Serach Concurrents' %}">
+    <i class="{{ bicons.search }}"></i>
+</button>
+
+
+<form action="{% url 'insights_bidders_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
+        onsubmit="stripEmptyFields(this)">
+    <div class="modal fade" id="searchModal" tabindex="-1" 
+        aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Concurrents Search' %}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body pb-0">
+
+                    <div class="row gx-3">
+                            
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
+                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
+                            </div>
+                        </div>
+                            
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Min Amount won" %}</span></span>
+                                <input type="number" step="any" class="form-control text-end" name="n" value="{{ query_dict.n }}" placeholder="{% trans 'Min' %}" aria-label="win_min">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Max Amount won" %}</span></span>
+                                <input type="number" step="any" class="form-control text-end" name="x" value="{{ query_dict.x }}" placeholder="{% trans 'Max' %}" aria-label="win_max">
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Participations count" %}</span></span>
+                                <select class="form-select" name="p" aria-label="participations">
+                                    <option {% if query_dict.p == '' %} selected {% endif %} value="">--</option>
+                                    <option {% if query_dict.p == '0' %} selected {% endif %} value="0">{% trans 'None' %}</option>
+                                    <option {% if query_dict.p == '1' %} selected {% endif %} value="1">{% trans '1 only' %}</option>
+                                    <option {% if query_dict.p == '2' %} selected {% endif %} value="2">{% trans '1 or more' %}</option>
+                                    <option {% if query_dict.p == '11' %} selected {% endif %} value="11">{% trans '10 or more' %}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Wins count" %}</span></span>
+                                <select class="form-select" name="w" aria-label="wins_count">
+                                    <option {% if query_dict.w == '' %} selected {% endif %} value="">--</option>
+                                    <option {% if query_dict.w == '0' %} selected {% endif %} value="0">{% trans 'None' %}</option>
+                                    <option {% if query_dict.w == '1' %} selected {% endif %} value="1">{% trans '1 only' %}</option>
+                                    <option {% if query_dict.w == '2' %} selected {% endif %} value="2">{% trans '1 or more' %}</option>
+                                    <option {% if query_dict.w == '11' %} selected {% endif %} value="11">{% trans '10 or more' %}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Success rate" %}</span></span>
+                                <select class="form-select" name="s" aria-label="success_rate">
+                                    <option {% if query_dict.s == '' %} selected {% endif %} value="">--</option>
+                                    <option {% if query_dict.s == '1' %} selected {% endif %} value="1">{% trans '100%' %}</option>
+                                    <option {% if query_dict.s == '6' %} selected {% endif %} value="6">{% trans '50% or more' %}</option>
+                                    <option {% if query_dict.s == '4' %} selected {% endif %} value="4">{% trans '50% or less' %}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="{% url 'insights_bidders_list' %}" type="button" class="btn btn-outline-secondary">
+                        <i class="{{ bicons.backspace }} me-1"></i>
+                        {% trans 'Reset' %}
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="{{ bicons.search }} me-1"></i>
+                        {% trans 'Submit' %}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    const myModal = document.getElementById('searchModal');
+    myModal.addEventListener('shown.bs.modal', function () {
+        document.getElementById('search_input').focus();
+    });
+
+    function stripEmptyFields(form) {
+        for (const el of form.elements) {
+            if (!el.name) continue;
+            if (el.value.trim() === ""){
+                el.disabled = true;
+            }
+        }
+    }
+</script>

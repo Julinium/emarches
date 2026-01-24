@@ -14,9 +14,6 @@ urlpatterns = [
     path('bids/<uuid:pk>/edit/',     views.bid_edit,     name='bidding_bid_edit'),
     path('bids/<uuid:pk>/delete/',   views.bid_delete,   name='bidding_bid_delete'),
     path('bids/<uuid:pk>/<str:ft>/', views.bid_file,     name='bidding_bid_file'),
-    # path('bids/<uuid:pk>/files/b/',  views.bid_b_file,   name='bidding_bid_b_file'),
-    # path('bids/<uuid:pk>/files/s/',  views.bid_s_file,   name='bidding_bid_s_file'),
-    # path('bids/<uuid:pk>/files/r/',  views.bid_r_file,   name='bidding_bid_r_file'),
 
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),
