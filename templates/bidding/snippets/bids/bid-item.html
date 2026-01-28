@@ -10,6 +10,12 @@
 
         <div class="card-header px-2 py-1">
             <div class="oneline">
+                {% if bid.lot.tender.cancelled == True %}
+                    <span class="badge bg-danger me-1" data-bs-toggle="tooltip" title="{% trans 'Tender is cancelled' %}">
+                        <i class="{{ bicons.cancelled }}"></i>
+                        <span>{% trans "CANCELLED" %}</span>
+                    </span>
+                {% endif %}
                 <span class="fw-bold small">{{ bid.caption }}</span>
             </div>
         </div>
@@ -20,15 +26,18 @@
 
                 <div class="row g-1 my-1">
                     <div class="col-12 col-md-6 text-start">
-                        <div data-bs-toggle="tooltip" title="{{ bid.company.name }}">
-                            <span>
-                                <img src="{{ bid.company.logo }}" alt="X" 
-                                    class="img-fluid rounded rounded-circle" 
-                                    style="width: 1.5rem; height: 1.5rem;">
-                            </span>
-                            <span class="">{{ bid.company.name }}</span>
+                        <div>
+                            <span data-bs-toggle="tooltip" title="{% trans 'Company' %}: {{ bid.company.name }}">
+                                <span>
+                                    <img src="{{ bid.company.logo }}" alt="X" 
+                                        class="img-fluid rounded rounded-circle" 
+                                        style="width: 1.5rem; height: 1.5rem;">
+                                </span>
+                                <span class="">{{ bid.company.name }}</span>
+                            </span>                            
+                            
                             {% if bid.duplicated %}
-                                <span class="badge bg-danger">
+                                <span class="badge bg-warning" data-bs-toggle="tooltip" title="{% trans 'Found other bids on the same Tender/lot using the same company' %}">
                                     <i class="{{ bicons.duplicate }}"></i>
                                     <span>{% trans "DUPLICATED" %}</span>
                                 </span>
@@ -52,12 +61,12 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 text-end">
-                        <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}">                        
+                        <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}"> 
+                            <span class="badge bg-{{ bid.tag_tint }} small me-1" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
                             <span><i class="{{ bicons.estimate }} small"></i></span>
                             <span class="fw-bold">{{ bid.bid_amount }}</span>
                         </div>
                         <div>
-                            <span class="badge bg-{{ bid.tag_tint }} small" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
                             <span class="badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond status' %}">
                                 <span><i class="{{ bicons.bond }}"></i></span>
                                 <span class="fw-bold">{{ bid.bond_amount }}</span>

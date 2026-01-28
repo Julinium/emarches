@@ -181,6 +181,7 @@ def portal_context(request):
         'duplicate'       : 'bi bi-layers-fill',
         'status'          : 'bi bi-bar-chart',
         'analysis'        : 'bi bi-cpu',
+        'cancelled'       : 'bi bi-x-octagon-fill',
 
     }
 

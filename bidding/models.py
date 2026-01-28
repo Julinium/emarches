@@ -155,7 +155,6 @@ class Bid(models.Model):
 
     def caption(self):
         if self.title and self.title != "": return self.title
-        # if self.lot.tender.lots_count > 1: return self.lot.title
         return self.lot.title
 
     @property
@@ -395,7 +394,6 @@ class Contract(models.Model):
 class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, verbose_name=_('Bid'), related_name='tasks')
-    # contract  = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, verbose_name=_('Contract'), related_name='tasks')
     title     = models.CharField(max_length=255, default=_('New Task'), verbose_name=_('Title'))
     date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
     reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
