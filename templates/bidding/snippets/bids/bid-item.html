@@ -62,15 +62,11 @@
                     </div>
                     <div class="col-12 col-md-6 text-end">
                         <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}"> 
-                            <span class="badge bg-{{ bid.tag_tint }} small me-1" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
                             <span><i class="{{ bicons.estimate }} small"></i></span>
                             <span class="fw-bold">{{ bid.bid_amount }}</span>
                         </div>
                         <div>
-                            <span class="badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond status' %}">
-                                <span><i class="{{ bicons.bond }}"></i></span>
-                                <span class="fw-bold">{{ bid.bond_amount }}</span>
-                            </span>
+                            <span class="badge bg-{{ bid.tag_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
                         </div>
                     </div>
                 </div>              
@@ -78,20 +74,25 @@
 
         </div>
 
-        <div class="card-footer small px-2 py-1 text-end">
+        <div class="card-footer small px-2 py-1">
             <div class="small">
 
-                <span class="ms-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
+                <span class="me-2 my-0 badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond status' %}">
+                    <span><i class="{{ bicons.bond }}"></i></span>
+                    <span class="fw-bold">{{ bid.bond_amount|default:'--' }}</span>
+                </span>
+
+                <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
                     <span><i class="{{ bicons.task }}"></i></span>
                     <span class="">{{ bid.tasks.all|length }}</span>
                 </span>
 
-                <span class="ms-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
+                <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
                     <span><i class="{{ bicons.expense }}"></i></span>
                     <span class="">{{ bid.expenses.all|length }}</span>
                 </span>
 
-                <span class="ms-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
+                <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
                     <span><i class="{{ bicons.contract }}"></i></span>
                     <span class="">{{ bid.contracts.all|length }}</span>
                 </span>

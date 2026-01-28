@@ -9,12 +9,12 @@
 
 {% block content %}
 
-    <div class="">
+    <div id="bid-details" class="">
 
         <div class="mb-3">
             <span class="h3">{% trans "Bid details" %}</span>
         </div>
- 
+
         <div class="my-3" id="bid-details">
 
             <div class="row gx-4 gy-0" id="bidDigest">
@@ -249,6 +249,77 @@
         </div>
 
     </div>
+
+    <div id="bid-modals">
+        <div id="bidDeleteModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="delete-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="my-2">
+                                <div class="mb-2">
+                                    <span class="small fw-light">{% trans "Amount" %}: </span>
+                                    <span id="span-amount"></span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="small fw-light">{% trans "Company" %}: </span>
+                                    <span id="span-company"></span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="small fw-light">{% trans "Result" %}: </span>
+                                    <span id="span-result"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="my-2">
+                                <span class="text-danger">{% trans "This bid, its associated data and files will be permanently deleted." %}</span>
+                                <span class="">{% trans "Are you sure this is what you want ?" %}</span>
+                            </div>
+
+                            <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                <option selected>{% trans "I am not sure" %}</option>
+                                <option value="know">{% trans "I know what I am doing" %}</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Cancel" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Delete' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const deleteModal = document.getElementById('bidDeleteModal');
+        const spanAmount = document.getElementById('span-amount');
+        const spanCompany = document.getElementById('span-company');
+        const spanResult = document.getElementById('span-result');
+        const deleteForm = document.getElementById('delete-form');
+
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            spanAmount.innerText = button.dataset.amount;
+            spanCompany.innerText = button.dataset.company;
+            spanResult.innerText = button.dataset.result;
+            deleteForm.action = button.dataset.url;
+        });
+    </script>
 
 {% endblock content %}
 
