@@ -193,8 +193,7 @@ def bids_list(request):
     
     if us: 
         BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-        # TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
-    BIDS_ORDERING_FIELD = 'date_submitted'
+    BIDS_ORDERING_FIELD = '-status'
 
     def get_req_params(req):
         allowed_keys = [
@@ -315,11 +314,15 @@ def bids_list(request):
     if ordering[0] == '-':
         ordering = ordering[1:]
         bids = bids.order_by(
-            F(ordering).asc(nulls_last=True), BIDS_ORDERING_FIELD
+            F(ordering).asc(nulls_last=True), BIDS_ORDERING_FIELD,
+            "-bond_status",
+            "-date_submitted"
             )
     else:
         bids = bids.order_by(
-            F(ordering).desc(nulls_last=True), BIDS_ORDERING_FIELD
+            F(ordering).desc(nulls_last=True), BIDS_ORDERING_FIELD,
+            "-bond_status",
+            "-date_submitted"
             )
 
     context = define_context(request)
@@ -509,18 +512,18 @@ def bonds_list(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_details(request, pk=None):
 
-    def is_past(value):
-        if isinstance(value, datetime):
-            if value.tzinfo is None:
-                now = datetime.now()
-            else:
-                now = datetime.now(timezone.utc).astimezone(value.tzinfo)
-            return value < now
+    # def is_past(value):
+    #     if isinstance(value, datetime):
+    #         if value.tzinfo is None:
+    #             now = datetime.now()
+    #         else:
+    #             now = datetime.now(timezone.utc).astimezone(value.tzinfo)
+    #         return value < now
 
-        if isinstance(value, date):
-            return value < date.today()
+    #     if isinstance(value, date):
+    #         return value < date.today()
         
-        return False
+    #     return False
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -535,104 +538,97 @@ def bid_details(request, pk=None):
     if not tender: return HttpResponse(status=404)
 
     # TODO: Move timeline to model as a @property
-    timeline = []
-    pontext = portal_context(request)
-    bicons = pontext['bicons']
+    # timeline = []
+    # pontext = portal_context(request)
+    # bicons = pontext['bicons']
 
-    if tender.published:
-        timeline.append({
-            "date": tender.published,          
-            "past": is_past(tender.published), 
-            "bicon" : bicons.get("published"),
-            "event": _("Tender published")
-            })
-    if tender.deadline:
-        timeline.append({
-            "date": tender.deadline.date(),    
-            "past": is_past(tender.deadline), 
-            "bicon" : bicons.get("deadline"),
-            "event": _("Bidding deadline")
-            })
-    if bid.date_submitted:
-        timeline.append({
-            "date": bid.date_submitted.date(), 
-            "past": is_past(bid.date_submitted), 
-            "bicon" : bicons.get("bid"),
-            "event": _("Bid Submitted")
-            })
-    # if bid.created:
+    # if tender.published:
     #     timeline.append({
-    #         "date": bid.created.date(),        
-    #         "past": is_past(bid.created), 
-    #         "bicon" : bicons.get("created"),
-    #         "event": _("Bid created")
+    #         "date": tender.published,          
+    #         "past": is_past(tender.published), 
+    #         "bicon" : bicons.get("published"),
+    #         "event": _("Tender published")
     #         })
-    if bid.updated:
-        timeline.append({
-            "date": bid.updated.date(),        
-            "past": is_past(bid.updated), 
-            "bicon" : bicons.get("updated"),
-            "event": _("Latest Bid update")
-            })
-    if bid.bond_due_date:
-        timeline.append({
-            "date": bid.bond_due_date.date(),
-            "past": is_past(bid.bond_due_date), 
-            "bicon" : bicons.get("deadline"),
-            "event": _("Bond return date")
-            })
+    # if tender.deadline:
+    #     timeline.append({
+    #         "date": tender.deadline.date(),    
+    #         "past": is_past(tender.deadline), 
+    #         "bicon" : bicons.get("deadline"),
+    #         "event": _("Bidding deadline")
+    #         })
+    # if bid.date_submitted:
+    #     timeline.append({
+    #         "date": bid.date_submitted.date(), 
+    #         "past": is_past(bid.date_submitted), 
+    #         "bicon" : bicons.get("bid"),
+    #         "event": _("Bid Submitted")
+    #         })
+    # if bid.updated:
+    #     timeline.append({
+    #         "date": bid.updated.date(),        
+    #         "past": is_past(bid.updated), 
+    #         "bicon" : bicons.get("updated"),
+    #         "event": _("Latest Bid update")
+    #         })
+    # if bid.bond_due_date:
+    #     timeline.append({
+    #         "date": bid.bond_due_date.date(),
+    #         "past": is_past(bid.bond_due_date), 
+    #         "bicon" : bicons.get("deadline"),
+    #         "event": _("Bond return date")
+    #         })
 
-    openings = tender.openings.all()
-    for opening in openings:
-        timeline.append({
-            "date": opening.date,    
-            "past": is_past(opening.date), 
-            "bicon" : bicons.get("deliberated"),
-            "event": _("Tender results published")
-            })
+    # openings = tender.openings.all()
+    # for opening in openings:
+    #     timeline.append({
+    #         "date": opening.date,    
+    #         "past": is_past(opening.date), 
+    #         "bicon" : bicons.get("deliberated"),
+    #         "event": _("Tender results published")
+    #         })
 
-    change = tender.changes.last()
-    if change:
-        timeline.append({
-            "date": change.reported.date(),    
-            "past": is_past(change.reported), 
-            "bicon" : bicons.get("changes"),
-            "event": _("Latest Tender change")
-            })
+    # change = tender.changes.last()
+    # if change:
+    #     timeline.append({
+    #         "date": change.reported.date(),    
+    #         "past": is_past(change.reported), 
+    #         "bicon" : bicons.get("changes"),
+    #         "event": _("Latest Tender change")
+    #         })
 
-    samples = bid.lot.samples
-    for sample in samples.all():
-        timeline.append({
-            "date": sample.when.date(),    
-            "past": is_past(sample.when), 
-            "bicon" : bicons.get("samples_ico"),
-            "event": _("Samples deadline")
-            })
+    # samples = bid.lot.samples
+    # for sample in samples.all():
+    #     timeline.append({
+    #         "date": sample.when.date(),    
+    #         "past": is_past(sample.when), 
+    #         "bicon" : bicons.get("samples_ico"),
+    #         "event": _("Samples deadline")
+    #         })
 
-    meetings = bid.lot.meetings
-    for meeting in meetings.all():
-        timeline.append({
-            "date": meeting.when.date(),    
-            "past": is_past(meeting.when), 
-            "bicon" : bicons.get("meetings_ico"),
-            "event": _("Meeting deadline")
-            })
+    # meetings = bid.lot.meetings
+    # for meeting in meetings.all():
+    #     timeline.append({
+    #         "date": meeting.when.date(),    
+    #         "past": is_past(meeting.when), 
+    #         "bicon" : bicons.get("meetings_ico"),
+    #         "event": _("Meeting deadline")
+    #         })
 
-    visits = bid.lot.visits
-    for visit in visits.all():
-        timeline.append({
-            "date": visit.when.date(),    
-            "past": is_past(visit.when), 
-            "bicon" : bicons.get("visits_ico"),
-            "event": _("Site visit deadline")
-            })
+    # visits = bid.lot.visits
+    # for visit in visits.all():
+    #     timeline.append({
+    #         "date": visit.when.date(),    
+    #         "past": is_past(visit.when), 
+    #         "bicon" : bicons.get("visits_ico"),
+    #         "event": _("Site visit deadline")
+    #         })
     
 
-    timeline.sort(key=lambda e: e["date"])
+    # timeline.sort(key=lambda e: e["date"])
 
     context = {
         "bid"       : bid,
-        "timeline"       : timeline,
+        # "timeline"       : timeline,
     }
 
     return render(request, 'bidding/bid-details.html', context)

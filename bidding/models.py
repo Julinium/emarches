@@ -2,6 +2,8 @@
 import os, uuid
 from decimal import Decimal
 from django.db import models
+from datetime import date, datetime, timezone
+
 from django.contrib.auth.models import User
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import FileExtensionValidator
 
 from base.models import Lot
+# from base.context_processors import portal_context
 from nas.models import Company
 from nas.imaging import squarify_image
 
@@ -117,6 +120,7 @@ class Contact(models.Model):
 
 
 class Bid(models.Model):
+
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     lot             = models.ForeignKey(Lot, on_delete=models.DO_NOTHING, related_name='bids')
     company         = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='bids')
@@ -127,7 +131,6 @@ class Bid(models.Model):
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
 
     bid_amount        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Bid Amount"))
-    # amount_x        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Corrected Amount"))
 
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, default=BondStatus.BOND_PREPARING, verbose_name=_('Bond Status'))
@@ -145,25 +148,29 @@ class Bid(models.Model):
 
     class Meta:
         db_table = 'bidding_bid'
-        ordering = ['company', 'bid_amount', 'date_submitted']
+        ordering = ['lot', 'date_submitted', 'company', 'bid_amount']
 
     def __str__(self):
         return self.lot.tender.title
 
-    # @property
-    # def amount(self):
-    #     return self.amount_x if self.amount_x else self.bid_amount
+    def caption(self):
+        if self.title and self.title != "": return self.title
+        # if self.lot.tender.lots_count > 1: return self.lot.title
+        return self.lot.title
 
-    # @property
-    # def amount(self):
-    #     return self.amount_x if self.amount_x else self.bid_amount
+    @property
+    def archivable(self):
+        if self.status == BidStatus.BID_FINISHED:
+            if self.bond_status == BondStatus.BOND_RETURNED or self.bond_status == BondStatus.BOND_LOST:
+                return True
+        return False
 
     @property
     def ratio_str(self):
         if self.lot:
             estimate = self.lot.estimate
             if estimate != 0:
-                ratio = round(Decimal("100") * (self.amount - estimate) / estimate, 2)
+                ratio = round(Decimal("100") * (self.bid_amount - estimate) / estimate, 2)
                 if ratio >= 0 : return f"+{ratio}%"
                 return f"{ratio}%"
         return None
@@ -246,6 +253,117 @@ class Bid(models.Model):
         if self.bond_status == BondStatus.BOND_LOST      :   return 'danger'
         return 'secondary'
 
+    @property
+    def milestones(self):
+        milestones = []
+        if self.lot.tender.published:
+            milestones.append({
+                "date": self.lot.tender.published,          
+                "past": is_past(self.lot.tender.published), 
+                "event": _("Tender published")
+                })
+        if self.lot.tender.deadline:
+            milestones.append({
+                "date": self.lot.tender.deadline.date(),    
+                "past": is_past(self.lot.tender.deadline), 
+                "event": _("Bidding deadline")
+                })
+        if self.date_submitted:
+            milestones.append({
+                "date": self.date_submitted.date(), 
+                "past": is_past(self.date_submitted), 
+                "event": _("Bid Submitted")
+                })
+        if self.updated:
+            milestones.append({
+                "date": self.updated.date(),        
+                "past": is_past(self.updated), 
+                "event": _("Latest Bid update")
+                })
+        if self.bond_due_date:
+            milestones.append({
+                "date": self.bond_due_date.date(),
+                "past": is_past(self.bond_due_date), 
+                "event": _("Bond return date")
+                })
+
+        openings = self.lot.tender.openings.all()
+        for opening in openings:
+            milestones.append({
+                "date": opening.date,    
+                "past": is_past(opening.date), 
+                "event": _("Tender results published")
+                })
+
+        change = self.lot.tender.changes.last()
+        if change:
+            milestones.append({
+                "date": change.reported.date(),    
+                "past": is_past(change.reported), 
+                "event": _("Latest Tender change")
+                })
+
+        samples = self.lot.samples
+        for sample in samples.all():
+            milestones.append({
+                "date": sample.when.date(),    
+                "past": is_past(sample.when), 
+                "event": _("Samples deadline")
+                })
+
+        meetings = self.lot.meetings
+        for meeting in meetings.all():
+            milestones.append({
+                "date": meeting.when.date(),    
+                "past": is_past(meeting.when), 
+                "event": _("Meeting deadline")
+                })
+
+        visits = self.lot.visits
+        for visit in visits.all():
+            milestones.append({
+                "date": visit.when.date(),    
+                "past": is_past(visit.when), 
+                "event": _("Site visit deadline")
+                })
+        
+        for task in self.tasks.all():
+            if task.date_due:
+                milestones.append({
+                    "date": task.date_due.date(),    
+                    "past": is_past(task.date_due), 
+                    "event": _("Task due") + ": " + task.title
+                })
+        
+        for contract in self.contracts.all():
+            if contract.date_signed:
+                milestones.append({
+                    "date": contract.date_signed.date(),    
+                    "past": is_past(contract.date_signed), 
+                    "event": _("Contract signed") + ": " + contract.title
+                })
+        
+        for contract in self.contracts.all():
+            if contract.date_finish:
+                milestones.append({
+                    "date": contract.date_finish.date(),    
+                    "past": is_past(contract.date_finish), 
+                    "event": _("Contract finished") + ": " + contract.title
+                })
+        
+        for expense in self.expenses.all():
+            if expense.date_paid:
+                milestones.append({
+                    "date": expense.date_paid.date(),    
+                    "past": is_past(expense.date_paid), 
+                    "event": f"{expense.amount_paid} : " + _("Expense paid") + ": " + expense.title
+                })
+        
+
+        milestones.sort(key=lambda e: e["date"])
+
+        return milestones
+
 
 class Contract(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -277,8 +395,8 @@ class Contract(models.Model):
 class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, verbose_name=_('Bid'), related_name='tasks')
-    contract  = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, verbose_name=_('Contract'), related_name='tasks')
-    title     = models.CharField(max_length=255, blank=True, default=_('New Task'), verbose_name=_('Title'))
+    # contract  = models.ForeignKey(Contract, on_delete=models.CASCADE, null=True, verbose_name=_('Contract'), related_name='tasks')
+    title     = models.CharField(max_length=255, default=_('New Task'), verbose_name=_('Title'))
     date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
     reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
     contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
@@ -303,7 +421,7 @@ class Expense(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bid          = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='expenses')
     contract     = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='expenses')
-    company      = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='expenses')
+    # company      = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='expenses')
     title        = models.CharField(max_length=255, blank=True, default=_('Expense'), verbose_name=_('Object'))
     reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
     bill_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Bill Number'))
@@ -368,10 +486,10 @@ class Reception(models.Model):
 class Income(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    bid          = models.ForeignKey(Bid,       on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'),       related_name='incomes')
+    # bid          = models.ForeignKey(Bid,       on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'),       related_name='incomes')
     contract     = models.ForeignKey(Contract,  on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'),  related_name='incomes')
-    company      = models.ForeignKey(Company,   on_delete=models.DO_NOTHING,            verbose_name=_('Company'),   related_name='incomes')
-    reception    = models.ForeignKey(Reception, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Reception'), related_name='incomes')
+    # company      = models.ForeignKey(Company,   on_delete=models.DO_NOTHING,            verbose_name=_('Company'),   related_name='incomes')
+    # reception    = models.ForeignKey(Reception, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Reception'), related_name='incomes')
 
     title        = models.CharField(max_length=255, blank=True, default=_('Expense'), verbose_name=_('Object'))
     reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
@@ -405,4 +523,15 @@ class Income(models.Model):
 
 
 
+def is_past(value):
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            now = datetime.now()
+        else:
+            now = datetime.now(timezone.utc).astimezone(value.tzinfo)
+        return value < now
 
+    if isinstance(value, date):
+        return value < date.today()
+    
+    return False

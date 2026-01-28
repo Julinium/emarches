@@ -208,12 +208,14 @@
                                     {% trans "Timeline" %}
                                 </div>
                                 <div id="" class="ms-2">                                    
-                                    {% for item in timeline %}
+                                    {% for item in bid.milestones %}
                                         <div class="my-1 pb-1 border border-0 border-bottom {% if item.past == True %}text-secondary{% endif %}">
-                                            <span><i class="small {% if item.bicon %}{{item.bicon}}{% else %}bi bi-dash-lg{% endif %} me-1"></i></span>
+                                            <span><i class="small {% if item.bicon %}{{ item.bicon }}{% else %}bi bi-dash-lg{% endif %} me-1"></i></span>
                                             <span class="{% if item.past != True %}fw-bold{% endif %}">{{ item.date }}</span>
                                             {% if item.past != True %}
                                                 <span class="badge small ms-1 bg-primary">{{ item.date|timeuntil }}</span>
+                                            {% else %}
+                                                <span class="badge small ms-1 bg-secondary-subtle">{{ item.date|timesince }}</span>
                                             {% endif %}
                                             <span><i class="ms-2 bi bi-dash-lg"></i></span>
                                             <span class="small">{{ item.event }}</span>
@@ -228,13 +230,22 @@
             </div>
 
         </div>
+        
+        <div id="bid-{{ bid.id }}-collapse">  
+            <div class="text-end mx-0 mb-3">
+                {% include "bidding/snippets/bids/bid-actions.html" with bid=bid %}
+            </div>
+        </div>
 
+        <div class="mt-5 mb-2 text-danger fw-light">
+            {% trans "Coming soon" %}
+        </div>
         <div class="my-3" id="bid-milestones">
-            <h4>Tasks and Milestones</h4>
+            <div class="fw-bold">Tasks and Milestones</div class="fw-bold">
         </div>
 
         <div class="my-3" id="bid-contracts">
-            <h4>Contracts list</h4>
+            <div class="fw-bold">Contracts list</div>
         </div>
 
     </div>
