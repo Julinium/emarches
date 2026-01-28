@@ -20,8 +20,7 @@
 
                 <div class="row g-1 my-1">
                     <div class="col-12 col-md-6 text-start">
-                        <div data-bs-toggle="tooltip" 
-                            title="{{ bid.company.name }}">
+                        <div data-bs-toggle="tooltip" title="{{ bid.company.name }}">
                             <span>
                                 <img src="{{ bid.company.logo }}" alt="X" 
                                     class="img-fluid rounded rounded-circle" 
@@ -37,25 +36,29 @@
                         </div>
                         <div class="oneline ms-4 text-secondary">
                             {% if bid.date_submitted %}
-                                <span class="small"><i class="{{ bicons.bid }} small text-secondary me-1"></i></span>
-                                <span class="small text-secondary me-2 ">{{ bid.date_submitted.date|default:'-' }}</span>
+                                <span data-bs-toggle="tooltip" title="{% trans 'Date submitted' %}">  
+                                    <span class="small"><i class="{{ bicons.bid }} small text-secondary me-1"></i></span>
+                                    <span class="small text-secondary me-2 ">{{ bid.date_submitted.date|default:'-' }}</span>                                  
+                                </span>
                             {% endif %}
-                            <span class="fw-light">
-                                <img src="{{ bid.creator.profile.avatar }}" alt="X" 
-                                        class="img-fluid rounded rounded-circle" 
-                                        style="width: 1rem; height: 1rem;">
+                            <span data-bs-toggle="tooltip" title="{% trans 'Creator' %}">  
+                                <span class="fw-light">
+                                    <img src="{{ bid.creator.profile.avatar }}" alt="X" 
+                                            class="img-fluid rounded rounded-circle" 
+                                            style="width: 1rem; height: 1rem;">
+                                </span>
+                                <span class="small text-secondary">{{ bid.creator }}</span>                              
                             </span>
-                            <span class="small text-secondary">{{ bid.creator }}</span>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 text-end">
-                        <div>                        
+                        <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}">                        
                             <span><i class="{{ bicons.estimate }} small"></i></span>
                             <span class="fw-bold">{{ bid.bid_amount }}</span>
                         </div>
                         <div>
-                            <span class="badge bg-{{ bid.tag_tint }} small">{{ bid.tag_display }}</span>
-                            <span class="badge fw-light bg-{{ bid.bond_tint }}">
+                            <span class="badge bg-{{ bid.tag_tint }} small" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
+                            <span class="badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond status' %}">
                                 <span><i class="{{ bicons.bond }}"></i></span>
                                 <span class="fw-bold">{{ bid.bond_amount }}</span>
                             </span>
@@ -66,25 +69,22 @@
 
         </div>
 
-        <div class="card-footer p-2 text-end">
+        <div class="card-footer small px-2 py-1 text-end">
             <div class="small">
 
-                <span class="ms-2 my-1">
+                <span class="ms-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
                     <span><i class="{{ bicons.task }}"></i></span>
-                    <!-- <span class="ms-1">{% trans 'Tasks' %}</span> -->
-                    <span class="ms-1">{{ bid.tasks.all|length }}</span>
+                    <span class="">{{ bid.tasks.all|length }}</span>
                 </span>
 
-                <span class="ms-2 mt-2">
+                <span class="ms-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
                     <span><i class="{{ bicons.expense }}"></i></span>
-                    <!-- <span class="ms-1">{% trans 'Expenses' %}</span> -->
-                    <span class="ms-1">{{ bid.expenses.all|length }}</span>
+                    <span class="">{{ bid.expenses.all|length }}</span>
                 </span>
 
-                <span class="ms-2 mt-2">
+                <span class="ms-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
                     <span><i class="{{ bicons.contract }}"></i></span>
-                    <!-- <span class="ms-1">{% trans 'Contracts' %}</span> -->
-                    <span class="ms-1">{{ bid.contracts.all|length }}</span>
+                    <span class="">{{ bid.contracts.all|length }}</span>
                 </span>
 
             </div>
