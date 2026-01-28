@@ -27,8 +27,7 @@
                                 {% trans "Bid Amount" %}
                             </div>
                             <div id="" class="ms-2">
-                                {% if bid.amount_c %}<span class="fw-bold">{{ bid.amount_c }}</span>{% endif %}
-                                <span class="{% if bid.amount_c %}small ms-1 fw-light text-decoration-linethrough{% else %}fw-bold{% endif %}">{{ bid.amount_s|default:'--' }}</span>
+                                <span class="fw-bold">{{ bid.bid_amount }}</span>
                             </div>
                         </div>
                     </div>

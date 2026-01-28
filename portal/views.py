@@ -418,7 +418,7 @@ def tender_details(request, pk=None):
 
     colleagues = user.teams.first().members.all()
 
-    bids = Bid.objects.filter(lot__tender=tender, creator__in=colleagues).distinct().order_by('lot', 'amount_s', 'date_submitted')
+    bids = Bid.objects.filter(lot__tender=tender, creator__in=colleagues).distinct().order_by('lot', 'bid_amount', 'date_submitted')
 
     context = { 
         'tender'        : tender,

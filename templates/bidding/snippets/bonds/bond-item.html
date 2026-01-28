@@ -50,7 +50,7 @@
                     <div class="col-12 col-md-6 text-end">
                         <div>                        
                             <span><i class="{{ bicons.estimate }} small"></i></span>
-                            <span class="fw-bold">{{ bid.amount }}</span>
+                            <span class="fw-bold">{{ bid.bid_amount }}</span>
                         </div>
                         <div>
                             <span class="badge bg-{{ bid.tag_tint }} small">{{ bid.tag_display }}</span>
@@ -118,7 +118,7 @@
                     {% if bid.deletable %}
                         <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
                                 data-bs-toggle="modal" data-bs-target="#bidDeleteModal"
-                                data-amount="{{ bid.amount }}"
+                                data-amount="{{ bid.bid_amount }}"
                                 data-company="{{ bid.company.name }}"
                                 data-result="{{ bid.get_result_display }}"
                                 data-url="{% url 'bidding_bid_delete' bid.id %}"

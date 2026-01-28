@@ -9,6 +9,22 @@
     <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
 
         <li class="">
+            <a class="dropdown-item py-2 fw-bold" href="{% url 'insights_bidders_list' %}">
+                <i class="{{ bicons.concurrence }} me-2"></i>
+                {% trans 'Concurrents' %}
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="{% url 'bidding_tenders_list' %}">
+                <i class="{{ bicons.bid_tender }} me-2"></i>
+                <span>{% trans 'Tenders' %}</span>
+            </a>
+        </li>
+
+        <li class="">
             <a class="dropdown-item py-2" href="{% url 'bidding_bids_list' %}">
                 <i class="{{ bicons.bid }} me-2"></i>
                 <span>{% trans 'Bids' %}</span>
@@ -24,8 +40,8 @@
 
         <li class="">
             <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.expense }} me-2"></i>
-                <span>{% trans 'Expenses' %}</span>
+                <i class="{{ bicons.contract }} me-2"></i>
+                <span>{% trans 'Contracts' %}</span>
             </a>
         </li>
 
@@ -33,8 +49,15 @@
 
         <li class="">
             <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.contract }} me-2"></i>
-                <span>{% trans 'Contracts' %}</span>
+                <i class="{{ bicons.expense }} me-2"></i>
+                <span>{% trans 'Expenses' %}</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="#">
+                <i class="{{ bicons.payment }} me-2"></i>
+                <span>{% trans 'Payments' %}</span>
             </a>
         </li>
 

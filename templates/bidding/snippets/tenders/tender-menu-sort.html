@@ -1,0 +1,53 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Order items by' %}">
+            <i class="{{ bicons.sort }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Ordering' %}</span>
+            </div>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Tender deadline' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='deadline' icon=bicons.deadline %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Tender published' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='published' icon=bicons.published %}
+            </li>
+            
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Tender estimate' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='estimate' icon=bicons.estimate %}
+            </li>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Guarantee' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bond' icon=bicons.bond %}
+            </li>
+            
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Client name' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='client__name' icon=bicons.client %}
+            </li>
+
+        </ul>
+    </div>
+</div>
+

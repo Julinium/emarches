@@ -126,8 +126,8 @@ class Bid(models.Model):
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Bid Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
 
-    amount_s        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Bid Amount"))
-    amount_c        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Corrected Amount"))
+    bid_amount        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Bid Amount"))
+    # amount_x        = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Corrected Amount"))
 
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, default=BondStatus.BOND_PREPARING, verbose_name=_('Bond Status'))
@@ -145,18 +145,18 @@ class Bid(models.Model):
 
     class Meta:
         db_table = 'bidding_bid'
-        ordering = ['company', 'amount_s', 'date_submitted']
+        ordering = ['company', 'bid_amount', 'date_submitted']
 
     def __str__(self):
         return self.lot.tender.title
 
     # @property
     # def amount(self):
-    #     return self.amount_c if self.amount_c else self.amount_s
+    #     return self.amount_x if self.amount_x else self.bid_amount
 
-    @property
-    def amount(self):
-        return self.amount_c if self.amount_c else self.amount_s
+    # @property
+    # def amount(self):
+    #     return self.amount_x if self.amount_x else self.bid_amount
 
     @property
     def ratio_str(self):

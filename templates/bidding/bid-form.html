@@ -33,13 +33,53 @@
     {% endif %}
 
     <div class="row g-3 mb-3">
+        <div class="col-12">
+            <div class="small text-muted">
+                <span>{% trans 'Client' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span class="">{{ tender.client.name }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="small text-muted">
+                <span>{% trans 'Execution location' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span class="">{{ tender.location }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="small text-muted">
+                <span>{% trans 'Reference' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span class="">{{ tender.reference }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="small text-muted">
+                <span>{% trans 'Published' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <span class="">{{ tender.published }}</span>
+                </div>
+            </div>
+        </div>
         <div class="col-12 col-md-6">
             <div class="small text-muted">
                 <span>{% trans 'Bidding deadline' %}</span>
             </div>
             <div class="ms-3">
                 <div class="form-control bg-secondary-subtle text-secondary">
-                    <span class="">{{ tender.deadline }}</span>
+                    <span class="fw-bold">{{ tender.deadline }}</span>
                 </div>
             </div>
         </div>
@@ -49,15 +89,11 @@
             </div>
             <div class="ms-3">
                 <div class="form-control bg-secondary-subtle text-secondary">
-                    <span>
-                        {% if tender.lots_count > 1 %}
-                            E = {{ lot.estimate }}
-                            <input type="hidden" class="d-none" id="estimate_raw" value="{{ lot.estimate|unlocalize }}">
-                        {% else %}
-                            E = {{ tender.estimate }}
-                            <input type="hidden" class="d-none" id="estimate_raw" value="{{ tender.estimate|unlocalize }}">
-                        {% endif %}
-                    </span>
+                    <span class="fw-light">E = </span>
+                    <span class="fw-bold">{% if tender.lots_count > 1 %}{{ lot.estimate }}{% else %}{{ tender.estimate }}{% endif %}</span>
+                    <input type="hidden" class="d-none" id="estimate_raw" 
+                            value="{% if tender.lots_count > 1 %}{{ lot.estimate|unlocalize }}{% else %}{{ tender.estimate|unlocalize }}{% endif %}"
+                            >
                 </div>
             </div>
         </div>
@@ -81,7 +117,7 @@
                             ">
                     <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
                         <span>{{ field.label_tag }}</span>
-                        {% if field.name == 'amount_s' %}
+                        {% if field.name == 'bid_amount' %}
                             <span id="beratio" class="fw-bold text-secondary"></span>
                         {% endif %}
                     </div>
@@ -116,7 +152,7 @@
     </form>
 
     <script>
-        const amountInput = document.getElementById("id_amount_s");
+        const amountInput = document.getElementById("id_bid_amount");
         const estimateInput = document.getElementById("estimate_raw");
         const ratioSpan = document.getElementById("beratio");
 

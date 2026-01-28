@@ -23,9 +23,8 @@
                 </div>
                 <div class="col-12 col-md-6 p-1 text-end">
                     <div>
-                        {% if bid.amount_c %}<span class="badge bg-warning small">!</span>{% endif %}
                         <span class="small fw-light badge bg-secondary me-1">E{{ bid.ratio_str }}</span>
-                        <span class="fw-bold">{{ bid.amount }}</span>
+                        <span class="fw-bold">{{ bid.bid_amount }}</span>
                     </div>                    
                     {% if bid.result %}
                         <div>
@@ -37,35 +36,6 @@
         </div>
     </div>
 
-
-
-
-    <!-- <div class="d-flex flex-row align-items-center">
-        <div class="me-4">
-            <img src="{{ bid.company.logo }}" alt="X" 
-                 class="img-fluid rounded rounded-circle" 
-                 style="width: 2rem; height: 2rem;">
-        </div>
-        <div>
-            <div class="row">
-                <div class="col-12 col-md-6 p-1">
-                    {% if tender.lots_count > 1 %}
-                        <span class=" small me-1">{% trans "Lot" %} {{ bid.lot.number }} :</span>
-                    {% endif %}
-                    <span class="badge bg-{{ bid.status_tint }} me-1">{{ bid.get_status_display }}</span>
-                    <span class="small me-1">{{ bid.company.name }}</span>
-                    {% if bid.result %}
-                        <span class="badge bg-{{ bid.result_tint }} me-1">{{ bid.get_result_display }}</span>
-                    {% endif %}
-                </div>
-                <div class="col-12 col-md-6 p-1 text-end">
-                    {% if bid.amount_c %}<span class="badge bg-warning small">!</span>{% endif %}
-                    <span class="small fw-light badge bg-secondary me-1">E{{bid.ratio_str}}</span>
-                    <span class="fw-bold">{{ bid.amount }}</span>
-                </div>
-            </div>
-        </div>
-    </div> -->
 </div>
 
 

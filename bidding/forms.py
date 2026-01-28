@@ -39,12 +39,12 @@ class BidForm(forms.ModelForm):
             'title',
             'company',
             'date_submitted',
-            'amount_s',
+            'bid_amount',
             'bond_amount',
             'bond_status',
             'bond_due_date',
             'status',
-            'amount_c',
+            # 'amount_c',
             'result',
             'file_bond',
             'file_submitted',
@@ -99,27 +99,41 @@ class BidForm(forms.ModelForm):
 
         return date_submitted
 
-    def clean_amount_s(self):
-        amount_s = self.cleaned_data.get("amount_s")
+    def clean_bid_amount(self):
+        bid_amount = self.cleaned_data.get("bid_amount")
         us = self.usets
         if us:
             if us.bidding_check_amount != False:
-                lot = self.lot #cleaned_data.get("lot")
+                lot = self.lot
                 estimate = lot.estimate
 
                 if lot.category.label != "Travaux": margin_bottom = 20
                 else: margin_bottom = MARGIN_PERCENT_UNDER
 
                 if estimate is not None:
-                    if amount_s is not None:
+                    if bid_amount is not None:
                         limit_top = round(Decimal(1 + MARGIN_PERCENT_OVER / 100) * estimate, 2)
-                        if amount_s > limit_top:
+                        if bid_amount > limit_top:
                             raise forms.ValidationError(_("Submitted amount must fall under allowed top margin:") + f" E+{MARGIN_PERCENT_OVER}%: {limit_top}")
                         limit_bottom = round(Decimal(1 - margin_bottom / 100) * estimate, 2)
-                        if amount_s < limit_bottom :
+                        if bid_amount < limit_bottom :
                             raise forms.ValidationError(_("Submitted amount must fall over allowed bottom margin:") + f" E-{MARGIN_PERCENT_UNDER}%: {limit_bottom}")
 
-        return amount_s
+        return bid_amount
+
+    def clean_bond_amount(self):
+        bond_amount = self.cleaned_data.get("bond_amount")
+        us = self.usets
+        if us:
+            if us.bidding_check_amount != False:
+                bond = self.lot.bond
+
+                if bond is not None:
+                    if bond_amount is not None:
+                        if bond_amount != bond:
+                            raise forms.ValidationError(_("Submitted bond amount is must be same as published bond"))
+
+        return bond_amount
 
     def clean_file_bond(self):
         uploaded_file = self.cleaned_data['file_bond']

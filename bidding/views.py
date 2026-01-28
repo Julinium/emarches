@@ -42,7 +42,7 @@ def dashboard(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bids_list(request):
+def tenders_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -172,6 +172,170 @@ def bids_list(request):
 
     logger = logging.getLogger('portal')
     logger.info(f"Bid Tenders List view")
+
+    return render(request, 'bidding/tenders-list.html', context)
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bids_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+    
+    if us: 
+        BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+        # TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+    BIDS_ORDERING_FIELD = 'date_submitted'
+
+    def get_req_params(req):
+        allowed_keys = [
+            'q', 'w', 'n', 'x', 'p', 's', 'page', 'sort',
+            ]
+
+        query_dict = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != ''
+        }
+        if not 'sort' in query_dict:
+            query_dict['sort'] = BIDS_ORDERING_FIELD
+            
+        query_string = {
+            k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
+        }
+
+        query_unsorted = {
+            k: v for k, v in req.GET.items()
+            if k in allowed_keys and v != '' and k not in ('page', 'sort')
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_bids(bids, params):
+        ff = 0
+        if not params : return bids.distinct(), ff
+
+        if 'q' in params:
+            ff += 1
+            q = params['q']
+            bids = bids.filter(name__icontains=q)
+
+        if 'n' in params:
+            ff += 1
+            n = params['n']
+            bids = bids.filter(wins_sum__gte=n)
+
+        if 'x' in params:
+            ff += 1
+            x = params['x']
+            bids = bids.filter(wins_sum__lte=x)
+
+        if 'w' in params:
+            ff += 1
+            w = params['w']
+            if w == "0":
+                bids = bids.filter(wins_count=0)
+            elif w == "1":
+                bids = bids.filter(wins_count=1)
+            elif w == "2":
+                bids = bids.filter(wins_count__gte=1)
+            elif w == "11":
+                bids = bids.filter(wins_count__gte=10)
+
+        if 'p' in params:
+            ff += 1
+            p = params['p']
+            if p == "0":
+                bids = bids.filter(part_count=0)
+            elif p == "1":
+                bids = bids.filter(part_count=1)
+            elif p == "2":
+                bids = bids.filter(part_count__gte=1)
+            elif p == "11":
+                bids = bids.filter(part_count__gte=10)
+
+        if 's' in params:
+            ff += 1
+            s = params['s']
+            if s == "1":
+                bids = bids.filter(succ_rate=100)
+            elif s == "6":
+                bids = bids.filter(succ_rate__gte=50)
+            elif s == "4":
+                bids = bids.filter(succ_rate__lte=50)
+
+        return bids.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context['query_string']   = urlencode(query_string)
+        context['query_unsorted'] = urlencode(query_unsorted)
+        context['query_dict']     = query_dict
+        context['full_bar_days']  = TENDER_FULL_PROGRESS_DAYS
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+
+    if user.teams.count() < 1:
+        team = Team.objects.create(
+            name=user.username.upper(),
+            creator=user,
+        )
+        team.add_member(user, patron=True)
+
+    teams = user.teams.all()
+    colleagues = user.teams.first().members.all()
+
+    if teams:
+        all_bids = Bid.objects.filter(
+            creator__in=colleagues
+        # ).prefetch_related(
+        #     "tasks", "expenses", "contracts",
+        )
+    else:
+        all_bids = Bid.objects.none()
+
+    bids, filters = filter_bids(all_bids, query_dict)
+    query_dict['filters'] = filters
+
+    sort = query_dict['sort']
+
+    if sort and sort != '':
+        ordering = sort
+    else: ordering = BIDS_ORDERING_FIELD
+
+    if ordering[0] == '-':
+        ordering = ordering[1:]
+        bids = bids.order_by(
+            F(ordering).asc(nulls_last=True), BIDS_ORDERING_FIELD
+            )
+    else:
+        bids = bids.order_by(
+            F(ordering).desc(nulls_last=True), BIDS_ORDERING_FIELD
+            )
+
+    context = define_context(request)
+
+    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)
+    page_number = request.GET['page'] if 'page' in request.GET else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context['page_obj']    = page_obj
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Bids List view")
 
     return render(request, 'bidding/bids-list.html', context)
 
@@ -335,7 +499,7 @@ def bonds_list(request):
     context['page_obj']    = page_obj
 
     logger = logging.getLogger('portal')
-    logger.info(f"Bids List view")
+    logger.info(f"Bonds List view")
 
     return render(request, 'bidding/bonds-list.html', context)
 
@@ -598,14 +762,14 @@ def bid_edit(request, pk=None, lk=None):
         )
         if bid is None:
             form.fields["date_submitted"].initial   = datetime.now()
-            form.fields["amount_s"].initial         = lot.estimate
+            form.fields["bid_amount"].initial         = lot.estimate
             form.fields["bond_amount"].initial      = lot.bond
 
             client_short = lot.tender.client.short
             if len(client_short) < 1: client_short = "[?]"
             words = lot.title.split()
             words_count = 8
-            lot_title = text if len(words) <= words_count else " ".join(words[:words_count]) + " ..."
+            lot_title = lot.title if len(words) <= words_count else " ".join(words[:words_count]) + " ..."
             bid_title = client_short + " | " + lot.tender.reference + " | " + lot_title 
 
             form.fields["title"].initial            = bid_title
@@ -660,86 +824,5 @@ def bid_file(request, pk=None, ft=None):
     # response['Content-Length'] = os.path.getsize(file_path)
     return response
 
-
-
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bid_b_file(request, pk=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated : return HttpResponse(status=403)
-
-#     bid = None
-#     if pk: bid = get_object_or_404(Bid, pk=pk)
-#     if not bid : return HttpResponse(status=403)
-
-#     # creator = bid.creator
-#     team = user.teams.first()
-#     if not team: return HttpResponse(status=403)
-#     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
-
-#     file_path = bid.file_bond.url
-#     file_name = os.path.basename(file_path)
-#     if not file_name : return HttpResponse(status=403)
-
-#     response = HttpResponse()
-#     response['Content-Type'] = 'application/octet-stream'
-#     response['X-Accel-Redirect'] = f"/bids/bonds/{file_name}"
-#     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
-#     # response['Content-Length'] = os.path.getsize(file_path)
-#     return response
-
-
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bid_s_file(request, pk=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated : return HttpResponse(status=403)
-
-#     bid = None
-#     if pk: bid = get_object_or_404(Bid, pk=pk)
-#     if not bid : return HttpResponse(status=403)
-
-#     # creator = bid.creator
-#     team = user.teams.first()
-#     if not team: return HttpResponse(status=403)
-#     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
-
-#     file_name = os.path.basename(bid.file_submitted.url)
-#     if not file_name : return HttpResponse(status=403)
-
-#     response = HttpResponse()
-#     response['Content-Type'] = 'application/octet-stream'
-#     response["X-Accel-Redirect"] =  f"/bids/submitted/{file_name}"
-#     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
-#     # response['Content-Length'] = os.path.getsize(file_path)
-#     return response
-
-
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bid_r_file(request, pk=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated : return HttpResponse(status=403)
-
-#     bid = None
-#     if pk: bid = get_object_or_404(Bid, pk=pk)
-#     if not bid : return HttpResponse(status=403)
-
-#     team = user.teams.first()
-#     if not team: return HttpResponse(status=403)
-#     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
-
-#     file_name = os.path.basename(bid.file_receipt.url)
-#     if not file_name : return HttpResponse(status=403)
-
-#     response = HttpResponse()
-#     response['Content-Type'] = 'application/octet-stream'
-#     response["X-Accel-Redirect"] =  f"/bids/receipts/{file_name}"
-#     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
-#     # response['Content-Length'] = os.path.getsize(file_path)
-#     return response
 
 

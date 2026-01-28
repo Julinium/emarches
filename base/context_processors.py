@@ -115,6 +115,7 @@ def portal_context(request):
         'simulator'       : 'bi bi-dpad',
 
         'tenders'         : 'bi bi-rocket-takeoff', 
+        'bid_tender'      : 'bi bi-reply-all', 
                             # megaphone 
                             # radioactive
                             # shop-window
@@ -174,7 +175,7 @@ def portal_context(request):
         'task'            : 'bi bi-journal-check',
         'contract'        : 'bi bi-bag-check',
         'expense'         : 'bi bi-credit-card',
-        'payment'         : 'bi bi-piggy-bank',
+        'payment'         : 'bi bi-coin',
         'reception'       : 'bi bi-check2-square',
 
         'duplicate'       : 'bi bi-layers-fill',
