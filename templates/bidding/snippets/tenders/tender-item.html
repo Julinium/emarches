@@ -65,16 +65,16 @@
             <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
                 <div id="bid-details-actions" class="text-end mx-0 mb-3">
 
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
+                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
                         <span><i class="{{ bicons.details }}"></i></span>
                         <span class="ms-1">{% trans 'Details' %}</span>
                     </a>
 
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
+                    <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
                         href="{% url 'bidding_bid_edit' bid.id %}?&redirect={{ request.build_absolute_uri|urlencode }}#t-{{ tender.chrono }}-top">
                         <span><i class="{{ bicons.edit }}"></i></span>
                         <span class="ms-1">{% trans 'Edit' %}</span>
-                    </a>
+                    </a> -->
 
                     <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank"
                         href="{% url 'portal_tender_detail' bid.lot.tender.id %}">
@@ -82,25 +82,25 @@
                         <span class="ms-1">{% trans 'Tender' %}</span>
                     </a>
 
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
+                    <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
                         <span><i class="{{ bicons.task }}"></i></span>
                         <span class="ms-1">{% trans 'Tasks' %}</span>
                         <span class="fw-bold ms-1">{{ bid.tasks.all|length }}</span>
-                    </a>
+                    </a> -->
 
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
+                    <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
                         <span><i class="{{ bicons.expense }}"></i></span>
                         <span class="ms-1">{% trans 'Expenses' %}</span>
                         <span class="fw-bold ms-1">{{ bid.expenses.all|length }}</span>
-                    </a>
+                    </a> -->
 
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
+                    <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
                         <span><i class="{{ bicons.contract }}"></i></span>
                         <span class="ms-1">{% trans 'Contracts' %}</span>
                         <span class="fw-bold ms-1">{{ bid.contracts.all|length }}</span>
-                    </a>
+                    </a> -->
 
-                    {% if bid.deletable %}
+                    <!-- {% if bid.deletable %}
                         <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
                                 data-bs-toggle="modal" data-bs-target="#bidDeleteModal"
                                 data-amount="{{ bid.bid_amount }}"
@@ -111,7 +111,7 @@
                             <span><i class="{{ bicons.delete }}"></i></span>
                             <span class="ms-1">{% trans 'Delete' %}</span>
                         </button>
-                    {% endif %}
+                    {% endif %} -->
                     
                 </div>
             </div>

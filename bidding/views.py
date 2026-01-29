@@ -21,6 +21,7 @@ from django.db.models import F , Q, Prefetch #, Count, Sum, Min, Max, DecimalFie
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
+from nas.models import Company
 from nas.choices import BidStatus, BidResults, BondStatus
 
 from bidding.models import Bid, Team, TeamMember
@@ -198,7 +199,7 @@ def bids_list(request):
 
     def get_req_params(req):
         allowed_keys = [
-            'q', 'status', 'bond_status', 'result',
+            'q', 'status', 'bond_status', 'result', 'company', 'creator',
             'page', 'sort',
             ]
 
@@ -219,7 +220,7 @@ def bids_list(request):
 
         return query_dict, query_string, query_unsorted
 
-    def filter_bids(bids, params):
+    def filter_bids(bids, params, companies=None, colleagues=None):
         ff = 0
         if not params : return bids.distinct(), ff
 
@@ -257,6 +258,21 @@ def bids_list(request):
                 bond_status=bond_status
             )
 
+        if 'company' in params:
+            ff += 1
+            company = params['company']
+            comp_obj = companies.filter(id=company).first()
+            bids = bids.filter(
+                company=comp_obj
+            )
+
+        if 'creator' in params:
+            ff += 1
+            creator = params['creator']
+            user_obj = colleagues.filter(username=creator).first()
+            bids = bids.filter(
+                creator=user_obj
+            )
 
         return bids.distinct(), ff
 
@@ -280,7 +296,9 @@ def bids_list(request):
 
     teams = user.teams.all()
     colleagues = user.teams.first().members.all()
-
+    companies = Company.objects.filter(user__in=colleagues)
+    if companies.count() < 1: return HttpResponse(_("No company found !"), status=403)
+    
     if teams:
         all_bids = Bid.objects.filter(
             creator__in=colleagues
@@ -290,7 +308,7 @@ def bids_list(request):
     else:
         all_bids = Bid.objects.none()
 
-    bids, filters = filter_bids(all_bids, query_dict)
+    bids, filters = filter_bids(all_bids, query_dict, companies, colleagues)
     query_dict['filters'] = filters
 
     sort = query_dict['sort']
@@ -328,6 +346,8 @@ def bids_list(request):
     bond_status_choices = BondStatus.choices
 
     context['page_obj']              = page_obj
+    context['companies']             = companies
+    context['colleagues']            = colleagues
     context['bid_status_choices']    = bid_status_choices
     context['bid_result_choices']    = bid_result_choices
     context['bond_status_choices']   = bond_status_choices

@@ -34,7 +34,36 @@
 
 
                         <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Company" %}</span></span>
+                                <select class="form-select" name="company" aria-label="company">
+                                    <option {% if query_dict.company == '' %} selected {% endif %} value="">--</option>
+                                    {% for c in companies %}
+                                        <option {% if query_dict.company == c.id|stringify %} selected {% endif %} value="{{ c.id }}">{{ c.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
 
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Creator" %}</span></span>
+                                <select class="form-select" name="creator" aria-label="creator">
+                                    <option {% if query_dict.creator == '' %} selected {% endif %} value="">--</option>
+                                    {% for user in colleagues %}
+                                        <option value="{{ user.username }}"
+                                                {% if user.username == query_dict.creator %}selected{% endif %}>
+                                            {% if user.first_name %}{{ user.first_name }}: {% endif %}
+                                            {{ user.username }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Status" %}</span></span>
                                 <select class="form-select" name="status" aria-label="status">
@@ -51,7 +80,6 @@
 
 
                         <div class="col-12 col-md-6">
-
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Result" %}</span></span>
                                 <select class="form-select" name="result" aria-label="result">

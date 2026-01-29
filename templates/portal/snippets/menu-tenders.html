@@ -23,6 +23,13 @@
         </li>
 
         <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a class="dropdown-item py-2" href="{% url 'bidding_tenders_list' %}">
+                <i class="{{ bicons.bidding }} me-2"></i>
+                <span>{% trans 'Bid on' %}</span>
+            </a>
+        </li>
         
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'portal_tender_favorite_list' %}">
