@@ -21,7 +21,7 @@ from django.db.models import F , Q, Prefetch #, Count, Sum, Min, Max, DecimalFie
 from django.core.paginator import Paginator
 
 from base.context_processors import portal_context
-from nas.choices import BidStatus, BondStatus
+from nas.choices import BidStatus, BidResults, BondStatus
 
 from bidding.models import Bid, Team, TeamMember
 from base.models import Tender, Lot
@@ -38,6 +38,7 @@ BIDS_ITEMS_PER_PAGE = 25
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     return HttpResponse('Dashboard')
+
 
 
 @login_required(login_url="account_login")
@@ -197,7 +198,8 @@ def bids_list(request):
 
     def get_req_params(req):
         allowed_keys = [
-            'q', 'w', 'n', 'x', 'p', 's', 'page', 'sort',
+            'q', 'status', 'bond_status', 'result',
+            'page', 'sort',
             ]
 
         query_dict = {
@@ -224,51 +226,37 @@ def bids_list(request):
         if 'q' in params:
             ff += 1
             q = params['q']
-            bids = bids.filter(name__icontains=q)
+            bids = bids.filter(
+                Q(title__icontains=q) | 
+                Q(lot__tender__title__icontains=q) | 
+                Q(lot__tender__reference__icontains=q) | 
+                Q(lot__tender__chrono__icontains=q) | 
+                Q(lot__tender__client__name__icontains=q) | 
+                Q(lot__title__icontains=q) | 
+                Q(lot__description__icontains=q)
+            )
 
-        if 'n' in params:
+        if 'status' in params:
             ff += 1
-            n = params['n']
-            bids = bids.filter(wins_sum__gte=n)
+            status = params['status']
+            bids = bids.filter(
+                status=status
+            )
 
-        if 'x' in params:
+        if 'result' in params:
             ff += 1
-            x = params['x']
-            bids = bids.filter(wins_sum__lte=x)
+            result = params['result']
+            bids = bids.filter(
+                result=result
+            )
 
-        if 'w' in params:
+        if 'bond_status' in params:
             ff += 1
-            w = params['w']
-            if w == "0":
-                bids = bids.filter(wins_count=0)
-            elif w == "1":
-                bids = bids.filter(wins_count=1)
-            elif w == "2":
-                bids = bids.filter(wins_count__gte=1)
-            elif w == "11":
-                bids = bids.filter(wins_count__gte=10)
+            bond_status = params['bond_status']
+            bids = bids.filter(
+                bond_status=bond_status
+            )
 
-        if 'p' in params:
-            ff += 1
-            p = params['p']
-            if p == "0":
-                bids = bids.filter(part_count=0)
-            elif p == "1":
-                bids = bids.filter(part_count=1)
-            elif p == "2":
-                bids = bids.filter(part_count__gte=1)
-            elif p == "11":
-                bids = bids.filter(part_count__gte=10)
-
-        if 's' in params:
-            ff += 1
-            s = params['s']
-            if s == "1":
-                bids = bids.filter(succ_rate=100)
-            elif s == "6":
-                bids = bids.filter(succ_rate__gte=50)
-            elif s == "4":
-                bids = bids.filter(succ_rate__lte=50)
 
         return bids.distinct(), ff
 
@@ -335,7 +323,14 @@ def bids_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
-    context['page_obj']    = page_obj
+    bid_status_choices = BidStatus.choices
+    bid_result_choices = BidResults.choices
+    bond_status_choices = BondStatus.choices
+
+    context['page_obj']              = page_obj
+    context['bid_status_choices']    = bid_status_choices
+    context['bid_result_choices']    = bid_result_choices
+    context['bond_status_choices']   = bond_status_choices
 
     logger = logging.getLogger('portal')
     logger.info(f"Bids List view")
@@ -512,19 +507,6 @@ def bonds_list(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_details(request, pk=None):
 
-    # def is_past(value):
-    #     if isinstance(value, datetime):
-    #         if value.tzinfo is None:
-    #             now = datetime.now()
-    #         else:
-    #             now = datetime.now(timezone.utc).astimezone(value.tzinfo)
-    #         return value < now
-
-    #     if isinstance(value, date):
-    #         return value < date.today()
-        
-    #     return False
-
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(status=403)
@@ -537,99 +519,7 @@ def bid_details(request, pk=None):
     tender = bid.lot.tender
     if not tender: return HttpResponse(status=404)
 
-    # TODO: Move timeline to model as a @property
-    # timeline = []
-    # pontext = portal_context(request)
-    # bicons = pontext['bicons']
-
-    # if tender.published:
-    #     timeline.append({
-    #         "date": tender.published,          
-    #         "past": is_past(tender.published), 
-    #         "bicon" : bicons.get("published"),
-    #         "event": _("Tender published")
-    #         })
-    # if tender.deadline:
-    #     timeline.append({
-    #         "date": tender.deadline.date(),    
-    #         "past": is_past(tender.deadline), 
-    #         "bicon" : bicons.get("deadline"),
-    #         "event": _("Bidding deadline")
-    #         })
-    # if bid.date_submitted:
-    #     timeline.append({
-    #         "date": bid.date_submitted.date(), 
-    #         "past": is_past(bid.date_submitted), 
-    #         "bicon" : bicons.get("bid"),
-    #         "event": _("Bid Submitted")
-    #         })
-    # if bid.updated:
-    #     timeline.append({
-    #         "date": bid.updated.date(),        
-    #         "past": is_past(bid.updated), 
-    #         "bicon" : bicons.get("updated"),
-    #         "event": _("Latest Bid update")
-    #         })
-    # if bid.bond_due_date:
-    #     timeline.append({
-    #         "date": bid.bond_due_date.date(),
-    #         "past": is_past(bid.bond_due_date), 
-    #         "bicon" : bicons.get("deadline"),
-    #         "event": _("Bond return date")
-    #         })
-
-    # openings = tender.openings.all()
-    # for opening in openings:
-    #     timeline.append({
-    #         "date": opening.date,    
-    #         "past": is_past(opening.date), 
-    #         "bicon" : bicons.get("deliberated"),
-    #         "event": _("Tender results published")
-    #         })
-
-    # change = tender.changes.last()
-    # if change:
-    #     timeline.append({
-    #         "date": change.reported.date(),    
-    #         "past": is_past(change.reported), 
-    #         "bicon" : bicons.get("changes"),
-    #         "event": _("Latest Tender change")
-    #         })
-
-    # samples = bid.lot.samples
-    # for sample in samples.all():
-    #     timeline.append({
-    #         "date": sample.when.date(),    
-    #         "past": is_past(sample.when), 
-    #         "bicon" : bicons.get("samples_ico"),
-    #         "event": _("Samples deadline")
-    #         })
-
-    # meetings = bid.lot.meetings
-    # for meeting in meetings.all():
-    #     timeline.append({
-    #         "date": meeting.when.date(),    
-    #         "past": is_past(meeting.when), 
-    #         "bicon" : bicons.get("meetings_ico"),
-    #         "event": _("Meeting deadline")
-    #         })
-
-    # visits = bid.lot.visits
-    # for visit in visits.all():
-    #     timeline.append({
-    #         "date": visit.when.date(),    
-    #         "past": is_past(visit.when), 
-    #         "bicon" : bicons.get("visits_ico"),
-    #         "event": _("Site visit deadline")
-    #         })
-    
-
-    # timeline.sort(key=lambda e: e["date"])
-
-    context = {
-        "bid"       : bid,
-        # "timeline"       : timeline,
-    }
+    context = {"bid" : bid}
 
     return render(request, 'bidding/bid-details.html', context)
 
@@ -645,17 +535,17 @@ def bid_delete(request, pk=None):
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
-    if not is_team_admin(user, team): return HttpResponse(status=403)
 
+    logger = logging.getLogger('portal')
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
 
     if request.method == "POST":
 
         bid = None
         if pk: bid = get_object_or_404(Bid, pk=pk)
-        if not bid: return HttpResponse(status=404)
 
-        # TODO: Check if Team admin
-        # TODO: Logging
+        if not is_team_admin(bid.creator, team): return HttpResponse(status=403)
 
         confirmed = request.POST.get('confirmed')
         if confirmed != 'know' :
@@ -683,12 +573,16 @@ def bid_delete(request, pk=None):
             bid.delete()
             messages.success(request, _("Bid deleted successfully"))
             referer = request.META.get('HTTP_REFERER', None)
+
+            logger.info(f"Bid delete: successful")
+
             if referer:
                 return redirect(referer)
             return redirect("bidding_bids_list")
+
         except Exception as xc: 
             return HttpResponse(status=403)
-
+            logger.error(f"Bid delete: unsuccessful")
 
     return HttpResponse(status=405)
 

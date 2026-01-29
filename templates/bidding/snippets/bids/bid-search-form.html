@@ -1,5 +1,5 @@
-{% load i18n %}
-{% load paraminos %}
+{% load i18n paraminos %}
+
 
 <button class="btn btn-light py-1 mx-1" type="button" 
         data-bs-toggle="modal" data-bs-target="#searchModal"
@@ -9,29 +9,80 @@
 </button>
 
 
-<form action="{% url 'insights_bidders_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
-        onsubmit="stripEmptyFields(this)">
-    <div class="modal fade" id="searchModal" tabindex="-1" 
-        aria-labelledby="searchModalLabel" aria-hidden="true">
+<form action="{% url 'bidding_bids_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
+      onsubmit="stripEmptyFields(this)">
+    <div class="modal fade" id="searchModal" aria-hidden="true"
+         aria-labelledby="searchModalLabel" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Concurrents Search' %}</h1>
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Bids Search' %}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
                 <div class="modal-body pb-0">
 
                     <div class="row gx-3">
-                            
-                        <div class="col-12 col-md-6">
+
+                        <div class="col-12">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
                                 <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
                             </div>
                         </div>
-                            
+
+
+                        <div class="col-12 col-md-6">
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Status" %}</span></span>
+                                <select class="form-select" name="status" aria-label="status">
+                                    <option {% if query_dict.status == '' %} selected {% endif %} value="">--</option>
+                                    {% for value, label in bid_status_choices %}
+                                        <option value="{{ value }}"
+                                                {% if value == query_dict.status %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Result" %}</span></span>
+                                <select class="form-select" name="result" aria-label="result">
+                                    <option {% if query_dict.result == '' %} selected {% endif %} value="">--</option>
+                                    {% for value, label in bid_result_choices %}
+                                        <option value="{{ value }}"
+                                                {% if value == query_dict.result %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bond Status" %}</span></span>
+                                <select class="form-select" name="bond_status" aria-label="bond_status">
+                                    <option {% if query_dict.status == '' %} selected {% endif %} value="">--</option>
+                                    {% for value, label in bond_status_choices %}
+                                        <option value="{{ value }}"
+                                                {% if value == query_dict.bond_status %}selected{% endif %}>
+                                            {{ label }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+
                         <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Min Amount won" %}</span></span>
@@ -42,19 +93,6 @@
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Max Amount won" %}</span></span>
                                 <input type="number" step="any" class="form-control text-end" name="x" value="{{ query_dict.x }}" placeholder="{% trans 'Max' %}" aria-label="win_max">
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Participations count" %}</span></span>
-                                <select class="form-select" name="p" aria-label="participations">
-                                    <option {% if query_dict.p == '' %} selected {% endif %} value="">--</option>
-                                    <option {% if query_dict.p == '0' %} selected {% endif %} value="0">{% trans 'None' %}</option>
-                                    <option {% if query_dict.p == '1' %} selected {% endif %} value="1">{% trans '1 only' %}</option>
-                                    <option {% if query_dict.p == '2' %} selected {% endif %} value="2">{% trans '1 or more' %}</option>
-                                    <option {% if query_dict.p == '11' %} selected {% endif %} value="11">{% trans '10 or more' %}</option>
-                                </select>
                             </div>
                         </div>
 
@@ -87,7 +125,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <a href="{% url 'insights_bidders_list' %}" type="button" class="btn btn-outline-secondary">
+                    <a href="{% url 'bidding_bids_list' %}" type="button" class="btn btn-outline-secondary">
                         <i class="{{ bicons.backspace }} me-1"></i>
                         {% trans 'Reset' %}
                     </a>
@@ -102,6 +140,7 @@
         </div>
     </div>
 </form>
+
 
 <script>
     const myModal = document.getElementById('searchModal');
@@ -118,3 +157,4 @@
         }
     }
 </script>
+

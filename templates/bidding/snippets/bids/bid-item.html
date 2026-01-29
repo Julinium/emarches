@@ -3,9 +3,9 @@
 {% load humanize %}
 {% load tz %}
 
-<div>
+<div id="t-{{ tender.chrono }}-top">
 
-    <a href="{% url 'bidding_bid_details' bid.id %}"
+    <a href="{% url 'bidding_bid_details' bid.id %}" target="_blank"
        class="text-decoration-none text-reset">
 
         <div class="card-header px-2 py-1">
@@ -99,7 +99,7 @@
 
             </div>
         </div>
-            
+
     </a>
 
 </div>

@@ -84,7 +84,7 @@
                             </div>
                             <div id="" class="ms-2">
                                 {% if bid.lot.tender.lots_count > 1 %}
-                                    <div class="mb-2">
+                                    <div class="mb-1">
                                         <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ bid.lot.number|default:'--' }}</span>
                                         <span class="">{{ bid.lot.title|default:'--' }}</span>
                                     </div>
@@ -264,15 +264,15 @@
                         </div>
                         <div class="modal-body">
                             <div class="my-2">
-                                <div class="mb-2">
+                                <div class="mb-1">
                                     <span class="small fw-light">{% trans "Amount" %}: </span>
                                     <span id="span-amount"></span>
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-1">
                                     <span class="small fw-light">{% trans "Company" %}: </span>
                                     <span id="span-company"></span>
                                 </div>
-                                <div class="mb-2">
+                                <div class="mb-1">
                                     <span class="small fw-light">{% trans "Result" %}: </span>
                                     <span id="span-result"></span>
                                 </div>
@@ -280,14 +280,15 @@
                             
                             <div class="my-2">
                                 <span class="text-danger">{% trans "This bid, its associated data and files will be permanently deleted." %}</span>
-                                <span class="">{% trans "Are you sure this is what you want ?" %}</span>
                             </div>
 
                             <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
-                                <option selected>{% trans "I am not sure" %}</option>
+                                <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                <option selected value="just_delete">{% trans "Just delete it" %}</option>
                                 <option value="know">{% trans "I know what I am doing" %}</option>
                             </select>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                 <span><i class="bi bi-x-lg"></i></span>

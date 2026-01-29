@@ -42,7 +42,7 @@
 
         <div class="container py-4 px-0">
             {% for bid in page_obj %}
-                <div class="card shadow mb-4" id="t-{{ tender.chrono }}-top">
+                <div class="card shadow mb-4">
                     {% include 'bidding/snippets/bids/bid-item.html' %}                       
                 </div>
             {% endfor %}

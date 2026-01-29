@@ -20,7 +20,6 @@ MARGIN_PERCENT_OVER = 20
 MARGIN_PERCENT_UNDER = 25
 
 
-
 class LotChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return _("Lot") + " " + str(obj.number) + ' : ' + str(obj.estimate) + ' : ' + obj.title
@@ -44,7 +43,6 @@ class BidForm(forms.ModelForm):
             'bond_status',
             'bond_due_date',
             'status',
-            # 'amount_c',
             'result',
             'file_bond',
             'file_submitted',
@@ -144,9 +142,9 @@ class BidForm(forms.ModelForm):
             safe_name = re.sub(r'[^\w\-.]', '_', name)
             safe_name = safe_name.strip(".")
             safe_name = safe_name.replace("__", "_")
-            if len(safe_name) < 8:
-                safe_name = f"eMarches.com-{safe_name}"
-            
+            # if len(safe_name) < 8:
+            #     safe_name = f"eMarches.com-{safe_name}"
+
             if not safe_name:
                 raise forms.ValidationError("Invalid file name.")
             if len(safe_name) > 64:
@@ -155,7 +153,7 @@ class BidForm(forms.ModelForm):
             uploaded_file.name = safe_name
 
         return uploaded_file
-    
+
     def clean_file_submitted(self):
         uploaded_file = self.cleaned_data['file_submitted']
         if uploaded_file:
