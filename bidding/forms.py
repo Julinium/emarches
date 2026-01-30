@@ -222,7 +222,7 @@ class TaskForm(forms.ModelForm):
         self.bid = bid
 
         if user:
-            colleagues = user.teams.members.all()
+            colleagues = user.teams.first().members.all()
             assignee_field = self.fields["assignee"]
             assignee_field.queryset = colleagues
             if colleagues.count() == 1:

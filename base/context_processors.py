@@ -98,6 +98,7 @@ def portal_context(request):
                             # exclamation-circle
         'share'           : 'bi bi-share',
         'created'         : 'bi bi-calendar-plus',
+        'create'          : 'bi bi-plus-lg',
                             # upload
         'updated'         : 'bi bi-arrow-repeat',
         'database'        : 'bi bi-database',

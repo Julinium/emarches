@@ -331,7 +331,7 @@ class Bid(models.Model):
         for task in self.tasks.all():
             if task.date_due:
                 milestones.append({
-                    "date": task.date_due.date(),    
+                    "date": task.date_due,    
                     "past": is_past(task.date_due), 
                     "event": _("Task due") + ": " + task.title
                 })
@@ -395,13 +395,13 @@ class Contract(models.Model):
 
 class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, verbose_name=_('Bid'), related_name='tasks')
+    bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Bid'), related_name='tasks')
     title     = models.CharField(max_length=255, default=_('New Task'), verbose_name=_('Title'))
-    date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
+    date_due  = models.DateField(blank=True, null=True, verbose_name="Due Date")
     # reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
-    contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
+    contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='tasks')
     details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
-    assignee  = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Assigned to'), related_name='assigned_tasks')
+    assignee  = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
     # milestone = models.BooleanField(null=True, default=True)
     status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, verbose_name=_('Status'))
@@ -412,6 +412,7 @@ class Task(models.Model):
 
     class Meta:
         db_table = 'bidding_task'
+        ordering = ['date_due', 'status', 'bid']
 
     def __str__(self):
         return self.title

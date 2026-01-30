@@ -27,7 +27,7 @@ from nas.choices import BidStatus, BidResults, BondStatus
 from bidding.models import Bid, Team, Task
 from base.models import Tender, Lot
 
-from bidding.forms import BidForm
+from bidding.forms import BidForm, TaskForm
 from bidding.secu import is_team_admin, is_team_member
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -536,6 +536,9 @@ def bid_details(request, pk=None):
     if not team: return HttpResponse(status=403)
     
     bid = get_object_or_404(Bid, pk=pk)
+    bid = Bid.objects.filter(pk=pk).prefetch_related("tasks", "contracts").first()
+    if not bid: return HttpResponse(status=404)
+
     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
     tender = bid.lot.tender
     if not tender: return HttpResponse(status=404)
@@ -714,9 +717,6 @@ def task_edit(request, pk=None, bk=None):
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
 
-    pro_context = portal_context(request)
-    us          = pro_context['user_settings']
-
     task = None
 
     if pk:
@@ -733,63 +733,46 @@ def task_edit(request, pk=None, bk=None):
         redir = None
 
     if request.method == "POST":
-        form = BidForm(
+        form = TaskForm(
             request.POST, 
-            request.FILES,
-            instance=bid,
+            # request.FILES,
+            instance=task,
             user=user,
-            lot=lot,
-            usets=us,
+            bid=bid,
         )
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.lot = lot
+            obj.bid = bid
             obj.creator = user
             obj.save()
 
             if redir:
                 return redirect(redir)
 
-            return redirect("bidding_bids_list")
+            return redirect("bidding_bid_details", bid.id)
         else:
             for field in form:
                 if field.errors:
                     for error in field.errors:
                         messages.error(request, f"{field.label}: {error}")
     else:
-        form = BidForm(
-            instance=bid,
+        form = TaskForm(
+            instance=task,
             user=user,
-            lot=lot,
-            usets=us,
+            bid=bid,
         )
-        if bid is None:
-            form.fields["date_submitted"].initial   = datetime.now()
-            form.fields["bid_amount"].initial         = lot.estimate
-            form.fields["bond_amount"].initial      = lot.bond
+        if task is None:
+            form.fields["date_due"].initial   = datetime.now()
 
-            client_short = lot.tender.client.short
-            if len(client_short) < 1: client_short = "[?]"
-            words = lot.title.split()
-            words_count = 8
-            lot_title = lot.title if len(words) <= words_count else " ".join(words[:words_count]) + " ..."
-            bid_title = client_short + " | " + lot.tender.reference + " | " + lot_title 
-
-            form.fields["title"].initial            = bid_title
-            if lot.description:
-                desc = lot.description
-                form.fields["details"].initial      = desc
-
-            companies = user.companies
-            if companies.count() == 1:
-                form.fields["company"].initial      = companies.first()
+            colleagues = team.members.all()
+            if colleagues.count() == 1:
+                form.fields["assignee"].initial      = colleagues.first()
 
 
-    return render(request, 'bidding/bid-form.html', {
+    return render(request, 'bidding/task-form.html', {
         "form"  : form,
-        "object": bid,
-        "tender": tender,
-        "lot"   : lot,
+        "object": task,
+        "bid"   : bid,
         "redir" : redir,
     })
 

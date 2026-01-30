@@ -11,8 +11,17 @@
 
     <div id="bid-details" class="">
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <span class="h3">{% trans "Bid details" %}</span>
+        </div> -->
+
+        <div class="d-flex align-items-center justify-content-between px-0">
+            <div class="">
+                <span class="h3 me-1">{% trans "Bid details" %}</span>
+            </div>
+            <div class="d-flex align-items-top">
+                {% include "bidding/snippets/bids/bid-actions.html" with bid=bid %}
+            </div>
         </div>
 
         <div class="my-3" id="bid-details">
@@ -230,18 +239,46 @@
             </div>
 
         </div>
-        
-        <div id="bid-{{ bid.id }}-collapse">  
-            <div class="text-end mx-0 mb-3">
-                {% include "bidding/snippets/bids/bid-actions.html" with bid=bid %}
-            </div>
-        </div>
 
-        <div class="mt-5 mb-2 text-danger fw-light">
-            {% trans "Coming soon" %}
-        </div>
-        <div class="my-3" id="bid-milestones">
-            <div class="fw-bold">Tasks and Milestones</div class="fw-bold">
+
+        <div id="accordionTasks">
+            <div class="accordion my-3">
+                <div class="accordion-item shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#tasksCollapse" aria-expanded="true" aria-controls="tasksCollapse">
+                            <span><i class="{{ bicons.task }}"></i></span>
+                            <span class="ms-2 fw-light">{% trans "Tasks" %}:</span>
+                            <span class="fw-bold ms-1">{{ bid.tasks.all|length }}</span>
+                        </button>
+                    </h2>
+                        <div id="tasksCollapse" class="accordion-collapse show" data-bs-parent="#accordionTasks">
+                            <div class="accordion-body p-0">
+                                <div class="list-group small mb-0">
+                                    {% for task in bid.tasks.all %}
+                                        <div class="list-group-item list-group-item-action p-2">
+                                            <div>{{ task.date_due|default:'?' }} - {{ task.title }}</div>
+                                            <div class="text-end">
+                                                <a href="{% url 'bidding_task_edit' task.id %}" target="_blank"
+                                                    class="btn btn-sm btn-outline-secondary">
+                                                    <span><i class="{{ bicons.edit }} me-1"></i></span>
+                                                    <span class="text-end">{% trans "Edit" %}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    
+                                    <div class="list-group-item p-2 text-end">
+                                        <a href="{% url 'bidding_task_create' bid.id %}" target="_blank"
+                                            class="btn btn-sm btn-primary">
+                                            <span><i class="{{ bicons.create }} me-1"></i></span>
+                                            <span class="text-end">{% trans "New Task" %}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
         </div>
 
         <div class="my-3" id="bid-contracts">
