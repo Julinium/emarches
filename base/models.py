@@ -641,9 +641,34 @@ class Concurrent(models.Model):
         return fwb.date if fwb else None
 
     @property
-    def success_rate(self):
+    def win_rate(self):
         if self.deposits_sum == 0 : return None
-        return round(100 * self.winners_sum / self.deposits_sum, 1)
+        return round(100 * self.winners_sum / self.deposits_sum, 2)
+
+    @property
+    def success_rate(self):
+        all_depos = self.deposits.count()
+        if all_depos == 0 : return None
+        all_win = self.winners.count()
+        return round(100 * all_win / all_depos, 2)
+
+    @property
+    def admin_reject_rate(self):
+        all_depos = self.deposits.count()
+        if all_depos == 0 : return None
+        all_rej = self.admin_rejects.count()
+        return round(100 * all_rej / all_depos, 2)
+
+    @property
+    def tech_reject_rate(self):
+        all_depos = self.deposits.count()
+        if all_depos == 0 : return None
+        all_rej = self.tech_rejects.count()
+        return round(100 * all_rej / all_depos, 2)
+
+    @property
+    def tech_offset(self):
+        return self.success_rate + self.admin_reject_rate
 
     @property
     def tenders(self): 

@@ -24,7 +24,7 @@ from base.context_processors import portal_context
 from nas.models import Company
 from nas.choices import BidStatus, BidResults, BondStatus
 
-from bidding.models import Bid, Team, TeamMember
+from bidding.models import Bid, Team, Task
 from base.models import Tender, Lot
 
 from bidding.forms import BidForm
@@ -96,7 +96,8 @@ def tenders_list(request):
                 Q(chrono__icontains=q) | 
                 Q(client__name__icontains=q) | 
                 Q(lots__title__icontains=q) | 
-                Q(lots__description__icontains=q)
+                Q(lots__description__icontains=q) | 
+                Q(lots__bids__title__icontains=q)
             )
         
         return tenders.distinct(), ff
@@ -632,6 +633,98 @@ def bid_edit(request, pk=None, lk=None):
     else:
         lot = get_object_or_404(Lot, pk=lk)
         tender = lot.tender
+
+    redir = request.GET.get('redirect', None)
+    if redir and not url_has_allowed_host_and_scheme(
+        redir, allowed_hosts={request.get_host()},
+        require_https=request.is_secure()):
+        redir = None
+
+    if request.method == "POST":
+        form = BidForm(
+            request.POST, 
+            request.FILES,
+            instance=bid,
+            user=user,
+            lot=lot,
+            usets=us,
+        )
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.lot = lot
+            obj.creator = user
+            obj.save()
+
+            if redir:
+                return redirect(redir)
+
+            return redirect("bidding_bids_list")
+        else:
+            for field in form:
+                if field.errors:
+                    for error in field.errors:
+                        messages.error(request, f"{field.label}: {error}")
+    else:
+        form = BidForm(
+            instance=bid,
+            user=user,
+            lot=lot,
+            usets=us,
+        )
+        if bid is None:
+            form.fields["date_submitted"].initial   = datetime.now()
+            form.fields["bid_amount"].initial         = lot.estimate
+            form.fields["bond_amount"].initial      = lot.bond
+
+            client_short = lot.tender.client.short
+            if len(client_short) < 1: client_short = "[?]"
+            words = lot.title.split()
+            words_count = 8
+            lot_title = lot.title if len(words) <= words_count else " ".join(words[:words_count]) + " ..."
+            bid_title = client_short + " | " + lot.tender.reference + " | " + lot_title 
+
+            form.fields["title"].initial            = bid_title
+            if lot.description:
+                desc = lot.description
+                form.fields["details"].initial      = desc
+
+            companies = user.companies
+            if companies.count() == 1:
+                form.fields["company"].initial      = companies.first()
+
+
+    return render(request, 'bidding/bid-form.html', {
+        "form"  : form,
+        "object": bid,
+        "tender": tender,
+        "lot"   : lot,
+        "redir" : redir,
+    })
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def task_edit(request, pk=None, bk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+    
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    pro_context = portal_context(request)
+    us          = pro_context['user_settings']
+
+    task = None
+
+    if pk:
+        task = get_object_or_404(Task, pk=pk)
+        if not is_team_member(task.bid.creator, team): return HttpResponse(status=403)
+        bid = task.bid
+    else:
+        bid = get_object_or_404(Bid, pk=bk)
 
     redir = request.GET.get('redirect', None)
     if redir and not url_has_allowed_host_and_scheme(

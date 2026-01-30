@@ -108,6 +108,7 @@ class Contact(models.Model):
     position  = models.CharField(max_length=128, blank=True, verbose_name=_('Position'))
     notes     = models.CharField(max_length=1024, blank=True, verbose_name=_('Notes'))
 
+    creator   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='contacts')
     created   = models.DateTimeField(auto_now_add=True, editable=False)
     updated   = models.DateTimeField(auto_now=True, editable=False)
 
@@ -397,12 +398,12 @@ class Task(models.Model):
     bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, verbose_name=_('Bid'), related_name='tasks')
     title     = models.CharField(max_length=255, default=_('New Task'), verbose_name=_('Title'))
     date_due  = models.DateTimeField(blank=True, null=True, verbose_name="Due Date")
-    reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
+    # reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
     contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='tasks')
     details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     assignee  = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
-    milestone = models.BooleanField(null=True, default=True)
+    # milestone = models.BooleanField(null=True, default=True)
     status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, verbose_name=_('Status'))
 
     creator   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='tasks')

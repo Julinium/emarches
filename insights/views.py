@@ -138,7 +138,7 @@ def bidders_list(request):
             last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
         ).annotate(
             succ_rate = ExpressionWrapper(
-                Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 3),
+                Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 0),
                 output_field=DecimalField(max_digits=8, decimal_places=3),
             )
         )

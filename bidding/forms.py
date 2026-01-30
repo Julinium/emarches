@@ -6,12 +6,11 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from base.models import Lot
 from nas.models import Company
-from bidding.models import Bid
+from bidding.models import Bid, Task, Contact
 from bidding.widgets import FilenameOnlyClearableFileInput
-
-# from base.context_processors import portal_context
 
 
 CHECK_BIDDING_DEADLINE = True
@@ -196,5 +195,50 @@ class BidForm(forms.ModelForm):
 
         return uploaded_file
     
+
+
+class TaskForm(forms.ModelForm):
+
+    class Meta:
+        model = Task
+        fields = [
+            "title"     ,
+            "date_due"  ,
+            "emergency" ,
+            "status"    ,
+            "assignee"  ,
+            "contact"   ,
+            "details"   ,
+        ]
+
+        widgets = {
+            'date_due': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'details'       : forms.Textarea(attrs={'rows': '3'}),
+        }
+
+    def __init__(self, *args, bid=None, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.creator = user
+        self.bid = bid
+
+        if user:
+            colleagues = user.teams.members.all()
+            assignee_field = self.fields["assignee"]
+            assignee_field.queryset = colleagues
+            if colleagues.count() == 1:
+                assignee_field.initial = colleagues.first()
+
+            contacts = Contact.objects.filter(creator__in=colleagues)
+            contact_field = self.fields["contact"]
+            contact_field.queryset = contacts
+            if contacts.count() == 1:
+                contact_field.initial = contacts.first()
+        else:
+            assignee_field.queryset = User.objects.none()
+            contact_field.queryset = Contact.objects.none()
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
 
 

@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+{% load static i18n l10n %}
+
+{% block title %}
+    {% trans "Edit Task" %}
+{% endblock title %}
+
+{% block content %}
+    <h3>{% trans "Edit Task" %}</h3>
+    <div class="">        
+        <div class="my-3">
+            <div class="small text-muted">
+                <span>{% trans 'Bid' %}</span>
+            </div>
+            <div class="ms-3">
+                <div class="form-control bg-secondary-subtle text-secondary">
+                    <div>
+                        <span>{{ bid.caption }}</span>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+
+            <div class="col-12">
+                <div class="small text-muted">
+                    <span>{% trans 'Client' %}</span>
+                </div>
+                <div class="ms-3">
+                    <div class="form-control bg-secondary-subtle text-secondary">
+                        <span class="">{{ bid.lot.tender.client.name }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="small text-muted">
+                    <span>{% trans 'Bid Status' %}</span>
+                </div>
+                <div class="ms-3">
+                    <div class="form-control bg-secondary-subtle text-secondary">
+                        <span class="">{{ bid.get_status_display }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="small text-muted">
+                    <span>{% trans 'Bid Amount' %}</span>
+                </div>
+                <div class="ms-3">
+                    <div class="form-control bg-secondary-subtle text-secondary">
+                        <span class="">{{ bid.bid_amount }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="needs-validation my-3" novalidate>
+        {% csrf_token %}
+
+        <input type="hidden" class="d-none" name="redirect" value="{{ redir }}">
+
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        <div class="row g-3">
+            {% for field in form.visible_fields %}
+                <div class="col-12 mt-4 
+                            {% if not 'textarea' in field.field.widget.template_name %}col-md-6{% endif %}
+                            ">
+                    <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
+                        <span>{{ field.label_tag }}</span>
+                    </div>
+                    <div class="ms-3">{{ field }}</div>
+
+                    {% for error in field.errors %}
+                        <div class="ms-3 text-danger small">
+                            <span><i class="bi bi-sign-stop"></i></span>
+                            <span class="">{{ error }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-3 text-center">
+
+            <a href="{% if request.META.HTTP_REFERER %}
+                        {{ request.META.HTTP_REFERER }}{% else %}
+                        javascript:history.back(){% endif %}" 
+                class="btn btn-outline-secondary m-1">
+                <i class="bi bi-backspace me-1"></i>
+                {% trans 'Cancel' %}
+            </a>
+
+            <button type="submit" class="btn btn-primary m-1">
+                <i class="bi bi-floppy me-1"></i>
+                <span>{% trans "Save" %}</span>
+            </button>
+
+        </div>
+    </form>
+
+
+{% endblock content %}
