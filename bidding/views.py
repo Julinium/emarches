@@ -592,12 +592,12 @@ def bid_delete(request, pk=None):
         try:
             bid.delete()
             messages.success(request, _("Bid deleted successfully"))
-            referer = request.META.get('HTTP_REFERER', None)
+            # referer = request.META.get('HTTP_REFERER', None)
 
             logger.info(f"Bid delete: successful")
 
-            if referer:
-                return redirect(referer)
+            # if referer:
+            #     return redirect(referer)
             return redirect("bidding_bids_list")
 
         except Exception as xc: 

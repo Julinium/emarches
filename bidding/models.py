@@ -169,8 +169,9 @@ class Bid(models.Model):
         if self.lot:
             estimate = self.lot.estimate
             if estimate != 0:
-                ratio = round(Decimal("100") * (self.bid_amount - estimate) / estimate, 2)
-                if ratio >= 0 : return f"+{ratio}%"
+                calco = Decimal("100") * (self.bid_amount - estimate) / estimate
+                ratio = round(calco, 2)
+                if calco >= 0 : return f"+{ratio}%"
                 return f"{ratio}%"
         return None
 

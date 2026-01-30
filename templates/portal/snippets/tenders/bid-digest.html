@@ -23,9 +23,9 @@
                 </div>
                 <div class="col-12 col-md-6 p-1 text-end">
                     <div>
-                        <span class="small fw-light badge bg-secondary me-1">E{{ bid.ratio_str }}</span>
+                        <span class="small fw-light badge bg-secondary me-1">E{{ bid.ratio_str|default:'?' }}</span>
                         <span class="fw-bold">{{ bid.bid_amount }}</span>
-                    </div>                    
+                    </div>
                     {% if bid.result %}
                         <div>
                             <span class="badge bg-{{ bid.result_tint }}">{{ bid.get_result_display }}</span>
