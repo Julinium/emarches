@@ -1,4 +1,6 @@
-import json, ast
+import ast
+import json
+
 from django import template
 from django.utils.translation import gettext as _
 

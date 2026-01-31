@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 class CivilityChoices(models.TextChoices):
     CIV_MR  = '10R',   _("Mr.")
     CIV_MLE = '20L',   _("Mle")

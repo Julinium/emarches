@@ -1,22 +1,19 @@
 import logging
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from decimal import Decimal
 from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control
-
-from django.db.models import F, Q, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
+from django.core.paginator import Paginator
+from django.db.models import (Count, DecimalField, ExpressionWrapper, F, Max,
+                              Min, Q, Sum)
 # from django.db.models.expressions import OrderBy
 from django.db.models.functions import NullIf, Round
-from decimal import Decimal
-
-from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_control
 
 from base.context_processors import portal_context
-
 from base.models import Concurrent
-
 
 BIDDERS_ITEMS_PER_PAGE = 25
 

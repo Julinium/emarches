@@ -1,49 +1,45 @@
-import os, logging, json, random, csv
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
+import base64
+import csv
+import json
+import logging
+import os
+import random
 from datetime import datetime, timedelta
+from io import BytesIO
+from pathlib import Path
+from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
-from django.core.paginator import Paginator
-from django.db.models import Count, Sum, Q
-from django.db.models.functions import Lower
-
+import segno
 from django.conf import settings
-from pathlib import Path
-
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as trans
-
-from django.db import models
-from urllib.parse import urlencode
-
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control, never_cache
-from django.utils.decorators import method_decorator
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, FileResponse, JsonResponse
-
+from django.contrib.auth.models import User
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db import models
+from django.db.models import Count, Q, Sum
+from django.db.models.functions import Lower
+from django.http import FileResponse, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as trans
+from django.views.decorators.cache import cache_control, never_cache
 from weasyprint import HTML
+
+from base.context_processors import portal_context
+from base.models import Category, Client, Crawler
+from base.texter import normalize_text
+from bdc.models import PurchaseOrder
+from nas.models import Sticky
+
 # import tempfile
 
-import segno
-from io import BytesIO
-import base64
 
-from django.contrib.auth.models import User
 
 # from easy_pdf.views import PDFTemplateView
 
-from bdc.models import PurchaseOrder
-from base.models import Category, Client, Crawler
-from nas.models import Sticky
-from bdc.models import PurchaseOrder
-from base.texter import normalize_text
-from base.context_processors import portal_context
 
 
 BDC_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS

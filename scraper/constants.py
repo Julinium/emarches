@@ -1,7 +1,9 @@
-import os, argparse, json
-from dotenv import load_dotenv
+import argparse
+import json
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
 
 SELENO_DIR = str(Path(__file__).resolve().parent)
 env_path = f'{ SELENO_DIR }/.env'

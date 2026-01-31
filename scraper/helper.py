@@ -1,10 +1,19 @@
-import os, csv, random, time, pytz, zipfile, re, unicodedata, traceback
+import csv
+import os
+import random
+import re
+import time
+import traceback
+import unicodedata
+import zipfile
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 
+import pytz
 from selenium import webdriver
 
 from scraper import constants as C
+
 
 def printMessage(level='---', raiser='---', message='!!! Empty Message !!!', before=0, after=0):
     """

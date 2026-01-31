@@ -1,6 +1,7 @@
-import os, json, logging 
+import json
+import logging
+import os
 from pathlib import Path
-
 
 from django.conf import settings
 

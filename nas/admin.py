@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Company, Folder, Notification, Newsletter, NotificationSubscription, NewsletterSubscription
+
+from .models import (Company, Folder, Newsletter, NewsletterSubscription,
+                     Notification, NotificationSubscription)
 
 
 @admin.register(Company)

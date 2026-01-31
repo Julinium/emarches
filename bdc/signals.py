@@ -1,10 +1,11 @@
-from django.db.models.signals import pre_delete, post_delete
-from django.dispatch import receiver
-
-from django.conf import settings
 from pathlib import Path
 
+from django.conf import settings
+from django.db.models.signals import post_delete, pre_delete
+from django.dispatch import receiver
+
 from bdc.models import PurchaseOrder
+
 
 @receiver(post_delete, sender=PurchaseOrder)
 def bdc_post_delete(sender, instance, using, **kwargs):

@@ -1,7 +1,9 @@
 
 from django.conf import settings
 from django.utils import translation
+
 from nas.models import UserSetting
+
 # from django.conf import global_settings
 
 class UserLanguageMiddleware:

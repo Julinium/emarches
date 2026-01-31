@@ -1,13 +1,11 @@
 import uuid
+
 from rest_framework import serializers
 
+from base.models import (Agrement, Category, Change, Client, Domain, Kind, Lot,
+                         Meeting, Mode, Procedure, Qualif, RelAgrementLot,
+                         RelDomainTender, RelQualifLot, Sample, Tender, Visit)
 from scraper import helper
-
-from base.models import (
-    Tender, Lot, Agrement, Qualif, Kind, Domain, Mode, Procedure, 
-    Category, Change, Client, Meeting, Sample, Visit,
-    RelAgrementLot, RelDomainTender, RelQualifLot
-)
 
 
 class CategorySerializer(serializers.ModelSerializer):

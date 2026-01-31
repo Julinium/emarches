@@ -1,17 +1,17 @@
-import os, re
+import os
+import re
+from decimal import Decimal
 
 from django import forms
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
-from decimal import Decimal
-
 from django.contrib.auth.models import User
-from base.models import Lot
-from nas.models import Company
-from bidding.models import Bid, Task, Expense, Contact
-from bidding.widgets import FilenameOnlyClearableFileInput
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
+from base.models import Lot
+from bidding.models import Bid, Contact, Expense, Task
+from bidding.widgets import FilenameOnlyClearableFileInput
+from nas.models import Company
 
 CHECK_BIDDING_DEADLINE = True
 CHECK_AMOUNT_MARGINS = True

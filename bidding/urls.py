@@ -1,7 +1,7 @@
 
-from django.urls import path, include
-from . import views
+from django.urls import include, path
 
+from . import views
 
 urlpatterns = [
 
@@ -16,11 +16,13 @@ urlpatterns = [
     path('bids/<uuid:pk>/delete/',   views.bid_delete,   name='bidding_bid_delete'),
     path('bids/<uuid:pk>/<str:ft>/', views.bid_file,     name='bidding_bid_file'),
 
-    path('tasks/<uuid:bk>/create/',  views.task_edit,    name='bidding_task_create'),
-    path('tasks/<uuid:pk>/edit/',    views.task_edit,    name='bidding_task_edit'),
+    path('tasks/<uuid:bk>/create/', views.task_edit,    name='bidding_task_create'),
+    path('tasks/<uuid:pk>/edit/',   views.task_edit,    name='bidding_task_edit'),
+    path('tasks/<uuid:pk>/delete/', views.task_delete,  name='bidding_task_delete'),
 
     path('expenses/<uuid:bk>/create/', views.expense_edit, name='bidding_expense_create'),
     path('expenses/<uuid:pk>/edit/',   views.expense_edit, name='bidding_expense_edit'),
+    path('expenses/<uuid:pk>/delete/', views.expense_delete, name='bidding_expense_delete'),
 
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),

@@ -1,7 +1,9 @@
 from django.contrib import admin
-from base.models import Crawler #, Category
-from nas.models import TenderView, Download
+
+from base.models import Crawler  # , Category
 from bdc.models import PurchaseOrder
+from nas.models import Download, TenderView
+
 # from modeltranslation.admin import TranslationAdmin
 
 @admin.register(Crawler)

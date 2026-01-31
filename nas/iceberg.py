@@ -1,4 +1,6 @@
-import requests, json
+import json
+
+import requests
 
 host = "https://www.icemaroc.com/api/search.php"
 

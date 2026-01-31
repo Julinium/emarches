@@ -1,8 +1,10 @@
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext as _
-# from datetime import date, timedelta
 
 from nas.models import Newsletter
+
+# from datetime import date, timedelta
+
 
 class Command(BaseCommand):
     help = "Insert basic Notification instances to database"

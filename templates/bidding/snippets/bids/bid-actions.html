@@ -12,24 +12,6 @@
         <span><i class="{{ bicons.goto }}"></i></span>
         <span class="ms-1">{% trans 'Tender' %}</span>
     </a>
-<!-- 
-    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
-        <span><i class="{{ bicons.task }}"></i></span>
-        <span class="ms-1">{% trans 'Tasks' %}</span>
-        <span class="fw-bold ms-1">{{ bid.tasks.all|length }}</span>
-    </a> -->
-
-    <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
-        <span><i class="{{ bicons.expense }}"></i></span>
-        <span class="ms-1">{% trans 'Expenses' %}</span>
-        <span class="fw-bold ms-1">{{ bid.expenses.all|length }}</span>
-    </a> -->
-
-    <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'bidding_bid_details' bid.id %}">
-        <span><i class="{{ bicons.contract }}"></i></span>
-        <span class="ms-1">{% trans 'Contracts' %}</span>
-        <span class="fw-bold ms-1">{{ bid.contracts.all|length }}</span>
-    </a> -->
 
     {% if bid.deletable %}
         <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"

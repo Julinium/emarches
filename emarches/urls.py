@@ -1,16 +1,17 @@
-from django.contrib import admin
-from django.urls import path, include
-
+from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
-from django.conf import settings
+from django.contrib import admin
+from django.urls import include, path
+
+# from base import views as base_views
+from nas import views as nas_views
+
 # from django.conf.urls import handler400, handler403, handler404, handler500
 
 # from private_storage import views as pv_views
 # from private_storage.views import PrivateStorageView
 
-# from base import views as base_views
-from nas import views as nas_views
 
 # handler400 = "base.views.custom_400_view" # Bad request
 # handler403 = "base.views.custom_403_view" # Forbidden

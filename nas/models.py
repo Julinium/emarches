@@ -1,20 +1,20 @@
 
 import uuid
-from django.db import models
+
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.db import models
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
-from django.conf import settings
-
-from base.models import Agrement, Tender, Qualif, Change
+from base.models import Agrement, Change, Qualif, Tender
 from bdc.models import PurchaseOrder
-from .imaging import squarify_image
+
+from .choices import (FirstArticles, FullBarDays, ItemsPerPage, OrderingField,
+                      PurchaseOrderFullBarDays, PurchaseOrderOrderingField)
 from .iceberg import get_ice_checkup
-from .choices import (
-    ItemsPerPage, OrderingField, PurchaseOrderOrderingField, 
-    PurchaseOrderFullBarDays, FullBarDays, FirstArticles
-    )
+from .imaging import squarify_image
+
 
 class Profile(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

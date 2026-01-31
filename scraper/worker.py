@@ -1,4 +1,7 @@
-import os, sys, traceback
+import os
+import sys
+import traceback
+
 import django
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -9,9 +12,11 @@ django.setup()
 
 def main():
     from datetime import datetime, timedelta
-    from scraper import helper, linker, getter , merger, downer, bonner
+
+    from base.models import Crawler, Tender
+    from scraper import bonner
     from scraper import constants as C
-    from base.models import Tender, Crawler
+    from scraper import downer, getter, helper, linker, merger
 
     started_time = datetime.now()
 

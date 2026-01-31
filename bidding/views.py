@@ -1,34 +1,34 @@
-import os, logging
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils.http import url_has_allowed_host_and_scheme
-from django.http import HttpResponse
+import logging, os
+from datetime import date, datetime, timezone
 from urllib.parse import urlencode
-from datetime import datetime, date, timezone
-from django.contrib import messages
-from django.contrib.auth.models import User
 
 from django.conf import settings
-
-from django.utils.translation import gettext_lazy as _
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import F, Prefetch, Q
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import resolve
+from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 
-from django.db.models import F , Q, Prefetch #, Count, Sum, Min, Max, DecimalField, ExpressionWrapper
+from base.context_processors import portal_context
+from base.models import Lot, Tender
+from bidding.forms import BidForm, ExpenseForm, TaskForm
+from bidding.models import Bid, Expense, Task, Team
+from bidding.secu import is_team_admin, is_team_member
+from nas.choices import BidResults, BidStatus, BondStatus, ExpenseStatus, TaskStatus
+from nas.models import Company
+
 # from django.db.models.functions import NullIf, Round
 # from decimal import Decimal
 
-from django.core.paginator import Paginator
 
-from base.context_processors import portal_context
-from nas.models import Company
-from nas.choices import BidStatus, BidResults, BondStatus
 
-from bidding.models import Bid, Team, Task, Expense
-from base.models import Tender, Lot
 
-from bidding.forms import BidForm, TaskForm, ExpenseForm
-from bidding.secu import is_team_admin, is_team_member
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = 25
@@ -571,42 +571,51 @@ def bid_delete(request, pk=None):
 
         if not is_team_admin(bid.creator, team): return HttpResponse(status=403)
 
+        redir = redirect("bidding_bids_list")
+        referer = request.META.get('HTTP_REFERER', None)
+        if referer:
+            if url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                redir = redirect(referer)
+
         confirmed = request.POST.get('confirmed')
         if confirmed != 'know' :
             messages.error(request, _("Please confirm deletion first"))
-            referer = request.META.get('HTTP_REFERER', None)
-            if referer:
-                return redirect(referer)
-            return redirect("bidding_bids_list")
+            return redir
+            # referer = request.META.get('HTTP_REFERER', None)
+            # if referer:
+            #     return redirect(referer)
+            # return redirect("bidding_bids_list")
 
         if bid.status != BidStatus.BID_CANCELLED:
             messages.error(request, _("You can not delete a bid unless it is Cancelled"))
-            referer = request.META.get('HTTP_REFERER', None)
-            if referer:
-                return redirect(referer)
-            return redirect("bidding_bids_list")
+            return redir
+            # referer = request.META.get('HTTP_REFERER', None)
+            # if referer:
+            #     return redirect(referer)
+            # return redirect("bidding_bids_list")
 
         if bid.bond_status == BondStatus.BOND_FILED:
             messages.error(request, _("Please check the Bond status before deleting"))
-            referer = request.META.get('HTTP_REFERER', None)
-            if referer:
-                return redirect(referer)
-            return redirect("bidding_bids_list")
+            return redir
+            # referer = request.META.get('HTTP_REFERER', None)
+            # if referer:
+            #     return redirect(referer)
+            # return redirect("bidding_bids_list")
 
         try:
             bid.delete()
             messages.success(request, _("Bid deleted successfully"))
             # referer = request.META.get('HTTP_REFERER', None)
 
-            logger.info(f"Bid delete: successful")
+            logger.info(f"Bid delete successful")
 
             # if referer:
             #     return redirect(referer)
             return redirect("bidding_bids_list")
 
         except Exception as xc: 
+            logger.error(f"Bid delete unsuccessful: { str(xc) }")
             return HttpResponse(status=403)
-            logger.error(f"Bid delete: unsuccessful")
 
     return HttpResponse(status=405)
 
@@ -708,6 +717,59 @@ def bid_edit(request, pk=None, lk=None):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def task_delete(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    logger = logging.getLogger('portal')
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
+
+    if request.method == "POST":
+
+        task = None
+        if pk: task = get_object_or_404(Task, pk=pk)
+        if not is_team_admin(task.creator, team): return HttpResponse(status=403)
+
+        bid = task.bid
+        if not bid: return HttpResponse(status=403)
+
+        redir = redirect("bidding_bid_details", bid.id)
+        referer = request.META.get('HTTP_REFERER', None)
+        if referer:
+            if url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                redir = redirect(referer)
+
+        confirmed = request.POST.get('confirmed')
+        if confirmed != 'know' :
+            messages.error(request, _("Please confirm deletion first"))
+            return redir
+
+        if task.status != TaskStatus.TASK_CANCELLED:
+            messages.error(request, _("You can not delete a task unless it is Cancelled"))
+            return redir
+
+        try:
+            task.delete()
+            messages.success(request, _("Task deleted successfully"))
+            logger.info(f"Task delete: successful")
+            return redir
+
+        except Exception as xc: 
+            logger.error(f"Task delete unsuccessful: { str(xc) }")
+            return HttpResponse(status=403)
+
+    return HttpResponse(status=405)
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def task_edit(request, pk=None, bk=None):
 
     user = request.user
@@ -775,6 +837,59 @@ def task_edit(request, pk=None, bk=None):
         "bid"   : bid,
         "redir" : redir,
     })
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def expense_delete(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    logger = logging.getLogger('portal')
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
+
+    if request.method == "POST":
+
+        expense = None
+        if pk: expense = get_object_or_404(Expense, pk=pk)
+        if not is_team_admin(expense.creator, team): return HttpResponse(status=403)
+
+        bid = expense.bid
+        if not bid: return HttpResponse(status=403)
+        
+        redir = redirect("bidding_bid_details", bid.id)
+        referer = request.META.get('HTTP_REFERER', None)
+        if referer:
+            if url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+                redir = redirect(referer)
+
+        confirmed = request.POST.get('confirmed')
+        if confirmed != 'know' :
+            messages.error(request, _("Please confirm deletion first"))
+            return redir
+
+        if expense.status != ExpenseStatus.XPS_CANCELLED:
+            messages.error(request, _("You can not delete an expense unless it is Cancelled"))
+            return redir
+
+        try:
+            expense.delete()
+            messages.success(request, _("Expense deleted successfully"))
+            logger.info(f"Expense delete: successful")
+            return redir
+
+        except Exception as xc: 
+            logger.error(f"Expense delete unsuccessful: { str(xc) }")
+            return HttpResponse(status=403)
+
+    return HttpResponse(status=405)
 
 
 

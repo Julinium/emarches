@@ -4,7 +4,9 @@
 # from django.utils.translation import gettext as _
 
 from django.contrib.auth.models import User
-from nas.models import Profile, Notification, Newsletter, NotificationSubscription, NewsletterSubscription
+
+from nas.models import (Newsletter, NewsletterSubscription, Notification,
+                        NotificationSubscription, Profile)
 
 
 def subscribeUserToNotifications(user):

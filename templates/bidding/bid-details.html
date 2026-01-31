@@ -269,10 +269,21 @@
                                             <div>{{ task.date_due|default:'?' }} - {{ task.title }}</div>
                                             <div class="text-end">
                                                 <a href="{% url 'bidding_task_edit' task.id %}"
-                                                    class="btn btn-sm btn-outline-secondary">
-                                                    <span><i class="{{ bicons.edit }} me-1"></i></span>
-                                                    <span class="text-end">{% trans "Edit" %}</span>
+                                                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                                                    <span><i class="{{ bicons.edit }}"></i></span>
+                                                    <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
                                                 </a>
+                                                {% if task.deletable %}
+                                                    <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal" data-bs-target="#taskDeleteModal"
+                                                            data-date="{{ task.date_due|default:'-' }}"
+                                                            data-title="{{ task.title }}"
+                                                            data-url="{% url 'bidding_task_delete' task.id %}"
+                                                            >
+                                                        <span><i class="{{ bicons.delete }}"></i></span>
+                                                        <span class="d-none d-md-inline-block ms-1">{% trans 'Delete' %}</span>
+                                                    </button>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -280,8 +291,8 @@
                                     <div class="list-group-item p-2 text-end">
                                         <a href="{% url 'bidding_task_create' bid.id %}"
                                             class="btn btn-sm btn-primary">
-                                            <span><i class="{{ bicons.create }} me-1"></i></span>
-                                            <span class="text-end">{% trans "New Task" %}</span>
+                                            <span><i class="{{ bicons.create }}"></i></span>
+                                            <span class="ms-1">{% trans "New Task" %}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -297,11 +308,19 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#expensesCollapse" aria-expanded="true" aria-controls="expensesCollapse">
-                            <span><i class="{{ bicons.expense }}"></i></span>
-                            <span class="ms-2 fw-light">{% trans "Expenses" %}:</span>
-                            <span class="fw-bold ms-1">{{ bid.expenses.all|length }}</span>
+                            <div class="w-100">
+                                <span>
+                                    <span><i class="{{ bicons.expense }}"></i></span>
+                                    <span class="ms-2 fw-light">{% trans "Expenses" %}:</span>
+                                    <span class="fw-bold ms-1">{{ bid.expenses.all|length }}</span>
+                                </span>
+                                {% if bid.expenses_sum != 0 %}
+                                    <span class="small fw-bold px-2 float-end text-end">{{ bid.expenses_sum }}</span>
+                                {% endif %}
+                            </div>
                         </button>
                     </h2>
+
                         <div id="expensesCollapse" class="accordion-collapse show" data-bs-parent="#accordionExpenses">
                             <div class="accordion-body p-0">
                                 <div class="list-group small mb-0">
@@ -310,10 +329,21 @@
                                             <div>{{ expense.date_paid|default:expense.bill_date }} = {{ expense.amount_paid }}: {{ expense.title }}</div>
                                             <div class="text-end">
                                                 <a href="{% url 'bidding_expense_edit' expense.id %}"
-                                                    class="btn btn-sm btn-outline-secondary">
-                                                    <span><i class="{{ bicons.edit }} me-1"></i></span>
-                                                    <span class="text-end">{% trans "Edit" %}</span>
+                                                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                                                    <span><i class="{{ bicons.edit }}"></i></span>
+                                                    <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
                                                 </a>
+                                                {% if expense.deletable %}
+                                                    <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                                                            data-bs-toggle="modal" data-bs-target="#expenseDeleteModal"
+                                                            data-amount="{{ expense.amount_paid }}"
+                                                            data-title="{{ expense.title }}"
+                                                            data-url="{% url 'bidding_expense_delete' expense.id %}"
+                                                            >
+                                                        <span><i class="{{ bicons.delete }}"></i></span>
+                                                        <span class="d-none d-md-inline-block ms-1">{% trans 'Delete' %}</span>
+                                                    </button>
+                                                {% endif %}
                                             </div>
                                         </div>
                                     {% endfor %}
@@ -321,8 +351,8 @@
                                     <div class="list-group-item p-2 text-end">
                                         <a href="{% url 'bidding_expense_create' bid.id %}"
                                             class="btn btn-sm btn-primary">
-                                            <span><i class="{{ bicons.create }} me-1"></i></span>
-                                            <span class="text-end">{% trans "New Expense" %}</span>
+                                            <span><i class="{{ bicons.create }}"></i></span>
+                                            <span class="me-1">{% trans "New Expense" %}</span>
                                         </a>
                                     </div>
                                 </div>
@@ -339,12 +369,13 @@
     </div>
 
     <div id="bid-modals">
+
         <div id="bidDeleteModal" class="modal fade" 
                 tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
                 aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <form id="delete-form" method="post">
+                    <form id="bid-delete-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
                             <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
@@ -354,15 +385,15 @@
                             <div class="my-2">
                                 <div class="mb-1">
                                     <span class="small fw-light">{% trans "Amount" %}: </span>
-                                    <span id="span-amount"></span>
+                                    <span id="bid-span-amount"></span>
                                 </div>
                                 <div class="mb-1">
                                     <span class="small fw-light">{% trans "Company" %}: </span>
-                                    <span id="span-company"></span>
+                                    <span id="bid-span-company"></span>
                                 </div>
                                 <div class="mb-1">
                                     <span class="small fw-light">{% trans "Result" %}: </span>
-                                    <span id="span-result"></span>
+                                    <span id="bid-span-result"></span>
                                 </div>
                             </div>
                             
@@ -391,22 +422,151 @@
                 </div>
             </div>
         </div>
+
+        <div id="expenseDeleteModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="expenseDeleteModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="expense-delete-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 text-danger fw-bold" id="expenseDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="my-2">
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Amount" %}: </span>
+                                    <span id="expense-span-amount"></span>
+                                </div>
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Title" %}: </span>
+                                    <span id="expense-span-title"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="my-2">
+                                <span class="text-danger">{% trans "This expense, its associated data and files will be permanently deleted." %}</span>
+                            </div>
+
+                            <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                <option selected value="just_delete">{% trans "Just delete it" %}</option>
+                                <option value="know">{% trans "I know what I am doing" %}</option>
+                            </select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Cancel" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Delete' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="taskDeleteModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="taskDeleteModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="task-delete-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 text-danger fw-bold" id="taskDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="my-2">
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Due date" %}: </span>
+                                    <span id="task-span-date"></span>
+                                </div>
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Title" %}: </span>
+                                    <span id="task-span-title"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="my-2">
+                                <span class="text-danger">{% trans "This task, its associated data and files will be permanently deleted." %}</span>
+                            </div>
+
+                            <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                <option selected value="just_delete">{% trans "Just delete it" %}</option>
+                                <option value="know">{% trans "I know what I am doing" %}</option>
+                            </select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Cancel" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Delete' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const deleteModal = document.getElementById('bidDeleteModal');
-        const spanAmount = document.getElementById('span-amount');
-        const spanCompany = document.getElementById('span-company');
-        const spanResult = document.getElementById('span-result');
-        const deleteForm = document.getElementById('delete-form');
+        // Bid deletion
+        const bidDeleteModal = document.getElementById('bidDeleteModal');
+        const bidSpanAmount  = document.getElementById('bid-span-amount');
+        const bidSpanCompany = document.getElementById('bid-span-company');
+        const bidSpanResult  = document.getElementById('bid-span-result');
+        const bidDeleteForm  = document.getElementById('bid-delete-form');
 
-        deleteModal.addEventListener('show.bs.modal', function (event) {
+        bidDeleteModal.addEventListener('show.bs.modal', function (event) {
             const button = event.relatedTarget;
 
-            spanAmount.innerText = button.dataset.amount;
-            spanCompany.innerText = button.dataset.company;
-            spanResult.innerText = button.dataset.result;
-            deleteForm.action = button.dataset.url;
+            bidSpanAmount.innerText  = button.dataset.amount;
+            bidSpanCompany.innerText = button.dataset.company;
+            bidSpanResult.innerText  = button.dataset.result;
+            bidDeleteForm.action     = button.dataset.url;
+        });
+
+
+        // Task deletion
+        const taskDeleteModal = document.getElementById('taskDeleteModal');
+        const taskSpanDate    = document.getElementById('task-span-date');
+        const taskSpanTitle   = document.getElementById('task-span-title');
+        const taskDeleteForm  = document.getElementById('task-delete-form');
+
+        taskDeleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            taskSpanDate.innerText  = button.dataset.date;
+            taskSpanTitle.innerText = button.dataset.title;
+            taskDeleteForm.action   = button.dataset.url;
+        });
+
+
+        // Expense deletion
+        const expenseDeleteModal = document.getElementById('expenseDeleteModal');
+        const expenseSpanAmount  = document.getElementById('expense-span-amount');
+        const expenseSpanTitle   = document.getElementById('expense-span-title');
+        const expenseDeleteForm  = document.getElementById('expense-delete-form');
+
+        expenseDeleteModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            expenseSpanAmount.innerText  = button.dataset.amount;
+            expenseSpanTitle.innerText   = button.dataset.title;
+            expenseDeleteForm.action     = button.dataset.url;
         });
     </script>
 

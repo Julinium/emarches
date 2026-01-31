@@ -5,7 +5,7 @@
 
 <div id="t-{{ tender.chrono }}-top">
 
-    <a href="{% url 'bidding_bid_details' bid.id %}" target="_blank"
+    <a href="{% url 'bidding_bid_details' bid.id %}"
        class="text-decoration-none text-reset">
 
         <div class="card-header px-2 py-1">
@@ -77,25 +77,31 @@
         <div class="card-footer small px-2 py-1">
             <div class="small">
 
-                <span class="me-2 my-0 badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond status' %}">
+                <span class="me-2 my-0 badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond amount' %}">
                     <span><i class="{{ bicons.bond }}"></i></span>
                     <span class="fw-bold">{{ bid.bond_amount|default:'--' }}</span>
                 </span>
 
-                <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
-                    <span><i class="{{ bicons.task }}"></i></span>
-                    <span class="">{{ bid.tasks.all|length }}</span>
-                </span>
+                {% if bid.tasks.all %}
+                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
+                        <span><i class="{{ bicons.task }}"></i></span>
+                        <span class="">{{ bid.tasks.all|length }}</span>
+                    </span>
+                {% endif %}
+                
+                {% if bid.expenses.all %}
+                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
+                        <span><i class="{{ bicons.expense }}"></i></span>
+                        <span class="">{{ bid.expenses.all|length }}</span>
+                    </span>
+                {% endif %}
 
-                <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
-                    <span><i class="{{ bicons.expense }}"></i></span>
-                    <span class="">{{ bid.expenses.all|length }}</span>
-                </span>
-
-                <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
-                    <span><i class="{{ bicons.contract }}"></i></span>
-                    <span class="">{{ bid.contracts.all|length }}</span>
-                </span>
+                {% if bid.contracts.all %}
+                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
+                        <span><i class="{{ bicons.contract }}"></i></span>
+                        <span class="">{{ bid.contracts.all|length }}</span>
+                    </span>
+                {% endif %}
 
             </div>
         </div>

@@ -1,15 +1,20 @@
 
-import uuid, traceback, re, pytz
+import re
+import traceback
+import uuid
 from os import path as path
+
+import pytz
 from django.conf import settings
 from django.db import models
+from django.db.models import Avg, Count, F, Max, Min, Q, Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from django.db.models import Sum, Count, Max, Min, Avg, F, Q
+from .texter import normalize_text as nt
+
 # from bidding.models import Bid
 
-from .texter import normalize_text as nt
 
 
 class Agrement(models.Model):

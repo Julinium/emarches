@@ -1,15 +1,17 @@
-import os, csv, random, json, traceback
+import csv
+import json
+import os
+import random
+import traceback
 from datetime import date, timedelta
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
+from base.models import Tender
 from scraper import constants as C
 from scraper import helper
-
-from base.models import Tender
-
 
 REFRESH_SAVED = True
 

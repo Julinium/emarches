@@ -1,9 +1,12 @@
-import re, requests, traceback
+import re
+import traceback
+
+import requests
 from bs4 import BeautifulSoup, Comment
 
-from scraper import helper
-from scraper import constants as C
 from base.models import Tender
+from scraper import constants as C
+from scraper import helper
 
 NA_PLH = None
 

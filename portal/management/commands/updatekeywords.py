@@ -1,8 +1,10 @@
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext as _
+
+from base.models import Client, Lot, Tender
+
 # from datetime import date, timedelta
 
-from base.models import Tender, Lot, Client
 
 class Command(BaseCommand):
     help = "Updates"

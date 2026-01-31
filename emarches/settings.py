@@ -1,9 +1,10 @@
-import os, django.conf.locale
+import os
 from pathlib import Path
+
+import django.conf.locale
 from django.contrib.messages import constants as messages
 from django.utils.translation import gettext_lazy as _
 from dotenv import load_dotenv
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -307,6 +308,7 @@ INTERNAL_IPS = [
 # ---------------
 
 from .loggino import JsonFormatter
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django's default loggers

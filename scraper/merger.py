@@ -1,30 +1,26 @@
 import traceback
-import pytz
-from rest_framework import serializers
-from django.db import transaction
-from datetime import datetime, timedelta, timezone, date, time
+from datetime import date, datetime, time, timedelta, timezone
 from zoneinfo import ZoneInfo
 
+import pytz
+from django.db import transaction
+from rest_framework import serializers
+
+from base.models import (  # Concurrent, Minutes, Bidder,; AdminReject, AdminAccept, AdminReserve, TechReject,; SelectedBid, WinnerBid, WinJustif, FailedLot,
+    Agrement, Category, Change, Client, Concurrent, Deposit, Domain, FileToGet,
+    Kind, Lot, Meeting, Mode, Opening, Procedure, Qualif, RelAgrementLot,
+    RelDomainTender, RelQualifLot, Sample, Tender, Visit)
 from scraper import constants as C
 from scraper import helper
-
-from base.models import (
-    Tender, Lot, Agrement, Qualif, Kind, Domain, Mode, Procedure, 
-    Category, Change, Client, Meeting, Sample, Visit, FileToGet,
-    RelAgrementLot, RelDomainTender, RelQualifLot,
-    # Concurrent, Minutes, Bidder, 
-    # AdminReject, AdminAccept, AdminReserve, TechReject, 
-    # SelectedBid, WinnerBid, WinJustif, FailedLot,
-    Concurrent, Opening, Deposit,
-)
-
-from scraper.serializers import (
-    TenderSerializer, LotSerializer, MeetingSerializer, SampleSerializer, VisitSerializer, 
-    ModeSerializer, ProcedureSerializer, DomainSerializer, 
-    CategorySerializer, ChangeSerializer, ClientSerializer, KindSerializer, AgrementSerializer, 
-    QualifSerializer, RelDomainTenderSerializer, RelAgrementLotSerializer, 
-    RelQualifLotSerializer
-)
+from scraper.serializers import (AgrementSerializer, CategorySerializer,
+                                 ChangeSerializer, ClientSerializer,
+                                 DomainSerializer, KindSerializer,
+                                 LotSerializer, MeetingSerializer,
+                                 ModeSerializer, ProcedureSerializer,
+                                 QualifSerializer, RelAgrementLotSerializer,
+                                 RelDomainTenderSerializer,
+                                 RelQualifLotSerializer, SampleSerializer,
+                                 TenderSerializer, VisitSerializer)
 
 
 def format(tender_json):

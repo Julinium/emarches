@@ -1,6 +1,7 @@
 
-from nas.models import UserSetting, Favorite
 from base.models import Category
+from nas.models import Favorite, UserSetting
+
 
 def portal_context(request):
 

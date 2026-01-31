@@ -1,22 +1,21 @@
 
-import requests
-from bs4 import BeautifulSoup
-import traceback
+import json
 import random
 import time
-import json
-import pytz
-
+import traceback
 from datetime import datetime, timedelta
 from decimal import Decimal
 
+import pytz
+import requests
+from bs4 import BeautifulSoup
+
+from base.models import Category, Client
+from bdc.models import Article, Attachement, PurchaseOrder
+
+from . import constants as C
 # from . import helper
 from .helper import getUa, printMessage
-from . import constants as C
-
-from bdc.models import Article, Attachement, PurchaseOrder
-from base.models import Category, Client
-
 
 LISTING_BASE_URL = C.BDC_LISTING_BASE_URL
 LISTING_PAGE_PARAM = "page"

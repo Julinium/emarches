@@ -1,24 +1,23 @@
 
-import os, uuid
-from decimal import Decimal
-from django.db import models
+import os
+import uuid
 from datetime import date, datetime, timezone
+from decimal import Decimal
 
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
+from django.db import models
+from django.db.models import Sum
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 
-from django.core.validators import FileExtensionValidator
-
 from base.models import Lot
-# from base.context_processors import portal_context
-from nas.models import Company
+from nas.choices import (BidResults, BidStatus, BondStatus, CivilityChoices,
+                         ContractStatus, ExpenseStatus, ReceptionStatus,
+                         TaskEmergency, TaskStatus)
 from nas.imaging import squarify_image
+from nas.models import Company
 
-from nas.choices import (
-    CivilityChoices, BidStatus, BondStatus, BidResults, ContractStatus, 
-    TaskEmergency, TaskStatus, ExpenseStatus, ReceptionStatus, 
-    )
 
 EXTENSIONS_VALIDATORS = [
     FileExtensionValidator(
@@ -386,6 +385,10 @@ class Bid(models.Model):
 
         return milestones
 
+    @property
+    def expenses_sum(self):
+        return self.expenses.aggregate(total=Sum('amount_paid'))['total'] or 0
+
 
 class Contract(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -438,6 +441,10 @@ class Task(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def deletable(self):
+        return self.status == TaskStatus.TASK_CANCELLED
+
 
 class Expense(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -471,6 +478,10 @@ class Expense(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def deletable(self):
+        return self.status == ExpenseStatus.XPS_CANCELLED
 
 
 class Reception(models.Model):

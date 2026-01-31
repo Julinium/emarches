@@ -1,34 +1,29 @@
 
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_control, never_cache
-from django.utils.decorators import method_decorator
-from django.shortcuts import render, get_object_or_404, redirect
-
-from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
-from django.utils import translation
-from django.http import HttpResponse
-from django.core import serializers
 import json
 
-from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core import serializers
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.utils import translation
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.cache import cache_control, never_cache
+from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
+                                  UpdateView)
 
 from base.models import Agrement, Qualif
-from nas.models import (
-    Profile, Company, Notification, NotificationSubscription, 
-    Newsletter, NewsletterSubscription, UserSetting)
-
-from nas.forms import (
-    UserProfileForm, CompanyForm, 
-    NotificationSubscriptionForm, 
-    NewsletterSubscriptionForm,
-    UserSettingsForm)
-
-from nas.subbing import subscribeUserToNotifications, subscribeUserToNewsletters
-
+from nas.forms import (CompanyForm, NewsletterSubscriptionForm,
+                       NotificationSubscriptionForm, UserProfileForm,
+                       UserSettingsForm)
+from nas.models import (Company, Newsletter, NewsletterSubscription,
+                        Notification, NotificationSubscription, Profile,
+                        UserSetting)
+from nas.subbing import (subscribeUserToNewsletters,
+                         subscribeUserToNotifications)
 
 COMPANIES_ITEMS_PER_PAGE = 10
 

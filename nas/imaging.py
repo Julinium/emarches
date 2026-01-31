@@ -1,6 +1,7 @@
-from PIL import Image
 import io
+
 from django.core.files.base import ContentFile
+from PIL import Image
 
 OUTPUT_WIDTH, OUTPUT_HEIGHT = 400, 400
 

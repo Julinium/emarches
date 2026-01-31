@@ -1,9 +1,8 @@
 from allauth.account.adapter import DefaultAccountAdapter
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.account.models import EmailAddress
-from django.shortcuts import resolve_url
-
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.contrib.auth import get_user_model
+from django.shortcuts import resolve_url
 
 User = get_user_model()
 

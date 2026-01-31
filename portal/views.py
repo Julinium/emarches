@@ -1,39 +1,35 @@
-import os, logging, json, random
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
+import json
+import logging
+import os
+import random
 from datetime import datetime
+from decimal import Decimal
+from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
-# from uuid import UUID
-from django.core.paginator import Paginator
 
 from django.conf import settings
-
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as trans
-
-from django.db import models
-from django.db.models import Count, Sum, F, Q, Exists, OuterRef
-from urllib.parse import urlencode
-
-from decimal import Decimal
-
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.decorators.http import require_POST
-from django.views.decorators.cache import cache_control, never_cache
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponse, FileResponse, JsonResponse
-
 from django.contrib.auth.models import User
+# from uuid import UUID
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db import models
+from django.db.models import Count, Exists, F, OuterRef, Q, Sum
+from django.http import FileResponse, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.utils.translation import gettext_lazy as trans
+from django.views.decorators.cache import cache_control, never_cache
+from django.views.decorators.http import require_POST
 
-from nas.models import UserSetting, Download, TenderView, Favorite, Company, Folder
-from base.models import Tender, Category, Client, Domain, Procedure, Crawler, Agrement, Qualif, Deposit
-from bidding.models import Bid
-from base.texter import normalize_text
 from base.context_processors import portal_context
-
+from base.models import (Agrement, Category, Client, Crawler, Deposit, Domain,
+                         Procedure, Qualif, Tender)
+from base.texter import normalize_text
+from bidding.models import Bid
+from nas.models import (Company, Download, Favorite, Folder, TenderView,
+                        UserSetting)
 
 # Default Settings
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS

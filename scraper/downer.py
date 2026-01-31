@@ -13,14 +13,18 @@
     ## Orphan files.
     ## Files for items over certain age old.
 
-import os, random, re, requests, traceback
-from bs4 import BeautifulSoup
+import os
+import random
+import re
+import traceback
 from datetime import datetime, timedelta
 
-from scraper import helper
-from scraper import constants as C
+import requests
+from bs4 import BeautifulSoup
 
-from base.models import Tender, FileToGet
+from base.models import FileToGet, Tender
+from scraper import constants as C
+from scraper import helper
 
 
 def getFileables():

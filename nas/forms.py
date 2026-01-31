@@ -1,11 +1,12 @@
 from django import forms
 from django.contrib import messages
-from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
-from .models import Profile, Company, Favorite, Folder, NotificationSubscription, UserSetting
 from .iceberg import get_ice_checkup
+from .models import (Company, Favorite, Folder, NotificationSubscription,
+                     Profile, UserSetting)
 
 ALLOW_INVALID_ICE = True
 

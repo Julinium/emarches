@@ -1,4 +1,5 @@
-import re, unicodedata
+import re
+import unicodedata
 
 
 def normalize_text(text, include_raw=True, min_length=2):

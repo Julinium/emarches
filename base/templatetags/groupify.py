@@ -1,8 +1,8 @@
-from collections import defaultdict, OrderedDict
-from django.forms.models import model_to_dict
+from collections import OrderedDict, defaultdict
+from decimal import Decimal
 
 from django import template
-from decimal import Decimal
+from django.forms.models import model_to_dict
 
 register = template.Library()
 

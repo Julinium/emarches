@@ -1,18 +1,14 @@
 
+import base64
 import csv
-
-from django.template.loader import render_to_string
-
-from weasyprint import HTML
-
-from django.conf import settings
+from io import BytesIO
 from pathlib import Path
 
 import segno
-from io import BytesIO
-import base64
-
+from django.conf import settings
+from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as trans
+from weasyprint import HTML
 
 empty_items = ['-', '--', '_', '__', '---', '***', '/', 
     '?', '??', '???', ' ', '.', '..', '...', '',

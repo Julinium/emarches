@@ -1,5 +1,6 @@
-from django.shortcuts import render
 from datetime import datetime, timedelta
+
+from django.shortcuts import render
 
 VPS_SERVER_MONTH = 64
 
