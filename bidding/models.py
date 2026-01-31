@@ -261,31 +261,36 @@ class Bid(models.Model):
             milestones.append({
                 "date": self.lot.tender.published,          
                 "past": is_past(self.lot.tender.published), 
-                "event": _("Tender published")
+                "event": _("Tender published"),
+                "bicon": "bi bi-clock",
                 })
         if self.lot.tender.deadline:
             milestones.append({
                 "date": self.lot.tender.deadline.date(),    
                 "past": is_past(self.lot.tender.deadline), 
-                "event": _("Bidding deadline")
+                "event": _("Bidding deadline"),
+                "bicon": "bi bi-hourglass",
                 })
         if self.date_submitted:
             milestones.append({
                 "date": self.date_submitted.date(), 
                 "past": is_past(self.date_submitted), 
-                "event": _("Bid Submitted")
+                "event": _("Bid Submitted"),
+                "bicon": "bi bi-envelope-arrow-up",
                 })
         if self.updated:
             milestones.append({
                 "date": self.updated.date(),        
                 "past": is_past(self.updated), 
-                "event": _("Latest Bid update")
+                "event": _("Latest Bid update"),
+                "bicon": "bi bi-arrow-repeat",
                 })
         if self.bond_due_date:
             milestones.append({
                 "date": self.bond_due_date.date(),
                 "past": is_past(self.bond_due_date), 
-                "event": _("Bond return date")
+                "event": _("Bond return date"),
+                "bicon": "bi bi-hourglass",
                 })
 
         openings = self.lot.tender.openings.all()
@@ -293,7 +298,8 @@ class Bid(models.Model):
             milestones.append({
                 "date": opening.date,    
                 "past": is_past(opening.date), 
-                "event": _("Tender results published")
+                "event": _("Tender results published"),
+                "bicon": "bi bi-check-square",
                 })
 
         change = self.lot.tender.changes.last()
@@ -301,7 +307,8 @@ class Bid(models.Model):
             milestones.append({
                 "date": change.reported.date(),    
                 "past": is_past(change.reported), 
-                "event": _("Latest Tender change")
+                "event": _("Latest Tender change"),
+                "bicon": "bi bi-activity",
                 })
 
         samples = self.lot.samples
@@ -309,7 +316,8 @@ class Bid(models.Model):
             milestones.append({
                 "date": sample.when.date(),    
                 "past": is_past(sample.when), 
-                "event": _("Samples deadline")
+                "event": _("Samples deadline"),
+                "bicon": "bi bi-palette2",
                 })
 
         meetings = self.lot.meetings
@@ -317,7 +325,8 @@ class Bid(models.Model):
             milestones.append({
                 "date": meeting.when.date(),    
                 "past": is_past(meeting.when), 
-                "event": _("Meeting deadline")
+                "event": _("Meeting deadline"),
+                "bicon": "bi bi-chevron-bar-contract",
                 })
 
         visits = self.lot.visits
@@ -325,7 +334,8 @@ class Bid(models.Model):
             milestones.append({
                 "date": visit.when.date(),    
                 "past": is_past(visit.when), 
-                "event": _("Site visit deadline")
+                "event": _("Site visit deadline"),
+                "bicon": "bi bi-person-walking",
                 })
         
         for task in self.tasks.all():
@@ -333,7 +343,8 @@ class Bid(models.Model):
                 milestones.append({
                     "date": task.date_due,    
                     "past": is_past(task.date_due), 
-                    "event": _("Task due") + ": " + task.title
+                    "event": _("Task due") + ": " + task.title,
+                    "bicon": "bi bi-journal-check",
                 })
         
         for contract in self.contracts.all():
@@ -341,7 +352,8 @@ class Bid(models.Model):
                 milestones.append({
                     "date": contract.date_signed.date(),    
                     "past": is_past(contract.date_signed), 
-                    "event": _("Contract signed") + ": " + contract.title
+                    "event": _("Contract signed") + ": " + contract.title,
+                    "bicon": "bi bi-bag-check",
                 })
         
         for contract in self.contracts.all():
@@ -349,15 +361,24 @@ class Bid(models.Model):
                 milestones.append({
                     "date": contract.date_finish.date(),    
                     "past": is_past(contract.date_finish), 
-                    "event": _("Contract finished") + ": " + contract.title
+                    "event": _("Contract finished") + ": " + contract.title,
+                    "bicon": "bi bi-bag-check",
                 })
         
         for expense in self.expenses.all():
             if expense.date_paid:
                 milestones.append({
-                    "date": expense.date_paid.date(),    
+                    "date": expense.date_paid,
                     "past": is_past(expense.date_paid), 
-                    "event": f"{expense.amount_paid} : " + _("Expense paid") + ": " + expense.title
+                    "event": f"{expense.amount_paid} " + _("Expense") + ": " + expense.title,
+                    "bicon": "bi bi-credit-card",
+                })
+            elif expense.bill_date:
+                milestones.append({
+                    "date": expense.bill_date,    
+                    "past": is_past(expense.bill_date), 
+                    "event": f"{expense.amount_paid} " + _("Bill") + ": " + expense.title,
+                    "bicon": "bi bi-credit-card",
                 })
         
 
@@ -421,13 +442,11 @@ class Task(models.Model):
 class Expense(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bid          = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='expenses')
-    contract     = models.ForeignKey(Contract, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contract'), related_name='expenses')
-    # company      = models.ForeignKey(Company, on_delete=models.DO_NOTHING, verbose_name=_('Company'), related_name='expenses')
     title        = models.CharField(max_length=255, blank=True, default=_('Expense'), verbose_name=_('Object'))
     reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
     bill_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Bill Number'))
-    bill_date    = models.DateTimeField(blank=True, null=True, verbose_name="Bill Date")
-    date_paid    = models.DateTimeField(blank=True, null=True, verbose_name="Paid Date")
+    bill_date    = models.DateField(blank=True, null=True, verbose_name="Bill Date")
+    date_paid    = models.DateField(blank=True, null=True, verbose_name="Paid Date")
     channel      = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payment Mean'))
     mean_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Mean Reference'))
 
@@ -436,13 +455,12 @@ class Expense(models.Model):
     
     payee        = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payee'))
     payee_ice    = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Payee ICE'))
-    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='expenses')
-
+    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='expenses')
 
     details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))
 
-    file         = models.FileField(upload_to='bidding/expenses/', validators=EXTENSIONS_VALIDATORS, null=True, verbose_name=_("File"))
+    file         = models.FileField(upload_to='bidding/expenses/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
 
     creator      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='expenses')
     created      = models.DateTimeField(auto_now_add=True, editable=False)

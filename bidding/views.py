@@ -24,10 +24,10 @@ from base.context_processors import portal_context
 from nas.models import Company
 from nas.choices import BidStatus, BidResults, BondStatus
 
-from bidding.models import Bid, Team, Task
+from bidding.models import Bid, Team, Task, Expense
 from base.models import Tender, Lot
 
-from bidding.forms import BidForm, TaskForm
+from bidding.forms import BidForm, TaskForm, ExpenseForm
 from bidding.secu import is_team_admin, is_team_member
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -536,7 +536,7 @@ def bid_details(request, pk=None):
     if not team: return HttpResponse(status=403)
     
     bid = get_object_or_404(Bid, pk=pk)
-    bid = Bid.objects.filter(pk=pk).prefetch_related("tasks", "contracts").first()
+    bid = Bid.objects.filter(pk=pk).prefetch_related("tasks", "expenses").first()
     if not bid: return HttpResponse(status=404)
 
     if not is_team_member(bid.creator, team): return HttpResponse(status=403)
@@ -772,6 +772,75 @@ def task_edit(request, pk=None, bk=None):
     return render(request, 'bidding/task-form.html', {
         "form"  : form,
         "object": task,
+        "bid"   : bid,
+        "redir" : redir,
+    })
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def expense_edit(request, pk=None, bk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+    
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    expense = None
+
+    if pk:
+        expense = get_object_or_404(Expense, pk=pk)
+        if not is_team_member(expense.bid.creator, team): return HttpResponse(status=403)
+        bid = expense.bid
+    else:
+        bid = get_object_or_404(Bid, pk=bk)
+
+    redir = request.GET.get('redirect', None)
+    if redir and not url_has_allowed_host_and_scheme(
+        redir, allowed_hosts={request.get_host()},
+        require_https=request.is_secure()):
+        redir = None
+
+    if request.method == "POST":
+        form = ExpenseForm(
+            request.POST,
+            request.FILES,
+            instance=expense,
+            user=user,
+            bid=bid,
+        )
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.bid = bid
+            obj.creator = user
+            obj.save()
+
+            if redir:
+                return redirect(redir)
+
+            return redirect("bidding_bid_details", bid.id)
+        else:
+            for field in form:
+                if field.errors:
+                    for error in field.errors:
+                        messages.error(request, f"{field.label}: {error}")
+    else:
+        form = ExpenseForm(
+            instance=expense,
+            user=user,
+            bid=bid,
+        )
+        if expense is None:
+            form.fields["bill_date"].initial   = datetime.now()
+            form.fields["date_paid"].initial   = datetime.now()
+
+
+    return render(request, 'bidding/expense-form.html', {
+        "form"  : form,
+        "object": expense,
         "bid"   : bid,
         "redir" : redir,
     })

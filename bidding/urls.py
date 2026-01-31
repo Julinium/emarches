@@ -19,6 +19,9 @@ urlpatterns = [
     path('tasks/<uuid:bk>/create/',  views.task_edit,    name='bidding_task_create'),
     path('tasks/<uuid:pk>/edit/',    views.task_edit,    name='bidding_task_edit'),
 
+    path('expenses/<uuid:bk>/create/', views.expense_edit, name='bidding_expense_create'),
+    path('expenses/<uuid:pk>/edit/',   views.expense_edit, name='bidding_expense_edit'),
+
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),
 

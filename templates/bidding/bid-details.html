@@ -93,13 +93,13 @@
                             </div>
                             <div id="" class="ms-2">
                                 {% if bid.lot.tender.lots_count > 1 %}
-                                    <div class="mb-1">
+                                    <div class="mb-1 threelines">
                                         <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ bid.lot.number|default:'--' }}</span>
                                         <span class="">{{ bid.lot.title|default:'--' }}</span>
                                     </div>
                                 <span class="badge bg-secondary me-1">{% trans "Tender" %}</span>
                                 {% endif %}
-                                <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %}">{{ bid.lot.tender.title|default:'--' }}</span>
+                                <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %} threelines">{{ bid.lot.tender.title|default:'--' }}</span>
                             </div>
                         </div>
                     </div>
@@ -112,7 +112,7 @@
                             <div class="text-muted small fw-light">
                                 {% trans "Client" %}
                             </div>
-                            <div id="" class="ms-2">
+                            <div id="" class="ms-2 threelines">
                                 <span class="">{{ bid.lot.tender.client.name|default:'--' }}</span>
                             </div>
                         </div>
@@ -216,18 +216,28 @@
                                 <div class="text-muted small fw-light">
                                     {% trans "Timeline" %}
                                 </div>
-                                <div id="" class="ms-2">                                    
+                                <div id="" class="ms-1">
                                     {% for item in bid.milestones %}
-                                        <div class="my-1 pb-1 border border-0 border-bottom {% if item.past == True %}text-secondary{% endif %}">
-                                            <span><i class="small {% if item.bicon %}{{ item.bicon }}{% else %}bi bi-dash-lg{% endif %} me-1"></i></span>
-                                            <span class="{% if item.past != True %}fw-bold{% endif %}">{{ item.date }}</span>
-                                            {% if item.past != True %}
-                                                <span class="badge small ms-1 bg-primary">{{ item.date|timeuntil }}</span>
-                                            {% else %}
-                                                <span class="badge small ms-1 bg-secondary-subtle">{{ item.date|timesince }}</span>
-                                            {% endif %}
-                                            <span><i class="ms-2 bi bi-dash-lg"></i></span>
-                                            <span class="small">{{ item.event }}</span>
+                                        <div class="my-1 pb-1 {% if item.past == True %}text-secondary{% endif %}">
+                                            <div class="d-flex">
+                                                <div class="me-2">
+                                                    <span><i class="small {% if item.bicon %}{{ item.bicon }}{% else %}bi bi-dash-lg{% endif %}"></i></span>
+                                                </div>
+                                                <div class="d-flex border border-0 border-bottom w-100 pb-1">
+                                                    <div class="flex-grow-1">
+                                                        <div class="small">{{ item.event }}</div>
+                                                        <div class="{% if item.past != True %}fw-bold{% endif %}">{{ item.date }}</div>
+                                                        <!-- <span class="small"><i class="{{ bicons.vertical }} small"></i></span> -->
+                                                    </div>
+                                                    <div class="">
+                                                        {% if item.past != True %}
+                                                            <span class="badge small ms-1 bg-warning">{{ item.date|timeuntil }}</span>
+                                                        {% else %}
+                                                            <span class="badge small ms-1 bg-secondary-subtle">{{ item.date|timesince }}</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -258,7 +268,7 @@
                                         <div class="list-group-item list-group-item-action p-2">
                                             <div>{{ task.date_due|default:'?' }} - {{ task.title }}</div>
                                             <div class="text-end">
-                                                <a href="{% url 'bidding_task_edit' task.id %}" target="_blank"
+                                                <a href="{% url 'bidding_task_edit' task.id %}"
                                                     class="btn btn-sm btn-outline-secondary">
                                                     <span><i class="{{ bicons.edit }} me-1"></i></span>
                                                     <span class="text-end">{% trans "Edit" %}</span>
@@ -268,10 +278,51 @@
                                     {% endfor %}
                                     
                                     <div class="list-group-item p-2 text-end">
-                                        <a href="{% url 'bidding_task_create' bid.id %}" target="_blank"
+                                        <a href="{% url 'bidding_task_create' bid.id %}"
                                             class="btn btn-sm btn-primary">
                                             <span><i class="{{ bicons.create }} me-1"></i></span>
                                             <span class="text-end">{% trans "New Task" %}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="accordionExpenses">
+            <div class="accordion my-3">
+                <div class="accordion-item shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#expensesCollapse" aria-expanded="true" aria-controls="expensesCollapse">
+                            <span><i class="{{ bicons.expense }}"></i></span>
+                            <span class="ms-2 fw-light">{% trans "Expenses" %}:</span>
+                            <span class="fw-bold ms-1">{{ bid.expenses.all|length }}</span>
+                        </button>
+                    </h2>
+                        <div id="expensesCollapse" class="accordion-collapse show" data-bs-parent="#accordionExpenses">
+                            <div class="accordion-body p-0">
+                                <div class="list-group small mb-0">
+                                    {% for expense in bid.expenses.all %}
+                                        <div class="list-group-item list-group-item-action p-2">
+                                            <div>{{ expense.date_paid|default:expense.bill_date }} = {{ expense.amount_paid }}: {{ expense.title }}</div>
+                                            <div class="text-end">
+                                                <a href="{% url 'bidding_expense_edit' expense.id %}"
+                                                    class="btn btn-sm btn-outline-secondary">
+                                                    <span><i class="{{ bicons.edit }} me-1"></i></span>
+                                                    <span class="text-end">{% trans "Edit" %}</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    
+                                    <div class="list-group-item p-2 text-end">
+                                        <a href="{% url 'bidding_expense_create' bid.id %}"
+                                            class="btn btn-sm btn-primary">
+                                            <span><i class="{{ bicons.create }} me-1"></i></span>
+                                            <span class="text-end">{% trans "New Expense" %}</span>
                                         </a>
                                     </div>
                                 </div>

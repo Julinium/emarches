@@ -9,7 +9,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from base.models import Lot
 from nas.models import Company
-from bidding.models import Bid, Task, Contact
+from bidding.models import Bid, Task, Expense, Contact
 from bidding.widgets import FilenameOnlyClearableFileInput
 
 
@@ -26,6 +26,7 @@ class LotChoiceField(forms.ModelChoiceField):
 class CompanyChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return f"{obj.name} ({obj.ice})"
+
 
 class BidForm(forms.ModelForm):
 
@@ -194,7 +195,6 @@ class BidForm(forms.ModelForm):
             uploaded_file.name = safe_name
 
         return uploaded_file
-    
 
 
 class TaskForm(forms.ModelForm):
@@ -235,6 +235,59 @@ class TaskForm(forms.ModelForm):
                 contact_field.initial = contacts.first()
         else:
             assignee_field.queryset = User.objects.none()
+            contact_field.queryset = Contact.objects.none()
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
+
+
+class ExpenseForm(forms.ModelForm):
+
+    class Meta:
+        model = Expense
+        fields = [
+            "title"       ,
+            "reference"   ,
+            "bill_ref"    ,
+            "bill_date"   ,
+            "date_paid"   ,
+            "channel"     ,
+            "mean_ref"    ,
+
+            "amount_paid" ,
+            "amount_vat"  ,
+            "payee"       ,
+            "payee_ice"   ,
+            "contact"     ,
+
+            "details"     ,
+            "status"      ,
+
+            "file"        ,
+
+        ]
+
+        widgets = {
+            'bill_date': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'date_paid': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'details'       : forms.Textarea(attrs={'rows': '3'}),
+        }
+
+    def __init__(self, *args, bid=None, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.creator = user
+        self.bid = bid
+
+        if user:
+            colleagues = user.teams.first().members.all()
+
+            contacts = Contact.objects.filter(creator__in=colleagues)
+            contact_field = self.fields["contact"]
+            contact_field.queryset = contacts
+            if contacts.count() == 1:
+                contact_field.initial = contacts.first()
+        else:
             contact_field.queryset = Contact.objects.none()
 
         for field in self.fields.values():
