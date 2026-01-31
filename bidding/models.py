@@ -445,6 +445,23 @@ class Task(models.Model):
     def deletable(self):
         return self.status == TaskStatus.TASK_CANCELLED
 
+    @property
+    def status_tint(self):
+        if self.status == TaskStatus.TASK_PENDING   : return 'warning'
+        if self.status == TaskStatus.TASK_STARTED   : return 'primary'
+        if self.status == TaskStatus.TASK_FINISHED  : return 'success'
+        if self.status == TaskStatus.TASK_STALLED   : return 'danger'
+        if self.status == TaskStatus.TASK_CANCELLED : return 'danger'
+        return 'secondary'
+
+    @property
+    def emergency_tint(self):
+        if self.emergency == TaskEmergency.TASK_TERTIARY  : return 'light'
+        if self.emergency == TaskEmergency.TASK_SECONDARY : return 'secondary'
+        if self.emergency == TaskEmergency.TASK_NORMAL    : return 'primary'
+        if self.emergency == TaskEmergency.TASK_URGENT    : return 'warning'
+        if self.emergency == TaskEmergency.TASK_CRITICAL  : return 'danger'
+        return 'secondary'
 
 class Expense(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -482,6 +499,14 @@ class Expense(models.Model):
     @property
     def deletable(self):
         return self.status == ExpenseStatus.XPS_CANCELLED
+
+    @property
+    def status_tint(self):
+        if self.status == ExpenseStatus.XPS_PENDING   : return 'warning'
+        if self.status == ExpenseStatus.XPS_PAID      : return 'primary'
+        if self.status == ExpenseStatus.XPS_CONFIRMED : return 'success'
+        if self.status == ExpenseStatus.XPS_CANCELLED : return 'danger'
+        return 'secondary'
 
 
 class Reception(models.Model):

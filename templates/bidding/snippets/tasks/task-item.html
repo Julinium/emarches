@@ -1,0 +1,57 @@
+{% load i18n %}
+
+<a data-bs-toggle="collapse" href="#task-{{ task.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="task-{{ task.id }}-collapse"
+       class="text-decoration-none text-reset">
+    <div class="d-flex p-2">
+        <div class="flex-grow-1">
+            <span class="badge bg-{{ task.status_tint }}">
+                {{ task.get_status_display|default:'-' }}
+            </span>
+            <span class="badge bg-{{ task.emergency_tint }} text-{{ task.emergency_tint }} px-2"> </span>
+            <span>{{ task.title|default:'-' }}</span>
+        </div>
+        <div class="text-end">
+            <span class="fw-bold">{{ task.date_due|default:'-' }}</span>
+        </div>
+    </div>
+</a>
+
+<div id="task-{{ task.id }}-collapse" class="collapse p-2">
+    <div id="">
+        <div>
+            <span class="small fw-light me-1">{% trans "Status" %}</span>
+            <span>{{ task.get_status_display|default:'-' }}</span>
+        </div>
+        <div>
+            <span class="small fw-light me-1">{% trans "Emergency" %}</span>
+            <span>{{ task.get_emergency_display|default:'-' }}</span>
+        </div>
+        <div>
+            <span class="small fw-light me-1">{% trans "Assignee" %}</span>
+            <span>{{ task.assignee|default:'-' }}</span>
+        </div>
+        <div>
+            <span class="small fw-light me-1">{% trans "Details" %}</span>
+            <span>{{ task.details|default:'-' }}</span>
+        </div>
+    </div>
+    <div class="text-end">
+        <a href="{% url 'bidding_task_edit' task.id %}"
+            class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+            <span><i class="{{ bicons.edit }}"></i></span>
+            <span class="ms-1">{% trans "Edit" %}</span>
+        </a>
+        {% if task.deletable %}
+            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                    data-bs-toggle="modal" data-bs-target="#taskDeleteModal"
+                    data-date="{{ task.date_due|default:'-' }}"
+                    data-title="{{ task.title }}"
+                    data-url="{% url 'bidding_task_delete' task.id %}"
+                    >
+                <span><i class="{{ bicons.delete }}"></i></span>
+                <span class="ms-1">{% trans 'Delete' %}</span>
+            </button>
+        {% endif %}
+    </div>
+</div>

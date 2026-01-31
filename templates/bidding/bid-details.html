@@ -265,32 +265,14 @@
                             <div class="accordion-body p-0">
                                 <div class="list-group small mb-0">
                                     {% for task in bid.tasks.all %}
-                                        <div class="list-group-item list-group-item-action p-2">
-                                            <div>{{ task.date_due|default:'?' }} - {{ task.title }}</div>
-                                            <div class="text-end">
-                                                <a href="{% url 'bidding_task_edit' task.id %}"
-                                                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                                                    <span><i class="{{ bicons.edit }}"></i></span>
-                                                    <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
-                                                </a>
-                                                {% if task.deletable %}
-                                                    <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
-                                                            data-bs-toggle="modal" data-bs-target="#taskDeleteModal"
-                                                            data-date="{{ task.date_due|default:'-' }}"
-                                                            data-title="{{ task.title }}"
-                                                            data-url="{% url 'bidding_task_delete' task.id %}"
-                                                            >
-                                                        <span><i class="{{ bicons.delete }}"></i></span>
-                                                        <span class="d-none d-md-inline-block ms-1">{% trans 'Delete' %}</span>
-                                                    </button>
-                                                {% endif %}
-                                            </div>
+                                        <div class="list-group-item p-0">
+                                            {% include 'bidding/snippets/tasks/task-item.html' with task=task %}
                                         </div>
                                     {% endfor %}
                                     
                                     <div class="list-group-item p-2 text-end">
                                         <a href="{% url 'bidding_task_create' bid.id %}"
-                                            class="btn btn-sm btn-primary">
+                                            class="btn btn-sm btn-outline-primary">
                                             <span><i class="{{ bicons.create }}"></i></span>
                                             <span class="ms-1">{% trans "New Task" %}</span>
                                         </a>
@@ -325,32 +307,14 @@
                             <div class="accordion-body p-0">
                                 <div class="list-group small mb-0">
                                     {% for expense in bid.expenses.all %}
-                                        <div class="list-group-item list-group-item-action p-2">
-                                            <div>{{ expense.date_paid|default:expense.bill_date }} = {{ expense.amount_paid }}: {{ expense.title }}</div>
-                                            <div class="text-end">
-                                                <a href="{% url 'bidding_expense_edit' expense.id %}"
-                                                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                                                    <span><i class="{{ bicons.edit }}"></i></span>
-                                                    <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
-                                                </a>
-                                                {% if expense.deletable %}
-                                                    <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
-                                                            data-bs-toggle="modal" data-bs-target="#expenseDeleteModal"
-                                                            data-amount="{{ expense.amount_paid }}"
-                                                            data-title="{{ expense.title }}"
-                                                            data-url="{% url 'bidding_expense_delete' expense.id %}"
-                                                            >
-                                                        <span><i class="{{ bicons.delete }}"></i></span>
-                                                        <span class="d-none d-md-inline-block ms-1">{% trans 'Delete' %}</span>
-                                                    </button>
-                                                {% endif %}
-                                            </div>
+                                        <div class="list-group-item p-0">
+                                            {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense %}
                                         </div>
                                     {% endfor %}
                                     
                                     <div class="list-group-item p-2 text-end">
                                         <a href="{% url 'bidding_expense_create' bid.id %}"
-                                            class="btn btn-sm btn-primary">
+                                            class="btn btn-sm btn-outline-primary">
                                             <span><i class="{{ bicons.create }}"></i></span>
                                             <span class="me-1">{% trans "New Expense" %}</span>
                                         </a>

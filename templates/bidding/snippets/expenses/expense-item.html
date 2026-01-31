@@ -1,0 +1,56 @@
+{% load i18n %}
+
+<a data-bs-toggle="collapse" href="#expense-{{ expense.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="expense-{{ expense.id }}-collapse"
+       class="text-decoration-none text-reset">
+    <div class="d-flex p-2">
+        <div class="flex-grow-1">
+            <span class="badge bg-{{ expense.status_tint }}">
+                {{ expense.get_status_display|default:'-' }}
+            </span>
+            <span>{{ expense.title|default:'-' }}</span>        
+        </div>
+        <div class="text-end">
+            <span class="fw-bold">{{ expense.amount_paid|default:'-' }}</span>
+        </div>
+    </div>
+</a>
+
+<div id="expense-{{ expense.id }}-collapse" class="collapse p-2">
+    <div id="">
+        <div>
+            <span class="small fw-light me-1">{% trans "Bill date" %}</span>
+            <span>{{ expense.bill_date|default:'-' }}</span>
+        </div>
+        <div>
+            <span class="small fw-light me-1">{% trans "Paid date" %}</span>
+            <span>{{ expense.date_paid|default:'-' }}</span>
+        </div>
+        <div>
+            <span class="small fw-light me-1">{% trans "Payee" %}</span>
+            <span>{{ expense.payee|default:'-' }}</span>
+        </div>
+        <div>
+            <span class="small fw-light me-1">{% trans "Details" %}</span>
+            <span>{{ expense.details|default:'-' }}</span>
+        </div>
+    </div>
+    <div class="text-end">
+        <a href="{% url 'bidding_expense_edit' expense.id %}"
+            class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+            <span><i class="{{ bicons.edit }}"></i></span>
+            <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
+        </a>
+        {% if expense.deletable %}
+            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                    data-bs-toggle="modal" data-bs-target="#expenseDeleteModal"
+                    data-amount="{{ expense.amount_paid }}"
+                    data-title="{{ expense.title }}"
+                    data-url="{% url 'bidding_expense_delete' expense.id %}"
+                    >
+                <span><i class="{{ bicons.delete }}"></i></span>
+                <span class="d-none d-md-inline-block ms-1">{% trans 'Delete' %}</span>
+            </button>
+        {% endif %}
+    </div>
+</div>
