@@ -23,6 +23,9 @@
         <li class="">
             <a href="#" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.notification }} me-2"></i></span>
+                <span class="badge bg-danger fw-light">
+                    <i class="{{ bicons.deadline }}"></i>
+                </span>
                 <span class="">{% trans "Notifications" %}</span>
             </a>
         </li>
@@ -32,6 +35,9 @@
         <li class="">
             <a href="#" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.company }} me-2"></i></span>
+                <span class="badge bg-danger fw-light">
+                    <i class="{{ bicons.deadline }}"></i>
+                </span>
                 <span class="">{% trans "Companies" %}</span>
             </a>
         </li>
@@ -39,6 +45,9 @@
         <li class="">
             <a href="#" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.people }} me-2"></i></span>
+                <span class="badge bg-danger fw-light">
+                    <i class="{{ bicons.deadline }}"></i>
+                </span>
                 <span class="">{% trans "Team" %}</span>
             </a>
         </li>
@@ -46,25 +55,35 @@
         <li class="">
             <a href="#" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.subscribe }} me-2"></i></span>
+                <span class="badge bg-danger fw-light">
+                    <i class="{{ bicons.deadline }}"></i>
+                </span>
                 <span class="">{% trans "Subscritption" %}</span>
             </a>
         </li>
 
-        <li><hr class="dropdown-divider"></li>
+        <!-- <li><hr class="dropdown-divider"></li> -->
         
-        <li>
+        <!-- <li>
+            <a href="{% url 'account_email' %}" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.addresses }} me-2"></i></span>
+                <span class="">{% trans "Manage Addresses" %}</span>
+            </a>
+        </li> -->
+        
+        <!-- <li>
             <a href="{% url 'socialaccount_connections' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.connection }} me-2"></i></span>
-                <span class="ms-1">{% trans "Account Connections" %}</span>
+                <span class="">{% trans "Account Connections" %}</span>
             </a>
-        </li>
+        </li> -->
 
         <li><hr class="dropdown-divider"></li>
     
         <li>
             <a href="{% url 'account_change_password' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.password }} me-2"></i></span>
-                <span class="ms-1">{% trans "Change Password" %}</span>
+                <span class="">{% trans "Password" %}</span>
             </a>
         </li>
 

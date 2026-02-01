@@ -81,6 +81,7 @@ class UserSettingsForm(forms.ModelForm):
 
             'bidding_check_deadline', 
             'bidding_check_amount', 
+            'bidding_check_bond', 
 
             'p_orders_ordering_field', 
             'p_orders_items_per_page', 

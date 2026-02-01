@@ -465,6 +465,7 @@ class UserSetting(models.Model):
 
     bidding_check_deadline  = models.BooleanField(default=True, verbose_name=_("Check Tender dealine when editing"))
     bidding_check_amount    = models.BooleanField(default=True, verbose_name=_("Check submitted amount when editing"))
+    bidding_check_bond      = models.BooleanField(default=True, verbose_name=_("Check submitted bond when editing"))
 
     general_wrap_long_text = models.BooleanField(default=False, verbose_name=_("Do not wrap long text"))
     general_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_020, verbose_name=_('List items per page'))

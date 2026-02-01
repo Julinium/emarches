@@ -482,7 +482,7 @@ class Task(models.Model):
 
 class Expense(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    bid          = models.ForeignKey(Bid, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Bid'), related_name='expenses')
+    bid          = models.ForeignKey(Bid, on_delete=models.CASCADE, null=True, verbose_name=_('Bid'), related_name='expenses')
     title        = models.CharField(max_length=255, blank=True, default=_('Expense'), verbose_name=_('Object'))
     reference    = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
     bill_ref     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Bill Number'))

@@ -12,9 +12,11 @@ from base.models import Lot
 from bidding.models import Bid, Contact, Expense, Task
 from bidding.widgets import FilenameOnlyClearableFileInput
 from nas.models import Company
+from nas.choices import BidStatus, BidResults
 
 CHECK_BIDDING_DEADLINE = True
 CHECK_AMOUNT_MARGINS = True
+CHECK_BOND_MARGINS = True
 MARGIN_PERCENT_OVER = 20
 MARGIN_PERCENT_UNDER = 25
 
@@ -123,7 +125,7 @@ class BidForm(forms.ModelForm):
         bond_amount = self.cleaned_data.get("bond_amount")
         us = self.usets
         if us:
-            if us.bidding_check_amount != False:
+            if us.bidding_check_bond != False:
                 bond = self.lot.bond
 
                 if bond is not None:

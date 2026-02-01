@@ -193,6 +193,7 @@ def portal_context(request):
         'subscribe'       : 'bi bi-ticket-perforated',
         'notification'    : 'bi bi-app-indicator',
         'connection'      : 'bi bi-plug',
+        'addresses'       : 'bi bi-envelope-at',
 
     }
 
