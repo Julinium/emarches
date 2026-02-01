@@ -184,6 +184,15 @@ def portal_context(request):
         'status'          : 'bi bi-bar-chart',
         'analysis'        : 'bi bi-cpu',
         'cancelled'       : 'bi bi-x-octagon-fill',
+        'overdue'         : 'bi bi-exclamation-diamond-fill',
+
+        'profile'         : 'bi bi-person-vcard',
+        'leave'           : 'bi bi-door-open',
+        'password'        : 'bi bi-person-lock',
+        'people'          : 'bi bi-people',
+        'subscribe'       : 'bi bi-ticket-perforated',
+        'notification'    : 'bi bi-app-indicator',
+        'connection'      : 'bi bi-plug',
 
     }
 

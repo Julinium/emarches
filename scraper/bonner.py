@@ -14,7 +14,6 @@ from base.models import Category, Client
 from bdc.models import Article, Attachement, PurchaseOrder
 
 from . import constants as C
-# from . import helper
 from .helper import getUa, printMessage
 
 LISTING_BASE_URL = C.BDC_LISTING_BASE_URL

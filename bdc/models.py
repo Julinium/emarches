@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models import Category, Client
 from base.texter import normalize_text as nt
 
-CREATE_ITEMS_PDF = True
+CREATE_ITEMS_PDF = False
 
 
 class PurchaseOrder(models.Model):

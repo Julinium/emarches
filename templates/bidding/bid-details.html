@@ -26,23 +26,56 @@
 
         <div class="my-3" id="bid-details">
 
-            <div class="row gx-4 gy-0" id="bidDigest">
+            <div id="bidDigest" class="row gx-4 gy-0">
 
-                <div class="col-12 col-md-6">
+                {% if bid.title %}
+                    <div id="bid-title" class="col-12">
+                        <div class="d-flex my-3">
+                            <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                            <div class="w-100 border border-0 border-bottom">
+                                <div class="text-muted small fw-light">
+                                    {% trans "Title" %}
+                                </div>
+                                <div id="" class="ms-2 twolines">
+                                    <span class="">{{ bid.title|default:'--' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div id="bid-amount" class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">
                             <div class="text-muted small fw-light">
-                                {% trans "Bid Amount" %}
+                                <span>{% trans "Date Amount" %}</span>                            
                             </div>
                             <div id="" class="ms-2">
                                 <span class="fw-bold">{{ bid.bid_amount }}</span>
+                                <span class="text-secondary ms-1 small fw-light">
+                                    <span class="small">= E{{ bid.ratio_str }}</span>
+                                </span>  
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div id="bid-estimate" class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                        <div class="w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Estimate" %}
+                            </div>
+                            <div id="" class="ms-2">
+                                <span class="text-secondary">{{ bid.lot.estimate }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bid-status" class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">
@@ -56,7 +89,35 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div id="bid-date-submitted" class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                        <div class="w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Bid Submitted" %}
+                            </div>
+                            <div id="" class="ms-2">
+                                <span class="">{{ bid.date_submitted.date|default:'--' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bid-result" class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                        <div class="w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Result" %}
+                            </div>
+                            <div id="" class="ms-2">
+                                <span class="">{{ bid.get_result_display|default:'--' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bond-amount" class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">
@@ -70,7 +131,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
+                <div id="bond-status" class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">
@@ -84,7 +145,21 @@
                     </div>
                 </div>
 
-                <div class="col-12">
+                <div id="bond-bond-due" class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                        <div class="w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                {% trans "Bond return date" %}
+                            </div>
+                            <div id="" class="ms-2">
+                                <span class="">{{ bid.bond_due_date|default:'--' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bid-object" class="col-12">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">
@@ -105,7 +180,7 @@
                     </div>
                 </div>
 
-                <div class="col-12">
+                <div id="bid-client" class="col-12">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">
@@ -119,36 +194,8 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <div class="d-flex my-3">
-                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
-                        <div class="w-100 border border-0 border-bottom">
-                            <div class="text-muted small fw-light">
-                                {% trans "Bid Submitted" %}
-                            </div>
-                            <div id="" class="ms-2">
-                                <span class="">{{ bid.date_submitted.date|default:'--' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-6">
-                    <div class="d-flex my-3">
-                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
-                        <div class="w-100 border border-0 border-bottom">
-                            <div class="text-muted small fw-light">
-                                {% trans "Result" %}
-                            </div>
-                            <div id="" class="ms-2">
-                                <span class="">{{ bid.get_result_display|default:'--' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {% if bid.file_bond %}
-                    <div class="col-12 col-md-6">
+                    <div id="file_bond" class="col-12 col-md-6">
                         <div class="d-flex my-3">
                             <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                             <div class="w-100 border border-0 border-bottom">
@@ -168,7 +215,7 @@
                 {% endif %}
 
                 {% if bid.file_submitted %}
-                    <div class="col-12 col-md-6">
+                    <div id="file_submitted" class="col-12 col-md-6">
                         <div class="d-flex my-3">
                             <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                             <div class="w-100 border border-0 border-bottom">
@@ -188,7 +235,7 @@
                 {% endif %}
 
                 {% if bid.file_receipt %}
-                    <div class="col-12 col-md-6">
+                    <div id="file_receipt" class="col-12 col-md-6">
                         <div class="d-flex my-3">
                             <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                             <div class="w-100 border border-0 border-bottom">
@@ -303,31 +350,66 @@
                         </button>
                     </h2>
 
-                        <div id="expensesCollapse" class="accordion-collapse show" data-bs-parent="#accordionExpenses">
-                            <div class="accordion-body p-0">
-                                <div class="list-group small mb-0">
-                                    {% for expense in bid.expenses.all %}
-                                        <div class="list-group-item p-0">
-                                            {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense %}
-                                        </div>
-                                    {% endfor %}
-                                    
-                                    <div class="list-group-item p-2 text-end">
-                                        <a href="{% url 'bidding_expense_create' bid.id %}"
-                                            class="btn btn-sm btn-outline-primary">
-                                            <span><i class="{{ bicons.create }}"></i></span>
-                                            <span class="me-1">{% trans "New Expense" %}</span>
-                                        </a>
+                    <div id="expensesCollapse" class="accordion-collapse show" data-bs-parent="#accordionExpenses">
+                        <div class="accordion-body p-0">
+                            <div class="list-group small mb-0">
+                                {% for expense in bid.expenses.all %}
+                                    <div class="list-group-item p-0">
+                                        {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense %}
                                     </div>
+                                {% endfor %}
+                                
+                                <div class="list-group-item p-2 text-end">
+                                    <a href="{% url 'bidding_expense_create' bid.id %}"
+                                        class="btn btn-sm btn-outline-primary">
+                                        <span><i class="{{ bicons.create }}"></i></span>
+                                        <span class="me-1">{% trans "New Expense" %}</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="my-3" id="bid-contracts">
-            <div class="fw-bold">Contracts list</div>
+
+        <div id="accordionContracts">
+            <div class="accordion my-3">
+                <div class="accordion-item shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#contractsCollapse" aria-expanded="true" aria-controls="contractsCollapse">
+                            <div class="w-100">
+                                <span>
+                                    <span><i class="{{ bicons.contract }}"></i></span>
+                                    <span class="ms-2 fw-light">{% trans "Contracts" %}:</span>
+                                    <!-- <span class="fw-bold ms-1">{{ bid.contracts.all|length }}</span> -->
+                                    <span class="badge bg-danger mx-2">Coming soon</span>
+                                </span>
+                            </div>
+                        </button>
+                    </h2>
+
+                    <div id="contractsCollapse" class="accordion-collapse show" data-bs-parent="#accordionContracts">
+                        <div class="accordion-body p-0">
+                            <div class="list-group small mb-0">
+                                <!-- {% for contract in bid.contracts.all %}
+                                    <div class="list-group-item p-0">
+                                        {% include 'bidding/snippets/contracts/contract-item.html' with contract=contract %}
+                                    </div>
+                                {% endfor %} -->
+                                
+                                <div class="list-group-item p-2 text-end">
+                                    <a class="btn btn-sm btn-outline-primary">
+                                        <span><i class="{{ bicons.create }}"></i></span>
+                                        <span class="me-1">{% trans "New Contract" %}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

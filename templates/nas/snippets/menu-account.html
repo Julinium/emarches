@@ -1,0 +1,82 @@
+{% load i18n %}
+
+<li class="nav-item dropdown">
+    <a class="nav-link py-2 dropdown-toggle"
+        href="#" id="bdcDropdown" role="button" 
+        data-bs-toggle="dropdown" aria-expanded="false">
+        <span>{% trans 'Account' %}</span>
+    </a>
+    <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
+
+        <li class="">
+            <a href="{% url 'nas_profile_view' %}" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.profile }} me-2"></i></span>
+                <span class="">{% trans "Profile" %}</span>
+            </a>
+        </li>
+        <li class="">
+            <a href="{% url 'nas_user_settings' %}" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.settings }} me-2"></i></span>
+                <span class="">{% trans "Preferences" %}</span>
+            </a>
+        </li>
+        <li class="">
+            <a href="#" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.notification }} me-2"></i></span>
+                <span class="">{% trans "Notifications" %}</span>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <li class="">
+            <a href="#" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.company }} me-2"></i></span>
+                <span class="">{% trans "Companies" %}</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a href="#" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.people }} me-2"></i></span>
+                <span class="">{% trans "Team" %}</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a href="#" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.subscribe }} me-2"></i></span>
+                <span class="">{% trans "Subscritption" %}</span>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+        
+        <li>
+            <a href="{% url 'socialaccount_connections' %}" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.connection }} me-2"></i></span>
+                <span class="ms-1">{% trans "Account Connections" %}</span>
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+    
+        <li>
+            <a href="{% url 'account_change_password' %}" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.password }} me-2"></i></span>
+                <span class="ms-1">{% trans "Change Password" %}</span>
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'account_logout' %}" class="p-2 dropdown-item text-danger fw-bold">
+                <span><i class="{{ bicons.leave }} me-2"></i></span>
+                <span class="">{% trans "Sign Out" %}</span>
+            </a>
+        </li>
+
+    </ul>
+</li>
+
+
+

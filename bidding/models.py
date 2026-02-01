@@ -446,6 +446,14 @@ class Task(models.Model):
         return self.status == TaskStatus.TASK_CANCELLED
 
     @property
+    def overdue(self):
+        if self.date_due:
+            if self.status != TaskStatus.TASK_FINISHED: 
+                if self.status != TaskStatus.TASK_CANCELLED: 
+                    return self.date_due <= datetime.now().date()
+        return False
+
+    @property
     def status_tint(self):
         if self.status == TaskStatus.TASK_PENDING   : return 'warning'
         if self.status == TaskStatus.TASK_STARTED   : return 'primary'
@@ -453,6 +461,15 @@ class Task(models.Model):
         if self.status == TaskStatus.TASK_STALLED   : return 'danger'
         if self.status == TaskStatus.TASK_CANCELLED : return 'danger'
         return 'secondary'
+
+    @property
+    def status_icon(self):
+        if self.status == TaskStatus.TASK_PENDING   : return 'hourglass-top'
+        if self.status == TaskStatus.TASK_STARTED   : return 'play-fill'
+        if self.status == TaskStatus.TASK_FINISHED  : return 'check-lg'
+        if self.status == TaskStatus.TASK_STALLED   : return 'pause-fill'
+        if self.status == TaskStatus.TASK_CANCELLED : return 'x-lg'
+        return 'dash-lg'
 
     @property
     def emergency_tint(self):

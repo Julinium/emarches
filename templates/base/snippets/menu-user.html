@@ -66,26 +66,28 @@
 
 
             {% if request.user.is_superuser %}
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <a class="dropdown-item p-2" href="https://emarches.com/crm/supervision">
-                        <i class="bi bi-eye-fill me-2"></i> {% translate 'Supervision' %}
-                        {% if new_contactings %}<span class="badge bg-danger text-white mx-1">{{ new_contactings.count }}</span>{% endif %}
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-tools me-2"></i> {% translate 'Administration' %}</a>
-                </li>
-                <li>
-                    <a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear me-2"></i> {% translate 'Database' %}</a>
-                </li>
-                <li>
-                    <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot me-2"></i> Scraper Logs</a>
-                </li>
-                <li>
-                    <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a>
-                </li>
-                <li><hr class="dropdown-divider"></li>
+                <div id="supersuser-section">
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item p-2" href="https://emarches.com/crm/supervision">
+                            <i class="bi bi-eye-fill me-2"></i> {% translate 'Supervision' %}
+                            {% if new_contactings %}<span class="badge bg-danger text-white mx-1">{{ new_contactings.count }}</span>{% endif %}
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-tools me-2"></i> {% translate 'Administration' %}</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear me-2"></i> {% translate 'Database' %}</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot me-2"></i> Scraper Logs</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                </div>
             {% endif %}
 
 

@@ -5,14 +5,20 @@
        class="text-decoration-none text-reset">
     <div class="d-flex p-2">
         <div class="flex-grow-1">
-            <span class="badge bg-{{ task.status_tint }}">
-                {{ task.get_status_display|default:'-' }}
+            <span class="badge bg-{{ task.emergency_tint }} px-2" data-bs-toggle="tooltip" 
+                  title="{% trans 'Emergency' %}: {{ task.get_emergency_display|default:'-' }}"> </span>
+            <span class="badge bg-{{ task.status_tint }}" data-bs-toggle="tooltip" 
+                  title="{% trans 'Status' %}: {{ task.get_status_display|default:'-' }}">
+                <i class="bi bi-{{ task.status_icon }}"></i>
             </span>
-            <span class="badge bg-{{ task.emergency_tint }} text-{{ task.emergency_tint }} px-2"> </span>
             <span>{{ task.title|default:'-' }}</span>
         </div>
-        <div class="text-end">
-            <span class="fw-bold">{{ task.date_due|default:'-' }}</span>
+        <div class="text-end" data-bs-toggle="tooltip" 
+                  title="{% trans 'Due date' %}: {{ task.date_due|default:'-' }}">
+            {% if task.overdue %}
+                <span class="text-danger mx-1" data-bs-toggle="tooltip" title="{% trans 'Task overdue' %}"><i class="{{ bicons.overdue }}"></i></span>
+            {% endif %}
+            <span class="fw-bold{% if task.overdue %} text-danger{% endif %}">{{ task.date_due|default:'-' }}</span>
         </div>
     </div>
 </a>
