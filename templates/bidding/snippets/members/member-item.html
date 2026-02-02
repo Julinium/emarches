@@ -5,7 +5,7 @@
 
 <div id="m-{{ member.username }}-top">
 
-    <a href="{% url 'bidding_bid_details' bid.id %}"
+    <a href=""
        class="text-decoration-none text-reset">
     </a>
 
@@ -26,42 +26,26 @@
             <div id="member-{{ member.id }}-digest" class="p-2">
 
                 <div class="row g-1 my-1">
-                    <div class="col-12 col-md-6 text-start">
+                    <div class="col-12 col-md-6">
                         <div>
-                            <span data-bs-toggle="tooltip" title="{% trans 'Company' %}: {{ member.company.name }}">
-                                <span>
-                                    <img src="{{ member.company.logo }}" alt="X" 
-                                        class="img-fluid rounded rounded-circle" 
-                                        style="width: 1.5rem; height: 1.5rem;">
+                            <span data-bs-toggle="tooltip" title="{% trans 'Username' %}">  
+                                <span class="fw-light">
+                                    <img src="{{ member.profile.avatar }}" alt="X" 
+                                            class="img-fluid rounded rounded-circle" 
+                                            style="width: 1.5rem; height: 1.5rem;">
                                 </span>
-                                <span class="">{{ member.company.name }}</span>
+                                <span class="">{{ member.username }}</span>                              
                             </span>
-                            
-                            {% if member.duplicated %}
-                                <span class="badge bg-warning" data-bs-toggle="tooltip" title="{% trans 'Found other members on the same Tender/lot using the same company' %}">
-                                    <i class="{{ bicons.duplicate }}"></i>
-                                    <span>{% trans "DUPLICATED" %}</span>
-                                </span>
-                            {% endif %}
                         </div>
                         <div class="oneline ms-4 text-secondary">
-                            {% if member.date_submitted %}
-                                <span data-bs-toggle="tooltip" title="{% trans 'Date submitted' %}">  
-                                    <span class="small"><i class="{{ bicons.member }} small text-secondary me-1"></i></span>
-                                    <span class="small text-secondary me-2 ">{{ member.date_submitted.date|default:'-' }}</span>                                  
-                                </span>
-                            {% endif %}
-                            <span data-bs-toggle="tooltip" title="{% trans 'Creator' %}">  
-                                <span class="fw-light">
-                                    <img src="{{ member.creator.profile.avatar }}" alt="X" 
-                                            class="img-fluid rounded rounded-circle" 
-                                            style="width: 1rem; height: 1rem;">
-                                </span>
-                                <span class="small text-secondary">{{ member.creator }}</span>                              
+                            <!-- {% if member.first_name or member.last_name %}
+                            {% endif %} -->
+                            <span data-bs-toggle="tooltip" title="{% trans 'Full name' %}">  
+                                <span class="small text-secondary me-2 ">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>                                  
                             </span>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 text-end">
+                    <!-- <div class="col-12 col-md-6 text-end">
                         <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}"> 
                             <span><i class="{{ bicons.estimate }} small"></i></span>
                             <span class="fw-bold">{{ member.member_amount }}</span>
@@ -69,7 +53,7 @@
                         <div>
                             <span class="badge bg-{{ member.tag_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ member.tag_display }}</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>              
             </div>
 
@@ -78,23 +62,35 @@
         <div class="card-footer small px-2 py-1">
             <div class="small">
 
-                {% if not member.is_active %}
-                    <span class="me-2 my-0 text-danger" data-bs-toggle="tooltip" title="{% trans 'Member is disabled' %}">
-                        <span><i class="{{ bicons.cancelled }}"></i></span>
-                        <span class="">{% trans 'Disabled' %}</span>
+                {% if member == request.user %}
+                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
+                        <span class="badge bg-success">
+                            <span class="">{% trans 'ME' %}</span>
+                        </span>
                     </span>
                 {% endif %}
 
-                {% if not member.is_patron %}
+                {% if not member.is_actife %}
+                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Member is disabled' %}">
+                        <span class="badge bg-danger">
+                            <span><i class="{{ bicons.cancelled }}"></i></span>
+                            <span class="">{% trans 'Disabled' %}</span>
+                        </span>
+                    </span>
+                {% endif %}
+
+                {% if member.is_patron %}
                     <span class="me-2 my-0 text-primary" data-bs-toggle="tooltip" title="{% trans 'Member is Team admin' %}">
-                        <span><i class="{{ bicons.superuser }}"></i></span>
-                        <span class="">{% trans 'Admin' %}</span>
+                        <span class="badge bg-warning">
+                            <span><i class="{{ bicons.superuser }}"></i></span>
+                            <span class="">{% trans 'Admin' %}</span>
+                        </span>
                     </span>
                 {% endif %}
 
                 <span class="me-2 my-0 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Member joined date' %}">
                     <span><i class="{{ bicons.history }}"></i></span>
-                    <span class="">{{ member.joined }}</span>
+                    <span class="">{{ member.joined.date|default:'-' }}</span>
                 </span>
 
             </div>

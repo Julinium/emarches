@@ -3,7 +3,7 @@ from bidding.models import TeamMember
 
 def is_team_admin(user, team):
     membership = TeamMember.objects.filter(
-        user=user, team=team,
+        user=user, team=team, active=True,
     ).first()
 
     if membership: return membership.patron == True
@@ -12,7 +12,7 @@ def is_team_admin(user, team):
 
 def is_team_member(user, team):
     membership = TeamMember.objects.filter(
-        user=user, team=team,
+        user=user, team=team, active=True,
     ).first()
 
     if membership: return True

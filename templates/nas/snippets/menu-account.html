@@ -37,11 +37,8 @@
         </li>
 
         <li class="">
-            <a href="#" class="p-2 dropdown-item">
+            <a href="{% url 'bidding_members_list' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.people }} me-2"></i></span>
-                <span class="badge bg-danger fw-light">
-                    <i class="{{ bicons.deadline }}"></i>
-                </span>
                 <span class="">{% trans "Team" %}</span>
             </a>
         </li>

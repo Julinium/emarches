@@ -39,7 +39,7 @@ def dashboard(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def team_list(request):
+def members_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -56,11 +56,11 @@ def team_list(request):
     USERS_ORDERING_FIELD = 'username'
 
     colleagues = team.members.annotate(
-        is_active = F("team_member__active"),
-        is_patron = F("team_member__patron"),
-        joined = F("team_member__joined"),
+        is_actife = F("teammember__active"),
+        is_patron = F("teammember__patron"),
+        joined = F("teammember__joined"),
     ).order_by(
-        '-active', '-patron', USERS_ORDERING_FIELD,
+        '-is_actife', '-is_patron', USERS_ORDERING_FIELD,
     )
 
     paginator = Paginator(colleagues, USERS_ITEMS_PER_PAGE)
@@ -74,6 +74,7 @@ def team_list(request):
     context = {
         'page_obj'  : page_obj,
         'team'      : team,
+        'manage'    : is_team_admin(user, team)
     }
 
     logger = logging.getLogger('portal')
