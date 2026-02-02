@@ -195,6 +195,8 @@ def portal_context(request):
         'connection'      : 'bi bi-plug',
         'addresses'       : 'bi bi-envelope-at',
 
+        'superuser'       : 'bi bi-hash',
+
     }
 
     context['bicons']        = bicons

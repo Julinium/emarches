@@ -10,7 +10,6 @@ from django.core.paginator import Paginator
 from django.db.models import F, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import resolve
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
@@ -23,22 +22,64 @@ from bidding.secu import is_team_admin, is_team_member
 from nas.choices import BidResults, BidStatus, BondStatus, ExpenseStatus, TaskStatus
 from nas.models import Company
 
-# from django.db.models.functions import NullIf, Round
-# from decimal import Decimal
-
-
-
-
+#
 
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
-TENDERS_ITEMS_PER_PAGE = 25
-BIDS_ITEMS_PER_PAGE = 25
+TENDERS_ITEMS_PER_PAGE = 10
+BIDS_ITEMS_PER_PAGE = 10
+USERS_ITEMS_PER_PAGE = 10
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def dashboard(request):
     return HttpResponse('Dashboard')
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def team_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(status=403)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(status=403)
+
+    pro_context = portal_context(request)
+    us = pro_context['user_settings']
+
+    if us: 
+        USERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+    USERS_ORDERING_FIELD = 'username'
+
+    colleagues = team.members.annotate(
+        is_active = F("team_member__active"),
+        is_patron = F("team_member__patron"),
+        joined = F("team_member__joined"),
+    ).order_by(
+        '-active', '-patron', USERS_ORDERING_FIELD,
+    )
+
+    paginator = Paginator(colleagues, USERS_ITEMS_PER_PAGE)
+    page_number = request.GET['page'] if 'page' in request.GET else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context = {
+        'page_obj'  : page_obj,
+        'team'      : team,
+    }
+
+    logger = logging.getLogger('portal')
+    logger.info(f"Team members List view")
+
+    return render(request, 'bidding/colleagues-list.html', context)
 
 
 
@@ -303,8 +344,8 @@ def bids_list(request):
     if teams:
         all_bids = Bid.objects.filter(
             creator__in=colleagues
-        # ).prefetch_related(
-        #     "tasks", "expenses", "contracts",
+        ).prefetch_related(
+            "tasks", "expenses", #"contracts",
         )
     else:
         all_bids = Bid.objects.none()

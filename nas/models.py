@@ -133,6 +133,12 @@ class Company(models.Model):
 
         return True
 
+    @property
+    def deletable(self):
+        if self.assets.count() > 0 : return False
+        if self.bids.count() > 0 : return False
+        return True
+
     
     def save(self, *args, **kwargs):
         if self.image:
@@ -167,9 +173,9 @@ class Folder(models.Model):
 class Favorite(models.Model):
     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', editable=False)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='favorites', verbose_name=_('Company'))
+    # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='favorites', verbose_name=_('Company'))
     tender  = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='favorites', editable=False, verbose_name=_('Tender'))
-    folders = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
+    # folders = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
     active  = models.BooleanField(null=True, default=True, editable=False)
     when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))

@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+{% block title %}
+    {% trans "Licenses selection" %}
+{% endblock title %}
+
+{% block content %}
+    <div class="h3 mt-3">
+        <span>
+            <img src="{{ company.logo }}" alt="Logo" width="40" height="40" class="img-fluid rounded-circle">
+        </span>
+        <span>{{ company.name }}</span>
+    </div>
+    <form method="post" action="{% url 'nas_company_agrements' company.id %}">
+        {% csrf_token %}
+
+        <div class="form-group ms-5">
+            <label class="my-2 h3">{% trans "Licenses" %}:</label>
+            <div class="checkbox-list">
+                {% for agrement in all_agrements %}
+                <div class="checkbox pt-3 pb-1 border-0 border-bottom">
+                    <label>
+                    <input type="checkbox" 
+                            name="agrements" 
+                            value="{{ agrement.id }}"
+                            {% if agrement in company.agrements.all %}checked{% endif %}>
+                        {{ agrement.name }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="mt-3 text-center">
+            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
+            <a class="m-1 btn btn-outline-secondary" href="{% url 'nas_company_detail' company.id %}"><i class="me-2 bi bi-x-lg"></i>Cancel</a>
+        </div>
+    </form>
+{% endblock content %}

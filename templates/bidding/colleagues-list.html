@@ -1,0 +1,88 @@
+{% extends 'base/base.html' %}
+{% load i18n l10n static %}
+{% load humanize %}
+
+{% block title %}
+    {% trans "My team" %}
+{% endblock title %}
+
+
+{% block content %}
+
+    <div class="d-flex align-items-center justify-content-between px-0">
+        <div class="">
+            <span class="h3 me-1">{% trans "My team" %}</span>
+        </div>
+        <!-- <div class="d-flex align-items-top">
+            include 'bidding/snippets/members/members-search-form.html'
+            include 'bidding/snippets/members/members-menu-sort.html'
+        </div> -->
+    </div>
+
+    <!-- <div class="fw-light mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="" data-bs-toggle="tooltip" 
+                  title="{% trans 'Results are filtered' %}">
+                <i class="{{ bicons.filters }}"></i>
+            </span>
+        {% endif %}
+        <span class="fw-bold">
+            {{ page_obj.paginator.count }} 
+        </span>
+        <span class="small text-muted">{% trans "Bids found" %}.</span>
+        {% if page_obj.has_other_pages %}
+        {% endif %}
+            <span class="small text-muted">{% trans "Showing" %}:</span>
+            <span class="small">
+                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
+            </span>
+    </div> -->
+
+    <div class="container py-4 px-0">
+        <div class="mb-2">
+            <span class="text-muted small fw-light me-2">{% trans 'Name' %}</span>
+            <span>{{ team.name }}</span>
+        </div>
+        <div class="mb-2">
+            <span class="text-muted small fw-light me-2">{% trans 'Status' %}</span>
+            <span>{{ team.active }}</span>
+        </div>
+        <div class="mb-2">
+            <span class="text-muted small fw-light me-2">{% trans 'Image' %}</span>
+            <span>{{ team.image.url }}</span>
+        </div>
+        <div class="mb-2">
+            <span class="text-muted small fw-light me-2">{% trans 'Creator' %}</span>
+            <span>{{ team.creator.username }}</span>
+        </div>
+        <div class="mb-2">
+            <span class="text-muted small fw-light me-2">{% trans 'Created' %}</span>
+            <span>{{ team.created }}</span>
+        </div>
+        <div class="mb-2">
+            <span class="text-muted small fw-light me-2">{% trans 'Updated' %}</span>
+            <span>{{ team.updated }}</span>
+        </div>
+    </div>
+    
+    
+    {% if page_obj %}
+
+        <div class="container py-4 px-0">
+            {% for members in page_obj %}
+                <div class="card shadow mb-4">
+                    {% include 'bidding/snippets/members/members-item.html' %}
+                </div>
+            {% endfor %}
+        </div>
+
+        {% include 'base/snippets/paginator.html' %}
+
+    {% else %}
+        {% include 'base/snippets/empty-list.html' %}
+    {% endif %}
+    
+
+{% endblock content %}
+
+

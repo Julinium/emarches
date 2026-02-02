@@ -1,0 +1,14 @@
+{% load i18n static %}
+
+<div class="">
+    <span class="badge bg-danger small me-1">
+        <i class="{{ bicons.deadline }}"></i>
+        <span>{% trans "Coming soon" %}</span>
+    </span>
+
+    {% if explain %}
+        <span class="text-danger fw-light">
+            {% trans "This feature is under development and will be availaible in future versions." %}
+        </span>
+    {% endif %}
+</div>

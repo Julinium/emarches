@@ -20,18 +20,24 @@
                 <span class="">{% trans "Preferences" %}</span>
             </a>
         </li>
-        <!-- <li class="">
-            <a href="{% url 'nas_tune_notifications' %}" class="p-2 dropdown-item">
+        <li class="">
+            <a href="#" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.notification }} me-2"></i></span>
+                <span class="badge bg-danger fw-light">
+                    <i class="{{ bicons.deadline }}"></i>
+                </span>
                 <span class="">{% trans "Notifications" %}</span>
             </a>
-        </li> -->
+        </li>
 
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a href="{% url 'nas_company_list' %}" class="p-2 dropdown-item">
+            <a href="#" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.company }} me-2"></i></span>
+                <span class="badge bg-danger fw-light">
+                    <i class="{{ bicons.deadline }}"></i>
+                </span>
                 <span class="">{% trans "Companies" %}</span>
             </a>
         </li>

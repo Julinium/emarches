@@ -1,0 +1,111 @@
+{% extends 'base/base.html' %}
+{% load static i18n %}
+
+
+{% block title %}
+    {% trans "Edit Profile" %}
+{% endblock title %}
+
+{% block content %}
+    <div class="h3">{% trans "Edit Profile" %}</div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mt-3">
+            <div class="text-center">
+                <div class="position-relative d-inline-block ratio ratio-1x1" style="max-width: 12rem;">
+                    {% if form.instance.image %}
+                        <img id="image-preview" src="{{ form.instance.avatar }}" alt="Avatar" class="img-fluid rounded-circle object-fit-cover">
+                    {% else %}
+                        <img id="image-preview" src="{% static 'avatars/default.png' %}" alt="Default avatar" class="img-fluid rounded-circle object-fit-cover">
+                    {% endif %}
+                </div>
+
+                <div id="img-actions" class="mt-0">
+                    <input type="file" class="d-none" id="{{ form.image.id_for_label }}" name="{{ form.image.name }}" accept="image/*">
+                    <input type="hidden" id="{{ form.clear_image.id_for_label }}" name="{{ form.clear_image.name }}" value="0">
+                    <label for="{{ form.image.id_for_label }}" class="btn btn-lg p-1 px-2 btn-light" title="{% trans 'Upload Image' %}">
+                        <i class="bi bi-image text-primary"></i>
+                    </label>
+                    <button type="button" 
+                            class="btn btn-lg p-1 px-2 btn-light" 
+                            data-bs-toggle="popover" 
+                             data-bs-trigger="focus"
+                            data-bs-placement="top"
+                            title="{% trans 'Avatar image' %}" 
+                            data-bs-content="
+                            {% trans 'Major image files up to 5MB are supported (PNG, JPG, JPEG, GIF, WEBP, AVIF, ...)' %}.
+                            {% trans 'SVG files are not allowed for security reasons' %}.
+                            {% trans 'We may crop and resize the image' %}.
+                            ">
+                        <i class="bi bi-info-circle text-success"></i>
+                    </button>
+                    <button type="button" class="btn btn-lg p-1 px-2 btn-light" title="{% trans 'Clear Image' %}" id="clear-image"><i class="bi bi-trash text-danger"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-floating mt-3 d-none">
+            <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" value="{{ form.username.value }}" required>
+            <label class="text-muted small fw-light" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+        </div>
+        
+        <div class="row gx-4 mt-1">
+            <div class="col-md-6 col-12">
+                <div class="form-floating mt-3 {% if form.first_name.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}" name="{{ form.first_name.name }}" value="{{ form.first_name.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+                </div>
+                <div class="form-floating mt-3 {% if form.last_name.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.last_name.id_for_label }}" name="{{ form.last_name.name }}" value="{{ form.last_name.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="form-floating mt-3 {% if form.phone.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.phone.id_for_label }}" name="{{ form.phone.name }}" value="{{ form.phone.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+                </div>
+                <div class="form-floating mt-3 {% if form.whatsapp.errors %}border-2 border-danger{% endif %}">
+                    <input type="text" class="form-control" id="{{ form.whatsapp.id_for_label }}" name="{{ form.whatsapp.name }}" value="{{ form.whatsapp.value }}">
+                    <label class="text-muted small fw-light" for="{{ form.whatsapp.id_for_label }}">{{ form.whatsapp.label }}</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-floating mt-3 {% if form.about.errors %}border-2 border-danger{% endif %}">
+            <textarea class="form-control" id="{{ form.about.id_for_label }}" name="{{ form.about.name }}" style="height: 5rem;">{{ form.about.value }}</textarea>
+            <label class="text-muted small fw-light" for="{{ form.about.id_for_label }}">{{ form.about.label }}</label>
+        </div>
+
+        <div class="mt-3 text-center">        
+            <button type="submit" class="m-1 btn btn-primary"><i class="me-2 bi bi-floppy"></i>{% trans "Save" %}</button>
+            <a class="m-1 btn btn-outline-secondary" href="{% url 'nas_profile_view' %}"><i class="me-2 bi bi-x-lg"></i>{% trans "Cancel" %}</a>
+        </div>
+    </form>
+
+    <script>
+        const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+        const imagePreview = document.getElementById('image-preview');
+        const clearButton = document.getElementById('clear-image');
+        const clearImageInput = document.getElementById('{{ form.clear_image.id_for_label }}');
+        const defaultImage = "{% static 'avatars/default.png' %}";
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    clearImageInput.value = '0'; // Reset clear_image when a new file is selected
+                };
+                imageInput.value = reader.readAsDataURL(file);
+
+            }
+        });
+
+        clearButton.addEventListener('click', function() {
+            imagePreview.src = defaultImage; // Reset to default avatar
+            clearImageInput.value = '1'; // Set clear_image to True
+            imageInput.value = ''; // Clear the file input
+        });
+    </script>
+{% endblock content %}

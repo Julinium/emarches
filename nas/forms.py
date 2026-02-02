@@ -62,6 +62,7 @@ class UserProfileForm(forms.ModelForm):
             profile.save()
         return profile
 
+
 class UserSettingsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):

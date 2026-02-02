@@ -1,0 +1,47 @@
+{% load i18n %}
+
+<div class="mt-0">
+    <div class="d-flex align-items-center">
+        <div class="h4 pb-0">
+            <span class=""><i class="bi bi-people me-1"></i></span>
+            <span>{% trans "My Team" %}</span>
+        </div>
+        <!-- {% if user.teams.all|length != 0 %}
+            <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_list' %}"><i class="bi bi-pencil me-2"></i>{% trans "Manage" %}</a></div>
+        {% endif %} -->
+    </div>
+</div>
+<div class="ms-4">
+    {% if user.teams.all|length == 0 %}
+        <div class="my-3">
+            <a href="{% url 'nas_company_create' %}" class="btn btn-outline-primary my-3"><i class="bi bi-plus-lg me-2"></i>{% trans "Create My Team" %}</a>
+        </div>
+    {% else %}
+        <div class="row g-4">
+            {% for membership in user.teams.first.teammember_set.all %}
+                <div class="col-md-6 col-12">
+                    <div class="mt-3 border border-bottom border-0">
+                        <div class="d-flex">
+                            <div id="img-preview" class="d-inline-block ratio ratio-1x1" style="max-width: 1.5rem; max-height: 1.5rem;">
+                                <img id="image-preview" src="{{ membership.user.profile.avatar }}" alt="-" class="img-fluid rounded-circle object-fit-cover">
+                            </div>
+                            <div class="ms-2">
+                                <div class="mt-0 fw-bold oneline">
+                                    <span class="me-1">{{ membership.user.username|default:'--' }}</span>
+                                    {% if membership.patron %}
+                                        <span class="badge bg-danger">{% trans "Admin" %}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="mt-0 small">
+                                    <span class="me-1 small">Joined: {{ membership.joined.date|default:'--' }}</span>
+                                    <span class="me-1 small">Last login: {{ membership.user.last_login|default:'--' }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    {% endif %}
+</div>

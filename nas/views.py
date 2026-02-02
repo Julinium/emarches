@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import translation
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control, never_cache
@@ -126,7 +127,15 @@ def tuneNotifications(request):
             for subscription in subscriptions:
                 subscription.active = str(subscription.id) in selected_subscriptions
                 subscription.save()
-            return redirect('nas_profile_view')
+            
+            redir = request.POST.get('next', request.META.get('HTTP_REFERER', None))
+            if redir and not url_has_allowed_host_and_scheme(
+                redir, allowed_hosts={request.get_host()},
+                require_https=request.is_secure()):
+                redir = None
+
+            return redirect(redir)
+
     else:
         form = NotificationSubscriptionForm(user=request.user)
     
@@ -346,13 +355,17 @@ def user_settings(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Settings saved successfully.")
-            next_url = request.POST.get('next', None)
-            if next_url: return redirect(next_url)
-            
-            next_url = request.GET.get('next', None)
-            if next_url: return redirect(next_url)
 
-            return redirect('/')
+            redir = request.POST.get('next', request.META.get('HTTP_REFERER', None))
+            if redir and not url_has_allowed_host_and_scheme(
+                redir, allowed_hosts={request.get_host()},
+                require_https=request.is_secure()):
+                redir = None
+
+            return redirect(redir)
+
+            # next_url = request.POST.get('next', None)
+            # if next_url: return redirect(next_url)
 
         else:
             show_form_errors(form, request)

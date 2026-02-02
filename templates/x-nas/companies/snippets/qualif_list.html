@@ -1,0 +1,35 @@
+{% load static i18n %}
+
+<div class="mt-0">
+    <div class="d-flex align-items-center">
+        <div class="h4 pb-0">
+            <span class=""><i class="bi bi-mortarboard-fill me-1"></i></span>
+            <span>{% trans "Qualifications" %}</span>
+        </div>
+        <div><a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_company_qualifs' company.id %}"><i class="bi bi-pencil me-2"></i>{% trans "Manage" %}</a></div>
+    </div>
+</div>
+<div class="ms-4">
+    <div class="mt-3 ps-2">
+        {% for qualif in company.qualifs.all %}
+            <div class="mt-3 border border-bottom border-0">
+                <div class="d-flex">
+                    <div id="img-preview" class="d-inline-block ratio ratio-1x1 border rounded-circle text-center mb-1" style="max-width: 1.5rem; max-height: 1.5rem;">
+                        <span class="">{{ qualif.short.0|default:'Q' }}</span>
+                    </div>
+                    <div class="ms-2">
+                        <div class="my-0">
+                            <span class="badge bg-secondary">{{ qualif.short }}</span>
+                            <span class="badge bg-success">{{ qualif.classe }}</span>
+                            <span>{{ qualif.name|default:'-' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-muted fw-light">
+                {% trans "No qualification found" %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

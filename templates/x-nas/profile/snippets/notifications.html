@@ -1,0 +1,108 @@
+{% load i18n %}
+
+<div class="mt-0">
+    <div class="d-flex align-items-center">
+        <div class="h4 pb-0">
+            <span class=""><i class="bi bi-app-indicator me-1"></i></span>
+            <span>{% trans "Notifications" %}</span>
+        </div>
+        <div>
+            <a class="btn btn-sm btn-light mb-1 ms-2" href="{% url 'nas_tune_notifications' %}"><i class="bi bi-pencil me-2"></i>{% trans "Manage" %}</a>
+        </div>
+    </div>
+</div>
+
+<div class="ms-4">
+    {% if notifications.all|length == 0 %}
+        <div class="my-3">
+            <div class="text-danger">{% trans "No Notification found" %}</div>
+        </div>
+    {% else %}
+        {% if notif_disabled %}
+            <div id="notif-form-container" class="mt-2">
+                <form id="enable-all-notifications-form" action="{% url 'nas_enable_all_notifications' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn btn-outline-success" href="javascript:"><i class="bi bi-check-all me-2"></i>{% trans "Enable all" %}</button>
+                </form>
+            </div>
+        {% endif %}
+        <div id="notification-list" class="mt-3">
+            {% for notif in notifications.all %}
+                <div class="mt-3 border border-bottom border-0">
+                    <div class="d-flex align-items-center">
+                        <div class="notif-icon-of-activity">
+                            {% if notif.active %}
+                                <i class="bi bi-check-square text-success"></i>
+                            {% else %}
+                                <i class="bi bi-x-square text-secondary text-danger"></i>
+                            {% endif %}
+                        </div>
+                        <div class="ms-2">
+                            <div class="my-0 twoline" data-bs-toggle="tooltip" title="{{ notif.notification.description }}">
+                                <span class="me-1 text-muted">{{ notif.notification.channel|title }}:</span>
+                                <span class="me-1 small">{{ notif.notification.name }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+
+<script>
+    const enableAllNotificationsForm = document.getElementById('enable-all-notifications-form')
+    if (enableAllNotificationsForm) {
+        enableAllNotificationsForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Create XHR object
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '{% url "nas_enable_all_notifications" %}', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('X-CSRFToken', getCsrfToken()); // Include CSRF token
+
+            // Handle response
+            xhr.onload = function() {
+                const notificationList = document.getElementById('notification-list');
+                if (xhr.status === 200) {
+                    const allIcons = document.getElementsByClassName('notif-icon-of-activity')
+                    const notificationsFormContainer = document.getElementById('notif-form-container');
+                    for (let element of allIcons) {
+                        element.innerHTML = `<i class="bi bi-check-square text-success"></i>`;
+                    }
+                    notificationsFormContainer.classList.add('d-none')
+                } else {
+                    const errorData = JSON.parse(xhr.responseText);
+                    notificationList.innerHTML = `<p class="text-danger">Error: ${errorData.error}</p>`;
+                }
+            };
+
+            // Handle network errors
+            xhr.onerror = function() {
+                document.getElementById('notification-list').innerHTML = '<p class="text-danger">Network error occurred.</p>';
+            };
+
+            // Send POST request (no data needed for enabling all)
+            xhr.send();
+        });
+    }
+
+    // Function to get CSRF token from cookie
+    function getCsrfToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
