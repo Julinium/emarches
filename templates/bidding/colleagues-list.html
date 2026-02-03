@@ -106,6 +106,58 @@
 
         <div id="invite-modal">
             
+            <div id="bidDeleteModal" class="modal fade" 
+                    tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
+                    aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <form id="bid-delete-form" method="post">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="my-2">
+                                    <div class="mb-1">
+                                        <span class="small fw-light">{% trans "Amount" %}: </span>
+                                        <span id="bid-span-amount"></span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <span class="small fw-light">{% trans "Company" %}: </span>
+                                        <span id="bid-span-company"></span>
+                                    </div>
+                                    <div class="mb-1">
+                                        <span class="small fw-light">{% trans "Result" %}: </span>
+                                        <span id="bid-span-result"></span>
+                                    </div>
+                                </div>
+                                
+                                <div class="my-2">
+                                    <span class="text-danger">{% trans "This bid, its associated data and files will be permanently deleted." %}</span>
+                                </div>
+
+                                <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                    <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                    <option selected value="just_delete">{% trans "Just delete it" %}</option>
+                                    <option value="know">{% trans "I know what I am doing" %}</option>
+                                </select>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <span><i class="bi bi-x-lg"></i></span>
+                                    <span class="ms-1">{% trans "Cancel" %}</span>
+                                </button>
+                                <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
+                                    <span><i class="{{ bicons.delete }}"></i></span>
+                                    <span class="ms-1">{% trans 'Delete' %}</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
     {% endif %}

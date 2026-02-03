@@ -5,21 +5,39 @@
 
 <div id="m-{{ member.username }}-top">
 
-    <a href=""
+
+    <!-- ########################### -->
+
+    <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
        class="text-decoration-none text-reset">
+        <div class="card-header p-2 {% if bid.lot.tender.expired %} bg-warning-subtle{% endif %}" data-bs-toggle="tooltip" title="{{ bid.title }}">
+            <div class="twolines">
+                {{ bid.title|default:bid.lot.title }}
+            </div>
+        </div>
+
+        <div class=" card-body p-0">
+
+            <div id="bid-{{ bid.id }}-digest" class="p-2">
+
+            </div>
+
+            <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
+
+                <div id="bid-details-extended" class="mx-0 mb-3">
+                    
+                </div>
+                
+                <div id="bid-details-actions" class="text-end mx-0 mb-3">
+                    
+                </div>
+            </div>
+
+        </div>            
     </a>
 
-        <!-- <div class="card-header px-2 py-1">
-            <div class="oneline">
-                {% if member.lot.tender.cancelled == True %}
-                    <span class="badge bg-danger me-1" data-bs-toggle="tooltip" title="{% trans 'Tender is cancelled' %}">
-                        <i class="{{ bicons.cancelled }}"></i>
-                        <span>{% trans "CANCELLED" %}</span>
-                    </span>
-                {% endif %}
-                <span class="fw-bold small">{{ member.caption }}</span>
-            </div>
-        </div> -->
+    <!-- ########################### -->
 
         <div class="card-body p-0">
 
@@ -38,22 +56,49 @@
                             </span>
                         </div>
                         <div class="oneline ms-4 text-secondary">
-                            <!-- {% if member.first_name or member.last_name %}
-                            {% endif %} -->
                             <span data-bs-toggle="tooltip" title="{% trans 'Full name' %}">  
                                 <span class="small text-secondary me-2 ">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>                                  
                             </span>
                         </div>
                     </div>
-                    <!-- <div class="col-12 col-md-6 text-end">
-                        <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}"> 
-                            <span><i class="{{ bicons.estimate }} small"></i></span>
-                            <span class="fw-bold">{{ member.member_amount }}</span>
-                        </div>
-                        <div>
-                            <span class="badge bg-{{ member.tag_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ member.tag_display }}</span>
-                        </div>
-                    </div> -->
+
+                    <div class="my-2">
+                        {% if member != request.user and member.is_patron %}
+                            {% if member.is_actife %}
+                                <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
+                                        data-bs-toggle="modal" data-bs-target="#memberDisableModal"
+                                        data-amount="{{ member.member_amount }}"
+                                        data-company="{{ member.company.name }}"
+                                        data-result="{{ member.get_result_display }}"
+                                        data-url="{% url 'bidding_member_disable' member.id %}">
+                                    <span><i class="{{ bicons.delete }}"></i></span>
+                                    <span class="ms-1">{% trans 'Disable' %}</span>
+                                </button>
+                            {% else %}
+                                <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-primary"
+                                        data-bs-toggle="modal" data-bs-target="#memberEnableModal"
+                                        data-amount="{{ member.member_amount }}"
+                                        data-company="{{ member.company.name }}"
+                                        data-result="{{ member.get_result_display }}"
+                                        data-url="{% url 'bidding_member_enable' member.id %}"
+                                        >
+                                    <span><i class="{{ bicons.delete }}"></i></span>
+                                    <span class="ms-1">{% trans 'Enable' %}</span>
+                                </button>
+                            {% endif %}
+
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-danger"
+                                    data-bs-toggle="modal" data-bs-target="#memberDeleteModal"
+                                    data-amount="{{ member.member_amount }}"
+                                    data-company="{{ member.company.name }}"
+                                    data-result="{{ member.get_result_display }}"
+                                    data-url="{% url 'bidding_member_remove' member.id %}"
+                                    >
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Remove' %}</span>
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>              
             </div>
 
