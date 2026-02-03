@@ -174,34 +174,37 @@ def member_bossify(request, tk=None, pk=None):
     user = request.user
     if not user or not user.is_authenticated :
         return HttpResponse(status=403)
-    
+
     if not pk: return HttpResponse(status=404)
     membership = get_object_or_404(TeamMember, pk=pk)
 
     member = membership.user
     if not member: return HttpResponse(status=404)
 
+    if member == user: return HttpResponse(status=405)
+
     if not tk: return HttpResponse(status=404)
     team = get_object_or_404(Team, pk=tk)
 
     if not is_team_admin(user, team): return HttpResponse(status=403)
     if not is_team_member(member, team): return HttpResponse(status=405)
+    if is_team_admin(member, team): return HttpResponse(status=405)
 
-    active_colleagues = team.members.annotate(
-        is_actife = F("teammember__active"),
-    ).filter(is_actife=True).exclude(id=member.id).count()
+    # active_colleagues = team.members.annotate(
+    #     is_actife = F("teammember__active"),
+    # ).filter(is_actife=True).exclude(id=member.id).count()
 
-    if active_colleagues < 2: return HttpResponse(status=405)
+    # if active_colleagues < 2: return HttpResponse(status=405)
 
     logger = logging.getLogger('portal')
 
     try:
-        membership.update(active = False)
-        logger.info(f"Team membership Disabled")        
+        membership.update(manager = True)
+        logger.info(f"Team membership changed to Manager")        
         return HttpResponse(status=200)
 
     except Exception as xc:
-        logger.info(f"Exception Disabling Team membership: { str(sc)}")
+        logger.info(f"Exception Changing Team membership: { str(sc)}")
 
     return HttpResponse(status=500)
 
