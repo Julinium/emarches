@@ -28,7 +28,7 @@
                             <div class="ms-2">
                                 <div class="mt-0 fw-bold oneline">
                                     <span class="me-1">{{ membership.user.username|default:'--' }}</span>
-                                    {% if membership.patron %}
+                                    {% if membership.manager %}
                                         <span class="badge bg-danger">{% trans "Admin" %}</span>
                                     {% endif %}
                                 </div>

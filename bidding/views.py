@@ -17,8 +17,8 @@ from django.views.decorators.cache import cache_control
 from base.context_processors import portal_context
 from base.models import Lot, Tender
 from bidding.forms import BidForm, ExpenseForm, TaskForm
-from bidding.models import Bid, Expense, Task, Team
-from bidding.secu import is_team_admin, is_team_member
+from bidding.models import Bid, Expense, Task, Team, TeamMember
+from bidding.secu import is_team_admin, is_team_member, is_active_team_member
 from nas.choices import BidResults, BidStatus, BondStatus, ExpenseStatus, TaskStatus
 from nas.models import Company
 
@@ -39,7 +39,7 @@ def dashboard(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def members_list(request):
+def member_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -47,6 +47,8 @@ def members_list(request):
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -57,10 +59,10 @@ def members_list(request):
 
     colleagues = team.members.annotate(
         is_actife = F("teammember__active"),
-        is_patron = F("teammember__patron"),
+        is_manager = F("teammember__manager"),
         joined = F("teammember__joined"),
     ).order_by(
-        '-is_actife', '-is_patron', USERS_ORDERING_FIELD,
+        '-is_actife', '-is_manager', USERS_ORDERING_FIELD,
     )
 
     paginator = Paginator(colleagues, USERS_ITEMS_PER_PAGE)
@@ -86,6 +88,127 @@ def members_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def member_disable(request, tk=None, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(status=403)
+    
+    if not pk: return HttpResponse(status=404)
+    membership = get_object_or_404(TeamMember, pk=pk)
+
+    member = membership.user
+    if not member: return HttpResponse(status=404)
+
+    if not tk: return HttpResponse(status=404)
+    team = get_object_or_404(Team, pk=tk)
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(member, team): return HttpResponse(status=405)
+
+    active_colleagues = team.members.annotate(
+        is_actife = F("teammember__active"),
+    ).filter(is_actife=True).exclude(id=member.id).count()
+
+    if active_colleagues < 2: return HttpResponse(status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        membership.update(active = False)
+        logger.info(f"Team membership Disabled")        
+        return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Disabling Team membership: { str(sc)}")
+
+    return HttpResponse(status=500)
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def member_enable(request, tk=None, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(status=403)
+    
+    if not pk: return HttpResponse(status=404)
+    membership = get_object_or_404(TeamMember, pk=pk)
+
+    member = membership.user
+    if not member: return HttpResponse(status=404)
+
+    if not tk: return HttpResponse(status=404)
+    team = get_object_or_404(Team, pk=tk)
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
+    if not is_team_member(member, team): return HttpResponse(status=403)
+    if is_active_team_member(member, team): return HttpResponse(status=405)
+
+    # active_colleagues = team.members.annotate(
+    #     is_actife = F("teammember__active"),
+    # ).filter(is_actife=True).exclude(id=member.id).count()
+
+    # if active_colleagues < 2: return HttpResponse(status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        membership.update(active = True)
+        logger.info(f"Team membership Enabled")        
+        return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Enabling Team membership: { str(sc)}")
+
+    return HttpResponse(status=500)
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def member_bossify(request, tk=None, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(status=403)
+    
+    if not pk: return HttpResponse(status=404)
+    membership = get_object_or_404(TeamMember, pk=pk)
+
+    member = membership.user
+    if not member: return HttpResponse(status=404)
+
+    if not tk: return HttpResponse(status=404)
+    team = get_object_or_404(Team, pk=tk)
+
+    if not is_team_admin(user, team): return HttpResponse(status=403)
+    if not is_team_member(member, team): return HttpResponse(status=405)
+
+    active_colleagues = team.members.annotate(
+        is_actife = F("teammember__active"),
+    ).filter(is_actife=True).exclude(id=member.id).count()
+
+    if active_colleagues < 2: return HttpResponse(status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        membership.update(active = False)
+        logger.info(f"Team membership Disabled")        
+        return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Disabling Team membership: { str(sc)}")
+
+    return HttpResponse(status=500)
+
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tenders_list(request):
 
     user = request.user
@@ -94,6 +217,8 @@ def tenders_list(request):
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -160,7 +285,7 @@ def tenders_list(request):
             name=user.username.upper(),
             creator=user,
         )
-        team.add_member(user, patron=True)
+        team.add_member(user, manager=True)
 
     teams = user.teams.all()
     colleagues = user.teams.first().members.all()
@@ -232,6 +357,8 @@ def bids_list(request):
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -335,7 +462,7 @@ def bids_list(request):
             name=user.username.upper(),
             creator=user,
         )
-        team.add_member(user, patron=True)
+        team.add_member(user, manager=True)
 
     teams = user.teams.all()
     colleagues = user.teams.first().members.all()
@@ -412,6 +539,8 @@ def bonds_list(request):
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -514,7 +643,7 @@ def bonds_list(request):
             name=user.username.upper(),
             creator=user,
         )
-        team.add_member(user, patron=True)
+        team.add_member(user, manager=True)
 
     teams = user.teams.all()
     colleagues = user.teams.first().members.all()
@@ -576,6 +705,8 @@ def bid_details(request, pk=None):
     
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
     
     bid = get_object_or_404(Bid, pk=pk)
     bid = Bid.objects.filter(pk=pk).prefetch_related("tasks", "expenses").first()
@@ -611,7 +742,7 @@ def bid_delete(request, pk=None):
         bid = None
         if pk: bid = get_object_or_404(Bid, pk=pk)
 
-        if not is_team_admin(bid.creator, team): return HttpResponse(status=403)
+        if not is_team_member(bid.creator, team): return HttpResponse(status=403)
 
         redir = redirect("bidding_bids_list")
         referer = request.META.get('HTTP_REFERER', None)
@@ -623,36 +754,20 @@ def bid_delete(request, pk=None):
         if confirmed != 'know' :
             messages.error(request, _("Please confirm deletion first"))
             return redir
-            # referer = request.META.get('HTTP_REFERER', None)
-            # if referer:
-            #     return redirect(referer)
-            # return redirect("bidding_bids_list")
 
         if bid.status != BidStatus.BID_CANCELLED:
             messages.error(request, _("You can not delete a bid unless it is Cancelled"))
             return redir
-            # referer = request.META.get('HTTP_REFERER', None)
-            # if referer:
-            #     return redirect(referer)
-            # return redirect("bidding_bids_list")
 
         if bid.bond_status == BondStatus.BOND_FILED:
             messages.error(request, _("Please check the Bond status before deleting"))
             return redir
-            # referer = request.META.get('HTTP_REFERER', None)
-            # if referer:
-            #     return redirect(referer)
-            # return redirect("bidding_bids_list")
 
         try:
             bid.delete()
             messages.success(request, _("Bid deleted successfully"))
-            # referer = request.META.get('HTTP_REFERER', None)
 
             logger.info(f"Bid delete successful")
-
-            # if referer:
-            #     return redirect(referer)
             return redirect("bidding_bids_list")
 
         except Exception as xc: 
@@ -673,6 +788,8 @@ def bid_edit(request, pk=None, lk=None):
     
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     pro_context = portal_context(request)
     us          = pro_context['user_settings']
@@ -776,7 +893,7 @@ def task_delete(request, pk=None):
 
         task = None
         if pk: task = get_object_or_404(Task, pk=pk)
-        if not is_team_admin(task.creator, team): return HttpResponse(status=403)
+        if not is_team_member(task.creator, team): return HttpResponse(status=403)
 
         bid = task.bid
         if not bid: return HttpResponse(status=403)
@@ -820,6 +937,8 @@ def task_edit(request, pk=None, bk=None):
     
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     task = None
 
@@ -893,15 +1012,15 @@ def expense_delete(request, pk=None):
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
 
-    logger = logging.getLogger('portal')
-
     if not is_team_admin(user, team): return HttpResponse(status=403)
+
+    logger = logging.getLogger('portal')
 
     if request.method == "POST":
 
         expense = None
         if pk: expense = get_object_or_404(Expense, pk=pk)
-        if not is_team_admin(expense.creator, team): return HttpResponse(status=403)
+        if not is_team_member(expense.creator, team): return HttpResponse(status=403)
 
         bid = expense.bid
         if not bid: return HttpResponse(status=403)
@@ -945,6 +1064,8 @@ def expense_edit(request, pk=None, bk=None):
     
     team = user.teams.first()
     if not team: return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     expense = None
 
@@ -1016,6 +1137,8 @@ def bid_file(request, pk=None, ft=None):
     bid = None
     if pk: bid = get_object_or_404(Bid, pk=pk)
     if not bid : return HttpResponse(status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(status=403)
 
     team = user.teams.first()
     if not team: return HttpResponse(status=403)

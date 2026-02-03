@@ -43,31 +43,31 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
-    
 
-    def add_member(self, user, patron=False):
+
+    def add_member(self, user, manager=False):
         return TeamMember.objects.create(
             team=self,
             user=user,
-            patron=patron,
+            manager=manager,
         )
 
     @property
     def companies(self):
         return Company.objects.filter(user__in=self.members.all())
     
-    @property
-    def avatar(self):
-        try:
-            avatar = self.image.url
-        except:
-            avatar = static('bidding/teams/default.png')
-        return avatar
-    
-    def save(self, *args, **kwargs):
-        if self.image:
-            self.image = squarify_image(self.image, str(self.id).split('-')[0])
-        super().save(*args, **kwargs)
+    # @property
+    # def avatar(self):
+    #     try:
+    #         avatar = self.image.url
+    #     except:
+    #         avatar = static('bidding/teams/default.png')
+    #     return avatar
+
+    # def save(self, *args, **kwargs):
+        # if self.image:
+        #     self.image = squarify_image(self.image, str(self.id).split('-')[0])
+        # super().save(*args, **kwargs)
 
 
 class TeamMember(models.Model):
@@ -75,7 +75,7 @@ class TeamMember(models.Model):
     user      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False)
     team      = models.ForeignKey(Team, on_delete=models.DO_NOTHING, editable=False)
     active    = models.BooleanField(null=True, default=True, editable=False)
-    patron    = models.BooleanField(null=True, default=False, editable=False)
+    manager   = models.BooleanField(null=True, default=False, editable=False)
     joined    = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:

@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='teammember',
-            name='patron',
+            name='manager',
             field=models.BooleanField(default=False, editable=False, null=True),
         ),
         migrations.AlterField(

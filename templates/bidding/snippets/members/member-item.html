@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="my-2">
-                        {% if member != request.user and member.is_patron %}
+                        {% if member != request.user and member.is_manager %}
                             {% if member.is_actife %}
                                 <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
                                         data-bs-toggle="modal" data-bs-target="#memberDisableModal"
@@ -124,7 +124,7 @@
                     </span>
                 {% endif %}
 
-                {% if member.is_patron %}
+                {% if member.is_manager %}
                     <span class="me-2 my-0 text-primary" data-bs-toggle="tooltip" title="{% trans 'Member is Team admin' %}">
                         <span class="badge bg-warning">
                             <span><i class="{{ bicons.superuser }}"></i></span>
