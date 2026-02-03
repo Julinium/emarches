@@ -63,7 +63,7 @@ def bdc_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -281,7 +281,7 @@ def bdc_favorite_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     # us = get_user_settings(request)
     pro_context = portal_context(request)
@@ -349,7 +349,7 @@ def bdc_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     bdc = get_object_or_404(PurchaseOrder.objects.select_related(
                 'client', 'category'
@@ -357,7 +357,7 @@ def bdc_details(request, pk=None):
                 'articles', 'attachements'
             ), id=pk)
 
-    if not bdc : return HttpResponse(status=404)
+    if not bdc : return HttpResponse(_("Not found"), status=404)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -413,15 +413,15 @@ def bdc_details(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_items_pdf(request, pk=None, fn=None):
 
-    if request.method != 'GET': return HttpResponse(status=405)
-    if pk == None or fn == None: return HttpResponse(status=404)
+    if request.method != 'GET': return HttpResponse(_("Bad request"), status=405)
+    if pk == None or fn == None: return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     bdc = get_object_or_404(PurchaseOrder, id=pk)
-    if not bdc : return HttpResponse(status=404)
+    if not bdc : return HttpResponse(_("Not found"), status=404)
     
     pdf_file_name = fn
     pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
@@ -439,22 +439,22 @@ def bdc_items_pdf(request, pk=None, fn=None):
         logger.info(f"User: { user.id }: PO items pdf File Download: {bdc.id} (={file_size}B)")
         return response
 
-    return HttpResponse(status=404)
+    return HttpResponse(_("Not found"), status=404)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_items_csv(request, pk=None, fn=None):
 
-    if request.method != 'GET': return HttpResponse(status=405)
-    if pk == None or fn == None: return HttpResponse(status=404)
+    if request.method != 'GET': return HttpResponse(_("Bad request"), status=405)
+    if pk == None or fn == None: return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     bdc = get_object_or_404(PurchaseOrder, id=pk)
-    if not bdc : return HttpResponse(status=404)
+    if not bdc : return HttpResponse(_("Not found"), status=404)
     
     csv_file_name = fn
     csv_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
@@ -472,7 +472,7 @@ def bdc_items_csv(request, pk=None, fn=None):
         logger.info(f"User: { user.id }: PO items csv File Download: {bdc.id} (={file_size}B)")
         return response
 
-    return HttpResponse(status=404)
+    return HttpResponse(_("Not found"), status=404)
 
 
 # @login_required(login_url="account_login")
@@ -481,7 +481,7 @@ def bdc_items_csv(request, pk=None, fn=None):
 
 #     user = request.user
 #     if not user or not user.is_authenticated : 
-#         return HttpResponse(status=403)
+#         return HttpResponse(_("Permission denied"), status=403)
     
 #     bdc = get_object_or_404(PurchaseOrder.objects.select_related(
 #                 'client', #'category'
@@ -525,7 +525,7 @@ def bdc_items_csv(request, pk=None, fn=None):
 
 #     user = request.user
 #     if not user or not user.is_authenticated : 
-#         return HttpResponse(status=403)
+#         return HttpResponse(_("Permission denied"), status=403)
     
 #     bdc = get_object_or_404(PurchaseOrder.objects.prefetch_related('articles'), id=pk)
     
@@ -558,7 +558,7 @@ def client_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -684,15 +684,15 @@ def locations_list(request):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_stickies_add(request, pk=None):
     
-    if request.method != 'POST': return HttpResponse(status=405)
-    if pk == None : return HttpResponse(status=404)
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
+    if pk == None : return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     purchase_order = get_object_or_404(PurchaseOrder, id=pk)
-    if not purchase_order : return HttpResponse(status=404)
+    if not purchase_order : return HttpResponse(_("Not found"), status=404)
 
     logger = logging.getLogger('portal')
 
@@ -714,15 +714,15 @@ def bdc_stickies_add(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_stickies_remove(request, pk=None):
 
-    if request.method != 'POST': return HttpResponse(status=405)
-    if pk == None : return HttpResponse(status=404)
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
+    if pk == None : return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     purchase_order = get_object_or_404(PurchaseOrder, id=pk)
-    if not purchase_order : return HttpResponse(status=404)
+    if not purchase_order : return HttpResponse(_("Not found"), status=404)
 
     logger = logging.getLogger('portal')
     sticked = Sticky.objects.filter(purchase_order=purchase_order, user=user)
@@ -740,11 +740,11 @@ def bdc_stickies_remove(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_stickies_remove_all(request):
 
-    if request.method != 'POST': return HttpResponse(status=405)
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
 
     user = request.user
     if not user or not user.is_authenticated :
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     # perimeter = request.POST.get('perimeter', '') 
     data = json.loads(request.body)

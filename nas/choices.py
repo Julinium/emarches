@@ -58,6 +58,10 @@ class ExpenseStatus(models.TextChoices):
     XPS_CONFIRMED = '30C',   _("Confirmed")
     XPS_CANCELLED = '40X',   _("Cancelled")
 
+class InvitationReplies(models.TextChoices):
+    INV_DENIED   = '0',   _("Denied")
+    INV_ACCEPTED = '1',   _("Accepted")
+
 class ReceptionStatus(models.TextChoices):
     RCP_PENDING   = '10P',   _("Pending")
     RCP_SUBMITTED = '20S',   _("Submitted")

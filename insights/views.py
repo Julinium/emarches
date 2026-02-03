@@ -30,7 +30,7 @@ def bidders_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -192,11 +192,11 @@ def bidder_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
 
-    if not bidder : return HttpResponse(status=404)
+    if not bidder : return HttpResponse(_("Not found"), status=404)
 
     context = { 
         'bidder'         : bidder,

@@ -16,10 +16,14 @@ from django.views.decorators.cache import cache_control
 
 from base.context_processors import portal_context
 from base.models import Lot, Tender
-from bidding.forms import BidForm, ExpenseForm, TaskForm
+from bidding.forms import BidForm, ExpenseForm, TaskForm, InvitationForm
 from bidding.models import Bid, Expense, Task, Team, TeamMember
-from bidding.secu import is_team_admin, is_team_member, is_active_team_member
-from nas.choices import BidResults, BidStatus, BondStatus, ExpenseStatus, TaskStatus
+from bidding.secu import (
+    is_team_admin, is_team_member, 
+    is_active_team_member, is_active_team_admin)
+from nas.choices import (
+    BidResults, BidStatus, BondStatus, 
+    ExpenseStatus, TaskStatus)
 from nas.models import Company
 
 #
@@ -39,16 +43,57 @@ def dashboard(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def invitation_create(request, tk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
+
+    if not tk: return HttpResponse(_("Not found"), status=404)
+    team = get_object_or_404(Team, pk=tk)
+
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+
+    logger = logging.getLogger('portal')
+
+    email = request.POST.get('email')
+
+    #############
+            # 'email',
+            # 'message',
+            # 'expiry',
+            # 'team',
+            # 'cancelled',
+            # 'sent_on',
+            # 'seen_on',
+            # 'reply_on',
+            # 'reply',
+            # 'response',
+    #############
+    try:
+        membership.update(active = False)
+        logger.info(f"Team membership Disabled")        
+        return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Disabling Team membership: { str(sc)}")
+
+    return HttpResponse(status=500)
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def member_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -73,10 +118,13 @@ def member_list(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
+    invitation_form = InvitationForm()
+
     context = {
         'page_obj'  : page_obj,
         'team'      : team,
-        'manage'    : is_team_admin(user, team)
+        'inv_form'  : invitation_form,
+        'manage'    : is_active_team_admin(user, team)
     }
 
     logger = logging.getLogger('portal')
@@ -84,33 +132,33 @@ def member_list(request):
 
     return render(request, 'bidding/colleagues-list.html', context)
 
-
-
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def member_disable(request, tk=None, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
-    if not pk: return HttpResponse(status=404)
+    if not pk: return HttpResponse(_("Not found"), status=404)
     membership = get_object_or_404(TeamMember, pk=pk)
 
     member = membership.user
-    if not member: return HttpResponse(status=404)
+    if not member: return HttpResponse(_("Not found"), status=404)
 
-    if not tk: return HttpResponse(status=404)
+    if member == user: return HttpResponse(_("Bad request"), status=405)
+
+    if not tk: return HttpResponse(_("Not found"), status=404)
     team = get_object_or_404(Team, pk=tk)
 
-    if not is_team_admin(user, team): return HttpResponse(status=403)
-    if not is_active_team_member(member, team): return HttpResponse(status=405)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+    if not is_active_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
 
-    active_colleagues = team.members.annotate(
-        is_actife = F("teammember__active"),
-    ).filter(is_actife=True).exclude(id=member.id).count()
+    # active_colleagues = team.members.annotate(
+    #     is_actife = F("teammember__active"),
+    # ).filter(is_actife=True).exclude(id=member.id).count()
 
-    if active_colleagues < 2: return HttpResponse(status=405)
+    # if active_colleagues < 1: return HttpResponse(_("Bad request"), status=405)
 
     logger = logging.getLogger('portal')
 
@@ -124,34 +172,34 @@ def member_disable(request, tk=None, pk=None):
 
     return HttpResponse(status=500)
 
-
-
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def member_enable(request, tk=None, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
-    if not pk: return HttpResponse(status=404)
+    if not pk: return HttpResponse(_("Not found"), status=404)
     membership = get_object_or_404(TeamMember, pk=pk)
 
     member = membership.user
-    if not member: return HttpResponse(status=404)
+    if not member: return HttpResponse(_("Not found"), status=404)
 
-    if not tk: return HttpResponse(status=404)
+    if member == user: return HttpResponse(_("Bad request"), status=405)
+
+    if not tk: return HttpResponse(_("Not found"), status=404)
     team = get_object_or_404(Team, pk=tk)
 
-    if not is_team_admin(user, team): return HttpResponse(status=403)
-    if not is_team_member(member, team): return HttpResponse(status=403)
-    if is_active_team_member(member, team): return HttpResponse(status=405)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+    if not is_team_member(member, team): return HttpResponse(_("Permission denied"), status=403)
+    if is_active_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
 
     # active_colleagues = team.members.annotate(
     #     is_actife = F("teammember__active"),
     # ).filter(is_actife=True).exclude(id=member.id).count()
 
-    # if active_colleagues < 2: return HttpResponse(status=405)
+    # if active_colleagues < 2: return HttpResponse(_("Bad request"), status=405)
 
     logger = logging.getLogger('portal')
 
@@ -165,42 +213,82 @@ def member_enable(request, tk=None, pk=None):
 
     return HttpResponse(status=500)
 
-
-
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def member_bossify(request, tk=None, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
-    if not pk: return HttpResponse(status=404)
+    if not pk: return HttpResponse(_("Not found"), status=404)
     membership = get_object_or_404(TeamMember, pk=pk)
 
     member = membership.user
-    if not member: return HttpResponse(status=404)
+    if not member: return HttpResponse(_("Not found"), status=404)
 
-    if member == user: return HttpResponse(status=405)
+    if member == user: return HttpResponse(_("Bad request"), status=405)
 
-    if not tk: return HttpResponse(status=404)
+    if not tk: return HttpResponse(_("Not found"), status=404)
     team = get_object_or_404(Team, pk=tk)
 
-    if not is_team_admin(user, team): return HttpResponse(status=403)
-    if not is_team_member(member, team): return HttpResponse(status=405)
-    if is_team_admin(member, team): return HttpResponse(status=405)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+    if not is_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
+    if is_team_admin(member, team): return HttpResponse(_("Bad request"), status=405)
 
     # active_colleagues = team.members.annotate(
     #     is_actife = F("teammember__active"),
     # ).filter(is_actife=True).exclude(id=member.id).count()
 
-    # if active_colleagues < 2: return HttpResponse(status=405)
+    # if active_colleagues < 2: return HttpResponse(_("Bad request"), status=405)
 
     logger = logging.getLogger('portal')
 
     try:
         membership.update(manager = True)
         logger.info(f"Team membership changed to Manager")        
+        return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Changing Team membership: { str(sc)}")
+
+    return HttpResponse(status=500)
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def member_debossify(request, tk=None, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if not pk: return HttpResponse(_("Not found"), status=404)
+    membership = get_object_or_404(TeamMember, pk=pk)
+
+    member = membership.user
+    if not member: return HttpResponse(_("Not found"), status=404)
+
+    if member == user: return HttpResponse(_("Bad request"), status=405)
+
+    if not tk: return HttpResponse(_("Not found"), status=404)
+    team = get_object_or_404(Team, pk=tk)
+
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+    if not is_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
+    if not is_team_admin(member, team): return HttpResponse(_("Bad request"), status=405)
+
+    active_co_managers = team.members.annotate(
+        is_actife = F("teammember__active"),
+        is_manager = F("teammember__manager"),
+    ).filter(is_actife=True, is_manager=True).exclude(id=member.id).count()
+
+    if active_managers < 1: return HttpResponse(_("Bad request"), status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        membership.update(manager = False)
+        logger.info(f"Team membership changed to Standard")        
         return HttpResponse(status=200)
 
     except Exception as xc:
@@ -216,12 +304,12 @@ def tenders_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -356,12 +444,12 @@ def bids_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -538,12 +626,12 @@ def bonds_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -704,20 +792,20 @@ def bid_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
     
     bid = get_object_or_404(Bid, pk=pk)
     bid = Bid.objects.filter(pk=pk).prefetch_related("tasks", "expenses").first()
-    if not bid: return HttpResponse(status=404)
+    if not bid: return HttpResponse(_("Not found"), status=404)
 
-    if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+    if not is_team_member(bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
     tender = bid.lot.tender
-    if not tender: return HttpResponse(status=404)
+    if not tender: return HttpResponse(_("Not found"), status=404)
 
     context = {"bid" : bid}
 
@@ -731,21 +819,21 @@ def bid_delete(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
     logger = logging.getLogger('portal')
 
-    if not is_team_admin(user, team): return HttpResponse(status=403)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     if request.method == "POST":
 
         bid = None
         if pk: bid = get_object_or_404(Bid, pk=pk)
 
-        if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+        if not is_team_member(bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
 
         redir = redirect("bidding_bids_list")
         referer = request.META.get('HTTP_REFERER', None)
@@ -775,9 +863,9 @@ def bid_delete(request, pk=None):
 
         except Exception as xc: 
             logger.error(f"Bid delete unsuccessful: { str(xc) }")
-            return HttpResponse(status=403)
+            return HttpResponse(_("Permission denied"), status=403)
 
-    return HttpResponse(status=405)
+    return HttpResponse(_("Bad request"), status=405)
 
 
 
@@ -787,12 +875,12 @@ def bid_edit(request, pk=None, lk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us          = pro_context['user_settings']
@@ -801,7 +889,7 @@ def bid_edit(request, pk=None, lk=None):
 
     if pk:
         bid = get_object_or_404(Bid, pk=pk)
-        if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+        if not is_team_member(bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
         lot = bid.lot
         tender = lot.tender
     else:
@@ -883,23 +971,23 @@ def task_delete(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
     logger = logging.getLogger('portal')
 
-    if not is_team_admin(user, team): return HttpResponse(status=403)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     if request.method == "POST":
 
         task = None
         if pk: task = get_object_or_404(Task, pk=pk)
-        if not is_team_member(task.creator, team): return HttpResponse(status=403)
+        if not is_team_member(task.creator, team): return HttpResponse(_("Permission denied"), status=403)
 
         bid = task.bid
-        if not bid: return HttpResponse(status=403)
+        if not bid: return HttpResponse(_("Permission denied"), status=403)
 
         redir = redirect("bidding_bid_details", bid.id)
         referer = request.META.get('HTTP_REFERER', None)
@@ -924,9 +1012,9 @@ def task_delete(request, pk=None):
 
         except Exception as xc: 
             logger.error(f"Task delete unsuccessful: { str(xc) }")
-            return HttpResponse(status=403)
+            return HttpResponse(_("Permission denied"), status=403)
 
-    return HttpResponse(status=405)
+    return HttpResponse(_("Bad request"), status=405)
 
 
 
@@ -936,18 +1024,18 @@ def task_edit(request, pk=None, bk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     task = None
 
     if pk:
         task = get_object_or_404(Task, pk=pk)
-        if not is_team_member(task.bid.creator, team): return HttpResponse(status=403)
+        if not is_team_member(task.bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
         bid = task.bid
     else:
         bid = get_object_or_404(Bid, pk=bk)
@@ -1010,12 +1098,12 @@ def expense_delete(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_team_admin(user, team): return HttpResponse(status=403)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     logger = logging.getLogger('portal')
 
@@ -1023,10 +1111,10 @@ def expense_delete(request, pk=None):
 
         expense = None
         if pk: expense = get_object_or_404(Expense, pk=pk)
-        if not is_team_member(expense.creator, team): return HttpResponse(status=403)
+        if not is_team_member(expense.creator, team): return HttpResponse(_("Permission denied"), status=403)
 
         bid = expense.bid
-        if not bid: return HttpResponse(status=403)
+        if not bid: return HttpResponse(_("Permission denied"), status=403)
         
         redir = redirect("bidding_bid_details", bid.id)
         referer = request.META.get('HTTP_REFERER', None)
@@ -1051,9 +1139,9 @@ def expense_delete(request, pk=None):
 
         except Exception as xc: 
             logger.error(f"Expense delete unsuccessful: { str(xc) }")
-            return HttpResponse(status=403)
+            return HttpResponse(_("Permission denied"), status=403)
 
-    return HttpResponse(status=405)
+    return HttpResponse(_("Bad request"), status=405)
 
 
 
@@ -1063,18 +1151,18 @@ def expense_edit(request, pk=None, bk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     expense = None
 
     if pk:
         expense = get_object_or_404(Expense, pk=pk)
-        if not is_team_member(expense.bid.creator, team): return HttpResponse(status=403)
+        if not is_team_member(expense.bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
         bid = expense.bid
     else:
         bid = get_object_or_404(Bid, pk=bk)
@@ -1132,28 +1220,28 @@ def expense_edit(request, pk=None, bk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bid_file(request, pk=None, ft=None):
 
-    if not ft: return HttpResponse(status=404)
+    if not ft: return HttpResponse(_("Not found"), status=404)
 
     user = request.user
-    if not user or not user.is_authenticated : return HttpResponse(status=403)
+    if not user or not user.is_authenticated : return HttpResponse(_("Permission denied"), status=403)
 
     bid = None
     if pk: bid = get_object_or_404(Bid, pk=pk)
-    if not bid : return HttpResponse(status=403)
+    if not bid : return HttpResponse(_("Permission denied"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(status=403)
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     team = user.teams.first()
-    if not team: return HttpResponse(status=403)
-    if not is_team_member(bid.creator, team): return HttpResponse(status=403)
+    if not team: return HttpResponse(_("Permission denied"), status=403)
+    if not is_team_member(bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
 
     if ft == 'bond': file_path = bid.file_bond.url
     elif ft == 'receipt': file_path = bid.file_receipt.url
     elif ft == 'submitted': file_path = bid.file_submitted.url
-    else: return HttpResponse(status=404)
+    else: return HttpResponse(_("Not found"), status=404)
 
     file_name = os.path.basename(file_path)
-    if not file_name : return HttpResponse(status=403)
+    if not file_name : return HttpResponse(_("Permission denied"), status=403)
 
     response = HttpResponse()
     response['Content-Type'] = 'application/octet-stream'

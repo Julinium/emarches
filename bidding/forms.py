@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from base.models import Lot
-from bidding.models import Bid, Contact, Expense, Task
+from bidding.models import Bid, Invitation, Contact, Expense, Task
 from bidding.widgets import FilenameOnlyClearableFileInput
 from nas.models import Company
 from nas.choices import BidStatus, BidResults
@@ -28,6 +28,37 @@ class LotChoiceField(forms.ModelChoiceField):
 class CompanyChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return f"{obj.name} ({obj.ice})"
+
+class InvitationForm(forms.ModelForm):
+
+    class Meta:
+        model = Invitation
+        fields = [
+            'email',
+            'message',
+            'expiry',
+            # 'team',
+            # 'cancelled',
+            # 'sent_on',
+            # 'seen_on',
+            # 'reply_on',
+            # 'reply',
+            # 'response',
+        ]
+
+        widgets = {
+            'expiry'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'message' : forms.Textarea(attrs={'rows': '3'}),
+        }
+
+    def __init__(self, *args, lot=None, user=None, usets=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
+
+
 
 
 class BidForm(forms.ModelForm):

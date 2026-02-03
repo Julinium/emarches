@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from base.models import Lot
 from nas.choices import (BidResults, BidStatus, BondStatus, CivilityChoices,
                          ContractStatus, ExpenseStatus, ReceptionStatus,
-                         TaskEmergency, TaskStatus)
+                         TaskEmergency, TaskStatus, InvitationReplies)
 from nas.imaging import squarify_image
 from nas.models import Company
 
@@ -87,6 +87,26 @@ class TeamMember(models.Model):
                 name="unique_team_member"
             )
         ]
+
+
+class Invitation(models.Model):
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email     = models.EmailField(verbose_name=_("Email address"))
+    message   = models.CharField(max_length=1024, verbose_name=_('Message'))
+    expiry    = models.DateTimeField(null=True, blank=True, verbose_name=_('Expiry date'))
+    team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False)
+    cancelled = models.BooleanField(null=True, default=False, editable=False, verbose_name=_('Cancelled'))
+    sent_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Sent on'))
+    seen_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Seen on'))
+    reply_on  = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Replied on'))
+    reply     = models.CharField(max_length=1, choices=InvitationReplies, default=InvitationReplies.INV_DENIED, editable=False, verbose_name=_('Reply'))
+    response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
+
+    creator   = models.ForeignKey(User, on_delete=models.SET_NULL, editable=False, related_name='invitations')
+    created   = models.DateTimeField(auto_now_add=True, editable=False)
+
+    class Meta:
+        db_table = 'bidding_invitation'
 
 
 class Contact(models.Model):
@@ -479,6 +499,7 @@ class Task(models.Model):
         if self.emergency == TaskEmergency.TASK_URGENT    : return 'warning'
         if self.emergency == TaskEmergency.TASK_CRITICAL  : return 'danger'
         return 'secondary'
+
 
 class Expense(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

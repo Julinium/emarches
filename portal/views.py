@@ -50,7 +50,7 @@ def tender_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -359,12 +359,12 @@ def tender_details_chrono(request, ch=None):
 
     user = request.user
     if not user or not user.is_authenticated :
-        return HttpResponse(status=403)
-    if not ch : return HttpResponse(status=404)
+        return HttpResponse(_("Permission denied"), status=403)
+    if not ch : return HttpResponse(_("Not found"), status=404)
 
     tender = get_object_or_404(Tender, chrono=ch)
 
-    # if not tender : return HttpResponse(status=404)
+    # if not tender : return HttpResponse(_("Not found"), status=404)
     
     return redirect('portal_tender_detail', tender.id)
 
@@ -375,7 +375,7 @@ def tender_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender.objects.select_related(
                 'client', 'category', 'mode', 'procedure'
@@ -385,7 +385,7 @@ def tender_details(request, pk=None):
                 'lots__meetings', 'lots__samples', 'lots__visits', 'lots__bids'
             ), id=pk)
 
-    if not tender : return HttpResponse(status=404)
+    if not tender : return HttpResponse(_("Not found"), status=404)
 
     files_list = []
     total_size = 0
@@ -451,15 +451,15 @@ def tender_details(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_get_file(request, pk=None, fn=None):
 
-    if request.method != 'GET': return HttpResponse(status=405)
-    if pk == None or fn == None: return HttpResponse(status=404)
+    if request.method != 'GET': return HttpResponse(_("Bad request"), status=405)
+    if pk == None or fn == None: return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender : return HttpResponse(status=404)
+    if not tender : return HttpResponse(_("Not found"), status=404)
     
     dce_dir = os.path.join(os.path.join(settings.DCE_MEDIA_ROOT, 'dce'), settings.DL_PATH_PREFIX + tender.chrono)
     file_path = os.path.join(os.path.join('dce', settings.DL_PATH_PREFIX + tender.chrono), fn)
@@ -482,22 +482,22 @@ def tender_get_file(request, pk=None, fn=None):
         logger.info(f"Tender File Download: {tender.id} (={tender.size_bytes}B)")
         return response
 
-    return HttpResponse(status=404)
+    return HttpResponse(_("Not found"), status=404)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_favorite(request, pk=None):
     
-    if request.method != 'POST': return HttpResponse(status=405)
-    if pk == None : return HttpResponse(status=404)
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
+    if pk == None : return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender : return HttpResponse(status=404)
+    if not tender : return HttpResponse(_("Not found"), status=404)
 
     logger = logging.getLogger('portal')
 
@@ -519,15 +519,15 @@ def tender_favorite(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_unfavorite(request, pk=None):
 
-    if request.method != 'POST': return HttpResponse(status=405)
-    if pk == None : return HttpResponse(status=404)
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
+    if pk == None : return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender : return HttpResponse(status=404)
+    if not tender : return HttpResponse(_("Not found"), status=404)
 
     logger = logging.getLogger('portal')
 
@@ -545,10 +545,10 @@ def tender_unfavorite(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_favorite_clean(request, span=None):
     
-    if request.method != 'POST': return HttpResponse(status=405)
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     cleanables = None
     if span:
@@ -580,7 +580,7 @@ def tender_favorite_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     # us = get_user_settings(request)
     pro_context = portal_context(request)
@@ -682,7 +682,7 @@ def client_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -783,7 +783,7 @@ def domain_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
-        return HttpResponse(status=403)
+        return HttpResponse(_("Permission denied"), status=403)
     
     pro_context = portal_context(request)
     us = pro_context['user_settings']
