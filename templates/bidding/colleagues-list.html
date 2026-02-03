@@ -15,86 +15,127 @@
         </div>
     </div>
 
-    {% if manage %}
-        <a href="#" class="btn btn-outline-primary my-3">
-            <i class="{{ bicons.edit }} me-2"></i>
-            <span>{% trans "Rename" %}</span>
-        </a>
+    <div id="team-actions">
+        {% if manage %}
+            <a href="#" class="btn btn-outline-primary my-3">
+                <i class="{{ bicons.edit }} me-2"></i>
+                <span>{% trans "Rename" %}</span>
+            </a>
 
-        <a href="#" class="btn btn-outline-primary my-3">
-            <i class="{{ bicons.create }} me-2"></i>
-            <span>{% trans "Add member" %}</span>
-        </a>
-    {% endif %}
+            <a href="#" class="btn btn-outline-primary my-3">
+                <i class="{{ bicons.create }} me-2"></i>
+                <span>{% trans "Add member" %}</span>
+            </a>
+        {% endif %}
+    </div>
 
-    <div class="container py-4 px-0">
+    <div id="team-info">
+        <div class="d-flex align-items-center justify-content-between px-0">
+            <div class="">
+                <span class="h4 me-1">{% trans "Basic information" %}</span>
+            </div>
+        </div>
 
-        <div class="row g-1 my-1">
-            <div class="col-12 col-md-6">                
-                <div class="">
-                    <span class="text-muted small fw-light me-2">{% trans 'Name' %}</span>
-                    <span>{{ team.name }}</span>
-                </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div class="">
-                    <span class="text-muted small fw-light me-2">{% trans 'Active' %}</span>
-                    <span>{{ team.active }}</span>
-                </div>                
-            </div>
-            <div class="col-12 col-md-6">   
-                <div class="mb-2">
-                    <span class="text-muted small fw-light me-2">{% trans 'Creator' %}</span>
-                    <span>{{ team.creator.username }}</span>
-                </div>             
-            </div>
-            <div class="col-12 col-md-6">   
-                <div class="mb-2">
-                    <span class="text-muted small fw-light me-2">{% trans 'Created' %}</span>
-                    <span>{{ team.created.date|default:'-' }}</span>
-                </div>             
-            </div>
-            <div class="col-12">
-                {% if team.image %}
-                    <div class="mb-2">
-                        <span class="text-muted small fw-light me-2">{% trans 'Image' %}</span>
-                        <span>{{ team.image.url }}</span>
+        <div class="container pb-4 px-0">
+
+            <div class="row g-1 my-1">
+                <div class="col-12 col-md-6">                
+                    <div class="">
+                        <span class="text-muted small fw-light me-2">{% trans 'Name' %}</span>
+                        <span>{{ team.name }}</span>
                     </div>
-                {% endif %}
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="">
+                        <span class="text-muted small fw-light me-2">{% trans 'Active' %}</span>
+                        <span>{{ team.active }}</span>
+                    </div>                
+                </div>
+                <div class="col-12 col-md-6">   
+                    <div class="mb-2">
+                        <span class="text-muted small fw-light me-2">{% trans 'Creator' %}</span>
+                        <span>{{ team.creator.username }}</span>
+                    </div>             
+                </div>
+                <div class="col-12 col-md-6">   
+                    <div class="mb-2">
+                        <span class="text-muted small fw-light me-2">{% trans 'Created' %}</span>
+                        <span>{{ team.created.date|default:'-' }}</span>
+                    </div>             
+                </div>
+                <div class="col-12">
+                    {% if team.image %}
+                        <div class="mb-2">
+                            <span class="text-muted small fw-light me-2">{% trans 'Image' %}</span>
+                            <span>{{ team.image.url }}</span>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
+
     
-    
-    {% if page_obj %}
-
-        <div class="container py-3 px-0">
-
-            <div class="fw-light mt-1">
-                <span class="small text-muted">{% trans "Members found" %}: </span>
-                <span class="fw-bold">
-                    {{ page_obj.paginator.count }} 
-                </span>
-                <span class="small text-muted">.</span>
-
-                <span class="small text-muted">{% trans "Showing" %}:</span>
-                <span class="small">
-                    {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
-                </span>
+    <div id="open-invitations">
+        {% if manage %}
+            <div class="d-flex align-items-center justify-content-between px-0">
+                <div class="">
+                    <span class="h4 me-1">{% trans "Pending Invitations" %}</span>
+                </div>
             </div>
 
-            {% for member in page_obj %}
-                <div class="card shadow my-3">
-                    {% include 'bidding/snippets/members/member-item.html' with member=member %}
-                </div>
-            {% endfor %}
+            <div class="container pb-4 px-0">
+                {% for inv in invitations %}
+                    <div class="fw-bold">{{ invitation.email }}</div>
+                {% empty %}
+                <div class="text-danger">No open invitation found</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+        
+    <div id="open-invitations">
+
+        <div class="d-flex align-items-center justify-content-between px-0">
+            <div class="">
+                <span class="h4 me-1">{% trans "My squad" %}</span>
+            </div>
         </div>
 
-        {% include 'base/snippets/paginator.html' %}
+        <div class="container pb-4 px-0">
+            {% if page_obj %}
 
-    {% else %}
-        {% include 'base/snippets/empty-list.html' %}
-    {% endif %}
+                <div class="">
+
+                    <div class="fw-light mt-1">
+                        <span class="small text-muted">{% trans "Members found" %}: </span>
+                        <span class="fw-bold">
+                            {{ page_obj.paginator.count }} 
+                        </span>
+                        <span class="small text-muted">.</span>
+
+                        <span class="small text-muted">{% trans "Showing" %}:</span>
+                        <span class="small">
+                            {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
+                        </span>
+                    </div>
+
+                    {% for member in page_obj %}
+                        <div class="card shadow my-3">
+                            {% include 'bidding/snippets/members/member-item.html' with member=member %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {% include 'base/snippets/paginator.html' %}
+
+            {% else %}
+                {% include 'base/snippets/empty-list.html' %}
+            {% endif %}
+
+        </div>
+    </div>
+    
 
 
 

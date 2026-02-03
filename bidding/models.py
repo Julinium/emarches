@@ -94,6 +94,7 @@ class Invitation(models.Model):
     email     = models.EmailField(verbose_name=_("Email address"))
     message   = models.CharField(max_length=1024, verbose_name=_('Message'))
     expiry    = models.DateTimeField(null=True, blank=True, verbose_name=_('Expiry date'))
+    show_my_email = models.BooleanField(null=True, default=True, verbose_name=_('Show my email'))
     team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False)
     cancelled = models.BooleanField(null=True, default=False, editable=False, verbose_name=_('Cancelled'))
     sent_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Sent on'))
@@ -102,7 +103,7 @@ class Invitation(models.Model):
     reply     = models.CharField(max_length=1, choices=InvitationReplies, default=InvitationReplies.INV_DENIED, editable=False, verbose_name=_('Reply'))
     response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
 
-    creator   = models.ForeignKey(User, on_delete=models.SET_NULL, editable=False, related_name='invitations')
+    creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='invitations')
     created   = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:

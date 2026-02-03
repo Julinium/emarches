@@ -1,5 +1,5 @@
 import logging, os
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from urllib.parse import urlencode
 
 from django.conf import settings
@@ -58,29 +58,24 @@ def invitation_create(request, tk=None):
 
     logger = logging.getLogger('portal')
 
-    email = request.POST.get('email')
+    form = InvitationForm(request.POST)
+    if form.is_valid():
+        try:
+            obj = form.save(commit=False)
+            obj.team = team
+            obj.creator = user
+            obj.sent_on = datetime.now()
+            obj.save()
+            logger.info(f"Invitation created")
+            return HttpResponse(status=200)
 
-    #############
-            # 'email',
-            # 'message',
-            # 'expiry',
-            # 'team',
-            # 'cancelled',
-            # 'sent_on',
-            # 'seen_on',
-            # 'reply_on',
-            # 'reply',
-            # 'response',
-    #############
-    try:
-        membership.update(active = False)
-        logger.info(f"Team membership Disabled")        
-        return HttpResponse(status=200)
+        except Exception as xc:
+            logger.info(f"Exception creating Invitation: { str(sc)}")
+            return HttpResponse(_("Server error raised"), status=500)
+    else:
+        return HttpResponse(_("Bad request"), status=405)
 
-    except Exception as xc:
-        logger.info(f"Exception Disabling Team membership: { str(sc)}")
-
-    return HttpResponse(status=500)
+    return HttpResponse(_("Server error raised"), status=500)
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -119,12 +114,14 @@ def member_list(request):
     page_obj = paginator.page(page_number)
 
     invitation_form = InvitationForm()
+    aska = datetime.now() + timedelta(days=2)
+    invitation_form.fields["expiry"].initial = aska
 
     context = {
-        'page_obj'  : page_obj,
-        'team'      : team,
-        'inv_form'  : invitation_form,
-        'manage'    : is_active_team_admin(user, team)
+        'page_obj'          : page_obj,
+        'team'              : team,
+        'invitation_form'   : invitation_form,
+        'manage'            : is_active_team_admin(user, team)
     }
 
     logger = logging.getLogger('portal')
@@ -170,7 +167,7 @@ def member_disable(request, tk=None, pk=None):
     except Exception as xc:
         logger.info(f"Exception Disabling Team membership: { str(sc)}")
 
-    return HttpResponse(status=500)
+    return HttpResponse(_("Server error raised"), status=500)
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -211,7 +208,7 @@ def member_enable(request, tk=None, pk=None):
     except Exception as xc:
         logger.info(f"Exception Enabling Team membership: { str(sc)}")
 
-    return HttpResponse(status=500)
+    return HttpResponse(_("Server error raised"), status=500)
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -252,7 +249,7 @@ def member_bossify(request, tk=None, pk=None):
     except Exception as xc:
         logger.info(f"Exception Changing Team membership: { str(sc)}")
 
-    return HttpResponse(status=500)
+    return HttpResponse(_("Server error raised"), status=500)
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -294,7 +291,7 @@ def member_debossify(request, tk=None, pk=None):
     except Exception as xc:
         logger.info(f"Exception Changing Team membership: { str(sc)}")
 
-    return HttpResponse(status=500)
+    return HttpResponse(_("Server error raised"), status=500)
 
 
 
@@ -935,7 +932,7 @@ def bid_edit(request, pk=None, lk=None):
         )
         if bid is None:
             form.fields["date_submitted"].initial   = datetime.now()
-            form.fields["bid_amount"].initial         = lot.estimate
+            form.fields["bid_amount"].initial       = lot.estimate
             form.fields["bond_amount"].initial      = lot.bond
 
             client_short = lot.tender.client.short

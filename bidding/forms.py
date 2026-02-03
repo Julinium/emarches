@@ -37,6 +37,7 @@ class InvitationForm(forms.ModelForm):
             'email',
             'message',
             'expiry',
+            'show_my_email',
             # 'team',
             # 'cancelled',
             # 'sent_on',
@@ -57,7 +58,6 @@ class InvitationForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
             field.label_suffix = ""
-
 
 
 

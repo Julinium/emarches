@@ -8,42 +8,19 @@
 
     <!-- ########################### -->
 
-    <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
+    <a data-bs-toggle="collapse" href="#member-{{ member.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="member-{{ member.id }}-collapse"
        class="text-decoration-none text-reset">
-        <div class="card-header p-2 {% if bid.lot.tender.expired %} bg-warning-subtle{% endif %}" data-bs-toggle="tooltip" title="{{ bid.title }}">
+        <!-- <div class="card-header p-2 {% if member.lot.tender.expired %} bg-warning-subtle{% endif %}" data-bs-toggle="tooltip" title="{{ member.title }}">
             <div class="twolines">
-                {{ bid.title|default:bid.lot.title }}
+                {{ member.username }}
             </div>
-        </div>
+        </div> -->
 
         <div class=" card-body p-0">
 
-            <div id="bid-{{ bid.id }}-digest" class="p-2">
-
-            </div>
-
-            <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
-
-                <div id="bid-details-extended" class="mx-0 mb-3">
-                    
-                </div>
-                
-                <div id="bid-details-actions" class="text-end mx-0 mb-3">
-                    
-                </div>
-            </div>
-
-        </div>            
-    </a>
-
-    <!-- ########################### -->
-
-        <div class="card-body p-0">
-
             <div id="member-{{ member.id }}-digest" class="p-2">
-
-                <div class="row g-1 my-1">
+                <div class="row g-1">
                     <div class="col-12 col-md-6">
                         <div>
                             <span data-bs-toggle="tooltip" title="{% trans 'Username' %}">  
@@ -61,8 +38,19 @@
                             </span>
                         </div>
                     </div>
+                </div>  
+            </div>
 
+            <div id="member-{{ member.id }}-collapse" class="collapse px-2">  
+
+                <div id="member-details-extended" class="mx-0 mb-3">
+                    <div class="my-3">Extra data 1</div>
+                    <div class="my-3">Extra data 2</div>
+                </div>
+                
+                <div id="member-details-actions" class="text-end mx-0 mb-3">                    
                     <div class="my-2">
+                        <div class="btn">Actions go here</div>
                         {% if member != request.user and member.is_manager %}
                             {% if member.is_actife %}
                                 <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
@@ -99,10 +87,14 @@
                             </button>
                         {% endif %}
                     </div>
-                </div>              
+                </div>
             </div>
 
-        </div>
+        </div>            
+    </a>
+
+    <!-- ########################### -->
+
 
         <div class="card-footer small px-2 py-1">
             <div class="small">
