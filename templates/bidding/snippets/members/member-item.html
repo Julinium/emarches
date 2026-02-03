@@ -8,9 +8,6 @@
 
     <!-- ########################### -->
 
-    <a data-bs-toggle="collapse" href="#member-{{ member.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="member-{{ member.id }}-collapse"
-       class="text-decoration-none text-reset">
         <!-- <div class="card-header p-2 {% if member.lot.tender.expired %} bg-warning-subtle{% endif %}" data-bs-toggle="tooltip" title="{{ member.title }}">
             <div class="twolines">
                 {{ member.username }}
@@ -19,6 +16,9 @@
 
         <div class=" card-body p-0">
 
+        <a data-bs-toggle="collapse" href="#member-{{ member.id }}-collapse"
+            role="button" aria-expanded="false" aria-controls="member-{{ member.id }}-collapse"
+            class="text-decoration-none text-reset">
             <div id="member-{{ member.id }}-digest" class="p-2">
                 <div class="row g-1">
                     <div class="col-12 col-md-6">
@@ -40,6 +40,7 @@
                     </div>
                 </div>  
             </div>
+        </a>
 
             <div id="member-{{ member.id }}-collapse" class="collapse px-2">  
 
@@ -50,9 +51,9 @@
                 
                 <div id="member-details-actions" class="text-end mx-0 mb-3">                    
                     <div class="my-2">
-                        <div class="btn">Actions go here</div>
                         {% if member != request.user and member.is_manager %}
                             {% if member.is_actife %}
+
                                 <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
                                         data-bs-toggle="modal" data-bs-target="#memberDisableModal"
                                         data-amount="{{ member.member_amount }}"
@@ -85,13 +86,14 @@
                                 <span><i class="{{ bicons.delete }}"></i></span>
                                 <span class="ms-1">{% trans 'Remove' %}</span>
                             </button>
+
                         {% endif %}
+
                     </div>
                 </div>
             </div>
 
-        </div>            
-    </a>
+        </div>
 
     <!-- ########################### -->
 

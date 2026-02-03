@@ -31,13 +31,17 @@ class CompanyChoiceField(forms.ModelChoiceField):
 
 class InvitationForm(forms.ModelForm):
 
+    show_my_email = forms.BooleanField(
+        required=False,
+        widget=forms.Select(choices=[(True, _("Yes")), (False, _("No"))])
+    )
     class Meta:
         model = Invitation
         fields = [
             'email',
             'message',
-            'expiry',
             'show_my_email',
+            # 'expiry',
             # 'team',
             # 'cancelled',
             # 'sent_on',
@@ -51,6 +55,25 @@ class InvitationForm(forms.ModelForm):
             'expiry'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
             'message' : forms.Textarea(attrs={'rows': '3'}),
         }
+
+    # def clean_expiry(self):
+    #     expiry = self.cleaned_data.get("expiry")
+    #     us = self.usets
+    #     if us:
+    #         if us.bidding_check_deadline != False:
+    #             lot = self.lot
+    #             deadline = lot.tender.deadline
+    #             published = lot.tender.published
+    #             if deadline is not None:
+    #                 if date_submitted is not None:
+    #                     if date_submitted.date() > deadline.date():
+    #                         raise forms.ValidationError(_("Allowed Submission date range:") + f" {published} - {deadline.date()}")
+    #             if published is not None:
+    #                 if date_submitted is not None:
+    #                     if date_submitted.date() < published:
+    #                         raise forms.ValidationError(_("Allowed Submission date range:") + f" {published} - {deadline.date()}")
+
+    #     return date_submitted
 
     def __init__(self, *args, lot=None, user=None, usets=None, **kwargs):
         super().__init__(*args, **kwargs)

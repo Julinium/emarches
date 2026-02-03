@@ -96,10 +96,10 @@ class Invitation(models.Model):
     expiry    = models.DateTimeField(null=True, blank=True, verbose_name=_('Expiry date'))
     show_my_email = models.BooleanField(null=True, default=True, verbose_name=_('Show my email'))
     team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False)
-    cancelled = models.BooleanField(null=True, default=False, editable=False, verbose_name=_('Cancelled'))
+    cancelled = models.BooleanField(default=False, editable=False, verbose_name=_('Cancelled'))
     sent_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Sent on'))
-    seen_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Seen on'))
-    reply_on  = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Replied on'))
+    seen_on   = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Seen on'))
+    reply_on  = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Replied on'))
     reply     = models.CharField(max_length=1, choices=InvitationReplies, default=InvitationReplies.INV_DENIED, editable=False, verbose_name=_('Reply'))
     response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
 

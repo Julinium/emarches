@@ -17,7 +17,7 @@ from django.views.decorators.cache import cache_control
 from base.context_processors import portal_context
 from base.models import Lot, Tender
 from bidding.forms import BidForm, ExpenseForm, TaskForm, InvitationForm
-from bidding.models import Bid, Expense, Task, Team, TeamMember
+from bidding.models import Bid, Expense, Task, Team, TeamMember, Invitation
 from bidding.secu import (
     is_team_admin, is_team_member, 
     is_active_team_member, is_active_team_admin)
@@ -32,6 +32,8 @@ TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = 10
 BIDS_ITEMS_PER_PAGE = 10
 USERS_ITEMS_PER_PAGE = 10
+
+INVITATION_EXPIRY_HOURS = 48
 
 
 @login_required(login_url="account_login")
@@ -64,18 +66,22 @@ def invitation_create(request, tk=None):
             obj = form.save(commit=False)
             obj.team = team
             obj.creator = user
+            obj.expiry = datetime.now() + timedelta(hours=INVITATION_EXPIRY_HOURS)
             obj.sent_on = datetime.now()
             obj.save()
             logger.info(f"Invitation created")
-            return HttpResponse(status=200)
+            # return HttpResponse(status=200)
 
         except Exception as xc:
-            logger.info(f"Exception creating Invitation: { str(sc)}")
-            return HttpResponse(_("Server error raised"), status=500)
+            logger.info(f"Exception creating Invitation: { str(xc)}")
+            return HttpResponse(_("Server error raised" + f"{ str(xc)}"), status=500)
     else:
         return HttpResponse(_("Bad request"), status=405)
 
-    return HttpResponse(_("Server error raised"), status=500)
+    # return HttpResponse(_("Server error raised"), status=500)
+    return redirect('bidding_member_list')
+
+
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -112,22 +118,23 @@ def member_list(request):
     else:
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
+    invitations = user.invitations.all()
 
     invitation_form = InvitationForm()
-    aska = datetime.now() + timedelta(days=2)
-    invitation_form.fields["expiry"].initial = aska
 
     context = {
         'page_obj'          : page_obj,
         'team'              : team,
         'invitation_form'   : invitation_form,
-        'manage'            : is_active_team_admin(user, team)
+        'invitations'       : invitations,
+        'manage'            : is_active_team_admin(user, team),
+        'expiry_hours'      : INVITATION_EXPIRY_HOURS,
     }
 
     logger = logging.getLogger('portal')
     logger.info(f"Team members List view")
 
-    return render(request, 'bidding/colleagues-list.html', context)
+    return render(request, 'bidding/members-list.html', context)
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -165,7 +172,7 @@ def member_disable(request, tk=None, pk=None):
         return HttpResponse(status=200)
 
     except Exception as xc:
-        logger.info(f"Exception Disabling Team membership: { str(sc)}")
+        logger.info(f"Exception Disabling Team membership: { str(xc)}")
 
     return HttpResponse(_("Server error raised"), status=500)
 
@@ -206,7 +213,7 @@ def member_enable(request, tk=None, pk=None):
         return HttpResponse(status=200)
 
     except Exception as xc:
-        logger.info(f"Exception Enabling Team membership: { str(sc)}")
+        logger.info(f"Exception Enabling Team membership: { str(xc)}")
 
     return HttpResponse(_("Server error raised"), status=500)
 
@@ -247,7 +254,7 @@ def member_bossify(request, tk=None, pk=None):
         return HttpResponse(status=200)
 
     except Exception as xc:
-        logger.info(f"Exception Changing Team membership: { str(sc)}")
+        logger.info(f"Exception Changing Team membership: { str(xc)}")
 
     return HttpResponse(_("Server error raised"), status=500)
 
@@ -289,7 +296,7 @@ def member_debossify(request, tk=None, pk=None):
         return HttpResponse(status=200)
 
     except Exception as xc:
-        logger.info(f"Exception Changing Team membership: { str(sc)}")
+        logger.info(f"Exception Changing Team membership: { str(xc)}")
 
     return HttpResponse(_("Server error raised"), status=500)
 
