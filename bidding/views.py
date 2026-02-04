@@ -1,4 +1,4 @@
-import logging, os
+import logging, os, traceback
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import urlencode
 
@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-from django.db.models import F, Prefetch, Q
+from django.db.models import F, Prefetch, Q, OuterRef, Subquery
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -23,7 +23,7 @@ from bidding.secu import (
     is_active_team_member, is_active_team_admin)
 from nas.choices import (
     BidResults, BidStatus, BondStatus, 
-    ExpenseStatus, TaskStatus)
+    ExpenseStatus, TaskStatus, InvitationReplies)
 from nas.models import Company
 
 #
@@ -74,18 +74,54 @@ def invitation_create(request, tk=None):
 
         except Exception as xc:
             logger.info(f"Exception creating Invitation: { str(xc)}")
-            return HttpResponse(_("Server error raised" + f"{ str(xc)}"), status=500)
+            return HttpResponse(_("Server error raised"), status=500)
     else:
         return HttpResponse(_("Bad request"), status=405)
 
     # return HttpResponse(_("Server error raised"), status=500)
-    return redirect('bidding_member_list')
+    return redirect('bidding_team_recap')
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def invitation_cancel(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
+    
+    if not pk: return HttpResponse(_("Not found"), status=404)
+    invitation = get_object_or_404(Invitation, pk=pk)
+
+    team = user.teams.first()
+    if not team: return HttpResponse(_("Permission denied"), status=403)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+
+    if invitation.cancelled: return HttpResponse(_("Already cancelled"), status=405)
+    if invitation.expired: return HttpResponse(_("Already expired"), status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        invitation.cancelled = True
+        # invitation.update(cancelled = True)
+        invitation.save()
+        logger.info(f"Invitation cancelled")
+        messages.success(request, _("Invitation cancelled successfully"))
+        # return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Cancelling invitation: { str(xc)}")
+        return HttpResponse(_("Server error raised"), status=500)
+
+    return redirect('bidding_team_recap')
 
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def member_list(request):
+def team_recap(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -118,7 +154,29 @@ def member_list(request):
     else:
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
-    invitations = user.invitations.all()
+
+    if user.profile and user.profile.invitable == True:
+        invitable = True
+        invited = user.received_invitations.exclude(
+                reply=InvitationReplies.INV_ACCEPTED, 
+                creator=user, 
+            ).filter(
+                username=user.username, 
+                cancelled=False, 
+                expiry__gte=datetime.now(), 
+            )
+    else:
+        invited = Invitation.objects.none()
+        invitable = False
+
+
+    invitations = user.invitations.exclude(
+            reply=InvitationReplies.INV_ACCEPTED
+        ).filter(
+            cancelled=False, 
+            # reply_on__isnull=True, 
+            expiry__gte=datetime.now(),
+        )
 
     invitation_form = InvitationForm()
 
@@ -127,6 +185,8 @@ def member_list(request):
         'team'              : team,
         'invitation_form'   : invitation_form,
         'invitations'       : invitations,
+        'invited'           : invited,
+        'invitable'         : invitable,
         'manage'            : is_active_team_admin(user, team),
         'expiry_hours'      : INVITATION_EXPIRY_HOURS,
     }
@@ -134,7 +194,7 @@ def member_list(request):
     logger = logging.getLogger('portal')
     logger.info(f"Team members List view")
 
-    return render(request, 'bidding/members-list.html', context)
+    return render(request, 'bidding/team-recap.html', context)
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

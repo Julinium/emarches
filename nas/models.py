@@ -20,6 +20,7 @@ class Profile(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user      = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
     active    = models.BooleanField(null=True, default=True, editable=False)
+    invitable = models.BooleanField(null=True, default=True, editable=False)
     image     = models.ImageField(upload_to='avatars/', null=True, blank=True, verbose_name=_('Avatar'))
     phone     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Phone'))
     whatsapp  = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Whatsapp'))

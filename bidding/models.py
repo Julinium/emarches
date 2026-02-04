@@ -91,16 +91,18 @@ class TeamMember(models.Model):
 
 class Invitation(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    email     = models.EmailField(verbose_name=_("Email address"))
+    # email     = models.EmailField(verbose_name=_("Email address"))
+    username  = models.EmailField(verbose_name=_("Username"))
+    invitee   = models.ForeignKey(User, null=True,blank=True, on_delete=models.SET_NULL, related_name='received_invitations')
     message   = models.CharField(max_length=1024, verbose_name=_('Message'))
     expiry    = models.DateTimeField(null=True, blank=True, verbose_name=_('Expiry date'))
     show_my_email = models.BooleanField(null=True, default=True, verbose_name=_('Show my email'))
-    team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False)
+    team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='invitations')
     cancelled = models.BooleanField(default=False, editable=False, verbose_name=_('Cancelled'))
     sent_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Sent on'))
     seen_on   = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Seen on'))
     reply_on  = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Replied on'))
-    reply     = models.CharField(max_length=1, choices=InvitationReplies, default=InvitationReplies.INV_DENIED, editable=False, verbose_name=_('Reply'))
+    reply     = models.CharField(max_length=1, choices=InvitationReplies, null=True, blank=True,  editable=False, verbose_name=_('Reply'))
     response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
 
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='invitations')
@@ -108,7 +110,17 @@ class Invitation(models.Model):
 
     class Meta:
         db_table = 'bidding_invitation'
+        ordering = ['created']
 
+    @property
+    def expired(self):
+        if self.expiry: return is_past(self.expiry) # < datetime.now()
+        return False
+
+    def save(self, *args, **kwargs):
+        self.invitee = User.objects.filter(username__exact=self.username).first()
+        super().save(*args, **kwargs)
+    
 
 class Contact(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

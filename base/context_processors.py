@@ -196,6 +196,8 @@ def portal_context(request):
         'addresses'       : 'bi bi-envelope-at',
 
         'superuser'       : 'bi bi-hash',
+        'email'           : 'bi bi-envelope',
+        'accept'          : 'bi bi-check-circle-fill'
 
     }
 

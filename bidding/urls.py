@@ -24,8 +24,9 @@ urlpatterns = [
     path('expenses/<uuid:pk>/edit/',   views.expense_edit, name='bidding_expense_edit'),
     path('expenses/<uuid:pk>/delete/', views.expense_delete, name='bidding_expense_delete'),
 
-    path('team/',                   views.member_list, name='bidding_member_list'),
+    path('team/',                   views.team_recap,   name='bidding_team_recap'),
     path('team/<uuid:tk>/invite',   views.invitation_create, name='bidding_invitation_create'),
+    path('invit/<uuid:pk>/cancel',  views.invitation_cancel, name='bidding_invitation_cancel'),
 
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),

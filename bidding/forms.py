@@ -38,7 +38,7 @@ class InvitationForm(forms.ModelForm):
     class Meta:
         model = Invitation
         fields = [
-            'email',
+            'username',
             'message',
             'show_my_email',
             # 'expiry',
