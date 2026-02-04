@@ -20,12 +20,10 @@
                         {{ invited.count }} 
                     </span>
                 </div>
-                <!-- <div id="open-invitations-actions">
-                    {% if manage %}
-                        <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
-                            <i class="{{ bicons.create }}"></i>
-                        </button>
-                    {% endif %}
+                <!-- <div id="my-invitations-actions">
+                    <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
+                        <i class="{{ bicons.create }}"></i>
+                    </button>
                 </div> -->
             </div>
 
@@ -52,7 +50,7 @@
                                         </span>
                                         <span>
                                             <span><i class="{{ bicons.contact }} small text-secondary"></i></span>
-                                            <span class="">{{ invit.creator.username }}</span>          
+                                            <span class="">@{{ invit.creator.username }}</span>          
                                         </span>
                                     </div>
                                     {% if invit.message %}
@@ -74,13 +72,14 @@
                                             {% endif %}
                                         {% endif %}
                                         <a href="#" class="me-2 btn btn-sm btn-outline-success" 
-                                           data-bs-toggle="modal" data-bs-target="#cancelInvitationModal"
-                                           data-url="{% url 'bidding_invitation_cancel' invit.id %}">
+                                           data-bs-toggle="modal" data-bs-target="#acceptInvitationModal"
+                                           data-url="{% url 'bidding_invitation_accept' invit.id %}"
+                                           data-team="{{ invit.team.name }}">
                                             <i class="{{ bicons.accept }}"></i>
                                             <span class="text-uppercase">{% trans "Accept" %}</span>
                                         </a>
                                         <a href="#" class="me-2 btn btn-sm btn-outline-danger"
-                                           data-bs-toggle="modal" data-bs-target="#cancelInvitationModal"
+                                           data-bs-toggle="modal" data-bs-target="#declineInvitationModal"
                                            data-url="{% url 'bidding_invitation_cancel' invit.id %}">
                                             <i class="{{ bicons.cancelled }}"></i>
                                             <span class="text-uppercase">{% trans "Decline" %}</span>
@@ -130,7 +129,7 @@
                 <div class="d-inline-block me-3">   
                     <div class="">
                         <span class="text-muted small fw-light me-1">{% trans 'Creator' %}:</span>
-                        <span>{{ team.creator.username }}</span>
+                        <span>@{{ team.creator.username }}</span>
                     </div>             
                 </div>
                 <div class="d-inline-block me-3">
@@ -150,80 +149,82 @@
         </div>
     </div>
     
-    <div id="open-invitations" class="mb-5">
-        {% if manage %}
-            <div class="d-flex align-items-center justify-content-between px-0">
-                <div class="">
-                    <span class="h3">{% trans "Sent Invitations" %}</span>
-                    <span class="small text-muted me-1">: </span>
-                    <span class="fw-bold">
-                        {{ invitations.count }} 
-                    </span>
+    {% if invitations %}
+        <div id="open-invitations" class="mb-5">
+            {% if manage %}
+                <div class="d-flex align-items-center justify-content-between px-0">
+                    <div class="">
+                        <span class="h3">{% trans "Sent Invitations" %}</span>
+                        <span class="small text-muted me-1">: </span>
+                        <span class="fw-bold">
+                            {{ invitations.count }} 
+                        </span>
+                    </div>
+                    <div id="open-invitations-actions">
+                        {% if manage %}
+                            <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
+                                <i class="{{ bicons.create }}"></i>
+                            </button>
+                        {% endif %}
+                    </div>
                 </div>
-                <div id="open-invitations-actions">
-                    {% if manage %}
-                        <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
-                            <i class="{{ bicons.create }}"></i>
-                        </button>
-                    {% endif %}
-                </div>
-            </div>
 
-            <div class="container px-0 pt-2">
-                <div class="list-group">
-                    {% for inv in invitations %}
-                        <div class="list-group-item list-group-item-action p-2">
-                            <div class="d-flex justify-content-between px-0">
-                                <div>
+                <div class="container px-0 pt-2">
+                    <div class="list-group">
+                        {% for inv in invitations %}
+                            <div class="list-group-item list-group-item-action p-2">
+                                <div class="d-flex justify-content-between px-0">
                                     <div>
-                                        <span><i class="{{ bicons.contact }} small text-secondary"></i></span>
-                                        <span class="fw-bold">{{ inv.username }}</span>
+                                        <div>
+                                            <span><i class="{{ bicons.contact }} small text-secondary"></i></span>
+                                            <span class="fw-bold">@{{ inv.username }}</span>
+                                        </div>
+                                        <div>
+                                            <span class="badge bg-warning" data-bs-toggle="tooltip" title="{% trans 'Expiry' %}: {{ inv.expiry }}">
+                                                <i class="{{ bicons.deadline }}"></i>
+                                                <span>{{ inv.expiry|timeuntil }}</span>
+                                            </span>
+                                            {% if inv.reply == '0' %}
+                                                <span class="badge bg-danger ms-2" data-bs-toggle="tooltip" title="{% trans 'Declined' %}: {{ inv.reply_on }}">
+                                                    <i class="{{ bicons.cancelled }} small"></i>
+                                                    <span class="small">{% trans "Declined" %}</span>
+                                                </span>
+                                                {% if inv.response %}
+                                                    <div class="fw-bold m-2 ms-4">
+                                                        {{ inv.response }}
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {% if inv.seen_on %}
+                                                    <span class="small text-secondary ms-2" data-bs-toggle="tooltip" title="{% trans 'Seen' %}: {{ inv.seen_on }}">
+                                                        <i class="{{ bicons.views }} small"></i>
+                                                        <span class="small">{{ inv.seen_on }}</span>
+                                                    </span>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
                                     </div>
                                     <div>
-                                        <span class="badge bg-warning" data-bs-toggle="tooltip" title="{% trans 'Expiry' %}: {{ inv.expiry }}">
-                                            <i class="{{ bicons.deadline }}"></i>
-                                            <span>{{ inv.expiry|timeuntil }}</span>
-                                        </span>
-                                        {% if inv.reply == '0' %}
-                                            <span class="badge bg-danger ms-2" data-bs-toggle="tooltip" title="{% trans 'Declined' %}: {{ inv.reply_on }}">
-                                                <i class="{{ bicons.cancelled }} small"></i>
-                                                <span class="small">{% trans "Declined" %}</span>
-                                            </span>
-                                            {% if inv.response %}
-                                                <div class="fw-bold m-2 ms-4">
-                                                    {{ inv.response }}
-                                                </div>
-                                            {% endif %}
-                                        {% else %}
-                                            {% if inv.seen_on %}
-                                                <span class="small text-secondary ms-2" data-bs-toggle="tooltip" title="{% trans 'Seen' %}: {{ inv.seen_on }}">
-                                                    <i class="{{ bicons.views }} small"></i>
-                                                    <span class="small">{{ inv.seen_on }}</span>
-                                                </span>
-                                            {% endif %}
+                                        {% if manage %}
+                                            <a href="#" class="ms-2 btn btn-sm btn-outline-danger" 
+                                            data-bs-toggle="modal" data-bs-target="#cancelInvitationModal"
+                                            data-url="{% url 'bidding_invitation_cancel' inv.id %}">
+                                                <i class="{{ bicons.cancelled }}"></i>
+                                            </a>
                                         {% endif %}
                                     </div>
                                 </div>
-                                <div>
-                                    {% if manage %}
-                                        <a href="#" class="ms-2 btn btn-sm btn-outline-danger" 
-                                           data-bs-toggle="modal" data-bs-target="#cancelInvitationModal"
-                                           data-url="{% url 'bidding_invitation_cancel' inv.id %}">
-                                            <i class="{{ bicons.cancelled }}"></i>
-                                        </a>
-                                    {% endif %}
-                                </div>
                             </div>
-                        </div>
-                    {% empty %}
-                        <div class="list-group-item list-group-item-action p-2">
-                            <span class="text-danger small">{% trans "No open invitation found" %}</span>
-                        </div>
-                    {% endfor %}
+                        {% empty %}
+                            <div class="list-group-item list-group-item-action p-2">
+                                <span class="text-danger small">{% trans "No open invitation found" %}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
+    {% endif %}
         
     <div id="team-members" class="mb-5">
 
@@ -235,6 +236,15 @@
                     {{ page_obj.paginator.count }} 
                 </span>
             </div>
+            {% if not invitations %}
+                <div id="open-invitations-actions">
+                    {% if manage %}
+                        <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
+                            <i class="{{ bicons.create }}"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
 
         <div class="container px-0 pt-2">
@@ -360,6 +370,61 @@
                     </div>
                 </div>
             </div>
+            
+            <div id="acceptInvitationModal" class="modal fade" 
+                    tabindex="-1" aria-labelledby="acceptInvitationModalLabel" 
+                    aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="accept-invitation-form" method="post">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5 fw-bold" id="acceptInvitationModalLabel">{% trans "Confirm acceptation" %}</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row g-3">
+
+                                    <div class="col-12 mt-3">
+                                        <span class="text-secondary small">{% trans "Team" %}.</span> 
+                                        <span id="team-name-span" class="fw-bold"></span> 
+                                    </div>
+
+                                    <div class="col-12 mt-3">
+                                        <span class="text-danger">{% trans "You will leave any other team" %}.</span> 
+                                        <span class="text-danger">{% trans "Your data may be visible to the new team members" %}.</span> 
+                                    </div>
+
+                                    <div class="col-12 mt-3">
+                                        <span class="text-secondary">{% trans "Are you sure you want to accept this invitation" %} ?</span> 
+                                    </div>
+
+                                    <div class="col-12 mt-3">
+                                        <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                            <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                            <option selected value="just_accept">{% trans "Just accept it" %}</option>
+                                            <option value="know">{% trans "I understand and I want to join this team" %}</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <span><i class="bi bi-x-lg"></i></span>
+                                    <span class="ms-1">{% trans "Close" %}</span>
+                                </button>
+                                <button type="submit" class="m-1 btn btn-outline-warning" data-bs-dismiss="modal">
+                                    <span><i class="{{ bicons.accept }}"></i></span>
+                                    <span class="ms-1">{% trans 'Accept invitation' %}</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -433,6 +498,20 @@
                 // expenseSpanTitle.innerText   = button.dataset.title;
                 cancelInvitationForm.action     = button.dataset.url;
             });
+
+
+            // Invitation accept
+            const acceptInvitationModal = document.getElementById('acceptInvitationModal');
+            const acceptInvitationForm  = document.getElementById('accept-invitation-form');
+            const teamSpanName  = document.getElementById('team-name-span');
+
+            acceptInvitationModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+
+                teamSpanName.innerText  = button.dataset.team;
+                acceptInvitationForm.action     = button.dataset.url;
+            });
+
         </script>
 
     {% endif %}

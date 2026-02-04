@@ -5,143 +5,150 @@
 
 <div id="m-{{ member.username }}-top">
 
+    <div class=" card-body p-0">
 
-    <!-- ########################### -->
-
-        <!-- <div class="card-header p-2 {% if member.lot.tender.expired %} bg-warning-subtle{% endif %}" data-bs-toggle="tooltip" title="{{ member.title }}">
-            <div class="twolines">
-                {{ member.username }}
-            </div>
-        </div> -->
-
-        <div class=" card-body p-0">
-
-            <a data-bs-toggle="collapse" href="#member-{{ member.id }}-collapse"
-                role="button" aria-expanded="false" aria-controls="member-{{ member.id }}-collapse"
-                class="text-decoration-none text-reset">
-                <div id="member-{{ member.id }}-digest" class="p-2">
-                    <div class="row g-1">
-                        <div class="col-12 col-md-6">
-                            <div>
-                                <span data-bs-toggle="tooltip" title="{% trans 'Username' %}">  
-                                    <span class="fw-light">
-                                        <img src="{{ member.profile.avatar }}" alt="X" 
-                                                class="img-fluid rounded rounded-circle" 
-                                                style="width: 1.5rem; height: 1.5rem;">
+        <a data-bs-toggle="collapse" href="#member-{{ member.id }}-collapse"
+            role="button" aria-expanded="false" aria-controls="member-{{ member.id }}-collapse"
+            class="text-decoration-none text-reset">
+            <div id="member-{{ member.id }}-digest" class="p-2">
+                <div class="row g-1">
+                    <div class="col-12 col-md-6">
+                        <div>
+                            <span data-bs-toggle="tooltip" title="{% trans 'Username' %}">  
+                                <span class="fw-light">
+                                    <img src="{{ member.profile.avatar }}" alt="X" 
+                                            class="img-fluid rounded rounded-circle" 
+                                            style="width: 1.5rem; height: 1.5rem;">
+                                </span>
+                                {% if member == request.user %}
+                                    <span class="me-1 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
+                                        <span class="badge bg-success">
+                                            <span class="">{% trans 'ME' %}</span>
+                                        </span>
                                     </span>
-                                    <span class="">{{ member.username }}</span>                              
-                                </span>
-                            </div>
-                            <div class="oneline ms-4 text-secondary">
-                                <span data-bs-toggle="tooltip" title="{% trans 'Full name' %}">  
-                                    <span class="small text-secondary me-2 ">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>                                  
-                                </span>
-                            </div>
+                                {% endif %}
+                                <span class="">@{{ member.username }}</span>
+
+                            </span>
                         </div>
-                    </div>  
-                </div>
-            </a>
+                        <div class="oneline ms-4 text-secondary">
+                            <span data-bs-toggle="tooltip" title="{% trans 'Full name' %}">  
+                                <span class="small text-secondary me-2 ">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>                                  
+                            </span>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </a>
 
-            <div id="member-{{ member.id }}-collapse" class="collapse px-2">  
+        <div id="member-{{ member.id }}-collapse" class="collapse px-2">  
 
-                <div id="member-details-extended" class="mx-0 mb-3">
-                    <div class="my-3">Extra data 1</div>
-                    <div class="my-3">Extra data 2</div>
-                </div>
-                
-                <div id="member-details-actions" class="text-end mx-0 mb-3">                    
-                    <div class="my-2">
-                        {% if member != request.user and member.is_manager %}
-                            {% if member.is_actife %}
-
-                                <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
-                                        data-bs-toggle="modal" data-bs-target="#memberDisableModal"
-                                        data-amount="{{ member.member_amount }}"
-                                        data-company="{{ member.company.name }}"
-                                        data-result="{{ member.get_result_display }}"
-                                        data-url="{% url 'bidding_member_disable' member.id %}">
-                                    <span><i class="{{ bicons.delete }}"></i></span>
-                                    <span class="ms-1">{% trans 'Disable' %}</span>
-                                </button>
-                            {% else %}
-                                <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-primary"
-                                        data-bs-toggle="modal" data-bs-target="#memberEnableModal"
-                                        data-amount="{{ member.member_amount }}"
-                                        data-company="{{ member.company.name }}"
-                                        data-result="{{ member.get_result_display }}"
-                                        data-url="{% url 'bidding_member_enable' member.id %}"
-                                        >
-                                    <span><i class="{{ bicons.delete }}"></i></span>
-                                    <span class="ms-1">{% trans 'Enable' %}</span>
-                                </button>
-                            {% endif %}
-
+            <div id="member-details-extended" class="mx-0 mb-3">
+                <div class="my-3">Extra data 1</div>
+                <div class="my-3">Extra data 2</div>
+            </div>
+            
+            <div id="member-details-actions" class="text-end mx-0 mb-3">                    
+                <div class="my-2">
+                    {% if manage and member != request.user %}
+                        {% if member.is_actife %}
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
+                                    data-bs-toggle="modal" data-bs-target="#memberDisableModal"
+                                    data-amount="{{ member.member_amount }}"
+                                    data-company="{{ member.company.name }}"
+                                    data-result="{{ member.get_result_display }}"
+                                    data-url="{% url 'bidding_member_disable' member.id %}">
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Disable' %}</span>
+                            </button>
+                        {% else %}
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-primary"
+                                    data-bs-toggle="modal" data-bs-target="#memberEnableModal"
+                                    data-amount="{{ member.member_amount }}"
+                                    data-company="{{ member.company.name }}"
+                                    data-result="{{ member.get_result_display }}"
+                                    data-url="{% url 'bidding_member_enable' member.id %}"
+                                    >
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Enable' %}</span>
+                            </button>
+                        {% endif %}
+                        {% if member.is_manager %}
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#memberDeleteModal"
+                                    data-amount="{{ member.member_amount }}"
+                                    data-company="{{ member.company.name }}"
+                                    data-result="{{ member.get_result_display }}"
+                                    data-url="{% url 'bidding_member_bossify' member.id %}"
+                                    >
+                                <span><i class="{{ bicons.superuser }}"></i></span>
+                                <span class="ms-1">{% trans 'Make Not Manger' %}</span>
+                            </button>
+                        {% else %}
                             <button type="button" class="ms-2 mt-2 btn btn-sm btn-danger"
                                     data-bs-toggle="modal" data-bs-target="#memberDeleteModal"
                                     data-amount="{{ member.member_amount }}"
                                     data-company="{{ member.company.name }}"
                                     data-result="{{ member.get_result_display }}"
-                                    data-url="{% url 'bidding_member_remove' member.id %}"
+                                    data-url="{% url 'bidding_member_bossify' member.id %}"
                                     >
-                                <span><i class="{{ bicons.delete }}"></i></span>
-                                <span class="ms-1">{% trans 'Remove' %}</span>
+                                <span><i class="{{ bicons.superuser }}"></i></span>
+                                <span class="ms-1">{% trans 'Make Manger' %}</span>
                             </button>
-
                         {% endif %}
 
-                    </div>
-                </div>
-            </div>
+                    {% endif %}
 
-        </div>
-
-    <!-- ########################### -->
-
-
-        <div class="card-footer small px-2 py-1">
-            <div class="small">
-                <div class="d-flex justify-content-between px-0">
-                    <div>
-                        {% if member == request.user %}
-                            <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
-                                <span class="badge bg-success">
-                                    <span class="">{% trans 'ME' %}</span>
-                                </span>
-                            </span>
-                        {% endif %}
-
-                        {% if not member.is_actife %}
-                            <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Member is disabled' %}">
-                                <span class="badge bg-danger">
-                                    <span><i class="{{ bicons.cancelled }}"></i></span>
-                                    <span class="">{% trans 'Disabled' %}</span>
-                                </span>
-                            </span>
-                        {% endif %}
-
-                        {% if member.is_manager %}
-                            <span class="me-2 my-0 text-primary" data-bs-toggle="tooltip" title="{% trans 'Member is Team admin' %}">
-                                <span class="badge bg-warning">
-                                    <span><i class="{{ bicons.superuser }}"></i></span>
-                                    <span class="">{% trans 'Admin' %}</span>
-                                </span>
-                            </span>
-                        {% endif %}
-
-                        <span class="me-2 my-0 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Member joined date' %}">
-                            <span><i class="{{ bicons.history }}"></i></span>
-                            <span class="">{{ member.joined.date|default:'-' }}</span>
-                        </span>
-                    </div>
-                    <div>
-                        <span class="ms-2 my-0 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Companies' %}">
-                            <span><i class="{{ bicons.company }}"></i></span>
-                            <span class="fw-bold">{{ member.companies.all|length }}</span>
-                        </span>
-                    </div>
                 </div>
             </div>
         </div>
+
+    </div>
+
+
+    <div class="card-footer small px-2 py-1">
+        <div class="small">
+            <div class="d-flex justify-content-between px-0">
+                <div>
+                    <!-- {% if member == request.user %}
+                        <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
+                            <span class="badge bg-success">
+                                <span class="">{% trans 'ME' %}</span>
+                            </span>
+                        </span>
+                    {% endif %} -->
+                    <span class="me-2 my-0 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Companies' %}">
+                        <span><i class="{{ bicons.company }}"></i></span>
+                        <span class="fw-bold">{{ member.companies.all|length }}</span>
+                    </span>
+
+                    {% if not member.is_actife %}
+                        <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Member is disabled' %}">
+                            <span class="badge bg-danger">
+                                <span><i class="{{ bicons.cancelled }}"></i></span>
+                                <span class="">{% trans 'Disabled' %}</span>
+                            </span>
+                        </span>
+                    {% endif %}
+
+                    {% if member.is_manager %}
+                        <span class="me-2 my-0 text-primary" data-bs-toggle="tooltip" title="{% trans 'Member is Team admin' %}">
+                            <span class="badge bg-warning">
+                                <span><i class="{{ bicons.superuser }}"></i></span>
+                                <span class="">{% trans 'Admin' %}</span>
+                            </span>
+                        </span>
+                    {% endif %}
+                </div>
+                <div>
+                    <span class="me-2 my-0 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Member joined date' %}">
+                        <span><i class="{{ bicons.history }}"></i></span>
+                        <span class="">{{ member.joined.date|default:'-' }}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </div>

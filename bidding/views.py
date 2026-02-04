@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import F, Prefetch, Q, OuterRef, Subquery
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -20,7 +21,8 @@ from bidding.forms import BidForm, ExpenseForm, TaskForm, InvitationForm
 from bidding.models import Bid, Expense, Task, Team, TeamMember, Invitation
 from bidding.secu import (
     is_team_admin, is_team_member, 
-    is_active_team_member, is_active_team_admin)
+    is_active_team_member, is_active_team_admin,
+    get_team, get_colleagues, update_membership)
 from nas.choices import (
     BidResults, BidStatus, BondStatus, 
     ExpenseStatus, TaskStatus, InvitationReplies)
@@ -57,6 +59,8 @@ def invitation_create(request, tk=None):
     team = get_object_or_404(Team, pk=tk)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+    
+    
 
     logger = logging.getLogger('portal')
 
@@ -64,6 +68,11 @@ def invitation_create(request, tk=None):
     if form.is_valid():
         try:
             obj = form.save(commit=False)
+            invitee = obj.invitee
+            if invitee:
+                if invitee in team.members.all():
+                    return HttpResponse(_("Bad request"), status=405)
+
             obj.team = team
             obj.creator = user
             obj.expiry = datetime.now() + timedelta(hours=INVITATION_EXPIRY_HOURS)
@@ -94,8 +103,102 @@ def invitation_cancel(request, pk=None):
     if not pk: return HttpResponse(_("Not found"), status=404)
     invitation = get_object_or_404(Invitation, pk=pk)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+
+    if invitation.cancelled: return HttpResponse(_("Already cancelled"), status=405)
+    if invitation.expired: return HttpResponse(_("Already expired"), status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        invitation.cancelled = True
+        # invitation.update(cancelled = True)
+        invitation.save()
+        logger.info(f"Invitation cancelled")
+        messages.success(request, _("Invitation cancelled successfully"))
+        # return HttpResponse(status=200)
+
+    except Exception as xc:
+        logger.info(f"Exception Cancelling invitation: { str(xc)}")
+        return HttpResponse(_("Server error raised"), status=500)
+
+    return redirect('bidding_team_recap')
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def invitation_accept(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
+    
+    if not pk: return HttpResponse(_("Not found"), status=404)
+    invitation = get_object_or_404(Invitation, pk=pk)
+
+    # team = get_team(user)
+    # if not team: return HttpResponse(_("Not found"), status=404)
+    # if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+
+    if invitation.cancelled: return HttpResponse(_("Invitation cancelled"), status=405)
+    if invitation.expired: return HttpResponse(_("Invitation expired"), status=405)
+    invitee = invitation.invitee
+    if not invitee: return HttpResponse(_("Bad request"), status=405)
+    if invitee != user: return HttpResponse(_("Bad request"), status=405)
+
+    logger = logging.getLogger('portal')
+
+    confirmed = request.POST.get('confirmed', None)
+    if confirmed != 'know' :
+        messages.error(request, _("Please confirm action first"))
+
+    else:
+        try:
+            memberships = invitee.memberships.all()
+            deleted_ms = 0
+            try:
+                with transaction.atomic():
+                    deleted_ms, pm = invitee.memberships.all().delete()
+                    membership = TeamMember.objects.create(
+                            user      = invitee,
+                            team      = invitation.team,
+                            active    = False,
+                        )
+                    # TODO: Delete Former Team if empty
+                    invitation.reply = InvitationReplies.INV_ACCEPTED
+                    invitation.save()
+                    logger.info(f"Invitation acceptance succeeded")
+                    messages.success(request, _("You now are a member of the team") + f": {invitation.team.name}")
+                    messages.error(request, _("Ask a team Manager to activate your membership"))
+            except Exception as xs:
+                logger.info(f"Deleted user membership instances: { deleted_ms }")
+                logger.info(f"Invitation acceptance failed: { str(xs) }")
+                return HttpResponse(_("Server error raised") + f": { str(xs) }", status=500)
+
+        except Exception as xc:
+            logger.info(f"Exception Cancelling invitation: { str(xc)}")
+            return HttpResponse(_("Server error raised") + f": { str(xc) }", status=500)
+
+    return redirect('bidding_team_recap')
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def invitation_decline(request, pk=None):
+    # TODO: Decline with response
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
+    
+    if not pk: return HttpResponse(_("Not found"), status=404)
+    invitation = get_object_or_404(Invitation, pk=pk)
+
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
 
     if invitation.cancelled: return HttpResponse(_("Already cancelled"), status=405)
@@ -127,22 +230,30 @@ def team_recap(request):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team:
+        team = Team.objects.create(
+            name=user.username.upper(),
+            creator=user,
+        )
+        team.add_member(user, manager=True)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
-    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
+    if not is_active_team_member(user, team):
+        return render(request, 'bidding/team-member-disabled.html', {"team": team})
+        # return HttpResponse(_("Member is not active") + f" in: [{ team }]", status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
 
-    if us: 
+    if us:
         USERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
     USERS_ORDERING_FIELD = 'username'
 
     colleagues = team.members.annotate(
-        is_actife = F("teammember__active"),
-        is_manager = F("teammember__manager"),
-        joined = F("teammember__joined"),
+        is_actife = F("memberships__active"),
+        is_manager = F("memberships__manager"),
+        joined = F("memberships__joined"),
     ).order_by(
         '-is_actife', '-is_manager', USERS_ORDERING_FIELD,
     )
@@ -159,6 +270,9 @@ def team_recap(request):
         invitable = True
         invited = user.received_invitations.exclude(
                 reply=InvitationReplies.INV_ACCEPTED, 
+                # creator=user, 
+            ).exclude(
+                # reply=InvitationReplies.INV_ACCEPTED, 
                 creator=user, 
             ).filter(
                 username=user.username, 
@@ -198,167 +312,143 @@ def team_recap(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def member_disable(request, tk=None, pk=None):
+def member_disable(request, uk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
         return HttpResponse(_("Permission denied"), status=403)
     
-    if not pk: return HttpResponse(_("Not found"), status=404)
-    membership = get_object_or_404(TeamMember, pk=pk)
+    if not uk: return HttpResponse(_("Not found"), status=404)
+    member = get_object_or_404(User, pk=uk)
 
-    member = membership.user
-    if not member: return HttpResponse(_("Not found"), status=404)
+    if member == user: return HttpResponse(_("Bad request") + ": " + _("Self enabling"), status=405)
 
-    if member == user: return HttpResponse(_("Bad request"), status=405)
-
-    if not tk: return HttpResponse(_("Not found"), status=404)
-    team = get_object_or_404(Team, pk=tk)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Team not found"), status=404)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    if not is_active_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
-
-    # active_colleagues = team.members.annotate(
-    #     is_actife = F("teammember__active"),
-    # ).filter(is_actife=True).exclude(id=member.id).count()
-
-    # if active_colleagues < 1: return HttpResponse(_("Bad request"), status=405)
+    if not is_active_team_member(member, team): return HttpResponse(_("Bad request") + ": " + _("Already disabled"), status=405)
 
     logger = logging.getLogger('portal')
 
     try:
-        membership.update(active = False)
-        logger.info(f"Team membership Disabled")        
-        return HttpResponse(status=200)
+        um = update_membership(user, member, 'disable')
+        if um == 'disable':
+            logger.info(f"Member disabled successfully")        
+            messages.success(request, _("Member disabled successfully"))
+        else:
+            return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception Disabling Team membership: { str(xc)}")
-
-    return HttpResponse(_("Server error raised"), status=500)
+        logger.info(f"Exception Disabling member: { str(xc)}")
+        return HttpResponse(_("Server error raised"), status=500)
+    
+    return redirect('bidding_team_recap')
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def member_enable(request, tk=None, pk=None):
+def member_enable(request, uk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
         return HttpResponse(_("Permission denied"), status=403)
     
-    if not pk: return HttpResponse(_("Not found"), status=404)
-    membership = get_object_or_404(TeamMember, pk=pk)
+    if not uk: return HttpResponse(_("Not found"), status=404)
+    member = get_object_or_404(User, pk=uk)
 
-    member = membership.user
-    if not member: return HttpResponse(_("Not found"), status=404)
+    if member == user: return HttpResponse(_("Bad request") + ": " + _("Self enabling"), status=405)
 
-    if member == user: return HttpResponse(_("Bad request"), status=405)
-
-    if not tk: return HttpResponse(_("Not found"), status=404)
-    team = get_object_or_404(Team, pk=tk)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Team not found"), status=404)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    if not is_team_member(member, team): return HttpResponse(_("Permission denied"), status=403)
-    if is_active_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
-
-    # active_colleagues = team.members.annotate(
-    #     is_actife = F("teammember__active"),
-    # ).filter(is_actife=True).exclude(id=member.id).count()
-
-    # if active_colleagues < 2: return HttpResponse(_("Bad request"), status=405)
+    if is_active_team_member(member, team): return HttpResponse(_("Bad request") + ": " + _("Already enabled"), status=405)
 
     logger = logging.getLogger('portal')
 
     try:
-        membership.update(active = True)
-        logger.info(f"Team membership Enabled")        
-        return HttpResponse(status=200)
+        um = update_membership(user, member, 'enable')
+        if um == 'enable':
+            logger.info(f"Member enabled successfully")        
+            messages.success(request, _("Member enabled successfully"))
+        else:
+            return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception Enabling Team membership: { str(xc)}")
-
-    return HttpResponse(_("Server error raised"), status=500)
+        logger.info(f"Exception Enabling member: { str(xc)}")
+        return HttpResponse(_("Server error raised")  + ": " + f" { str(xc)}", status=500)
+    
+    return redirect('bidding_team_recap')
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def member_bossify(request, tk=None, pk=None):
+def member_bossify(request, uk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
         return HttpResponse(_("Permission denied"), status=403)
+    
+    if not uk: return HttpResponse(_("Not found"), status=404)
+    member = get_object_or_404(User, pk=uk)
 
-    if not pk: return HttpResponse(_("Not found"), status=404)
-    membership = get_object_or_404(TeamMember, pk=pk)
+    if member == user: return HttpResponse(_("Bad request") + ": " + _("Self editing"), status=405)
 
-    member = membership.user
-    if not member: return HttpResponse(_("Not found"), status=404)
-
-    if member == user: return HttpResponse(_("Bad request"), status=405)
-
-    if not tk: return HttpResponse(_("Not found"), status=404)
-    team = get_object_or_404(Team, pk=tk)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Team not found"), status=404)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    if not is_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
-    if is_team_admin(member, team): return HttpResponse(_("Bad request"), status=405)
-
-    # active_colleagues = team.members.annotate(
-    #     is_actife = F("teammember__active"),
-    # ).filter(is_actife=True).exclude(id=member.id).count()
-
-    # if active_colleagues < 2: return HttpResponse(_("Bad request"), status=405)
+    if is_active_team_admin(member, team): return HttpResponse(_("Bad request") + ": " + _("Already manager"), status=405)
 
     logger = logging.getLogger('portal')
 
     try:
-        membership.update(manager = True)
-        logger.info(f"Team membership changed to Manager")        
-        return HttpResponse(status=200)
+        um = update_membership(user, member, 'bossify')
+        if um == 'bossify':
+            logger.info(f"Member made manager successfully")        
+            messages.success(request, _("Member made manager successfully"))
+        else:
+            return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception Changing Team membership: { str(xc)}")
-
-    return HttpResponse(_("Server error raised"), status=500)
+        logger.info(f"Exception making manager a member: { str(xc)}")
+        return HttpResponse(_("Server error raised")  + ": " + f" { str(xc)}", status=500)
+    
+    return redirect('bidding_team_recap')
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def member_debossify(request, tk=None, pk=None):
+def member_debossify(request, uk=None):
 
     user = request.user
     if not user or not user.is_authenticated :
         return HttpResponse(_("Permission denied"), status=403)
+    
+    if not uk: return HttpResponse(_("Not found"), status=404)
+    member = get_object_or_404(User, pk=uk)
 
-    if not pk: return HttpResponse(_("Not found"), status=404)
-    membership = get_object_or_404(TeamMember, pk=pk)
+    if member == user: return HttpResponse(_("Bad request") + ": " + _("Self editing"), status=405)
 
-    member = membership.user
-    if not member: return HttpResponse(_("Not found"), status=404)
-
-    if member == user: return HttpResponse(_("Bad request"), status=405)
-
-    if not tk: return HttpResponse(_("Not found"), status=404)
-    team = get_object_or_404(Team, pk=tk)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Team not found"), status=404)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    if not is_team_member(member, team): return HttpResponse(_("Bad request"), status=405)
-    if not is_team_admin(member, team): return HttpResponse(_("Bad request"), status=405)
-
-    active_co_managers = team.members.annotate(
-        is_actife = F("teammember__active"),
-        is_manager = F("teammember__manager"),
-    ).filter(is_actife=True, is_manager=True).exclude(id=member.id).count()
-
-    if active_managers < 1: return HttpResponse(_("Bad request"), status=405)
+    if not is_active_team_admin(member, team): return HttpResponse(_("Bad request") + ": " + _("Already not manager"), status=405)
 
     logger = logging.getLogger('portal')
 
     try:
-        membership.update(manager = False)
-        logger.info(f"Team membership changed to Standard")        
-        return HttpResponse(status=200)
+        um = update_membership(user, member, 'debossify')
+        if um == 'debossify':
+            logger.info(f"Member made not manager successfully")        
+            messages.success(request, _("Member made not manager successfully"))
+        else:
+            return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception Changing Team membership: { str(xc)}")
-
-    return HttpResponse(_("Server error raised"), status=500)
+        logger.info(f"Exception making not manager a member: { str(xc)}")
+        return HttpResponse(_("Server error raised")  + ": " + f" { str(xc)}", status=500)
+    
+    return redirect('bidding_team_recap')
 
 
 
@@ -370,8 +460,8 @@ def tenders_list(request):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -435,34 +525,35 @@ def tenders_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    if user.teams.count() < 1:
-        team = Team.objects.create(
-            name=user.username.upper(),
-            creator=user,
-        )
-        team.add_member(user, manager=True)
+    # if user.teams.count() < 1:
+    #     team = Team.objects.create(
+    #         name=user.username.upper(),
+    #         creator=user,
+    #     )
+    #     team.add_member(user, manager=True)
 
     teams = user.teams.all()
-    colleagues = user.teams.first().members.all()
+    # colleagues = user.teams.first().members.all()
+    colleagues = get_colleagues(user)
 
-    if teams:
-        bid_tenders = Tender.objects.filter(
-                lots__bids__creator__in=colleagues,
-            ).prefetch_related(
-                Prefetch(
-                    "lots__bids",
-                    queryset=Bid.objects.filter(creator__in=colleagues,),
-                    to_attr="team_bids",
-                ),
-                'openings',
-                "lots__bids__tasks",
-                "lots__bids__expenses",
-                "lots__bids__contracts",
-            ).order_by(
-                '-deadline',
-            ).distinct()
-    else:
-        bid_tenders = Tender.objects.none()
+    bid_tenders = Tender.objects.filter(
+            lots__bids__creator__in=colleagues,
+        ).prefetch_related(
+            Prefetch(
+                "lots__bids",
+                queryset=Bid.objects.filter(creator__in=colleagues,),
+                to_attr="team_bids",
+            ),
+            'openings',
+            "lots__bids__tasks",
+            "lots__bids__expenses",
+            "lots__bids__contracts",
+        ).order_by(
+            '-deadline',
+        ).distinct()
+    # if teams:
+    # else:
+    #     bid_tenders = Tender.objects.none()
 
     tenders, filters = filter_tenders(bid_tenders, query_dict)
     query_dict['filters'] = filters
@@ -510,8 +601,8 @@ def bids_list(request):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -612,26 +703,29 @@ def bids_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    if user.teams.count() < 1:
-        team = Team.objects.create(
-            name=user.username.upper(),
-            creator=user,
-        )
-        team.add_member(user, manager=True)
 
-    teams = user.teams.all()
-    colleagues = user.teams.first().members.all()
+    # if user.teams.count() < 1:
+    #     team = Team.objects.create(
+    #         name=user.username.upper(),
+    #         creator=user,
+    #     )
+    #     team.add_member(user, manager=True)
+
+    # teams = user.teams.all()
+    # colleagues = user.teams.first().members.all()
+
+    colleagues = get_colleagues(user)
     companies = Company.objects.filter(user__in=colleagues)
     if companies.count() < 1: return HttpResponse(_("No company found !"), status=403)
     
-    if teams:
-        all_bids = Bid.objects.filter(
+    # if teams:
+    # else:
+    all_bids = Bid.objects.filter(
             creator__in=colleagues
         ).prefetch_related(
             "tasks", "expenses", #"contracts",
         )
-    else:
-        all_bids = Bid.objects.none()
+    # all_bids = Bid.objects.none()
 
     bids, filters = filter_bids(all_bids, query_dict, companies, colleagues)
     query_dict['filters'] = filters
@@ -692,8 +786,8 @@ def bonds_list(request):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -858,8 +952,8 @@ def bid_details(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
     
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
     
@@ -885,8 +979,8 @@ def bid_delete(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     logger = logging.getLogger('portal')
 
@@ -941,8 +1035,8 @@ def bid_edit(request, pk=None, lk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
     
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -1014,7 +1108,7 @@ def bid_edit(request, pk=None, lk=None):
                 desc = lot.description
                 form.fields["details"].initial      = desc
 
-            companies = user.companies
+            companies = team.companies
             if companies.count() == 1:
                 form.fields["company"].initial      = companies.first()
 
@@ -1037,8 +1131,8 @@ def task_delete(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     logger = logging.getLogger('portal')
 
@@ -1090,8 +1184,8 @@ def task_edit(request, pk=None, bk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
     
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -1164,8 +1258,8 @@ def expense_delete(request, pk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -1217,8 +1311,8 @@ def expense_edit(request, pk=None, bk=None):
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
     
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
@@ -1295,8 +1389,8 @@ def bid_file(request, pk=None, ft=None):
 
     if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
 
-    team = user.teams.first()
-    if not team: return HttpResponse(_("Permission denied"), status=403)
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
     if not is_team_member(bid.creator, team): return HttpResponse(_("Permission denied"), status=403)
 
     if ft == 'bond': file_path = bid.file_bond.url
@@ -1313,6 +1407,41 @@ def bid_file(request, pk=None, ft=None):
     response['Content-Disposition'] = f'attachment; filename="{ file_name }"'
     # response['Content-Length'] = os.path.getsize(file_path)
     return response
+
+
+
+# def get_team(user=None):
+#     if not user: return None
+#     membership = user.memberships.last()
+#     return membership.team if membership else None
+
+# def get_colleagues(user=None):
+#     if not user: return None
+#     membership = user.memberships.last()
+#     return membership.team.members.all() if membership else None
+
+# def update_membership(user=None, member=None, verb=None):
+#     if not user or not member or not verb: return None
+#     if user == member : return None
+#     try:
+#         memberships = member.memberships.all()
+#         last_membership = memberships.order_by("joined").last()
+#         if last_membership:
+#             memberships.exclude(pk=last_membership.pk).delete()
+#             if verb:
+#                 if verb == 'disable':
+#                     last_membership.active = False
+#                 elif verb == 'enable':
+#                     last_membership.active = True
+#                 elif verb == 'bossify':
+#                     last_membership.manager = True
+#                 elif verb == 'debossify':
+#                     last_membership.manager = False
+#                 last_membership.save()
+#                 return verb
+#         return None
+#     except: 
+#         return None
 
 
 

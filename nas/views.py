@@ -191,10 +191,10 @@ class CompanyListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        team = user.teams.first()
-        colleagues = team.members.filter(active = True)
-        return Company.objects.filter(user__in=colleagues, active=True)
-        # return Company.objects.filter(user=self.request.user, active=True)
+        # team = user.teams.first()
+        # colleagues = team.members.filter(is_active = True)
+        # return Company.objects.filter(user__in=colleagues, active=True)
+        return Company.objects.filter(user=self.request.user, active=True)
 
 
 @method_decorator(login_required, name='dispatch')

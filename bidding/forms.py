@@ -10,6 +10,10 @@ from django.utils.translation import gettext_lazy as _
 
 from base.models import Lot
 from bidding.models import Bid, Invitation, Contact, Expense, Task
+from bidding.secu import (
+    # is_team_admin, is_team_member, 
+    # is_active_team_member, is_active_team_admin,
+    get_team, get_colleagues, update_membership)
 from bidding.widgets import FilenameOnlyClearableFileInput
 from nas.models import Company
 from nas.choices import BidStatus, BidResults
@@ -27,7 +31,7 @@ class LotChoiceField(forms.ModelChoiceField):
 
 class CompanyChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return f"{obj.name} ({obj.ice})"
+        return f"{obj.name} ({obj.ice}, @{obj.user})"
 
 class InvitationForm(forms.ModelForm):
 
@@ -121,8 +125,12 @@ class BidForm(forms.ModelForm):
         self.usets = usets
         self.lot = lot
 
-        if user:
-            fleet = user.teams.first().companies
+        member = self.creator
+
+        if member:
+            team = get_team(member)
+            fleet = team.companies
+            # fleet = user.teams.first().companies
             company_field = self.fields["company"]
             company_field.queryset = fleet
             if fleet.count() == 1:

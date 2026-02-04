@@ -1,0 +1,44 @@
+{% extends 'base/base.html' %}
+{% load i18n l10n static %}
+{% load humanize %}
+
+{% block title %}
+    {% trans "Member disabled" %}
+{% endblock title %}
+
+
+{% block content %}
+
+
+
+    <div class="mb-5">
+        <div class="d-flex align-items-center justify-content-between px-0">
+            <div class="">
+                <span class="h3">{% trans "Member disabled" %}</span>
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="container px-0 pt-2">
+
+                <div class="my-2">
+                    <span class="small text-secondary me-1">{% trans "Team" %}:</span>
+                    <span class="fw-bold">{{ team.name }}</span>
+                </div>
+                <div class="text-danger my-2">
+                    {% trans "Your membership is disabled" %}
+                </div>
+                <div class="text-secondary small my-2">
+                    {% trans "Please contact your team Manager" %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+
+{% endblock content %}
+
+

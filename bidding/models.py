@@ -72,14 +72,15 @@ class Team(models.Model):
 
 class TeamMember(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False)
-    team      = models.ForeignKey(Team, on_delete=models.DO_NOTHING, editable=False)
+    user      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='memberships')
+    team      = models.ForeignKey(Team, on_delete=models.DO_NOTHING, editable=False, related_name='memberships')
     active    = models.BooleanField(null=True, default=True, editable=False)
     manager   = models.BooleanField(null=True, default=False, editable=False)
     joined    = models.DateTimeField(auto_now_add=True, editable=False)
 
     class Meta:
         db_table = 'bidding_team_member'
+        ordering = ['joined']
         
         constraints = [
             models.UniqueConstraint(

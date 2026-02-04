@@ -22,7 +22,21 @@ class JsonFormatter(logging.Formatter):
         if hasattr(record, "extra"):
             log_data.update(record.extra)
 
-        context = get_request_context()
+        try: context = get_request_context()
+        except: context = None
+
+        # data = {
+        #     "ip": get_client_ip(request), 
+        #     "user_agent": request.META.get("HTTP_USER_AGENT", ""), 
+        #     "method": request.method, 
+        #     "path": request.path, 
+        #     "full_path": request.get_full_path(), 
+        #     "host": request.get_host(), 
+        #     "is_secure": request.is_secure(), 
+        #     "referer": request.META.get("HTTP_REFERER"), 
+        #     "accept_language": request.META.get("HTTP_ACCEPT_LANGUAGE"), 
+        # }
+
         if context:
             log_data.update({
                 "request_id": context.get("request_id"),
@@ -40,6 +54,7 @@ class JsonFormatter(logging.Formatter):
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django's default loggers
+
     'formatters': {
         'verbose': {
             'format': '[{asctime}][{levelname}][{module}] {process:d}x{thread:d}: {message}',
@@ -53,6 +68,7 @@ LOGGING_CONFIG = {
             "()": JsonFormatter,
         },
     },
+
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
@@ -73,6 +89,7 @@ LOGGING_CONFIG = {
             'formatter': 'verbose',
         },
     },
+
     'loggers': {
         'django': {
             'handlers': ['console'],
