@@ -146,7 +146,7 @@ def invitation_accept(request, pk=None):
     invitee = invitation.invitee
     if not invitee: return HttpResponse(_("Bad request"), status=405)
     if invitee != user: return HttpResponse(_("Bad request"), status=405)
-    if get_team(invitee) == get_team(user): return HttpResponse(_("Bad request") + ": " + _("Already member"), status=405)
+    if get_team(invitation.creator) == get_team(user): return HttpResponse(_("Bad request") + ": " + _("Already member"), status=405)
 
     logger = logging.getLogger('portal')
 
@@ -183,41 +183,41 @@ def invitation_accept(request, pk=None):
 
     return redirect('bidding_team_recap')
 
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def invitation_decline(request, pk=None):
-    # TODO: Decline with response
-    user = request.user
-    if not user or not user.is_authenticated :
-        return HttpResponse(_("Permission denied"), status=403)
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def invitation_decline(request, pk=None):
+#     # TODO: Decline with response
+#     user = request.user
+#     if not user or not user.is_authenticated :
+#         return HttpResponse(_("Permission denied"), status=403)
 
-    if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
+#     if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
     
-    if not pk: return HttpResponse(_("Not found"), status=404)
-    invitation = get_object_or_404(Invitation, pk=pk)
+#     if not pk: return HttpResponse(_("Not found"), status=404)
+#     invitation = get_object_or_404(Invitation, pk=pk)
 
-    team = get_team(user)
-    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
-    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+#     team = get_team(user)
+#     if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
+#     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
 
-    if invitation.cancelled: return HttpResponse(_("Already cancelled"), status=405)
-    if invitation.expired: return HttpResponse(_("Already expired"), status=405)
+#     if invitation.cancelled: return HttpResponse(_("Already cancelled"), status=405)
+#     if invitation.expired: return HttpResponse(_("Already expired"), status=405)
 
-    logger = logging.getLogger('portal')
+#     logger = logging.getLogger('portal')
 
-    try:
-        invitation.cancelled = True
-        # invitation.update(cancelled = True)
-        invitation.save()
-        logger.info(f"Invitation cancelled")
-        messages.success(request, _("Invitation cancelled successfully"))
-        # return HttpResponse(status=200)
+#     try:
+#         invitation.cancelled = True
+#         # invitation.update(cancelled = True)
+#         invitation.save()
+#         logger.info(f"Invitation cancelled")
+#         messages.success(request, _("Invitation cancelled successfully"))
+#         # return HttpResponse(status=200)
 
-    except Exception as xc:
-        logger.info(f"Exception Cancelling invitation: { str(xc)}")
-        return HttpResponse(_("Server error raised"), status=500)
+#     except Exception as xc:
+#         logger.info(f"Exception Cancelling invitation: { str(xc)}")
+#         return HttpResponse(_("Server error raised"), status=500)
 
-    return redirect('bidding_team_recap')
+#     return redirect('bidding_team_recap')
 
 
 

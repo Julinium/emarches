@@ -33,7 +33,7 @@ urlpatterns = [
 
     path('invit/<uuid:pk>/cancel',  views.invitation_cancel,  name='bidding_invitation_cancel'),
     path('invit/<uuid:pk>/accept',  views.invitation_accept,  name='bidding_invitation_accept'),
-    path('invit/<uuid:pk>/decline', views.invitation_decline, name='bidding_invitation_decline'),
+    # path('invit/<uuid:pk>/decline', views.invitation_decline, name='bidding_invitation_decline'),
 
     # path('contracts/',              views.contracts_list,   name='bidding_contracts_list'),
     # path('contracts/<uuid:pk>/',    views.contract_details, name='bidding_contract_details'),

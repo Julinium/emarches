@@ -10,7 +10,7 @@
 {% block content %}
 
     {% if invitable and invited.all %}
-        <div id="my-invitations" class="mb-5">                    
+        <div id="received-invitations-section" class="mb-5">                    
             <div class="d-flex align-items-center justify-content-between px-0">
                 <div class="">
                     <span class="h3">{% trans "Received Invitations" %}</span>
@@ -19,7 +19,7 @@
                         {{ invited.count }} 
                     </span>
                 </div>
-                <!-- <div id="my-invitations-actions">
+                <!-- <div id="received-invitations-actions">
                     <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
                         <i class="{{ bicons.create }}"></i>
                     </button>
@@ -76,12 +76,6 @@
                                            data-team="{{ invit.team.name }}">
                                             <i class="{{ bicons.accept }}"></i>
                                             <span class="text-uppercase">{% trans "Accept" %}</span>
-                                        </a>
-                                        <a class="me-2 btn btn-sm btn-outline-danger"
-                                           data-bs-toggle="modal" data-bs-target="#declineInvitationModal"
-                                           data-url="{% url 'bidding_invitation_cancel' invit.id %}">
-                                            <i class="{{ bicons.cancelled }}"></i>
-                                            <span class="text-uppercase">{% trans "Decline" %}</span>
                                         </a>
                                     </div>
                                 </div>
