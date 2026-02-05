@@ -10,6 +10,17 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING(f"Started doing the work ..."))
         
         ############################################
+        from bidding.models import Team
+        # from datetime import datetime
+        
+        # mbs = TeamMember.objects.all()
+        # for mb in mbs:
+        #     mb.created = mb.joined
+        #     mb.save()
+        teams = Team.objects.all()
+        for t in teams:
+            if t.members.count() == 0:
+                t.delete()
 
         ############################################
 

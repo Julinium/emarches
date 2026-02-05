@@ -166,8 +166,10 @@ def invitation_accept(request, pk=None):
                             team      = invitation.team,
                             active    = False,
                         )
+                    update_membership(user, invitee, 'disable')
                     # TODO: Delete Former Team if empty
                     invitation.reply = InvitationReplies.INV_ACCEPTED
+                    invitation.reply_on = datetime.now()
                     invitation.save()
                     logger.info(f"Invitation acceptance succeeded")
                     messages.success(request, _("You now are a member of the team") + f": {invitation.team.name}")
@@ -175,7 +177,7 @@ def invitation_accept(request, pk=None):
             except Exception as xs:
                 logger.info(f"Deleted user membership instances: { deleted_ms }")
                 logger.info(f"Invitation acceptance failed: { str(xs) }")
-                return HttpResponse(_("Server error raised") + f": { str(xs) }", status=500)
+                return HttpResponse(_("Server error raised"), status=500)
 
         except Exception as xc:
             logger.info(f"Exception Cancelling invitation: { str(xc)}")
@@ -232,7 +234,7 @@ def team_recap(request):
     team = get_team(user)
     if not team:
         team = Team.objects.create(
-            name=user.username.upper(),
+            name = _("TEAM") + "-" + user.username.upper(),
             creator=user,
         )
         team.add_member(user, manager=True)
@@ -241,6 +243,12 @@ def team_recap(request):
     if not is_active_team_member(user, team):
         return render(request, 'bidding/team-member-disabled.html', {"team": team})
         # return HttpResponse(_("Member is not active") + f" in: [{ team }]", status=403)
+    
+    if team.members.count() == 1:
+        tm = user.memberships.filter(team=team).order_by('joined').last()
+        if tm.manager != True:
+            tm.manager = True
+            tm.save()
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -723,7 +731,8 @@ def bids_list(request):
     # if teams:
     # else:
     all_bids = Bid.objects.filter(
-            creator__in=colleagues
+            creator__in=colleagues,
+            # company__in=companies,
         ).prefetch_related(
             "tasks", "expenses", #"contracts",
         )
@@ -1074,9 +1083,9 @@ def bid_edit(request, pk=None, lk=None):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.lot = lot
-            # if obj.pk is None: # do not change creator when someone else edits objects.
-            #     obj.creator = user
-            obj.creator = user
+            if obj.pk is None: # do not change creator when someone else edits objects.
+                obj.creator = user
+            obj.updater = user
             obj.save()
 
             if redir:
@@ -1413,39 +1422,6 @@ def bid_file(request, pk=None, ft=None):
     return response
 
 
-
-# def get_team(user=None):
-#     if not user: return None
-#     membership = user.memberships.last()
-#     return membership.team if membership else None
-
-# def get_colleagues(user=None):
-#     if not user: return None
-#     membership = user.memberships.last()
-#     return membership.team.members.all() if membership else None
-
-# def update_membership(user=None, member=None, verb=None):
-#     if not user or not member or not verb: return None
-#     if user == member : return None
-#     try:
-#         memberships = member.memberships.all()
-#         last_membership = memberships.order_by("joined").last()
-#         if last_membership:
-#             memberships.exclude(pk=last_membership.pk).delete()
-#             if verb:
-#                 if verb == 'disable':
-#                     last_membership.active = False
-#                 elif verb == 'enable':
-#                     last_membership.active = True
-#                 elif verb == 'bossify':
-#                     last_membership.manager = True
-#                 elif verb == 'debossify':
-#                     last_membership.manager = False
-#                 last_membership.save()
-#                 return verb
-#         return None
-#     except: 
-#         return None
 
 
 

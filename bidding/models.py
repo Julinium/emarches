@@ -78,6 +78,9 @@ class TeamMember(models.Model):
     manager   = models.BooleanField(null=True, default=False, editable=False)
     joined    = models.DateTimeField(auto_now_add=True, editable=False)
 
+    created   = models.DateTimeField(auto_now_add=True, editable=False)
+    updated   = models.DateTimeField(auto_now=True, editable=False) 
+
     class Meta:
         db_table = 'bidding_team_member'
         ordering = ['joined']
@@ -101,7 +104,7 @@ class Invitation(models.Model):
     team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='invitations')
     cancelled = models.BooleanField(default=False, editable=False, verbose_name=_('Cancelled'))
     sent_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Sent on'))
-    seen_on   = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Seen on'))
+    # seen_on   = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Seen on'))
     reply_on  = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Replied on'))
     reply     = models.CharField(max_length=1, choices=InvitationReplies, null=True, blank=True,  editable=False, verbose_name=_('Reply'))
     response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
@@ -179,6 +182,7 @@ class Bid(models.Model):
     created         = models.DateTimeField(auto_now_add=True, editable=False)
     updated         = models.DateTimeField(auto_now=True, editable=False)
     creator         = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='bids')
+    updater         = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, blank=True, null=True, related_name='updated_bids')
 
     class Meta:
         db_table = 'bidding_bid'

@@ -30,17 +30,19 @@ def is_active_team_member(user, team):
     return False
 
 
-
-
 def get_team(user=None):
     if not user: return None
-    membership = user.memberships.last()
+    membership = user.memberships.order_by("joined").last()
+    # membership = user.memberships.filter(active=True).last()
     return membership.team if membership else None
+
 
 def get_colleagues(user=None):
     if not user: return None
-    membership = user.memberships.last()
-    return membership.team.members.all() if membership else None
+    membership = user.memberships.order_by("joined").last()
+    # membership = user.memberships.filter(active=True).last()
+    return membership.team.members.filter(is_active=True).all() if membership else None
+
 
 def update_membership(user=None, member=None, verb=None):
     if not user or not member or not verb: return None
@@ -50,6 +52,9 @@ def update_membership(user=None, member=None, verb=None):
         last_membership = memberships.order_by("joined").last()
         if last_membership:
             memberships.exclude(pk=last_membership.pk).delete()
+            # memberships.exclude(pk=last_membership.pk).update(
+            #         active = False
+            #     )
             if verb:
                 if verb == 'disable':
                     last_membership.active = False
