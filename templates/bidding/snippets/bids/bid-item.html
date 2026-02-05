@@ -11,7 +11,7 @@
         <div class="card-header px-2 py-1">
             <div class="oneline">
                 {% if bid.lot.tender.cancelled == True %}
-                    <span class="badge bg-danger me-1" data-bs-toggle="tooltip" title="{% trans 'Tender is cancelled' %}">
+                    <span class="badge bg-danger blink me-1" data-bs-toggle="tooltip" title="{% trans 'Tender is cancelled' %}">
                         <i class="{{ bicons.cancelled }}"></i>
                         <span>{% trans "CANCELLED" %}</span>
                     </span>
@@ -44,13 +44,13 @@
                             {% endif %}
                         </div>
                         <div class="oneline ms-4 text-secondary">
-                            {% if bid.date_submitted %}
-                                <span data-bs-toggle="tooltip" title="{% trans 'Date submitted' %}">  
-                                    <span class="small"><i class="{{ bicons.bid }} small text-secondary me-1"></i></span>
-                                    <span class="small text-secondary me-2 ">{{ bid.date_submitted.date|default:'-' }}</span>                                  
-                                </span>
-                            {% endif %}
-                            <span data-bs-toggle="tooltip" title="{% trans 'Creator' %}">  
+
+                            <span data-bs-toggle="tooltip" title="{% trans 'Latest update' %}: {{ bid.updated|default:'-' }}">
+                                <span class="small"><i class="{{ bicons.updated }} small text-secondary"></i></span>
+                                <span class="small text-secondary me-2 ">{{ bid.updated.date|default:'-' }}</span>                                  
+                            </span>
+
+                            <span data-bs-toggle="tooltip" title="{% trans 'Latest editor' %}">  
                                 <span class="fw-light">
                                     <img src="{{ bid.creator.profile.avatar }}" alt="X" 
                                             class="img-fluid rounded rounded-circle" 
@@ -58,6 +58,7 @@
                                 </span>
                                 <span class="small text-secondary">{{ bid.creator }}</span>                              
                             </span>
+
                         </div>
                     </div>
                     <div class="col-12 col-md-6 text-end">
@@ -66,6 +67,12 @@
                             <span class="fw-bold">{{ bid.bid_amount }}</span>
                         </div>
                         <div>
+                            {% if bid.date_submitted %}
+                                <span data-bs-toggle="tooltip" title="{% trans 'Date submitted' %}">  
+                                    <span class="small"><i class="{{ bicons.bid }} small text-secondary"></i></span>
+                                    <span class="small text-secondary me-2 ">{{ bid.date_submitted.date|default:'-' }}</span>                                  
+                                </span>
+                            {% endif %}
                             <span class="badge bg-{{ bid.tag_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
                         </div>
                     </div>

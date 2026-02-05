@@ -9,7 +9,6 @@
 
 {% block content %}
 
-    
     {% if invitable and invited.all %}
         <div id="my-invitations" class="mb-5">                    
             <div class="d-flex align-items-center justify-content-between px-0">
@@ -71,14 +70,14 @@
                                                 </a>
                                             {% endif %}
                                         {% endif %}
-                                        <a href="#" class="me-2 btn btn-sm btn-outline-success" 
+                                        <a class="me-2 btn btn-sm btn-outline-success" 
                                            data-bs-toggle="modal" data-bs-target="#acceptInvitationModal"
                                            data-url="{% url 'bidding_invitation_accept' invit.id %}"
                                            data-team="{{ invit.team.name }}">
                                             <i class="{{ bicons.accept }}"></i>
                                             <span class="text-uppercase">{% trans "Accept" %}</span>
                                         </a>
-                                        <a href="#" class="me-2 btn btn-sm btn-outline-danger"
+                                        <a class="me-2 btn btn-sm btn-outline-danger"
                                            data-bs-toggle="modal" data-bs-target="#declineInvitationModal"
                                            data-url="{% url 'bidding_invitation_cancel' invit.id %}">
                                             <i class="{{ bicons.cancelled }}"></i>
@@ -267,254 +266,248 @@
 
         </div>
     </div>
-    
 
 
+    <div id="rename-modal">
+        
+    </div>
 
-    {% if manage %}
+    <div id="invitation-modals">            
+        
+        <div id="newInvitationModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="newInvitationModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="new-invitation-form" method="post" action="{% url 'bidding_invitation_create' team.id %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="newInvitationModalLabel">{% trans "New member invitation" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
 
-        <div id="rename-modal">
-            
-        </div>
+                            <div class="row g-3">
 
-        <div id="invitation-modals">
-            
-            <div id="newInvitationModal" class="modal fade" 
-                    tabindex="-1" aria-labelledby="newInvitationModalLabel" 
-                    aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form id="new-invitation-form" method="post" action="{% url 'bidding_invitation_create' team.id %}">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5 fw-bold" id="newInvitationModalLabel">{% trans "New member invitation" %}</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="row g-3">
-
-                                    {% for field in invitation_form.visible_fields %}
-                                        <div class="col-12 mt-3">
-                                            <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
-                                                <span>{{ field.label_tag }}</span>
-                                            </div>
-                                            <div class="ms-3">{{ field }}</div>
-
-                                            {% for error in field.errors %}
-                                                <div class="ms-3 text-danger small">
-                                                    <span><i class="bi bi-sign-stop"></i></span>
-                                                    <span class="">{{ error }}</span>
-                                                </div>
-                                            {% endfor %}
+                                {% for field in invitation_form.visible_fields %}
+                                    <div class="col-12 mt-3">
+                                        <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
+                                            <span>{{ field.label_tag }}</span>
                                         </div>
-                                    {% endfor %}
+                                        <div class="ms-3">{{ field }}</div>
 
-                                    <div class="col-12 mt-3">
-                                        <span class="text-secondary small fw-light">{% trans "Validity" %}:</span> 
-                                        <span class="fw-bold">{{ expiry_hours }}</span>
-                                        <span>{% trans "hours" %}</span>
+                                        {% for error in field.errors %}
+                                            <div class="ms-3 text-danger small">
+                                                <span><i class="bi bi-sign-stop"></i></span>
+                                                <span class="">{{ error }}</span>
+                                            </div>
+                                        {% endfor %}
                                     </div>
+                                {% endfor %}
 
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small fw-light">{% trans "Validity" %}:</span> 
+                                    <span class="fw-bold">{{ expiry_hours }}</span>
+                                    <span>{% trans "hours" %}</span>
                                 </div>
+
                             </div>
+                        </div>
 
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <span><i class="bi bi-x-lg"></i></span>
-                                    <span class="ms-1">{% trans "Close" %}</span>
-                                </button>
-                                <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
-                                    <span><i class="{{ bicons.delete }}"></i></span>
-                                    <span class="ms-1">{% trans 'Save' %}</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="cancelInvitationModal" class="modal fade" 
-                    tabindex="-1" aria-labelledby="cancelInvitationModalLabel" 
-                    aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form id="cancel-invitation-form" method="post">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5 fw-bold" id="cancelInvitationModalLabel">{% trans "Confirm cancellation" %}</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="row g-3">
-
-                                    <div class="col-12 mt-3">
-                                        <span class="text-secondary">{% trans "Are you sure you want to cancel this invitation" %} ?</span> 
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <span><i class="bi bi-x-lg"></i></span>
-                                    <span class="ms-1">{% trans "Close" %}</span>
-                                </button>
-                                <button type="submit" class="m-1 btn btn-outline-danger" data-bs-dismiss="modal">
-                                    <span><i class="{{ bicons.cancelled }}"></i></span>
-                                    <span class="ms-1">{% trans 'Cancel invitation' %}</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            
-            <div id="acceptInvitationModal" class="modal fade" 
-                    tabindex="-1" aria-labelledby="acceptInvitationModalLabel" 
-                    aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form id="accept-invitation-form" method="post">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5 fw-bold" id="acceptInvitationModalLabel">{% trans "Confirm acceptation" %}</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="row g-3">
-
-                                    <div class="col-12 mt-3">
-                                        <span class="text-secondary small">{% trans "Team" %}.</span> 
-                                        <span id="team-name-span" class="fw-bold"></span> 
-                                    </div>
-
-                                    <div class="col-12 mt-3">
-                                        <span class="text-danger">{% trans "You will leave any other team" %}.</span> 
-                                        <span class="text-danger">{% trans "Your data may be visible to the new team members" %}.</span> 
-                                    </div>
-
-                                    <div class="col-12 mt-3">
-                                        <span class="text-secondary">{% trans "Are you sure you want to accept this invitation" %} ?</span> 
-                                    </div>
-
-                                    <div class="col-12 mt-3">
-                                        <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
-                                            <option selected value="not_sure">{% trans "I am not sure" %}</option>
-                                            <option selected value="just_accept">{% trans "Just accept it" %}</option>
-                                            <option value="know">{% trans "I understand and I want to join this team" %}</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <span><i class="bi bi-x-lg"></i></span>
-                                    <span class="ms-1">{% trans "Close" %}</span>
-                                </button>
-                                <button type="submit" class="m-1 btn btn-outline-warning" data-bs-dismiss="modal">
-                                    <span><i class="{{ bicons.accept }}"></i></span>
-                                    <span class="ms-1">{% trans 'Accept invitation' %}</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary">
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Save' %}</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
 
+        <div id="cancelInvitationModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="cancelInvitationModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="cancel-invitation-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="cancelInvitationModalLabel">{% trans "Confirm cancellation" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
 
-        <div id="bid-delete-modal">
-            
-            <div id="bidDeleteModal" class="modal fade" 
-                    tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
-                    aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <form id="bid-delete-form" method="post">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="my-2">
-                                    <div class="mb-1">
-                                        <span class="small fw-light">{% trans "Amount" %}: </span>
-                                        <span id="bid-span-amount"></span>
-                                    </div>
-                                    <div class="mb-1">
-                                        <span class="small fw-light">{% trans "Company" %}: </span>
-                                        <span id="bid-span-company"></span>
-                                    </div>
-                                    <div class="mb-1">
-                                        <span class="small fw-light">{% trans "Result" %}: </span>
-                                        <span id="bid-span-result"></span>
-                                    </div>
-                                </div>
-                                
-                                <div class="my-2">
-                                    <span class="text-danger">{% trans "This bid, its associated data and files will be permanently deleted." %}</span>
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Are you sure you want to cancel this invitation" %} ?</span> 
                                 </div>
 
-                                <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
-                                    <option selected value="not_sure">{% trans "I am not sure" %}</option>
-                                    <option selected value="just_delete">{% trans "Just delete it" %}</option>
-                                    <option value="know">{% trans "I know what I am doing" %}</option>
-                                </select>
                             </div>
+                        </div>
 
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                    <span><i class="bi bi-x-lg"></i></span>
-                                    <span class="ms-1">{% trans "Cancel" %}</span>
-                                </button>
-                                <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
-                                    <span><i class="{{ bicons.delete }}"></i></span>
-                                    <span class="ms-1">{% trans 'Delete' %}</span>
-                                </button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-danger" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.cancelled }}"></i></span>
+                                <span class="ms-1">{% trans 'Cancel invitation' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>            
+        
+        <div id="acceptInvitationModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="acceptInvitationModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="accept-invitation-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="acceptInvitationModalLabel">{% trans "Confirm acceptation" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small">{% trans "Team" %}.</span> 
+                                    <span id="team-name-span" class="fw-bold"></span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-danger">{% trans "You will leave any other team" %}.</span> 
+                                    <span class="text-danger">{% trans "Your data may be visible to the new team members" %}.</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Are you sure you want to accept this invitation" %} ?</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                        <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                        <option selected value="just_accept">{% trans "Just accept it" %}</option>
+                                        <option value="know">{% trans "I understand and I want to join this team" %}</option>
+                                    </select>
+                                </div>
+
                             </div>
-                        </form>
-                    </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-warning" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Accept invitation' %}</span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-
-        <script>
-            // Invitation cancel
-            const cancelInvitationModal = document.getElementById('cancelInvitationModal');
-            // const expenseSpanAmount  = document.getElementById('expense-span-amount');
-            // const expenseSpanTitle   = document.getElementById('expense-span-title');
-            const cancelInvitationForm  = document.getElementById('cancel-invitation-form');
-
-            cancelInvitationModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-
-                // expenseSpanAmount.innerText  = button.dataset.amount;
-                // expenseSpanTitle.innerText   = button.dataset.title;
-                cancelInvitationForm.action     = button.dataset.url;
-            });
+    </div>
 
 
-            // Invitation accept
-            const acceptInvitationModal = document.getElementById('acceptInvitationModal');
-            const acceptInvitationForm  = document.getElementById('accept-invitation-form');
-            const teamSpanName  = document.getElementById('team-name-span');
+    <div id="bid-delete-modal">
+        
+        <div id="bidDeleteModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <form id="bid-delete-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="my-2">
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Amount" %}: </span>
+                                    <span id="bid-span-amount"></span>
+                                </div>
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Company" %}: </span>
+                                    <span id="bid-span-company"></span>
+                                </div>
+                                <div class="mb-1">
+                                    <span class="small fw-light">{% trans "Result" %}: </span>
+                                    <span id="bid-span-result"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="my-2">
+                                <span class="text-danger">{% trans "This bid, its associated data and files will be permanently deleted." %}</span>
+                            </div>
 
-            acceptInvitationModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
+                            <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                <option selected value="just_delete">{% trans "Just delete it" %}</option>
+                                <option value="know">{% trans "I know what I am doing" %}</option>
+                            </select>
+                        </div>
 
-                teamSpanName.innerText  = button.dataset.team;
-                acceptInvitationForm.action     = button.dataset.url;
-            });
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Cancel" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1">{% trans 'Delete' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        </script>
+    <script>
+        // Invitation cancel
+        const cancelInvitationModal = document.getElementById('cancelInvitationModal');
+        // const expenseSpanAmount  = document.getElementById('expense-span-amount');
+        // const expenseSpanTitle   = document.getElementById('expense-span-title');
+        const cancelInvitationForm  = document.getElementById('cancel-invitation-form');
 
-    {% endif %}
+        cancelInvitationModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            // expenseSpanAmount.innerText  = button.dataset.amount;
+            // expenseSpanTitle.innerText   = button.dataset.title;
+            cancelInvitationForm.action     = button.dataset.url;
+        });
+
+
+        // Invitation accept
+        const acceptInvitationModal = document.getElementById('acceptInvitationModal');
+        const acceptInvitationForm  = document.getElementById('accept-invitation-form');
+        const teamSpanName  = document.getElementById('team-name-span');
+
+        acceptInvitationModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            teamSpanName.innerText  = button.dataset.team;
+            acceptInvitationForm.action     = button.dataset.url;
+        });
+
+    </script>
     
 
 {% endblock content %}

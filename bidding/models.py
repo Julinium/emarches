@@ -93,9 +93,9 @@ class TeamMember(models.Model):
 class Invitation(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # email     = models.EmailField(verbose_name=_("Email address"))
-    username  = models.EmailField(verbose_name=_("Username"))
+    username  = models.CharField(verbose_name=_("Username"))
     invitee   = models.ForeignKey(User, null=True,blank=True, on_delete=models.SET_NULL, related_name='received_invitations')
-    message   = models.CharField(max_length=1024, verbose_name=_('Message'))
+    message   = models.CharField(null=True, blank=True, max_length=1024, verbose_name=_('Message'))
     expiry    = models.DateTimeField(null=True, blank=True, verbose_name=_('Expiry date'))
     show_my_email = models.BooleanField(null=True, default=True, verbose_name=_('Show my email'))
     team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='invitations')

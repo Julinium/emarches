@@ -50,6 +50,17 @@
                                 {% trans "Show full text when possible" %}
                             </label>
                         </div>
+                        
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" 
+                                role="switch" name="general_show_invitations" 
+                                id="id_general_show_invitations"
+                                {% if form.general_show_invitations.value %}checked{% endif %}
+                                >
+                            <label class="form-check-label" for="id_general_show_invitations">
+                                {% trans "Show invitations from other teams" %}
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

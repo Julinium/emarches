@@ -34,6 +34,7 @@ TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = 10
 BIDS_ITEMS_PER_PAGE = 10
 USERS_ITEMS_PER_PAGE = 10
+SHOW_INVITATIONS = True
 
 INVITATION_EXPIRY_HOURS = 48
 
@@ -59,8 +60,6 @@ def invitation_create(request, tk=None):
     team = get_object_or_404(Team, pk=tk)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    
-    
 
     logger = logging.getLogger('portal')
 
@@ -68,18 +67,17 @@ def invitation_create(request, tk=None):
     if form.is_valid():
         try:
             obj = form.save(commit=False)
-            invitee = obj.invitee
-            if invitee:
-                if invitee in team.members.all():
-                    return HttpResponse(_("Bad request"), status=405)
-
-            obj.team = team
-            obj.creator = user
-            obj.expiry = datetime.now() + timedelta(hours=INVITATION_EXPIRY_HOURS)
-            obj.sent_on = datetime.now()
-            obj.save()
-            logger.info(f"Invitation created")
-            # return HttpResponse(status=200)
+            invitee = User.objects.filter(username=obj.username).first()
+            if invitee and invitee in team.members.all():
+                messages.warning(request, _("Already member"))
+            else:
+                obj.team = team
+                obj.creator = user
+                obj.expiry = datetime.now() + timedelta(hours=INVITATION_EXPIRY_HOURS)
+                obj.sent_on = datetime.now()
+                obj.save()
+                logger.info(f"Invitation created")
+                messages.success(request, _("Invitation created"))
 
         except Exception as xc:
             logger.info(f"Exception creating Invitation: { str(xc)}")
@@ -148,6 +146,7 @@ def invitation_accept(request, pk=None):
     invitee = invitation.invitee
     if not invitee: return HttpResponse(_("Bad request"), status=405)
     if invitee != user: return HttpResponse(_("Bad request"), status=405)
+    if get_team(invitee) == get_team(user): return HttpResponse(_("Bad request") + ": " + _("Already member"), status=405)
 
     logger = logging.getLogger('portal')
 
@@ -248,9 +247,11 @@ def team_recap(request):
 
     if us:
         USERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+        SHOW_INVITATIONS     = int(us.general_show_invitations)
     USERS_ORDERING_FIELD = 'username'
 
     colleagues = team.members.annotate(
+        # is_me = F("memberships__user", filter ...),
         is_actife = F("memberships__active"),
         is_manager = F("memberships__manager"),
         joined = F("memberships__joined"),
@@ -266,8 +267,9 @@ def team_recap(request):
         if int(page_number) > paginator.num_pages: page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
-    if user.profile and user.profile.invitable == True:
-        invitable = True
+    invitable = SHOW_INVITATIONS
+    if invitable == True:
+        # invitable = True
         invited = user.received_invitations.exclude(
                 reply=InvitationReplies.INV_ACCEPTED, 
                 # creator=user, 
@@ -281,7 +283,7 @@ def team_recap(request):
             )
     else:
         invited = Invitation.objects.none()
-        invitable = False
+        # invitable = False
 
 
     invitations = user.invitations.exclude(
@@ -1072,6 +1074,8 @@ def bid_edit(request, pk=None, lk=None):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.lot = lot
+            # if obj.pk is None: # do not change creator when someone else edits objects.
+            #     obj.creator = user
             obj.creator = user
             obj.save()
 

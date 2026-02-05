@@ -20,7 +20,7 @@ class Profile(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user      = models.OneToOneField(User, on_delete=models.CASCADE, editable=False)
     active    = models.BooleanField(null=True, default=True, editable=False)
-    invitable = models.BooleanField(null=True, default=True, editable=False)
+    # invitable = models.BooleanField(null=True, default=True, editable=False)
     image     = models.ImageField(upload_to='avatars/', null=True, blank=True, verbose_name=_('Avatar'))
     phone     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Phone'))
     whatsapp  = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Whatsapp'))
@@ -454,31 +454,32 @@ class Reaction(models.Model):
 
 class UserSetting(models.Model):
 
-    id                     = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    active                 = models.BooleanField(null=True, default=True, editable=False)
-    user                   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='settings')
+    id                       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    active                   = models.BooleanField(null=True, default=True, editable=False)
+    user                     = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='settings')
     
-    tenders_ordering_field = models.CharField(max_length=16, choices=OrderingField.choices, default=OrderingField.DEADLINE_ASC, verbose_name=_('Default sort'))
-    tenders_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Items per page'))
-    tenders_full_bar_days  = models.CharField(max_length=16, choices=FullBarDays.choices, default=FullBarDays.FBD_030, verbose_name=_('Full progress bar days'))
-    tenders_show_expired   = models.BooleanField(default=False, verbose_name=_("Show today's expired items"))
-    tenders_show_cancelled = models.BooleanField(default=False, verbose_name=_("Show cancelled tenders"))
+    tenders_ordering_field   = models.CharField(max_length=16, choices=OrderingField.choices, default=OrderingField.DEADLINE_ASC, verbose_name=_('Default sort'))
+    tenders_items_per_page   = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Items per page'))
+    tenders_full_bar_days    = models.CharField(max_length=16, choices=FullBarDays.choices, default=FullBarDays.FBD_030, verbose_name=_('Full progress bar days'))
+    tenders_show_expired     = models.BooleanField(default=False, verbose_name=_("Show today's expired items"))
+    tenders_show_cancelled   = models.BooleanField(default=False, verbose_name=_("Show cancelled tenders"))
 
-    p_orders_ordering_field = models.CharField(max_length=16, choices=PurchaseOrderOrderingField.choices, default=PurchaseOrderOrderingField.DEADLINE_ASC, verbose_name=_('Default sort'))
-    p_orders_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Items per page'))
-    p_orders_full_bar_days  = models.CharField(max_length=16, choices=PurchaseOrderFullBarDays.choices, default=PurchaseOrderFullBarDays.FBD_015, verbose_name=_('Full progress bar days'))
-    p_orders_show_expired   = models.BooleanField(default=True, verbose_name=_("Show today's expired items"))
-    p_orders_first_articles = models.CharField(max_length=16, choices=FirstArticles.choices, default=FirstArticles.ATS_005, verbose_name=_('First articles to show'))
+    p_orders_ordering_field  = models.CharField(max_length=16, choices=PurchaseOrderOrderingField.choices, default=PurchaseOrderOrderingField.DEADLINE_ASC, verbose_name=_('Default sort'))
+    p_orders_items_per_page  = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Items per page'))
+    p_orders_full_bar_days   = models.CharField(max_length=16, choices=PurchaseOrderFullBarDays.choices, default=PurchaseOrderFullBarDays.FBD_015, verbose_name=_('Full progress bar days'))
+    p_orders_show_expired    = models.BooleanField(default=True, verbose_name=_("Show today's expired items"))
+    p_orders_first_articles  = models.CharField(max_length=16, choices=FirstArticles.choices, default=FirstArticles.ATS_005, verbose_name=_('First articles to show'))
 
-    bidding_check_deadline  = models.BooleanField(default=True, verbose_name=_("Check Tender dealine when editing"))
-    bidding_check_amount    = models.BooleanField(default=True, verbose_name=_("Check submitted amount when editing"))
-    bidding_check_bond      = models.BooleanField(default=True, verbose_name=_("Check submitted bond when editing"))
+    bidding_check_deadline   = models.BooleanField(default=True, verbose_name=_("Check Tender dealine when editing"))
+    bidding_check_amount     = models.BooleanField(default=True, verbose_name=_("Check submitted amount when editing"))
+    bidding_check_bond       = models.BooleanField(default=True, verbose_name=_("Check submitted bond when editing"))
 
-    general_wrap_long_text = models.BooleanField(default=False, verbose_name=_("Do not wrap long text"))
-    general_items_per_page = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_020, verbose_name=_('List items per page'))
+    general_wrap_long_text   = models.BooleanField(default=False, verbose_name=_("Do not wrap long text"))
+    general_items_per_page   = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_020, verbose_name=_('List items per page'))
+    general_show_invitations = models.BooleanField(default=True, verbose_name=_("Show invitations from other teams"))
     
-    preferred_language     = models.CharField(max_length=16, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE, verbose_name=_("Preferred interface language"))
-    updated   = models.DateTimeField(auto_now=True, editable=False)
+    preferred_language       = models.CharField(max_length=16, choices=settings.LANGUAGES, default=settings.LANGUAGE_CODE, verbose_name=_("Preferred interface language"))
+    updated                  = models.DateTimeField(auto_now=True, editable=False)
 
     class Meta:
         db_table = 'nas_user_setting'

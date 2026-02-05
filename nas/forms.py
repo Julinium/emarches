@@ -73,6 +73,7 @@ class UserSettingsForm(forms.ModelForm):
         fields = [
             'general_wrap_long_text',
             'general_items_per_page',
+            'general_show_invitations',
             
             'tenders_ordering_field', 
             'tenders_items_per_page', 
