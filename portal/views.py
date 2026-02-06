@@ -28,6 +28,7 @@ from base.models import (Agrement, Category, Client, Crawler, Deposit, Domain,
                          Procedure, Qualif, Tender)
 from base.texter import normalize_text
 from bidding.models import Bid
+from bidding.secu import get_colleagues, get_team
 from nas.models import (Company, Download, Favorite, Folder, TenderView,
                         UserSetting)
 
@@ -316,7 +317,8 @@ def tender_list(request):
     if 'minutes_end' in ordering or '-minutes_end' in ordering:
         tenders = tenders.annotate(minutes_end=F('openings__date'))
 
-    colleagues = user.teams.first().members.all()
+    # colleagues = user.teams.first().members.all()
+    colleagues = get_colleagues(user)
 
     tenders = tenders.prefetch_related(
             'favorites', 'views', 'openings',
@@ -412,7 +414,8 @@ def tender_details(request, pk=None):
     us = pro_context['user_settings']
     full_bar_days = int(us.tenders_full_bar_days) if us.tenders_full_bar_days else TENDER_FULL_PROGRESS_DAYS
 
-    colleagues = user.teams.first().members.all()
+    # colleagues = user.teams.first().members.all()
+    colleagues = get_colleagues(user)
 
     bids = Bid.objects.filter(lot__tender=tender, creator__in=colleagues).distinct().order_by('lot', 'bid_amount', 'date_submitted')
 
@@ -615,7 +618,8 @@ def tender_favorite_list(request):
         id__in=faved_ids
     )
 
-    colleagues = user.teams.first().members.all()
+    # colleagues = user.teams.first().members.all()
+    colleagues = get_colleagues(user)
 
     tenders = tenders.select_related(
             'client', 'category', 'mode', 'procedure'

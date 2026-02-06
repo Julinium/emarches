@@ -17,10 +17,10 @@ class Command(BaseCommand):
         # for mb in mbs:
         #     mb.created = mb.joined
         #     mb.save()
-        teams = Team.objects.all()
-        for t in teams:
-            if t.members.count() == 0:
-                t.delete()
+        # teams = Team.objects.all()
+        # for t in teams:
+        #     if t.members.count() == 0:
+        #         t.delete()
 
         ############################################
 
