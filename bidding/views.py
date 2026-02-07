@@ -1,4 +1,4 @@
-import logging, os, traceback
+import logging, re, os, traceback
 from datetime import date, datetime, timedelta, timezone
 from urllib.parse import urlencode
 
@@ -37,6 +37,7 @@ USERS_ITEMS_PER_PAGE = 10
 SHOW_INVITATIONS = True
 
 INVITATION_EXPIRY_HOURS = 48
+SAFE_INPUT_RE = re.compile(r'^[a-zA-Z0-9_.@-]+$')
 
 
 @login_required(login_url="account_login")
@@ -137,16 +138,21 @@ def invitation_accept(request, pk=None):
     if not pk: return HttpResponse(_("Not found"), status=404)
     invitation = get_object_or_404(Invitation, pk=pk)
 
-    # team = get_team(user)
-    # if not team: return HttpResponse(_("Not found"), status=404)
-    # if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-
     if invitation.cancelled: return HttpResponse(_("Invitation cancelled"), status=405)
     if invitation.expired: return HttpResponse(_("Invitation expired"), status=405)
     invitee = invitation.invitee
     if not invitee: return HttpResponse(_("Bad request"), status=405)
     if invitee != user: return HttpResponse(_("Bad request"), status=405)
-    if get_team(invitation.creator) == get_team(user): return HttpResponse(_("Bad request") + ": " + _("Already member"), status=405)
+
+    team = get_team(user)
+    if get_team(invitation.creator) == team: return HttpResponse(_("Bad request") + ": " + _("Already member"), status=405)
+
+    if team.members.count() > 1:
+        return HttpResponse(_("Bad request") + ": " + _("You need to leave your current team first"), status=405)
+
+    # if not team: return HttpResponse(_("Not found"), status=404)
+    # if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+
 
     logger = logging.getLogger('portal')
 
@@ -185,41 +191,7 @@ def invitation_accept(request, pk=None):
 
     return redirect('bidding_team_recap')
 
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def invitation_decline(request, pk=None):
-#     # TODO: Decline with response
-#     user = request.user
-#     if not user or not user.is_authenticated :
-#         return HttpResponse(_("Permission denied"), status=403)
 
-#     if request.method != "POST": return HttpResponse(_("Bad request"), status=405)
-    
-#     if not pk: return HttpResponse(_("Not found"), status=404)
-#     invitation = get_object_or_404(Invitation, pk=pk)
-
-#     team = get_team(user)
-#     if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
-#     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-
-#     if invitation.cancelled: return HttpResponse(_("Already cancelled"), status=405)
-#     if invitation.expired: return HttpResponse(_("Already expired"), status=405)
-
-#     logger = logging.getLogger('portal')
-
-#     try:
-#         invitation.cancelled = True
-#         # invitation.update(cancelled = True)
-#         invitation.save()
-#         logger.info(f"Invitation cancelled")
-#         messages.success(request, _("Invitation cancelled successfully"))
-#         # return HttpResponse(status=200)
-
-#     except Exception as xc:
-#         logger.info(f"Exception Cancelling invitation: { str(xc)}")
-#         return HttpResponse(_("Server error raised"), status=500)
-
-#     return redirect('bidding_team_recap')
 
 
 
@@ -322,6 +294,57 @@ def team_recap(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def team_edit(request, tk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        return HttpResponse(_("Permission denied"), status=403)
+    
+    if not tk: return HttpResponse(_("Bad request")  + ": " + _(" Team not found or not allowed"), status=405)
+    
+    peam = get_object_or_404(Team, pk=tk)
+
+    team = get_team(user)
+    if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
+
+    if not is_active_team_member(user, team): return HttpResponse(_("Permission denied"), status=403)
+
+    if team != peam: return HttpResponse(_("Bad request")  + ": " + _(" Team not allowed or not found"), status=403)
+
+    if request.method != "POST": return HttpResponse(_("Bad request"), status=403)
+
+
+    team_name = request.POST.get('team_name', None)
+    rename = True
+
+    if team_name is None:
+        rename = False
+        messages.error(request, _("Entered name was empty or too short"))
+
+    if rename:
+        if len(team_name) < 4: 
+            rename = False
+            messages.error(request, _("Name is too short"))
+
+    if rename:
+        if len(team_name) > 64: 
+            rename = False
+            messages.error(request, _("Name is too long"))
+
+    if rename:
+        if not SAFE_INPUT_RE.fullmatch(team_name): 
+            rename = False
+            messages.error(request, _("Only letters, numbers and _ . @ - are allowed"))
+    
+    if rename:
+        team.name = team_name
+        team.save()
+        messages.success(request, _("Team renamed successfully"))
+
+    return redirect("bidding_team_recap")
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def member_disable(request, uk=None):
 
     user = request.user
@@ -407,7 +430,7 @@ def member_bossify(request, uk=None):
     if not team: return HttpResponse(_("Team not found"), status=404)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    if is_active_team_admin(member, team): return HttpResponse(_("Bad request") + ": " + _("Already manager"), status=405)
+    if is_team_admin(member, team): return HttpResponse(_("Bad request") + ": " + _("Already manager"), status=405)
 
     logger = logging.getLogger('portal')
 
@@ -442,7 +465,7 @@ def member_debossify(request, uk=None):
     if not team: return HttpResponse(_("Team not found"), status=404)
 
     if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
-    if not is_active_team_admin(member, team): return HttpResponse(_("Bad request") + ": " + _("Already not manager"), status=405)
+    if not is_team_admin(member, team): return HttpResponse(_("Bad request") + ": " + _("Already not manager"), status=405)
 
     logger = logging.getLogger('portal')
 
@@ -459,6 +482,42 @@ def member_debossify(request, uk=None):
         return HttpResponse(_("Server error raised")  + ": " + f" { str(xc)}", status=500)
     
     return redirect('bidding_team_recap')
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def member_fire(request, uk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated :
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if not uk: return HttpResponse(_("Not found"), status=404)
+    member = get_object_or_404(User, pk=uk)
+
+    if member == user: return HttpResponse(_("Bad request") + ": " + _("Self editing"), status=405)
+
+    team = get_team(user)
+    if not team: return HttpResponse(_("Team not found"), status=404)
+
+    if not is_active_team_admin(user, team): return HttpResponse(_("Permission denied"), status=403)
+    if not is_team_member(member, team): return HttpResponse(_("Bad request") + ": " + _("Not a member"), status=405)
+
+    logger = logging.getLogger('portal')
+
+    try:
+        um = update_membership(user, member, 'fire')
+        if um == 'fire':
+            logger.info(f"Member fired successfully")        
+            messages.success(request, _("Member fired successfully"))
+        else:
+            return HttpResponse(_("Server error raised"), status=500)
+
+    except Exception as xc:
+        logger.info(f"Exception firing a member: { str(xc)}")
+        return HttpResponse(_("Server error raised")  + ": " + f" { str(xc)}", status=500)
+    
+    return redirect('bidding_team_recap')
+
 
 
 

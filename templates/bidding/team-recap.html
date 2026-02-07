@@ -19,11 +19,6 @@
                         {{ invited.count }} 
                     </span>
                 </div>
-                <!-- <div id="received-invitations-actions">
-                    <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
-                        <i class="{{ bicons.create }}"></i>
-                    </button>
-                </div> -->
             </div>
 
             <div id="received-invitations" class="pt-2">
@@ -101,7 +96,8 @@
             </div>
             <div id="team-actions">
                 {% if manage %}
-                    <a href="#" class="ms-2 btn btn-sm btn-outline-secondary">
+                    <a href="#" class="ms-2 btn btn-sm btn-outline-secondary"
+                       data-bs-toggle="modal" data-bs-target="#teamEditModal">
                         <i class="{{ bicons.edit }}"></i>
                     </a>
                 {% endif %}
@@ -125,12 +121,7 @@
                         <span>@{{ team.creator.username }}</span>
                     </div>             
                 </div>
-                <div class="d-inline-block me-3">
-                    <div class="">
-                        <span class="text-muted small fw-light me-1">{% trans 'Active' %}:</span>
-                        <span>{{ team.active }}</span>
-                    </div>                
-                </div>
+
                 <div class="d-inline-block me-3">   
                     <div class="">
                         <span class="text-muted small fw-light me-1">{% trans 'Created' %}:</span>
@@ -264,6 +255,47 @@
 
     <div id="rename-modal">
         
+        <div id="teamEditModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="teamEditModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="team-edit-form" method="post" action="{% url 'bidding_team_edit' team.id %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="teamEditModalLabel">{% trans "Team edit" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-4">
+                                    <div class="small text-muted">
+                                        <span>{% trans "Name" %}</span>
+                                    </div>
+                                    <div class="ms-3">
+                                        <input class="form-control" type="text" name="team_name" value="{{ team.name }}">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Confirm' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="invitation-modals">            
@@ -358,7 +390,7 @@
                     </form>
                 </div>
             </div>
-        </div>            
+        </div>
         
         <div id="acceptInvitationModal" class="modal fade" 
                 tabindex="-1" aria-labelledby="acceptInvitationModalLabel" 
@@ -381,7 +413,7 @@
                                 </div>
 
                                 <div class="col-12 mt-3">
-                                    <span class="text-danger">{% trans "You will leave any other team" %}.</span> 
+                                    <span class="text-danger">{% trans "You will leave your current team" %}.</span> 
                                     <span class="text-danger">{% trans "Your data may be visible to the new team members" %}.</span> 
                                 </div>
 
@@ -405,7 +437,7 @@
                                 <span><i class="bi bi-x-lg"></i></span>
                                 <span class="ms-1">{% trans "Close" %}</span>
                             </button>
-                            <button type="submit" class="m-1 btn btn-outline-warning" data-bs-dismiss="modal">
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
                                 <span><i class="{{ bicons.accept }}"></i></span>
                                 <span class="ms-1">{% trans 'Accept invitation' %}</span>
                             </button>
@@ -414,6 +446,226 @@
                 </div>
             </div>
         </div>
+    </div>
+
+
+    <div id="member-modals">
+
+        <div id="memberDisableModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="memberDisableModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="member-disable-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="memberDisableModalLabel">{% trans "Confirm disabling" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Are you sure you want to disable this member" %} ?</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small fw-light">{% trans "Username" %}: </span> 
+                                    <span id="member-disable-username-span" class="fw-bold"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Confirm' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="memberEnableModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="memberEnableModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="member-enable-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="memberEnableModalLabel">{% trans "Confirm enabling" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Are you sure you want to enable this member" %} ?</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small fw-light">{% trans "Username" %}: </span> 
+                                    <span id="member-enable-username-span" class="fw-bold"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Confirm' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="memberDebossifyModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="memberDebossifyModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="member-debossify-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="memberDebossifyModalLabel">{% trans "Confirm making not Manager" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Are you sure you want to make this member not Manager" %} ?</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small fw-light">{% trans "Username" %}: </span> 
+                                    <span id="member-debossify-username-span" class="fw-bold"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Confirm' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="memberBossifyModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="memberBossifyModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="member-bossify-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="memberBossifyModalLabel">{% trans "Confirm making Manager" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Team managers can edit other team members, including other team managers" %}.</span>
+                                    <span class="text-secondary">{% trans "Are you sure you want to make this member Manager" %} ?</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-danger fw-bold">{% trans "Only procede if you trust this user 100%" %}.</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small fw-light">{% trans "Username" %}: </span> 
+                                    <span id="member-bossify-username-span" class="fw-bold"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Confirm' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="memberFireModal" class="modal fade" 
+                tabindex="-1" aria-labelledby="memberFireModalLabel" 
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="member-fire-form" method="post">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5 fw-bold" id="memberFireModalLabel">{% trans "Confirm firing" %}</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="row g-3">
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary">{% trans "Are you sure you want to fire this member" %} ?</span> 
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="text-secondary small fw-light">{% trans "Username" %}: </span> 
+                                    <span id="member-fire-username-span" class="fw-bold"></span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <span><i class="bi bi-x-lg"></i></span>
+                                <span class="ms-1">{% trans "Close" %}</span>
+                            </button>
+                            <button type="submit" class="m-1 btn btn-outline-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.accept }}"></i></span>
+                                <span class="ms-1">{% trans 'Confirm' %}</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
 
@@ -499,6 +751,71 @@
 
             teamSpanName.innerText  = button.dataset.team;
             acceptInvitationForm.action     = button.dataset.url;
+        });
+
+
+        // Member diasble
+        const memberDisableModal = document.getElementById('memberDisableModal');
+        const memberDisableForm  = document.getElementById('member-disable-form');
+        const memberDisableUsernameSpan = document.getElementById('member-disable-username-span');
+
+        memberDisableModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            memberDisableUsernameSpan.innerText  = button.dataset.username;
+            memberDisableForm.action     = button.dataset.url;
+        });
+
+
+        // Member enble
+        const memberEnableModal = document.getElementById('memberEnableModal');
+        const memberEnableForm  = document.getElementById('member-enable-form');
+        const memberEnableUsernameSpan = document.getElementById('member-enable-username-span');
+
+        memberEnableModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            memberEnableUsernameSpan.innerText  = button.dataset.username;
+            memberEnableForm.action     = button.dataset.url;
+        });
+
+
+        // Member make not manager
+        const memberDebossifyModal = document.getElementById('memberDebossifyModal');
+        const memberDebossifyForm  = document.getElementById('member-debossify-form');
+        const memberDebossifyUsernameSpan = document.getElementById('member-debossify-username-span');
+
+        memberDebossifyModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            memberDebossifyUsernameSpan.innerText  = button.dataset.username;
+            memberDebossifyForm.action     = button.dataset.url;
+        });
+
+
+        // Member make not manager
+        const memberBossifyModal = document.getElementById('memberBossifyModal');
+        const memberBossifyForm  = document.getElementById('member-bossify-form');
+        const memberBossifyUsernameSpan = document.getElementById('member-bossify-username-span');
+
+        memberBossifyModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            memberBossifyUsernameSpan.innerText  = button.dataset.username;
+            memberBossifyForm.action     = button.dataset.url;
+        });
+
+
+        // Member delete
+        const memberFireModal = document.getElementById('memberFireModal');
+        const memberFireForm  = document.getElementById('member-fire-form');
+        const memberFireUsernameSpan = document.getElementById('member-fire-username-span');
+
+        memberFireModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            memberFireUsernameSpan.innerText  = button.dataset.username;
+            memberFireForm.action     = button.dataset.url;
         });
 
     </script>

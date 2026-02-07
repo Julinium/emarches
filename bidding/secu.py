@@ -1,4 +1,4 @@
-from bidding.models import TeamMember
+from bidding.models import Team, TeamMember
 
 
 def is_team_admin(user, team):
@@ -32,9 +32,24 @@ def is_active_team_member(user, team):
 
 def get_team(user=None):
     if not user: return None
-    membership = user.memberships.order_by("joined").last()
-    # membership = user.memberships.filter(active=True).last()
-    return membership.team if membership else None
+    memberships = user.memberships.all()
+    last_membership = memberships.order_by("-joined").first()
+    if last_membership:
+        memberships.exclude(pk=last_membership.pk).delete()
+        return last_membership.team
+    else:
+        try:
+            name = 'TEAM-' + user.username
+            team = Team.objects.create(
+                creator = user,
+                name=nam.strip().upper(),
+            )
+            team.add_member(user, True)
+            return team
+        except Exception as xc:
+            pass
+
+    return None
 
 
 def get_colleagues(user=None):
@@ -49,22 +64,24 @@ def update_membership(user=None, member=None, verb=None):
     if user == member : return None
     try:
         memberships = member.memberships.all()
-        last_membership = memberships.order_by("joined").last()
+        last_membership = memberships.order_by("-joined").first()
         if last_membership:
             memberships.exclude(pk=last_membership.pk).delete()
-            # memberships.exclude(pk=last_membership.pk).update(
-            #         active = False
-            #     )
             if verb:
-                if verb == 'disable':
-                    last_membership.active = False
-                elif verb == 'enable':
-                    last_membership.active = True
-                elif verb == 'bossify':
-                    last_membership.manager = True
-                elif verb == 'debossify':
-                    last_membership.manager = False
-                last_membership.save()
+                if verb == 'fire':
+                    last_membership.delete()
+                else:
+                    if verb == 'disable':
+                        last_membership.active = False
+                    elif verb == 'enable':
+                        last_membership.active = True
+                    elif verb == 'bossify':
+                        last_membership.manager = True
+                    elif verb == 'debossify':
+                        last_membership.manager = False
+                    elif verb == 'debossify':
+                        last_membership.manager = False
+                    last_membership.save()
                 return verb
         return None
     except: 

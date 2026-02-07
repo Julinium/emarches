@@ -34,7 +34,7 @@ class Team(models.Model):
     active    = models.BooleanField(null=True, default=True)
     members   = models.ManyToManyField(User, through='TeamMember')
     image     = models.ImageField(upload_to='bidding/teams/', null=True, blank=True, verbose_name=_('Avatar'))
-    name      = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Name'))
+    name      = models.CharField(max_length=255, blank=True, default='LA-SQUADRA', verbose_name=_('Name'))
     created   = models.DateTimeField(auto_now_add=True, editable=False)
     updated   = models.DateTimeField(auto_now=True, editable=False) 
 

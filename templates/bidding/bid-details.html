@@ -44,6 +44,41 @@
                     </div>
                 {% endif %}
 
+                <div id="bid-company" class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                        <div class="w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                <span>{% trans "Company" %}</span>                            
+                            </div>
+                            <div id="" class="ms-2">
+                                <span class="">{{ bid.company.name }}</span>
+                                <span class="text-secondary ms-1 small fw-light">
+                                    <span class="small">{{ bid.company.ice|default:'' }}</span>
+                                </span>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bid-company" class="col-12 col-md-6">
+                    <div class="d-flex my-3">
+                        <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
+                        <div class="w-100 border border-0 border-bottom">
+                            <div class="text-muted small fw-light">
+                                <span>{% trans "Owner" %}</span>                            
+                            </div>
+                            <div id="" class="ms-2">
+                                <span class="">@{{ bid.company.user.username }}</span>
+                                <span class="text-secondary ms-1 small fw-light">
+                                    <span class="small">{{ bid.company.user.first_name|default:'' }}</span>
+                                    <span class="small">{{ bid.company.user.last_name|default:'' }}</span>
+                                </span>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="bid-amount" class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
@@ -172,9 +207,15 @@
                                         <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ bid.lot.number|default:'--' }}</span>
                                         <span class="">{{ bid.lot.title|default:'--' }}</span>
                                     </div>
-                                <span class="badge bg-secondary me-1">{% trans "Tender" %}</span>
+                                    <div class="mb-1 threelines">
+                                        <span class="badge bg-secondary me-1">{% trans "Tender" %}</span>
+                                        <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %}">{{ bid.lot.tender.title|default:'--' }}</span>
+                                    </div>
+                                {% else %}
+                                    <div class="mb-1 threelines">
+                                        <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %}">{{ bid.lot.tender.title|default:'--' }}</span>
+                                    </div>
                                 {% endif %}
-                                <span class="{% if bid.lot.tender.lots_count > 1 %}text-secondary{% endif %} threelines">{{ bid.lot.tender.title|default:'--' }}</span>
                             </div>
                         </div>
                     </div>

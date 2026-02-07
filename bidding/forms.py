@@ -87,10 +87,9 @@ class InvitationForm(forms.ModelForm):
             field.label_suffix = ""
 
 
-
 class BidForm(forms.ModelForm):
 
-    company = CompanyChoiceField(queryset=Lot.objects.none())
+    company = CompanyChoiceField(queryset=Company.objects.none())
 
     class Meta:
         model = Bid
@@ -124,19 +123,19 @@ class BidForm(forms.ModelForm):
         self.creator = user
         self.usets = usets
         self.lot = lot
+        
+        company_field = self.fields["company"]
+        fleet = Company.objects.none()
 
-        member = self.creator
+        owner = self.creator
+        if owner is None: owner = user
+        if owner:
+            fleet = owner.companies
+        
+        company_field.queryset = fleet
+        if fleet.count() == 1:
+            company_field.initial = fleet.first()
 
-        if member:
-            # team = get_team(member)
-            # fleet = team.companies
-            fleet = member.companies
-            company_field = self.fields["company"]
-            company_field.queryset = fleet
-            if fleet.count() == 1:
-                company_field.initial = fleet.first()
-        else:
-            company_field.queryset = Company.objects.none()
 
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
@@ -357,5 +356,6 @@ class ExpenseForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
             field.label_suffix = ""
+
 
 

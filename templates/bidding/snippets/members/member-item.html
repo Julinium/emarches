@@ -20,13 +20,13 @@
                                             class="img-fluid rounded rounded-circle" 
                                             style="width: 1.5rem; height: 1.5rem;">
                                 </span>
-                                {% if member == request.user %}
+                                <!-- {% if member == request.user %}
                                     <span class="me-1 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
                                         <span class="badge bg-success">
                                             <span class="">{% trans 'ME' %}</span>
                                         </span>
                                     </span>
-                                {% endif %}
+                                {% endif %} -->
                                 <span class="">@{{ member.username }}</span>
 
                             </span>
@@ -52,48 +52,48 @@
                 <div class="my-2">
                     {% if manage and member != request.user %}
                         {% if member.is_actife %}
-                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-warning"
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-secondary"
                                     data-bs-toggle="modal" data-bs-target="#memberDisableModal"
-                                    data-amount="{{ member.member_amount }}"
-                                    data-company="{{ member.company.name }}"
-                                    data-result="{{ member.get_result_display }}"
+                                    data-username="{{ member.username }}"
                                     data-url="{% url 'bidding_member_disable' member.id %}">
-                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span><i class="{{ bicons.disable }}"></i></span>
                                 <span class="ms-1">{% trans 'Disable' %}</span>
                             </button>
                         {% else %}
-                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-primary"
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-success"
                                     data-bs-toggle="modal" data-bs-target="#memberEnableModal"
-                                    data-amount="{{ member.member_amount }}"
-                                    data-company="{{ member.company.name }}"
-                                    data-result="{{ member.get_result_display }}"
+                                    data-username="{{ member.username }}"
                                     data-url="{% url 'bidding_member_enable' member.id %}"
                                     >
-                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span><i class="{{ bicons.enable }}"></i></span>
                                 <span class="ms-1">{% trans 'Enable' %}</span>
                             </button>
                         {% endif %}
                         {% if member.is_manager %}
-                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-secondary"
-                                    data-bs-toggle="modal" data-bs-target="#memberDeleteModal"
-                                    data-amount="{{ member.member_amount }}"
-                                    data-company="{{ member.company.name }}"
-                                    data-result="{{ member.get_result_display }}"
-                                    data-url="{% url 'bidding_member_bossify' member.id %}"
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#memberDebossifyModal"
+                                    data-username="{{ member.username }}"
+                                    data-url="{% url 'bidding_member_debossify' member.id %}"
                                     >
                                 <span><i class="{{ bicons.superuser }}"></i></span>
                                 <span class="ms-1">{% trans 'Make Not Manger' %}</span>
                             </button>
                         {% else %}
-                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-danger"
-                                    data-bs-toggle="modal" data-bs-target="#memberDeleteModal"
-                                    data-amount="{{ member.member_amount }}"
-                                    data-company="{{ member.company.name }}"
-                                    data-result="{{ member.get_result_display }}"
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-secondary"
+                                    data-bs-toggle="modal" data-bs-target="#memberBossifyModal"
+                                    data-username="{{ member.username }}"
                                     data-url="{% url 'bidding_member_bossify' member.id %}"
                                     >
                                 <span><i class="{{ bicons.superuser }}"></i></span>
                                 <span class="ms-1">{% trans 'Make Manger' %}</span>
+                            </button>
+                            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                                    data-bs-toggle="modal" data-bs-target="#memberFireModal"
+                                    data-username="{{ member.username }}"
+                                    data-url="{% url 'bidding_member_fire' member.id %}"
+                                    >
+                                <span><i class="{{ bicons.delete }}"></i></span>
+                                <span class="ms-1 text-danger">{% trans 'Fire' %}</span>
                             </button>
                         {% endif %}
 
@@ -110,13 +110,6 @@
         <div class="small">
             <div class="d-flex justify-content-between px-0">
                 <div>
-                    <!-- {% if member == request.user %}
-                        <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
-                            <span class="badge bg-success">
-                                <span class="">{% trans 'ME' %}</span>
-                            </span>
-                        </span>
-                    {% endif %} -->
                     <span class="me-2 my-0 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Companies' %}">
                         <span><i class="{{ bicons.company }}"></i></span>
                         <span class="fw-bold">{{ member.companies.all|length }}</span>
@@ -127,6 +120,13 @@
                             <span class="badge bg-danger">
                                 <span><i class="{{ bicons.cancelled }}"></i></span>
                                 <span class="">{% trans 'Disabled' %}</span>
+                            </span>
+                        </span>
+                    {% endif %}
+                    {% if member == request.user %}
+                        <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'That is me' %}">
+                            <span class="badge bg-success">
+                                <span class="">{% trans 'ME' %}</span>
                             </span>
                         </span>
                     {% endif %}

@@ -24,12 +24,14 @@ urlpatterns = [
     path('expenses/<uuid:pk>/edit/',   views.expense_edit, name='bidding_expense_edit'),
     path('expenses/<uuid:pk>/delete/', views.expense_delete, name='bidding_expense_delete'),
 
-    path('team/',                   views.team_recap,         name='bidding_team_recap'),
+    path('team/recap',              views.team_recap,         name='bidding_team_recap'),
+    path('team/<uuid:tk>/edit',     views.team_edit,          name='bidding_team_edit'),
     path('team/<uuid:tk>/invite',   views.invitation_create,  name='bidding_invitation_create'),
     path('team/<int:uk>/disable',   views.member_disable,     name='bidding_member_disable'),
     path('team/<int:uk>/enable',    views.member_enable,      name='bidding_member_enable'),
     path('team/<int:uk>/bossify',   views.member_bossify,     name='bidding_member_bossify'),
     path('team/<int:uk>/debossify', views.member_debossify,   name='bidding_member_debossify'),
+    path('team/<int:uk>/fire',      views.member_fire,        name='bidding_member_fire'),
 
     path('invit/<uuid:pk>/cancel',  views.invitation_cancel,  name='bidding_invitation_cancel'),
     path('invit/<uuid:pk>/accept',  views.invitation_accept,  name='bidding_invitation_accept'),

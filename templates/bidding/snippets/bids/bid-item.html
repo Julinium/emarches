@@ -45,18 +45,18 @@
                         </div>
                         <div class="oneline ms-4 text-secondary">
 
-                            <span data-bs-toggle="tooltip" title="{% trans 'Latest update' %}: {{ bid.updated|default:'-' }}">
-                                <span class="small"><i class="{{ bicons.updated }} small text-secondary"></i></span>
-                                <span class="small text-secondary me-2 ">{{ bid.updated.date|default:'-' }}</span>                                  
-                            </span>
-
-                            <span data-bs-toggle="tooltip" title="{% trans 'Latest editor' %}">  
+                            <span class="me-2" data-bs-toggle="tooltip" title="{% trans 'Owner' %}">
                                 <span class="fw-light">
-                                    <img src="{{ bid.creator.profile.avatar }}" alt="X" 
+                                    <img src="{{ bid.company.user.profile.avatar }}" alt="X" 
                                             class="img-fluid rounded rounded-circle" 
                                             style="width: 1rem; height: 1rem;">
                                 </span>
-                                <span class="small text-secondary">{{ bid.creator }}</span>                              
+                                <span class="small text-secondary">{{ bid.company.user.username }}</span>                              
+                            </span>
+
+                            <span class="me-2" data-bs-toggle="tooltip" title="{% trans 'Latest update' %}: {{ bid.updated|default:'-' }}">
+                                <span class="small"><i class="{{ bicons.updated }} small text-secondary"></i></span>
+                                <span class="small text-secondary">{{ bid.updated.date|default:'-' }}</span>                                  
                             </span>
 
                         </div>

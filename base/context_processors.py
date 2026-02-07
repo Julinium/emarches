@@ -197,7 +197,8 @@ def portal_context(request):
 
         'superuser'       : 'bi bi-hash',
         'email'           : 'bi bi-envelope',
-        'accept'          : 'bi bi-check-circle-fill'
+        'accept'          : 'bi bi-check-circle-fill',
+        'save'            : 'bi bi-floppy',
 
     }
 
