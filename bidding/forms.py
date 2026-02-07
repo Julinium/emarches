@@ -128,9 +128,9 @@ class BidForm(forms.ModelForm):
         member = self.creator
 
         if member:
-            team = get_team(member)
-            fleet = team.companies
-            # fleet = user.teams.first().companies
+            # team = get_team(member)
+            # fleet = team.companies
+            fleet = member.companies
             company_field = self.fields["company"]
             company_field.queryset = fleet
             if fleet.count() == 1:
@@ -286,7 +286,7 @@ class TaskForm(forms.ModelForm):
         self.bid = bid
 
         if user:
-            colleagues = user.teams.first().members.all()
+            colleagues = get_colleagues(user)
             assignee_field = self.fields["assignee"]
             assignee_field.queryset = colleagues
             if colleagues.count() == 1:
@@ -344,7 +344,7 @@ class ExpenseForm(forms.ModelForm):
         self.bid = bid
 
         if user:
-            colleagues = user.teams.first().members.all()
+            colleagues = get_colleagues(user)
 
             contacts = Contact.objects.filter(creator__in=colleagues)
             contact_field = self.fields["contact"]

@@ -543,7 +543,6 @@ def tenders_list(request):
     #     team.add_member(user, manager=True)
 
     teams = user.teams.all()
-    # colleagues = user.teams.first().members.all()
     colleagues = get_colleagues(user)
 
     bid_tenders = Tender.objects.filter(
@@ -714,29 +713,16 @@ def bids_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
 
-    # if user.teams.count() < 1:
-    #     team = Team.objects.create(
-    #         name=user.username.upper(),
-    #         creator=user,
-    #     )
-    #     team.add_member(user, manager=True)
-
-    # teams = user.teams.all()
-    # colleagues = user.teams.first().members.all()
-
     colleagues = get_colleagues(user)
     companies = Company.objects.filter(user__in=colleagues)
     if companies.count() < 1: return HttpResponse(_("No company found !"), status=403)
     
-    # if teams:
-    # else:
     all_bids = Bid.objects.filter(
             creator__in=colleagues,
             # company__in=companies,
         ).prefetch_related(
             "tasks", "expenses", #"contracts",
         )
-    # all_bids = Bid.objects.none()
 
     bids, filters = filter_bids(all_bids, query_dict, companies, colleagues)
     query_dict['filters'] = filters
@@ -906,7 +892,7 @@ def bonds_list(request):
         team.add_member(user, manager=True)
 
     teams = user.teams.all()
-    colleagues = user.teams.first().members.all()
+    colleagues = get_colleagues(user)
 
     if teams:
         all_bids = Bid.objects.filter(
@@ -1121,7 +1107,8 @@ def bid_edit(request, pk=None, lk=None):
                 desc = lot.description
                 form.fields["details"].initial      = desc
 
-            companies = team.companies
+            # companies = team.companies
+            companies = user.companies
             if companies.count() == 1:
                 form.fields["company"].initial      = companies.first()
 
