@@ -31,7 +31,28 @@
                     {% trans "Your membership is disabled" %}
                 </div>
                 <div class="text-secondary small my-2">
-                    {% trans "Please contact your team Manager" %}
+                    {% trans "Please contact your team Manager" %}:
+                </div>
+
+                <div class="my-2">
+                    {% if team.active_managers %}
+                        <div class="list-group">
+                            {% for member in team.active_managers %}
+                                {% if member != user %}
+                                {% endif %}
+                                    <div class="list-group-item">
+                                        <div class="text-secondary small">
+                                            <span class="fw-bold me-2">@{{ member.username }}</span>
+                                            <span class="fw-light small">{{ member.first_name|default:'' }}</span>
+                                            <span class="fw-light small">{{ member.last_name|default:'' }}</span>
+                                            <span class="ms-2">
+                                                <a href="mailto:{{ member.email }}">{{ member.email }}</a>                                                
+                                            </span>
+                                        </div>
+                                    </div>
+                            {% endfor %}
+                        </div>                
+                    {% endif %}
                 </div>
 
             </div>

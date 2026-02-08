@@ -231,13 +231,13 @@ def team_recap(request):
     USERS_ORDERING_FIELD = 'username'
 
     colleagues = team.members.annotate(
-        # is_me = F("memberships__user", filter ...),
-        is_actife = F("memberships__active"),
-        is_manager = F("memberships__manager"),
-        joined = F("memberships__joined"),
-    ).order_by(
-        '-is_actife', '-is_manager', USERS_ORDERING_FIELD,
-    )
+            # is_me = F("memberships__user", filter ...),
+            is_actife = F("memberships__active"),
+            is_manager = F("memberships__manager"),
+            joined = F("memberships__joined"),
+        ).order_by(
+            '-is_actife', '-is_manager', USERS_ORDERING_FIELD,
+        )
 
     paginator = Paginator(colleagues, USERS_ITEMS_PER_PAGE)
     page_number = request.GET['page'] if 'page' in request.GET else 1

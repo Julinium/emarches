@@ -55,6 +55,14 @@ class Team(models.Model):
     @property
     def companies(self):
         return Company.objects.filter(user__in=self.members.all())
+
+    @property
+    def active_managers(self):
+        return self.members.filter(
+                memberships__active  = True,
+                memberships__manager = True,
+            )
+        # return Company.objects.filter(user__in=self.members.all())
     
     # @property
     # def avatar(self):
