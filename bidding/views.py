@@ -801,9 +801,10 @@ def bids_list(request):
             )
     else:
         bids = bids.order_by(
-            F(ordering).desc(nulls_last=True), BIDS_ORDERING_FIELD,
-            "-bond_status",
-            "-date_submitted"
+                F(ordering).desc(nulls_last=True), 
+                BIDS_ORDERING_FIELD,
+                "-bond_status",
+                "-date_submitted"
             )
 
     context = define_context(request)
@@ -1128,7 +1129,7 @@ def bid_edit(request, pk=None, lk=None):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.lot = lot
-            if obj.pk is None: # do not change creator when someone else edits objects.
+            if obj._state.adding: 
                 obj.creator = user
             obj.updater = user
             obj.save()
@@ -1145,11 +1146,12 @@ def bid_edit(request, pk=None, lk=None):
     else:
         form = BidForm(
             instance=bid,
-            user=user,
+            user=bid.creator if bid else user,
             lot=lot,
             usets=us,
         )
-        if bid is None:
+
+        if bid is None: # Creating a New instance
             form.fields["date_submitted"].initial   = datetime.now()
             form.fields["bid_amount"].initial       = lot.estimate
             form.fields["bond_amount"].initial      = lot.bond

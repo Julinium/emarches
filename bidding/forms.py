@@ -127,11 +127,14 @@ class BidForm(forms.ModelForm):
         company_field = self.fields["company"]
         fleet = Company.objects.none()
 
-        owner = self.creator
-        if owner is None: owner = user
-        if owner:
-            fleet = owner.companies
+        # owner = self.creator
+        # if owner is None: owner = user
+        # if owner:
+        #     fleet = owner.companies
         
+        if user:
+            fleet = user.companies
+
         company_field.queryset = fleet
         if fleet.count() == 1:
             company_field.initial = fleet.first()
