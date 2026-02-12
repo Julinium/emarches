@@ -51,13 +51,14 @@
                                 <span class="">{{ bid.company.name }}</span>
                                 <span class="text-secondary ms-1 small fw-light">
                                     <span class="small">{{ bid.company.ice|default:'' }}</span>
+                                    <span class="small">@{{ bid.company.user|default:'?' }}</span>
                                 </span>  
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="bid-company" class="col-12 col-md-6">
+                <div id="bid-creator" class="col-12 col-md-6">
                     <div class="d-flex my-3">
                         <div class="me-1"><i class="bi {{ bicons.section }}"></i></div>
                         <div class="w-100 border border-0 border-bottom">

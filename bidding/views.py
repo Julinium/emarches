@@ -1091,7 +1091,7 @@ def bid_edit(request, pk=None, lk=None):
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
-    
+
     team = get_team(user)
     if not team: return HttpResponse(_("Permission denied")  + ": " + _(" Team not found"), status=403)
 
@@ -1117,20 +1117,23 @@ def bid_edit(request, pk=None, lk=None):
         require_https=request.is_secure()):
         redir = None
 
+    creator = bid.creator if bid else user
+    companies = creator.companies
+
     if request.method == "POST":
         form = BidForm(
             request.POST, 
             request.FILES,
             instance=bid,
-            user=user,
+            companies=companies,
             lot=lot,
             usets=us,
         )
         if form.is_valid():
             obj = form.save(commit=False)
             obj.lot = lot
-            if obj._state.adding: 
-                obj.creator = user
+            # if obj._state.adding: obj.creator = user
+            obj.creator = creator
             obj.updater = user
             obj.save()
 
@@ -1143,12 +1146,14 @@ def bid_edit(request, pk=None, lk=None):
                 if field.errors:
                     for error in field.errors:
                         messages.error(request, f"{field.label}: {error}")
-    else:
+
+    if request.method == "GET":        
+
         form = BidForm(
-            instance=bid,
-            user=bid.creator if bid else user,
-            lot=lot,
-            usets=us,
+            instance = bid,
+            companies  = companies,
+            lot      = lot,
+            usets    = us,
         )
 
         if bid is None: # Creating a New instance
@@ -1168,8 +1173,6 @@ def bid_edit(request, pk=None, lk=None):
                 desc = lot.description
                 form.fields["details"].initial      = desc
 
-            # companies = team.companies
-            companies = user.companies
             if companies.count() == 1:
                 form.fields["company"].initial      = companies.first()
 

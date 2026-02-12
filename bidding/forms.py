@@ -45,14 +45,6 @@ class InvitationForm(forms.ModelForm):
             'username',
             'message',
             'show_my_email',
-            # 'expiry',
-            # 'team',
-            # 'cancelled',
-            # 'sent_on',
-            # 'seen_on',
-            # 'reply_on',
-            # 'reply',
-            # 'response',
         ]
 
         widgets = {
@@ -60,26 +52,8 @@ class InvitationForm(forms.ModelForm):
             'message' : forms.Textarea(attrs={'rows': '3'}),
         }
 
-    # def clean_expiry(self):
-    #     expiry = self.cleaned_data.get("expiry")
-    #     us = self.usets
-    #     if us:
-    #         if us.bidding_check_deadline != False:
-    #             lot = self.lot
-    #             deadline = lot.tender.deadline
-    #             published = lot.tender.published
-    #             if deadline is not None:
-    #                 if date_submitted is not None:
-    #                     if date_submitted.date() > deadline.date():
-    #                         raise forms.ValidationError(_("Allowed Submission date range:") + f" {published} - {deadline.date()}")
-    #             if published is not None:
-    #                 if date_submitted is not None:
-    #                     if date_submitted.date() < published:
-    #                         raise forms.ValidationError(_("Allowed Submission date range:") + f" {published} - {deadline.date()}")
 
-    #     return date_submitted
-
-    def __init__(self, *args, lot=None, user=None, usets=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         for field in self.fields.values():
@@ -118,26 +92,29 @@ class BidForm(forms.ModelForm):
             "file_receipt"  : FilenameOnlyClearableFileInput,
         }
 
-    def __init__(self, *args, lot=None, user=None, usets=None, **kwargs):
+    def __init__(self, *args, lot=None, companies=None, usets=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.creator = user
+
+        # owner = self.creator if self.creator else creator
+
+        # if self.creator is None: self.creator = creator
         self.usets = usets
         self.lot = lot
         
         company_field = self.fields["company"]
-        fleet = Company.objects.none()
+        fleet = companies if companies else Company.objects.none()
 
         # owner = self.creator
         # if owner is None: owner = user
         # if owner:
         #     fleet = owner.companies
         
-        if user:
-            fleet = user.companies
+        # if owner:
+        #     fleet = owner.companies
 
         company_field.queryset = fleet
-        if fleet.count() == 1:
-            company_field.initial = fleet.first()
+        # if fleet.count() == 1:
+        #     company_field.initial = fleet.first()
 
 
         for field in self.fields.values():
@@ -195,7 +172,7 @@ class BidForm(forms.ModelForm):
                 if bond is not None:
                     if bond_amount is not None:
                         if bond_amount != bond:
-                            raise forms.ValidationError(_("Submitted bond amount is must be same as published bond"))
+                            raise forms.ValidationError(_("Submitted bond amount must be same as published bond"))
 
         return bond_amount
 
