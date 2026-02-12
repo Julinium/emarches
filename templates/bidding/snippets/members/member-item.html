@@ -1,14 +1,12 @@
 {% load i18n static %} {% load paraminos %} {% load humanize %} {% load tz %}
 
-<div id="m-{{ member.username }}-top">
+<div id="m-{{ member.username }}-top" class="{% if member == request.user %}bg-success-subtle{% endif %}">
     <div class="card-body p-0">
-        <a
-            data-bs-toggle="collapse"
-            href="#member-{{ member.id }}-collapse"
-            role="button"
-            aria-expanded="false"
-            aria-controls="member-{{ member.id }}-collapse"
-            class="text-decoration-none text-reset">
+        <a href="#member-{{ member.id }}-collapse" role="button"
+           data-bs-toggle="collapse" aria-expanded="false"
+           aria-controls="member-{{ member.id }}-collapse"
+           class="text-decoration-none text-reset">
+
             <div id="member-{{ member.id }}-digest" class="p-2">
                 <div class="row g-1">
                     <div class="col-12 col-md-6">
@@ -30,25 +28,38 @@
                             <span
                                 data-bs-toggle="tooltip"
                                 title="{% trans 'Full name' %}">
-                                <span class="small text-secondary me-2"
-                                    >{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>
+                                <span class="small text-secondary me-2">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
+
         </a>
 
         <div id="member-{{ member.id }}-collapse" class="collapse px-2">
+
             <div id="member-details-extended" class="mx-0 mb-3">
-                <div class="my-3">Extra data 1</div>
-                <div class="my-3">Extra data 2</div>
+                <div class="my-3 small">
+                    <span class="d-inline-block">
+                        <span class="fw-light small text-secondary">{% trans "Email" %}:</span>
+                        <span class="me-2">{{ member.email|default:'-' }}</span>
+                    </span>
+                    <span class="d-inline-block">
+                        <span class="fw-light small text-secondary">{% trans "Joined" %}:</span>
+                        <span class="me-2">{{ member.joined|default:'-' }}</span>
+                    </span>
+                    <span class="d-inline-block">
+                        <span class="fw-light small text-secondary">{% trans "Last login" %}:</span>
+                        <span class="me-2">{{ member.last_login|default:'-' }}</span>
+                    </span>
+                </div>
             </div>
 
-            <div id="member-details-actions" class="text-end mx-0 mb-3">
-                <div class="my-2">
-                    {% if manage and member != request.user %}
-                        {% if member.is_active %}
+            {% if manage and member != request.user %}
+                <div id="member-details-actions" class="text-end mx-0 mb-3">
+                    <div class="my-2">
+                        {% if member.is_actife %}
                             <button
                                 type="button"
                                 class="ms-2 mt-2 btn btn-sm btn-outline-secondary"
@@ -56,7 +67,7 @@
                                 data-bs-target="#memberDisableModal"
                                 data-username="{{ member.username }}"
                                 data-url="{% url 'bidding_member_disable' member.id %}">
-                                <span><i class="{{ bicons.disable }}"></i></span>
+                                <span><i class="{{ bicons.user_disable }}"></i></span>
                                 <span class="ms-1">{% trans 'Disable' %}</span>
                             </button>
                         {% else %}
@@ -67,7 +78,7 @@
                                 data-bs-target="#memberEnableModal"
                                 data-username="{{ member.username }}"
                                 data-url="{% url 'bidding_member_enable' member.id %}">
-                                <span><i class="{{ bicons.enable }}"></i></span>
+                                <span><i class="{{ bicons.user_enable }}"></i></span>
                                 <span class="ms-1">{% trans 'Enable' %}</span>
                             </button>
                         {% endif %}
@@ -104,29 +115,22 @@
                                 <span class="ms-1 text-danger">{% trans 'Fire' %}</span>
                             </button>
                         {% endif %}
-                    {% endif %}
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+
         </div>
     </div>
 
     <div class="card-footer small px-2 py-1">
         <div class="small">
             <div class="d-flex justify-content-between px-0">
-                <div>
-                    <span
-                        class="me-2 my-0 text-secondary"
-                        data-bs-toggle="tooltip"
-                        title="{% trans 'Companies' %}">
-                        <span><i class="{{ bicons.company }}"></i></span>
-                        <span class="fw-bold">{{ member.companies.all|length }}</span>
-                    </span>
 
+                <div>
                     {% if not member.is_actife %}
-                        <span
-                            class="me-2 my-0"
-                            data-bs-toggle="tooltip"
-                            title="{% trans 'Member is disabled' %}">
+                        <span class="me-2 my-0"
+                              data-bs-toggle="tooltip"
+                              title="{% trans 'Member is disabled' %}">
                             <span class="badge bg-danger">
                                 <span><i class="{{ bicons.cancelled }}"></i></span>
                                 <span class="">{% trans 'Disabled' %}</span>
@@ -147,7 +151,7 @@
                         <span
                             class="me-2 my-0 text-primary"
                             data-bs-toggle="tooltip"
-                            title="{% trans 'Member is Team admin' %}>
+                            title="{% trans 'Member is Team admin' %}">
                             <span class="badge bg-warning">
                                 <span><i class="{{ bicons.superuser }}"></i></span>
                                 <span class="">{% trans 'Admin' %}</span>
@@ -155,15 +159,45 @@
                         </span>
                     {% endif %}
                 </div>
+
                 <div>
-                    <span
-                        class="me-2 my-0 text-secondary"
-                        data-bs-toggle="tooltip"
-                        title="{% trans 'Member joined date' %}">
-                        <span><i class="{{ bicons.history }}"></i></span>
-                        <span class="">{{ member.joined.date|default:'-' }}</span>
+                    <span class="me-2 my-0 text-secondary"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Tasks' %}">
+                        <span><i class="{{ bicons.task }}"></i></span>
+                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Tasks' %}:</span>
+                        <span class="fw-bold">{{ member.tasks.all|length }}</span>
+                    </span>
+                    <span class="me-2 my-0 text-secondary"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Expenses' %}">
+                        <span><i class="{{ bicons.expense }}"></i></span>
+                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Expenses' %}:</span>
+                        <span class="fw-bold">{{ member.expenses.all|length }}</span>
+                    </span>
+                    <span class="me-2 my-0 text-secondary"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Bids' %}">
+                        <span><i class="{{ bicons.bid }}"></i></span>
+                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Bids' %}:</span>
+                        <span class="fw-bold">{{ member.bids.all|length }}</span>
+                    </span>
+                    <span class="me-2 my-0 text-secondary"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Contracts' %}">
+                        <span><i class="{{ bicons.contract }}"></i></span>
+                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Contracts' %}:</span>
+                        <span class="fw-bold">{{ member.contracts.all|length }}</span>
+                    </span>
+                    <span class="me-2 my-0 text-secondary"
+                          data-bs-toggle="tooltip"
+                          title="{% trans 'Companies' %}">
+                        <span><i class="{{ bicons.company }}"></i></span>
+                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Companies' %}:</span>
+                        <span class="fw-bold">{{ member.companies.all|length }}</span>
                     </span>
                 </div>
+
             </div>
         </div>
     </div>

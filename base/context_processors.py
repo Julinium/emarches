@@ -199,6 +199,8 @@ def portal_context(request):
         'email'           : 'bi bi-envelope',
         'accept'          : 'bi bi-check-circle-fill',
         'save'            : 'bi bi-floppy',
+        'user_disable'    : 'bi bi-person-slash',
+        'user_enable'     : 'bi bi-person-check',
 
     }
 
