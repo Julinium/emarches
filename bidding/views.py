@@ -195,7 +195,7 @@ def invitation_accept(request, pk=None):
             try:
                 with transaction.atomic():
                     deleted_ms, pm = invitee.memberships.all().delete()
-                    membership = TeamMember.objects.create(  # pyright: ignore[reportAttributeAccessIssue]
+                    membership = TeamMember.objects.create(  
                         user=invitee,
                         team=invitation.team,
                         active=False,
@@ -236,7 +236,7 @@ def team_recap(request):
 
     team = get_team(user)
     if not team:
-        team = Team.objects.create(  # pyright: ignore[reportAttributeAccessIssue]
+        team = Team.objects.create(  
             name=_("TEAM") + "-" + user.username.upper(),
             creator=user,
         )
@@ -264,16 +264,15 @@ def team_recap(request):
         SHOW_INVITATIONS = int(us.general_show_invitations)
     USERS_ORDERING_FIELD = "username"
 
-    colleagues = team.members.annotate(
+    all_members = team.members.annotate(
         # is_me = F("memberships__user", filter ...),
         is_actife=F("memberships__active"),
         is_manager=F("memberships__manager"),
         joined=F("memberships__joined"),
-    ).order_by(
-        "-is_actife",
-        "-is_manager",
-        USERS_ORDERING_FIELD,
     )
+
+    colleagues = all_members.exclude(id=user.id).order_by("-is_actife", "-is_manager", USERS_ORDERING_FIELD)
+    member_me = all_members.filter(id=user.id).first()
 
     paginator = Paginator(colleagues, USERS_ITEMS_PER_PAGE)
     page_number = request.GET["page"] if "page" in request.GET else 1
@@ -316,6 +315,7 @@ def team_recap(request):
 
     context = {
         "page_obj": page_obj,
+        "member_me": member_me,
         "team": team,
         "invitation_form": invitation_form,
         "invitations": invitations,
@@ -859,11 +859,11 @@ def bids_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     colleagues = get_colleagues(user)
-    companies = Company.objects.filter(user__in=colleagues)  # pyright: ignore[reportAttributeAccessIssue]
+    companies = Company.objects.filter(user__in=colleagues)  
     if companies.count() < 1:
         return HttpResponse(_("No company found !"), status=403)
 
-    all_bids = Bid.objects.filter(  # pyright: ignore[reportAttributeAccessIssue]
+    all_bids = Bid.objects.filter(  
         creator__in=colleagues,
         # company__in=companies,
     ).prefetch_related(
@@ -931,7 +931,7 @@ def bonds_list(request):
 
     user = request.user
     if not user or not user.is_authenticated:
-        return HttpResponse(_("Permission denied"), status=403)  # pyright: ignore[reportArgumentType]
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
     if not team:
@@ -940,7 +940,7 @@ def bonds_list(request):
         )
 
     if not is_active_team_member(user, team):
-        return HttpResponse(_("Permission denied"), status=403)  # pyright: ignore[reportArgumentType]
+        return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context["user_settings"]
@@ -1041,28 +1041,14 @@ def bonds_list(request):
         context["query_string"] = urlencode(query_string)
         context["query_unsorted"] = urlencode(query_unsorted)
         context["query_dict"] = query_dict
-        context["full_bar_days"] = TENDER_FULL_PROGRESS_DAYS
+        # context["full_bar_days"] = TENDER_FULL_PROGRESS_DAYS
 
         return context
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    if user.teams.count() < 1:
-        team = Team.objects.create(  # pyright: ignore[reportAttributeAccessIssue]
-            name=user.username.upper(),
-            creator=user,
-        )
-        team.add_member(user, manager=True)
-
-    teams = user.teams.all()
     colleagues = get_colleagues(user)
-
-    if teams:
-        all_bids = Bid.objects.filter(  # pyright: ignore[reportAttributeAccessIssue]
-            creator__in=colleagues
-        )
-    else:
-        all_bids = Bid.objects.none()  # pyright: ignore[reportAttributeAccessIssue]
+    all_bids = Bid.objects.filter(creator__in=colleagues)
 
     bids, filters = filter_bids(all_bids, query_dict)
     query_dict["filters"] = filters
@@ -1082,16 +1068,27 @@ def bonds_list(request):
 
     context = define_context(request)
 
-    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)  # pyright: ignore[reportPossiblyUnboundVariable]
-    page_number = request.GET["page"] if "page" in request.GET else 1
-    if not str(page_number).isdigit():
-        page_number = 1
-    else:
-        if int(page_number) > paginator.num_pages:  # pyright: ignore[reportOperatorIssue]
-            page_number = paginator.num_pages
-    page_obj = paginator.page(page_number)
+    # paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)  # pyright: ignore[reportPossiblyUnboundVariable]
+    # page_number = request.GET["page"] if "page" in request.GET else 1
+    # if not str(page_number).isdigit():
+    #     page_number = 1
+    # else:
+    #     if int(page_number) > paginator.num_pages:  # pyright: ignore[reportOperatorIssue]
+    #         page_number = paginator.num_pages
+    # page_obj = paginator.page(page_number)
+    # context["page_obj"] = page_obj
 
-    context["page_obj"] = page_obj
+    bids_bond_return_overdue = bids.filter(
+            bond_status=BondStatus.BOND_FILED,
+            bond_due_date__lte=datetime.now(),
+        )
+    bids_bond_draft = bids.filter(
+            bond_status=BondStatus.BOND_PREPARING,
+            # bond_due_date__lte=datetime.now(),
+        )
+
+    context["bids_bond_return_overdue"] = bids
+    context["bids_bond_draft"] = bids_bond_draft
 
     logger = logging.getLogger("portal")
     logger.info("Bonds List view")
@@ -1105,7 +1102,7 @@ def bid_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated:
-        return HttpResponse(_("Permission denied"), status=403)  # pyright: ignore[reportArgumentType]
+        return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
     if not team:
@@ -1114,7 +1111,7 @@ def bid_details(request, pk=None):
         )
 
     if not is_active_team_member(user, team):
-        return HttpResponse(_("Permission denied"), status=403)  # pyright: ignore[reportArgumentType]
+        return HttpResponse(_("Permission denied"), status=403)
 
     bid = get_object_or_404(Bid, pk=pk)
     bid = Bid.objects.filter(pk=pk).prefetch_related("tasks", "expenses").first()

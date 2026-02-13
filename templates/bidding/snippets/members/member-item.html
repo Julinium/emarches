@@ -1,6 +1,6 @@
 {% load i18n static %} {% load paraminos %} {% load humanize %} {% load tz %}
 
-<div id="m-{{ member.username }}-top" class="{% if member == request.user %}bg-success-subtle{% endif %}">
+<div id="m-{{ member.username }}-top">
     <div class="card-body p-0">
         <a href="#member-{{ member.id }}-collapse" role="button"
            data-bs-toggle="collapse" aria-expanded="false"
@@ -137,7 +137,7 @@
                             </span>
                         </span>
                     {% endif %}
-                    {% if member == request.user %}
+                    <!-- {% if member == request.user %}
                         <span
                             class="me-2 my-0"
                             data-bs-toggle="tooltip"
@@ -146,7 +146,7 @@
                                 <span class="">{% trans 'ME' %}</span>
                             </span>
                         </span>
-                    {% endif %}
+                    {% endif %} -->
                     {% if member.is_manager %}
                         <span
                             class="me-2 my-0 text-primary"
@@ -161,40 +161,40 @@
                 </div>
 
                 <div>
-                    <span class="me-2 my-0 text-secondary"
+                    <span class="ms-2 me-1 my-0 text-secondary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Tasks' %}">
                         <span><i class="{{ bicons.task }}"></i></span>
-                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Tasks' %}:</span>
-                        <span class="fw-bold">{{ member.tasks.all|length }}</span>
+                        <!-- <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Tasks' %}:</span> -->
+                        <span class="">{{ member.tasks.all|length }}</span>
                     </span>
-                    <span class="me-2 my-0 text-secondary"
+                    <span class="ms-2 me-1 my-0 text-secondary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Expenses' %}">
                         <span><i class="{{ bicons.expense }}"></i></span>
-                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Expenses' %}:</span>
-                        <span class="fw-bold">{{ member.expenses.all|length }}</span>
+                        <!-- <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Expenses' %}:</span> -->
+                        <span class="">{{ member.expenses.all|length }}</span>
                     </span>
-                    <span class="me-2 my-0 text-secondary"
+                    <span class="ms-2 me-1 my-0 text-secondary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Bids' %}">
                         <span><i class="{{ bicons.bid }}"></i></span>
-                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Bids' %}:</span>
-                        <span class="fw-bold">{{ member.bids.all|length }}</span>
+                        <!-- <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Bids' %}:</span> -->
+                        <span class="">{{ member.bids.all|length }}</span>
                     </span>
-                    <span class="me-2 my-0 text-secondary"
+                    <span class="ms-2 me-1 my-0 text-secondary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Contracts' %}">
                         <span><i class="{{ bicons.contract }}"></i></span>
-                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Contracts' %}:</span>
-                        <span class="fw-bold">{{ member.contracts.all|length }}</span>
+                        <!-- <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Contracts' %}:</span> -->
+                        <span class="">{{ member.contracts.all|length }}</span>
                     </span>
-                    <span class="me-2 my-0 text-secondary"
+                    <span class="ms-2 me-1 my-0 text-secondary"
                           data-bs-toggle="tooltip"
                           title="{% trans 'Companies' %}">
                         <span><i class="{{ bicons.company }}"></i></span>
-                        <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Companies' %}:</span>
-                        <span class="fw-bold">{{ member.companies.all|length }}</span>
+                        <!-- <span class="fw-light text-secondary small d-none d-md-inline-block">{% trans 'Companies' %}:</span> -->
+                        <span class="">{{ member.companies.all|length }}</span>
                     </span>
                 </div>
 

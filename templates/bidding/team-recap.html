@@ -210,6 +210,40 @@
         </div>
     {% endif %}
         
+    <div id="me-member" class="mb-5">
+
+        <div class="d-flex align-items-center justify-content-between px-0">
+            <div class="">
+                <span class="h3">{% trans "Me" %}</span>
+                <!-- <span class="small text-muted me-1">: </span>
+                <span class="fw-bold">
+                    {{ page_obj.paginator.count }} 
+                </span> -->
+            </div>
+            <!-- {% if not invitations %}
+                <div id="open-invitations-actions">
+                    {% if manage %}
+                        <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
+                            <i class="{{ bicons.create }}"></i>
+                        </button>
+                    {% endif %}
+                </div>
+            {% endif %} -->
+        </div>
+
+        <div class="container px-0 pt-2">
+
+                <div class="">
+
+                    <div class="card shadow mb-3">
+                        {% include 'bidding/snippets/members/member-item.html' with member=member_me %}
+                    </div>
+                    
+                </div>
+
+        </div>
+    </div>
+        
     <div id="team-members" class="mb-5">
 
         <div class="d-flex align-items-center justify-content-between px-0">
@@ -232,7 +266,6 @@
         </div>
 
         <div class="container px-0 pt-2">
-            {% if page_obj %}
 
                 <div class="">
 
@@ -246,7 +279,7 @@
 
                 {% include 'base/snippets/paginator.html' %}
 
-            {% else %}
+            {% if not page_obj %}
                 {% include 'base/snippets/empty-list.html' %}
             {% endif %}
 

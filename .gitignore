@@ -5,7 +5,7 @@
 .env.*
 db.sqlite3
 media/
-
+.tmp/
 scraper/.env
 scraper/.env.*
 scraper/exports
