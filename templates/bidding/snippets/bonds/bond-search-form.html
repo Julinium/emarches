@@ -4,12 +4,12 @@
 <button class="btn btn-light py-1 mx-1" type="button" 
         data-bs-toggle="modal" data-bs-target="#searchModal"
         data-bs-toggle="tooltip"
-        title="{% trans 'Serach Concurrents' %}">
+        title="{% trans 'Serach Bonds' %}">
     <i class="{{ bicons.search }}"></i>
 </button>
 
 
-<form action="{% url 'bidding_bids_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
+<form action="{% url 'bidding_bonds_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
       onsubmit="stripEmptyFields(this)">
     <div class="modal fade" id="searchModal" aria-hidden="true"
          aria-labelledby="searchModalLabel" tabindex="-1">
@@ -17,7 +17,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Bids Search' %}</h1>
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Bonds Search' %}</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -25,12 +25,12 @@
 
                     <div class="row gx-3">
 
-                        <div class="col-12">
+                        <!-- <div class="col-12">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
                                 <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
                             </div>
-                        </div>
+                        </div> -->
 
 
                         <div class="col-12 col-md-6">
@@ -63,7 +63,7 @@
                         </div>
 
 
-                        <div class="col-12 col-md-6">
+                        <!-- <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Status" %}</span></span>
                                 <select class="form-select" name="status" aria-label="status">
@@ -76,10 +76,10 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
 
-                        <div class="col-12 col-md-6">
+                        <!-- <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Result" %}</span></span>
                                 <select class="form-select" name="result" aria-label="result">
@@ -92,10 +92,10 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
 
-                        <div class="col-12 col-md-6">
+                        <!-- <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bond Status" %}</span></span>
                                 <select class="form-select" name="bond_status" aria-label="bond_status">
@@ -108,13 +108,13 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <a href="{% url 'bidding_bids_list' %}" type="button" class="btn btn-outline-secondary">
+                    <a href="{% url 'bidding_bonds_list' %}" type="button" class="btn btn-outline-secondary">
                         <i class="{{ bicons.backspace }} me-1"></i>
                         {% trans 'Reset' %}
                     </a>

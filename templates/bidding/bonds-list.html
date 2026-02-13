@@ -25,6 +25,7 @@
                   title="{% trans 'Results are filtered' %}">
                 <i class="{{ bicons.filters }}"></i>
             </span>
+            <span class="small text-muted">{% trans "Results are filtered" %}.</span>
             <!-- <span class="fw-bold">
                 {{ page_obj.paginator.count }} 
             </span>
@@ -44,9 +45,18 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#overdueCollapse" aria-expanded="true" aria-controls="overdueCollapse">
-                            <span><i class="{{ bicons.expired }}"></i></span>
-                            <span class="ms-2 fw-light">{% trans "Return Overdue" %}:</span>
-                            <span class="fw-bold ms-1">{{ bids_bond_return_overdue.all|length }}</span>
+                            <div class="w-100">
+                                <span class="">
+                                    <span><i class="{{ bicons.expired }}"></i></span>
+                                    <span class="ms-2 fw-light">{% trans "Return Overdue" %}:</span>
+                                    <span class="ms-1 small">{{ bids_bond_return_overdue.all|length }}</span>
+                                </span>
+                                {% if total_return_overdue != 0 %}
+                                    <span class="float-end text-end ms-3 me-2">
+                                        <span class="fw-bold text-danger">{{ total_return_overdue }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
                         </button>
                     </h2>
                         <div id="overdueCollapse" class="accordion-collapse show" data-bs-parent="#accordionOverdue">
@@ -73,9 +83,18 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#upcomingCollapse" aria-expanded="true" aria-controls="upcomingCollapse">
-                            <span><i class="{{ bicons.deadline }}"></i></span>
-                            <span class="ms-2 fw-light">{% trans "Return Upcoming" %}:</span>
-                            <span class="fw-bold ms-1">{{ bids_bond_upcoming.all|length }}</span>
+                            <div class="w-100">
+                                <span class="">
+                                    <span><i class="{{ bicons.deadline }}"></i></span>
+                                    <span class="ms-2 fw-light">{% trans "Return Upcoming" %}:</span>
+                                    <span class="ms-1 small">{{ bids_bond_upcoming.all|length }}</span>
+                                </span>
+                                {% if total_upcoming != 0 %}
+                                    <span class="float-end text-end ms-3 me-2">
+                                        <span class="fw-bold text-primary">{{ total_upcoming }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
                         </button>
                     </h2>
                         <div id="upcomingCollapse" class="accordion-collapse show" data-bs-parent="#accordionUpcoming">
@@ -101,13 +120,22 @@
             <div class="accordion my-3">
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
-                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#draftCollapse" aria-expanded="true" aria-controls="draftCollapse">
-                            <span><i class="{{ bicons.edit }}"></i></span>
-                            <span class="ms-2 fw-light">{% trans "Drafts" %}:</span>
-                            <span class="fw-bold ms-1">{{ bids_bond_draft.all|length }}</span>
+                        <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#draftCollapse" aria-expanded="false" aria-controls="draftCollapse">
+                            <div class="w-100">
+                                <span class="">                                    
+                                    <span><i class="{{ bicons.edit }}"></i></span>
+                                    <span class="ms-2 fw-light">{% trans "Drafts" %}:</span>
+                                    <span class="ms-1 small">{{ bids_bond_draft.all|length }}</span>
+                                </span>
+                                {% if total_draft != 0 %}
+                                    <span class="float-end text-end ms-3 me-2">
+                                        <span class="fw-bold text-secondary">{{ total_draft }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
                         </button>
                     </h2>
-                        <div id="draftCollapse" class="accordion-collapse show" data-bs-parent="#accordionDraft">
+                        <div id="draftCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionDraft">
                             <div class="accordion-body p-0">
                                 <div class="list-group small mb-0">
                                     {% for bid in bids_bond_draft.all %}

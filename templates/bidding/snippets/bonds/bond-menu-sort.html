@@ -15,15 +15,8 @@
             <hr class="dropdown-divider">
             
             <li>
-                {% trans 'Tender deadline' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='lot__tender__deadline' icon=bicons.deadline %}
-            </li>
-            
-            <hr class="dropdown-divider">
-
-            <li>
-                {% trans 'Bid Status' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='status' icon=bicons.status %}
+                {% trans 'Return due date' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bond_due_date' icon=bicons.deadline %}
             </li>
             
             <hr class="dropdown-divider">
@@ -45,13 +38,6 @@
             <li>
                 {% trans 'Bond Amount' as caption %}
                 {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bond_amount' icon=bicons.bond %}
-            </li>
-
-            <hr class="dropdown-divider">
-
-            <li>
-                {% trans 'Bond Status' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bond_status' icon=bicons.status %}
             </li>
 
             <hr class="dropdown-divider">

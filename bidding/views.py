@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db import transaction
-from django.db.models import F, Prefetch, Q
+from django.db.models import F, Prefetch, Q, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -942,22 +942,18 @@ def bonds_list(request):
     if not is_active_team_member(user, team):
         return HttpResponse(_("Permission denied"), status=403)
 
-    pro_context = portal_context(request)
-    us = pro_context["user_settings"]
+    # pro_context = portal_context(request)
+    # us = pro_context["user_settings"]
 
-    if us:
-        BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
+    # if us:
+        # BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
         # TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
-    BIDS_ORDERING_FIELD = "date_submitted"
+    BIDS_ORDERING_FIELD = "bond_due_date"
 
     def get_req_params(req):
         allowed_keys = [
-            "q",
-            "w",
-            "n",
-            "x",
-            "p",
-            "s",
+            "company",
+            "creator",
             "page",
             "sort",
         ]
@@ -985,54 +981,15 @@ def bonds_list(request):
         if not params:
             return bids.distinct(), ff
 
-        if "q" in params:
+        if "company" in params:
             ff += 1
-            q = params["q"]
-            bids = bids.filter(name__icontains=q)
+            company = params["company"]
+            bids = bids.filter(company__id=company)
 
-        if "n" in params:
+        if "creator" in params:
             ff += 1
-            n = params["n"]
-            bids = bids.filter(wins_sum__gte=n)
-
-        if "x" in params:
-            ff += 1
-            x = params["x"]
-            bids = bids.filter(wins_sum__lte=x)
-
-        if "w" in params:
-            ff += 1
-            w = params["w"]
-            if w == "0":
-                bids = bids.filter(wins_count=0)
-            elif w == "1":
-                bids = bids.filter(wins_count=1)
-            elif w == "2":
-                bids = bids.filter(wins_count__gte=1)
-            elif w == "11":
-                bids = bids.filter(wins_count__gte=10)
-
-        if "p" in params:
-            ff += 1
-            p = params["p"]
-            if p == "0":
-                bids = bids.filter(part_count=0)
-            elif p == "1":
-                bids = bids.filter(part_count=1)
-            elif p == "2":
-                bids = bids.filter(part_count__gte=1)
-            elif p == "11":
-                bids = bids.filter(part_count__gte=10)
-
-        if "s" in params:
-            ff += 1
-            s = params["s"]
-            if s == "1":
-                bids = bids.filter(succ_rate=100)
-            elif s == "6":
-                bids = bids.filter(succ_rate__gte=50)
-            elif s == "4":
-                bids = bids.filter(succ_rate__lte=50)
+            creator = params["creator"]
+            bids = bids.filter(creator__username=creator)
 
         return bids.distinct(), ff
 
@@ -1068,29 +1025,43 @@ def bonds_list(request):
 
     context = define_context(request)
 
+    colleagues = get_colleagues(user)
+    companies = Company.objects.filter(user__in=colleagues)  
 
     bids_bond_return_overdue = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_FILED,
             bond_due_date__lte=datetime.now(),
-        ).order_by("bond_due_date")
-
+        )#.order_by("bond_due_date")
+    
     bids_bond_upcoming = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_FILED,
         ).exclude(
             bond_due_date__lte=datetime.now(),
-        ).order_by("bond_due_date")
+        )#.order_by("bond_due_date")
 
     bids_bond_draft = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_PREPARING,
             # bond_due_date__lte=datetime.now(),
-        ).order_by("bond_due_date")
+        )#.order_by("bond_due_date")
 
+
+    total_return_overdue = bids_bond_return_overdue.aggregate(total=Sum("bond_amount"))["total"] or 0
+    total_upcoming = bids_bond_upcoming.aggregate(total=Sum("bond_amount"))["total"] or 0
+    total_draft = bids_bond_draft.aggregate(total=Sum("bond_amount"))["total"] or 0
+    
     context["bids_bond_return_overdue"] = bids_bond_return_overdue
     context["bids_bond_draft"] = bids_bond_draft
     context["bids_bond_upcoming"] = bids_bond_upcoming
+    
+    context["total_return_overdue"] = total_return_overdue
+    context["total_upcoming"] = total_upcoming
+    context["total_draft"] = total_draft
+
+    context["colleagues"] = colleagues
+    context["companies"] = companies
 
     logger = logging.getLogger("portal")
     logger.info("Bonds List view")
