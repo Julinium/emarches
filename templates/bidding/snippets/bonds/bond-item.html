@@ -4,12 +4,21 @@
        class="text-decoration-none text-reset">
     <div class="d-flex p-2">
 
-        <div class="flex-grow-1">
-            <span>{{ bid.company.name|default:'-' }}</span>
+        <div class="flex-grow-1 small">
+            <span class="ms-2">{{ bid.company.name|default:'-' }}</span>
+            {% if bid.bond_due_date %}
+                <span class="ms-2 small">{{ bid.bond_due_date|date|default:'-' }}</span>
+                {% if epoch == 'since' %}
+                    <span class="badge bg-danger">{{ bid.bond_due_date|timesince }}</span>
+                {% endif %}
+                {% if epoch == 'until' %}
+                    <span class="badge bg-success">{{ bid.bond_due_date|timeuntil }}</span>
+                {% endif %}
+            {% endif %}
         </div>
 
         <div class="text-end">
-            <span class="fw-bold">{{ bid.bond_amount|default:'-' }}</span>
+            <span class="fw-bold">{{ bid.bond_amount }}</span>
         </div>
 
     </div>

@@ -44,7 +44,7 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#overdueCollapse" aria-expanded="true" aria-controls="overdueCollapse">
-                            <span><i class="{{ bicons.task }}"></i></span>
+                            <span><i class="{{ bicons.expired }}"></i></span>
                             <span class="ms-2 fw-light">{% trans "Return Overdue" %}:</span>
                             <span class="fw-bold ms-1">{{ bids_bond_return_overdue.all|length }}</span>
                         </button>
@@ -54,7 +54,36 @@
                                 <div class="list-group small mb-0">
                                     {% for bid in bids_bond_return_overdue.all %}
                                         <div class="list-group-item p-0">
-                                            {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid %}
+                                            {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid epoch='since' %}
+                                        </div>
+                                    {% empty %}
+                                        <div class="list-group-item p-2 text-secondary">
+                                            <span class="ms-1">{% trans "None found" %}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="accordionUpcoming">
+            <div class="accordion my-3">
+                <div class="accordion-item shadow-sm">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#upcomingCollapse" aria-expanded="true" aria-controls="upcomingCollapse">
+                            <span><i class="{{ bicons.deadline }}"></i></span>
+                            <span class="ms-2 fw-light">{% trans "Return Upcoming" %}:</span>
+                            <span class="fw-bold ms-1">{{ bids_bond_upcoming.all|length }}</span>
+                        </button>
+                    </h2>
+                        <div id="upcomingCollapse" class="accordion-collapse show" data-bs-parent="#accordionUpcoming">
+                            <div class="accordion-body p-0">
+                                <div class="list-group small mb-0">
+                                    {% for bid in bids_bond_upcoming.all %}
+                                        <div class="list-group-item p-0">
+                                            {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid epoch='until' %}
                                         </div>
                                     {% empty %}
                                         <div class="list-group-item p-2 text-secondary">
@@ -73,15 +102,15 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#draftCollapse" aria-expanded="true" aria-controls="draftCollapse">
-                            <span><i class="{{ bicons.task }}"></i></span>
+                            <span><i class="{{ bicons.edit }}"></i></span>
                             <span class="ms-2 fw-light">{% trans "Drafts" %}:</span>
-                            <span class="fw-bold ms-1">{{ bids_bond_return_draft.all|length }}</span>
+                            <span class="fw-bold ms-1">{{ bids_bond_draft.all|length }}</span>
                         </button>
                     </h2>
                         <div id="draftCollapse" class="accordion-collapse show" data-bs-parent="#accordionDraft">
                             <div class="accordion-body p-0">
                                 <div class="list-group small mb-0">
-                                    {% for bid in bids_bond_return_draft.all %}
+                                    {% for bid in bids_bond_draft.all %}
                                         <div class="list-group-item p-0">
                                             {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid %}
                                         </div>

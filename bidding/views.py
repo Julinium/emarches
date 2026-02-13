@@ -1068,27 +1068,29 @@ def bonds_list(request):
 
     context = define_context(request)
 
-    # paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)  # pyright: ignore[reportPossiblyUnboundVariable]
-    # page_number = request.GET["page"] if "page" in request.GET else 1
-    # if not str(page_number).isdigit():
-    #     page_number = 1
-    # else:
-    #     if int(page_number) > paginator.num_pages:  # pyright: ignore[reportOperatorIssue]
-    #         page_number = paginator.num_pages
-    # page_obj = paginator.page(page_number)
-    # context["page_obj"] = page_obj
 
     bids_bond_return_overdue = bids.filter(
+            bond_amount__isnull=False,
             bond_status=BondStatus.BOND_FILED,
             bond_due_date__lte=datetime.now(),
-        )
+        ).order_by("bond_due_date")
+
+    bids_bond_upcoming = bids.filter(
+            bond_amount__isnull=False,
+            bond_status=BondStatus.BOND_FILED,
+        ).exclude(
+            bond_due_date__lte=datetime.now(),
+        ).order_by("bond_due_date")
+
     bids_bond_draft = bids.filter(
+            bond_amount__isnull=False,
             bond_status=BondStatus.BOND_PREPARING,
             # bond_due_date__lte=datetime.now(),
-        )
+        ).order_by("bond_due_date")
 
-    context["bids_bond_return_overdue"] = bids
+    context["bids_bond_return_overdue"] = bids_bond_return_overdue
     context["bids_bond_draft"] = bids_bond_draft
+    context["bids_bond_upcoming"] = bids_bond_upcoming
 
     logger = logging.getLogger("portal")
     logger.info("Bonds List view")
