@@ -1,6 +1,6 @@
 # emarches
 emarches is a Python-based full-stack application aiming to provide a better alternative to the Moroccan Public Procurement portal.   
-To see it in action, you can visit our deployed website at www.emarches.com
+To see it in action, you can visit our deployed website at new.emarches.com
 
 # Legal ?
 Always remember: scraping may be illegal or cause you to be banned or blacklisted.

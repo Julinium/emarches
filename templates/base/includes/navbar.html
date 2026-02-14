@@ -18,8 +18,8 @@
            alt="eMarches">
     </a>
     <button class="navbar-toggler border-0 p-0 ps-1" type="button" 
-        data-bs-toggle="collapse" data-bs-target="#navbarToggler"
-        aria-controls="navbarToggler" aria-expanded="false" 
+        data-bs-toggle="collapse" data-bs-target="#mainNavigationBar"
+        aria-controls="mainNavigationBar" aria-expanded="false" 
         style="outline: none; box-shadow: none;"
         aria-label="Toggle navigation">
         {% if request.user.is_authenticated %}
@@ -34,13 +34,13 @@
         <span class="navbar-toggler-icon"></span>
     </button>
       
-    <div class="collapse navbar-collapse" id="navbarToggler">
+    <div class="collapse navbar-collapse" id="mainNavigationBar">
       
           <ul class="navbar-nav me-auto navbar-nav-scroll">
             {% include 'nas/snippets/menu-account.html' %}
-            {% include 'bidding/snippets/menu-bidding.html' %}
             {% include 'portal/snippets/menu-tenders.html' %}
             {% include 'bdc/snippets/menu-bdc.html' %}
+            {% include 'bidding/snippets/menu-bidding.html' %}
           </ul>
 
             <ul class="navbar-nav ms-auto navbar-nav-scroll text-end">

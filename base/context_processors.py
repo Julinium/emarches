@@ -160,9 +160,9 @@ def portal_context(request):
                             # filter-left 
                             # sort-up 
                             # list-ol 
-                            
+
         'company'         : 'bi bi-buildings',
-                            
+
         'bid'             : 'bi bi-envelope-arrow-up',
         'bid_fill'        : 'bi bi-envelope-arrow-up-fill text-primary',
 
@@ -219,18 +219,18 @@ def portal_context(request):
     faved_ids  = user.favorites.values_list('tender', flat=True)
     pinned_ids = user.stickies.values_list('purchase_order', flat=True)
 
-    # TODO: Permission logic
-    show_bidders_names = False
-    user = request.user
-    if user and user.is_superuser:
-        show_bidders_names = True
+    # # TODO: Permission logic
+    # show_bidders_names = True
+    # user = request.user
+    # if user and user.is_superuser:
+    #     show_bidders_names = True
 
 
-    context['user_settings'] = user_settings
-    context['faved_ids']     = faved_ids
-    context['pinned_ids']    = pinned_ids
-    context['wrap_text']     = user_settings.general_wrap_long_text == True
-    context['show_bidders_names']     = show_bidders_names
+    context['user_settings']      = user_settings
+    context['faved_ids']          = faved_ids
+    context['pinned_ids']         = pinned_ids
+    context['wrap_text']          = user_settings.general_wrap_long_text == True if user_settings else False
+    # context['show_bidders_names'] = show_bidders_names
 
     return context
 

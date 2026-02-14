@@ -2,7 +2,7 @@
 {% load i18n l10n static humanize groupify tz %}
 
 {% block title %}
-    {% trans "Concurrent details" %}: {% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}
+    {% trans "Concurrent details" %}: {{ bidder.name }}
 {% endblock title %}
 
 {% block content %}
@@ -15,7 +15,7 @@
 
         <div class="card-header p-0">
             <div class="d-flex align-items-center justify-content-between px-2 py-1">
-                <div class="fs-5 fw-bold">{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</div>
+                <div class="fs-5 fw-bold">{{ bidder.name }}</div>
                 <div class="badge bg-success">
                     <i class="{{ bicons.winner }} small"></i>
                     <span class="fw-bold">{{ bidder.winners_sum|metrify }}</span>

@@ -56,7 +56,7 @@
 
                             <div id="bidder-data">
                                 <div class="{% if wrap_text == False %}oneline{% endif %}">
-                                    <span>{% if show_bidders_names %}{{ bidder.name }}{% else %}{{ bidder.pseudo }}{% endif %}</span>
+                                    <span>{{ bidder.name }}</span>
                                     <span class="small ms-1 float-end text-end"
                                         style="min-width: 5rem;">
                                         <span class="small fw-light">{{ bidder.wins_count }}/{{ bidder.deposits.all|length }}</span>

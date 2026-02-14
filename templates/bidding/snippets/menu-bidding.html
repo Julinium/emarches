@@ -27,9 +27,6 @@
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bidding_bonds_list' %}">
                 <i class="{{ bicons.bond }} me-2"></i>
-                <span class="badge bg-danger fw-light">
-                    <i class="{{ bicons.deadline }}"></i>
-                </span>
                 <span>{% trans 'Bonds' %}</span>
             </a>
         </li>
@@ -66,13 +63,6 @@
             </a>
         </li>
 
-        <!-- <li class="">
-            <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.payment }} me-2"></i>
-                <span>{% trans 'Payments' %}</span>
-            </a>
-        </li> -->
-
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
@@ -84,15 +74,6 @@
                 <span>{% trans 'Contacts' %}</span>
             </a>
         </li>
-
-        <!-- <li><hr class="dropdown-divider"></li> -->
-
-        <!-- <li class="">
-            <a class="dropdown-item py-2" href="#">
-                <i class="{{ bicons.analysis }} me-2"></i>
-                <span>{% trans 'Analysis' %}</span>
-            </a>
-        </li> -->
 
     </ul>
 </li>
