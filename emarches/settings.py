@@ -16,7 +16,7 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = ENVIRONMENT != 'production'
 
-DEBUG = True
+# DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 
@@ -207,24 +207,6 @@ SOCIALACCOUNT_PROVIDERS = {
         "VERIFIED_EMAIL": True,
         'EMAIL_AUTHENTICATION': True
     },
-
-    # "apple": {
-    #     "APPS": [
-    #         {
-    #             "client_id": os.getenv("ALLAUTH_APPLE_CLIENT_ID"),
-    #             "secret": os.getenv("ALLAUTH_APPLE_SECRET"),
-    #         },
-    #     ],
-    #     "SCOPE": [
-    #         "profile",
-    #         "email",
-    #     ],
-    #     "AUTH_PARAMS": {
-    #         "access_type": "online",
-    #     },
-    #     "VERIFIED_EMAIL": True,
-    #     'EMAIL_AUTHENTICATION': True
-    # },
 
     'telegram': {
         'APP': {
