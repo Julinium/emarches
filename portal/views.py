@@ -426,6 +426,9 @@ def tender_list(request):
             page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
+    # for t in page_obj:
+    #     t.fsize = t.file_size or None
+
     context["page_obj"] = page_obj
     context["colleagues"] = colleagues
 
@@ -476,6 +479,7 @@ def tender_details(request, pk=None):
             "lots__samples",
             "lots__visits",
             "lots__bids",
+            # "bids",
         ),
         id=pk,
     )
@@ -483,24 +487,28 @@ def tender_details(request, pk=None):
     if not tender:
         return HttpResponse(trans("Not found"), status=404)
 
-    files_list = []
-    total_size = 0
-    dce_dir = os.path.join(
-        os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
-        settings.DL_PATH_PREFIX + tender.chrono,
-    )
-    if os.path.exists(dce_dir):
-        files_list = os.listdir(dce_dir)
+    # files_list = []
+    # total_size = 0
+    # dce_dir = os.path.join(
+    #     os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
+    #     settings.DL_PATH_PREFIX + tender.chrono,
+    # )
+    # if os.path.exists(dce_dir):
+    #     files_list = os.listdir(dce_dir)
 
-    files_info = []
-    if len(files_list) > 0:
-        for entry in files_list:
-            full_path = os.path.join(dce_dir, entry)
-            if os.path.exists(full_path):
-                if os.path.isfile(full_path):
-                    sizens = os.path.getsize(full_path)
-                    total_size += sizens
-                    files_info.append({"name": entry, "size": sizens})
+    # files_info = []
+    # if len(files_list) > 0:
+    #     for entry in files_list:
+    #         full_path = os.path.join(dce_dir, entry)
+    #         if os.path.exists(full_path):
+    #             if os.path.isfile(full_path):
+    #                 sizens = os.path.getsize(full_path)
+    #                 total_size += sizens
+    #                 files_info.append({"name": entry, "size": sizens})
+
+    # total_size = 0
+    # for f in tender.files_info:
+    #     total_size += f.get("size", 0)
 
     # files_count = len(files_info)
     favorited = tender.favorites.filter(user=user).first()
@@ -524,8 +532,8 @@ def tender_details(request, pk=None):
     context = {
         "tender": tender,
         "link_prefix": LINK_PREFIX,
-        "total_size": total_size,
-        "files_info": files_info,
+        # "total_size": total_size,
+        # "files_info": files_info,
         "dce_modal": DCE_SHOW_MODAL,
         "full_bar_days": full_bar_days,
         "favorited": favorited,

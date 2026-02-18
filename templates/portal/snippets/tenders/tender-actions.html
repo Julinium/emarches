@@ -34,19 +34,19 @@
         <span class="d-none--d-md-inline ms-1">{% trans 'Share' %}</span>
     </a>
 
-    {% if total_size > 0 %}
-        {% if files_info|length == 1 and not dce_modal %}
-            {% with files_info|first as f %}
+    {% if tender.total_size > 0 %}
+        {% if tender.files_info|length == 1 and not dce_modal %}
+            {% with tender.files_info|first as f %}
                 <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
                         class="m-1 btn btn-outline-primary" type="button">
-                    <span class="fw-bold">{{ total_size|metrify:1 }}</span>
+                    <span class="fw-bold">{{ tender.total_size|metrify:1 }}</span>
                     <span><i class="{{ bicons.downloads }}"></i></span>
                     <span class="d-none--d-md-inline ms-1">{% trans 'Download' %}</span>
                 </a>
             {% endwith %}
         {% else %}
             <button class="m-1 btn 
-                        {% if files_info|length == 0 %}
+                        {% if tender.files_info|length == 0 %}
                                 btn-outline-secondary
                         {% else %}
                                 btn-outline-primary 
@@ -54,7 +54,7 @@
                     type="button" 
                     data-bs-toggle="modal" data-bs-target="#dceModal">
                 <span><i class="{{ bicons.downloads }}"></i></span>
-                <span class="d-none--d-md-inline ms-1 fw-bold">{{ total_size|metrify:1 }}</span>
+                <span class="d-none--d-md-inline ms-1 fw-bold">{{ tender.total_size|metrify:1 }}</span>
                 <span class="d-none--d-md-inline ms-1">{% trans 'Files' %}</span>
             </button>
         {% endif %}
@@ -94,7 +94,7 @@
 
     {% endif %}
 
-    {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
+    {% if tender.cancelled == False %}
         <a href="{{ link_prefix }}{{ tender.link }}"
         class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
         onclick="window.open(this.href, '_blank');">
@@ -102,5 +102,8 @@
             <span class="d-none--d-md-inline ms-1">{% trans 'Official Link' %}</span>
         </a>
     {% endif %}
+
+    <!-- {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
+    {% endif %} -->
     
 </div>

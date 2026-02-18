@@ -253,27 +253,27 @@
                                 </span>
                             {% endif %}
 
+                            <!-- <span class="small me-2"
+                                data-bs-toggle="tooltip"
+                                title="{% trans 'Files size' %}">
+                                <i class="{{ bicons.files_size }}"></i>
+                                <span class="">{{ tender.size_bytes|metrify:0 }}</span>
+                            </span>
+
+                            {% if not tender.size_bytes %}
+                                <span class="small me-2"
+                                    data-bs-toggle="tooltip"
+                                    title="{% trans 'Files may not be ready, yet' %}">
+                                    <i class="{{ bicons.no_files }}"></i>
+                                </span>
+                            {% endif %} -->
+
                             {% if tender.changes.all %}
                                 <span class="small me-2"
                                     data-bs-toggle="tooltip"
                                     title="{% trans 'Tender has Changes' %}">
                                     {{ tender.changes.all.count|metrify:0 }}
                                     <i class="{{ bicons.changes }}"></i>
-                                </span>
-                            {% endif %}
-
-                            <!-- <span class="small me-2"
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Files size' %}">
-                                <i class="{{ bicons.files_size }}"></i>
-                                {{ tender.size_bytes|metrify:0 }}
-                            </span> -->
-
-                            {% if not tender.size_bytes or tender.size_bytes == 0 %}
-                                <span class="small me-2"
-                                    data-bs-toggle="tooltip"
-                                    title="{% trans 'Files may not be ready, yet' %}">
-                                    <i class="{{ bicons.no_files }}"></i>
                                 </span>
                             {% endif %}
 
@@ -318,6 +318,23 @@
                                 <i class="{{ bicons.downloads }} small"></i>
                             </span>
                             {% endif %}
+
+
+                            {% if not tender.total_size %}
+                                <span class="ms-2 small"
+                                    data-bs-toggle="tooltip"
+                                    title="{% trans 'Files may not be available' %}">
+                                    <i class="{{ bicons.no_files }}"></i>
+                                </span>
+                            {% else %}
+                                <span class="ms-2 small"
+                                    data-bs-toggle="tooltip"
+                                    title="{% trans 'Available files size' %}">
+                                    <i class="{{ bicons.files_size }}"></i>
+                                    <span class="">{{ tender.total_size|metrify:0 }}</span>
+                                </span>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>

@@ -25,13 +25,6 @@
 
                     <div class="row gx-3">
 
-                        <!-- <div class="col-12">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
-                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
-                            </div>
-                        </div> -->
-
 
                         <div class="col-12 col-md-6">
                             <div class="input-group mb-3">
@@ -61,54 +54,6 @@
                                 </select>
                             </div>
                         </div>
-
-
-                        <!-- <div class="col-12 col-md-6">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Status" %}</span></span>
-                                <select class="form-select" name="status" aria-label="status">
-                                    <option {% if query_dict.status == '' %} selected {% endif %} value="">--</option>
-                                    {% for value, label in bid_status_choices %}
-                                        <option value="{{ value }}"
-                                                {% if value == query_dict.status %}selected{% endif %}>
-                                            {{ label }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div> -->
-
-
-                        <!-- <div class="col-12 col-md-6">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bid Result" %}</span></span>
-                                <select class="form-select" name="result" aria-label="result">
-                                    <option {% if query_dict.result == '' %} selected {% endif %} value="">--</option>
-                                    {% for value, label in bid_result_choices %}
-                                        <option value="{{ value }}"
-                                                {% if value == query_dict.result %}selected{% endif %}>
-                                            {{ label }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div> -->
-
-
-                        <!-- <div class="col-12 col-md-6">
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Bond Status" %}</span></span>
-                                <select class="form-select" name="bond_status" aria-label="bond_status">
-                                    <option {% if query_dict.status == '' %} selected {% endif %} value="">--</option>
-                                    {% for value, label in bond_status_choices %}
-                                        <option value="{{ value }}"
-                                                {% if value == query_dict.bond_status %}selected{% endif %}>
-                                            {{ label }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div> -->
 
                     </div>
                 </div>

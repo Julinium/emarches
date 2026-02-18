@@ -82,7 +82,7 @@
             <div class="accordion my-3">
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
-                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#upcomingCollapse" aria-expanded="true" aria-controls="upcomingCollapse">
+                        <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#upcomingCollapse" aria-expanded="false" aria-controls="upcomingCollapse">
                             <div class="w-100">
                                 <span class="">
                                     <span><i class="{{ bicons.deadline }}"></i></span>
@@ -97,7 +97,7 @@
                             </div>
                         </button>
                     </h2>
-                        <div id="upcomingCollapse" class="accordion-collapse show" data-bs-parent="#accordionUpcoming">
+                        <div id="upcomingCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionUpcoming">
                             <div class="accordion-body p-0">
                                 <div class="list-group small mb-0">
                                     {% for bid in bids_bond_upcoming.all %}
