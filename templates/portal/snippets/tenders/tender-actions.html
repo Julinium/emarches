@@ -61,13 +61,11 @@
     {% endif %}
     
     
-    {% if position != 'bottom' %}
-        {% if tender.openings.all|length > 0 %}
-            <a class="btn btn-outline-success" href="#resultsBookmark">
-                <span><i class="{{ bicons.deliberated }}"></i></span>
-                <span class="d-none--d-md-inline ms-1">{% trans 'Results' %}</span>
-            </a>
-        {% endif %}
+    {% if position != 'bottom' and tender.openings.all|length > 0 %}
+        <a class="btn btn-outline-success" href="#resultsBookmark">
+            <span><i class="{{ bicons.deliberated }}"></i></span>
+            <span class="d-none--d-md-inline ms-1">{% trans 'Results' %}</span>
+        </a>
     {% endif %}
 
         
@@ -100,8 +98,5 @@
         <span><i class="{{ bicons.link }}"></i></span>
         <span class="d-none--d-md-inline ms-1">{% trans 'Official Link' %}</span>
     </a>
-
-    <!-- {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
-    {% endif %} -->
     
 </div>

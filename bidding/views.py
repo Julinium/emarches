@@ -1047,18 +1047,45 @@ def bonds_list(request):
             # bond_due_date__lte=datetime.now(),
         )#.order_by("bond_due_date")
 
+    bids_bond_claimed = bids.filter(
+            bond_amount__isnull=False,
+            bond_status=BondStatus.BOND_CLAIMED,
+            # bond_due_date__lte=datetime.now(),
+        )#.order_by("bond_due_date")
+
+    bids_bond_returned = bids.filter(
+            bond_amount__isnull=False,
+            bond_status=BondStatus.BOND_RETURNED,
+            # bond_due_date__lte=datetime.now(),
+        )#.order_by("bond_due_date")
+
+    bids_bond_lost = bids.filter(
+            bond_amount__isnull=False,
+            bond_status=BondStatus.BOND_LOST,
+            # bond_due_date__lte=datetime.now(),
+        )#.order_by("bond_due_date")
+
 
     total_return_overdue = bids_bond_return_overdue.aggregate(total=Sum("bond_amount"))["total"] or 0
     total_upcoming = bids_bond_upcoming.aggregate(total=Sum("bond_amount"))["total"] or 0
     total_draft = bids_bond_draft.aggregate(total=Sum("bond_amount"))["total"] or 0
+    total_claimed = bids_bond_claimed.aggregate(total=Sum("bond_amount"))["total"] or 0
+    total_returned = bids_bond_returned.aggregate(total=Sum("bond_amount"))["total"] or 0
+    total_lost = bids_bond_lost.aggregate(total=Sum("bond_amount"))["total"] or 0
     
     context["bids_bond_return_overdue"] = bids_bond_return_overdue
-    context["bids_bond_draft"] = bids_bond_draft
     context["bids_bond_upcoming"] = bids_bond_upcoming
+    context["bids_bond_draft"] = bids_bond_draft
+    context["bids_bond_claimed"] = bids_bond_claimed
+    context["bids_bond_returned"] = bids_bond_returned
+    context["bids_bond_lost"] = bids_bond_lost
     
     context["total_return_overdue"] = total_return_overdue
     context["total_upcoming"] = total_upcoming
     context["total_draft"] = total_draft
+    context["total_claimed"] = total_claimed
+    context["total_returned"] = total_returned
+    context["total_lost"] = total_lost
 
     context["colleagues"] = colleagues
     context["companies"] = companies

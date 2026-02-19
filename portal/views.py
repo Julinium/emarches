@@ -2,10 +2,8 @@ import json
 import logging
 import os
 
-# import random
 from datetime import datetime
 
-# from decimal import Decimal
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
 
@@ -13,21 +11,16 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-# from django.contrib.auth.models import User
-# from uuid import UUID
 from django.core.paginator import Paginator
 
-# from django.db import models
 from django.db.models import Count, Exists, F, OuterRef, Q, Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-# from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as trans
 from django.views.decorators.cache import cache_control
 
-# from django.views.decorators.http import require_POST
 from base.context_processors import portal_context
 from base.models import (
     Agrement,

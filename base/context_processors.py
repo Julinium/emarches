@@ -202,6 +202,9 @@ def portal_context(request):
         'user_disable'    : 'bi bi-person-slash',
         'user_enable'     : 'bi bi-person-check',
 
+        'claimed'         : 'bi bi-send-check',
+        'returned'        : 'bi bi-check-lg ',
+
     }
 
     context['bicons']        = bicons
