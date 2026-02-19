@@ -94,14 +94,12 @@
 
     {% endif %}
 
-    {% if tender.cancelled == False %}
-        <a href="{{ link_prefix }}{{ tender.link }}"
-        class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
-        onclick="window.open(this.href, '_blank');">
-            <span><i class="{{ bicons.link }}"></i></span>
-            <span class="d-none--d-md-inline ms-1">{% trans 'Official Link' %}</span>
-        </a>
-    {% endif %}
+    <a href="{{ link_prefix }}{{ tender.link }}"
+    class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
+    onclick="window.open(this.href, '_blank');">
+        <span><i class="{{ bicons.link }}"></i></span>
+        <span class="d-none--d-md-inline ms-1">{% trans 'Official Link' %}</span>
+    </a>
 
     <!-- {% if request.user.is_superuser or tender.expired == False and tender.cancelled == False %}
     {% endif %} -->
