@@ -1087,8 +1087,16 @@ def bonds_list(request):
     context["total_returned"] = total_returned
     context["total_lost"] = total_lost
 
+    bonds_count = bids_bond_return_overdue.count()    
+    bonds_count += bids_bond_upcoming.count()
+    bonds_count += bids_bond_draft.count()
+    bonds_count += bids_bond_claimed.count()
+    bonds_count += bids_bond_returned.count()
+    bonds_count += bids_bond_lost.count()
+
     context["colleagues"] = colleagues
     context["companies"] = companies
+    context["bonds_count"] = bonds_count
 
     logger = logging.getLogger("portal")
     logger.info("Bonds List view")

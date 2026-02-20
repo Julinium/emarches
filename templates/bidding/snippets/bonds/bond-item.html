@@ -3,7 +3,7 @@
     <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
        role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
        class="text-decoration-none text-reset">
-    
+
         <div>
 
             <div id="bid-{{ bid.id }}-digest" class="p-2">
@@ -58,6 +58,7 @@
                         </div> -->
                     </div>
                 </div>              
+
             </div>
 
             <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
@@ -114,6 +115,7 @@
                     
                 </div>
             </div>
+
         </div>
     
     </a>
@@ -122,38 +124,3 @@
 
 
 
-
-
-
-
-
-<!-- 
-<a href="{% url 'bidding_bid_details' bid.id %}"
-       class="text-decoration-none text-reset">
-    <div class="d-flex p-2">
-
-        <div class="flex-grow-1 small">
-            <div>
-                <span class="ms-2">{{ bid.company.name|default:'-' }}</span>
-                <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
-                <span class="small">@{{ bid.creator|default:'-' }}</span>
-            </div>
-            {% if bid.bond_due_date %}
-                <div>
-                    <span class="ms-2 small">{{ bid.bond_due_date|date|default:'-' }}</span>
-                    {% if epoch == 'since' %}
-                        <span class="badge bg-danger">{{ bid.bond_due_date|timesince }}</span>
-                    {% endif %}
-                    {% if epoch == 'until' %}
-                        <span class="badge bg-success">{{ bid.bond_due_date|timeuntil }}</span>
-                    {% endif %}
-                </div>    
-            {% endif %}
-        </div>
-
-        <div class="text-end">
-            <span class="">{{ bid.bond_amount }}</span>
-        </div>
-
-    </div>
-</a> -->

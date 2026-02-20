@@ -204,6 +204,7 @@ def portal_context(request):
 
         'claimed'         : 'bi bi-send-check',
         'returned'        : 'bi bi-check-lg ',
+        'empty_list'      : 'bi bi-stars ',
 
     }
 
