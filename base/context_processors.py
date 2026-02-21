@@ -203,7 +203,12 @@ def portal_context(request):
         'user_enable'     : 'bi bi-person-check',
 
         'claimed'         : 'bi bi-send-check',
-        'returned'        : 'bi bi-check-lg ',
+        'returned'        : 'bi bi-check-lg',
+        'started'         : 'bi bi-play',
+        'finished'        : 'bi bi-check-lg',
+        'emergency'       : 'bi bi-exclamation-diamond',
+
+
         'empty_list'      : 'bi bi-stars ',
 
     }

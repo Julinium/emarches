@@ -659,7 +659,7 @@ def tenders_list(request):
             ff += 1
             q = params["q"]
             tenders = tenders.filter(
-                Q(title__icontains=q)  # pyright: ignore[reportOperatorIssue]
+                Q(title__icontains=q)
                 | Q(reference__icontains=q)
                 | Q(chrono__icontains=q)
                 | Q(client__name__icontains=q)
@@ -809,7 +809,7 @@ def bids_list(request):
             ff += 1
             q = params["q"]
             bids = bids.filter(
-                Q(title__icontains=q)  # pyright: ignore[reportOperatorIssue]
+                Q(title__icontains=q)
                 | Q(lot__tender__title__icontains=q)
                 | Q(lot__tender__reference__icontains=q)
                 | Q(lot__tender__chrono__icontains=q)
@@ -904,7 +904,7 @@ def bids_list(request):
     if not str(page_number).isdigit():
         page_number = 1
     else:
-        if int(page_number) > paginator.num_pages:  # pyright: ignore[reportOperatorIssue]
+        if int(page_number) > paginator.num_pages:
             page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
@@ -941,13 +941,7 @@ def bonds_list(request):
 
     if not is_active_team_member(user, team):
         return HttpResponse(_("Permission denied"), status=403)
-
-    # pro_context = portal_context(request)
-    # us = pro_context["user_settings"]
-
-    # if us:
-        # BIDS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-        # TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
+    
     BIDS_ORDERING_FIELD = "bond_due_date"
 
     def get_req_params(req):
@@ -1032,38 +1026,34 @@ def bonds_list(request):
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_FILED,
             bond_due_date__lte=datetime.now(),
-        )#.order_by("bond_due_date")
+        )
     
     bids_bond_upcoming = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_FILED,
         ).exclude(
             bond_due_date__lte=datetime.now(),
-        )#.order_by("bond_due_date")
+        )
 
     bids_bond_draft = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_PREPARING,
-            # bond_due_date__lte=datetime.now(),
-        )#.order_by("bond_due_date")
+        )
 
     bids_bond_claimed = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_CLAIMED,
-            # bond_due_date__lte=datetime.now(),
-        )#.order_by("bond_due_date")
+        )
 
     bids_bond_returned = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_RETURNED,
-            # bond_due_date__lte=datetime.now(),
-        )#.order_by("bond_due_date")
+        )
 
     bids_bond_lost = bids.filter(
             bond_amount__isnull=False,
             bond_status=BondStatus.BOND_LOST,
-            # bond_due_date__lte=datetime.now(),
-        )#.order_by("bond_due_date")
+        )
 
 
     total_return_overdue = bids_bond_return_overdue.aggregate(total=Sum("bond_amount"))["total"] or 0
@@ -1102,6 +1092,179 @@ def bonds_list(request):
     logger.info("Bonds List view")
 
     return render(request, "bidding/bonds-list.html", context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tasks_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        return HttpResponse(_("Permission denied"), status=403)
+
+    team = get_team(user)
+    if not team:
+        return HttpResponse(
+            _("Permission denied") + ": " + _(" Team not found"), status=403
+        )
+
+    if not is_active_team_member(user, team):
+        return HttpResponse(_("Permission denied"), status=403)
+    
+    TASKS_ORDERING_FIELD = "date_due"
+
+    def get_req_params(req):
+        allowed_keys = [
+            "q",
+            "company",
+            "creator",
+            "assignee",
+            "page",
+            "sort",
+        ]
+
+        query_dict = {k: v for k, v in req.GET.items() if k in allowed_keys and v != ""}
+        if "sort" not in query_dict:
+            query_dict["sort"] = TASKS_ORDERING_FIELD
+
+        query_string = {
+            k: v
+            for k, v in req.GET.items()
+            if k in allowed_keys and v != "" and k != "page"
+        }
+
+        query_unsorted = {
+            k: v
+            for k, v in req.GET.items()
+            if k in allowed_keys and v != "" and k not in ("page", "sort")
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_tasks(tasks, params):
+        ff = 0
+        if not params:
+            return tasks.distinct(), ff
+
+        if "q" in params:
+            ff += 1
+            q = params["q"]
+            tasks = tasks.filter(
+                Q(title__icontains=q)
+                | Q(details__icontains=q)
+                | Q(bid__title__icontains=q)
+                | Q(bid__lot__tender__title__icontains=q)
+                | Q(bid__lot__tender__reference__icontains=q)
+                | Q(bid__lot__tender__client__name__icontains=q)
+                # | Q(lot__title__icontains=q)
+                # | Q(lot__description__icontains=q)
+            )
+
+        if "company" in params:
+            ff += 1
+            company = params["company"]
+            # tasks = tasks.filter(creator__company__id=company)
+            tasks = tasks.filter(creator__companies=company)
+
+        if "creator" in params:
+            ff += 1
+            creator = params["creator"]
+            tasks = tasks.filter(creator__username=creator)
+
+        if "assignee" in params:
+            ff += 1
+            assignee = params["assignee"]
+            tasks = tasks.filter(assignee__username=assignee)
+
+        return tasks.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context["query_string"] = urlencode(query_string)
+        context["query_unsorted"] = urlencode(query_unsorted)
+        context["query_dict"] = query_dict
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+
+    colleagues = get_colleagues(user)
+    all_tasks = Task.objects.filter(
+        # creator__in=colleagues, 
+        bid__creator__in=colleagues,
+        )
+
+    tasks, filters = filter_tasks(all_tasks, query_dict)
+    query_dict["filters"] = filters
+
+    sort = query_dict["sort"]
+
+    if sort and sort != "":
+        ordering = sort
+    else:
+        ordering = TASKS_ORDERING_FIELD
+
+    if ordering[0] == "-":
+        ordering = ordering[1:]
+        tasks = tasks.order_by(F(ordering).asc(nulls_last=True), TASKS_ORDERING_FIELD)
+    else:
+        tasks = tasks.order_by(F(ordering).desc(nulls_last=True), TASKS_ORDERING_FIELD)
+
+    context = define_context(request)
+
+    colleagues = get_colleagues(user)
+    companies = Company.objects.filter(user__in=colleagues)
+
+    tasks_overdue = tasks.filter(
+            date_due__lte=datetime.now(),
+        ).exclude(
+            status=TaskStatus.TASK_FINISHED,
+        ).exclude(
+            status=TaskStatus.TASK_CANCELLED,
+        )
+    
+    tasks_pending = tasks.filter(
+            status=TaskStatus.TASK_PENDING,
+            date_due__gt=datetime.now(),
+        # ).exclude(
+        #     date_due__lte=datetime.now(),
+        )
+
+    tasks_started = tasks.filter(
+            status=TaskStatus.TASK_STARTED,
+            date_due__gt=datetime.now(),
+        )
+
+    tasks_finished = tasks.filter(
+            status=TaskStatus.TASK_FINISHED,
+        )
+
+    tasks_cancelled = tasks.filter(
+            status=TaskStatus.TASK_CANCELLED,
+        )
+
+    
+    context["tasks_overdue"] = tasks_overdue
+    context["tasks_pending"] = tasks_pending
+    context["tasks_started"] = tasks_started
+    context["tasks_finished"] = tasks_finished
+    context["tasks_cancelled"] = tasks_cancelled
+    
+
+    tasks_count = tasks_overdue.count()    
+    tasks_count += tasks_pending.count()
+    tasks_count += tasks_started.count()
+    tasks_count += tasks_finished.count()
+    tasks_count += tasks_cancelled.count()
+
+    context["colleagues"] = colleagues
+    context["companies"] = companies
+    context["tasks_count"] = tasks_count
+
+    logger = logging.getLogger("portal")
+    logger.info("Tasks List view")
+
+    return render(request, "bidding/tasks-list.html", context)
 
 
 @login_required(login_url="account_login")

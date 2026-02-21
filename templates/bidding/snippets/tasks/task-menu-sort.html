@@ -1,0 +1,60 @@
+{% load i18n %}
+<div class="small">
+    <div class="dropdown dropstart">
+        <button class="btn btn-light py-1 mx-1" type="button" 
+                data-bs-toggle="dropdown" aria-expanded="false"
+                data-bs-toggle="tooltip" 
+                title="{% trans 'Order items by' %}">
+            <i class="{{ bicons.sort }}"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow">
+            <div class="ms-3 mb-2">
+                <span class="">{% trans 'Ordering' %}</span>
+            </div>
+            
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Due date' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='date_due' icon=bicons.deadline %}
+            </li>
+            
+            <!-- <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Bid Submitted' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='date_submitted' icon=bicons.bid %}
+            </li>
+            
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Bid Amount' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='bid_amount' icon=bicons.estimate %}
+            </li> -->
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Emergency' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='emergency' icon=bicons.emergency %}
+            </li>
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Task Created' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='created' icon=bicons.created %}
+            </li>
+
+            <hr class="dropdown-divider">
+
+            <li>
+                {% trans 'Task Updated' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='updated' icon=bicons.updated %}
+            </li>
+
+        </ul>
+    </div>
+</div>
+

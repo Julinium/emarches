@@ -1,0 +1,221 @@
+{% extends 'base/base.html' %}
+{% load i18n l10n static %}
+{% load humanize %}
+
+{% block title %}
+    {% trans "Tasks list" %}
+{% endblock title %}
+
+
+{% block content %}
+
+    <div class="d-flex align-items-center justify-content-between px-0">
+        <div class="">
+            <span class="h3 me-1">{% trans "Tasks list" %}</span>
+        </div>
+        <div class="d-flex align-items-top">
+            {% include 'bidding/snippets/tasks/task-search-form.html' %}
+            {% include 'bidding/snippets/tasks/task-menu-sort.html' %}
+        </div>
+    </div>
+
+    <div class="fw-light mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="" data-bs-toggle="tooltip" 
+                  title="{% trans 'Results are filtered' %}">
+                <i class="{{ bicons.filters }}"></i>
+            </span>
+            <span class="small text-muted">{% trans "Results are filtered" %}.</span>
+        {% endif %}
+        <span class="fw-bold">
+            {{ tasks_count }} 
+        </span>
+        <span class="small text-muted">{% trans "Tasks found" %}.</span>
+    </div>
+
+    <div class="container py-4 px-0">
+        {% if tasks_count > 0 %}
+            {% if tasks_overdue.all|length != 0 %}
+                <div id="accordionOverdue">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#overdueCollapse" aria-expanded="true" aria-controls="overdueCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.expired }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Return Overdue" %}:</span>
+                                            <span class="ms-1 small">{{ tasks_overdue.all|length }}</span>
+                                        </span>
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="overdueCollapse" class="accordion-collapse show" data-bs-parent="#accordionOverdue">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for task in tasks_overdue.all %}
+                                                <div class="list-group-item p-0">
+                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if tasks_pending.all|length != 0 %}
+                <div id="accordionPending">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pendingCollapse" aria-expanded="false" aria-controls="pendingCollapse">
+                                    <div class="w-100">
+                                        <span class="">                                    
+                                            <span><i class="{{ bicons.edit }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Pending" %}:</span>
+                                            <span class="ms-1 small">{{ tasks_pending.all|length }}</span>
+                                        </span>
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="pendingCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionPending">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for task in tasks_pending.all %}
+                                                <div class="list-group-item p-0">
+                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if tasks_started.all|length != 0 %}
+                <div id="accordionStarted">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#startedCollapse" aria-expanded="false" aria-controls="startedCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.started }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Started" %}:</span>
+                                            <span class="ms-1 small">{{ tasks_started.all|length }}</span>
+                                        </span>
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="startedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionStarted">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for task in tasks_started.all %}
+                                                <div class="list-group-item p-0">
+                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if tasks_finished.all|length != 0 %}
+                <div id="accordionFinished">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#finishedCollapse" aria-expanded="false" aria-controls="finishedCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.finished }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Finished" %}:</span>
+                                            <span class="ms-1 small">{{ tasks_finished.all|length }}</span>
+                                        </span>
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="finishedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionFinished">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for task in tasks_finished.all %}
+                                                <div class="list-group-item p-0">
+                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if tasks_cancelled.all|length != 0 %}
+                <div id="accordionCancelled">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cancelledCollapse" aria-expanded="false" aria-controls="cancelledCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.cancelled }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Cancelled" %}:</span>
+                                            <span class="ms-1 small">{{ tasks_cancelled.all|length }}</span>
+                                        </span>
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="cancelledCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionCancelled">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for task in tasks_cancelled.all %}
+                                                <div class="list-group-item p-0">
+                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+    
+        {% else %}
+            {% include 'base/snippets/empty-list.html' %}
+        {% endif %}
+
+    </div>
+
+{% endblock content %}
+
+

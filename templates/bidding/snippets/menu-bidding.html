@@ -44,11 +44,11 @@
         <li><hr class="dropdown-divider"></li>
 
         <li class="">
-            <a class="dropdown-item py-2" href="#">
+            <a class="dropdown-item py-2" href="{% url 'bidding_tasks_list' %}">
                 <i class="{{ bicons.task }} me-2"></i>
-                <span class="badge bg-danger fw-light">
+                <!-- <span class="badge bg-danger fw-light">
                     <i class="{{ bicons.deadline }}"></i>
-                </span>
+                </span> -->
                 <span>{% trans 'Tasks' %}</span>
             </a>
         </li>

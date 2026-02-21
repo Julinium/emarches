@@ -473,7 +473,6 @@ class Task(models.Model):
     details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     assignee  = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
-    # milestone = models.BooleanField(null=True, default=True)
     status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, verbose_name=_('Status'))
 
     creator   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='tasks')
@@ -504,7 +503,7 @@ class Task(models.Model):
         if self.status == TaskStatus.TASK_PENDING   : return 'warning'
         if self.status == TaskStatus.TASK_STARTED   : return 'primary'
         if self.status == TaskStatus.TASK_FINISHED  : return 'success'
-        if self.status == TaskStatus.TASK_STALLED   : return 'danger'
+        # if self.status == TaskStatus.TASK_STALLED   : return 'danger'
         if self.status == TaskStatus.TASK_CANCELLED : return 'danger'
         return 'secondary'
 
@@ -513,7 +512,7 @@ class Task(models.Model):
         if self.status == TaskStatus.TASK_PENDING   : return 'hourglass-top'
         if self.status == TaskStatus.TASK_STARTED   : return 'play-fill'
         if self.status == TaskStatus.TASK_FINISHED  : return 'check-lg'
-        if self.status == TaskStatus.TASK_STALLED   : return 'pause-fill'
+        # if self.status == TaskStatus.TASK_STALLED   : return 'pause-fill'
         if self.status == TaskStatus.TASK_CANCELLED : return 'x-lg'
         return 'dash-lg'
 
