@@ -50,10 +50,6 @@
                 <span class="small fw-light me-1">{% trans "Bid title" %}</span>
                 <span>{{ task.bid.title|default:task.bid.lot.title }}</span>
             </div>
-            <!-- <div>
-                <span class="small fw-light me-1">{% trans "Bid creator" %}</span>
-                <span>{{ task.bid.creator.username|default:'?' }}</span>
-            </div> -->
         {% endif %}
     </div>
     <div class="text-end">
