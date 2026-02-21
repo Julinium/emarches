@@ -215,20 +215,7 @@
         <div class="d-flex align-items-center justify-content-between px-0">
             <div class="">
                 <span class="h3">{% trans "Me" %}</span>
-                <!-- <span class="small text-muted me-1">: </span>
-                <span class="fw-bold">
-                    {{ page_obj.paginator.count }} 
-                </span> -->
             </div>
-            <!-- {% if not invitations %}
-                <div id="open-invitations-actions">
-                    {% if manage %}
-                        <button type="button" class="ms-2 btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#newInvitationModal">
-                            <i class="{{ bicons.create }}"></i>
-                        </button>
-                    {% endif %}
-                </div>
-            {% endif %} -->
         </div>
 
         <div class="container px-0 pt-2">
@@ -277,9 +264,9 @@
                     
                 </div>
 
+            {% if page_obj %}
                 {% include 'base/snippets/paginator.html' %}
-
-            {% if not page_obj %}
+            {% else %}
                 {% include 'base/snippets/empty-list.html' %}
             {% endif %}
 

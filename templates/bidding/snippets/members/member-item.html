@@ -10,26 +10,20 @@
             <div id="member-{{ member.id }}-digest" class="p-2">
                 <div class="row g-1">
                     <div class="col-12 col-md-6">
-                        <div>
-                            <span
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Username' %}">
-                                <span class="fw-light">
-                                    <img
-                                        src="{{ member.profile.avatar }}"
-                                        alt="X"
-                                        class="img-fluid rounded rounded-circle"
-                                        style="width: 1.5rem; height: 1.5rem"/>
-                                </span>
-                                <span class="">@{{ member.username }}</span>
-                            </span>
-                        </div>
-                        <div class="oneline ms-4 text-secondary">
-                            <span
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Full name' %}">
-                                <span class="small text-secondary me-2">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>
-                            </span>
+                        <div class="d-flex align-items-center">
+                            <img
+                                src="{{ member.profile.avatar }}"
+                                alt="X"
+                                class="img-fluid rounded rounded-circle"
+                                style="width:3rem; height:3rem"/>                       
+                            <div class="ms-2">
+                                <div class="oneline">
+                                    <span class="fw-bold">@{{ member.username }}</span>
+                                </div>
+                                <div class="oneline">
+                                    <span class="small text-secondary">{{ member.first_name|default:'-' }} {{ member.last_name|default:'-' }}</span>
+                                </div>
+                            </div>                                     
                         </div>
                     </div>
                 </div>
@@ -137,16 +131,7 @@
                             </span>
                         </span>
                     {% endif %}
-                    <!-- {% if member == request.user %}
-                        <span
-                            class="me-2 my-0"
-                            data-bs-toggle="tooltip"
-                            title="{% trans 'That is me' %}">
-                            <span class="badge bg-success">
-                                <span class="">{% trans 'ME' %}</span>
-                            </span>
-                        </span>
-                    {% endif %} -->
+                    
                     {% if member.is_manager %}
                         <span
                             class="me-2 my-0 text-primary"
