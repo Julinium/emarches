@@ -786,6 +786,11 @@ class Opening(models.Model):
     win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     @property
+    def offset(self):
+        te = self.tender.estimate
+        return 100 * (self.won_amount - te) / te if te != 0 else None
+
+    @property
     def winners(self): 
         return Concurrent.objects.filter(
             deposits__opening=self,

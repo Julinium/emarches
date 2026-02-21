@@ -122,7 +122,7 @@
                                                         <span>{{ opening.won_lots }}/{{ opening.tender.lots_count }}</span>
                                                     </span>
                                                 {% else %}
-                                                    <span class="badge small text-bg-secondary">{% if opening.win_offset >= 0 %}+{% endif %}{{ opening.win_offset|floatformat:1 }}%</span>
+                                                    <span class="badge small text-bg-secondary">{% if opening.offset >= 0 %}+{% endif %}{{ opening.offset|floatformat:1 }}%</span>
                                                 {% endif %}
                                                 <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
                                                 {% for concurrent in opening.winners.all %}
@@ -252,21 +252,6 @@
                                     <i class="{{ bicons.variant }}"></i>
                                 </span>
                             {% endif %}
-
-                            <!-- <span class="small me-2"
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Files size' %}">
-                                <i class="{{ bicons.files_size }}"></i>
-                                <span class="">{{ tender.size_bytes|metrify:0 }}</span>
-                            </span>
-
-                            {% if not tender.size_bytes %}
-                                <span class="small me-2"
-                                    data-bs-toggle="tooltip"
-                                    title="{% trans 'Files may not be ready, yet' %}">
-                                    <i class="{{ bicons.no_files }}"></i>
-                                </span>
-                            {% endif %} -->
 
                             {% if tender.changes.all %}
                                 <span class="small me-2"
