@@ -31,12 +31,7 @@
             {{ bonds_count }} 
         </span>
         <span class="small text-muted">{% trans "Bonds found" %}.</span>
-        <!-- <span class="small text-muted">{% trans "Showing" %}:</span>
-        <span class="small">
-            {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
-        </span> -->
     </div>
-    
 
     <div class="container py-4 px-0">
         {% if bonds_count > 0 %}
@@ -279,6 +274,7 @@
                     </div>
                 </div>
             {% endif %}
+    
         {% else %}
             {% include 'base/snippets/empty-list.html' %}
         {% endif %}

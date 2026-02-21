@@ -613,11 +613,11 @@ def mergeResults(digest):
         won_amount += helper.getAmount(w.get('amount'))
         won_lots += 1
 
-    won_total = won_lots == tender.lots_count
+    # xon_total = won_lots == tender.lots_count
 
-    win_offset_t = None
-    if won_total and tender.estimate > 0:
-        win_offset_t = 100 * (won_amount - tender.estimate) / tender.estimate
+    # xin_offset_t = None
+    # if xon_total and tender.estimate > 0:
+        # xin_offset_t = 100 * (won_amount - tender.estimate) / tender.estimate
 
 
     # Create or update Opening                
@@ -629,8 +629,8 @@ def mergeResults(digest):
             'date' : date,
             'won_amount'   : won_amount,
             'won_lots'     : won_lots,
-            'won_total'    : won_total,
-            'win_offset'   : win_offset_t,
+            # 'xon_total'    : xon_total,
+            # 'xin_offset'   : xin_offset_t,
             }
         )
     if created: 
@@ -669,12 +669,12 @@ def mergeResults(digest):
             admin = None
             reject_t = None
             justif = None
-            win_offset = None
+            xin_offset = None
             amount_a = None
             amount_b = None
             amount_w = None
             winner = None
-            dep_offset = None
+            # xep_offset = None
                         
             if next((item for item in accepts_admin if item.get("name") == name and item.get("lot") == lot), None): 
                 admin = 'a'
@@ -695,8 +695,8 @@ def mergeResults(digest):
                 amount_w = helper.getAmount(winner_item.get("amount"))
                 winner = True
                 found_depots += 1
-                if lot_est and lot_est != 0:
-                    win_offset = round(100 * (amount_w - lot_est) / lot_est, 3)
+                # if lot_est and lot_est != 0:
+                    # xin_offset = round(100 * (amount_w - lot_est) / lot_est, 3)
                 
                 justifs = digest.get('winner_justifs', [])
                 justif_item = next((item for item in justifs if item.get("lot") == lot), None)
@@ -708,8 +708,8 @@ def mergeResults(digest):
                 amount_b = helper.getAmount(offer_item.get("pre_amount"))
                 amount_a = helper.getAmount(offer_item.get("amount"))
                 found_depots += 1
-                if lot_est and lot_est != 0:
-                    dep_offset = round(100 * (amount_a - lot_est) / lot_est, 3)
+                # if lot_est and lot_est != 0:
+                    # xep_offset = round(100 * (amount_a - lot_est) / lot_est, 3)
             if found_depots > 0:                
                 deposit, created_d = Deposit.objects.get_or_create(
                     opening=opening,
@@ -719,10 +719,10 @@ def mergeResults(digest):
                         'date'         : date,
                         'amount_b'     : amount_b,
                         'amount_a'     : amount_a,
-                        'dep_offset'   : dep_offset,
+                        # 'xep_offset'   : xep_offset,
                         'amount_w'     : amount_w,
                         'winner'       : winner, 
-                        'win_offset'   : win_offset,
+                        # 'xin_offset'   : xin_offset,
                         'justif'       : justif,
                         'reject_t'     : reject_t, 
                         'admin'        : admin, 

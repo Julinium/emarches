@@ -399,7 +399,7 @@
                                                 {% if depo.amount_a != depo.amount_b %}
                                                     <span class="small fw-light text-decoration-line-through">{{ depo.amount_b }}</span>
                                                 {% endif %}
-                                                <span class="badge small text-bg-secondary">{% if depo.dep_offset >= 0 %}+{% endif %}{{ depo.dep_offset|default:'0'|floatformat:1 }}%</span>
+                                                <span class="badge small text-bg-secondary">{% if depo.offset >= 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%</span>
                                                 <span>=</span>
                                                 {% if depo.winner %}
                                                     <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>

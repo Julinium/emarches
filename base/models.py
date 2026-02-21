@@ -782,13 +782,18 @@ class Opening(models.Model):
     date       = models.DateField(blank=True, null=True)
     won_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     won_lots   = models.SmallIntegerField(blank=True, default=0)
-    won_total  = models.BooleanField(blank=True, null=True, default=False)
-    win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+    # xon_total  = models.BooleanField(blank=True, null=True, default=False)
+    # xin_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     @property
     def offset(self):
         te = self.tender.estimate
         return 100 * (self.won_amount - te) / te if te != 0 else None
+
+    @property
+    def total_win(self):
+        return self.won_lots == self.tender.lots_count
+
 
     @property
     def winners(self): 
@@ -871,8 +876,6 @@ class Deposit(models.Model):
     winner     = models.BooleanField(blank=True, null=True)
     justif     = models.TextField(blank=True, null=True)
     date       = models.DateField(blank=True, null=True)
-    win_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
-    dep_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     @property
     def lot(self):
