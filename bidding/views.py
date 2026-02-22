@@ -1282,7 +1282,7 @@ def expenses_list(request):
     manager = is_active_team_admin(user, team)
     
     if not is_active_team_member(user, team):
-        return HttpResponse(_("Permission denied"), status=403)
+        return HttpResponse(_("Permission denied") + ": " + _(" Member disabled"), status=403)
     
     EXPENSES_ORDERING_FIELD = "date_paid"
 
@@ -1424,7 +1424,7 @@ def expenses_list(request):
     context["colleagues"] = colleagues
     context["companies"] = companies
     context["expenses_count"] = expenses_count
-    context["manager"] = manager,
+    context["manager"] = manager
 
     logger = logging.getLogger("portal")
     logger.info("Expenses List view")

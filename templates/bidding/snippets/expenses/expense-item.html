@@ -16,60 +16,62 @@
                   title="{% trans 'Amount, Inc. Taxes' %}: {{ expense.amount_paid|default:'-' }}">{{ expense.amount_paid|default:'-' }}</span>
         </div>
     </div>
-</a>
 
-<div id="expense-{{ expense.id }}-collapse" class="collapse p-2">
-    <div id="">
-        <div>
-            <span class="small fw-light me-1">{% trans "Bill date" %}</span>
-            <span>{{ expense.bill_date|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Paid date" %}</span>
-            <span>{{ expense.date_paid|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Payee" %}</span>
-            <span>{{ expense.payee|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Included VAT" %}</span>
-            <span>{{ expense.amount_vat|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Details" %}</span>
-            <span>{{ expense.details|default:'-' }}</span>
-        </div>
-        {% if show_bid %}
+    <div id="expense-{{ expense.id }}-collapse" class="collapse p-2">
+        <div id="">
             <div>
-                <span class="small fw-light me-1">{% trans "Bid title" %}</span>
-                <span>{{ expense.bid.title|default:expense.bid.lot.title }}</span>
+                <span class="small fw-light me-1">{% trans "Bill date" %}</span>
+                <span>{{ expense.bill_date|default:'-' }}</span>
             </div>
-        {% endif %}
-    </div>
-    <div class="text-end">
-        {% if show_bid %}
-            <a href="{% url 'bidding_bid_details' expense.bid.id %}" target="_blank"
+            <div>
+                <span class="small fw-light me-1">{% trans "Paid date" %}</span>
+                <span>{{ expense.date_paid|default:'-' }}</span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Payee" %}</span>
+                <span>{{ expense.payee|default:'-' }}</span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Included VAT" %}</span>
+                <span>{{ expense.amount_vat|default:'-' }}</span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Details" %}</span>
+                <span>{{ expense.details|default:'-' }}</span>
+            </div>
+            {% if show_bid %}
+                <div>
+                    <span class="small fw-light me-1">{% trans "Bid title" %}</span>
+                    <span>{{ expense.bid.title|default:expense.bid.lot.title }}</span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="text-end">
+            {% if show_bid %}
+                <a href="{% url 'bidding_bid_details' expense.bid.id %}" target="_blank"
+                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                    <span><i class="{{ bicons.bidding }}"></i></span>
+                    <span class="ms-1">{% trans "Bid details" %}</span>
+                </a>
+            {% endif %}
+
+            <!-- <a href="{% url 'bidding_expense_edit' expense.id %}"
                 class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                <span><i class="{{ bicons.bidding }}"></i></span>
-                <span class="ms-1">{% trans "Bid details" %}</span>
-            </a>
-        {% endif %}
-        <a href="{% url 'bidding_expense_edit' expense.id %}"
-            class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-            <span><i class="{{ bicons.edit }}"></i></span>
-            <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
-        </a>
-        {% if expense.deletable and manager %}
-            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
-                    data-bs-toggle="modal" data-bs-target="#expenseDeleteModal"
-                    data-amount="{{ expense.amount_paid }}"
-                    data-title="{{ expense.title }}"
-                    data-url="{% url 'bidding_expense_delete' expense.id %}"
-                    >
-                <span><i class="{{ bicons.delete }}"></i></span>
-                <span class="d-none d-md-inline-block ms-1">{% trans 'Delete' %}</span>
-            </button>
-        {% endif %}
+                <span><i class="{{ bicons.edit }}"></i></span>
+                <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
+            </a> -->
+
+            {% if expense.deletable and manager %}
+                <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                        data-bs-toggle="modal" data-bs-target="#expenseDeleteModal"
+                        data-amount="{{ expense.amount_paid }}"
+                        data-title="{{ expense.title }}"
+                        data-url="{% url 'bidding_expense_delete' expense.id %}">
+                    <span><i class="{{ bicons.delete }}"></i></span>
+                    <span class="d-none d-md-inline-block ms-1">{% trans 'Delete expense' %}</span>
+                </button>
+            {% endif %}
+        </div>
     </div>
-</div>
+
+</a>
