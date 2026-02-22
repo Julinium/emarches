@@ -50,7 +50,6 @@ class TaskStatus(models.TextChoices):
     TASK_STARTED   = '20S',   _("Started")
     TASK_FINISHED  = '40E',   _("Finished")
     TASK_CANCELLED = '50X',   _("Cancelled")
-    # TASK_STALLED   = '30S',   _("Stalled")
 
 class ExpenseStatus(models.TextChoices):
     XPS_PENDING   = '10P',   _("Pending")

@@ -13,7 +13,7 @@
         <span class="ms-1">{% trans 'Tender' %}</span>
     </a> -->
 
-    {% if bid.deletable %}
+    {% if bid.deletable and manager %}
         <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
                 data-bs-toggle="modal" data-bs-target="#bidDeleteModal"
                 data-amount="{{ bid.bid_amount }}"

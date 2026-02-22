@@ -539,7 +539,7 @@ class Expense(models.Model):
 
     amount_paid  = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Paid Amount, incl. Taxes"))
     amount_vat   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Taxes Amount"))
-    
+
     payee        = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payee'))
     payee_ice    = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Payee ICE'))
     contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='expenses')

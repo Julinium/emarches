@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block title %}
-    {% trans "Tasks list" %}
+    {% trans "Expenses list" %}
 {% endblock title %}
 
 
@@ -11,11 +11,11 @@
 
     <div class="d-flex align-items-center justify-content-between px-0">
         <div class="">
-            <span class="h3 me-1">{% trans "Tasks list" %}</span>
+            <span class="h3 me-1">{% trans "Expenses list" %}</span>
         </div>
         <div class="d-flex align-items-top">
-            {% include 'bidding/snippets/tasks/task-search-form.html' %}
-            {% include 'bidding/snippets/tasks/task-menu-sort.html' %}
+            {% include 'bidding/snippets/expenses/expense-search-form.html' %}
+            {% include 'bidding/snippets/expenses/expense-menu-sort.html' %}
         </div>
     </div>
 
@@ -28,69 +28,40 @@
             <span class="small text-muted">{% trans "Results are filtered" %}.</span>
         {% endif %}
         <span class="fw-bold">
-            {{ tasks_count }} 
+            {{ expenses_count }} 
         </span>
-        <span class="small text-muted">{% trans "Tasks found" %}.</span>
+        <span class="small text-muted">{% trans "Expenses found" %}.</span>
     </div>
 
     <div class="container py-4 px-0">
-        {% if tasks_count > 0 %}
-            {% if tasks_overdue.all|length != 0 %}
-                <div id="accordionOverdue">
-                    <div class="accordion my-3">
-                        <div class="accordion-item shadow-sm">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#overdueCollapse" aria-expanded="true" aria-controls="overdueCollapse">
-                                    <div class="w-100">
-                                        <span class="">
-                                            <span><i class="{{ bicons.expired }}"></i></span>
-                                            <span class="ms-2 fw-light">{% trans "Return Overdue" %}:</span>
-                                            <span class="ms-1 small">{{ tasks_overdue.all|length }}</span>
-                                        </span>
-                                    </div>
-                                </button>
-                            </h2>
-                                <div id="overdueCollapse" class="accordion-collapse show" data-bs-parent="#accordionOverdue">
-                                    <div class="accordion-body p-0">
-                                        <div class="list-group small mb-0">
-                                            {% for task in tasks_overdue.all %}
-                                                <div class="list-group-item p-0">
-                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
-                                                </div>
-                                            {% empty %}
-                                                <div class="list-group-item p-2 text-secondary">
-                                                    <span class="ms-1">{% trans "None found" %}</span>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
+        {% if expenses_count > 0 %}
 
-            {% if tasks_pending.all|length != 0 %}
+            {% if expenses_pending.all|length != 0 %}
                 <div id="accordionPending">
                     <div class="accordion my-3">
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pendingCollapse" aria-expanded="false" aria-controls="pendingCollapse">
+                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#pendingCollapse" aria-expanded="true" aria-controls="pendingCollapse">
                                     <div class="w-100">
                                         <span class="">                                    
                                             <span><i class="{{ bicons.edit }}"></i></span>
                                             <span class="ms-2 fw-light">{% trans "Pending" %}:</span>
-                                            <span class="ms-1 small">{{ tasks_pending.all|length }}</span>
+                                            <span class="ms-1 small">{{ expenses_pending.all|length }}</span>
                                         </span>
+                                        {% if total_pending != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_pending }}</span>
+                                            </span>
+                                        {% endif %}
                                     </div>
                                 </button>
                             </h2>
-                                <div id="pendingCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionPending">
+                                <div id="pendingCollapse" class="accordion-collapse show" data-bs-parent="#accordionPending">
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
-                                            {% for task in tasks_pending.all %}
+                                            {% for expense in expenses_pending.all %}
                                                 <div class="list-group-item p-0">
-                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                    {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
                                                 <div class="list-group-item p-2 text-secondary">
@@ -105,27 +76,32 @@
                 </div>
             {% endif %}
 
-            {% if tasks_started.all|length != 0 %}
-                <div id="accordionStarted">
+            {% if expenses_paid.all|length != 0 %}
+                <div id="accordionPaid">
                     <div class="accordion my-3">
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#startedCollapse" aria-expanded="false" aria-controls="startedCollapse">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#paidCollapse" aria-expanded="false" aria-controls="paidCollapse">
                                     <div class="w-100">
                                         <span class="">
                                             <span><i class="{{ bicons.started }}"></i></span>
-                                            <span class="ms-2 fw-light">{% trans "Started" %}:</span>
-                                            <span class="ms-1 small">{{ tasks_started.all|length }}</span>
+                                            <span class="ms-2 fw-light">{% trans "Paid" %}:</span>
+                                            <span class="ms-1 small">{{ expenses_paid.all|length }}</span>
                                         </span>
+                                        {% if total_paid != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_paid }}</span>
+                                            </span>
+                                        {% endif %}
                                     </div>
                                 </button>
                             </h2>
-                                <div id="startedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionStarted">
+                                <div id="paidCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionPaid">
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
-                                            {% for task in tasks_started.all %}
+                                            {% for expense in expenses_paid.all %}
                                                 <div class="list-group-item p-0">
-                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                    {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
                                                 <div class="list-group-item p-2 text-secondary">
@@ -140,27 +116,32 @@
                 </div>
             {% endif %}
 
-            {% if tasks_finished.all|length != 0 %}
-                <div id="accordionFinished">
+            {% if expenses_confirmed.all|length != 0 %}
+                <div id="accordionConfirmed">
                     <div class="accordion my-3">
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#finishedCollapse" aria-expanded="false" aria-controls="finishedCollapse">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#confirmedCollapse" aria-expanded="false" aria-controls="confirmedCollapse">
                                     <div class="w-100">
                                         <span class="">
                                             <span><i class="{{ bicons.finished }}"></i></span>
-                                            <span class="ms-2 fw-light">{% trans "Finished" %}:</span>
-                                            <span class="ms-1 small">{{ tasks_finished.all|length }}</span>
+                                            <span class="ms-2 fw-light">{% trans "Confirmed" %}:</span>
+                                            <span class="ms-1 small">{{ expenses_confirmed.all|length }}</span>
                                         </span>
+                                        {% if total_confirmed != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_confirmed }}</span>
+                                            </span>
+                                        {% endif %}
                                     </div>
                                 </button>
                             </h2>
-                                <div id="finishedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionFinished">
+                                <div id="confirmedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionConfirmed">
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
-                                            {% for task in tasks_finished.all %}
+                                            {% for expense in expenses_confirmed.all %}
                                                 <div class="list-group-item p-0">
-                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                    {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
                                                 <div class="list-group-item p-2 text-secondary">
@@ -175,7 +156,7 @@
                 </div>
             {% endif %}
             
-            {% if tasks_cancelled.all|length != 0 %}
+            {% if expenses_cancelled.all|length != 0 %}
                 <div id="accordionCancelled">
                     <div class="accordion my-3">
                         <div class="accordion-item shadow-sm">
@@ -185,17 +166,22 @@
                                         <span class="">
                                             <span><i class="{{ bicons.cancelled }}"></i></span>
                                             <span class="ms-2 fw-light">{% trans "Cancelled" %}:</span>
-                                            <span class="ms-1 small">{{ tasks_cancelled.all|length }}</span>
+                                            <span class="ms-1 small">{{ expenses_cancelled.all|length }}</span>
                                         </span>
+                                        {% if total_cancelled != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-danger">{{ total_cancelled }}</span>
+                                            </span>
+                                        {% endif %}
                                     </div>
                                 </button>
                             </h2>
                                 <div id="cancelledCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionCancelled">
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
-                                            {% for task in tasks_cancelled.all %}
+                                            {% for expense in expenses_cancelled.all %}
                                                 <div class="list-group-item p-0">
-                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                    {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
                                                 <div class="list-group-item p-2 text-secondary">
@@ -210,34 +196,33 @@
                 </div>
             {% endif %}
 
-
             <div id="confirmation-modlas">
 
-                <div id="taskDeleteModal" class="modal fade" 
-                        tabindex="-1" aria-labelledby="taskDeleteModalLabel" 
+                <div id="expenseDeleteModal" class="modal fade" 
+                        tabindex="-1" aria-labelledby="expenseDeleteModalLabel" 
                         aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
-                            <form id="task-delete-form" method="post">
+                            <form id="expense-delete-form" method="post">
                                 {% csrf_token %}
                                 <div class="modal-header">
-                                    <h1 class="modal-title fs-5 text-danger fw-bold" id="taskDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                                    <h1 class="modal-title fs-5 text-danger fw-bold" id="expenseDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="my-2">
                                         <div class="mb-1">
-                                            <span class="small fw-light">{% trans "Due date" %}: </span>
-                                            <span id="task-span-date"></span>
+                                            <span class="small fw-light">{% trans "Amount" %}: </span>
+                                            <span id="expense-span-amount"></span>
                                         </div>
                                         <div class="mb-1">
                                             <span class="small fw-light">{% trans "Title" %}: </span>
-                                            <span id="task-span-title"></span>
+                                            <span id="expense-span-title"></span>
                                         </div>
                                     </div>
                                     
                                     <div class="my-2">
-                                        <span class="text-danger">{% trans "This task, its associated data and files will be permanently deleted." %}</span>
+                                        <span class="text-danger">{% trans "This expense, its associated data and files will be permanently deleted." %}</span>
                                     </div>
 
                                     <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
@@ -264,20 +249,20 @@
 
                 <script>
 
-                    // Task deletion
-                    const taskDeleteModal = document.getElementById('taskDeleteModal');
-                    const taskSpanDate    = document.getElementById('task-span-date');
-                    const taskSpanTitle   = document.getElementById('task-span-title');
-                    const taskDeleteForm  = document.getElementById('task-delete-form');
+                    // Expense deletion
+                    const expenseDeleteModal = document.getElementById('expenseDeleteModal');
+                    const expenseSpanAmount  = document.getElementById('expense-span-amount');
+                    const expenseSpanTitle   = document.getElementById('expense-span-title');
+                    const expenseDeleteForm  = document.getElementById('expense-delete-form');
 
-                    taskDeleteModal.addEventListener('show.bs.modal', function (event) {
+                    expenseDeleteModal.addEventListener('show.bs.modal', function (event) {
                         const button = event.relatedTarget;
 
-                        taskSpanDate.innerText  = button.dataset.date;
-                        taskSpanTitle.innerText = button.dataset.title;
-                        taskDeleteForm.action   = button.dataset.url;
+                        expenseSpanAmount.innerText  = button.dataset.amount;
+                        expenseSpanTitle.innerText   = button.dataset.title;
+                        expenseDeleteForm.action     = button.dataset.url;
                     });
-                    
+
                 </script>
 
             </div>

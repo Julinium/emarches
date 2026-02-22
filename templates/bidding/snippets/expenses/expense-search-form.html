@@ -1,0 +1,112 @@
+{% load i18n paraminos %}
+
+
+<button class="btn btn-light py-1 mx-1" type="button" 
+        data-bs-toggle="modal" data-bs-target="#searchModal"
+        data-bs-toggle="tooltip"
+        title="{% trans 'Serach Expenses' %}">
+    <i class="{{ bicons.search }}"></i>
+</button>
+
+
+<form action="{% url 'bidding_expenses_list' %}?{{ query_string }}&sort={{ query_string.sorter }}"
+      onsubmit="stripEmptyFields(this)">
+    <div class="modal fade" id="searchModal" aria-hidden="true"
+         aria-labelledby="searchModalLabel" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Expenses Search' %}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body pb-0">
+
+                    <div class="row gx-3">
+
+                        <div class="col-12">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
+                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" list="bidders" placeholder="{% trans 'Start Typing' %}" aria-label="search_query">
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Company" %}</span></span>
+                                <select class="form-select" name="company" aria-label="company">
+                                    <option {% if query_dict.company == '' %} selected {% endif %} value="">--</option>
+                                    {% for c in companies %}
+                                        <option {% if query_dict.company == c.id|stringify %} selected {% endif %} value="{{ c.id }}">{{ c.name }} (@{{ c.user }}, {{ c.ice }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Creator" %}</span></span>
+                                <select class="form-select" name="creator" aria-label="creator">
+                                    <option {% if query_dict.creator == '' %} selected {% endif %} value="">--</option>
+                                    {% for member in colleagues %}
+                                        <option value="{{ member.username }}"
+                                                {% if member.username == query_dict.creator %}selected{% endif %}>
+                                            @{{ member.username }}{% if member == user %} ({% trans 'ME' %}){% endif %}
+                                            {% if member.first_name %}: {{ member.first_name }}{% if member.last_name %} {{ member.last_name }}{% endif %}{% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                            
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Amount Min" %}</span></span>
+                                <input type="number" step="any" class="form-control text-end" name="amtn" value="{{ query_dict.amtn }}" placeholder="{% trans 'Min' %}" aria-label="amount_min">
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Amount Max" %}</span></span>
+                                <input type="number" step="any" class="form-control text-end" name="amtx" value="{{ query_dict.amtx }}" placeholder="{% trans 'Max' %}" aria-label="amount_max">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <a href="{% url 'bidding_expenses_list' %}" type="button" class="btn btn-outline-secondary">
+                        <i class="{{ bicons.backspace }} me-1"></i>
+                        {% trans 'Reset' %}
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="{{ bicons.search }} me-1"></i>
+                        {% trans 'Submit' %}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<script>
+    const myModal = document.getElementById('searchModal');
+    myModal.addEventListener('shown.bs.modal', function () {
+        document.getElementById('search_input').focus();
+    });
+
+    function stripEmptyFields(form) {
+        for (const el of form.elements) {
+            if (!el.name) continue;
+            if (el.value.trim() === ""){
+                el.disabled = true;
+            }
+        }
+    }
+</script>
+

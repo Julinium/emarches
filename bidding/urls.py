@@ -5,12 +5,13 @@ from . import views
 
 urlpatterns = [
 
-    path('dashboard',                views.dashboard,    name='bidding_dashboard'),
+    path('dashboard',      views.dashboard,         name='bidding_dashboard'),
 
-    path('tenders/',                 views.tenders_list, name='bidding_tenders_list'),
-    path('bids/',                    views.bids_list,    name='bidding_bids_list'),
-    path('bonds/',                   views.bonds_list,   name='bidding_bonds_list'),
-    path('tasks/',                   views.tasks_list,   name='bidding_tasks_list'),
+    path('tenders/',       views.tenders_list,      name='bidding_tenders_list'),
+    path('bids/',          views.bids_list,         name='bidding_bids_list'),
+    path('bonds/',         views.bonds_list,        name='bidding_bonds_list'),
+    path('tasks/',         views.tasks_list,        name='bidding_tasks_list'),
+    path('expenses/',      views.expenses_list,     name='bidding_expenses_list'),
     
     path('bids/<uuid:pk>/details/',  views.bid_details,  name='bidding_bid_details'),
     path('bids/<uuid:lk>/create/',   views.bid_edit,     name='bidding_bid_create'),

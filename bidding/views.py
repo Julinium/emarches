@@ -760,6 +760,8 @@ def bids_list(request):
             _("Permission denied") + ": " + _(" Team not found"), status=403
         )
 
+    manager = is_active_team_admin(user, team)
+
     if not is_active_team_member(user, team):
         return HttpResponse(_("Permission denied"), status=403)
 
@@ -865,7 +867,6 @@ def bids_list(request):
 
     all_bids = Bid.objects.filter(  
         creator__in=colleagues,
-        # company__in=companies,
     ).prefetch_related(
         "tasks",
         "expenses",  # "contracts",
@@ -899,7 +900,7 @@ def bids_list(request):
 
     context = define_context(request)
 
-    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)  # pyright: ignore[reportPossiblyUnboundVariable]
+    paginator = Paginator(bids, BIDS_ITEMS_PER_PAGE)
     page_number = request.GET["page"] if "page" in request.GET else 1
     if not str(page_number).isdigit():
         page_number = 1
@@ -918,6 +919,7 @@ def bids_list(request):
     context["bid_status_choices"] = bid_status_choices
     context["bid_result_choices"] = bid_result_choices
     context["bond_status_choices"] = bond_status_choices
+    context["manager"] = manager
 
     logger = logging.getLogger("portal")
     logger.info("Bids List view")
@@ -1108,6 +1110,8 @@ def tasks_list(request):
             _("Permission denied") + ": " + _(" Team not found"), status=403
         )
 
+    manager = is_active_team_admin(user, team)
+
     if not is_active_team_member(user, team):
         return HttpResponse(_("Permission denied"), status=403)
     
@@ -1156,15 +1160,12 @@ def tasks_list(request):
                 | Q(bid__lot__tender__title__icontains=q)
                 | Q(bid__lot__tender__reference__icontains=q)
                 | Q(bid__lot__tender__client__name__icontains=q)
-                # | Q(lot__title__icontains=q)
-                # | Q(lot__description__icontains=q)
             )
 
         if "company" in params:
             ff += 1
             company = params["company"]
-            # tasks = tasks.filter(creator__company__id=company)
-            tasks = tasks.filter(creator__companies=company)
+            tasks = tasks.filter(bid__company=company)
 
         if "creator" in params:
             ff += 1
@@ -1190,7 +1191,6 @@ def tasks_list(request):
 
     colleagues = get_colleagues(user)
     all_tasks = Task.objects.filter(
-        # creator__in=colleagues, 
         bid__creator__in=colleagues,
         )
 
@@ -1212,7 +1212,6 @@ def tasks_list(request):
 
     context = define_context(request)
 
-    colleagues = get_colleagues(user)
     companies = Company.objects.filter(user__in=colleagues)
 
     tasks_overdue = tasks.filter(
@@ -1226,8 +1225,6 @@ def tasks_list(request):
     tasks_pending = tasks.filter(
             status=TaskStatus.TASK_PENDING,
             date_due__gt=datetime.now(),
-        # ).exclude(
-        #     date_due__lte=datetime.now(),
         )
 
     tasks_started = tasks.filter(
@@ -1260,11 +1257,179 @@ def tasks_list(request):
     context["colleagues"] = colleagues
     context["companies"] = companies
     context["tasks_count"] = tasks_count
+    context["manager"] = manager
 
     logger = logging.getLogger("portal")
     logger.info("Tasks List view")
 
     return render(request, "bidding/tasks-list.html", context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def expenses_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        return HttpResponse(_("Permission denied"), status=403)
+
+    team = get_team(user)
+    if not team:
+        return HttpResponse(
+            _("Permission denied") + ": " + _(" Team not found"), status=403
+        )
+
+    manager = is_active_team_admin(user, team)
+    
+    if not is_active_team_member(user, team):
+        return HttpResponse(_("Permission denied"), status=403)
+    
+    EXPENSES_ORDERING_FIELD = "date_paid"
+
+    def get_req_params(req):
+        allowed_keys = [
+            "q",
+            "company",
+            "creator",
+            'amtn',
+            'amtx',
+            "page",
+            "sort",
+        ]
+
+        query_dict = {k: v for k, v in req.GET.items() if k in allowed_keys and v != ""}
+        if "sort" not in query_dict:
+            query_dict["sort"] = EXPENSES_ORDERING_FIELD
+
+        query_string = {
+            k: v
+            for k, v in req.GET.items()
+            if k in allowed_keys and v != "" and k != "page"
+        }
+
+        query_unsorted = {
+            k: v
+            for k, v in req.GET.items()
+            if k in allowed_keys and v != "" and k not in ("page", "sort")
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_expenses(expenses, params):
+        ff = 0
+        if not params:
+            return expenses.distinct(), ff
+
+        if "q" in params:
+            ff += 1
+            q = params["q"]
+            expenses = expenses.filter(
+                Q(title__icontains=q)
+                | Q(reference__icontains=q)
+                | Q(bill_ref__icontains=q)
+                | Q(channel__icontains=q)
+                | Q(mean_ref__icontains=q)
+                | Q(payee__icontains=q)
+                | Q(payee_ice__icontains=q)
+                | Q(details__icontains=q)
+                | Q(contact__name__icontains=q)
+                | Q(contact__company__icontains=q)
+                | Q(contact__notes__icontains=q)
+                | Q(bid__title__icontains=q)
+                | Q(bid__lot__tender__title__icontains=q)
+                | Q(bid__lot__tender__reference__icontains=q)
+                | Q(bid__lot__tender__client__name__icontains=q)
+            )
+
+        if "company" in params:
+            ff += 1
+            company = params["company"]
+            expenses = expenses.filter(bid__company=company)
+
+        if "creator" in params:
+            ff += 1
+            creator = params["creator"]
+            expenses = expenses.filter(creator__username=creator)
+
+        if "amtn" in params:
+            ff += 1
+            amtn = params["amtn"]
+            expenses = expenses.filter(amount_paid__gte=amtn)
+
+        if "amtx" in params:
+            ff += 1
+            amtx = params["amtx"]
+            expenses = expenses.filter(amount_paid__lte=amtx)
+
+        return expenses.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context["query_string"] = urlencode(query_string)
+        context["query_unsorted"] = urlencode(query_unsorted)
+        context["query_dict"] = query_dict
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+
+    colleagues = get_colleagues(user)
+    all_expenses = Expense.objects.filter(bid__creator__in=colleagues)
+
+    expenses, filters = filter_expenses(all_expenses, query_dict)
+    query_dict["filters"] = filters
+
+    sort = query_dict["sort"]
+
+    if sort and sort != "":
+        ordering = sort
+    else:
+        ordering = EXPENSES_ORDERING_FIELD
+
+    if ordering[0] == "-":
+        ordering = ordering[1:]
+        expenses = expenses.order_by(F(ordering).asc(nulls_last=True), EXPENSES_ORDERING_FIELD)
+    else:
+        expenses = expenses.order_by(F(ordering).desc(nulls_last=True), EXPENSES_ORDERING_FIELD)
+
+    context = define_context(request)
+
+    companies = Company.objects.filter(user__in=colleagues)
+    
+    expenses_pending = expenses.filter(status=ExpenseStatus.XPS_PENDING)
+    expenses_paid = expenses.filter(status=ExpenseStatus.XPS_PAID)
+    expenses_confirmed = expenses.filter(status=ExpenseStatus.XPS_CONFIRMED)
+    expenses_cancelled = expenses.filter(status=ExpenseStatus.XPS_CANCELLED)
+
+    total_pending = expenses_pending.aggregate(total=Sum("amount_paid"))["total"] or 0
+    total_paid = expenses_paid.aggregate(total=Sum("amount_paid"))["total"] or 0
+    total_confirmed = expenses_confirmed.aggregate(total=Sum("amount_paid"))["total"] or 0
+    total_cancelled = expenses_cancelled.aggregate(total=Sum("amount_paid"))["total"] or 0
+    
+    context["expenses_pending"]   = expenses_pending
+    context["expenses_paid"]      = expenses_paid
+    context["expenses_confirmed"] = expenses_confirmed
+    context["expenses_cancelled"] = expenses_cancelled
+
+    context["total_pending"]   = total_pending
+    context["total_paid"]      = total_paid
+    context["total_confirmed"] = total_confirmed
+    context["total_cancelled"] = total_cancelled
+    
+    expenses_count = expenses_pending.count()  
+    expenses_count += expenses_paid.count()
+    expenses_count += expenses_confirmed.count()
+    expenses_count += expenses_cancelled.count()
+
+    context["colleagues"] = colleagues
+    context["companies"] = companies
+    context["expenses_count"] = expenses_count
+    context["manager"] = manager,
+
+    logger = logging.getLogger("portal")
+    logger.info("Expenses List view")
+
+    return render(request, "bidding/expenses-list.html", context)
 
 
 @login_required(login_url="account_login")
@@ -1317,15 +1482,15 @@ def bid_delete(request, pk=None):
     logger = logging.getLogger("portal")
 
     if not is_active_team_admin(user, team):
-        return HttpResponse(_("Permission denied"), status=403)
+        return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
 
     if request.method == "POST":
         bid = None
         if pk:
             bid = get_object_or_404(Bid, pk=pk)
 
-        if not bid or not is_team_member(bid.creator, team):
-            return HttpResponse(_("Permission denied"), status=403)
+        # if not bid or not is_team_member(bid.creator, team):
+        #     return HttpResponse(_("Permission denied"), status=403)
 
         redir = redirect("bidding_bids_list")
         referer = request.META.get("HTTP_REFERER", None)
@@ -1497,18 +1662,19 @@ def task_delete(request, pk=None):
     logger = logging.getLogger("portal")
 
     if not is_active_team_admin(user, team):
-        return HttpResponse(_("Permission denied"), status=403)
+        return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
 
     if request.method == "POST":
         task = None
         if pk:
             task = get_object_or_404(Task, pk=pk)
-        if not is_team_member(task.creator, team):
-            return HttpResponse(_("Permission denied"), status=403)
+
+        # if not is_team_member(task.creator, team):
+        #     return HttpResponse(_("Permission denied") + ": " + _(" Creator is not a member"), status=403)
 
         bid = task.bid
         if not bid:
-            return HttpResponse(_("Permission denied"), status=403)
+            return HttpResponse(_("Permission denied") + ": " + _(" Related bid not found"), status=403)
 
         redir = redirect("bidding_bid_details", bid.id)
         referer = request.META.get("HTTP_REFERER", None)
@@ -1640,7 +1806,7 @@ def expense_delete(request, pk=None):
         )
 
     if not is_active_team_admin(user, team):
-        return HttpResponse(_("Permission denied"), status=403)
+        return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
 
     logger = logging.getLogger("portal")
 
@@ -1648,12 +1814,13 @@ def expense_delete(request, pk=None):
         expense = None
         if pk:
             expense = get_object_or_404(Expense, pk=pk)
-        if not is_team_member(expense.creator, team):
-            return HttpResponse(_("Permission denied"), status=403)
+
+        # if not is_team_member(expense.creator, team):
+        #     return HttpResponse(_("Permission denied") + ": " + _(" Creator is not a member"), status=403)
 
         bid = expense.bid
         if not bid:
-            return HttpResponse(_("Permission denied"), status=403)
+            return HttpResponse(_("Permission denied") + ": " + _(" Related bid not found"), status=403)
 
         redir = redirect("bidding_bid_details", bid.id)
         referer = request.META.get("HTTP_REFERER", None)

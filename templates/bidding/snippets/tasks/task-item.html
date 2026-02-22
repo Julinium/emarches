@@ -35,7 +35,13 @@
         </div>
         <div>
             <span class="small fw-light me-1">{% trans "Creator" %}</span>
-            <span>{{ task.creator|default:'-' }}</span>
+            <span>
+                {% if task.creator in colleagues %}
+                    {{ task.creator|default:'-' }}
+                {% else %}
+                    -- {% trans "Former member" %} --
+                {% endif %}
+            </span>
         </div>
         <div>
             <span class="small fw-light me-1">{% trans "Assignee" %}</span>
@@ -67,7 +73,7 @@
             <span class="ms-1">{% trans "Edit" %}</span>
         </a>
 
-        {% if task.deletable %}
+        {% if task.deletable and manager %}
             <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
                     data-bs-toggle="modal" data-bs-target="#taskDeleteModal"
                     data-date="{{ task.date_due|default:'-' }}"
