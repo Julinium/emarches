@@ -681,18 +681,20 @@ def tenders_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    # teams = user.teams.all()
     colleagues = get_colleagues(user)
+    companies = Company.objects.filter(user__in=colleagues)
 
     bid_tenders = (
         Tender.objects.filter(
             lots__bids__creator__in=colleagues,
+            lots__bids__company__in=companies,
         )
         .prefetch_related(
             Prefetch(
                 "lots__bids",
                 queryset=Bid.objects.filter(
                     creator__in=colleagues,
+                    company__in=companies,
                 ),
                 to_attr="team_bids",
             ),
@@ -861,7 +863,7 @@ def bids_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     colleagues = get_colleagues(user)
-    companies = Company.objects.filter(user__in=colleagues) 
+    companies = Company.objects.filter(user__in=colleagues)
     
     if companies.count() < 1:
         return HttpResponse(_("No company found !"), status=403)
@@ -1991,3 +1993,4 @@ def bid_file(request, pk=None, ft=None):
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
     # response['Content-Length'] = os.path.getsize(file_path)
     return response
+

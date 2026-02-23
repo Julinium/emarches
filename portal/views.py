@@ -36,7 +36,7 @@ from base.models import (
 from base.texter import normalize_text
 from bidding.models import Bid
 from bidding.secu import get_colleagues
-from nas.models import Download, Favorite, TenderView
+from nas.models import Company, Download, Favorite, TenderView
 
 # Default Settings
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -515,18 +515,19 @@ def tender_details(request, pk=None):
     )
 
     colleagues = get_colleagues(user)
+    companies = Company.objects.filter(user__in=colleagues)
 
     bids = (
-        Bid.objects.filter(lot__tender=tender, creator__in=colleagues)
-        .distinct()
-        .order_by("lot", "bid_amount", "date_submitted")
+        Bid.objects.filter(
+            lot__tender=tender, 
+            creator__in=colleagues,
+            company__in=companies,
+        ).distinct().order_by("lot", "bid_amount", "date_submitted")
     )
 
     context = {
         "tender": tender,
         "link_prefix": LINK_PREFIX,
-        # "total_size": total_size,
-        # "files_info": files_info,
         "dce_modal": DCE_SHOW_MODAL,
         "full_bar_days": full_bar_days,
         "favorited": favorited,
