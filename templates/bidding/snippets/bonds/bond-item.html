@@ -4,91 +4,88 @@
        role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
        class="text-decoration-none text-reset">
 
-        <div>
+        <div id="bid-{{ bid.id }}-digest" class="p-2">
 
-            <div id="bid-{{ bid.id }}-digest" class="p-2">
-
-                <div class="row g-1 my-1">
-                    <div class="col-12 col-md-6 text-start">
-                        <div>
-                            <span data-bs-toggle="tooltip" title="{{ bid.company.name }} | {{ bid.company.ice }}">
-                                <img src="{{ bid.company.logo }}" alt="X"
+            <div class="row g-1 my-1">
+                <div class="col-12 col-md-6 text-start">
+                    <div>
+                        <span data-bs-toggle="tooltip" title="{{ bid.company.name }} | {{ bid.company.ice }}">
+                            <img src="{{ bid.company.logo }}" alt="X"
+                                class="img-fluid rounded rounded-circle" 
+                                style="width: 1.5rem; height: 1.5rem;">
+                            <span class="">{{ bid.company.name }}</span>
+                        </span>
+                        <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
+                        <span class="fw-light" data-bs-toggle="tooltip" title="{{ bid.creator.username }}">
+                            <img src="{{ bid.creator.profile.avatar }}" alt="X" 
                                     class="img-fluid rounded rounded-circle" 
-                                    style="width: 1.5rem; height: 1.5rem;">
-                                <span class="">{{ bid.company.name }}</span>
-                            </span>
-                            <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
-                            <span class="fw-light" data-bs-toggle="tooltip" title="{{ bid.creator.username }}">
-                                <img src="{{ bid.creator.profile.avatar }}" alt="X" 
-                                        class="img-fluid rounded rounded-circle" 
-                                        style="width: 1rem; height: 1rem;">
-                                <span class="small text-secondary">@{{ bid.creator }}</span>
-                            </span>
-                        </div>
-                        <div class="oneline ms-4 text-secondary">
-                            {% if bid.bond_due_date %}
-                                <!-- <span class="small"><i class="{{ bicons.bid }} small text-secondary me-1"></i></span> -->
-                                <span class="small text-secondary me-2 ">{{ bid.bond_due_date.date|default:'-' }}</span>
-                                {% if epoch == 'since' %}
-                                    <span class="badge bg-danger">{{ bid.bond_due_date|timesince }}</span>
-                                {% endif %}
-                                {% if epoch == 'until' %}
-                                    <span class="badge bg-success">{{ bid.bond_due_date|timeuntil }}</span>
-                                {% endif %}
+                                    style="width: 1rem; height: 1rem;">
+                            <span class="small text-secondary">@{{ bid.creator }}</span>
+                        </span>
+                    </div>
+                    <div class="oneline ms-4 text-secondary">
+                        {% if bid.bond_due_date %}
+                            <!-- <span class="small"><i class="{{ bicons.bid }} small text-secondary me-1"></i></span> -->
+                            <span class="small text-secondary me-2 ">{{ bid.bond_due_date.date|default:'-' }}</span>
+                            {% if epoch == 'since' %}
+                                <span class="badge bg-danger">{{ bid.bond_due_date|timesince }}</span>
                             {% endif %}
-                            <!-- <span class="fw-light">
-                                <img src="{{ bid.creator.profile.avatar }}" alt="X" 
-                                        class="img-fluid rounded rounded-circle" 
-                                        style="width: 1rem; height: 1rem;">
-                            </span>
-                            <span class="small text-secondary">{{ bid.creator }}</span> -->
-                        </div>
+                            {% if epoch == 'until' %}
+                                <span class="badge bg-success">{{ bid.bond_due_date|timeuntil }}</span>
+                            {% endif %}
+                        {% endif %}
+                        <!-- <span class="fw-light">
+                            <img src="{{ bid.creator.profile.avatar }}" alt="X" 
+                                    class="img-fluid rounded rounded-circle" 
+                                    style="width: 1rem; height: 1rem;">
+                        </span>
+                        <span class="small text-secondary">{{ bid.creator }}</span> -->
                     </div>
-                    <div class="col-12 col-md-6 text-end">
-                        <div>                        
-                            <!-- <span><i class="{{ bicons.estimate }} small"></i></span> -->
-                            <span class="">{{ bid.bond_amount }}</span>
-                        </div>
-                        <!-- <div>
-                            <span class="badge bg-{{ bid.tag_tint }} small">{{ bid.tag_display }}</span>
-                            <span class="badge fw-light bg-{{ bid.bond_tint }}">
-                                <span><i class="{{ bicons.bond }}"></i></span>
-                                <span class="fw-bold">{{ bid.bond_amount }}</span>
-                            </span>
-                        </div> -->
-                    </div>
-                </div>              
-
-            </div>
-
-            <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
-
-                <div id="bid-details-extended" class="mx-0 mb-3">
-                    <div class="small">
-                        <span class="fw-bold me-1">{% trans "Tender" %}:</span>
-                        <span class="text-secondary">{{ bid.lot.tender.title }}</span>
-                    </div>
-                    {% if bid.lot.tender.lots_count > 1 %}
-                        <div class="small">
-                            <span class="fw-bold me-1">{% trans "Lot" %}: {{ bid.lot.number }}</span>
-                            <span class="text-secondary">: {{ bid.lot.title }}</span>
-                        </div>
-                    {% endif %}
                 </div>
-                
-                <div id="bid-details-actions" class="text-end mx-0 mb-3">
-
-                    <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
-                        <span><i class="{{ bicons.details }}"></i></span>
-                        <span class="ms-1">{% trans 'Bid details' %}</span>
-                    </a>
-                    
+                <div class="col-12 col-md-6 text-end">
+                    <div>                        
+                        <!-- <span><i class="{{ bicons.estimate }} small"></i></span> -->
+                        <span class="">{{ bid.bond_amount }}</span>
+                    </div>
+                    <!-- <div>
+                        <span class="badge bg-{{ bid.tag_tint }} small">{{ bid.tag_display }}</span>
+                        <span class="badge fw-light bg-{{ bid.bond_tint }}">
+                            <span><i class="{{ bicons.bond }}"></i></span>
+                            <span class="fw-bold">{{ bid.bond_amount }}</span>
+                        </span>
+                    </div> -->
                 </div>
-            </div>
+            </div>              
 
         </div>
     
     </a>
+
+    <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
+
+        <div id="bid-details-extended" class="mx-0 mb-3">
+            <div class="small">
+                <span class="fw-bold me-1">{% trans "Tender" %}:</span>
+                <span class="text-secondary">{{ bid.lot.tender.title }}</span>
+            </div>
+            {% if bid.lot.tender.lots_count > 1 %}
+                <div class="small">
+                    <span class="fw-bold me-1">{% trans "Lot" %}: {{ bid.lot.number }}</span>
+                    <span class="text-secondary">: {{ bid.lot.title }}</span>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div id="bid-details-actions" class="text-end mx-0 mb-3">
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
+                <span><i class="{{ bicons.details }}"></i></span>
+                <span class="ms-1">{% trans 'Bid details' %}</span>
+            </a>
+            
+        </div>
+    </div>
+
 
 
 

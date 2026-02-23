@@ -861,12 +861,14 @@ def bids_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     colleagues = get_colleagues(user)
-    companies = Company.objects.filter(user__in=colleagues)  
+    companies = Company.objects.filter(user__in=colleagues) 
+    
     if companies.count() < 1:
         return HttpResponse(_("No company found !"), status=403)
 
-    all_bids = Bid.objects.filter(  
+    all_bids = Bid.objects.filter(
         creator__in=colleagues,
+        company__in=companies,
     ).prefetch_related(
         "tasks",
         "expenses",  # "contracts",
@@ -944,7 +946,7 @@ def bonds_list(request):
     if not is_active_team_member(user, team):
         return HttpResponse(_("Permission denied"), status=403)
     
-    BIDS_ORDERING_FIELD = "bond_due_date"
+    BIDS_ORDERING_FIELD = "-bond_due_date"
 
     def get_req_params(req):
         allowed_keys = [
@@ -1001,7 +1003,13 @@ def bonds_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     colleagues = get_colleagues(user)
-    all_bids = Bid.objects.filter(creator__in=colleagues)
+    companies = Company.objects.filter(user__in=colleagues)  
+
+    # all_bids = Bid.objects.filter(creator__in=colleagues)
+    all_bids = Bid.objects.filter(
+        company__in=companies,
+        creator__in=colleagues,
+        )
 
     bids, filters = filter_bids(all_bids, query_dict)
     query_dict["filters"] = filters
@@ -1020,9 +1028,6 @@ def bonds_list(request):
         bids = bids.order_by(F(ordering).desc(nulls_last=True), BIDS_ORDERING_FIELD)
 
     context = define_context(request)
-
-    colleagues = get_colleagues(user)
-    companies = Company.objects.filter(user__in=colleagues)  
 
     bids_bond_return_overdue = bids.filter(
             bond_amount__isnull=False,
@@ -1190,8 +1195,11 @@ def tasks_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     colleagues = get_colleagues(user)
+    companies = Company.objects.filter(user__in=colleagues)  
+
     all_tasks = Task.objects.filter(
         bid__creator__in=colleagues,
+        bid__company__in=companies,
         )
 
     tasks, filters = filter_tasks(all_tasks, query_dict)
@@ -1212,7 +1220,6 @@ def tasks_list(request):
 
     context = define_context(request)
 
-    companies = Company.objects.filter(user__in=colleagues)
 
     tasks_overdue = tasks.filter(
             date_due__lte=datetime.now(),
@@ -1374,7 +1381,12 @@ def expenses_list(request):
     query_dict, query_string, query_unsorted = get_req_params(request)
 
     colleagues = get_colleagues(user)
-    all_expenses = Expense.objects.filter(bid__creator__in=colleagues)
+    companies = Company.objects.filter(user__in=colleagues)  
+
+    all_expenses = Expense.objects.filter(
+        bid__creator__in=colleagues,
+        bid__company__in=companies,
+        )
 
     expenses, filters = filter_expenses(all_expenses, query_dict)
     query_dict["filters"] = filters
@@ -1393,8 +1405,6 @@ def expenses_list(request):
         expenses = expenses.order_by(F(ordering).desc(nulls_last=True), EXPENSES_ORDERING_FIELD)
 
     context = define_context(request)
-
-    companies = Company.objects.filter(user__in=colleagues)
     
     expenses_pending = expenses.filter(status=ExpenseStatus.XPS_PENDING)
     expenses_paid = expenses.filter(status=ExpenseStatus.XPS_PAID)
