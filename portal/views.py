@@ -471,7 +471,7 @@ def tender_details(request, pk=None):
             "lots__meetings",
             "lots__samples",
             "lots__visits",
-            "lots__bids",
+            # "lots__bids",
             # "bids",
         ),
         id=pk,
