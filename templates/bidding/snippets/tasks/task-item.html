@@ -23,7 +23,8 @@
     </div>
 
     <div id="task-{{ task.id }}-collapse" class="collapse p-2">
-        <div id="">
+
+        <div id="task-{{ task.id }}-extra-info">
             <div>
                 <span class="small fw-light me-1">{% trans "Status" %}</span>
                 <span>{{ task.get_status_display|default:'-' }}</span>
@@ -57,7 +58,8 @@
                 </div>
             {% endif %}
         </div>
-        <div class="text-end">
+
+        <div id="task-{{ task.id }}-actions" class="text-end">
             {% if show_bid %}
                 <a href="{% url 'bidding_bid_details' task.bid.id %}" target="_blank"
                     class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
@@ -66,11 +68,13 @@
                 </a>
             {% endif %}
 
-            <!-- <a href="{% url 'bidding_task_edit' task.id %}"
-                class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                <span><i class="{{ bicons.edit }}"></i></span>
-                <span class="ms-1">{% trans "Edit" %}</span>
-            </a> -->
+            {% if not show_bid %}
+                <a href="{% url 'bidding_task_edit' task.id %}"
+                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                    <span><i class="{{ bicons.edit }}"></i></span>
+                    <span class="ms-1">{% trans "Edit task" %}</span>
+                </a>
+            {% endif %}
 
             {% if task.deletable and manager %}
                 <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
@@ -84,6 +88,7 @@
                 </button>
             {% endif %}
         </div>
+
     </div>
 
 </a>

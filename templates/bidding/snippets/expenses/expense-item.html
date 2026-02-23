@@ -55,11 +55,13 @@
                 </a>
             {% endif %}
 
-            <!-- <a href="{% url 'bidding_expense_edit' expense.id %}"
-                class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                <span><i class="{{ bicons.edit }}"></i></span>
-                <span class="d-none d-md-inline-block ms-1">{% trans "Edit" %}</span>
-            </a> -->
+            {% if not show_bid %}
+                <a href="{% url 'bidding_expense_edit' expense.id %}"
+                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                    <span><i class="{{ bicons.edit }}"></i></span>
+                    <span class="d-none d-md-inline-block ms-1">{% trans "Edit expense" %}</span>
+                </a>
+            {% endif %}
 
             {% if expense.deletable and manager %}
                 <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"

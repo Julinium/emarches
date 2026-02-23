@@ -6,8 +6,8 @@ from . import views
 urlpatterns = [
     
     path('',                            views.tender_list,              name='portal_tender_list'),
-    path('chrono/<str:ch>/',            views.tender_details_chrono,    name='portal_tender_detail_chrono'),
-    path('details/<uuid:pk>/',          views.tender_details,           name='portal_tender_detail'),
+    path('chrono/<str:ch>/',            views.tender_details_chrono,    name='portal_tender_chrono'),
+    path('details/<uuid:pk>/',          views.tender_details,           name='portal_tender_details'),
     path('dce/<uuid:pk>/<str:fn>/',     views.tender_get_file,          name='portal_tender_get_file'),
 
     path('clients/',                    views.client_list,              name='portal_client_list'),

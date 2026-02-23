@@ -445,7 +445,7 @@ def tender_details_chrono(request, ch=None):
 
     # if not tender : return HttpResponse(trans("Not found"), status=404)
 
-    return redirect("portal_tender_detail", tender.id)
+    return redirect("portal_tender_details", tender.id)
 
 
 @login_required(login_url="account_login")

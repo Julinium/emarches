@@ -42,7 +42,7 @@
         <div class="container py-4 px-0">
             {% for tender in page_obj %}
                 <a class="text-decoration-none text-reset" target="_blank"
-                   href="{% url 'portal_tender_detail' tender.id %}">                                               
+                   href="{% url 'portal_tender_details' tender.id %}">                                               
                     <div class="card shadow mb-4" id="t-{{ tender.chrono }}-top">
                         
                         <div class="card-header p-2">

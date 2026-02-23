@@ -108,7 +108,7 @@
                         <div class="list-group">
                             {% for bid in bidder.tenders.all %}
                                     <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                        href="{% url 'portal_tender_detail' bid.opening.tender.id %}#resultsBookmark">
+                                        href="{% url 'portal_tender_details' bid.opening.tender.id %}#resultsBookmark">
                                         <div>
                                             <span class="small">{{ bid.opening.date }}</span>
                                             <span class="small">
@@ -161,7 +161,7 @@
                         <div class="list-group">
                             {% for opening, lots in grouped_ad_rej.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
                                     <div class="fw-light small">{{ opening.date }}</div>
                                     <div class="twolines">
                                         <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
@@ -213,7 +213,7 @@
                         <div class="list-group">
                             {% for opening, lots in grouped_ad_acc.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
                                     <div class="fw-light small">{{ opening.date }}</div>
                                     <div class="twolines">
                                         <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
@@ -265,7 +265,7 @@
                         <div class="list-group">
                             {% for opening, lots in grouped_ad_res.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
                                     <div class="fw-light small">{{ opening.date }}</div>
                                     <div class="twolines">
                                         <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
@@ -321,7 +321,7 @@
                         <div class="list-group">
                             {% for opening, lots in grouped_tech_rej.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
                                     <div class="fw-light small">{{ opening.date }}</div>
                                     <div class="twolines">
                                         <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
@@ -378,7 +378,7 @@
                         <div class="list-group">
                             {% for opening, depos in grouped_selects.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
                                     <div class="fw-light small">{{ opening.date }}</div>
                                     <div class="twolines">
                                         <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
@@ -444,7 +444,7 @@
                         <div class="list-group">
                             {% for opening, depos in grouped_winners.items %}
                                 <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                                    href="{% url 'portal_tender_detail' opening.tender.id %}#resultsBookmark">
+                                    href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
                                     <div class="fw-light small">{{ opening.date }}</div>
                                     <div class="twolines">
                                         <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
