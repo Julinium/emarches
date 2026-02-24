@@ -419,9 +419,6 @@ def tender_list(request):
             page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
-    # for t in page_obj:
-    #     t.fsize = t.file_size or None
-
     context["page_obj"] = page_obj
     context["colleagues"] = colleagues
 
@@ -480,30 +477,6 @@ def tender_details(request, pk=None):
     if not tender:
         return HttpResponse(trans("Not found"), status=404)
 
-    # files_list = []
-    # total_size = 0
-    # dce_dir = os.path.join(
-    #     os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
-    #     settings.DL_PATH_PREFIX + tender.chrono,
-    # )
-    # if os.path.exists(dce_dir):
-    #     files_list = os.listdir(dce_dir)
-
-    # files_info = []
-    # if len(files_list) > 0:
-    #     for entry in files_list:
-    #         full_path = os.path.join(dce_dir, entry)
-    #         if os.path.exists(full_path):
-    #             if os.path.isfile(full_path):
-    #                 sizens = os.path.getsize(full_path)
-    #                 total_size += sizens
-    #                 files_info.append({"name": entry, "size": sizens})
-
-    # total_size = 0
-    # for f in tender.files_info:
-    #     total_size += f.get("size", 0)
-
-    # files_count = len(files_info)
     favorited = tender.favorites.filter(user=user).first()
 
     pro_context = portal_context(request)
@@ -707,15 +680,12 @@ def tender_favorite_list(request):
     if not user or not user.is_authenticated:
         return HttpResponse(trans("Permission denied"), status=403)
 
-    # us = get_user_settings(request)
     pro_context = portal_context(request)
     us = pro_context["user_settings"]
     if us:
         TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
         TENDERS_ORDERING_FIELD = us.tenders_ordering_field
         TENDERS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-        # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
-        # SHOW_CANCELLED = us.tenders_show_cancelled
 
     sort = request.GET.get("sort", TENDERS_ORDERING_FIELD)
     page = request.GET.get("page", None)
@@ -731,8 +701,6 @@ def tender_favorite_list(request):
         ordering = []
 
     ordering.append("id")
-
-    # faved_ids = user.favorites.values_list('tender', flat=True)
 
     pontext = portal_context(request)
     faved_ids = pontext.get("faved_ids", None)
