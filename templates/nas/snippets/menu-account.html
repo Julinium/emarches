@@ -8,18 +8,18 @@
     </a>
     <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
 
-        <li class="">
+        <!-- <li class="">
             <a href="{% url 'nas_profile_view' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.profile }} me-2"></i></span>
                 <span class="">{% trans "Profile" %}</span>
             </a>
-        </li>
-        <li class="">
+        </li> -->
+        <!-- <li class="">
             <a href="{% url 'nas_user_settings' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.settings }} me-2"></i></span>
                 <span class="">{% trans "Preferences" %}</span>
             </a>
-        </li>
+        </li> -->
         <!-- <li class="">
             <a href="{% url 'nas_tune_notifications' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.notification }} me-2"></i></span>
@@ -27,14 +27,7 @@
             </a>
         </li> -->
 
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a href="{% url 'nas_company_list' %}" class="p-2 dropdown-item">
-                <span><i class="{{ bicons.company }} me-2"></i></span>
-                <span class="">{% trans "Companies" %}</span>
-            </a>
-        </li>
+        <!-- <li><hr class="dropdown-divider"></li> -->
 
         <li class="">
             <a href="{% url 'bidding_team_recap' %}" class="p-2 dropdown-item">
@@ -44,11 +37,16 @@
         </li>
 
         <li class="">
-            <a href="#" class="p-2 dropdown-item">
+            <a href="{% url 'nas_company_list' %}" class="p-2 dropdown-item">
+                <span><i class="{{ bicons.company }} me-2"></i></span>
+                <span class="">{% trans "Companies" %}</span>
+            </a>
+        </li>
+
+        <li class="">
+            <a href="#" class="p-2 dropdown-item text-muted">
+                <i class="{{ bicons.deadline }} text-danger"></i>
                 <span><i class="{{ bicons.subscribe }} me-2"></i></span>
-                <span class="badge bg-danger fw-light">
-                    <i class="{{ bicons.deadline }}"></i>
-                </span>
                 <span class="">{% trans "Subscritption" %}</span>
             </a>
         </li>
@@ -72,18 +70,26 @@
         <li><hr class="dropdown-divider"></li>
     
         <li>
+            <a href="#" class="p-2 dropdown-item text-muted">
+                <i class="{{ bicons.deadline }} text-danger"></i>
+                <span><i class="{{ bicons.insights }} me-2"></i></span>
+                <span class="">{% trans "Stats" %}</span>
+            </a>
+        </li>
+    
+        <!-- <li>
             <a href="{% url 'account_change_password' %}" class="p-2 dropdown-item">
                 <span><i class="{{ bicons.password }} me-2"></i></span>
                 <span class="">{% trans "Password" %}</span>
             </a>
-        </li>
+        </li> -->
 
-        <li>
+        <!-- <li>
             <a href="{% url 'account_logout' %}" class="p-2 dropdown-item text-danger fw-bold">
                 <span><i class="{{ bicons.leave }} me-2"></i></span>
                 <span class="">{% trans "Sign Out" %}</span>
             </a>
-        </li>
+        </li> -->
 
     </ul>
 </li>
