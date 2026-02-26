@@ -14,97 +14,31 @@ class JsonFormatter(logging.Formatter):
             "time": self.formatTime(record),
             "level": record.levelname,
             "message": record.getMessage(),
-            "logger": record.name,
+            # "logger": record.name,
             # "file": record.pathname,
-            # "line": record.lineno,
+            "line": record.lineno,
         }
 
-        if hasattr(record, "extra"):
-            log_data.update(record.extra)
+        if record.pathname.startswith(str(BASE_DIR)):
+            relative_path = os.path.relpath(record.pathname, BASE_DIR)
+        else:
+            relative_path = record.pathname
+            
+        log_data["file"] = relative_path
 
-        try: context = get_request_context()
-        except: context = None
+        def get_client_ip(request):
+            x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+            if x_forwarded_for: return x_forwarded_for.split(",")[0].strip()
+            else: return request.META.get("REMOTE_ADDR")
 
-        # data = {
-        #     "ip": get_client_ip(request), 
-        #     "user_agent": request.META.get("HTTP_USER_AGENT", ""), 
-        #     "method": request.method, 
-        #     "path": request.path, 
-        #     "full_path": request.get_full_path(), 
-        #     "host": request.get_host(), 
-        #     "is_secure": request.is_secure(), 
-        #     "referer": request.META.get("HTTP_REFERER"), 
-        #     "accept_language": request.META.get("HTTP_ACCEPT_LANGUAGE"), 
-        # }
-
-        if context:
-            log_data.update({
-                "request_id": context.get("request_id"),
-                "ip": context.get("ip"),
-                "user_id": context.get("user_id"),
-                "user_agent": context.get("user_agent"),
-                "query_dict": context.get("query_dict"),
-                "status_code": context.get("status_code"),
-            })
+        request = getattr(record, "request", None)
+        if request:
+            log_data["user_id"] = request.user.id if request.user.is_authenticated else "--"
+            log_data["ip_address"] = get_client_ip(request)
+            log_data["proxies"] = request.META.get("HTTP_X_FORWARDED_FOR", "--")
+            log_data["user_agent"] = request.META.get("HTTP_USER_AGENT", "--")
+            log_data["referer"] = request.META.get("HTTP_REFERER", "--")
+            log_data["full_path"] = request.get_full_path()
 
         return json.dumps(log_data, ensure_ascii=False, default=str)
 
-
-# Full logging config for Django
-LOGGING_CONFIG = {
-    'version': 1,
-    'disable_existing_loggers': False,  # Keep Django's default loggers
-
-    'formatters': {
-        'verbose': {
-            'format': '[{asctime}][{levelname}][{module}] {process:d}x{thread:d}: {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {asctime} {message}',
-            'style': '{',
-        },
-        "json": {
-            "()": JsonFormatter,
-        },
-    },
-
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'portal_file': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/portal.log'),
-            'maxBytes': 1024*1024*16,
-            'backupCount': 20,
-            'formatter': 'json',
-        },
-        'request_file': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs/requests.log'),
-            'maxBytes': 1024*1024*32,
-            'backupCount': 20,
-            'formatter': 'verbose',
-        },
-    },
-
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django.request': {
-            'handlers': ['request_file', 'console'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'portal': {  # Your app
-            'handlers': ['portal_file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}

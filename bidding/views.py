@@ -49,6 +49,8 @@ SHOW_INVITATIONS = True
 INVITATION_EXPIRY_HOURS = 48
 SAFE_INPUT_RE = re.compile(r"^[a-zA-Z0-9_.@-]+$")
 
+logger_portal = logging.getLogger("portal")
+
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -74,7 +76,7 @@ def invitation_create(request, tk=None):
     if not is_active_team_admin(user, team):
         return HttpResponse(_("Permission denied"), status=403)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     form = InvitationForm(request.POST)
     if form.is_valid():
@@ -89,11 +91,16 @@ def invitation_create(request, tk=None):
                 obj.expiry = datetime.now() + timedelta(hours=INVITATION_EXPIRY_HOURS)
                 obj.sent_on = datetime.now()
                 obj.save()
-                logger.info("Invitation created")
+                logger_portal.info("Invitation created", extra={
+                    "request": request, 
+                    "model": "invitation",
+                    "operation": "create",
+                    "instance": obj.id,
+                    })
                 messages.success(request, _("Invitation created"))
 
         except Exception as xc:
-            logger.info(f"Exception creating Invitation: {str(xc)}")
+            logger_portal.exception("Exception creating Invitation", extra={"request": request})
             return HttpResponse(_("Server error raised"), status=500)
     else:
         return HttpResponse(_("Bad request"), status=405)
@@ -130,18 +137,23 @@ def invitation_cancel(request, pk=None):
     if invitation.expired:
         return HttpResponse(_("Already expired"), status=405)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     try:
         invitation.cancelled = True
         # invitation.update(cancelled = True)
         invitation.save()
-        logger.info("Invitation cancelled")
+        logger_portal.info("Invitation cancelled", extra={
+            "request": request, 
+            "model": "invitation",
+            "operation": "update",
+            "instance": invitation.id,
+            })
         messages.success(request, _("Invitation cancelled successfully"))
         # return HttpResponse(status=200)
 
     except Exception as xc:
-        logger.info(f"Exception Cancelling invitation: {str(xc)}")
+        logger_portal.exception("Exception Cancelling invitation", extra={"request": request})
         return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
@@ -182,7 +194,7 @@ def invitation_accept(request, pk=None):
             status=405,
         )
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     confirmed = request.POST.get("confirmed", None)
     if confirmed != "know":
@@ -205,7 +217,12 @@ def invitation_accept(request, pk=None):
                     invitation.reply = InvitationReplies.INV_ACCEPTED
                     invitation.reply_on = datetime.now()
                     invitation.save()
-                    logger.info("Invitation acceptance succeeded")
+                    logger_portal.info("Invitation acceptance succeeded", extra={
+                        "request": request, 
+                        "model": "invitation",
+                        "operation": "update",
+                        "instance": invitation.id,
+                        })
                     messages.success(
                         request,
                         _("You now are a member of the team")
@@ -215,13 +232,13 @@ def invitation_accept(request, pk=None):
                         request, _("Ask a team Manager to activate your membership")
                     )
             except Exception as xs:
-                logger.info(f"Deleted user membership instances: {deleted_ms}")
-                logger.info(f"Invitation acceptance failed: {str(xs)}")
+                logger_portal.info(f"Deleted user membership instances: {deleted_ms}", extra={"request": request})
+                logger_portal.exception("Invitation acceptance failed", extra={"request": request})
                 return HttpResponse(_("Server error raised"), status=500)
 
         except Exception as xc:
-            logger.info(f"Exception Cancelling invitation: {str(xc)}")
-            return HttpResponse(_("Server error raised") + f": {str(xc)}", status=500)
+            logger_portal.exception("Exception Cancelling invitation", extra={"request": request})
+            return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
 
@@ -325,8 +342,8 @@ def team_recap(request):
         "expiry_hours": INVITATION_EXPIRY_HOURS,
     }
 
-    logger = logging.getLogger("portal")
-    logger.info("Team members List view")
+    #logger = logging.getLogger("portal")
+    logger_portal.info("Team members List view", extra={"request": request})
 
     return render(request, "bidding/team-recap.html", context)
 
@@ -417,18 +434,23 @@ def member_disable(request, uk=None):
     if not is_active_team_member(member, team):
         return HttpResponse(_("Bad request") + ": " + _("Already disabled"), status=405)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     try:
         um = update_membership(user, member, "disable")
         if um == "disable":
-            logger.info("Member disabled successfully")
+            logger_portal.info("Member disabled successfully", extra={
+                "request": request, 
+                "model": "member",
+                "operation": "update",
+                "instance": member.id,
+                })
             messages.success(request, _("Member disabled successfully"))
         else:
             return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception Disabling member: {str(xc)}")
+        logger_portal.exception("Exception Disabling member", extra={"request": request})
         return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
@@ -458,19 +480,24 @@ def member_enable(request, uk=None):
     if is_active_team_member(member, team):
         return HttpResponse(_("Bad request") + ": " + _("Already enabled"), status=405)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     try:
         um = update_membership(user, member, "enable")
         if um == "enable":
-            logger.info("Member enabled successfully")
+            logger_portal.info("Member enabled successfully", extra={
+                "request": request, 
+                "model": "member",
+                "operation": "update",
+                "instance": member.id,
+                })
             messages.success(request, _("Member enabled successfully"))
         else:
             return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception Enabling member: {str(xc)}")
-        return HttpResponse(_("Server error raised") + ": " + f" {str(xc)}", status=500)
+        logger_portal.exception("Exception Enabling member", extra={"request": request})
+        return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
 
@@ -499,19 +526,24 @@ def member_bossify(request, uk=None):
     if is_team_admin(member, team):
         return HttpResponse(_("Bad request") + ": " + _("Already manager"), status=405)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     try:
         um = update_membership(user, member, "bossify")
         if um == "bossify":
-            logger.info("Member made manager successfully")
+            logger_portal.info("Member made manager successfully", extra={
+                "request": request, 
+                "model": "member",
+                "operation": "update",
+                "instance": member.id,
+                })
             messages.success(request, _("Member made manager successfully"))
         else:
             return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception making manager a member: {str(xc)}")
-        return HttpResponse(_("Server error raised") + ": " + f" {str(xc)}", status=500)
+        logger_portal.exception("Exception making manager a member", extra={"request": request})
+        return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
 
@@ -542,19 +574,24 @@ def member_debossify(request, uk=None):
             _("Bad request") + ": " + _("Already not manager"), status=405
         )
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     try:
         um = update_membership(user, member, "debossify")
         if um == "debossify":
-            logger.info("Member made not manager successfully")
+            logger_portal.info("Member made not manager successfully", extra={
+                "request": request, 
+                "model": "member",
+                "operation": "update",
+                "instance": member.id,
+                })
             messages.success(request, _("Member made not manager successfully"))
         else:
             return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception making not manager a member: {str(xc)}")
-        return HttpResponse(_("Server error raised") + ": " + f" {str(xc)}", status=500)
+        logger_portal.exception(f"Exception making not manager a member", extra={"request": request})
+        return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
 
@@ -583,19 +620,24 @@ def member_fire(request, uk=None):
     if not is_team_member(member, team):
         return HttpResponse(_("Bad request") + ": " + _("Not a member"), status=405)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     try:
         um = update_membership(user, member, "fire")
         if um == "fire":
-            logger.info("Member fired successfully")
+            logger_portal.info("Member fired successfully", extra={
+                "request": request, 
+                "model": "member",
+                "operation": "update",
+                "instance": member.id,
+                })
             messages.success(request, _("Member fired successfully"))
         else:
             return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
-        logger.info(f"Exception firing a member: {str(xc)}")
-        return HttpResponse(_("Server error raised") + ": " + f" {str(xc)}", status=500)
+        logger_portal.exception("Exception firing a member", extra={"request": request})
+        return HttpResponse(_("Server error raised"), status=500)
 
     return redirect("bidding_team_recap")
 
@@ -742,8 +784,8 @@ def tenders_list(request):
 
     context["page_obj"] = page_obj
 
-    logger = logging.getLogger("portal")
-    logger.info("Bid Tenders List view")
+    #logger = logging.getLogger("portal")
+    logger_portal.info("Bid Tenders List view", extra={"request": request})
 
     return render(request, "bidding/tenders-list.html", context)
 
@@ -925,8 +967,8 @@ def bids_list(request):
     context["bond_status_choices"] = bond_status_choices
     context["manager"] = manager
 
-    logger = logging.getLogger("portal")
-    logger.info("Bids List view")
+    #logger = logging.getLogger("portal")
+    logger_portal.info("Bids List view", extra={"request": request})
 
     return render(request, "bidding/bids-list.html", context)
 
@@ -1097,8 +1139,8 @@ def bonds_list(request):
     context["companies"] = companies
     context["bonds_count"] = bonds_count
 
-    logger = logging.getLogger("portal")
-    logger.info("Bonds List view")
+    #logger = logging.getLogger("portal")
+    logger_portal.info("Bonds List view", extra={"request": request})
 
     return render(request, "bidding/bonds-list.html", context)
 
@@ -1268,8 +1310,8 @@ def tasks_list(request):
     context["tasks_count"] = tasks_count
     context["manager"] = manager
 
-    logger = logging.getLogger("portal")
-    logger.info("Tasks List view")
+    #logger = logging.getLogger("portal")
+    logger_portal.info("Tasks List view", extra={"request": request})
 
     return render(request, "bidding/tasks-list.html", context)
 
@@ -1438,8 +1480,8 @@ def expenses_list(request):
     context["expenses_count"] = expenses_count
     context["manager"] = manager
 
-    logger = logging.getLogger("portal")
-    logger.info("Expenses List view")
+    #logger = logging.getLogger("portal")
+    logger_portal.info("Expenses List view", extra={"request": request})
 
     return render(request, "bidding/expenses-list.html", context)
 
@@ -1491,7 +1533,7 @@ def bid_delete(request, pk=None):
             _("Permission denied") + ": " + _(" Team not found"), status=403
         )
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     if not is_active_team_admin(user, team):
         return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
@@ -1530,14 +1572,20 @@ def bid_delete(request, pk=None):
             return redir
 
         try:
+            ex_id = bid.id
             bid.delete()
             messages.success(request, _("Bid deleted successfully"))
 
-            logger.info("Bid delete successful")
+            logger_portal.info("Bid delete successful", extra={
+                "request": request, 
+                "model": "bid",
+                "operation": "delete",
+                "instance": ex_id,
+                })
             return redirect("bidding_bids_list")
 
         except Exception as xc:
-            logger.error(f"Bid delete unsuccessful: {str(xc)}")
+            logger_portal.exception(f"Bid delete unsuccessful", extra={"request": request})
             return HttpResponse(_("Permission denied"), status=403)
 
     return HttpResponse(_("Bad request"), status=405)
@@ -1671,7 +1719,7 @@ def task_delete(request, pk=None):
             _("Permission denied") + ": " + _(" Team not found"), status=403
         )
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     if not is_active_team_admin(user, team):
         return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
@@ -1710,13 +1758,19 @@ def task_delete(request, pk=None):
             return redir
 
         try:
+            ex_id = task.id
             task.delete()
             messages.success(request, _("Task deleted successfully"))
-            logger.info("Task delete: successful")
+            logger_portal.info("Task delete: successful", extra={
+                "request": request, 
+                "model": "task",
+                "operation": "delete",
+                "instance": ex_id,
+                })
             return redir
 
         except Exception as xc:
-            logger.error(f"Task delete unsuccessful: {str(xc)}")
+            logger_portal.exception(f"Task delete unsuccessful", extra={"request": request})
             return HttpResponse(_("Permission denied"), status=403)
 
     return HttpResponse(_("Bad request"), status=405)
@@ -1820,7 +1874,7 @@ def expense_delete(request, pk=None):
     if not is_active_team_admin(user, team):
         return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
 
-    logger = logging.getLogger("portal")
+    #logger = logging.getLogger("portal")
 
     if request.method == "POST":
         expense = None
@@ -1856,13 +1910,19 @@ def expense_delete(request, pk=None):
             return redir
 
         try:
+            ex_id = expense.id
             expense.delete()
             messages.success(request, _("Expense deleted successfully"))
-            logger.info("Expense delete: successful")
+            logger_portal.info("Expense delete: successful", extra={
+                "request": request, 
+                "model": "expense",
+                "operation": "delete",
+                "instance": ex_id,
+                })
             return redir
 
         except Exception as xc:
-            logger.error(f"Expense delete unsuccessful: {str(xc)}")
+            logger_portal.exception(f"Expense delete unsuccessful", extra={"request": request})
             return HttpResponse(_("Permission denied"), status=403)
 
     return HttpResponse(_("Bad request"), status=405)
@@ -1993,4 +2053,7 @@ def bid_file(request, pk=None, ft=None):
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
     # response['Content-Length'] = os.path.getsize(file_path)
     return response
+
+
+
 

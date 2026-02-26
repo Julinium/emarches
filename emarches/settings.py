@@ -231,8 +231,10 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-LOGIN_REDIRECT_URL = 'nas_profile_view'
-LOGOUT_REDIRECT_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'bidding_team_recap'
+# LOGIN_REDIRECT_URL = 'nas_profile_view'
+# LOGOUT_REDIRECT_URL = 'account_login'
+LOGOUT_REDIRECT_URL = 'base_home'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 SOCIALACCOUNT_AUTO_SIGNUP = True
@@ -315,7 +317,7 @@ LOGGING = {
         'portal_file': {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/portal.log'),
-            'maxBytes': 1024*1024*16,
+            'maxBytes': 1024*1024*32,
             'backupCount': 20,
             'formatter': 'json',
         },
