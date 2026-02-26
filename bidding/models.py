@@ -180,10 +180,10 @@ class Bid(models.Model):
     bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, default=BondStatus.BOND_PREPARING, verbose_name=_('Bond Status'))
     bond_due_date   = models.DateTimeField(blank=True, null=True, verbose_name="Bond Due Date")
-    file_bond       = models.FileField(upload_to='bidding/bonds/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
+    file_bond       = models.FileField(upload_to='bidding/bond/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
 
     file_submitted  = models.FileField(upload_to='bidding/submitted/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Submission file"))
-    file_receipt    = models.FileField(upload_to='bidding/receipts/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
+    file_receipt    = models.FileField(upload_to='bidding/receipt/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Receipt file"))
 
     result          = models.CharField(max_length=16, choices=BidResults.choices, default=BidResults.BID_UNKNOWN, verbose_name=_('Result'))
 
@@ -434,6 +434,16 @@ class Bid(models.Model):
     @property
     def expenses_sum(self):
         return self.expenses.aggregate(total=Sum('amount_paid'))['total'] or 0
+
+    @property
+    def files_count(self):
+        fc = 0
+        if self.file_bond : fc += 1
+        if self.file_receipt : fc += 1
+        if self.file_submitted : fc += 1
+        return fc
+
+
 
 
 class Contract(models.Model):

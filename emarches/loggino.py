@@ -5,6 +5,8 @@ from pathlib import Path
 
 from django.conf import settings
 
+from base.helper import get_client_ip
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -14,9 +16,7 @@ class JsonFormatter(logging.Formatter):
             "time": self.formatTime(record),
             "level": record.levelname,
             "message": record.getMessage(),
-            # "logger": record.name,
-            # "file": record.pathname,
-            "line": record.lineno,
+            "logger": record.name,
         }
 
         if record.pathname.startswith(str(BASE_DIR)):
@@ -25,11 +25,15 @@ class JsonFormatter(logging.Formatter):
             relative_path = record.pathname
             
         log_data["file"] = relative_path
+        log_data["line"] = record.lineno
+        
+        model = getattr(record, "model", None)
+        operation = getattr(record, "operation", None)
+        instance = getattr(record, "instance", None)
 
-        def get_client_ip(request):
-            x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
-            if x_forwarded_for: return x_forwarded_for.split(",")[0].strip()
-            else: return request.META.get("REMOTE_ADDR")
+        if model: log_data["model"] = model
+        if operation: log_data["operation"] = operation
+        if instance: log_data["instance"] = instance
 
         request = getattr(record, "request", None)
         if request:

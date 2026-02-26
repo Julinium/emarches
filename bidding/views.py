@@ -1867,22 +1867,15 @@ def expense_delete(request, pk=None):
 
     team = get_team(user)
     if not team:
-        return HttpResponse(
-            _("Permission denied") + ": " + _(" Team not found"), status=403
-        )
+        return HttpResponse(_("Permission denied") + ": " + _(" Team not found"), status=403)
 
     if not is_active_team_admin(user, team):
         return HttpResponse(_("Permission denied") + ": " + _(" Managers only"), status=403)
-
-    #logger = logging.getLogger("portal")
 
     if request.method == "POST":
         expense = None
         if pk:
             expense = get_object_or_404(Expense, pk=pk)
-
-        # if not is_team_member(expense.creator, team):
-        #     return HttpResponse(_("Permission denied") + ": " + _(" Creator is not a member"), status=403)
 
         bid = expense.bid
         if not bid:
@@ -1904,9 +1897,7 @@ def expense_delete(request, pk=None):
             return redir
 
         if expense.status != ExpenseStatus.XPS_CANCELLED:
-            messages.error(
-                request, _("You can not delete an expense unless it is Cancelled")
-            )
+            messages.error(request, _("You can not delete an expense unless it is Cancelled"))
             return redir
 
         try:
@@ -2011,27 +2002,33 @@ def expense_edit(request, pk=None, bk=None):
 def bid_file(request, pk=None, ft=None):
 
     if not ft:
+        logger_portal.warning("E404: Null file type parameter", extra={"request": request})
         return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenicated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
     bid = None
     if pk:
         bid = get_object_or_404(Bid, pk=pk)
     if not bid:
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if not is_active_team_member(user, team):
+        logger_portal.warning("E403: Bid reading error", extra={"request": request})        
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+
+    if not is_active_team_member(user, team):
+        logger_portal.warning("E403: User not an active team member", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
     if not team:
-        return HttpResponse(
-            _("Permission denied") + ": " + _(" Team not found"), status=403
-        )
+        logger_portal.warning("E403: Team not found", extra={"request": request})
+        return HttpResponse(_("Permission denied") + ": " + _(" Team not found"), status=403)
+    
     if not is_team_member(bid.creator, team):
+        logger_portal.warning("E403: Bid creator not a team member", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
     if ft == "bond":
@@ -2041,17 +2038,25 @@ def bid_file(request, pk=None, ft=None):
     elif ft == "submitted":
         file_path = bid.file_submitted.url
     else:
+        logger_portal.warning("E404: Wrong bid file type", extra={"request": request})
         return HttpResponse(_("Not found"), status=404)
 
     file_name = os.path.basename(file_path)
     if not file_name:
-        return HttpResponse(_("Permission denied"), status=403)
+        logger_portal.warning("E404: Bid file not found", extra={"request": request})
+        return HttpResponse(_("File not found"), status=404)
 
     response = HttpResponse()
     response["Content-Type"] = "application/octet-stream"
     response["X-Accel-Redirect"] = f"/bids/{ft}/{file_name}"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-    # response['Content-Length'] = os.path.getsize(file_path)
+    # response['Content-Length'] = os.path.getsize(f"/bids/{ft}/{file_name}")
+    logger_portal.info("Bid file download launched", extra={
+            "request": request, 
+            "model": "bid",
+            "operation": f"{ ft } file: { file_name }",
+            "instance": pk,
+        })
     return response
 
 
