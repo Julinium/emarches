@@ -22,7 +22,11 @@ from nas.models import Company
 EXTENSIONS_VALIDATORS = [
     FileExtensionValidator(
         allowed_extensions=[
-            'zip', 'rar', 'pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png', 'xls', 'xlsx', 'odt', 'odp', 'odx', 'txt'
+            'zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'tar.gz', 'tgz', 'tar.bz2', 'tar.xz', 
+            'pdf', 'doc', 'docx', 'odt', 'odp', 'odx', 'txt', 'xml', 'json', 'md', 'rtf', 'html',
+            'jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif', 
+            'xls', 'xlsx', 'ods', 'dif', 'dbf', 'csv',
+            'mpp', 'ppt', 'pptx',
             ]
         )
     ]
@@ -442,6 +446,14 @@ class Bid(models.Model):
         if self.file_receipt : fc += 1
         if self.file_submitted : fc += 1
         return fc
+
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file_bond : fs += self.file_bond.size
+        if self.file_receipt : fs += self.file_receipt.size
+        if self.file_submitted : fs += self.file_submitted.size
+        return fs
 
 
 

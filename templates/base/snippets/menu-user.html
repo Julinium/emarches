@@ -27,24 +27,6 @@
                     <span class="">{% trans "Preferences" %}</span>
                 </a>
             </li>
-            <!-- {% url 'account_email' as email_url_ %}
-            {% if email_url_ %}
-                <li>
-                    <a href="{{ email_url_ }}" class="p-2 dropdown-item">
-                        <span><i class="bi bi-envelope-check me-2"></i></span>
-                        <span class="ms-1">{% trans "Change Email" %}</span>
-                    </a>
-                </li>
-            {% endif %} -->
-            <!-- {% url 'socialaccount_connections' as connections_url_ %}
-            {% if connections_url_ %}
-                <li>
-                    <a href="{{ connections_url_ }}" class="p-2 dropdown-item">
-                        <span><i class="bi bi-plug me-2"></i></span>
-                        <span class="ms-1">{% trans "Account Connections" %}</span>
-                    </a>
-                </li>
-            {% endif %} -->
             {% url 'mfa_index' as mfa_url_ %}
             {% if mfa_url_ %}
                 <li>
@@ -82,6 +64,12 @@
                     </li>
                     <li>
                         <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot me-2"></i> Scraper Logs</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item p-2" target="_blank" href="{% url 'base_view_log_file' 'portal' %}"><i class="bi bi-robot me-2"></i> Portal log</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item p-2" target="_blank" href="{% url 'base_view_log_file' 'requests' %}"><i class="bi bi-robot me-2"></i> Requests log</a>
                     </li>
                     <li>
                         <a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a>

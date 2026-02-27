@@ -1,46 +1,41 @@
-from datetime import datetime, timedelta
+import logging
+import os
 
 from django.shortcuts import render
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.cache import cache_control
+from django.http import HttpResponse
 
-VPS_SERVER_MONTH = 64
-
+logger_portal = logging.getLogger("portal")
 
 
 def home(request):
-    target = 0
-    mail_server = VPS_SERVER_MONTH
-
-    today = datetime.now().date()
-    # epoch_zero=today
-    # epoch_zero.day=1
-    # epoch_zero.month=1
-    epoch_zero = datetime(today.year, 1, 1)
-    run_days = today - epoch_zero.date()
-    
-
-    period_name = today.strftime('%Y')
-    period_progress = 23
-    amount_progress = 34
-
-    amount_funded   = 1300
-    amount_goal     = 5700
-
-
-    context = {}
-
     return render(request, 'base/home.html')
 
-# Custom errors handling
 
-# def custom_400_view(request, exception): #bad_request
-#     return render(request, "base/errors/400.html", status=400)
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def view_log_file(request, logger='portal'):
 
-# def custom_403_view(request, exception): #permission_denied
-#     return render(request, "base/errors/403.html", status=403)
+    if not logger:
+        logger_portal.warning("E404: Null log type parameter", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
 
-# def custom_404_view(request, exception): #page_not_found
-#     return render(request, "base/errors/404.html", status=404)
+    user = request.user
+    if not user or not user.is_authenticated or not user.is_superuser:
+        logger_portal.warning("E403: User not authenicated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
 
-# def custom_500_view(request): #server_error
-#     return render(request, "base/errors/500.html", status=500)
+    log_file = os.path.join(settings.BASE_DIR, f"logs/{ logger }.log")
+    
+    with open(log_file, "r", encoding="utf-8", errors="ignore") as f:
+        content = f.read()
 
+    logger_portal.info(f"Log file '{ logger }' view launched", extra={"request": request})
+    
+    return render(request, "base/base-log-view.html", {
+        "logger": logger,
+        "content": content,
+    })
