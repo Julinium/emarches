@@ -5,6 +5,7 @@
 .env.*
 db.sqlite3
 media/
+emarches/logs
 .tmp/
 scraper/.env
 scraper/.env.*

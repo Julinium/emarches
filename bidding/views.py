@@ -489,7 +489,7 @@ def member_enable(request, uk=None):
         logger_portal.warning("E403: User is not an active team manager", extra={"request": request})
         return HttpResponse(_("You are not an active team manager"), status=403)
 
-    if is_team_member(member, team):
+    if is_active_team_member(member, team):
         logger_portal.warning("E405: Member is already enabled", extra={"request": request})
         return HttpResponse(_("Already enabled"), status=405)
 
