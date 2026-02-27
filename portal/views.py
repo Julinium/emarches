@@ -50,6 +50,8 @@ RABAT_TZ = ZoneInfo("Africa/Casablanca")
 
 DCE_SHOW_MODAL = True
 
+logger_portal = logging.getLogger("portal")
+
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -57,6 +59,7 @@ def tender_list(request):
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
@@ -422,9 +425,7 @@ def tender_list(request):
     context["page_obj"] = page_obj
     context["colleagues"] = colleagues
 
-    logger = logging.getLogger("portal")
-    logger.info("Tender List view")
-
+    logger_portal.info("Tenders list view", extra={"request": request})
     return render(request, "portal/tender-list.html", context)
 
 
@@ -434,14 +435,16 @@ def tender_details_chrono(request, ch=None):
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
+
     if not ch:
-        return HttpResponse(trans("Not found"), status=404)
+        logger_portal.warning("E405: Bad request parameter", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
 
     tender = get_object_or_404(Tender, chrono=ch)
 
-    # if not tender : return HttpResponse(trans("Not found"), status=404)
-
+    logger_portal.info("Tenders details chrono redirect", extra={"request": request})
     return redirect("portal_tender_details", tender.id)
 
 
@@ -451,6 +454,7 @@ def tender_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(
@@ -474,8 +478,8 @@ def tender_details(request, pk=None):
         id=pk,
     )
 
-    if not tender:
-        return HttpResponse(trans("Not found"), status=404)
+    # if not tender:
+    #     return HttpResponse(trans("Not found"), status=404)
 
     favorited = tender.favorites.filter(user=user).first()
 
@@ -512,9 +516,6 @@ def tender_details(request, pk=None):
         user=user,
     )
 
-    logger = logging.getLogger("portal")
-    logger.info(f"Tender details view: {tender.id}")
-
     tolerance_dn = 25.0
     if tender.category.label == "Travaux":
         tolerance_dn = 20.0
@@ -526,6 +527,7 @@ def tender_details(request, pk=None):
     context["tolerance_dn"] = tolerance_dn
     context["tolerance_up"] = tolerance_up
 
+    logger_portal.info("Tenders details view", extra={"request": request})
     return render(request, "portal/tender-details.html", context)
 
 
@@ -534,17 +536,21 @@ def tender_details(request, pk=None):
 def tender_get_file(request, pk=None, fn=None):
 
     if request.method != "GET":
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
         return HttpResponse(trans("Bad request"), status=405)
+
     if pk is None or fn is None:
-        return HttpResponse(trans("Not found"), status=404)
+        logger_portal.warning("E405: Bad request paramters", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender:
-        return HttpResponse(trans("Not found"), status=404)
+    # if not tender:
+    #     return HttpResponse(trans("Not found"), status=404)
 
     dce_dir = os.path.join(
         os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
@@ -569,10 +575,10 @@ def tender_get_file(request, pk=None, fn=None):
             size_bytes=file_size if file_size else tender.size_bytes,
         )
 
-        logger = logging.getLogger("portal")
-        logger.info(f"Tender File Download: {tender.id} (={tender.size_bytes}B)")
+        logger_portal.info("Tenders file download launched", extra={"request": request})
         return response
 
+    logger_portal.warning("File not found", extra={"request": request})
     return HttpResponse(trans("Not found"), status=404)
 
 
@@ -581,19 +587,21 @@ def tender_get_file(request, pk=None, fn=None):
 def tender_favorite(request, pk=None):
 
     if request.method != "POST":
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
         return HttpResponse(trans("Bad request"), status=405)
-    if pk == None:
-        return HttpResponse(trans("Not found"), status=404)
+
+    if pk is None:
+        logger_portal.warning("E405: Bad request paramters", extra={"request": request})
+        return HttpResponse(trans("Not found"), status=405)
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender:
-        return HttpResponse(trans("Not found"), status=404)
-
-    logger = logging.getLogger("portal")
+    # if not tender:
+    #     return HttpResponse(trans("Not found"), status=404)
 
     favorited = Favorite.objects.filter(tender=tender, user=user).first()
     if not favorited:
@@ -601,12 +609,11 @@ def tender_favorite(request, pk=None):
             user=user,
             tender=tender,
         )
-        logger.info(f"Tender Favorite: {tender.id}")
-        # messages.success(request, trans('Item successfully added to your Favorites'))
-
+        logger_portal.info("Tender added to Favorites", extra={"request": request})
         return HttpResponse(tender.id, status=200)
-    logger.info(f"Failed Tender Favorite: {tender.id}")
-    return HttpResponse(status=500)
+
+    logger_portal.info("E500: Failed Tender Favorite", extra={"request": request})
+    return HttpResponse(trans("Failed adding Tender to Favorites"), status=500)
 
 
 @login_required(login_url="account_login")
@@ -614,28 +621,29 @@ def tender_favorite(request, pk=None):
 def tender_unfavorite(request, pk=None):
 
     if request.method != "POST":
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
         return HttpResponse(trans("Bad request"), status=405)
+
     if pk is None:
-        return HttpResponse(_("Not found"), status=404)
+        logger_portal.warning("E405: Bad request paramters", extra={"request": request})
+        return HttpResponse(trans("Not found"), status=405)
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    if not tender:
-        return HttpResponse(trans("Not found"), status=404)
-
-    logger = logging.getLogger("portal")
+    # if not tender:
+    #     return HttpResponse(trans("Not found"), status=404)
 
     deleted, _ = Favorite.objects.filter(tender=tender, user=user).delete()
     if deleted > 0:
-        logger.info(f"Tender Unfavorite: {tender.id}")
-        # messages.success(request, trans('Item successfully removed from your Favorites'))
+        logger_portal.info("Tender removed from Favorites", extra={"request": request})
         return HttpResponse(tender.id, status=200)
 
-    logger.info(f"Failed Tender Unfavorite: {tender.id}")
-    return HttpResponse(status=500)
+    logger_portal.warning("E500: Failed removing Tender from favorites", extra={"request": request})
+    return HttpResponse(trans("Failed removing Tender from favorites"), status=500)
 
 
 @login_required(login_url="account_login")
@@ -643,9 +651,12 @@ def tender_unfavorite(request, pk=None):
 def tender_favorite_clean(request, span=None):
 
     if request.method != "POST":
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
         return HttpResponse(trans("Bad request"), status=405)
+
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     cleanables = None
@@ -658,18 +669,15 @@ def tender_favorite_clean(request, span=None):
             wassa = datetime.now(RABAT_TZ)
             cleanables = user.favorites.filter(tender__deadline__lt=wassa)
 
-    logger = logging.getLogger("portal")
     if cleanables:
         trash, xxx = cleanables.delete()
-        logger.info(f"Favorite Tender Cleanup: {span} => {trash} items")
+        logger_portal.info(f"Favorite Tender Cleanup: { trash }", extra={"request": request})
         messages.success(request, trans("Favorite items cleaned") + f": {trash}")
     else:
-        logger.info(f"Favorite Tender Cleanup: {span} => No items cleaned up")
+        logger_portal.info("No favorites cleaned up", extra={"request": request})
         messages.warning(request, trans("Nothing to clean up."))
 
     return redirect("portal_tender_favorite_list")
-
-    # return render(request, 'portal/tender-favorite-list.html', {})
 
 
 @login_required(login_url="account_login")
@@ -678,6 +686,7 @@ def tender_favorite_list(request):
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
@@ -744,56 +753,56 @@ def tender_favorite_list(request):
     page_obj = paginator.page(page_number)
 
     context["page_obj"] = page_obj
-
-    logger = logging.getLogger("portal")
-    logger.info("Favorite Tender List view")
-
+    logger_portal.info("Favorite Tender List view", extra={"request": request})
     return render(request, "portal/tender-favorite-list.html", context)
 
 
+@login_required(login_url="account_login")
 def locations_list(request):
-    json_path = os.path.join(
-        settings.BASE_DIR, "scraper", "data", "regions-cities.json"
-    )
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
+
+    json_path = os.path.join(settings.BASE_DIR, "scraper", "data", "regions-cities.json")
+
     try:
         with open(json_path, "r", encoding="utf-8") as f:
             states = json.load(f)
     except FileNotFoundError:
         states = []
-        return HttpResponse("File Not Found Error", code=404)
+        logger_portal.exception("E500: Locations json not found", extra={"request": request})
+        return HttpResponse("Locations list not found", code=500)
         # Or raise a 404 / show error page
     except json.JSONDecodeError:
         states = []
-        return HttpResponse("JSON Decode Error", code=405)
+        logger_portal.exception("E500: Failed reading locations json", extra={"request": request})
+        return HttpResponse("Locations list not found", code=500)
         # Handle corrupted JSON
 
     context = {"states": states}
 
-    logger = logging.getLogger("portal")
-    logger.info("Locations List view")
-
+    logger_portal.info("Locations List view", extra={"request": request})
     return render(request, "portal/locations-list.html", context)
 
 
+@login_required(login_url="account_login")
 def client_list(request):
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context["user_settings"]
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-        # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
     CLIENTS_ORDERING_FIELD = "tenders_count"
 
     def get_req_params(req):
-        allowed_keys = [
-            "q",
-            "page",
-            "sort",
-        ]
+        allowed_keys = ["q", "page", "sort",]
 
         query_dict = {k: v for k, v in req.GET.items() if k in allowed_keys and v != ""}
         if "sort" not in query_dict:
@@ -879,23 +888,22 @@ def client_list(request):
     context["page_obj"] = page_obj
     context["clients"] = clients
 
-    logger = logging.getLogger("portal")
-    logger.info(f"Clients List view")
-
+    logger_portal.warning("Clients List view", extra={"request": request})
     return render(request, "portal/clients-list.html", context)
 
 
+@login_required(login_url="account_login")
 def domain_list(request):
 
     user = request.user
     if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context["user_settings"]
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-        # SHOW_TODAYS_EXPIRED = us.tenders_show_expired
         SHOW_CANCELLED = us.tenders_show_cancelled
     CLIENTS_ORDERING_FIELD = "tenders_count"
 
@@ -991,7 +999,5 @@ def domain_list(request):
     context["page_obj"] = page_obj
     context["domains"] = domains
 
-    logger = logging.getLogger("portal")
-    logger.info("Domains List view")
-
+    logger_portal.warning("Domains List view", extra={"request": request})
     return render(request, "portal/domains-list.html", context)

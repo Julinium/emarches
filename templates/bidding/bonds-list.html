@@ -241,7 +241,7 @@
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
                                 <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#lostCollapse" aria-expanded="false" aria-controls="lostCollapse">
-                                    <div class="w-100">
+                                    <div class="w-100 text-danger">
                                         <span class="">
                                             <span><i class="{{ bicons.cancelled }}"></i></span>
                                             <span class="ms-2 fw-light">{% trans "Lost" %}:</span>
@@ -249,7 +249,7 @@
                                         </span>
                                         {% if total_lost != 0 %}
                                             <span class="float-end text-end ms-3 me-2">
-                                                <span class="fw-bold text-danger">{{ total_lost }}</span>
+                                                <span class="fw-bold">{{ total_lost }}</span>
                                             </span>
                                         {% endif %}
                                     </div>

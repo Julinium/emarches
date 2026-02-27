@@ -17,6 +17,8 @@ from base.models import Concurrent
 
 BIDDERS_ITEMS_PER_PAGE = 25
 
+logger_portal = logging.getLogger("portal")
+
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -29,8 +31,9 @@ def dashboard(request):
 def bidders_list(request):
 
     user = request.user
-    if not user or not user.is_authenticated : 
-        return HttpResponse(_("Permission denied"), status=403)
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -157,14 +160,10 @@ def bidders_list(request):
         if ordering[0] == '-':
             ordering = ordering[1:]
             bidders = bidders.order_by(
-                # OrderBy(F(ordering), nulls_last=True),
-                # OrderBy(F("last_win")),
                 F(ordering).asc(nulls_last=True), '-last_win', 'name'
                 )
         else:
             bidders = bidders.order_by(
-                # OrderBy(F(ordering), descending=True, nulls_last=True),
-                # OrderBy(F("last_win")),
                 F(ordering).desc(nulls_last=True), '-last_win', 'name'
                 )
 
@@ -180,9 +179,7 @@ def bidders_list(request):
 
     context['page_obj'] = page_obj
 
-    logger = logging.getLogger('portal')
-    logger.info(f"Bidders List view")
-
+    logger_portal.info("Concurrents list view", extra={"request": request})
     return render(request, 'insights/bidders-list.html', context)
 
 
@@ -191,19 +188,17 @@ def bidders_list(request):
 def bidder_details(request, pk=None):
 
     user = request.user
-    if not user or not user.is_authenticated : 
-        return HttpResponse(_("Permission denied"), status=403)
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
 
     bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
 
-    if not bidder : return HttpResponse(_("Not found"), status=404)
+    # if not bidder :
+    #     return HttpResponse(_("Not found"), status=404)
 
-    context = { 
-        'bidder'         : bidder,
-    }
+    context = {'bidder': bidder,}
 
-    logger = logging.getLogger('portal')
-    logger.info(f"Bidder details view: {bidder.id}")
-
+    logger_portal.info("Bidder details view", extra={"request": request})
     return render(request, 'insights/bidder-details.html', context)
 

@@ -23,9 +23,8 @@
                             <span class="small text-secondary">@{{ bid.creator }}</span>
                         </span>
                     </div>
-                    <div class="oneline ms-4 text-secondary">
+                    <div class="oneline ms-4 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Return due date' %}">
                         {% if bid.bond_due_date %}
-                            <!-- <span class="small"><i class="{{ bicons.bid }} small text-secondary me-1"></i></span> -->
                             <span class="small text-secondary me-2 ">{{ bid.bond_due_date.date|default:'-' }}</span>
                             {% if epoch == 'since' %}
                                 <span class="badge bg-danger">{{ bid.bond_due_date|timesince }}</span>
@@ -34,26 +33,12 @@
                                 <span class="badge bg-success">{{ bid.bond_due_date|timeuntil }}</span>
                             {% endif %}
                         {% endif %}
-                        <!-- <span class="fw-light">
-                            <img src="{{ bid.creator.profile.avatar }}" alt="X" 
-                                    class="img-fluid rounded rounded-circle" 
-                                    style="width: 1rem; height: 1rem;">
-                        </span>
-                        <span class="small text-secondary">{{ bid.creator }}</span> -->
                     </div>
                 </div>
                 <div class="col-12 col-md-6 text-end">
-                    <div>                        
-                        <!-- <span><i class="{{ bicons.estimate }} small"></i></span> -->
+                    <div>
                         <span class="">{{ bid.bond_amount }}</span>
                     </div>
-                    <!-- <div>
-                        <span class="badge bg-{{ bid.tag_tint }} small">{{ bid.tag_display }}</span>
-                        <span class="badge fw-light bg-{{ bid.bond_tint }}">
-                            <span><i class="{{ bicons.bond }}"></i></span>
-                            <span class="fw-bold">{{ bid.bond_amount }}</span>
-                        </span>
-                    </div> -->
                 </div>
             </div>              
 
@@ -64,13 +49,40 @@
     <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
 
         <div id="bid-details-extended" class="mx-0 mb-3">
-            <div class="small">
-                <span class="fw-bold me-1">{% trans "Tender" %}:</span>
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Bond status" %}:</span>
+                <span class="text-secondary">{{ bid.get_bond_status_display }}</span>
+            </div>
+            
+            <!-- <div class="">
+                <span class="fw-light small me-1">{% trans "Return due date" %}:</span>
+                <span class="text-secondary">{{ bid.bond_due_date|date|default:'-' }}</span>
+            </div> -->
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Bid status" %}:</span>
+                <span class="text-secondary">{{ bid.get_status_display }}</span>
+            </div>
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Bid submitted date" %}:</span>
+                <span class="text-secondary">{{ bid.date_submitted|date|default:'-' }}</span>
+            </div>
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Bid result" %}:</span>
+                <span class="text-secondary">{{ bid.get_result_display }}</span>
+            </div>
+            
+            <div class="threelines">
+                <span class="fw-bold small me-1">{% trans "Tender" %}:</span>
                 <span class="text-secondary">{{ bid.lot.tender.title }}</span>
             </div>
+
             {% if bid.lot.tender.lots_count > 1 %}
-                <div class="small">
-                    <span class="fw-bold me-1">{% trans "Lot" %}: {{ bid.lot.number }}</span>
+                <div class="threelines">
+                    <span class="fw-bold small me-1">{% trans "Lot" %}: {{ bid.lot.number }}</span>
                     <span class="text-secondary">: {{ bid.lot.title }}</span>
                 </div>
             {% endif %}
@@ -78,8 +90,13 @@
         
         <div id="bid-details-actions" class="text-end mx-0 mb-3">
 
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'portal_tender_details' bid.lot.tender.id %}">
                 <span><i class="{{ bicons.details }}"></i></span>
+                <span class="ms-1">{% trans 'Tender details' %}</span>
+            </a>
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
+                <span><i class="{{ bicons.bidding }}"></i></span>
                 <span class="ms-1">{% trans 'Bid details' %}</span>
             </a>
             

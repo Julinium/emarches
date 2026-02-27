@@ -25,7 +25,7 @@ EXTENSIONS_VALIDATORS = [
             'zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'tar.gz', 'tgz', 'tar.bz2', 'tar.xz', 
             'pdf', 'doc', 'docx', 'odt', 'odp', 'odx', 'txt', 'xml', 'json', 'md', 'rtf', 'html',
             'jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif', 
-            'xls', 'xlsx', 'ods', 'dif', 'dbf', 'csv',
+            'xls', 'xlsx', 'ods', 'ots', 'dif', 'dbf', 'csv',
             'mpp', 'ppt', 'pptx',
             ]
         )
@@ -483,6 +483,13 @@ class Contract(models.Model):
 
     def __str__(self):
         return self.reference
+    
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file_guarantee : fs += self.file_guarantee.size
+        if self.file_terms : fs += self.file_terms.size
+        return fs
 
 
 class Task(models.Model):
@@ -593,6 +600,12 @@ class Expense(models.Model):
         if self.status == ExpenseStatus.XPS_CANCELLED : return 'danger'
         return 'secondary'
 
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file : fs += self.file.size
+        return fs
+
 
 class Reception(models.Model):
     id           = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -661,6 +674,11 @@ class Income(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file : fs += self.file.size
+        return fs
 
 
 def is_past(value):

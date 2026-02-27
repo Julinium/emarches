@@ -9,7 +9,7 @@
 </button>
 
 
-<form action="{% url 'portal_domain_list' %}?{{ query_string }}&sort={{ query_string.sorter }}">
+<form action="{% url 'portal_domains_list' %}?{{ query_string }}&sort={{ query_string.sorter }}">
     <div class="modal fade" id="searchModal" tabindex="-1" 
         aria-labelledby="searchModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -40,7 +40,7 @@
 
                 <div class="modal-footer">
                     
-                    <a href="{% url 'portal_domain_list' %}" type="button" class="btn btn-outline-secondary">
+                    <a href="{% url 'portal_domains_list' %}" type="button" class="btn btn-outline-secondary">
                         <i class="{{ bicons.backspace }} me-1"></i>
                         {% trans 'Reset' %}
                     </a>

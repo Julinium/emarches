@@ -149,10 +149,9 @@
                             </div>
                         {% endif %}
 
-                        {% if bid.file_bond %}
+                        <!-- {% if bid.file_bond %}
                             <div class="small mt-1">
                                 <span class="fw-light me-1">{% trans "Bond file" %}:</span>
-                                <!-- <span class="text-secondary">{{ bid.file_bond_name }}</span> -->
                                 <span class=""><a href="{% url 'bidding_bid_file' bid.id 'bond' %}">{{ bid.file_bond_name }}</a></span>
                             </div>
                         {% endif %}
@@ -160,7 +159,6 @@
                         {% if bid.file_receipt %}
                             <div class="small mt-1">
                                 <span class="fw-light me-1">{% trans "Receipt file" %}:</span>
-                                <!-- <span class="text-secondary">{{ bid.file_receipt }}</span> -->
                                 <span class=""><a href="{% url 'bidding_bid_file' bid.id 'receipt' %}">{{ bid.file_receipt_name }}</a></span>
                             </div>
                         {% endif %}
@@ -168,23 +166,22 @@
                         {% if bid.file_submitted %}
                             <div class="small mt-1">
                                 <span class="fw-light me-1">{% trans "Submitted file" %}:</span>
-                                <!-- <span class="text-secondary">{{ bid.file_submitted }}</span> -->
                                 <span class=""><a href="{% url 'bidding_bid_file' bid.id 'submitted' %}">{{ bid.file_submitted_name }}</a></span>
                             </div>
-                        {% endif %}
+                        {% endif %} -->
 
                     </div>
 
                     <div id="bid-{{ bid.id }}-actions" class="text-end mx-0 mb-3">
 
-                        <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
+                        <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'portal_tender_details' bid.lot.tender.id %}">
                             <span><i class="{{ bicons.details }}"></i></span>
-                            <span class="ms-1">{% trans 'Bid details' %}</span>
+                            <span class="ms-1">{% trans 'Tender details' %}</span>
                         </a>
 
-                        <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'portal_tender_details' bid.lot.tender.id %}">
-                            <span><i class="{{ bicons.link }}"></i></span>
-                            <span class="ms-1">{% trans 'Tender details' %}</span>
+                        <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bid_details' bid.id %}">
+                            <span><i class="{{ bicons.bidding }}"></i></span>
+                            <span class="ms-1">{% trans 'Bid details' %}</span>
                         </a>
                         
                     </div>
