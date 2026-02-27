@@ -47,7 +47,20 @@
                     <span>{{ expense.bid.title|default:expense.bid.lot.title }}</span>
                 </div>
             {% endif %}
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Files size" %}:</span>
+                <span class="text-secondary">{{ expense.files_size|filesizeformat|default:'-' }}</span>
+            </div>
+
+            {% if expense.file %}
+                <div class="small mt-1">
+                    <span class="fw-light me-1">{% trans "Expense file" %}:</span>
+                    <span class=""><a href="{% url 'bidding_expense_file' expense.id 'receipt' %}">{{ expense.file_name }}</a></span>
+                </div>
+            {% endif %}
         </div>
+
         <div class="text-end">
             {% if show_bid %}
                 <a href="{% url 'bidding_bid_details' expense.bid.id %}" target="_blank"

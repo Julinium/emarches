@@ -491,6 +491,16 @@ class Contract(models.Model):
         if self.file_terms : fs += self.file_terms.size
         return fs
 
+    @property
+    def file_guarantee_name(self):
+        if self.file_guarantee: return os.path.basename(self.file_guarantee.name)
+        return None
+
+    @property
+    def file_terms_name(self):
+        if self.file_terms: return os.path.basename(self.file_terms.name)
+        return None
+
 
 class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -599,6 +609,11 @@ class Expense(models.Model):
         if self.status == ExpenseStatus.XPS_CONFIRMED : return 'success'
         if self.status == ExpenseStatus.XPS_CANCELLED : return 'danger'
         return 'secondary'
+
+    @property
+    def file_name(self):
+        if self.file: return os.path.basename(self.file.name)
+        return None
 
     @property
     def files_size(self):

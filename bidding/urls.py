@@ -17,15 +17,16 @@ urlpatterns = [
     path('bids/<uuid:lk>/create/',   views.bid_edit,     name='bidding_bid_create'),
     path('bids/<uuid:pk>/edit/',     views.bid_edit,     name='bidding_bid_edit'),
     path('bids/<uuid:pk>/delete/',   views.bid_delete,   name='bidding_bid_delete'),
-    path('bids/<uuid:pk>/<str:ft>/', views.bid_file,     name='bidding_bid_file'),
+    path('bids/<uuid:pk>/files/<str:ft>/', views.bid_file,     name='bidding_bid_file'),
 
     path('tasks/<uuid:bk>/create/', views.task_edit,    name='bidding_task_create'),
     path('tasks/<uuid:pk>/edit/',   views.task_edit,    name='bidding_task_edit'),
     path('tasks/<uuid:pk>/delete/', views.task_delete,  name='bidding_task_delete'),
 
-    path('expenses/<uuid:bk>/create/', views.expense_edit, name='bidding_expense_create'),
-    path('expenses/<uuid:pk>/edit/',   views.expense_edit, name='bidding_expense_edit'),
-    path('expenses/<uuid:pk>/delete/', views.expense_delete, name='bidding_expense_delete'),
+    path('expenses/<uuid:bk>/create/',   views.expense_edit,   name='bidding_expense_create'),
+    path('expenses/<uuid:pk>/edit/',     views.expense_edit,   name='bidding_expense_edit'),
+    path('expenses/<uuid:pk>/delete/',   views.expense_delete, name='bidding_expense_delete'),
+    path('expenses/<uuid:pk>/files/<str:ft>/', views.expense_file,   name='bidding_expense_file'),
 
     path('team/recap',              views.team_recap,         name='bidding_team_recap'),
     path('team/<uuid:tk>/edit',     views.team_edit,          name='bidding_team_edit'),

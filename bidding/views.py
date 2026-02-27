@@ -2076,15 +2076,65 @@ def bid_file(request, pk=None, ft=None):
     response["Content-Type"] = "application/octet-stream"
     response["X-Accel-Redirect"] = f"/bids/{ft}/{file_name}"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-    # response['Content-Length'] = os.path.getsize(f"/bids/{ft}/{file_name}")
-    logger_portal.info("Bid file download launched", extra={
-            "request": request, 
-            "model": "bid",
-            "operation": f"{ ft } file: { file_name }",
-            "instance": pk,
-        })
+    logger_portal.info("Bid file download launched", extra={"request": request})
     return response
 
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def expense_file(request, pk=None, ft=None):
+
+    if not ft:
+        logger_portal.warning("E404: Null file type parameter", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenicated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    expense = None
+    if pk:
+        expense = get_object_or_404(Expense, pk=pk)
+    if not expense:
+        logger_portal.warning("E403: Expense reading error", extra={"request": request})        
+        return HttpResponse(_("Permission denied"), status=403)
+
+    team = get_team(user)
+
+    if not team:
+        logger_portal.warning("E403: Team not found", extra={"request": request})
+        return HttpResponse(_("Permission denied") + ": " + _(" Team not found"), status=403)
+
+    if not is_active_team_member(user, team):
+        logger_portal.warning("E403: User not an active team member", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+    
+    if not is_team_member(expense.creator, team):
+        logger_portal.warning("E403: Expense creator not a team member", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if ft == "receipt":
+        file_path = expense.file.url
+    # elif ft == "receipt":
+    #     file_path = expense.file_receipt.url
+    # elif ft == "submitted":
+    #     file_path = expense.file_submitted.url
+    else:
+        logger_portal.warning("E404: Wrong expense file type", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
+
+    file_name = os.path.basename(file_path)
+    if not file_name:
+        logger_portal.warning("E404: Expense file not found", extra={"request": request})
+        return HttpResponse(_("File not found"), status=404)
+
+    response = HttpResponse()
+    response["Content-Type"] = "application/octet-stream"
+    response["X-Accel-Redirect"] = f"/expenses/{ ft }/{ file_name }"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+    logger_portal.info("Expense file download launched", extra={"request": request})
+    return response
 
 
 

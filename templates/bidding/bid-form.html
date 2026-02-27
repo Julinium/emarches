@@ -18,7 +18,7 @@
                         {% if tender.cancelled %}
                             <span class="badge bg-danger blink">{% trans "CANCELLED" %}</span>
                         {% endif %}
-                        <span>{{ tender.title }}</span>                        
+                        <span class="threelines">{{ tender.title }}</span>                        
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <div class="ms-3">
                     <div class="form-control bg-secondary-subtle text-secondary">
                         <span class="badge bg-secondary me-1">{% trans "Lot" %} {{ lot.number }}</span>
-                        <span class="">{{ lot.title }}</span>
+                        <span class="threelines">{{ lot.title }}</span>
                     </div>
                 </div>
             </div>

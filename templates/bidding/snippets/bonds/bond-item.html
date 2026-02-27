@@ -54,12 +54,7 @@
                 <span class="fw-light small me-1">{% trans "Bond status" %}:</span>
                 <span class="text-secondary">{{ bid.get_bond_status_display }}</span>
             </div>
-            
-            <!-- <div class="">
-                <span class="fw-light small me-1">{% trans "Return due date" %}:</span>
-                <span class="text-secondary">{{ bid.bond_due_date|date|default:'-' }}</span>
-            </div> -->
-            
+
             <div class="">
                 <span class="fw-light small me-1">{% trans "Bid status" %}:</span>
                 <span class="text-secondary">{{ bid.get_status_display }}</span>
