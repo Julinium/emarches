@@ -75,7 +75,14 @@ def invitation_create(request, tk=None):
         logger_portal.warning("E404: Team not found", extra={"request": request})
         return HttpResponse(_("Not found"), status=404)
 
-    team = get_object_or_404(Team, pk=tk)
+    # team = get_object_or_404(Team, pk=tk)
+    team = get_team(user)
+    request.team = team
+
+    if not team:
+        logger_portal.warning("E404: Team not found", extra={"request": request})
+        return HttpResponse(_("Team not found"), status=404)
+
     if not is_active_team_admin(user, team):
         logger_portal.warning("E403: User is not a team manager", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
@@ -103,7 +110,6 @@ def invitation_create(request, tk=None):
         logger_portal.warning("E403: Invitation form invalid", extra={"request": request})
         return HttpResponse(_("Bad request"), status=403)
 
-    # return HttpResponse(_("Server error raised"), status=500)
     return redirect("bidding_team_recap")
 
 
@@ -126,6 +132,8 @@ def invitation_cancel(request, pk=None):
     invitation = get_object_or_404(Invitation, pk=pk)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E404: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found"), status=404)
@@ -191,6 +199,8 @@ def invitation_accept(request, pk=None):
         return HttpResponse(_("Bad request"), status=405)
 
     team = get_team(user)
+    request.team = team
+
     if get_team(invitation.creator) == team:
         logger_portal.warning("E405: Already memeber", extra={"request": request})
         return HttpResponse(_("Bad request") + ": " + _("Already member"), status=405)
@@ -198,8 +208,6 @@ def invitation_accept(request, pk=None):
     if team and team.members.count() > 1:
         logger_portal.warning("E405: User must leave current team first", extra={"request": request})
         return HttpResponse( _("You need to leave your current team first"), status=405)
-
-    #logger = logging.getLogger("portal")
 
     confirmed = request.POST.get("confirmed", None)
     if confirmed != "know":
@@ -231,7 +239,7 @@ def invitation_accept(request, pk=None):
                         request, _("Ask a team Manager to activate your membership")
                     )
             except Exception as xs:
-                logger_portal.info(f"Deleted user membership instances: {deleted_ms}", extra={"request": request})
+                logger_portal.warning(f"Deleted user membership instances: {deleted_ms}", extra={"request": request})
                 logger_portal.exception("Invitation acceptance failed", extra={"request": request})
                 return HttpResponse(_("Server error raised"), status=500)
 
@@ -252,18 +260,20 @@ def team_recap(request):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
-    if not team:
-        try:
-            team = Team.objects.create(  
-                name=_("TEAM") + "-" + user.username.upper(),
-                creator=user,
-            )
-            logger_portal.info(f"Team created { team.name }", extra={"request": request})
-            team.add_member(user, manager=True)
-            logger_portal.info(f"User added to team", extra={"request": request})
-        except:
-            logger_portal.exception("Exception creating Team and membership", extra={"request": request})
-            return HttpResponse(_("Exception creating Team and membership"), status=403)
+    request.team = team
+
+    # if not team:
+    #     try:
+    #         team = Team.objects.create(  
+    #             name=_("TEAM") + "-" + user.username.upper(),
+    #             creator=user,
+    #         )
+    #         logger_portal.info(f"Team created { team.name }", extra={"request": request})
+    #         team.add_member(user, manager=True)
+    #         logger_portal.info(f"User added to team", extra={"request": request})
+    #     except:
+    #         logger_portal.exception("Exception creating Team and membership", extra={"request": request})
+    #         return HttpResponse(_("Exception creating Team and membership"), status=403)
 
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
@@ -364,6 +374,8 @@ def team_edit(request, tk=None):
     peam = get_object_or_404(Team, pk=tk)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
         return HttpResponse(_(" Team not found"), status=403)
@@ -434,6 +446,8 @@ def member_disable(request, uk=None):
         return HttpResponse(_("You can not disable yourself"), status=405)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -481,6 +495,8 @@ def member_enable(request, uk=None):
         return HttpResponse(_("You can not enable yourself"), status=405)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -499,7 +515,7 @@ def member_enable(request, uk=None):
             logger_portal.info("Member enabled successfully", extra={"request": request})
             messages.success(request, _("Member enabled successfully"))
         else:
-            logger_portal.exception("Failed enabling member", extra={"request": request})
+            logger_portal.warning("Failed enabling member", extra={"request": request})
             return HttpResponse(_("Server error raised"), status=500)
 
     except Exception as xc:
@@ -528,6 +544,8 @@ def member_bossify(request, uk=None):
         return HttpResponse(_("Self editing not allowed"), status=405)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -546,7 +564,7 @@ def member_bossify(request, uk=None):
             logger_portal.info("Member made manager successfully", extra={"request": request})
             messages.success(request, _("Member made manager successfully"))
         else:
-            logger_portal.exception("Failed making member a manager", extra={"request": request})
+            logger_portal.warning("Failed making member a manager", extra={"request": request})
             return HttpResponse(_("Failed making member a manager"), status=500)
 
     except Exception as xc:
@@ -575,6 +593,8 @@ def member_debossify(request, uk=None):
         return HttpResponse(_("Self editing not allowed"), status=405)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -593,7 +613,7 @@ def member_debossify(request, uk=None):
             logger_portal.info("Member made not manager successfully", extra={"request": request})
             messages.success(request, _("Member made not manager successfully"))
         else:
-            logger_portal.exception("Failed making member not a manager", extra={"request": request})
+            logger_portal.warning("Failed making member not a manager", extra={"request": request})
             return HttpResponse(_("Failed making member not a manager"), status=500)
 
     except Exception as xc:
@@ -622,6 +642,8 @@ def member_fire(request, uk=None):
         return HttpResponse(_("Self editing not allowed"), status=405)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -640,7 +662,7 @@ def member_fire(request, uk=None):
             logger_portal.info("Member fired successfully", extra={"request": request})
             messages.success(request, _("Member fired successfully"))
         else:
-            logger_portal.exception("Failed firing member", extra={"request": request})
+            logger_portal.warning("Failed firing member", extra={"request": request})
             return HttpResponse(_("Failed firing member"), status=500)
 
     except Exception as xc:
@@ -660,6 +682,8 @@ def tenders_list(request):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -799,7 +823,7 @@ def tenders_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bids_list(request):
+def bids_list_x(request):
 
     user = request.user
     if not user or not user.is_authenticated:
@@ -807,6 +831,8 @@ def bids_list(request):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -982,6 +1008,221 @@ def bids_list(request):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def bids_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    team = get_team(user)
+    request.team = team
+
+    if not team:
+        logger_portal.warning("E405: Team not found", extra={"request": request})
+        return HttpResponse(_("Team not found or not allowed"), status=405)
+
+    if not is_active_team_member(user, team):
+        logger_portal.warning("E403: User is not an active team member", extra={"request": request})
+        return HttpResponse(_("You are not an active team member"), status=403)
+    
+    BIDS_ORDERING_FIELD = "-status"
+
+    def get_req_params(req):
+        allowed_keys = [
+            "q",
+            "status",
+            "bond_status",
+            "result",
+            "company",
+            "creator",
+            "page",
+            "sort",
+        ]
+
+        query_dict = {k: v for k, v in req.GET.items() if k in allowed_keys and v != ""}
+        if "sort" not in query_dict:
+            query_dict["sort"] = BIDS_ORDERING_FIELD
+
+        query_string = {
+            k: v
+            for k, v in req.GET.items()
+            if k in allowed_keys and v != "" and k != "page"
+        }
+
+        query_unsorted = {
+            k: v
+            for k, v in req.GET.items()
+            if k in allowed_keys and v != "" and k not in ("page", "sort")
+        }
+
+        return query_dict, query_string, query_unsorted
+
+    def filter_bids(bids, params, companies=None, colleagues=None):
+        ff = 0
+        if not params:
+            return bids.distinct(), ff
+
+        if "q" in params:
+            ff += 1
+            q = params["q"]
+            bids = bids.filter(
+                Q(title__icontains=q)
+                | Q(lot__tender__title__icontains=q)
+                | Q(lot__tender__reference__icontains=q)
+                | Q(lot__tender__chrono__icontains=q)
+                | Q(lot__tender__client__name__icontains=q)
+                | Q(lot__title__icontains=q)
+                | Q(lot__description__icontains=q)
+            )
+
+        if "status" in params:
+            ff += 1
+            status = params["status"]
+            bids = bids.filter(status=status)
+
+        if "result" in params:
+            ff += 1
+            result = params["result"]
+            bids = bids.filter(result=result)
+
+        if "bond_status" in params:
+            ff += 1
+            bond_status = params["bond_status"]
+            bids = bids.filter(bond_status=bond_status)
+
+        if "company" in params and companies:
+            ff += 1
+            company = params["company"]
+            comp_obj = companies.filter(id=company).first()
+            bids = bids.filter(company=comp_obj)
+
+        if "creator" in params and colleagues:
+            ff += 1
+            creator = params["creator"]
+            user_obj = colleagues.filter(username=creator).first()
+            bids = bids.filter(creator=user_obj)
+
+        return bids.distinct(), ff
+
+    def define_context(request):
+        context = {}
+        context["query_string"] = urlencode(query_string)
+        context["query_unsorted"] = urlencode(query_unsorted)
+        context["query_dict"] = query_dict
+        context["full_bar_days"] = TENDER_FULL_PROGRESS_DAYS
+
+        return context
+
+    query_dict, query_string, query_unsorted = get_req_params(request)
+
+    colleagues = get_colleagues(user)
+    companies = Company.objects.filter(user__in=colleagues)
+    
+    if companies.count() < 1:
+        logger_portal.warning("E403: Company not found", extra={"request": request})
+        return HttpResponse(_("No Company was found"), status=403)
+
+    all_bids = Bid.objects.filter(
+        creator__in=colleagues,
+        company__in=companies,
+    ).prefetch_related(
+        "tasks",
+        "expenses",  # "contracts",
+    )
+
+    bids, filters = filter_bids(all_bids, query_dict, companies, colleagues)
+    query_dict["filters"] = filters
+
+    sort = query_dict["sort"]
+
+    if sort and sort != "":
+        ordering = sort
+    else:
+        ordering = BIDS_ORDERING_FIELD
+
+    if ordering[0] == "-":
+        ordering = ordering[1:]
+        bids = bids.order_by(
+            F(ordering).asc(nulls_last=True),
+            BIDS_ORDERING_FIELD,
+            "-bond_status",
+            "-date_submitted",
+        )
+    else:
+        bids = bids.order_by(
+            F(ordering).desc(nulls_last=True),
+            BIDS_ORDERING_FIELD,
+            "-bond_status",
+            "-date_submitted",
+        )
+
+    context = define_context(request)
+
+    bids_draft = bids.filter(
+            status=BidStatus.BID_PREPARING,
+        )
+
+    bids_ready = bids.filter(
+            status=BidStatus.BID_READY,
+        )
+
+    bids_submitted = bids.filter(
+            status=BidStatus.BID_SUBMITTED,
+        )
+
+    bids_finished = bids.filter(
+            status=BidStatus.BID_FINISHED,
+        )
+
+    bids_cancelled = bids.filter(
+            status=BidStatus.BID_CANCELLED,
+        )
+
+    total_draft = bids_draft.aggregate(total=Sum("bid_amount"))["total"] or 0
+    total_ready = bids_ready.aggregate(total=Sum("bid_amount"))["total"] or 0
+    total_submitted = bids_submitted.aggregate(total=Sum("bid_amount"))["total"] or 0
+    total_finished = bids_finished.aggregate(total=Sum("bid_amount"))["total"] or 0
+    total_cancelled = bids_cancelled.aggregate(total=Sum("bid_amount"))["total"] or 0
+    
+    context["bids_draft"] = bids_draft
+    context["bids_ready"] = bids_ready
+    context["bids_submitted"] = bids_submitted
+    context["bids_finished"] = bids_finished
+    context["bids_cancelled"] = bids_cancelled
+    
+    context["total_draft"] = total_draft
+    context["total_ready"] = total_ready
+    context["total_submitted"] = total_submitted
+    context["total_finished"] = total_finished
+    context["total_cancelled"] = total_cancelled
+ 
+    bids_count = bids_draft.count()
+    bids_count += bids_ready.count()
+    bids_count += bids_submitted.count()
+    bids_count += bids_finished.count()
+    bids_count += bids_cancelled.count()
+
+    manager = is_active_team_admin(user, team)
+
+    bid_status_choices = BidStatus.choices
+    bid_result_choices = BidResults.choices
+    bond_status_choices = BondStatus.choices
+
+    context["colleagues"] = colleagues
+    context["companies"] = companies
+    context["bids_count"] = bids_count
+    context["bid_status_choices"] = bid_status_choices
+    context["bid_result_choices"] = bid_result_choices
+    context["bond_status_choices"] = bond_status_choices
+    context["manager"] = manager
+
+    logger_portal.info("Bids List view", extra={"request": request})
+    return render(request, "bidding/bids-list.html", context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bonds_list(request):
 
     user = request.user
@@ -990,6 +1231,8 @@ def bonds_list(request):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -1160,6 +1403,8 @@ def tasks_list(request):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -1330,6 +1575,8 @@ def expenses_list(request):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -1499,6 +1746,8 @@ def bid_details(request, pk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -1519,7 +1768,6 @@ def bid_details(request, pk=None):
 
     tender = bid.lot.tender
     if not tender:
-        # return HttpResponse(_("Not found"), status=404)
         logger_portal.warning("E404: Tender not found", extra={"request": request})
         return HttpResponse(_("Tender not found"), status=404)
 
@@ -1539,6 +1787,8 @@ def bid_delete(request, pk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E405: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=405)
@@ -1604,6 +1854,8 @@ def bid_edit(request, pk=None, lk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=403)
@@ -1727,6 +1979,8 @@ def task_delete(request, pk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=403)
@@ -1791,6 +2045,8 @@ def task_edit(request, pk=None, bk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=403)
@@ -1881,6 +2137,8 @@ def expense_delete(request, pk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=403)
@@ -1945,6 +2203,8 @@ def expense_edit(request, pk=None, bk=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
         return HttpResponse(_("Team not found or not allowed"), status=403)
@@ -2044,6 +2304,8 @@ def bid_file(request, pk=None, ft=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
 
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
@@ -2076,7 +2338,7 @@ def bid_file(request, pk=None, ft=None):
     response["Content-Type"] = "application/octet-stream"
     response["X-Accel-Redirect"] = f"/bids/{ft}/{file_name}"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-    logger_portal.info("Bid file download launched", extra={"request": request})
+    logger_portal.info("Bid file download authorized", extra={"request": request})
     return response
 
 
@@ -2101,6 +2363,8 @@ def expense_file(request, pk=None, ft=None):
         return HttpResponse(_("Permission denied"), status=403)
 
     team = get_team(user)
+    request.team = team
+
 
     if not team:
         logger_portal.warning("E403: Team not found", extra={"request": request})
@@ -2116,10 +2380,6 @@ def expense_file(request, pk=None, ft=None):
 
     if ft == "receipt":
         file_path = expense.file.url
-    # elif ft == "receipt":
-    #     file_path = expense.file_receipt.url
-    # elif ft == "submitted":
-    #     file_path = expense.file_submitted.url
     else:
         logger_portal.warning("E404: Wrong expense file type", extra={"request": request})
         return HttpResponse(_("Not found"), status=404)
@@ -2133,7 +2393,7 @@ def expense_file(request, pk=None, ft=None):
     response["Content-Type"] = "application/octet-stream"
     response["X-Accel-Redirect"] = f"/expenses/{ ft }/{ file_name }"
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-    logger_portal.info("Expense file download launched", extra={"request": request})
+    logger_portal.info("Expense file download authorized", extra={"request": request})
     return response
 
 

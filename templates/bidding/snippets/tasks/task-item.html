@@ -1,94 +1,101 @@
 {% load i18n %}
 
-<a data-bs-toggle="collapse" href="#task-{{ task.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="task-{{ task.id }}-collapse"
-       class="text-decoration-none text-reset">
-    <div class="d-flex p-2">
-        <div class="flex-grow-1">
-            <span class="badge bg-{{ task.emergency_tint }} px-2" data-bs-toggle="tooltip" 
-                  title="{% trans 'Emergency' %}: {{ task.get_emergency_display|default:'-' }}"> </span>
-            <span class="badge bg-{{ task.status_tint }}" data-bs-toggle="tooltip" 
-                  title="{% trans 'Status' %}: {{ task.get_status_display|default:'-' }}">
-                <i class="bi bi-{{ task.status_icon }}"></i>
-            </span>
-            <span>{{ task.title|default:'-' }}</span>
-        </div>
-        <div class="text-end" data-bs-toggle="tooltip" 
-                  title="{% trans 'Due date' %}: {{ task.date_due|default:'-' }}">
-            {% if task.overdue %}
-                <span class="text-danger mx-1" data-bs-toggle="tooltip" title="{% trans 'Task overdue' %}"><i class="{{ bicons.overdue }}"></i></span>
-            {% endif %}
-            <span class="fw-bold{% if task.overdue %} text-danger{% endif %}">{{ task.date_due|default:'-' }}</span>
-        </div>
-    </div>
+<div id="expense-{{ expense.id }}-line">
 
-</a>
-
-<div id="task-{{ task.id }}-collapse" class="collapse p-2">
-
-    <div id="task-{{ task.id }}-extra-info">
-        <div>
-            <span class="small fw-light me-1">{% trans "Status" %}</span>
-            <span>{{ task.get_status_display|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Emergency" %}</span>
-            <span>{{ task.get_emergency_display|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Creator" %}</span>
-            <span>
-                {% if task.creator in colleagues %}
-                    {{ task.creator|default:'-' }}
-                {% else %}
-                    -- {% trans "Former member" %} --
-                {% endif %}
-            </span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Assignee" %}</span>
-            <span>{{ task.assignee|default:'-' }}</span>
-        </div>
-        <div>
-            <span class="small fw-light me-1">{% trans "Details" %}</span>
-            <span>{{ task.details|default:'-' }}</span>
-        </div>
-        {% if show_bid %}
-            <div>
-                <span class="small fw-light me-1">{% trans "Bid title" %}</span>
-                <span>{{ task.bid.title|default:task.bid.lot.title }}</span>
+    <a data-bs-toggle="collapse" href="#task-{{ task.id }}-collapse"
+        role="button" aria-expanded="false" aria-controls="task-{{ task.id }}-collapse"
+        class="text-decoration-none text-reset">
+        <div class="d-flex p-2">
+            <div class="flex-grow-1">
+                <span class="badge bg-{{ task.emergency_tint }}" data-bs-toggle="tooltip" 
+                    title="{{ task.get_emergency_display|default:'-' }} | {{ task.get_status_display|default:'-' }}">
+                    <i class="bi bi-{{ task.status_icon }}"></i>
+                </span>
+                <!-- <span class="badge bg-{{ task.status_tint }}" data-bs-toggle="tooltip" 
+                    title="{% trans 'Status' %}: {{ task.get_status_display|default:'-' }}">
+                    <i class="bi bi-{{ task.status_icon }}"></i>
+                </span> -->
+                <!-- <span class="badge bg-{{ task.emergency_tint }} px-2" data-bs-toggle="tooltip" 
+                    title="{% trans 'Emergency' %}: {{ task.get_emergency_display|default:'-' }}"> </span> -->
+                <span>{{ task.title|default:'-' }}</span>
             </div>
-        {% endif %}
-    </div>
+            <div class="text-end" data-bs-toggle="tooltip" 
+                    title="{% trans 'Due date' %}: {{ task.date_due|default:'-' }}">
+                {% if task.overdue %}
+                    <span class="text-danger mx-1" data-bs-toggle="tooltip" title="{% trans 'Task overdue' %}"><i class="{{ bicons.overdue }}"></i></span>
+                {% endif %}
+                <span class="fw-bold{% if task.overdue %} text-danger{% endif %}">{{ task.date_due|default:'-' }}</span>
+            </div>
+        </div>
+    </a>
 
-    <div id="task-{{ task.id }}-actions" class="text-end">
-        {% if show_bid %}
-            <a href="{% url 'bidding_bid_details' task.bid.id %}" target="_blank"
-                class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                <span><i class="{{ bicons.bidding }}"></i></span>
-                <span class="ms-1">{% trans "Bid details" %}</span>
-            </a>
-        {% endif %}
+    <div id="task-{{ task.id }}-collapse" class="collapse px-2 ms-4 border-start">
 
-        {% if not show_bid %}
-            <a href="{% url 'bidding_task_edit' task.id %}"
-                class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
-                <span><i class="{{ bicons.edit }}"></i></span>
-                <span class="ms-1">{% trans "Edit task" %}</span>
-            </a>
-        {% endif %}
+        <div id="task-{{ task.id }}-extended" class="mx-0 mb-3">
+            <div>
+                <span class="small fw-light me-1">{% trans "Status" %}</span>
+                <span>{{ task.get_status_display|default:'-' }}</span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Emergency" %}</span>
+                <span>{{ task.get_emergency_display|default:'-' }}</span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Creator" %}</span>
+                <span>
+                    {% if task.creator in colleagues %}
+                        {{ task.creator|default:'-' }}
+                    {% else %}
+                        -- {% trans "Former member" %} --
+                    {% endif %}
+                </span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Assignee" %}</span>
+                <span>{{ task.assignee|default:'-' }}</span>
+            </div>
+            <div>
+                <span class="small fw-light me-1">{% trans "Details" %}</span>
+                <span>{{ task.details|default:'-' }}</span>
+            </div>
+            {% if show_bid %}
+                <div>
+                    <span class="small fw-light me-1">{% trans "Bid title" %}</span>
+                    <span>{{ task.bid.title|default:task.bid.lot.title }}</span>
+                </div>
+            {% endif %}
+        </div>
 
-        {% if task.deletable and manager %}
-            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
-                    data-bs-toggle="modal" data-bs-target="#taskDeleteModal"
-                    data-date="{{ task.date_due|default:'-' }}"
-                    data-title="{{ task.title }}"
-                    data-url="{% url 'bidding_task_delete' task.id %}"
-                    >
-                <span><i class="{{ bicons.delete }}"></i></span>
-                <span class="ms-1">{% trans 'Delete task' %}</span>
-            </button>
-        {% endif %}
+        <div id="task-{{ task.id }}-actions" class="text-end mx-0 mb-3">
+            {% if show_bid %}
+                <a href="{% url 'bidding_bid_details' task.bid.id %}" target="_blank"
+                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                    <span><i class="{{ bicons.bidding }}"></i></span>
+                    <span class="ms-1">{% trans "Bid details" %}</span>
+                </a>
+            {% endif %}
+
+            {% if not show_bid %}
+                <a href="{% url 'bidding_task_edit' task.id %}"
+                    class="ms-2 mt-2 btn btn-sm btn-outline-secondary">
+                    <span><i class="{{ bicons.edit }}"></i></span>
+                    <span class="ms-1">{% trans "Edit task" %}</span>
+                </a>
+            {% endif %}
+
+            {% if task.deletable and manager %}
+                <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                        data-bs-toggle="modal" data-bs-target="#taskDeleteModal"
+                        data-date="{{ task.date_due|default:'-' }}"
+                        data-title="{{ task.title }}"
+                        data-url="{% url 'bidding_task_delete' task.id %}"
+                        >
+                    <span><i class="{{ bicons.delete }}"></i></span>
+                    <span class="ms-1">{% trans 'Delete task' %}</span>
+                </button>
+            {% endif %}
+        </div>
+
     </div>
 
 </div>

@@ -6,6 +6,7 @@
         data-bs-toggle="dropdown" aria-expanded="false">
         <span>{% trans 'Bidding' %}</span>
     </a>
+    
     <ul class="dropdown-menu shadow" aria-labelledby="bdcDropdown">
 
         <li class="">
@@ -44,9 +45,6 @@
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bidding_tasks_list' %}">
                 <i class="{{ bicons.task }} me-2"></i>
-                <!-- <span class="badge bg-danger fw-light">
-                    <i class="{{ bicons.deadline }}"></i>
-                </span> -->
                 <span>{% trans 'Tasks' %}</span>
             </a>
         </li>
@@ -54,20 +52,7 @@
         <li class="">
             <a class="dropdown-item py-2" href="{% url 'bidding_expenses_list' %}">
                 <i class="{{ bicons.expense }} me-2"></i>
-                <!-- <span class="badge bg-danger fw-light">
-                    <i class="{{ bicons.deadline }}"></i>
-                </span> -->
                 <span>{% trans 'Expenses' %}</span>
-            </a>
-        </li>
-
-        <li><hr class="dropdown-divider"></li>
-
-        <li class="">
-            <a class="dropdown-item py-2 text-muted" href="#">
-                <i class="{{ bicons.deadline }} text-danger"></i>
-                <i class="{{ bicons.contact }} me-2"></i>
-                <span>{% trans 'Contacts' %}</span>
             </a>
         </li>
 

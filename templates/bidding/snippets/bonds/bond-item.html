@@ -1,10 +1,12 @@
 {% load i18n %}
 
-    <a data-bs-toggle="collapse" href="#bid-{{ bid.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="bid-{{ bid.id }}-collapse"
+<div id="bond-{{ bid.id }}-line">
+
+    <a data-bs-toggle="collapse" href="#bond-{{ bid.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="bond-{{ bid.id }}-collapse"
        class="text-decoration-none text-reset">
 
-        <div id="bid-{{ bid.id }}-digest" class="p-2">
+        <div id="bond-{{ bid.id }}-digest" class="p-2">
 
             <div class="row g-1 my-1">
                 <div class="col-12 col-md-6 text-start">
@@ -46,9 +48,9 @@
     
     </a>
 
-    <div id="bid-{{ bid.id }}-collapse" class="collapse px-2">  
+    <div id="bond-{{ bid.id }}-collapse" class="collapse px-2 ms-4 border-start">  
 
-        <div id="bid-details-extended" class="mx-0 mb-3">
+        <div id="bond-{{ bid.id }}-extended" class="mx-0 mb-3">
             
             <div class="">
                 <span class="fw-light small me-1">{% trans "Bond status" %}:</span>
@@ -83,7 +85,7 @@
             {% endif %}
         </div>
         
-        <div id="bid-details-actions" class="text-end mx-0 mb-3">
+        <div id="bond-{{ bid.id }}-actions" class="text-end mx-0 mb-3">
 
             <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'portal_tender_details' bid.lot.tender.id %}">
                 <span><i class="{{ bicons.details }}"></i></span>
@@ -96,10 +98,7 @@
             </a>
             
         </div>
+
     </div>
 
-
-
-
-
-
+</div>

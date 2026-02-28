@@ -40,7 +40,7 @@
                     <div class="accordion my-3">
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#overdueCollapse" aria-expanded="true" aria-controls="overdueCollapse">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#overdueCollapse" aria-expanded="false" aria-controls="overdueCollapse">
                                     <div class="w-100">
                                         <span class="">
                                             <span><i class="{{ bicons.expired }}"></i></span>
@@ -50,12 +50,12 @@
                                     </div>
                                 </button>
                             </h2>
-                                <div id="overdueCollapse" class="accordion-collapse show" data-bs-parent="#accordionOverdue">
+                                <div id="overdueCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionOverdue">
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for task in tasks_overdue.all %}
-                                                <div class="list-group-item p-0">
-                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
+                                                <div class="list-group-item-action border-bottom p-0">
+                                                    {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}                                                     
                                                 </div>
                                             {% empty %}
                                                 <div class="list-group-item p-2 text-secondary">
@@ -89,7 +89,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for task in tasks_pending.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -124,7 +124,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for task in tasks_started.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -159,7 +159,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for task in tasks_finished.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -194,7 +194,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for task in tasks_cancelled.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/tasks/task-item.html' with task=task show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -242,7 +242,7 @@
 
                                     <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
                                         <option selected value="not_sure">{% trans "I am not sure" %}</option>
-                                        <option selected value="just_delete">{% trans "Just delete it" %}</option>
+                                        <option value="just_delete">{% trans "Just delete it" %}</option>
                                         <option value="know">{% trans "I know what I am doing" %}</option>
                                     </select>
                                 </div>

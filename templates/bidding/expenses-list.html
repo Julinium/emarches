@@ -41,10 +41,10 @@
                     <div class="accordion my-3">
                         <div class="accordion-item shadow-sm">
                             <h2 class="accordion-header">
-                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#pendingCollapse" aria-expanded="true" aria-controls="pendingCollapse">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pendingCollapse" aria-expanded="false" aria-controls="pendingCollapse">
                                     <div class="w-100">
-                                        <span class="">                                    
-                                            <span><i class="{{ bicons.edit }}"></i></span>
+                                        <span class="">
+                                            <span><i class="{{ bicons.deadline }}"></i></span>
                                             <span class="ms-2 fw-light">{% trans "Pending" %}:</span>
                                             <span class="ms-1 small">{{ expenses_pending.all|length }}</span>
                                         </span>
@@ -56,11 +56,11 @@
                                     </div>
                                 </button>
                             </h2>
-                                <div id="pendingCollapse" class="accordion-collapse show" data-bs-parent="#accordionPending">
+                                <div id="pendingCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionPending">
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for expense in expenses_pending.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -100,7 +100,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for expense in expenses_paid.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -140,7 +140,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for expense in expenses_confirmed.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -180,7 +180,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for expense in expenses_cancelled.all %}
-                                                <div class="list-group-item p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/expenses/expense-item.html' with expense=expense show_bid='yes' %}
                                                 </div>
                                             {% empty %}
@@ -227,7 +227,7 @@
 
                                     <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
                                         <option selected value="not_sure">{% trans "I am not sure" %}</option>
-                                        <option selected value="just_delete">{% trans "Just delete it" %}</option>
+                                        <option value="just_delete">{% trans "Just delete it" %}</option>
                                         <option value="know">{% trans "I know what I am doing" %}</option>
                                     </select>
                                 </div>

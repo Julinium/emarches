@@ -68,7 +68,7 @@
 
         <div class="row g-3">
             {% for field in form.visible_fields %}
-                <div class="col-12 mt-4 
+                <div class="col-12 mt-4
                             {% if not 'textarea' in field.field.widget.template_name and field.name != 'file' %}col-md-6{% endif %}
                             ">
                     <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
@@ -90,7 +90,7 @@
 
             <a href="{% if request.META.HTTP_REFERER %}
                         {{ request.META.HTTP_REFERER }}{% else %}
-                        javascript:history.back(){% endif %}" 
+                        javascript:history.back(){% endif %}"
                 class="btn btn-outline-secondary m-1">
                 <i class="bi bi-backspace me-1"></i>
                 {% trans 'Cancel' %}

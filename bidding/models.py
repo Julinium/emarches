@@ -236,7 +236,13 @@ class Bid(models.Model):
     @property
     def deletable(self):
         if self.status != BidStatus.BID_CANCELLED: return False
-        if self.bond_amount != 0 and self.bond_status == BondStatus.BOND_FILED: return False
+        if self.bond_amount != 0:
+            if self.bond_status == BondStatus.BOND_FILED: return False
+            if self.bond_status == BondStatus.BOND_CLAIMED: return False
+            if self.bond_status == BondStatus.BOND_LOST: return False
+        if self.paid_expenses_sum > 0: return False
+        if self.confirmed_expenses_sum > 0: return False
+        if self.contracts.count() > 0: return False
         return True
 
     @property
@@ -438,6 +444,14 @@ class Bid(models.Model):
     @property
     def expenses_sum(self):
         return self.expenses.aggregate(total=Sum('amount_paid'))['total'] or 0
+    
+    @property
+    def paid_expenses_sum(self):
+        return self.expenses.filter(status=ExpenseStatus.XPS_PAID).aggregate(total=Sum('amount_paid'))['total'] or 0
+    
+    @property
+    def confirmed_expenses_sum(self):
+        return self.expenses.filter(status=ExpenseStatus.XPS_CONFIRMED).aggregate(total=Sum('amount_paid'))['total'] or 0
 
     @property
     def files_count(self):

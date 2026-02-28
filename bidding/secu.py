@@ -1,4 +1,8 @@
+import logging
+
 from bidding.models import Team, TeamMember
+
+logger_portal = logging.getLogger("portal")
 
 
 def is_team_admin(user, team):
@@ -38,6 +42,27 @@ def get_team(user=None):
         memberships.exclude(pk=last_membership.pk).delete()
         return last_membership.team
     else:
+        # teams = user.teams.all()
+        # Delete all empty teams except the latest one. Join it
+        # If no empty team found, create a new one.
+        # if not team:
+        #     try:
+        #         team = Team.objects.create(  
+        #             name=_("TEAM") + "-" + user.username.upper(),
+        #             creator=user,
+        #         )
+        #         logger_portal.info(f"Team created { team.name }", extra={"request": request})
+        #         team.add_member(user, manager=True)
+        #         logger_portal.info(f"User added to team", extra={"request": request})
+        #     except:
+        #         logger_portal.exception("Exception creating Team and membership", extra={"request": request})
+        #         return HttpResponse(_("Exception creating Team and membership"), status=403)
+
+
+
+
+
+
         try:
             name = 'TEAM-' + user.username
             team = Team.objects.create(

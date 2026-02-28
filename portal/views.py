@@ -612,7 +612,7 @@ def tender_favorite(request, pk=None):
         logger_portal.info("Tender added to Favorites", extra={"request": request})
         return HttpResponse(tender.id, status=200)
 
-    logger_portal.info("E500: Failed Tender Favorite", extra={"request": request})
+    logger_portal.warning("E500: Failed Tender Favorite", extra={"request": request})
     return HttpResponse(trans("Failed adding Tender to Favorites"), status=500)
 
 
@@ -888,7 +888,7 @@ def client_list(request):
     context["page_obj"] = page_obj
     context["clients"] = clients
 
-    logger_portal.warning("Clients List view", extra={"request": request})
+    logger_portal.info("Clients List view", extra={"request": request})
     return render(request, "portal/clients-list.html", context)
 
 
@@ -999,5 +999,5 @@ def domain_list(request):
     context["page_obj"] = page_obj
     context["domains"] = domains
 
-    logger_portal.warning("Domains List view", extra={"request": request})
+    logger_portal.info("Domains List view", extra={"request": request})
     return render(request, "portal/domains-list.html", context)

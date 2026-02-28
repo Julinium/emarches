@@ -25,35 +25,293 @@
                   title="{% trans 'Results are filtered' %}">
                 <i class="{{ bicons.filters }}"></i>
             </span>
+            <span class="small text-muted">{% trans "Results are filtered" %}.</span>
         {% endif %}
         <span class="fw-bold">
-            {{ page_obj.paginator.count }} 
+            {{ bids_count }} 
         </span>
         <span class="small text-muted">{% trans "Bids found" %}.</span>
-        {% if page_obj.has_other_pages %}
-        {% endif %}
-            <span class="small text-muted">{% trans "Showing" %}:</span>
-            <span class="small">
-                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
-            </span>
     </div>
-    
-    {% if page_obj %}
 
-        <div class="container py-4 px-0">
-            {% for bid in page_obj %}
-                <div class="card shadow mb-4">
-                    {% include 'bidding/snippets/bids/bid-item.html' %}                       
+    <div class="container py-4 px-0">
+        {% if bids_count > 0 %}
+
+            {% if bids_draft.all|length != 0 %}
+                <div id="accordionDraft">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#draftCollapse" aria-expanded="false" aria-controls="draftCollapse">
+                                    <div class="w-100">
+                                        <span class="">                                    
+                                            <span><i class="{{ bicons.edit }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Drafts" %}:</span>
+                                            <span class="ms-1 small">{{ bids_draft.all|length }}</span>
+                                        </span>
+                                        {% if total_draft != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_draft }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="draftCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionDraft">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for bid in bids_draft.all %}
+                                                <div class="list-group-item-action border-bottom p-0">
+                                                    {% include 'bidding/snippets/bids/bid-item.html' with bid=bid %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-        </div>
+            {% endif %}
 
-        {% include 'base/snippets/paginator.html' %}
+            {% if bids_ready.all|length != 0 %}
+                <div id="accordionReady">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#readyCollapse" aria-expanded="false" aria-controls="readyCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.expired }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Ready" %}:</span>
+                                            <span class="ms-1 small">{{ bids_ready.all|length }}</span>
+                                        </span>
+                                        {% if total_ready != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_ready }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="readyCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionReady">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for bid in bids_ready.all %}
+                                                <div class="list-group-item-action border-bottom p-0">
+                                                    {% include 'bidding/snippets/bids/bid-item.html' with bid=bid epoch='since' %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
-    {% else %}
-        {% include 'base/snippets/empty-list.html' %}
-    {% endif %}
+            {% if bids_submitted.all|length != 0 %}
+                <div id="accordionSubmitted">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#submittedCollapse" aria-expanded="false" aria-controls="submittedCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.claimed }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Submitted" %}:</span>
+                                            <span class="ms-1 small">{{ bids_submitted.all|length }}</span>
+                                        </span>
+                                        {% if total_submitted != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_submitted }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="submittedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionSubmitted">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for bid in bids_submitted.all %}
+                                                <div class="list-group-item-action border-bottom p-0">
+                                                    {% include 'bidding/snippets/bids/bid-item.html' with bid=bid %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if bids_finished.all|length != 0 %}
+                <div id="accordionFinished">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#finishedCollapse" aria-expanded="false" aria-controls="finishedCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.returned }}"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Finished" %}:</span>
+                                            <span class="ms-1 small">{{ bids_finished.all|length }}</span>
+                                        </span>
+                                        {% if total_finished != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_finished }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="finishedCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionFinished">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for bid in bids_finished.all %}
+                                                <div class="list-group-item-action border-bottom p-0">
+                                                    {% include 'bidding/snippets/bids/bid-item.html' with bid=bid %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if bids_cancelled.all|length != 0 %}
+                <div id="accordionCancelled">
+                    <div class="accordion my-3">
+                        <div class="accordion-item shadow-sm">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#cancelledCollapse" aria-expanded="false" aria-controls="cancelledCollapse">
+                                    <div class="w-100">
+                                        <span class="">
+                                            <span><i class="{{ bicons.cancelled }} text-danger"></i></span>
+                                            <span class="ms-2 fw-light">{% trans "Cancelled" %}:</span>
+                                            <span class="ms-1 small">{{ bids_cancelled.all|length }}</span>
+                                        </span>
+                                        {% if total_cancelled != 0 %}
+                                            <span class="float-end text-end ms-3 me-2">
+                                                <span class="fw-bold text-secondary">{{ total_cancelled }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </button>
+                            </h2>
+                                <div id="cancelledCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionCancelled">
+                                    <div class="accordion-body p-0">
+                                        <div class="list-group small mb-0">
+                                            {% for bid in bids_cancelled.all %}
+                                                <div class="list-group-item-action border-bottom p-0">
+                                                    {% include 'bidding/snippets/bids/bid-item.html' with bid=bid %}
+                                                </div>
+                                            {% empty %}
+                                                <div class="list-group-item p-2 text-secondary">
+                                                    <span class="ms-1">{% trans "None found" %}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div id="confirmation-modlas">
+
+                <div id="bidDeleteModal" class="modal fade" 
+                        tabindex="-1" aria-labelledby="bidDeleteModalLabel" 
+                        aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <form id="bid-delete-form" method="post">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="my-2">
+                                        <div class="mb-1">
+                                            <span class="small fw-light">{% trans "Amount" %}: </span>
+                                            <span id="bid-span-amount"></span>
+                                        </div>
+                                        <div class="mb-1">
+                                            <span class="small fw-light">{% trans "Title" %}: </span>
+                                            <span id="bid-span-title"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="my-2">
+                                        <span class="text-danger">{% trans "This bid, its associated data and files (bonds, tasks, expenses, contracts, ...) will be permanently deleted" %}.</span>
+                                    </div>
+
+                                    <select class="form-select mb-2" name="confirmed" aria-label="Delete confirmation select">
+                                        <option selected value="not_sure">{% trans "I am not sure" %}</option>
+                                        <option value="just_delete">{% trans "Just delete it" %}</option>
+                                        <option value="know">{% trans "I know what I am doing" %}</option>
+                                    </select>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <span><i class="bi bi-x-lg"></i></span>
+                                        <span class="ms-1">{% trans "Cancel" %}</span>
+                                    </button>
+                                    <button type="submit" class="m-1 btn btn-danger" data-bs-dismiss="modal">
+                                        <span><i class="{{ bicons.delete }}"></i></span>
+                                        <span class="ms-1">{% trans 'Delete' %}</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+
+                    // Expense deletion
+                    const bidDeleteModal = document.getElementById('bidDeleteModal');
+                    const bidSpanAmount  = document.getElementById('bid-span-amount');
+                    const bidSpanTitle   = document.getElementById('bid-span-title');
+                    const bidDeleteForm  = document.getElementById('bid-delete-form');
+
+                    bidDeleteModal.addEventListener('show.bs.modal', function (event) {
+                        const button = event.relatedTarget;
+
+                        bidSpanAmount.innerText  = button.dataset.amount;
+                        bidSpanTitle.innerText   = button.dataset.title;
+                        bidDeleteForm.action     = button.dataset.url;
+                    });
+
+                </script>
+
+            </div>
     
+        {% else %}
+            {% include 'base/snippets/empty-list.html' %}
+        {% endif %}
+
+    </div>
 
 {% endblock content %}
 
