@@ -136,7 +136,7 @@ class Invitation(models.Model):
     def save(self, *args, **kwargs):
         self.invitee = User.objects.filter(username__exact=self.username).first()
         super().save(*args, **kwargs)
-    
+
 
 class Contact(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -456,8 +456,6 @@ class Bid(models.Model):
         return fs
 
 
-
-
 class Contract(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     reference      = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Reference'))
@@ -508,7 +506,7 @@ class Task(models.Model):
     title     = models.CharField(max_length=255, default=_('New Task'), verbose_name=_('Title'))
     date_due  = models.DateField(blank=True, null=True, verbose_name="Due Date")
     # reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
-    contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='tasks')
+    # contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='tasks')
     details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     assignee  = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
@@ -581,7 +579,7 @@ class Expense(models.Model):
 
     payee        = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Payee'))
     payee_ice    = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Payee ICE'))
-    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='expenses')
+    # contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='expenses')
 
     details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))
@@ -632,7 +630,7 @@ class Reception(models.Model):
 
     client       = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Client'))
     client_ice   = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Client ICE'))
-    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='receptions')
+    # contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='receptions')
     location     = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Location'))
 
     details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
@@ -672,7 +670,7 @@ class Income(models.Model):
 
     client       = models.CharField(max_length=255, blank=True, default='', verbose_name=_('Client'))
     client_ice   = models.CharField(max_length=15, blank=True, default='', verbose_name=_('Client ICE'))
-    contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='incomes')
+    # contact      = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, null=True, verbose_name=_('Contact'), related_name='incomes')
 
     details      = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     status       = models.CharField(max_length=16, choices=ExpenseStatus.choices, default=ExpenseStatus.XPS_PENDING, verbose_name=_('Status'))

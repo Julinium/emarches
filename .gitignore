@@ -6,11 +6,16 @@
 db.sqlite3
 media/
 emarches/logs
+logs
 .tmp/
+__pycache__/
+
+*.log
+*.pyc
+
 scraper/.env
 scraper/.env.*
 scraper/exports
 scraper/logs
 scraper/crony/.lock
 
-*.log

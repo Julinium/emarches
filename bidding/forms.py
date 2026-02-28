@@ -250,7 +250,6 @@ class TaskForm(forms.ModelForm):
             "emergency" ,
             "status"    ,
             "assignee"  ,
-            "contact"   ,
             "details"   ,
         ]
 
@@ -271,14 +270,14 @@ class TaskForm(forms.ModelForm):
             if colleagues.count() == 1:
                 assignee_field.initial = colleagues.first()
 
-            contacts = Contact.objects.filter(creator__in=colleagues)
-            contact_field = self.fields["contact"]
-            contact_field.queryset = contacts
-            if contacts.count() == 1:
-                contact_field.initial = contacts.first()
+            # contacts = Contact.objects.filter(creator__in=colleagues)
+            # contact_field = self.fields["contact"]
+            # contact_field.queryset = contacts
+            # if contacts.count() == 1:
+                # contact_field.initial = contacts.first()
         else:
             assignee_field.queryset = User.objects.none()
-            contact_field.queryset = Contact.objects.none()
+            # contact_field.queryset = Contact.objects.none()
 
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
@@ -302,7 +301,7 @@ class ExpenseForm(forms.ModelForm):
             "amount_vat"  ,
             "payee"       ,
             "payee_ice"   ,
-            "contact"     ,
+            # "contact"     ,
 
             "details"     ,
             "status"      ,
@@ -322,16 +321,16 @@ class ExpenseForm(forms.ModelForm):
         self.creator = user
         self.bid = bid
 
-        if user:
-            colleagues = get_colleagues(user)
+        # if user:
+        #     colleagues = get_colleagues(user)
 
-            contacts = Contact.objects.filter(creator__in=colleagues)
-            contact_field = self.fields["contact"]
-            contact_field.queryset = contacts
-            if contacts.count() == 1:
-                contact_field.initial = contacts.first()
-        else:
-            contact_field.queryset = Contact.objects.none()
+        #     contacts = Contact.objects.filter(creator__in=colleagues)
+        #     contact_field = self.fields["contact"]
+        #     contact_field.queryset = contacts
+        #     if contacts.count() == 1:
+        #         contact_field.initial = contacts.first()
+        # else:
+        #     contact_field.queryset = Contact.objects.none()
 
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
