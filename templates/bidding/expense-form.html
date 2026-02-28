@@ -69,7 +69,7 @@
         <div class="row g-3">
             {% for field in form.visible_fields %}
                 <div class="col-12 mt-4 
-                            {% if not 'textarea' in field.field.widget.template_name %}col-md-6{% endif %}
+                            {% if not 'textarea' in field.field.widget.template_name and field.name != 'file' %}col-md-6{% endif %}
                             ">
                     <div class="small {% if field.errors %}text-danger{% else %}text-muted{% endif %}">
                         <span>{{ field.label_tag }}</span>

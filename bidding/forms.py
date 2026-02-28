@@ -302,18 +302,19 @@ class ExpenseForm(forms.ModelForm):
             "payee"       ,
             "payee_ice"   ,
             # "contact"     ,
-
-            "details"     ,
             "status"      ,
 
             "file"        ,
+
+            "details"     ,
 
         ]
 
         widgets = {
             'bill_date': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
             'date_paid': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'details'       : forms.Textarea(attrs={'rows': '3'}),
+            'details'  : forms.Textarea(attrs={'rows': '3'}),
+            "file"     : FilenameOnlyClearableFileInput,
         }
 
     def __init__(self, *args, bid=None, user=None, **kwargs):
