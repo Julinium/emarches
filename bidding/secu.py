@@ -1,5 +1,6 @@
 import logging
 
+from datetime import datetime, timedelta
 from django.utils.translation import gettext_lazy as _
 
 from bidding.models import Team, TeamMember
@@ -13,9 +14,16 @@ def get_or_create_team(user=None, request=None):
     last_membership = memberships.order_by("-joined").first()
     if last_membership:
         try:
+            back48h = datetime.now() - timedelta(hours=60)
+            canvs = user.invitations.filter(cancelled=True) | user.invitations.filter(expiry__lt=back48h)
+            dc, dd = canvs.delete()
+            logger_portal.debug(f"Deleted { dc } dead Invitations: { dd }", extra={"request": request})
+        except:
+            logger_portal.exception("Exception deleting dead Invitations", extra={"request": request})
+        try:
             others = memberships.exclude(pk=last_membership.pk)
-            deleted_ms, x = others.delete()
-            logger_portal.debug(f"Deleted { deleted_ms } Memebeships: { x }", extra={"request": request})
+            dc, dd = others.delete()
+            logger_portal.debug(f"Deleted { dc } Memebeships: { dd }", extra={"request": request})
         except:
             logger_portal.exception("Exception handling other Memberships", extra={"request": request})
 
@@ -24,8 +32,8 @@ def get_or_create_team(user=None, request=None):
     else:
         emp_teams = user.teams.filter(members__isnull=True)
         try:
-            deleted_teams, x = emp_teams.delete()
-            logger_portal.debug(f"Deleted { deleted_teams } empty Teams: { x }", extra={"request": request})
+            dc, dd = emp_teams.delete()
+            logger_portal.debug(f"Deleted { dc } empty Teams: { dd }", extra={"request": request})
         except:
             logger_portal.exception("Exception handling empty Teams", extra={"request": request})
             
@@ -92,8 +100,8 @@ def update_membership(user=None, member=None, verb=None, request=None):
         if last_membership:
             try:
                 others = memberships.exclude(pk=last_membership.pk)
-                deleted_ms, x = others.delete()
-                logger_portal.debug(f"Deleted { deleted_ms } Memebeships: { x }", extra={"request": request})
+                dc, dd = others.delete()
+                logger_portal.debug(f"Deleted { dc } Memebeships: { dd }", extra={"request": request})
             except:
                 logger_portal.exception("Exception handling other Memberships", extra={"request": request})
             

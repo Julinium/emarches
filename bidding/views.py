@@ -225,19 +225,14 @@ def invitation_accept(request, pk=None):
                         active=False,
                     )
                     update_membership(user, invitee, "disable", request=request)
-                    # TODO: Delete Former Team if empty
-                    invitation.reply = InvitationReplies.INV_ACCEPTED
-                    invitation.reply_on = datetime.now()
-                    invitation.save()
+
+                    # invitation.reply = InvitationReplies.INV_ACCEPTED
+                    # invitation.reply_on = datetime.now()
                     logger_portal.info("Invitation acceptance succeeded", extra={"request": request})
-                    messages.success(
-                        request,
-                        _("You now are a member of the team")
-                        + f": {invitation.team.name}",
-                    )
-                    messages.error(
-                        request, _("Ask a team Manager to activate your membership")
-                    )
+                    messages.success(request, _("You now are a member of team") + f": {invitation.team.name}")
+                    messages.warning(request, _("Ask a team Manager to activate your membership"))
+                    invitation.delete()
+                    logger_portal.debug("Invitation Deleted successfully", extra={"request": request})
             except Exception as xs:
                 logger_portal.warning(f"Deleted user membership instances: {deleted_ms}", extra={"request": request})
                 logger_portal.exception("Invitation acceptance failed", extra={"request": request})
