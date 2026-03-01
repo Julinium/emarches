@@ -173,11 +173,6 @@
                                                     <i class="{{ bicons.cancelled }} small"></i>
                                                     <span class="small">{% trans "Declined" %}</span>
                                                 </span>
-                                                {% if inv.response %}
-                                                    <div class="fw-bold m-2 ms-4">
-                                                        {{ inv.response }}
-                                                    </div>
-                                                {% endif %}
                                             {% else %}
                                                 {% if inv.seen_on %}
                                                     <span class="small text-secondary ms-2" data-bs-toggle="tooltip" title="{% trans 'Seen' %}: {{ inv.seen_on }}">

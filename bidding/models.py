@@ -23,10 +23,10 @@ EXTENSIONS_VALIDATORS = [
     FileExtensionValidator(
         allowed_extensions=[
             'zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'tar.gz', 'tgz', 'tar.bz2', 'tar.xz', 
-            'pdf', 'doc', 'docx', 'odt', 'odp', 'odx', 'txt', 'xml', 'json', 'md', 'rtf', 'html',
+            'pdf', 'doc', 'docx', 'odt', 'odp', 'odx', 'txt', 'xml', 'json', 'md', 'rtf', 'html', 
             'jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif', 
-            'xls', 'xlsx', 'ods', 'ots', 'dif', 'dbf', 'csv',
-            'mpp', 'ppt', 'pptx',
+            'xls', 'xlsx', 'ods', 'ots', 'dif', 'dbf', 'csv', 
+            'mpp', 'ppt', 'pptx', 
             ]
         )
     ]
@@ -66,26 +66,12 @@ class Team(models.Model):
                 memberships__active  = True,
                 memberships__manager = True,
             )
-        # return Company.objects.filter(user__in=self.members.all())
-    
-    # @property
-    # def avatar(self):
-    #     try:
-    #         avatar = self.image.url
-    #     except:
-    #         avatar = static('bidding/teams/default.png')
-    #     return avatar
-
-    # def save(self, *args, **kwargs):
-        # if self.image:
-        #     self.image = squarify_image(self.image, str(self.id).split('-')[0])
-        # super().save(*args, **kwargs)
 
 
 class TeamMember(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user      = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='memberships')
-    team      = models.ForeignKey(Team, on_delete=models.DO_NOTHING, editable=False, related_name='memberships')
+    team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='memberships')
     active    = models.BooleanField(null=True, default=True, editable=False)
     manager   = models.BooleanField(null=True, default=False, editable=False)
     joined    = models.DateTimeField(auto_now_add=True, editable=False)
@@ -119,7 +105,7 @@ class Invitation(models.Model):
     # seen_on   = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Seen on'))
     reply_on  = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Replied on'))
     reply     = models.CharField(max_length=1, choices=InvitationReplies, null=True, blank=True,  editable=False, verbose_name=_('Reply'))
-    response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
+    # response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
 
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='invitations')
     created   = models.DateTimeField(auto_now_add=True, editable=False)
@@ -136,36 +122,6 @@ class Invitation(models.Model):
     def save(self, *args, **kwargs):
         self.invitee = User.objects.filter(username__exact=self.username).first()
         super().save(*args, **kwargs)
-
-
-class Contact(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    civility  = models.CharField(max_length=16, choices=CivilityChoices.choices, default=CivilityChoices.CIV_MR, verbose_name=_('Civility'))
-    active    = models.BooleanField(null=True, default=True)
-    name      = models.CharField(max_length=255, verbose_name=_('Name'))
-    phone     = models.CharField(max_length=255, blank=True, verbose_name=_('Phone'))
-    mobile    = models.CharField(max_length=255, blank=True, verbose_name=_('Mobile'))
-    email     = models.EmailField(blank=True, verbose_name=_('Email'))
-    whatsapp  = models.CharField(max_length=255, blank=True, verbose_name=_('Whatsapp'))
-    faximili  = models.CharField(max_length=255, blank=True, verbose_name=_('Fax'))
-    website   = models.CharField(max_length=128, blank=True, verbose_name=_('Website'))
-    address   = models.CharField(max_length=512, blank=True, verbose_name=_('Street Address'))
-    city      = models.CharField(max_length=64, blank=True, verbose_name=_('City'))
-    country   = models.CharField(max_length=64, blank=True, default=_('Morocco'), verbose_name=_('Country'))
-    company   = models.CharField(max_length=128, blank=True, verbose_name=_('Company'))
-    position  = models.CharField(max_length=128, blank=True, verbose_name=_('Position'))
-    notes     = models.CharField(max_length=1024, blank=True, verbose_name=_('Notes'))
-
-    creator   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='contacts')
-    created   = models.DateTimeField(auto_now_add=True, editable=False)
-    updated   = models.DateTimeField(auto_now=True, editable=False)
-
-    class Meta:
-        db_table = 'bidding_contact'
-        ordering = ['name']
-
-    def __str__(self):
-        return f'{self.civility} {self.name}'
 
 
 class Bid(models.Model):
@@ -720,3 +676,4 @@ def is_past(value):
         return value < date.today()
     
     return False
+

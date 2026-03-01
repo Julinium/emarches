@@ -1,8 +1,48 @@
 import logging
 
+from django.utils.translation import gettext_lazy as _
+
 from bidding.models import Team, TeamMember
 
 logger_portal = logging.getLogger("portal")
+
+
+def get_or_create_team(user=None, request=None):
+    if not user: return None
+    memberships = user.memberships.all()
+    last_membership = memberships.order_by("-joined").first()
+    if last_membership:
+        try:
+            others = memberships.exclude(pk=last_membership.pk)
+            deleted_ms, x = others.delete()
+            logger_portal.debug(f"Deleted { deleted_ms } Memebeships: { x }", extra={"request": request})
+        except:
+            logger_portal.exception("Exception handling other Memberships", extra={"request": request})
+
+        return last_membership.team
+        
+    else:
+        emp_teams = user.teams.filter(members__isnull=True)
+        try:
+            deleted_teams, x = emp_teams.delete()
+            logger_portal.debug(f"Deleted { deleted_teams } empty Teams: { x }", extra={"request": request})
+        except:
+            logger_portal.exception("Exception handling empty Teams", extra={"request": request})
+            
+        try:
+            team = Team.objects.create(  
+                name= f"TEAM-{ user.username.upper() }",
+                creator=user,
+            )
+            logger_portal.debug(f"Team created { team.name }", extra={"request": request})
+
+            team.add_member(user, manager=True)
+            logger_portal.debug(f"User { user.id } added to team { team.name }", extra={"request": request})
+            return team
+        except Exception as xc:
+            logger_portal.exception(f"Exception creating Team and membership: { xc }", extra={"request": request})
+
+    return None
 
 
 def is_team_admin(user, team):
@@ -33,81 +73,55 @@ def is_active_team_member(user, team):
     if membership: return True
     return False
 
-
-def get_team(user=None):
-    if not user: return None
-    memberships = user.memberships.all()
-    last_membership = memberships.order_by("-joined").first()
-    if last_membership:
-        memberships.exclude(pk=last_membership.pk).delete()
-        return last_membership.team
-    else:
-        # teams = user.teams.all()
-        # Delete all empty teams except the latest one. Join it
-        # If no empty team found, create a new one.
-        # if not team:
-        #     try:
-        #         team = Team.objects.create(  
-        #             name=_("TEAM") + "-" + user.username.upper(),
-        #             creator=user,
-        #         )
-        #         logger_portal.info(f"Team created { team.name }", extra={"request": request})
-        #         team.add_member(user, manager=True)
-        #         logger_portal.info(f"User added to team", extra={"request": request})
-        #     except:
-        #         logger_portal.exception("Exception creating Team and membership", extra={"request": request})
-        #         return HttpResponse(_("Exception creating Team and membership"), status=403)
-
-
-
-
-
-
-        try:
-            name = 'TEAM-' + user.username
-            team = Team.objects.create(
-                creator = user,
-                name=nam.strip().upper(),
-            )
-            team.add_member(user, True)
-            return team
-        except Exception as xc:
-            pass
-
-    return None
-
-
 def get_colleagues(user=None):
     if not user: return None
     membership = user.memberships.order_by("joined").last()
-    # membership = user.memberships.filter(active=True).last()
     return membership.team.members.filter(is_active=True).all() if membership else None
 
 
-def update_membership(user=None, member=None, verb=None):
-    if not user or not member or not verb: return None
-    if user == member : return None
+def update_membership(user=None, member=None, verb=None, request=None):
+    if not user or not member or not verb: 
+        logger_portal.debug("update_membership failed: Bad parameters", extra={"request": request})
+        return None
+    if user == member : 
+        logger_portal.debug("update_membership failed: Self editing", extra={"request": request})
+        return None
     try:
         memberships = member.memberships.all()
         last_membership = memberships.order_by("-joined").first()
         if last_membership:
-            memberships.exclude(pk=last_membership.pk).delete()
-            if verb:
-                if verb == 'fire':
-                    last_membership.delete()
-                else:
-                    if verb == 'disable':
-                        last_membership.active = False
-                    elif verb == 'enable':
-                        last_membership.active = True
-                    elif verb == 'bossify':
-                        last_membership.manager = True
-                    elif verb == 'debossify':
-                        last_membership.manager = False
-                    elif verb == 'debossify':
-                        last_membership.manager = False
-                    last_membership.save()
-                return verb
+            try:
+                others = memberships.exclude(pk=last_membership.pk)
+                deleted_ms, x = others.delete()
+                logger_portal.debug(f"Deleted { deleted_ms } Memebeships: { x }", extra={"request": request})
+            except:
+                logger_portal.exception("Exception handling other Memberships", extra={"request": request})
+            
+            if verb == 'fire':
+                last_membership.delete()
+                logger_portal.info("Deleted membership successfully", extra={"request": request})
+            else:
+                if verb == 'disable':
+                    last_membership.active = False
+                elif verb == 'enable':
+                    last_membership.active = True
+                elif verb == 'bossify':
+                    last_membership.manager = True
+                elif verb == 'debossify':
+                    last_membership.manager = False
+                elif verb == 'debossify':
+                    last_membership.manager = False
+                last_membership.save()
+                logger_portal.info(f"Updated membership with: { verb }", extra={"request": request})
+            return verb
+        
+        logger_portal.warning("No last membership not found", extra={"request": request})
         return None
     except: 
+        logger_portal.exception("Exception updating membership", extra={"request": request})
         return None
+
+
+# def hire(user=None, team=None):
+#     if is_team_member(user, team): return True
+

@@ -342,7 +342,7 @@ LOGGING = {
         },
         'portal': {
             'handlers': ['portal_file'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
         },
     },

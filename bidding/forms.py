@@ -9,11 +9,11 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from base.models import Lot
-from bidding.models import Bid, Invitation, Contact, Expense, Task
+from bidding.models import Bid, Invitation, Expense, Task
 from bidding.secu import (
     # is_team_admin, is_team_member, 
     # is_active_team_member, is_active_team_admin,
-    get_team, get_colleagues, update_membership)
+    get_or_create_team, get_colleagues, update_membership)
 from bidding.widgets import FilenameOnlyClearableFileInput
 from nas.models import Company
 from nas.choices import BidStatus, BidResults
