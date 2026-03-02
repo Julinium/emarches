@@ -39,6 +39,9 @@ class JsonFormatter(logging.Formatter):
         """
 
         log_data = {
+            "time": self.formatTime(record),
+            "level": record.levelname,
+            "message": record.getMessage(),
         }
 
         request = getattr(record, "request", None)
