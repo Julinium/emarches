@@ -53,40 +53,6 @@ def get_or_create_team(user=None, request=None):
     return None
 
 
-def is_team_admin(user, team):
-    membership = TeamMember.objects.filter(
-        user=user, team=team,
-    ).first()
-    if membership: return membership.manager == True
-    return False
-
-def is_active_team_admin(user, team):
-    membership = TeamMember.objects.filter(
-        user=user, team=team, active=True,
-    ).first()
-    if membership: return membership.manager == True
-    return False
-
-def is_team_member(user, team):
-    membership = TeamMember.objects.filter(
-        user=user, team=team,
-    ).first()
-    if membership: return True
-    return False
-
-def is_active_team_member(user, team):
-    membership = TeamMember.objects.filter(
-        user=user, team=team, active=True,
-    ).first()
-    if membership: return True
-    return False
-
-def get_colleagues(user=None):
-    if not user: return None
-    membership = user.memberships.order_by("joined").last()
-    return membership.team.members.filter(is_active=True).all() if membership else None
-
-
 def update_membership(user=None, member=None, verb=None, request=None):
     if not user or not member or not verb: 
         logger_portal.debug("update_membership failed: Bad parameters", extra={"request": request})
@@ -130,6 +96,36 @@ def update_membership(user=None, member=None, verb=None, request=None):
         return None
 
 
-# def hire(user=None, team=None):
-#     if is_team_member(user, team): return True
+def is_team_admin(user, team):
+    membership = TeamMember.objects.filter(
+        user=user, team=team,
+    ).first()
+    if membership: return membership.manager == True
+    return False
+
+def is_active_team_admin(user, team):
+    membership = TeamMember.objects.filter(
+        user=user, team=team, active=True,
+    ).first()
+    if membership: return membership.manager == True
+    return False
+
+def is_team_member(user, team):
+    membership = TeamMember.objects.filter(
+        user=user, team=team,
+    ).first()
+    if membership: return True
+    return False
+
+def is_active_team_member(user, team):
+    membership = TeamMember.objects.filter(
+        user=user, team=team, active=True,
+    ).first()
+    if membership: return True
+    return False
+
+def get_colleagues(user=None):
+    if not user: return None
+    membership = user.memberships.order_by("joined").last()
+    return membership.team.members.filter(is_active=True).all() if membership else None
 

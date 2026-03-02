@@ -296,11 +296,11 @@ class ExpenseForm(forms.ModelForm):
             "date_paid"   ,
             "channel"     ,
             "mean_ref"    ,
+            "status"      ,
             "amount_paid" ,
             "amount_vat"  ,
             "payee"       ,
             "payee_ice"   ,
-            "status"      ,
             "file"        ,
             "details"     ,
 

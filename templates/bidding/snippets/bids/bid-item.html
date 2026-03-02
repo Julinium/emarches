@@ -13,30 +13,37 @@
                 <div id="bid-{{ bid.id }}-digest" class="p-2">
 
                     <div class="row g-1 my-1">
-                        <div class="col-12 text-start twolines">
-                            <span class="me-1" data-bs-toggle="tooltip" title="{% trans 'Company' %}: {{ bid.company.name }}">
-                                <img src="{{ bid.company.logo }}" alt="X" 
-                                     class="img-fluid rounded rounded-circle" 
-                                     style="width: 1.5rem; height: 1.5rem;">
-                            </span>
+                        <div class="col-12 text-start">
+                            <div class="d-flex align-items-center">
+                                <div class="me-1">
+                                    <div class="me-1" data-bs-toggle="tooltip" 
+                                         title="{% trans 'Company' %}: {{ bid.company.name }}"
+                                         style="min-width: 2rem;">
+                                        <img src="{{ bid.company.logo }}" alt="X" 
+                                            class="img-fluid rounded rounded-circle" 
+                                            style="width: 2rem; height: 2rem;">
+                                    </div>
+                                </div>
+                                <div class="twolines">
+                                    {% if bid.lot.tender.cancelled == True %}
+                                        <span class="badge bg-danger blink me-1" data-bs-toggle="tooltip" title="{% trans 'Tender is cancelled' %}">
+                                            <i class="{{ bicons.cancelled }}"></i>
+                                            <span>{% trans "CANCELLED" %}</span>
+                                        </span>
+                                    {% endif %}
 
-                            {% if bid.lot.tender.cancelled == True %}
-                                <span class="badge bg-danger blink me-1" data-bs-toggle="tooltip" title="{% trans 'Tender is cancelled' %}">
-                                    <i class="{{ bicons.cancelled }}"></i>
-                                    <span>{% trans "CANCELLED" %}</span>
-                                </span>
-                            {% endif %}
-
-                            {% if bid.duplicated %}
-                                <span class="badge bg-warning me-1" data-bs-toggle="tooltip" title="{% trans 'Found other bids on the same Tender/lot using the same company' %}">
-                                    <i class="{{ bicons.duplicate }}"></i>
-                                    <span>{% trans "DUPLICATED" %}</span>
-                                </span>
-                            {% endif %}
-                            <span class="">{{ bid.caption }}</span>
+                                    {% if bid.duplicated %}
+                                        <span class="badge bg-warning me-1" data-bs-toggle="tooltip" title="{% trans 'Found other bids on the same Tender/lot using the same company' %}">
+                                            <i class="{{ bicons.duplicate }}"></i>
+                                            <span>{% trans "DUPLICATED" %}</span>
+                                        </span>
+                                    {% endif %}
+                                    <span class="">{{ bid.caption }}</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="col-12 col-md-6 text-start">
+                        <!-- <div class="col-12 col-md-6 text-start">
                             <div id="bid-{{ bid.id }}-footer" class="small">
 
                                 <span class="me-2 my-0 badge fw-light bg-{{ bid.bond_tint }}" data-bs-toggle="tooltip" title="{% trans 'Bond amount' %}">
@@ -44,44 +51,41 @@
                                     <span class="fw-bold">{{ bid.bond_amount|default:'--' }}</span>
                                 </span>
 
-                                {% if bid.tasks.all %}
-                                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
-                                        <span><i class="{{ bicons.task }}"></i></span>
-                                        <span class="">{{ bid.tasks.all|length }}</span>
-                                    </span>
-                                {% endif %}
-                                
-                                {% if bid.expenses.all %}
-                                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
-                                        <span><i class="{{ bicons.expense }}"></i></span>
-                                        <span class="">{{ bid.expenses.all|length }}</span>
-                                    </span>
-                                {% endif %}
-
-                                {% if bid.contracts.all %}
-                                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
-                                        <span><i class="{{ bicons.contract }}"></i></span>
-                                        <span class="">{{ bid.contracts.all|length }}</span>
-                                    </span>
-                                {% endif %}
-
-                                {% if bid.files_count != 0 %}
-                                    <span class="me-2 my-0" data-bs-toggle="tooltip" title="{% trans 'Files' %}">
-                                        <span><i class="{{ bicons.files_size }}"></i></span>
-                                        <span class="">{{ bid.files_size|filesizeformat }}</span>
-                                    </span>
-                                {% endif %}
-
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="col-12 col-md-6 text-end">
+                        <div class="col-12 text-end">
 
-                            <div data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}"> 
-                                <span class="badge bg-{{ bid.tag_tint }} me-1" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
-                                <span class="fw-bold">{{ bid.bid_amount }}</span>
-                            </div>
+                            {% if bid.tasks.all %}
+                                <span class="me-2 my-0 small" data-bs-toggle="tooltip" title="{% trans 'Tasks' %}">
+                                    <span><i class="{{ bicons.task }}"></i></span>
+                                    <span class="">{{ bid.tasks.all|length }}</span>
+                                </span>
+                            {% endif %}
+                            
+                            {% if bid.expenses.all %}
+                                <span class="me-2 my-0 small" data-bs-toggle="tooltip" title="{% trans 'Expenses' %}">
+                                    <span><i class="{{ bicons.expense }}"></i></span>
+                                    <span class="">{{ bid.expenses.all|length }}</span>
+                                </span>
+                            {% endif %}
 
+                            {% if bid.contracts.all %}
+                                <span class="me-2 my-0 small" data-bs-toggle="tooltip" title="{% trans 'Contracts' %}">
+                                    <span><i class="{{ bicons.contract }}"></i></span>
+                                    <span class="">{{ bid.contracts.all|length }}</span>
+                                </span>
+                            {% endif %}
+
+                            {% if bid.files_count != 0 %}
+                                <span class="me-2 my-0 small" data-bs-toggle="tooltip" title="{% trans 'Files' %}">
+                                    <span><i class="{{ bicons.files_size }}"></i></span>
+                                    <span class="">{{ bid.files_size|filesizeformat }}</span>
+                                </span>
+                            {% endif %}
+
+                            <span class="badge bg-{{ bid.tag_tint }} me-1 my-0" data-bs-toggle="tooltip" title="{% trans 'Bid status' %}">{{ bid.tag_display }}</span>
+                            <span class="fw-bold my-0" data-bs-toggle="tooltip" title="{% trans 'Bid amount' %}">{{ bid.bid_amount }}</span>
                         </div>
                     </div>
                 </div>
@@ -129,14 +133,26 @@
                 <div class="small oneline mt-1">
                     <span class="fw-light me-1">{% trans "Bid Created" %}:</span>
                     <span class="text-secondary fw-bold">{{ bid.created|date|default:'-' }}</span>
-                    <span class="text-secondary me-1">@{{ bid.creator.username|default:'-' }}</span>
+                    <span class="text-secondary me-1">
+                        {% if bid.creator in colleagues %}
+                            @{{ bid.creator.username|default:'-' }}
+                        {% else %}
+                            -- {% trans "Former member" %} --
+                        {% endif %}
+                    </span>
                 </div>
 
                 {% if bid.updated|date:"Y-m-d H:i:s" != bid.created|date:"Y-m-d H:i:s" %}
                     <div class="small oneline mt-1">
                         <span class="fw-light me-1">{% trans "Last Updated" %}:</span>
                         <span class="text-secondary fw-bold">{{ bid.updated|date|default:'-' }}</span>
-                    <span class="text-secondary me-1">@{{ bid.updater.username|default:'-' }}</span>
+                    <span class="text-secondary me-1">
+                        {% if bid.updater in colleagues %}
+                            @{{ bid.updater.username|default:'-' }}
+                        {% else %}
+                            -- {% trans "Former member" %} --
+                        {% endif %}
+                    </span>
                     </div>
                 {% endif %}
 

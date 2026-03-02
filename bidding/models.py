@@ -4,6 +4,7 @@ import uuid
 from datetime import date, datetime, timezone
 from decimal import Decimal
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -93,7 +94,6 @@ class TeamMember(models.Model):
 
 class Invitation(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # email     = models.EmailField(verbose_name=_("Email address"))
     username  = models.CharField(verbose_name=_("Username"))
     invitee   = models.ForeignKey(User, null=True,blank=True, on_delete=models.SET_NULL, related_name='received_invitations')
     message   = models.CharField(null=True, blank=True, max_length=1024, verbose_name=_('Message'))
@@ -102,10 +102,8 @@ class Invitation(models.Model):
     team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='invitations')
     cancelled = models.BooleanField(default=False, editable=False, verbose_name=_('Cancelled'))
     sent_on   = models.DateTimeField(auto_now_add=True, editable=False, verbose_name=_('Sent on'))
-    # seen_on   = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Seen on'))
     reply_on  = models.DateTimeField(null=True, blank=True, editable=False, verbose_name=_('Replied on'))
     reply     = models.CharField(max_length=1, choices=InvitationReplies, null=True, blank=True,  editable=False, verbose_name=_('Reply'))
-    # response  = models.CharField(max_length=255, null=True, blank=True, editable=False, verbose_name=_('Reply message'))
 
     creator   = models.ForeignKey(User, on_delete=models.DO_NOTHING, editable=False, related_name='invitations')
     created   = models.DateTimeField(auto_now_add=True, editable=False)
@@ -400,11 +398,11 @@ class Bid(models.Model):
     @property
     def expenses_sum(self):
         return self.expenses.aggregate(total=Sum('amount_paid'))['total'] or 0
-    
+
     @property
     def paid_expenses_sum(self):
         return self.expenses.filter(status=ExpenseStatus.XPS_PAID).aggregate(total=Sum('amount_paid'))['total'] or 0
-    
+
     @property
     def confirmed_expenses_sum(self):
         return self.expenses.filter(status=ExpenseStatus.XPS_CONFIRMED).aggregate(total=Sum('amount_paid'))['total'] or 0
@@ -412,17 +410,17 @@ class Bid(models.Model):
     @property
     def files_count(self):
         fc = 0
-        if self.file_bond : fc += 1
-        if self.file_receipt : fc += 1
-        if self.file_submitted : fc += 1
+        if self.file_bond and self.file_bond.storage.exists(self.file_bond.name) : fc += self.file_bond.size
+        if self.file_receipt and self.file_receipt.storage.exists(self.file_receipt.name) : fc += self.file_receipt.size
+        if self.file_submitted and self.file_submitted.storage.exists(self.file_submitted.name) : fc += self.file_submitted.size
         return fc
 
     @property
     def files_size(self):
         fs = 0
-        if self.file_bond : fs += self.file_bond.size
-        if self.file_receipt : fs += self.file_receipt.size
-        if self.file_submitted : fs += self.file_submitted.size
+        if self.file_bond and self.file_bond.storage.exists(self.file_bond.name) : fs += self.file_bond.size
+        if self.file_receipt and self.file_receipt.storage.exists(self.file_receipt.name) : fs += self.file_receipt.size
+        if self.file_submitted and self.file_submitted.storage.exists(self.file_submitted.name) : fs += self.file_submitted.size
         return fs
 
 
@@ -455,8 +453,8 @@ class Contract(models.Model):
     @property
     def files_size(self):
         fs = 0
-        if self.file_guarantee : fs += self.file_guarantee.size
-        if self.file_terms : fs += self.file_terms.size
+        if self.file_guarantee and self.file_guarantee.storage.exists(self.file_guarantee.name) : fs += self.file_guarantee.size
+        if self.file_terms and self.file_terms.storage.exists(self.file_terms.name) : fs += self.file_terms.size
         return fs
 
     @property
@@ -586,7 +584,7 @@ class Expense(models.Model):
     @property
     def files_size(self):
         fs = 0
-        if self.file : fs += self.file.size
+        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
         return fs
 
 
@@ -660,7 +658,7 @@ class Income(models.Model):
     @property
     def files_size(self):
         fs = 0
-        if self.file : fs += self.file.size
+        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
         return fs
 
 
