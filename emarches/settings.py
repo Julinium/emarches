@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bidding',
 
     'django_cleanup',
+    'user_agents',
     'debug_toolbar',
 
     # 'easy_pdf',
@@ -296,6 +297,7 @@ from .loggino import JsonFormatter
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,  # Keep Django's default loggers
+
     'formatters': {
         'verbose': {
             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
@@ -309,6 +311,7 @@ LOGGING = {
             "()": JsonFormatter,
         },
     },
+
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
@@ -329,6 +332,7 @@ LOGGING = {
             'formatter': 'verbose',
         },
     },
+
     'loggers': {
         'django': {
             'handlers': ['console'],

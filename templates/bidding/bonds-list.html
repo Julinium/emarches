@@ -59,7 +59,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for bid in bids_bond_return_overdue.all %}
-                                                <div class="list-group-item-action p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid epoch='since' %}
                                                 </div>
                                             {% empty %}
@@ -99,7 +99,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for bid in bids_bond_upcoming.all %}
-                                                <div class="list-group-item-action p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid epoch='until' %}
                                                 </div>
                                             {% empty %}
@@ -139,7 +139,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for bid in bids_bond_draft.all %}
-                                                <div class="list-group-item-action p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid %}
                                                 </div>
                                             {% empty %}
@@ -179,7 +179,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for bid in bids_bond_claimed.all %}
-                                                <div class="list-group-item-action p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid %}
                                                 </div>
                                             {% empty %}
@@ -219,7 +219,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for bid in bids_bond_returned.all %}
-                                                <div class="list-group-item-action p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid %}
                                                 </div>
                                             {% empty %}
@@ -259,7 +259,7 @@
                                     <div class="accordion-body p-0">
                                         <div class="list-group small mb-0">
                                             {% for bid in bids_bond_lost.all %}
-                                                <div class="list-group-item-action p-0">
+                                                <div class="list-group-item-action border-bottom p-0">
                                                     {% include 'bidding/snippets/bonds/bond-item.html' with bid=bid %}
                                                 </div>
                                             {% empty %}
