@@ -1,11 +1,13 @@
 
 import json
+import logging
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core import serializers
-from django.http import HttpResponse
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import translation
@@ -17,6 +19,16 @@ from django.views.generic import (CreateView, DeleteView, DetailView, ListView,
                                   UpdateView)
 
 from base.models import Agrement, Qualif
+from base.context_processors import portal_context
+from bidding.secu import (
+        get_colleagues,
+        get_or_create_team,
+        is_active_team_admin,
+        is_active_team_member,
+        is_team_admin,
+        is_team_member,
+        update_membership,
+    )
 from nas.forms import (CompanyForm, NewsletterSubscriptionForm,
                        NotificationSubscriptionForm, UserProfileForm,
                        UserSettingsForm)
@@ -26,6 +38,7 @@ from nas.models import (Company, Newsletter, NewsletterSubscription,
 from nas.subbing import (subscribeUserToNewsletters,
                          subscribeUserToNotifications)
 
+logger_portal = logging.getLogger("portal")
 COMPANIES_ITEMS_PER_PAGE = 10
 
 
@@ -180,6 +193,54 @@ def onboard(request):
         'profile': request.user.profile,
     }
     return render(request, 'nas/onboard.html', context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def companies_list(request):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    team = get_or_create_team(user, request)
+    request.team = team
+
+    if not team:
+        logger_portal.warning("E403: Team not found", extra={"request": request})
+        return HttpResponse(_("Team not found or not allowed"), status=403)
+
+    if not is_active_team_member(user, team):
+        logger_portal.warning("E403: User is not an active team member", extra={"request": request})
+        return HttpResponse(_("You are not an active team member"), status=403)
+    
+    colleagues = get_colleagues(user)
+
+    team_companies = Company.objects.filter(
+            user__in=colleagues,
+        ).annotate(
+            is_mine=Q(user=user)
+        ).order_by("is_mine", "name")
+
+    pro_context = portal_context(request)
+    us = pro_context["user_settings"]
+
+    if us:
+        COMPANIES_ITEMS_PER_PAGE = int(us.general_items_per_page)
+    
+    paginator = Paginator(team_companies, COMPANIES_ITEMS_PER_PAGE)
+    page_number = request.GET["page"] if "page" in request.GET else 1
+    if not str(page_number).isdigit():
+        page_number = 1
+    else:
+        if int(page_number) > paginator.num_pages:
+            page_number = paginator.num_pages
+    page_obj = paginator.page(page_number)
+
+    context = {"page_obj": page_obj}
+
+    return render(request, 'nas/companies/companies-list.html', context)
 
 
 @method_decorator(login_required, name='dispatch')

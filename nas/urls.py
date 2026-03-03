@@ -29,7 +29,8 @@ urlpatterns = [
     path('companies/<uuid:pk>/icify/', views.accept_iced_company, name='nas_company_icify'),
     
     
-    path('companies/', views.CompanyListView.as_view(), name='nas_company_list'),
+    path('companies/',                  views.companies_list,              name='nas_company_list'),
+    path('x_companies/', views.CompanyListView.as_view(), name='x_nas_company_list'),
     path('companies/new/', views.CompanyCreateView.as_view(), name='nas_company_create'),
     path('companies/<uuid:pk>/', views.CompanyDetailView.as_view(), name='nas_company_detail'),
     path('companies/<uuid:pk>/edit/', views.CompanyUpdateView.as_view(), name='nas_company_edit'),

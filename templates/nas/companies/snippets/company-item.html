@@ -1,0 +1,90 @@
+{% load i18n %}
+
+<div id="company-{{ company.id }}-line">
+
+    <a data-bs-toggle="collapse" href="#company-{{ company.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="company-{{ company.id }}-collapse"
+       class="text-decoration-none text-reset">
+
+        <div id="company-{{ company.id }}-digest" class="p-2">
+
+            <div class="row g-1 my-1">
+                <div class="col-12 col-md-6 text-start">
+                    <div>
+                        <span data-bs-toggle="tooltip" title="{{ company.name }} | {{ company.ice }}">
+                            <img src="{{ company.logo }}" alt="X"
+                                class="img-fluid rounded rounded-circle" 
+                                style="width: 1.5rem; height: 1.5rem;">
+                            <span class="">{{ company.name }}</span>
+                        </span>
+                        <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
+                        <span class="fw-light" data-bs-toggle="tooltip" title="{{ company.creator.username }}">
+                            <span class="small text-secondary">@{{ company.user.username }}</span>
+                        </span>
+                    </div>
+                    <!-- <div class="oneline ms-4 text-secondary" data-bs-toggle="tooltip" title="{% trans 'Return due date' %}">
+                        {% if company_due_date %}
+                            <span class="small text-secondary me-2 ">{{ company_due_date.date|default:'-' }}</span>
+                            {% if epoch == 'since' %}
+                                <span class="badge bg-danger">{{ company_due_date|timesince }}</span>
+                            {% endif %}
+                            {% if epoch == 'until' %}
+                                <span class="badge bg-success">{{ company_due_date|timeuntil }}</span>
+                            {% endif %}
+                        {% endif %}
+                    </div> -->
+                </div>
+                <div class="col-12 col-md-6 text-end">
+                    <div>
+                        <span class="">{{ company.ice }}</span>
+                    </div>
+                </div>
+            </div>              
+
+        </div>
+    
+    </a>
+
+    <div id="company-{{ company.id }}-collapse" class="collapse px-2 ms-4 border-start">  
+
+        <div id="company-{{ company.id }}-extended" class="mx-0 mb-3">
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "ICE" %}:</span>
+                <span class="text-secondary">{{ company.ice }}</span>
+            </div>
+
+            <div class="">
+                <span class="fw-light small me-1">{% trans "RC" %}:</span>
+                <span class="text-secondary">{{ company.rc }}</span>
+            </div>
+
+            <div class="">
+                <span class="fw-light small me-1">{% trans "TP" %}:</span>
+                <span class="text-secondary">{{ company.tp }}</span>
+            </div>
+
+            <div class="">
+                <span class="fw-light small me-1">{% trans "City" %}:</span>
+                <span class="text-secondary">{{ company.city }}</span>
+            </div>
+
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Phone" %}:</span>
+                <span class="text-secondary">{{ company.phone }}</span>
+            </div>
+            
+        </div>
+        
+        <div id="company-{{ company.id }}-actions" class="text-end mx-0 mb-3">
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'nas_company_detail' company.id %}">
+                <span><i class="{{ bicons.details }}"></i></span>
+                <span class="ms-1">{% trans 'Company details' %}</span>
+            </a>
+    
+        </div>
+
+    </div>
+
+</div>
