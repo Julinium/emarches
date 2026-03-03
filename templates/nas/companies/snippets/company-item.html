@@ -6,7 +6,7 @@
        role="button" aria-expanded="false" aria-controls="company-{{ company.id }}-collapse"
        class="text-decoration-none text-reset">
 
-        <div id="company-{{ company.id }}-digest" class="p-2">
+        <div id="company-{{ company.id }}-digest" class="p-2 {% if company.is_mine == False %}text-secondary{% endif %}">
 
             <div class="row g-1 my-1">
                 <div class="col-12 col-md-6 text-start">
@@ -16,6 +16,7 @@
                                 class="img-fluid rounded rounded-circle" 
                                 style="width: 1.5rem; height: 1.5rem;">
                             <span class="">{{ company.name }}</span>
+                            <!-- <span class="">{{ company.is_mine }}</span> -->
                         </span>
                         <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
                         <span class="fw-light" data-bs-toggle="tooltip" title="{{ company.creator.username }}">
@@ -48,6 +49,11 @@
     <div id="company-{{ company.id }}-collapse" class="collapse px-2 ms-4 border-start">  
 
         <div id="company-{{ company.id }}-extended" class="mx-0 mb-3">
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Mine" %}:</span>
+                <span class="text-secondary">{{ company.is_mine }}</span>
+            </div>
             
             <div class="">
                 <span class="fw-light small me-1">{% trans "ICE" %}:</span>

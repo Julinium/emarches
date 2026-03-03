@@ -41,9 +41,22 @@
 
     <div class="container py-4 px-0">
         {% if page_obj %}
-            <div class="list-group small mb-0">
+            <div class="list-group small">
                 {% for company in page_obj %}
-                    <div class="list-group-item-action border-bottom p-0">
+
+                    {% ifchanged company.is_mine %}
+                        <div class="list-group-item bg-secondary-subtle">
+                            <span class="fw-bold">
+                                {% if company.is_mine == True %}
+                                    {% trans "My companies" %}
+                                {% else %}
+                                    {% trans "Team's companies" %}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endifchanged %}
+
+                    <div class="list-group-item list-group-item-action p-0">
                         {% include 'nas/companies/snippets/company-item.html' with company=company  %}
                     </div>
                 {% empty %}
@@ -52,7 +65,8 @@
                     </div>
                 {% endfor %}
             </div>
-    
+            
+            {% include 'base/snippets/paginator.html' %}
         {% else %}
             {% include 'base/snippets/empty-list.html' %}
         {% endif %}
