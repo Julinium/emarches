@@ -145,24 +145,6 @@ class TenderSerializer(serializers.ModelSerializer):
         ]
 
 
-    # def update(self, instance, validated_data):
-    #     changes = {}
-    #     for field, new_value in validated_data.items():
-    #         old_value = getattr(instance, field)
-    #         if old_value != new_value:
-    #             changes[field] = {
-    #                 'old_value': str(old_value),
-    #                 'new_value': str(new_value)
-    #             }
-    #     if changes:
-    #         change = Change(tender=instance, changes=changes)
-    #         change.save()
-    #         log_message = f"Tender {instance.chrono} updated. Changes saved."
-    #         helper.printMessage('INFO', 'serializer.TenderSerializer', log_message, 2, 3)
-
-    #     return super().update(instance, validated_data)
-
-
 class RelAgrementLotSerializer(serializers.ModelSerializer):
     agrement = AgrementSerializer(read_only=True)
     lot = LotSerializer(read_only=True)

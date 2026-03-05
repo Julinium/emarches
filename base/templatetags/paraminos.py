@@ -14,8 +14,8 @@ CHANGES_FIELDS = {
     'deadline': _('Deadline'),
     'estimate': _('Estimate'),
     'bond': _('Guarantee'),
-    'size_bytes': _('Actual files size'),
-    'size_read': _('Displayed files size'),
+    'size_bytes': _('Files bytes'),
+    'size_read': _('Files size'),
     'contact_name': _('Contact name'),
     'contact_phone': _('Contact phone'),
     'contact_email': _('Contact email'),
@@ -55,8 +55,12 @@ def dictify(value):
         json_str = json.dumps(evaled)
         data = json.loads(json_str)
 
+        if any(item.get("field") == "size_read" for item in data):
+            data = [item for item in data if item.get("field") != "size_bytes"]
+                
         for item in data:
-            item['field'] = str(CHANGES_FIELDS.get(item['field'], item['field']))
+            item['field'] = str(CHANGES_FIELDS.get(item['field'], '--'))
+
         return data
     except json.JSONDecodeError:
         return []
@@ -65,11 +69,3 @@ def dictify(value):
 def stringify(value):
     return str(value)
 
-
-
-# @register.filter
-# def progressify(value, full=30):
-#     try:
-#         ratio = int(100 * value / full)
-#         return max(0, min(ratio, 100))
-#     except: return 0

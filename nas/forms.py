@@ -4,11 +4,14 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+from bidding.widgets import FilenameOnlyClearableFileInput
+
 from .iceberg import get_ice_checkup
 from .models import (Company, Favorite, Folder, NotificationSubscription,
-                     Profile, UserSetting)
+                     Profile, UserSetting, Manageriat, SignatureKey, Expirable)
 
 ALLOW_INVALID_ICE = True
+
 
 class UserProfileForm(forms.ModelForm):
 
@@ -100,13 +103,13 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         fields = [
-            'name', 'forme', 'ice', 'tp', 'rc', 'cnss', 'address', 'city', 'zip_code',
-            'state', 'country', 'date_est', 'phone', 'mobile', 'email', 'whatsapp', 'faximili',
-            'website', 'activity', 'sector', 'note', 'image', 'clear_image']
+            'name', 'forme', 'ice', 'rc', 'address', 'email', 'website', 
+            'activity', 'note', 'image', 'file', 'clear_image']
 
         widgets = {
             'date_est': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
             'note': forms.Textarea(attrs={'rows': 8}),
+            "file"     : FilenameOnlyClearableFileInput,
         }
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -156,6 +159,58 @@ class CompanyForm(forms.ModelForm):
         cj = get_ice_checkup(ice)
         if not cj: return False
         return cj.get('n2') == cj.get('cs')
+
+
+class ManageriatForm(forms.ModelForm):
+
+    class Meta:
+        model = Manageriat
+        fields = [
+            'company', 'name', 'identity',
+            'validity_start', 'validity_end', 'file',
+            ]
+
+        widgets = {
+            'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'validity_end': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'note': forms.Textarea(attrs={'rows': 8}),
+        }
+
+    # def __init__(self, *args, user=None, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.user = user
+
+
+class SignatureKeyForm(forms.ModelForm):
+
+    class Meta:
+        model = SignatureKey
+        fields = [
+            'company', 'name', "serial", "issuer", "holder", "owner",
+            'validity_start', 'validity_end', "file", "note",
+            ]
+
+        widgets = {
+            'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'validity_end': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'note': forms.Textarea(attrs={'rows': 8}),
+        }
+
+
+class ExpirableForm(forms.ModelForm):
+
+    class Meta:
+        model = Expirable
+        fields = [
+            'company', 'name', "subject", "issuer", "holder",
+            'validity_start', 'validity_end', "file", "note",
+            ]
+
+        widgets = {
+            'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'validity_end': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'note': forms.Textarea(attrs={'rows': 8}),
+        }
 
 
 class NotificationSubscriptionForm(forms.Form):

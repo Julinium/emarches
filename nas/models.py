@@ -1,8 +1,10 @@
 
 import uuid
 
+from datetime import date, datetime, timezone
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
@@ -14,6 +16,21 @@ from .choices import (FirstArticles, FullBarDays, ItemsPerPage, OrderingField,
                       PurchaseOrderFullBarDays, PurchaseOrderOrderingField)
 from .iceberg import get_ice_checkup
 from .imaging import squarify_image
+
+
+
+EXTENSIONS_VALIDATORS = [
+    FileExtensionValidator(
+        allowed_extensions=[
+            'zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'tar.gz', 'tgz', 'tar.bz2', 'tar.xz', 
+            'pdf', 'doc', 'docx', 'odt', 'odp', 'odx', 'txt', 'xml', 'json', 'md', 'rtf', 'html', 
+            'jpg', 'jpeg', 'png', 'webp', 'bmp', 'gif', 
+            'xls', 'xlsx', 'ods', 'ots', 'dif', 'dbf', 'csv', 
+            'mpp', 'ppt', 'pptx', 
+            ]
+        )
+    ]
+
 
 
 class Profile(models.Model):
@@ -57,27 +74,28 @@ class Company(models.Model):
     name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
     forme     = models.CharField(max_length=255, blank=True, null=True, default='SARL', verbose_name=_('Juridic form'))
     ice       = models.CharField(max_length=64, blank=True, null=True, default='77777777777777', verbose_name="ICE")
-    tp        = models.CharField(max_length=64, blank=True, null=True, default='7777777', verbose_name=_('Tax Pro'))
+    # tp        = models.CharField(max_length=64, blank=True, null=True, default='7777777', verbose_name=_('Tax Pro'))
     rc        = models.CharField(max_length=64, blank=True, null=True, default='7777777', verbose_name=_('Num. RC'))
-    cnss      = models.CharField(max_length=64, blank=True, null=True, default='7777777', verbose_name=_('CNSS'))
-    address   = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('Street Address'))
-    city      = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('City'))
-    zip_code  = models.CharField(max_length=8, blank=True, null=True, verbose_name=_('ZIP Code'))
-    state     = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Region, State'))
-    country   = models.CharField(max_length=64, blank=True, null=True, default=_('Morocco'), verbose_name=_('Country'))
-    date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
-    phone     = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Phone'))
-    mobile    = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Mobile'))
+    # cnss      = models.CharField(max_length=64, blank=True, null=True, default='7777777', verbose_name=_('CNSS'))
+    # address   = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('Street Address'))
+    address   = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Address'))
+    # zip_code  = models.CharField(max_length=8, blank=True, null=True, verbose_name=_('ZIP Code'))
+    # state     = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Region, State'))
+    # country   = models.CharField(max_length=64, blank=True, null=True, default=_('Morocco'), verbose_name=_('Country'))
+    # date_est  = models.DateField(blank=True, null=True, verbose_name=_('Date Established'))
+    # phone     = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Phone'))
+    # mobile    = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Mobile'))
     email     = models.EmailField(blank=True, null=True, verbose_name=_('Email'))
-    whatsapp  = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Whatsapp'))
-    faximili  = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Fax'))
+    # whatsapp  = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Whatsapp'))
+    # faximili  = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Fax'))
     website   = models.CharField(max_length=128, blank=True, null=True, default='www.mode-777.com', verbose_name=_('Website'))
     activity  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Activity'))
-    sector    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Sector'))
+    # sector    = models.CharField(max_length=128, blank=True, null=True, verbose_name=_('Sector'))
     note      = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
     image     = models.ImageField(upload_to='companies/', null=True, blank=True, verbose_name=_('Logo'))
     agrements = models.ManyToManyField(Agrement, blank=True, related_name='companies', verbose_name=_('Agrements'))
     qualifs   = models.ManyToManyField(Qualif, blank=True, related_name='companies', verbose_name=_('Qualifications'))
+    file      = models.FileField(upload_to='nas/companies/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
 
     created   = models.DateTimeField(auto_now_add=True, editable=False)
     updated   = models.DateTimeField(auto_now=True, editable=False)
@@ -136,10 +154,20 @@ class Company(models.Model):
 
     @property
     def deletable(self):
-        if self.assets.count() > 0 : return False
+        # if self.assets.count() > 0 : return False
         if self.bids.count() > 0 : return False
         return True
 
+    @property
+    def file_name(self):
+        if self.file: return os.path.basename(self.file.name)
+        return None
+
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
+        return fs
     
     def save(self, *args, **kwargs):
         if self.image:
@@ -174,9 +202,7 @@ class Folder(models.Model):
 class Favorite(models.Model):
     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', editable=False)
-    # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='favorites', verbose_name=_('Company'))
     tender  = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='favorites', editable=False, verbose_name=_('Tender'))
-    # folders = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
     active  = models.BooleanField(null=True, default=True, editable=False)
     when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
@@ -389,9 +415,7 @@ class NotificationSent(models.Model):
 class Sticky(models.Model):
     id              = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user            = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stickies', editable=False)
-    # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='favorites', verbose_name=_('Company'))
     purchase_order  = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name='stickies', editable=False, verbose_name=_('Purchase Order'))
-    # folders         = models.ManyToManyField(Folder, related_name='favorites', verbose_name=_('Folders'))
     active          = models.BooleanField(null=True, default=True, editable=False)
     when            = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
     comment         = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
@@ -488,25 +512,128 @@ class UserSetting(models.Model):
         return f'Settings for {self.user.username}'
 
 
-class Asset(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
-    serial = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Serial Number"))
-    issuer = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
-    holder = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
-    owner  = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Owner"))
-    issued = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Validity start"))
-    expiry = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name=_("Expiry date"))
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="assets", blank=True, null=True, verbose_name=_("Company"))
+class Manageriat(models.Model):
+    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="manageriats", blank=True, null=True, verbose_name=_("Company"))
+    name           = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    identity       = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Identity"))
+    validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
+    validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
+    note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
+    file           = models.FileField(upload_to='nas/manageriats/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
 
     class Meta:
-        db_table = 'base_asset'
+        db_table = 'nas_manageriat'
         ordering = ['name']
-        verbose_name = _("Asset")
+        verbose_name = _("Manageriat")
     
     def __str__(self):
         return self.name
 
+    @property
+    def file_name(self):
+        if self.file: return os.path.basename(self.file.name)
+        return None
 
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
+        return fs
+    
+    @property
+    def expired(self):
+        if self.expiry: return is_past(self.expiry)
+        return False
+
+
+class SignatureKey(models.Model):
+    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="signature_keys", blank=True, null=True, verbose_name=_("Company"))
+    name           = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    serial         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Serial Number"))
+    issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
+    holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
+    owner          = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Owner"))
+    validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
+    validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
+    note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
+    file           = models.FileField(upload_to='nas/signature_keys/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
+
+    class Meta:
+        db_table = 'nas_signature_key'
+        ordering = ['name']
+        verbose_name = _("Signature Key")
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def file_name(self):
+        if self.file: return os.path.basename(self.file.name)
+        return None
+
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
+        return fs
+    
+    @property
+    def expired(self):
+        if self.expiry: return is_past(self.expiry)
+        return False
+
+
+class Expirable(models.Model):
+    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="expirables", blank=True, null=True, verbose_name=_("Company"))
+    name           = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    subject        = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Subject"))
+    issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
+    holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
+    validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
+    validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
+    note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
+    file           = models.FileField(upload_to='nas/expirables/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
+
+    class Meta:
+        db_table = 'nas_expirable'
+        ordering = ['name']
+        verbose_name = _("Expirable")
+    
+    def __str__(self):
+        return self.name
+
+    @property
+    def file_name(self):
+        if self.file: return os.path.basename(self.file.name)
+        return None
+
+    @property
+    def files_size(self):
+        fs = 0
+        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
+        return fs
+    
+    @property
+    def expired(self):
+        if self.expiry: return is_past(self.expiry)
+        return False
+
+
+
+def is_past(value):
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            now = datetime.now()
+        else:
+            now = datetime.now(timezone.utc).astimezone(value.tzinfo)
+        return value < now
+
+    if isinstance(value, date):
+        return value < date.today()
+    
+    return False
 
 

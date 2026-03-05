@@ -6,9 +6,9 @@ from .models import (Company, Folder, Newsletter, NewsletterSubscription,
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'ice', 'user', 'city', 'active', 'created')
-    list_filter = ('active', 'city', 'sector')
-    search_fields = ('name', 'ice', 'ice', 'city')
+    list_display = ('name', 'ice', 'user', 'address', 'active', 'created')
+    list_filter = ('active', 'address',)
+    search_fields = ('name', 'ice', 'address')
 
 @admin.register(Folder)
 class FolderAdmin(admin.ModelAdmin):

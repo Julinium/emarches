@@ -11,7 +11,8 @@
     <div class="ms-3">
         {% for bidder in tender.openings.last.bidders.all %}
             <a href="{% url 'insights_bidder_details' bidder.id %}" 
-                target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-2">
+                target="_blank" class="btn btn-sm btn-outline-primary me-1 mb-2">
+                <i class="{{ bicons.concurrence }} me-1"></i>
                 <span class="">{{ bidder.name }}</span>
             </a>
         {% empty %}

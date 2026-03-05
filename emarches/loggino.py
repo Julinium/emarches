@@ -36,6 +36,7 @@ class JsonFormatter(logging.Formatter):
             "logger": <logger>,
             "file": <file>,
             "line": <line>,
+            ...
         """
 
         log_data = {
@@ -43,6 +44,12 @@ class JsonFormatter(logging.Formatter):
             "level": record.levelname,
             "message": record.getMessage(),
         }
+
+        # Add all extra fields except "request"
+        super_attrs = ["provider", "uid", "email", ]
+        for key, value in record.__dict__.items():
+            if key in super_attrs and key != "request":
+                log_data[key] = value
 
         request = getattr(record, "request", None)
         if request:
@@ -74,8 +81,10 @@ class JsonFormatter(logging.Formatter):
             if proxies is not None and proxies != ip_address:
                 log_data["proxies"] = proxies
 
-            pua = parse(request.META.get("HTTP_USER_AGENT", "-"))
+            ua = request.META.get("HTTP_USER_AGENT", "-")
+            pua = parse(ua)
             log_data["device"] = str(pua)
+            log_data["ua"] = ua
 
             log_data["referer"] = request.META.get("HTTP_REFERER", "-")
 

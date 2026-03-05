@@ -745,8 +745,7 @@ def tenders_list(request):
         Tender.objects.filter(
             lots__bids__creator__in=colleagues,
             lots__bids__company__in=companies,
-        )
-        .prefetch_related(
+        ).prefetch_related(
             Prefetch(
                 "lots__bids",
                 queryset=Bid.objects.filter(
@@ -759,11 +758,9 @@ def tenders_list(request):
             "lots__bids__tasks",
             "lots__bids__expenses",
             "lots__bids__contracts",
-        )
-        .order_by(
+        ).order_by(
             "-deadline",
-        )
-        .distinct()
+        ).distinct()
     )
 
     tenders, filters = filter_tenders(bid_tenders, query_dict)

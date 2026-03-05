@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -30,6 +30,7 @@ from bidding.secu import (
         is_team_member,
         update_membership,
     )
+from nas.choices import BidStatus, BidResults
 from nas.forms import (CompanyForm, NewsletterSubscriptionForm,
                        NotificationSubscriptionForm, UserProfileForm,
                        UserSettingsForm)
@@ -217,11 +218,31 @@ def companies_list(request):
         return HttpResponse(_("You are not an active team member"), status=403)
     
     colleagues = get_colleagues(user)
+    submitted = Q(bids__status=BidStatus.BID_SUBMITTED)
+    finished  = Q(bids__status=BidStatus.BID_FINISHED)
+    awarded   = Q(bids__result=BidResults.BID_AWARDED)
+    cancelled = Q(bids__status=BidStatus.BID_CANCELLED)
+    draft     = Q(bids__status=BidStatus.BID_PREPARING)
 
     team_companies = Company.objects.filter(
             user__in=colleagues,
         ).annotate(
-            is_mine=Q(user=user)
+            is_mine=Q(user=user),
+            # bdcs_count=Count('purchase_orders', filter=Q(
+            #     purchase_orders__deadline__gte=assa)),            
+            # part_count = Count('deposits', distinct=True), 
+            # wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
+            # bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
+            bids_sum   = Sum(
+                'bids__bid_amount', filter=(submitted | finished), 
+                ), 
+            awards_sum   = Sum(
+                'bids__bid_amount', filter=(submitted | finished) & awarded  , 
+                ), 
+            # last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
+            # last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
+        ).prefetch_related(
+            "manageriats", "expirables", "signature_keys",
         ).order_by("-is_mine", "user__username", "name")
 
     pro_context = portal_context(request)

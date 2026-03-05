@@ -6,12 +6,14 @@ import pytz
 from django.db import transaction
 from rest_framework import serializers
 
-from base.models import (  # Concurrent, Minutes, Bidder,; AdminReject, AdminAccept, AdminReserve, TechReject,; SelectedBid, WinnerBid, WinJustif, FailedLot,
+from base.models import (
     Agrement, Category, Change, Client, Concurrent, Deposit, Domain, FileToGet,
     Kind, Lot, Meeting, Mode, Opening, Procedure, Qualif, RelAgrementLot,
     RelDomainTender, RelQualifLot, Sample, Tender, Visit)
+
 from scraper import constants as C
 from scraper import helper
+
 from scraper.serializers import (AgrementSerializer, CategorySerializer,
                                  ChangeSerializer, ClientSerializer,
                                  DomainSerializer, KindSerializer,
@@ -107,7 +109,6 @@ def save(tender_data):
         except: pass
         return default_int
 
-
     formatted_data = format(tender_data)
     helper.printMessage('DEBUG', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
 
@@ -131,6 +132,7 @@ def save(tender_data):
     if category_data:
         helper.printMessage('TRACE', 'm.save', "+++ Got Category data. Analyzing ... ")
         label = category_data.get('label')
+
         if label and Category.objects.filter(label=label).exists():
             category = Category.objects.get(label=label)
             category_serializer = CategorySerializer(category, data=category_data, partial=True)
@@ -333,16 +335,13 @@ def save(tender_data):
 
             lot_data['category'] = lot_category
 
-            # Match Lot by title
             lot_title  = lot_data.get('title')
             lot_number = lot_data.get('number', 1)
-            # lot_number = lottify(lot_number_text, i)
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
             if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
                 lot = Lot.objects.get(
-                    title=lot_title, number=lot_number, tender=tender, 
-                    # estimate=lot_data["estimate"], bond=lot_data["bond"]
+                    title=lot_title, number=lot_number, tender=tender,
                     )
                 lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
                 if lot_serializer.is_valid(): lot_serializer.save()
@@ -361,7 +360,6 @@ def save(tender_data):
             json_meeting_keys = set()
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot Meetings ... ")
             for meeting_data in meetings_data:
-                # when = meeting_data.get('when')
                 when = ensure_dt_rabat(meeting_data.get('when'))
                 description = meeting_data.get('description')
                 json_meeting_keys.add((when, description))
@@ -376,7 +374,7 @@ def save(tender_data):
                     meeting_serializer.is_valid(raise_exception=True)
                     meeting_serializer.save(lot=lot)
                     if not tender_create: 
-                        change = {"field": "meeting" , "old_value": "", "new_value": str(when)}
+                        change = {"field": "meeting" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M")}
                         changed_fields.append(change)
 
             # Remove Meetings not in JSON
@@ -386,7 +384,7 @@ def save(tender_data):
             for when, description in meetings_to_remove:
                 Meeting.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create:
-                    change = {"field": "meeting" , "old_value": str(when), "new_value": ""}
+                    change = {"field": "meeting" , "old_value": when.strftime("%Y-%m-%d %H:%M"), "new_value": ""}
                     changed_fields.append(change)
 
             # Handle Samples
@@ -395,7 +393,6 @@ def save(tender_data):
             for sample_data in samples_data:
                 sample_data['when'] = ensure_dt_rabat(sample_data.get('when'))
                 when = sample_data.get('when')
-                # when = ensure_dt_rabat(sample_data.get('when'))
                 description = sample_data.get('description')
                 json_sample_keys.add((when, description))
                 sample = None
@@ -409,7 +406,7 @@ def save(tender_data):
                     sample_serializer.is_valid(raise_exception=True)
                     sample_serializer.save(lot=lot)
                     if not tender_create: 
-                        change = {"field": "sample" , "old_value": "", "new_value": str(when)}
+                        change = {"field": "sample" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M")}
                         changed_fields.append(change)
 
             # Remove Samples not in JSON
@@ -419,14 +416,13 @@ def save(tender_data):
             for when, description in samples_to_remove:
                 Sample.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create: 
-                    change = {"field": "sample" , "old_value": str(when), "new_value": ""}
+                    change = {"field": "sample" , "old_value": when.strftime("%Y-%m-%d %H:%M"), "new_value": ""}
                     changed_fields.append(change)
 
             # Handle Visits
             json_visit_keys = set()
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot Visits ... ")
             for visit_data in visits_data:
-                # when = visit_data.get('when')
                 when = ensure_dt_rabat(visit_data.get('when'))
                 description = visit_data.get('description')
                 json_visit_keys.add((when, description))
@@ -441,7 +437,7 @@ def save(tender_data):
                     visit_serializer.is_valid(raise_exception=True)
                     visit_serializer.save(lot=lot)
                     if not tender_create: 
-                        change = {"field": "visit" , "old_value": "", "new_value": str(when)}
+                        change = {"field": "visit" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M")}
                         changed_fields.append(change)
 
             # Remove Visits not in JSON
@@ -451,7 +447,7 @@ def save(tender_data):
             for when, description in visits_to_remove:
                 Visit.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create: 
-                    change = {"field": "visit" , "old_value": str(when), "new_value": ""}
+                    change = {"field": "visit" , "old_value": when.strftime("%Y-%m-%d %H:%M"), "new_value": ""}
                     changed_fields.append(change)
 
             # Handle Agrements (many-to-many)
@@ -744,4 +740,5 @@ def ensure_dt_rabat(snap, default_time=time(0,0)):
         naive_dt = datetime.combine(snap, default_time)
         return rabat_tz.localize(naive_dt)
     return snap
+
 
