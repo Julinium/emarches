@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 from django.core.paginator import Paginator
 
-from django.db.models import Count, Exists, F, OuterRef, Q, Sum
+from django.db.models import Count, Exists, F, OuterRef, Q, Sum, Max
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -799,7 +799,7 @@ def client_list(request):
     us = pro_context["user_settings"]
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
-    CLIENTS_ORDERING_FIELD = "tenders_count"
+    CLIENTS_ORDERING_FIELD = "latest_published"
 
     def get_req_params(req):
         allowed_keys = ["q", "page", "sort",]
@@ -843,32 +843,32 @@ def client_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
     assa = timezone.now()
+    ongoing_tenders = Q(
+            tenders__deadline__gte=assa, 
+            # tenders__cancelled=False,
+        )
     all_clients = Client.objects.annotate(
-        tenders_count=Count(
-            "tenders", filter=Q(tenders__deadline__gte=assa, tenders__cancelled=False)
-        ),
-        total_estimate=Sum(
-            "tenders__estimate",
-            filter=Q(tenders__deadline__gte=assa, tenders__cancelled=False),
-        ),
-    ).filter(tenders_count__gt=0)
+            all_tenders_count=Count("tenders"),
+            all_total_estimate=Sum("tenders__estimate", default=0),
+            tenders_count=Count("tenders", filter=ongoing_tenders),
+            total_estimate=Sum("tenders__estimate", filter=ongoing_tenders, default=0),
+            latest_published = Max("tenders__published")
+        ).filter(
+            all_tenders_count__gt=0
+        )
 
     clients, filters = filter_clients(all_clients, query_dict)
 
     sort = query_dict["sort"]
-
+    ordering = []
     if sort and sort != "":
-        ordering = [sort]
-        if sort == "tenders_count":
-            ordering = ["-tenders_count"]
-        if sort == "-tenders_count":
-            ordering = ["tenders_count"]
-        if sort == "total_estimate":
-            ordering = ["-total_estimate"]
-        if sort == "-total_estimate":
-            ordering = ["total_estimate"]
-    else:
-        ordering = []
+        ordering = [sort] # Invert sort keys, except Name
+        if sort not in ["name", "-name"]:
+            if sort[0] == "-" :
+                ordering = [sort[1:]]
+            else:
+                ordering = [f"-{ sort }"]
+
 
     query_dict["filters"] = filters
 
@@ -885,8 +885,15 @@ def client_list(request):
             page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
 
+    for obj in page_obj:
+        obj.estimate_average = (
+            round(obj.all_total_estimate / obj.all_tenders_count, 2)
+            if obj.all_tenders_count != 0
+            else Decimal("0")
+        )
+
     context["page_obj"] = page_obj
-    context["clients"] = clients
+    # context["clients"] = clients
 
     logger_portal.info("Clients List view", extra={"request": request})
     return render(request, "portal/clients-list.html", context)

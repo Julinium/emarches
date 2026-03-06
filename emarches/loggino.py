@@ -46,7 +46,7 @@ class JsonFormatter(logging.Formatter):
         }
 
         # Add all extra fields except "request"
-        super_attrs = ["provider", "uid", "email", ]
+        super_attrs = ["provider", "uid", "email", 'file_bytes']
         for key, value in record.__dict__.items():
             if key in super_attrs and key != "request":
                 log_data[key] = value

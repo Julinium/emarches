@@ -40,24 +40,60 @@
 
     {% if page_obj %}
         <div class="container py-4 px-0">
-                {% for client in page_obj %}
-                    <a href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client" 
-                       class="btn text-start w-100 p-0 mb-2">
-                        <div class="card shadow py-2 px-3">
+            {% for client in page_obj %}
+                    <div class="card shadow mb-3">
+
+                        <div class="card-header px-2 py-1">                          
                             <div class="d-flex justify-content-between">
-                                <div>
+                                <div class="oneline">
                                     <span><i class="{{ bicons.client }} me-1"></i></span>
-                                    <span class="fw-bold">{{ client.short }}</span>
+                                    <span class="fw-bold me-1">{{ client.short|default:'-' }}</span>
                                 </div>
                                 <div class="ms-2 text-end">
-                                    <span class="badge bg-secondary"><i class="{{ bicons.count }} me-1"></i>{{ client.tenders_count }}</span>
-                                    <span class="badge bg-success ms-1"><i class="{{ bicons.estimate }} me-1"></i>{{ client.total_estimate|metrify }}</span>
+                                    <!-- <span class="badge bg-secondary" data-bs-toggle="tooltip" title="{% trans 'Tenders count' %}: {% trans 'Active' %} / {% trans 'All' %}">
+                                        <i class="{{ bicons.count }} me-1"></i>
+                                        <span>{{ client.tenders_count }}/{{ client.all_tenders_count }}</span>
+                                    </span>
+                                    <span class="badge bg-success ms-1" data-bs-toggle="tooltip" title="{% trans 'Total tenders estimate' %}: {% trans 'Active' %} / {% trans 'All' %}">
+                                        <i class="{{ bicons.estimate }} me-1"></i>
+                                        <span>{{ client.total_estimate|metrify }}/{{ client.all_total_estimate|metrify }}</span>
+                                    </span> -->
+                                    <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Active Tenders' %} @ {% trans 'Estimate average' %} ({{ client.estimate_average }})">
+                                        <span class="small fw-bold">{{ client.tenders_count }}</span>
+                                        <span class="small fw-light fs-7">/</span>
+                                        <span class="small fw-light">{{ client.all_tenders_count }}</span>
+                                        <span class="small fw-light fs-7">@</span>
+                                        <span class="small fw-light">{{ client.estimate_average|metrify }}</span>
+                                    </span>
+
+                                    <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
+
+                                    <span class="text-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ client.total_estimate }}">
+                                        <i class="{{ bicons.estimate }} small"></i>
+                                        <span class="fw-bold">{{ client.total_estimate|metrify }}</span>
+                                    </span>
+                                    <!-- <span class="badge bg-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ client.total_estimate }}">
+                                        <i class="{{ bicons.estimate }} me-1"></i>
+                                        <span>{{ client.total_estimate|metrify }}</span>
+                                    </span> -->
                                 </div>
                             </div>
-                            <div class="{% if wrap_text == False %}threelines{% endif %} small text-muted">{{ client.name }}</div>
                         </div>
-                    </a>
-                {% endfor %}
+
+                        <!-- <a href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client" 
+                            class="btn text-start w-100 p-0">
+                        </a> -->
+                        <div class="card-body p-0">
+                            {% include "portal/snippets/clients/client-item.html" with client=client %}
+                        </div>
+
+                        <div class="card-footer text-secondary small px-2 py-1" data-bs-toggle="tooltip" title="{% trans 'Latest published' %}">
+                            <span class="small"><i class="{{ bicons.published }}"></i></span>
+                            <span class="small">{{ client.latest_published }}</span>
+                        </div>
+
+                    </div>
+            {% endfor %}
         </div>
 
         {% include 'base/snippets/paginator.html' %}

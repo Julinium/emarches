@@ -56,6 +56,8 @@ empty_items = ['-', '--', '_', '__', '---', '***', '/',
     'Aucune', 'Non'
 ]
 
+logger_portal = logging.getLogger('portal')
+
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -63,6 +65,7 @@ def bdc_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
@@ -268,8 +271,7 @@ def bdc_list(request):
     context['page_obj']     = page_obj
     context['last_updated'] = last_updated
 
-    logger = logging.getLogger('portal')
-    logger.info(f"Purchase Orders List view")
+    logger_portal.info(f"Purchase Orders List view", extra={"request": request})
 
 
     return render(request, 'bdc/bdc-list.html', context)
@@ -281,6 +283,7 @@ def bdc_favorite_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
     # us = get_user_settings(request)
@@ -337,8 +340,7 @@ def bdc_favorite_list(request):
 
     context['page_obj'] = page_obj
 
-    logger = logging.getLogger('portal')
-    logger.info(f"Favorite PO's List view")
+    logger_portal.info(f"Favorite PO's List view", extra={"request": request})
 
     return render(request, 'bdc/bdc-favorite-list.html', context)
 
@@ -349,6 +351,7 @@ def bdc_details(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
     
     bdc = get_object_or_404(PurchaseOrder.objects.select_related(
@@ -357,7 +360,9 @@ def bdc_details(request, pk=None):
                 'articles', 'attachements'
             ), id=pk)
 
-    if not bdc : return HttpResponse(_("Not found"), status=404)
+    if not bdc : 
+        logger_portal.warning("E404: PO not found", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
@@ -403,8 +408,7 @@ def bdc_details(request, pk=None):
         'csv_file_name' : csv_file_name,
         }
 
-    logger = logging.getLogger('portal')
-    logger.info(f"PurchaseOrder details view: {bdc.id}")
+    logger_portal.info("PurchaseOrder details view", extra={"request": request})
 
     return render(request, 'bdc/bdc-details.html', context)
 
@@ -413,15 +417,23 @@ def bdc_details(request, pk=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_items_pdf(request, pk=None, fn=None):
 
-    if request.method != 'GET': return HttpResponse(_("Bad request"), status=405)
-    if pk == None or fn == None: return HttpResponse(_("Not found"), status=404)
-
     user = request.user
     if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
+    if request.method != 'GET': 
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
+        return HttpResponse(_("Bad request"), status=405)
+
+    if pk == None or fn == None:
+        logger_portal.warning("E405: Bad request parameters", extra={"request": request})
+        return HttpResponse(_("Bad request"), status=405)
+
     bdc = get_object_or_404(PurchaseOrder, id=pk)
-    if not bdc : return HttpResponse(_("Not found"), status=404)
+    if not bdc : 
+        logger_portal.warning("E404: PO not found", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
     
     pdf_file_name = fn
     pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
@@ -435,10 +447,10 @@ def bdc_items_pdf(request, pk=None, fn=None):
         response['Content-Disposition'] = f'attachment; filename="{ pdf_file_name }"'
         response['Content-Length'] = file_size
 
-        logger = logging.getLogger('portal')
-        logger.info(f"User: { user.id }: PO items pdf File Download: {bdc.id} (={file_size}B)")
+        logger_portal.info("PO items pdf File Download allowed", extra={"request": request, "file_bytes": file_size})
         return response
 
+    logger_portal.warning("E404: Files not found", extra={"request": request})
     return HttpResponse(_("Not found"), status=404)
 
 
@@ -446,15 +458,23 @@ def bdc_items_pdf(request, pk=None, fn=None):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_items_csv(request, pk=None, fn=None):
 
-    if request.method != 'GET': return HttpResponse(_("Bad request"), status=405)
-    if pk == None or fn == None: return HttpResponse(_("Not found"), status=404)
-
     user = request.user
     if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
+    if request.method != 'GET': 
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
+        return HttpResponse(_("Bad request"), status=405)
+
+    if pk == None or fn == None: 
+        logger_portal.warning("E405: Bad request parameters", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
+
     bdc = get_object_or_404(PurchaseOrder, id=pk)
-    if not bdc : return HttpResponse(_("Not found"), status=404)
+    if not bdc : 
+        logger_portal.warning("E404: PO not found", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
     
     csv_file_name = fn
     csv_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
@@ -468,103 +488,27 @@ def bdc_items_csv(request, pk=None, fn=None):
         response['Content-Disposition'] = f'attachment; filename="{ csv_file_name }"'
         response['Content-Length'] = file_size
 
-        logger = logging.getLogger('portal')
-        logger.info(f"User: { user.id }: PO items csv File Download: {bdc.id} (={file_size}B)")
+        logger_portal.info("PO items csv File Download allowed", extra={"request": request, "file_bytes": file_size})
         return response
 
+    logger_portal.warning("E404: Files not found", extra={"request": request})
     return HttpResponse(_("Not found"), status=404)
 
 
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bdc_generate_items_pdf(request, pk=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated : 
-#         return HttpResponse(_("Permission denied"), status=403)
-    
-#     bdc = get_object_or_404(PurchaseOrder.objects.select_related(
-#                 'client', #'category'
-#             ).prefetch_related(
-#                 'articles', #'attachements'
-#             ), id=pk)
-
-#     crm = trans("Generated by ")
-#     url = "https://new.emarches.com/bdc/"
-    
-#     if bdc : url += f"details/{bdc.id}"
-
-#     qr_buffer = BytesIO()
-#     segno.make(url, error='M').save(qr_buffer, kind='svg', scale=8)
-#     qr_svg_base64 = base64.b64encode(qr_buffer.getvalue()).decode()
-#     qr_data_uri = f"data:image/svg+xml;base64,{qr_svg_base64}"
-
-#     context = {
-#         "bdc": bdc,
-#         'empty_items'  : empty_items,
-#         "crm": crm + ' ' + 'eMarches.com',
-#         "qr_code": qr_data_uri,
-#     }
-
-#     html_string = render_to_string("bdc/bdc-articles-pdf.html", context)
-
-#     # Convert to PDF
-#     html = HTML(string=html_string, base_url=request.build_absolute_uri("/"))
-#     pdf_bytes = html.write_pdf()
-
-#     # Return as download
-#     pdf_file_name = f'eMarches.com-{ bdc.chrono }.pdf'
-#     response = HttpResponse(pdf_bytes, content_type="application/pdf")
-#     response["Content-Disposition"] = f'attachment; filename="{ pdf_file_name }"'
-#     return response
-
-
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-# def bdc_generate_items_csv(request, pk=None):
-
-#     user = request.user
-#     if not user or not user.is_authenticated : 
-#         return HttpResponse(_("Permission denied"), status=403)
-    
-#     bdc = get_object_or_404(PurchaseOrder.objects.prefetch_related('articles'), id=pk)
-    
-#     csv_file_name = f'eMarches.com-{ bdc.chrono }.csv'
-#     response = HttpResponse(content_type='text/csv')
-#     response['Content-Disposition'] = f'attachment; filename="{ csv_file_name }"'
-
-#     writer = csv.writer(response)
-#     writer.writerow([
-#         trans('Number'), trans('Title'), trans('UOM'), 
-#         trans('Quantity'), trans('VAT') + '%', 
-#         trans('Specifications'), trans('Warranties')
-#         ])
-
-#     for item in bdc.articles.all():
-#         writer.writerow([
-#             item.number,
-#             item.title,
-#             item.uom,
-#             item.quantity,
-#             item.vat_percent,
-#             item.specifications,
-#             item.warranties,
-#         ])
-
-#     return response
-
-
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def client_list(request):
 
     user = request.user
     if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     if us: 
         CLIENTS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-    CLIENTS_ORDERING_FIELD = 'name'
+    CLIENTS_ORDERING_FIELD = 'bdcs_count'
 
     def get_req_params(req):
         allowed_keys = [
@@ -611,9 +555,12 @@ def client_list(request):
     
     assa = timezone.now()
     all_clients = Client.objects.annotate(
-        bdcs_count=Count('purchase_orders', filter=Q(
-            purchase_orders__deadline__gte=assa))
-    ).filter(bdcs_count__gt=0)
+            bdcs_count=Count('purchase_orders', filter=Q(purchase_orders__deadline__gte=assa)),
+            all_bdcs_count=Count('purchase_orders')
+        ).filter(
+            # bdcs_count__gt=0,
+            all_bdcs_count__gt=0
+        )
 
     clients, filters = filter_clients(all_clients, query_dict)
 
@@ -650,51 +597,52 @@ def client_list(request):
     context['page_obj'] = page_obj
     context['clients'] = clients
 
-    logger = logging.getLogger('portal')
-    logger.info(f"PO's Clients List view")
+    logger_portal.info("PO's Clients List view", extra={"request": request})
 
     return render(request, 'bdc/clients-list.html', context)
 
 
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def locations_list(request):
+
     json_path = os.path.join(settings.BASE_DIR, 'scraper', 'data', 'regions-cities.json')
     try:
         with open(json_path, 'r', encoding='utf-8') as f:
             states = json.load(f)
     except FileNotFoundError:
-        states = [] 
+        states = []
+        logger_portal.error("E404: Regions-cities file not found", extra={"request": request})
         return HttpResponse('File Not Found Error', code=404)
         # Or raise a 404 / show error page
     except json.JSONDecodeError:
         states = []
-        return HttpResponse('JSON Decode Error', code=405)
+        logger_portal.error("E500: JSON Decode Error", extra={"request": request})
+        return HttpResponse('Server error', code=500)
         # Handle corrupted JSON
 
     context = {
         'states': states
     }
 
-    logger = logging.getLogger('portal')
-    logger.info(f"PO's Locations List view")
-    
+    logger_portal.info("PO's Locations List view", extra={"request": request})
     return render(request, 'bdc/locations-list.html', context)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bdc_stickies_add(request, pk=None):
-    
-    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
-    if pk == None : return HttpResponse(_("Not found"), status=404)
 
     user = request.user
     if not user or not user.is_authenticated : 
         return HttpResponse(_("Permission denied"), status=403)
+    
+    if request.method != 'POST': return HttpResponse(_("Bad request"), status=405)
+    if pk == None : return HttpResponse(_("Not found"), status=404)
 
     purchase_order = get_object_or_404(PurchaseOrder, id=pk)
     if not purchase_order : return HttpResponse(_("Not found"), status=404)
 
-    logger = logging.getLogger('portal')
 
     sticked = Sticky.objects.filter(purchase_order=purchase_order, user=user).first()
     if not sticked:
@@ -702,11 +650,11 @@ def bdc_stickies_add(request, pk=None):
             user=user,
             purchase_order=purchase_order,
         )
-        logger.info(f"Purchase Order Favorited successfully: { purchase_order.id }")
+        logger_portal.info(f"Purchase Order Favorited successfully: { purchase_order.id }")
         # messages.success(request, trans('Item successfully added to your Favorites'))
 
         return HttpResponse(purchase_order.id, status=200)
-    logger.info(f"Failed to favorite Purchase Order: { purchase_order.id }")
+    logger_portal.warning("Failed to favorite Purchase Order", extra={"request": request})
     return HttpResponse(status=500)
 
 
@@ -724,15 +672,14 @@ def bdc_stickies_remove(request, pk=None):
     purchase_order = get_object_or_404(PurchaseOrder, id=pk)
     if not purchase_order : return HttpResponse(_("Not found"), status=404)
 
-    logger = logging.getLogger('portal')
     sticked = Sticky.objects.filter(purchase_order=purchase_order, user=user)
 
     deleted, _ = sticked.delete()
     if deleted > 0:
-        logger.info(f"Purchase Order Unfavorited successfully: { purchase_order.id }")
+        logger_portal.info("Purchase Order Unfavorited successfully", extra={"request": request})
         return HttpResponse(purchase_order.id, status=200)
 
-    logger.info(f"Failed to unfavorite Purchase Order: { purchase_order.id }")
+    logger_portal.warning("Failed to unfavorite Purchase Order", extra={"request": request})
     return HttpResponse(status=500)
 
 
@@ -766,15 +713,14 @@ def bdc_stickies_remove_all(request):
     count = sticked.count() if sticked else 0
     bla = f'perimeter = [{ perimeter }], count = [{ count }]'
 
-    logger = logging.getLogger('portal')
     if count > 0:
         deleted, _ = sticked.delete()
         if deleted != count:
-            logger.info(f"Failed to unfavorite Purchase Orders.")
+            logger_portal.info(f"Failed to unfavorite Purchase Orders.")
             return HttpResponse(bla, status=500)
-        logger.info(f"All Purchase Order Unfavorited successfully.")
+        logger_portal.info("All Purchase Order Unfavorited successfully", extra={"request": request})
     else:
-        logger.info(f"Nothing to Unfavorite.")
+        logger_portal.warning("Nothing to Unfavorite", extra={"request": request})
 
     return HttpResponse(bla, status=200)
 

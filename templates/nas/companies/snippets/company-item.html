@@ -21,45 +21,59 @@
                         </div>
                         <div>
                             <div class="">{{ company.name }}</div>
-                            {% if company.is_mine %}
-                                <div class="fw-light small text-secondary oneline" 
-                                    data-bs-toggle="tooltip" title="{% trans 'ICE' %}">
-                                    <span>{{ company.ice|default:'-' }}</span>
-                                </div>
-                            {% else %}
-                                <div class="fw-light small text-secondary oneline">
-                                    <span>@{{ company.user.username }}</span>
-                                </div>
-                            {% endif %}
+                            <div class="fw-light small text-secondary oneline">
+                                {% if company.is_mine %}
+                                    <span class="me-2">{{ company.ice|default:'-' }}</span>
+                                {% else %}
+                                    <span class="me-2">@{{ company.user.username }}</span>
+                                {% endif %}
+                                
+                                {% if company.qualifs.all|length > 0 %}
+                                    <span class="me-2 small"
+                                        data-bs-toggle="tooltip" title="{% trans 'Qualifications' %}">
+                                        <i class="{{ bicons.qualifs_ico|default:'bi bi-dash-lg' }}"></i>
+                                        <span>{{ company.qualifs.all|length }}</span>
+                                    </span>
+                                {% endif %}
+
+                                {% if company.agrements.all|length > 0 %}
+                                    <span class="me-2 small"
+                                        data-bs-toggle="tooltip" title="{% trans 'Licences' %}">
+                                        <i class="{{ bicons.agrements_ico|default:'bi bi-dash-lg' }}"></i>
+                                        <span>{{ company.agrements.all|length }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-6 small text-end">
                     <div class="fw-light small text-secondary">
-                        {% if company.awards_sum %}
-                            <span class="ms-2 text-success">
-                                <i class="{{ bicons.winner|default:'bi bi-dash-lg' }}"></i>
-                                <span>{{ company.awards_sum|metrify }}</span>
+
+                        {% if company.expenses_sum %}
+                            <span class="ms-2"
+                                  data-bs-toggle="tooltip" title="{% trans 'Total expenses' %}">
+                                <i class="{{ bicons.expense|default:'bi bi-dash-lg' }}"></i>
+                                <span>{{ company.expenses_sum|metrify }}</span>
                             </span>
                         {% endif %}
+
                         {% if company.bids_sum %}
-                            <span class="ms-2">
+                            <span class="ms-2"
+                                  data-bs-toggle="tooltip" title="{% trans 'Total submitted bids' %}">
                                 <i class="{{ bicons.bidding|default:'bi bi-dash-lg' }}"></i>
                                 <span>{{ company.bids_sum|metrify }}</span>
                             </span>
                         {% endif %}
-                        <!-- <span class="ms-2">
-                            <i class="{{ bicons.manager|default:'bi bi-dash-lg' }}"></i>
-                            <span>{{ company.manageriats|length }}</span>
-                        </span>
-                        <span class="ms-2">
-                            <i class="{{ bicons.esign|default:'bi bi-dash-lg' }}"></i>
-                            <span>{{ company.signature_keys|length }}</span>
-                        </span>
-                        <span class="ms-2">
-                            <i class="{{ bicons.expirable|default:'bi bi-dash-lg' }}"></i>
-                            <span>{{ company.expirables|length }}</span>
-                        </span> -->
+
+                        {% if company.awards_sum %}
+                            <span class="ms-2 text-success"
+                                  data-bs-toggle="tooltip" title="{% trans 'Total awards' %}">
+                                <i class="{{ bicons.winner|default:'bi bi-dash-lg' }}"></i>
+                                <span>{{ company.awards_sum|metrify }}</span>
+                            </span>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>              

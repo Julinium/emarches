@@ -30,7 +30,7 @@ from bidding.secu import (
         is_team_member,
         update_membership,
     )
-from nas.choices import BidStatus, BidResults
+from nas.choices import BidStatus, BidResults, ExpenseStatus
 from nas.forms import (CompanyForm, NewsletterSubscriptionForm,
                        NotificationSubscriptionForm, UserProfileForm,
                        UserSettingsForm)
@@ -218,29 +218,28 @@ def companies_list(request):
         return HttpResponse(_("You are not an active team member"), status=403)
     
     colleagues = get_colleagues(user)
-    submitted = Q(bids__status=BidStatus.BID_SUBMITTED)
-    finished  = Q(bids__status=BidStatus.BID_FINISHED)
-    awarded   = Q(bids__result=BidResults.BID_AWARDED)
-    cancelled = Q(bids__status=BidStatus.BID_CANCELLED)
-    draft     = Q(bids__status=BidStatus.BID_PREPARING)
+    submitted_bids = Q(bids__status=BidStatus.BID_SUBMITTED)
+    finished_bids  = Q(bids__status=BidStatus.BID_FINISHED)
+    awarded_bids   = Q(bids__result=BidResults.BID_AWARDED)
+    confirmed_exp  = Q(bids__expenses__status=ExpenseStatus.XPS_CONFIRMED)
+    paid_exp       = Q(bids__expenses__status=ExpenseStatus.XPS_PAID)
 
     team_companies = Company.objects.filter(
             user__in=colleagues,
         ).annotate(
-            is_mine=Q(user=user),
-            # bdcs_count=Count('purchase_orders', filter=Q(
-            #     purchase_orders__deadline__gte=assa)),            
+            is_mine      = Q(user=user),
+            bids_sum     = Sum('bids__bid_amount', filter=(submitted_bids | finished_bids)), 
+            awards_sum   = Sum('bids__bid_amount', filter=(submitted_bids | finished_bids) & awarded_bids), 
+            expenses_sum = Sum('bids__expenses__amount_paid', filter=(confirmed_exp | paid_exp)), 
+            
+            # bdcs_count=Count('purchase_orders', filter=Q(purchase_orders__deadline__gte=assa)),            
             # part_count = Count('deposits', distinct=True), 
             # wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
             # bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
-            bids_sum   = Sum(
-                'bids__bid_amount', filter=(submitted | finished), 
-                ), 
-            awards_sum   = Sum(
-                'bids__bid_amount', filter=(submitted | finished) & awarded  , 
-                ), 
             # last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
             # last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
+        # ).select_related(
+        #     "agrements", "qualifs",
         ).prefetch_related(
             "manageriats", "expirables", "signature_keys",
         ).order_by("-is_mine", "user__username", "name")

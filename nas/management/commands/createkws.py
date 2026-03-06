@@ -10,17 +10,26 @@ class Command(BaseCommand):
         self.stdout.write(self.style.WARNING(f"Started doing the work ..."))
         
         ############################################
-        from bidding.models import Team
-        # from datetime import datetime
-        
-        # mbs = TeamMember.objects.all()
-        # for mb in mbs:
-        #     mb.created = mb.joined
-        #     mb.save()
-        # teams = Team.objects.all()
-        # for t in teams:
-        #     if t.members.count() == 0:
-        #         t.delete()
+        from base.models import Client, make_acronym
+        clients = Client.objects.filter(
+                # tenders__isnull=False,
+                short__isnull=True,
+            )
+
+        cc = clients.count()
+        print(f"Found {cc} clients to save.\n")
+        i = 0
+        for c in clients:
+            # i += 1
+            ns = make_acronym(c.name)
+            if c.short != ns:
+                i += 1
+                print(f"Saving client {i:04} / {cc:04}:")
+                print(f"\tOld Short: {c.short}")
+                c.short = ns
+                print(f"\tNew Short: {ns}")
+                print(f"\tFull name: {c.name}\n")
+                c.save()
 
         ############################################
 

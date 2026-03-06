@@ -211,7 +211,9 @@ def portal_context(request):
 
         'empty_list'      : 'bi bi-stars ',
         'manager'         : 'bi bi-file-earmark-person',
-        'expirable'       : 'bi bi-chevron-bar-right ',
+        'expirable'       : 'bi bi-chevron-bar-right',
+
+        'average'         : 'bi bi-arrows-collapse',
 
     }
 

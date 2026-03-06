@@ -1727,7 +1727,7 @@ def bid_edit(request, pk=None, lk=None):
             form.fields["bond_amount"].initial = lot.bond
 
             client_short = lot.tender.client.short
-            if len(client_short) < 1:
+            if len(client_short) < 2:
                 client_short = "[?]"
             words = lot.title.split()
             words_count = 8

@@ -14,8 +14,8 @@ from django.utils.translation import gettext_lazy as _
 
 from .texter import normalize_text as nt
 
-# from bidding.models import Bid
 
+NOT_WORDS = {"des", "sur", "pour", "les"}
 
 
 class Agrement(models.Model):
@@ -105,13 +105,17 @@ class Client(models.Model):
         except Exception as x:
             traceback.print_exc()
         try:
-            slash = ' / '
-            s = self.name
-            last_slash = s.rfind(slash)
-            if last_slash != -1:
-                dash = s.find(' - ', last_slash + len(slash))
-                if dash != -1:
-                    self.short = s[last_slash + len(slash):dash]
+            # slash = ' / '
+            # s = self.name
+            # last_slash = s.rfind(slash)
+            # if last_slash != -1:
+            #     dash = s.find(' - ', last_slash + len(slash))
+            #     if dash != -1:
+            #         self.short = s[last_slash + len(slash):dash]
+
+            # s = self.name
+            # match = re.search(r'/\s*([^/]+?)\s*-', s)
+            self.short = make_acronym(self.name)
         except Exception as x:
             traceback.print_exc()
                     
@@ -928,8 +932,44 @@ class Deposit(models.Model):
         db_table = 'base_deposit'
         ordering = ['opening', 'lot_number', 'amount_a']
 
-    
 
+def make_acronym(s: str) -> str:
+    # 1. keep part after last "/"
+    s = s.lower()
+    s = s.replace("d'", "d ")
+    
+    s = s.split(" / ")[-1].strip()
+    s = s.split(" - ")[-1].strip()
+
+    # 2. split on spaces or dashes
+    words = re.split(r"[ -]+", s)
+
+    letters = []
+
+    for w in words:
+        w = w.strip()
+
+        if not w:
+            continue
+
+        # 3. abbreviated word like "S."
+        if re.fullmatch(r"[A-Z]\.", w):
+            letters.append(w[0].upper())
+            continue
+
+        lw = w.lower()
+
+        # 4. ignore stop words
+        if lw in NOT_WORDS:
+            continue
+
+        # 5. ignore short words
+        if len(w) < 3:
+            continue
+
+        letters.append(w[0].upper())
+
+    return "".join(letters).upper()
     
 
 
