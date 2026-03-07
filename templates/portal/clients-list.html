@@ -50,40 +50,18 @@
                                     <span class="fw-bold me-1">{{ client.short|default:'-' }}</span>
                                 </div>
                                 <div class="ms-2 text-end">
-                                    <!-- <span class="badge bg-secondary" data-bs-toggle="tooltip" title="{% trans 'Tenders count' %}: {% trans 'Active' %} / {% trans 'All' %}">
-                                        <i class="{{ bicons.count }} me-1"></i>
-                                        <span>{{ client.tenders_count }}/{{ client.all_tenders_count }}</span>
-                                    </span>
-                                    <span class="badge bg-success ms-1" data-bs-toggle="tooltip" title="{% trans 'Total tenders estimate' %}: {% trans 'Active' %} / {% trans 'All' %}">
-                                        <i class="{{ bicons.estimate }} me-1"></i>
-                                        <span>{{ client.total_estimate|metrify }}/{{ client.all_total_estimate|metrify }}</span>
-                                    </span> -->
-                                    <!-- <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Active Tenders' %} @ {% trans 'Estimate average' %} ({{ client.estimate_average }})">
-                                        <span class="small fw-bold">{{ client.tenders_count }}</span>
-                                        <span class="small fw-light fs-7">/</span>
-                                        <span class="small fw-light">{{ client.all_tenders_count }}</span>
-                                        <span class="small fw-light fs-7">@</span>
-                                        <span class="small fw-light">{{ client.estimate_average|metrify }}</span>
-                                    </span> -->
-
-                                    <!-- <span><i class="{{ bicons.vertical }} small text-secondary"></i></span> -->
+                                    
                                     {% if client.total_estimate %}
                                         <span class="text-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ client.total_estimate }}">
                                             <i class="{{ bicons.estimate }} small"></i>
                                             <span class="fw-bold">{{ client.total_estimate|metrify }}</span>
                                         </span>
                                     {% endif %}
-                                    <!-- <span class="badge bg-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ client.total_estimate }}">
-                                        <i class="{{ bicons.estimate }} me-1"></i>
-                                        <span>{{ client.total_estimate|metrify }}</span>
-                                    </span> -->
+                                    
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <a href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client" 
-                            class="btn text-start w-100 p-0">
-                        </a> -->
+                        
                         <div class="card-body p-0">
                             {% include "portal/snippets/clients/client-item.html" with client=client %}
                         </div>

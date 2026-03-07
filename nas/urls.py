@@ -17,7 +17,7 @@ urlpatterns = [
     path('settings', views.user_settings, name='nas_user_settings'),
     path('settings/reset', views.user_settings_reset, name='nas_user_settings_reset'),
 
-    path('onboard', views.onboard, name='nas_onboard'),
+    # path('onboard', views.onboard, name='nas_onboard'),
     
     path('notifications/all-on', views.enableAllNotifications, name='nas_enable_all_notifications'),
     path('newsletters/all-on', views.enableAllNewsletters, name='nas_enable_all_newsletters'),
@@ -27,12 +27,14 @@ urlpatterns = [
     path('companies/<uuid:pk>/agrements/', views.manage_company_agrements, name='nas_company_agrements'),
     path('companies/<uuid:pk>/qualifs/', views.manage_company_qualifs, name='nas_company_qualifs'),
     path('companies/<uuid:pk>/icify/', views.accept_iced_company, name='nas_company_icify'),
-    
-    
+
+
     path('companies/',                  views.companies_list,              name='nas_company_list'),
-    path('x_companies/', views.CompanyListView.as_view(), name='x_nas_company_list'),
+    path('companies/<uuid:pk>/files/<str:ft>/', views.company_file,   name='nas_company_file'),
+    # path('x_companies/', views.CompanyListView.as_view(), name='x_nas_company_list'),
     path('companies/new/', views.CompanyCreateView.as_view(), name='nas_company_create'),
     path('companies/<uuid:pk>/', views.CompanyDetailView.as_view(), name='nas_company_detail'),
     path('companies/<uuid:pk>/edit/', views.CompanyUpdateView.as_view(), name='nas_company_edit'),
     path('companies/<uuid:pk>/delete/', views.CompanyDeleteView.as_view(), name='nas_company_delete'),
 ]
+

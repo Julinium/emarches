@@ -104,17 +104,23 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = [
             'name', 'forme', 'ice', 'rc', 'address', 'email', 'website', 
-            'activity', 'note', 'image', 'file', 'clear_image']
+            'activity', 'file', 'note', 'image', 'clear_image']
 
         widgets = {
             'date_est': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note': forms.Textarea(attrs={'rows': 8}),
+            'note': forms.Textarea(attrs={'rows': 3}),
             "file"     : FilenameOnlyClearableFileInput,
         }
+
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
     
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
+
+
     def clean(self):
         cleaned_data = super().clean()
         name = cleaned_data.get('name')

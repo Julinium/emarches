@@ -320,15 +320,15 @@ LOGGING = {
         'portal_file': {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/portal.log'),
-            'maxBytes': 1024*1024*32,
-            'backupCount': 20,
+            'maxBytes': 1024*1024*64,
+            'backupCount': 99,
             'formatter': 'json',
         },
         'request_file': {
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(BASE_DIR, 'logs/requests.log'),
-            'maxBytes': 1024*1024*32,
-            'backupCount': 20,
+            'maxBytes': 1024*1024*64,
+            'backupCount': 99,
             'formatter': 'verbose',
         },
     },
@@ -341,7 +341,7 @@ LOGGING = {
         },
         'django.request': {
             'handlers': ['request_file', 'console'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False,
         },
         'portal': {

@@ -1,4 +1,4 @@
-
+import os
 import json
 import logging
 
@@ -47,49 +47,76 @@ COMPANIES_ITEMS_PER_PAGE = 10
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def profile_view(request):
+    logger_portal.debug("Redirect to nas_at_username", extra={"request": request})
     return redirect('nas_at_username', request.user.username)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def username_view(request, username):
-    user = (
-        User.objects
-        .select_related(
-            'profile',
-        ).prefetch_related(# 'groups', # 'user_permissions',
-            'companies',            # Company
-            'newsletters',          # NewsletterSubscription
-            'notifications',        # NotificationSubscription
-        )
-        .get(username=request.user.username)
-    )
 
-    context = {
-        'user': user,
-    }
+    uqer = request.user
+    if not uqer or not uqer.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    try:
+        user = (
+            User.objects
+            .select_related(
+                'profile',
+            ).prefetch_related(# 'groups', # 'user_permissions',
+                # 'companies',            # Company
+                'newsletters',          # NewsletterSubscription
+                'notifications',        # NotificationSubscription
+            )
+            .get(username=uqer.username)
+        )
+    except:
+        logger_portal.error("E404: Username not found", extra={"request": request})
+        return HttpResponse("Not found", status=404)
+
+
+    context = {'user': user,}
+    logger_portal.info("User profile view", extra={"request": request})
     return render(request, 'nas/profile-view.html', context)
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def profile_edit(request):
+
     user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
     try:
         profile = user.profile
+        logger_portal.debug("Found user profile", extra={"request": request})
     except:
-        profile = Profile(user=user)
-        profile.save()
+        logger_portal.debug("User profile not found", extra={"request": request})
+        try:
+            profile = Profile(user=user)
+            profile.save()
+            logger_portal.debug("Created user profile", extra={"request": request})
+        except:
+            logger_portal.error("E500: Error creating user profile", extra={"request": request})
+            return HttpResponse("Server Error", status=500)
 
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
+            logger_portal.info("User profile saved successfully", extra={"request": request})
             return redirect('nas_profile_view')
         else:
+            logger_portal.warning("User profile form invalid", extra={"request": request})
             show_form_errors(form, request)
     else:
+        logger_portal.info("User profile form view", extra={"request": request})
         form = UserProfileForm(instance=profile)
+
     return render(request, 'nas/profile-edit.html', {'form': form})
 
 
@@ -187,14 +214,14 @@ def tuneNewsletters(request):
     })
 
 
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def onboard(request):
-    context = {
-        'user': request.user,
-        'profile': request.user.profile,
-    }
-    return render(request, 'nas/onboard.html', context)
+# @login_required(login_url="account_login")
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# def onboard(request):
+#     context = {
+#         'user': request.user,
+#         'profile': request.user.profile,
+#     }
+#     return render(request, 'nas/onboard.html', context)
 
 
 @login_required(login_url="account_login")
@@ -291,6 +318,63 @@ class CompanyDetailView(DetailView):
             ).filter(user=self.request.user, active=True)
 
 
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def company_file(request, pk=None, ft=None):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenicated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if not ft:
+        logger_portal.warning("E404: Null file type parameter", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
+
+    company = None
+    if pk:
+        company = get_object_or_404(Company, pk=pk)
+    if not company:
+        logger_portal.warning("E403: Company reading error", extra={"request": request})        
+        return HttpResponse(_("Permission denied"), status=403)
+
+    team = get_or_create_team(user, request)
+    request.team = team
+
+
+    if not team:
+        logger_portal.warning("E403: Team not found", extra={"request": request})
+        return HttpResponse(_("Permission denied") + ": " + _(" Team not found"), status=403)
+
+    if not is_active_team_member(user, team):
+        logger_portal.warning("E403: User not an active team member", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+    
+    if not is_team_member(company.user, team):
+        logger_portal.warning("E403: Company owner not a team member", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if ft == "file":
+        file_path = company.file.url
+    else:
+        logger_portal.warning("E404: Wrong company file type", extra={"request": request})
+        return HttpResponse(_("Not found"), status=404)
+
+    file_name = os.path.basename(file_path)
+    if not file_name:
+        logger_portal.warning("E404: Company file not found", extra={"request": request})
+        return HttpResponse(_("File not found"), status=404)
+
+    response = HttpResponse()
+    response["Content-Type"] = "application/octet-stream"
+    response["X-Accel-Redirect"] = f"/companies/{ ft }/{ file_name }"
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+    logger_portal.info("Expense file download authorized", extra={"request": request})
+    return response
+
+
+
 @method_decorator(login_required, name='dispatch')
 class CompanyCreateView(CreateView):
     model = Company
@@ -376,7 +460,25 @@ def manage_company_agrements(request, pk):
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def accept_iced_company(request, pk):
-    company = get_object_or_404(Company, id=pk)
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    try:
+        company = Company.objects.get(id=pk)
+    except:
+        company = None
+
+    if company is None:
+        logger_portal.error("E404: Company not found", extra={"request": request})
+        return HttpResponse("Not found", status=404)
+
+    if company.user != user:
+        logger_portal.error("E403: User does not own company", extra={"request": request})
+        return HttpResponse("Permission denied", status=403)
+
     if company.iced_company:
         if request.method == "POST":
             try:
@@ -407,23 +509,31 @@ def accept_iced_company(request, pk):
                     company.save()
                     messages.success(request, _("Data saved successfully"))
                 else:
-                    messages.error(request, _("Errors occurred while saving data"))
-            except Exception as xc:
-                messages.error(request, str(xc))
-                messages.error(request, _("Verification process failed") + ": Exception raised")
+                    logger_portal.warning("Errors occurred while saving company data", extra={"request": request})
+                    messages.error(request, _("Errors occurred while saving company data"))
+            except:
+                logger_portal.error("Exception handling verification data", extra={"request": request})
+                messages.error(request, _("Verification process failed"))
+        else:
+            logger_portal.error("E405: Bad request method", extra={"request": request})
+            return HttpResponse("Bad request", status=405)
     else:
-        messages.error(request, _("Verification process failed") + ": Got empty or no Iced")
+        logger_portal.error("Could not get verification", extra={"request": request})
+        messages.error(request, _("Verification process failed"))
         
     return redirect('nas_company_detail', pk=company.id)
+
 
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @login_required
 def user_settings(request):
+
     user = request.user
     if not user or not user.is_authenticated:
-        return HttpResponse('Not allowed', status_code=403)
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
 
     user_settings = UserSetting.objects.filter(user = user).first()
 
@@ -438,39 +548,48 @@ def user_settings(request):
 
         if form.is_valid():
             form.save()
+            logger_portal.info("User settings saved successfully", extra={"request": request})
             messages.success(request, "Settings saved successfully.")
 
             redir = request.POST.get('next', request.META.get('HTTP_REFERER', None))
             if redir and not url_has_allowed_host_and_scheme(
                 redir, allowed_hosts={request.get_host()},
                 require_https=request.is_secure()):
-                redir = None
-
+                logger_portal.warning("Redirect not allowed, sending home instead", extra={"request": request})
+                redir = "base_home"
+            
             return redirect(redir)
 
             # next_url = request.POST.get('next', None)
             # if next_url: return redirect(next_url)
 
         else:
+            logger_portal.warning("User settings form invalid", extra={"request": request})
             show_form_errors(form, request)
     else:
+        logger_portal.info("User settings form view", extra={"request": request})
         form = UserSettingsForm(instance=user_settings)
 
     return render(request, 'nas/user-settings-edit.html', {'form': form})
 
 
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def user_settings_reset(request):
+
     user = request.user
     if not user or not user.is_authenticated:
-        return HttpResponse('Not allowed', status_code=403)
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
 
     count, _ = UserSetting.objects.filter(user = user).delete()
 
     if count > 0:
+        logger_portal.info("User setting reset to default", extra={"request": request})
         messages.success(request, "Settings reset successfully.")
     else:
+        logger_portal.warning("User setting not reset", extra={"request": request})
         messages.error(request, "Something went wrong while resetting Settings.")
 
     next_url = request.POST.get('next', None)
@@ -480,6 +599,7 @@ def user_settings_reset(request):
     if next_url: return redirect(next_url)
 
     return redirect('/')
+
 
 
 def show_form_errors(form, request):
@@ -494,7 +614,8 @@ def show_form_errors(form, request):
                 error_messages.append(f"{field}: {error}")
     if error_messages != []:
         messages.error(request, '\n. '.join(error_messages))
+
     if imagine:
         messages.error(request, _("Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, AVIF, or GIF."))
-        messages.warning(request, _("SVG files are not allowed for security reasons."))
+        # messages.warning(request, _("SVG files are not allowed."))
 

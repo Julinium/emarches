@@ -13,20 +13,9 @@
         <div class="">
             <span class="h3 me-1">{% trans "Companies list" %}</span>
         </div>
-        <!-- <div class="d-flex align-items-top">
-            {% include 'bidding/snippets/bonds/bond-search-form.html' %}
-            {% include 'bidding/snippets/bonds/bond-menu-sort.html' %}
-        </div> -->
     </div>
 
     <div class="fw-light mt-1">
-        <!-- {% if query_dict.filters > 0 %}
-            <span class="" data-bs-toggle="tooltip" 
-                  title="{% trans 'Results are filtered' %}">
-                <i class="{{ bicons.filters }}"></i>
-            </span>
-            <span class="small text-muted">{% trans "Results are filtered" %}.</span>
-        {% endif %} -->
         <span class="fw-bold">
             {{ page_obj.paginator.count }} 
         </span>
@@ -59,11 +48,9 @@
                     <div class="list-group-item list-group-item-action p-0">
                         {% include 'nas/companies/snippets/company-item.html' with company=company  %}
                     </div>
-                {% empty %}
-                    <div class="list-group-item-action p-2 text-secondary">
-                        <span class="ms-1">{% trans "None found" %}</span>
-                    </div>
+                    
                 {% endfor %}
+
             </div>
             
             {% include 'base/snippets/paginator.html' %}

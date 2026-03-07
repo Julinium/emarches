@@ -318,17 +318,6 @@ class ExpenseForm(forms.ModelForm):
         self.creator = user
         self.bid = bid
 
-        # if user:
-        #     colleagues = get_colleagues(user)
-
-        #     contacts = Contact.objects.filter(creator__in=colleagues)
-        #     contact_field = self.fields["contact"]
-        #     contact_field.queryset = contacts
-        #     if contacts.count() == 1:
-        #         contact_field.initial = contacts.first()
-        # else:
-        #     contact_field.queryset = Contact.objects.none()
-
         for field in self.fields.values():
             field.widget.attrs["class"] = "form-control"
             field.label_suffix = ""

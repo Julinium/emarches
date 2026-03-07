@@ -1,17 +1,20 @@
 {% load i18n %}
+
 <div class="small">
     <div class="dropdown dropstart">
+        
         <button class="btn btn-light py-1 mx-1" type="button" 
                 data-bs-toggle="dropdown" aria-expanded="false"
                 data-bs-toggle="tooltip" 
                 title="{% trans 'Order items by' %}">
             <i class="{{ bicons.sort }}"></i>
         </button>
+
         <ul class="dropdown-menu dropdown-menu-lg-end shadow">
             <div class="ms-3 mb-2">
                 <span class="">{% trans 'Ordering' %}</span>
             </div>
-            
+
             <li>
                 {% trans 'Latest published' as caption %}
                 {% include 'base/snippets/menu-sort-item.html' with caption=caption field='latest_published' icon=bicons.published %}

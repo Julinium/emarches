@@ -88,13 +88,13 @@
 
         <div class="mt-3 text-center">
 
-            <a href="{% if request.META.HTTP_REFERER %}
+            <!-- <a href="{% if request.META.HTTP_REFERER %}
                         {{ request.META.HTTP_REFERER }}{% else %}
                         javascript:history.back(){% endif %}"
                 class="btn btn-outline-secondary m-1">
                 <i class="bi bi-backspace me-1"></i>
                 {% trans 'Cancel' %}
-            </a>
+            </a> -->
 
             <button type="submit" class="btn btn-primary m-1">
                 <i class="{{ bicons.save }} me-1"></i>
