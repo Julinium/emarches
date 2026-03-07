@@ -798,7 +798,7 @@ def client_list(request):
     pro_context = portal_context(request)
     us = pro_context["user_settings"]
     if us:
-        CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
+        CLIENTS_ITEMS_PER_PAGE = int(us.general_items_per_page)
     CLIENTS_ORDERING_FIELD = "latest_published"
 
     def get_req_params(req):
@@ -863,11 +863,16 @@ def client_list(request):
     ordering = []
     if sort and sort != "":
         ordering = [sort] # Invert sort keys, except Name
-        if sort not in ["name", "-name"]:
+        if sort not in ["name", "-name", "short", "-short"]:
             if sort[0] == "-" :
                 ordering = [sort[1:]]
             else:
                 ordering = [f"-{ sort }"]
+            # ordering.append("short")
+
+        if sort in ["latest_published", "-latest_published"]:
+            ordering.append("-tenders_count")
+            ordering.append("-all_tenders_count")
 
 
     query_dict["filters"] = filters

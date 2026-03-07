@@ -11,13 +11,6 @@
             <div class="ms-3 mb-2">
                 <span class="">{% trans 'Ordering' %}</span>
             </div>
-
-            <hr class="dropdown-divider">
-            
-            <li>
-                {% trans 'Client Name' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='short' icon=bicons.client %}
-            </li>
             
             <li>
                 {% trans 'Latest published' as caption %}
@@ -46,6 +39,18 @@
             <li>
                 {% trans 'All tenders amount' as caption %}
                 {% include 'base/snippets/menu-sort-item.html' with caption=caption field='all_total_estimate' icon=bicons.estimate %}
+            </li>
+
+            <hr class="dropdown-divider">
+            
+            <li>
+                {% trans 'Client Acronym' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='short' icon=bicons.client %}
+            </li>
+            
+            <li>
+                {% trans 'Client Name' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='name' icon=bicons.client %}
             </li>
         </ul>
     </div>
