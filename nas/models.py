@@ -511,7 +511,7 @@ class Manageriat(models.Model):
 
     class Meta:
         db_table = 'nas_manageriat'
-        ordering = ['name']
+        ordering = ['-validity_end', 'name']
         verbose_name = _("Manageriat")
     
     def __str__(self):
@@ -530,7 +530,7 @@ class Manageriat(models.Model):
     
     @property
     def expired(self):
-        if self.expiry: return is_past(self.expiry)
+        if self.validity_end: return is_past(self.validity_end)
         return False
 
 
@@ -541,7 +541,7 @@ class SignatureKey(models.Model):
     serial         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Serial Number"))
     issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
     holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
-    owner          = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Owner"))
+    # owner          = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Owner"))
     validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
     validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
     note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
@@ -549,7 +549,7 @@ class SignatureKey(models.Model):
 
     class Meta:
         db_table = 'nas_signature_key'
-        ordering = ['name']
+        ordering = ['-validity_end', 'name']
         verbose_name = _("Signature Key")
     
     def __str__(self):
@@ -568,7 +568,7 @@ class SignatureKey(models.Model):
     
     @property
     def expired(self):
-        if self.expiry: return is_past(self.expiry)
+        if self.validity_end: return is_past(self.validity_end)
         return False
 
 
@@ -586,7 +586,7 @@ class Expirable(models.Model):
 
     class Meta:
         db_table = 'nas_expirable'
-        ordering = ['name']
+        ordering = ['-validity_end', 'name']
         verbose_name = _("Expirable")
     
     def __str__(self):
@@ -605,7 +605,7 @@ class Expirable(models.Model):
     
     @property
     def expired(self):
-        if self.expiry: return is_past(self.expiry)
+        if self.validity_end: return is_past(self.validity_end)
         return False
 
 

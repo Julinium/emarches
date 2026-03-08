@@ -172,19 +172,25 @@ class ManageriatForm(forms.ModelForm):
     class Meta:
         model = Manageriat
         fields = [
-            'company', 'name', 'identity',
+            # 'company', 
+            'name', 'identity',
             'validity_start', 'validity_end', 'file',
             ]
 
         widgets = {
             'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'validity_end': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note': forms.Textarea(attrs={'rows': 8}),
+            'validity_end'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'note'          : forms.Textarea(attrs={'rows': 3}),
+            "file"          : FilenameOnlyClearableFileInput,
         }
 
-    # def __init__(self, *args, user=None, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.user = user
+    def __init__(self, *args, company=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.company = company
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
 
 
 class SignatureKeyForm(forms.ModelForm):
@@ -192,15 +198,26 @@ class SignatureKeyForm(forms.ModelForm):
     class Meta:
         model = SignatureKey
         fields = [
-            'company', 'name', "serial", "issuer", "holder", "owner",
+            # 'company', 
+            'name', "serial", "issuer", "holder", 
+            # "owner",
             'validity_start', 'validity_end', "file", "note",
             ]
 
         widgets = {
             'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'validity_end': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note': forms.Textarea(attrs={'rows': 8}),
+            'validity_end'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'note'          : forms.Textarea(attrs={'rows': 3}),
+            "file"          : FilenameOnlyClearableFileInput,
         }
+
+    def __init__(self, *args, company=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.company = company
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
 
 
 class ExpirableForm(forms.ModelForm):
@@ -208,15 +225,25 @@ class ExpirableForm(forms.ModelForm):
     class Meta:
         model = Expirable
         fields = [
-            'company', 'name', "subject", "issuer", "holder",
+            # 'company', 
+            'name', "subject", "issuer", "holder",
             'validity_start', 'validity_end', "file", "note",
             ]
 
         widgets = {
             'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'validity_end': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note': forms.Textarea(attrs={'rows': 8}),
+            'validity_end'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
+            'note'          : forms.Textarea(attrs={'rows': 3}),
+            "file"          : FilenameOnlyClearableFileInput,
         }
+
+    def __init__(self, *args, company=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.company = company
+
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-control"
+            field.label_suffix = ""
 
 
 class NotificationSubscriptionForm(forms.Form):
@@ -253,6 +280,4 @@ class NewsletterSubscriptionForm(forms.Form):
             self.fields['subscriptions'].initial = [
                 sub.id for sub in subscriptions if sub.active
             ]
-
-
 

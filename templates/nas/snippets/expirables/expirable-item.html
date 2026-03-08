@@ -1,0 +1,91 @@
+{% load i18n %}
+
+<div id="expirable-{{ expirable.id }}-line">
+
+    <a data-bs-toggle="collapse" href="#expirable-{{ expirable.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="expirable-{{ expirable.id }}-collapse"
+       class="text-decoration-none text-reset">
+
+        <div id="expirable-{{ expirable.id }}-digest" class="p-2">
+
+            <div class="row g-1 my-1 {% if expirable.expired %}text-secondary{% endif %}">
+                <div class="col-12 col-md-6 text-start">
+                    <div>
+                        <span class="fw-bold">{{ expirable.name }}</span>
+                        {% if expirable.expired %}
+                            <span class="badge bg-secondary">{% trans "Expired" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 text-end">
+                    <div class="small">
+                        <i class="{{ bicons.deadline }}"></i>
+                        <span class="">{{ expirable.validity_end|date }}</span>
+                    </div>
+                </div>
+            </div>              
+
+        </div>
+
+    </a>
+
+    <div id="expirable-{{ expirable.id }}-collapse" class="collapse px-2 ms-4 border-start">  
+
+        <div id="expirable-{{ expirable.id }}-extended" class="mx-0 mb-3">
+            
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Subject" %}:</span>
+                <span class="text-secondary">{{ expirable.subject }}</span>
+            </div>
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Issuer" %}:</span>
+                <span class="text-secondary">{{ expirable.issuer }}</span>
+            </div>
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Holder" %}:</span>
+                <span class="text-secondary">{{ expirable.holder }}</span>
+            </div>
+
+            <div class="">
+                <span class="fw-light small me-1">{% trans "Validity" %}:</span>
+                <span class="text-secondary">{{ expirable.validity_start|date }}</span>
+                <span class="mx-2"> - </span>
+                <span class="text-secondary">{{ expirable.validity_end|date }}</span>
+            </div>
+            
+            <div class="threelines">
+                <span class="fw-bold small me-1">{% trans "Note" %}:</span>
+                <span class="text-secondary">{{ expirable.note|default:"-" }}</span>
+            </div>
+
+            {% if expirable.file %}
+                <div class="col-12">
+                    <div class="mt-3 border border-bottom border-0">
+                        <div class="small text-muted fw-light me-2">
+                            <span>{% trans "File" %}</span> 
+                            <span class="small text-secondary fw-bold">({{ expirable.files_size|filesizeformat }})</span>
+                        </div>
+                        <div class="mx-3"><a href="{% url 'nas_expirable_file' expirable.id 'file' %}">{{ expirable.file_name }}</a></div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+        
+        <div id="expirable-{{ expirable.id }}-actions" class="text-end mx-0 mb-3">
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" href="{% url 'nas_expirable_edit' expirable.id company.id %}">
+                <span><i class="{{ bicons.edit }}"></i></span>
+                <span class="ms-1">{% trans 'Edit' %}</span>
+            </a>
+
+            <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-danger" href="{% url 'nas_expirable_edit' expirable.id company.id %}">
+                <span><i class="{{ bicons.delete }}"></i></span>
+                <span class="ms-1">{% trans 'Delete' %}</span>
+            </a> -->
+            
+        </div>
+
+    </div>
+
+</div>

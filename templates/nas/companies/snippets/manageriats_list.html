@@ -1,0 +1,43 @@
+{% load static i18n %}
+
+<div id="accordionManageriats">
+    <div class="accordion mt-3">
+        <div class="accordion-item shadow-sm">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#manageriatsCollapse" aria-expanded="false" aria-controls="manageriatsCollapse">
+                    <div class="w-100">
+                        <span class="h4">
+                            <span><i class="{{ bicons.manager }}"></i></span>
+                            <span class="ms-1">{% trans "Manageriats" %}:</span>
+                            <span class="ms-1 small fw-bold">{{ company.manageriats_count }}</span>
+                            <span class="small">/</span>
+                            <span class="ms-1 small">{{ company.manageriats.all|length }}</span>
+                        </span>
+                    </div>
+                </button>
+            </h2>
+            <div id="manageriatsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionManageriats">
+                <div class="accordion-body p-0">
+                    <div class="list-group mb-0">
+                        {% for manageriat in company.manageriats.all %}
+                            <div class="list-group-item-action border-bottom p-0">
+                                {% include 'nas/snippets/manageriats/manageriat-item.html' with manageriat=manageriat company=company %}
+                            </div>
+                        {% empty %}
+                            <div class="list-group-item-action p-2 text-secondary">
+                                <span class="ms-1">{% trans "None found" %}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 mt-2 text-end">
+        <span class="">
+            <a class="btn btn-sm btn-outline-primary mb-1 ms-2" href="{% url 'nas_manageriat_create' company.id %}"><i class="{{ bicons.create }} me-2"></i>{% trans "New" %}</a>
+        </span>
+    </div>
+</div>
+

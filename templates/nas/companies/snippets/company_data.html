@@ -62,7 +62,10 @@
     {% if company.file %}
         <div class="col-12">
             <div class="mt-3 border border-bottom border-0">
-                <div class="small text-muted fw-light me-2">{% trans "Company file" %}</div>
+                <div class="small text-muted fw-light me-2">
+                    <span>{% trans "Company file" %}</span> 
+                    <span class="small text-secondary fw-bold">({{ company.files_size|filesizeformat }})</span>
+                </div>
                 <div class="mx-3"><a href="{% url 'nas_company_file' company.id 'file' %}">{{ company.file_name }}</a></div>
             </div>
         </div>

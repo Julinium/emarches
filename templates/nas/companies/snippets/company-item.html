@@ -114,12 +114,34 @@
         </div>
         
         <div id="company-{{ company.id }}-actions" class="text-end mx-0 mb-3">
+
             {% if company.is_mine %}
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'nas_company_detail' company.id %}">
-                <span><i class="{{ bicons.details }}"></i></span>
-                <span class="ms-1">{% trans 'Company details' %}</span>
-            </a>
+                <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'nas_company_detail' company.id %}">
+                    <span><i class="{{ bicons.details }}"></i></span>
+                    <span class="ms-1">{% trans 'Company details' %}</span>
+                </a>
             {% endif %}
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bids_list' %}?company={{ company.id }}">
+                <span><i class="{{ bicons.bidding }}"></i></span>
+                <span class="ms-1">{% trans 'Bids' %}</span>
+            </a>
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_bonds_list' %}?company={{ company.id }}">
+                <span><i class="{{ bicons.bond }}"></i></span>
+                <span class="ms-1">{% trans 'Bonds' %}</span>
+            </a>
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_expenses_list' %}?company={{ company.id }}">
+                <span><i class="{{ bicons.expense }}"></i></span>
+                <span class="ms-1">{% trans 'Expenses' %}</span>
+            </a>
+
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank" href="{% url 'bidding_tasks_list' %}?company={{ company.id }}">
+                <span><i class="{{ bicons.task }}"></i></span>
+                <span class="ms-1">{% trans 'Tasks' %}</span>
+            </a>
+
         </div>
 
     </div>

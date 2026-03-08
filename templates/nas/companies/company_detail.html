@@ -31,17 +31,26 @@
 
     
     <div class="mt-5">
-        {% include 'nas/companies/snippets/company_details.html' with company=company %}
+        {% include 'nas/companies/snippets/company_data.html' with company=company %}
     </div>
     <div class="mt-5">
+        {% include 'nas/companies/snippets/manageriats_list.html' with company=company %}
+    </div>
+    <div class="mt-3">
+        {% include 'nas/companies/snippets/signature_keys_list.html' with company=company %}
+    </div>
+    <div class="mt-3">
+        {% include 'nas/companies/snippets/expirables_list.html' with company=company %}
+    </div>
+    <div class="mt-3">
         {% include 'nas/companies/snippets/qualif_list.html' with company=company %}
     </div>
-    <div class="mt-5">
+    <div class="mt-3">
         {% include 'nas/companies/snippets/agrement_list.html' with company=company %}
     </div>
 
     {% if company.deletable %}
-        <div id="company-actions" class="mt-5 text-center">
+        <div id="company-actions" class="mt-3 text-center">
             <a href="{% url 'nas_company_delete' company.pk %}" class="btn btn-danger m-1"><i class="bi bi-trash me-2"></i>{% trans "Delete Company" %}</a>
         </div>
     {% endif %}
