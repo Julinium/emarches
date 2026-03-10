@@ -1,10 +1,10 @@
 import os
 import uuid
 
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, MinLengthValidator
 from django.db import models
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
@@ -156,10 +156,36 @@ class Company(models.Model):
         if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
         return fs
     
+    @property
+    def running_manageriats(self, *args, **kwargs):
+        wassa = datetime.now()
+        return self.manageriats.filter(
+            validity_start__lte = wassa,
+            validity_end__gte = wassa,
+        )
+    
+    @property
+    def running_signature_keys(self, *args, **kwargs):
+        wassa = datetime.now()
+        return self.signature_keys.filter(
+            validity_start__lte = wassa,
+            validity_end__gte = wassa,
+        )
+    
+    @property
+    def running_expirables(self, *args, **kwargs):
+        wassa = datetime.now()
+        return self.expirables.filter(
+            validity_start__lte = wassa,
+            validity_end__gte = wassa,
+        )
+    
     def save(self, *args, **kwargs):
         if self.image:
             self.image = squarify_image(self.image, str(self.id).split('-')[0])
         super().save(*args, **kwargs)
+
+    
 
 
 class Folder(models.Model):
@@ -502,7 +528,7 @@ class UserSetting(models.Model):
 class Manageriat(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="manageriats", blank=True, null=True, verbose_name=_("Company"))
-    name           = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
     identity       = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Identity"))
     validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
     validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
@@ -532,16 +558,22 @@ class Manageriat(models.Model):
     def expired(self):
         if self.validity_end: return is_past(self.validity_end)
         return False
+    
+    @property
+    def days_to_go(self):
+        if self.validity_end: 
+            td = self.validity_end.date() - datetime.now().date()
+            return td.days
+        return None
 
 
 class SignatureKey(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="signature_keys", blank=True, null=True, verbose_name=_("Company"))
-    name           = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
     serial         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Serial Number"))
     issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
     holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
-    # owner          = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Owner"))
     validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
     validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
     note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
@@ -570,12 +602,19 @@ class SignatureKey(models.Model):
     def expired(self):
         if self.validity_end: return is_past(self.validity_end)
         return False
+    
+    @property
+    def days_to_go(self):
+        if self.validity_end: 
+            td = self.validity_end.date() - datetime.now().date()
+            return td.days
+        return None
 
 
 class Expirable(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="expirables", blank=True, null=True, verbose_name=_("Company"))
-    name           = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Name"))
+    name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
     subject        = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Subject"))
     issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
     holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
@@ -607,6 +646,13 @@ class Expirable(models.Model):
     def expired(self):
         if self.validity_end: return is_past(self.validity_end)
         return False
+    
+    @property
+    def days_to_go(self):
+        if self.validity_end: 
+            td = self.validity_end.date() - datetime.now().date()
+            return td.days
+        return None
 
 
 

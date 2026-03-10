@@ -6,12 +6,12 @@
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#manageriatsCollapse" aria-expanded="false" aria-controls="manageriatsCollapse">
                     <div class="w-100">
-                        <span class="h4">
+                        <span class="fs-6">
                             <span><i class="{{ bicons.manager }}"></i></span>
                             <span class="ms-1">{% trans "Manageriats" %}:</span>
                             <span class="ms-1 small fw-bold">{{ company.manageriats_count }}</span>
                             <span class="small">/</span>
-                            <span class="ms-1 small">{{ company.manageriats.all|length }}</span>
+                            <span class="ms-1 small fw-light">{{ company.manageriats.all|length }}</span>
                         </span>
                     </div>
                 </button>

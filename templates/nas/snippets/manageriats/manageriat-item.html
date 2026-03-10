@@ -72,10 +72,15 @@
                 <span class="ms-1">{% trans 'Edit' %}</span>
             </a>
 
-            <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-danger" href="{% url 'nas_manageriat_edit' manageriat.id company.id %}">
+            <button type="button" class="ms-2 mt-2 btn btn-sm btn-outline-danger"
+                    data-bs-toggle="modal" data-bs-target="#manageriatDeleteModal"
+                    data-name="{{ manageriat.name }}"
+                    data-date="{{ manageriat.validity_end|date|default:'-' }}"
+                    data-url="{% url 'nas_manageriat_delete' manageriat.id %}"
+                    >
                 <span><i class="{{ bicons.delete }}"></i></span>
                 <span class="ms-1">{% trans 'Delete' %}</span>
-            </a> -->
+            </button>
             
         </div>
 

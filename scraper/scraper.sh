@@ -19,10 +19,11 @@ if ! test -e "$_logs_file"; then
     mkdir -p $_logs_dir && touch $_logs_file
 fi
 
-_lock_file_short="${$_lock_file#"$_crony_dir/"}"
+# _lock_file_short="${$_lock_file#"$_crony_dir/"}"
+_lock_file_short=".lock"
 
 if test -e "$_lock_file"; then
-    echo "Execution prevented by a Lock file: $_lock_file_short" # >> "$_logs_file"
+    echo "Execution prevented by a Lock file: $_lock_file_short" >> "$_logs_file"
     echo "Another script is probably running or did not finish as expected." # >> "$_logs_file"
     echo "The lock file will be removed on next boot. It can also be removed manually." # >> "$_logs_file"
 else

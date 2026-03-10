@@ -834,6 +834,146 @@ def expirable_file(request, pk=None, ft=None):
     return response
 
 
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def manageriat_delete(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method == "POST":
+        if pk:
+            manageriat = get_object_or_404(Manageriat, pk=pk)
+
+        company = manageriat.company
+        if not company:
+            logger_portal.warning("E403: Related company not found", extra={"request": request})
+            return HttpResponse(_("Related company not found or not allowed"), status=403)
+
+        if company.user != user:
+            logger_portal.warning("E403: User does not own the company", extra={"request": request})
+            return HttpResponse(_("Permission denied"), status=403)
+
+        redir = redirect("nas_company_detail", company.id)
+        referer = request.META.get("HTTP_REFERER", None)
+        if referer:
+            if url_has_allowed_host_and_scheme(
+                referer,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                redir = redirect(referer)
+
+        try:
+            manageriat.delete()
+            messages.success(request, _("Manageriat deleted successfully"))
+            logger_portal.info("Manageriat deleted successfully", extra={"request": request})
+            return redir
+
+        except:
+            logger_portal.exception(f"E405: Exception deleting Manageriat", extra={"request": request})
+            return HttpResponse(_("Manageriat delete unsuccessful"), status=405)
+
+    logger_portal.warning(f"E405: Bad request method", extra={"request": request})
+    return HttpResponse(_("Bad request"), status=405)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def signature_key_delete(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method == "POST":
+        if pk:
+            signature_key = get_object_or_404(SignatureKey, pk=pk)
+
+        company = signature_key.company
+        if not company:
+            logger_portal.warning("E403: Related company not found", extra={"request": request})
+            return HttpResponse(_("Related company not found or not allowed"), status=403)
+
+        if company.user != user:
+            logger_portal.warning("E403: User does not own the company", extra={"request": request})
+            return HttpResponse(_("Permission denied"), status=403)
+
+        redir = redirect("nas_company_detail", company.id)
+        referer = request.META.get("HTTP_REFERER", None)
+        if referer:
+            if url_has_allowed_host_and_scheme(
+                referer,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                redir = redirect(referer)
+
+        try:
+            signature_key.delete()
+            messages.success(request, _("Signature Key deleted successfully"))
+            logger_portal.info("Signature Key deleted successfully", extra={"request": request})
+            return redir
+
+        except:
+            logger_portal.exception(f"E405: Exception deleting Signature Key", extra={"request": request})
+            return HttpResponse(_("Signature Key delete unsuccessful"), status=405)
+
+    logger_portal.warning(f"E405: Bad request method", extra={"request": request})
+    return HttpResponse(_("Bad request"), status=405)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def expirable_delete(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(_("Permission denied"), status=403)
+
+    if request.method == "POST":
+        if pk:
+            expirable = get_object_or_404(Expirable, pk=pk)
+
+        company = expirable.company
+        if not company:
+            logger_portal.warning("E403: Related company not found", extra={"request": request})
+            return HttpResponse(_("Related company not found or not allowed"), status=403)
+
+        if company.user != user:
+            logger_portal.warning("E403: User does not own the company", extra={"request": request})
+            return HttpResponse(_("Permission denied"), status=403)
+
+        redir = redirect("nas_company_detail", company.id)
+        referer = request.META.get("HTTP_REFERER", None)
+        if referer:
+            if url_has_allowed_host_and_scheme(
+                referer,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                redir = redirect(referer)
+
+        try:
+            expirable.delete()
+            messages.success(request, _("Expirable deleted successfully"))
+            logger_portal.info("Expirable deleted successfully", extra={"request": request})
+            return redir
+
+        except:
+            logger_portal.exception(f"E405: Exception deleting Expirable", extra={"request": request})
+            return HttpResponse(_("Expirable delete unsuccessful"), status=405)
+
+    logger_portal.warning(f"E405: Bad request method", extra={"request": request})
+    return HttpResponse(_("Bad request"), status=405)
+
+
+
+
 
 
 

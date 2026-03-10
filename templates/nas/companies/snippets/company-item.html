@@ -86,30 +86,129 @@
 
         <div id="company-{{ company.id }}-extended" class="mx-0 mb-3">
             
-            <div class="">
-                <span class="fw-light small me-1">{% trans "ICE" %}:</span>
-                <span class="text-secondary">{{ company.ice|default:'-' }}</span>
-            </div>
+            {% if company.ice %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "ICE" %}:</span>
+                    <span class="text-secondary">{{ company.ice|default:'-' }}</span>
+                </div>
+            {% endif %}
 
-            <div class="">
-                <span class="fw-light small me-1">{% trans "RC" %}:</span>
-                <span class="text-secondary">{{ company.rc|default:'-' }}</span>
-            </div>
+            {% if company.rc %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "RC" %}:</span>
+                    <span class="text-secondary">{{ company.rc|default:'-' }}</span>
+                </div>
+            {% endif %}
 
-            <div class="">
-                <span class="fw-light small me-1">{% trans "City" %}:</span>
-                <span class="text-secondary">{{ company.city|default:'-' }}</span>
-            </div>
+            {% if company.city %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "City" %}:</span>
+                    <span class="text-secondary">{{ company.city|default:'-' }}</span>
+                </div>
+            {% endif %}
 
-            <div class="">
-                <span class="fw-light small me-1">{% trans "Main Activity" %}:</span>
-                <span class="text-secondary">{{ company.activity|default:'-' }}</span>
-            </div>
+            {% if company.activity %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "Main Activity" %}:</span>
+                    <span class="text-secondary">{{ company.activity|default:'-' }}</span>
+                </div>
+            {% endif %}
 
-            <div class="">
-                <span class="fw-light small me-1">{% trans "Email" %}:</span>
-                <span class="text-secondary">{{ company.email|default:'-' }}</span>
-            </div>
+            {% if company.email %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "Email" %}:</span>
+                    <span class="text-secondary">{{ company.email|default:'-' }}</span>
+                </div>
+            {% endif %}
+
+
+            {% if company.running_manageriats.all %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "Administrative Management" %}:</span>
+                    {% for mgrt in company.running_manageriats.all %}
+                        <div class="ms-3 mb-2">
+                            <div class="text-secondary">{{ mgrt.name|default:'?' }}</div>
+                            {% if mgrt.days_to_go %}
+                                <div class="progress bg-danger p-0 m-0" 
+                                        style="height: 0.25rem;"
+                                        data-bs-toggle="tooltip"
+                                        title="{% trans 'Validity end' %}: {{ mgrt.validity_end|date }}">
+                                    {% with mgrt.days_to_go|barify:365 as green %}
+                                        <div class="progress-bar bg-success" 
+                                                role="progressbar" style="width: {{ green }}%;" 
+                                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                        </div>
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if company.running_signature_keys.all %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "Eliectronic Signature" %}:</span>
+                    {% for sk in company.running_signature_keys.all %}
+                        <div class="ms-3 mb-2">
+                            <div class="text-secondary">{{ sk.name|default:'?' }} #{{ sk.serial|default:'?' }}</div>
+                            {% if sk.days_to_go %}
+                                <div class="progress bg-danger p-0 m-0" 
+                                        style="height: 0.25rem;"
+                                        data-bs-toggle="tooltip"
+                                        title="{% trans 'Validity end' %}: {{ sk.validity_end|date }}">
+                                    {% with sk.days_to_go|barify:365 as green %}
+                                        <div class="progress-bar bg-success" 
+                                                role="progressbar" style="width: {{ green }}%;" 
+                                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                        </div>
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if company.running_expirables.all %}
+                <div class="">
+                    <span class="fw-light small me-1">{% trans "Expirables" %}:</span>
+                    {% for xp in company.running_expirables.all %}
+                        <div class="ms-3 mb-2">
+                            <div class="text-secondary">{{ xp.name|default:'?' }}: {{ xp.subject|default:'?' }}</div>
+                            {% if xp.days_to_go %}
+                                <div class="progress bg-danger p-0 m-0" 
+                                        style="height: 0.25rem;"
+                                        data-bs-toggle="tooltip"
+                                        title="{% trans 'Validity end' %}: {{ xp.validity_end|date }}">
+                                    {% with xp.days_to_go|barify:365 as green %}
+                                        <div class="progress-bar bg-success" 
+                                                role="progressbar" style="width: {{ green }}%;" 
+                                                aria-valuenow="{{ green }}" aria-valuemin="0" 
+                                                aria-valuemax="100">
+                                        </div>
+                                    {% endwith %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if company.is_mine %}
+                {% if company.file %}
+                    <div class="">
+                        <span class="fw-light small me-1">{% trans "Company files" %} ({{ company.files_size|filesizeformat }}):</span>
+                        <span class=""><a href="{% url 'nas_company_file' company.id 'file' %}">{{ company.file_name }}</a></span>
+                    </div>
+                {% endif %}
+            {% endif %}
+
             
         </div>
         

@@ -3,6 +3,7 @@ import hashlib
 
 from django.dispatch import receiver
 from allauth.account.signals import (
+    user_signed_up,
     user_logged_in,
     user_logged_out,
     password_changed,
@@ -17,9 +18,17 @@ from allauth.socialaccount.signals import (
     social_account_updated,
 )
 
-
 logger_portal = logging.getLogger("portal")
 
+
+@receiver(user_signed_up)
+def log_user_signup(request, user, **kwargs):
+    logger_portal.info(
+        "User signed up",
+        extra={
+            "request": request,
+        },
+    )
 
 @receiver(user_logged_in)
 def log_user_login(request, user, **kwargs):
@@ -30,7 +39,6 @@ def log_user_login(request, user, **kwargs):
         },
     )
 
-
 @receiver(user_logged_out)
 def log_user_logout(request, user, **kwargs):
     logger_portal.info(
@@ -39,7 +47,6 @@ def log_user_logout(request, user, **kwargs):
             "request": request,
         },
     )
-
 
 @receiver(password_changed)
 def log_password_change(request, user, **kwargs):
@@ -50,7 +57,6 @@ def log_password_change(request, user, **kwargs):
         },
     )
 
-
 @receiver(password_set)
 def log_password_set(request, user, **kwargs):
     logger_portal.warning(
@@ -59,7 +65,6 @@ def log_password_set(request, user, **kwargs):
             "request": request,
         },
     )
-
 
 @receiver(email_confirmed)
 def log_email_confirmed(request, email_address, **kwargs):
@@ -71,7 +76,6 @@ def log_email_confirmed(request, email_address, **kwargs):
         },
     )
 
-
 @receiver(email_added)
 def log_email_added(request, user, email_address, **kwargs):
     logger_portal.info(
@@ -81,7 +85,6 @@ def log_email_added(request, user, email_address, **kwargs):
             "email": mask_email(email_address.email),
         },
     )
-
 
 @receiver(email_removed)
 def log_email_removed(request, user, email_address, **kwargs):
@@ -93,8 +96,6 @@ def log_email_removed(request, user, email_address, **kwargs):
         },
     )
 
-
-
 @receiver(social_account_added)
 def log_social_link(request, sociallogin, **kwargs):
     logger_portal.info(
@@ -104,7 +105,6 @@ def log_social_link(request, sociallogin, **kwargs):
             "provider": sociallogin.account.provider,
         },
     )
-
 
 @receiver(social_account_removed)
 def log_social_removed(request, socialaccount, **kwargs):
@@ -117,7 +117,6 @@ def log_social_removed(request, socialaccount, **kwargs):
         },
     )
 
-
 @receiver(social_account_updated)
 def log_social_updated(request, sociallogin, **kwargs):
     logger_portal.info(
@@ -128,9 +127,6 @@ def log_social_updated(request, sociallogin, **kwargs):
             "uid": sociallogin.account.uid,
         },
     )
-
-# def hash_email(email):
-#     return hashlib.sha256(email.encode()).hexdigest()
 
 
 def mask_email(email: str) -> str:
