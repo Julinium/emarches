@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
 
     path('',               views.dashboard,        name='insights_dashboard'),
-    path('bidders/',       views.bidders_list,     name='insights_bidders_list'),
+    path('list/',          views.bidders_list,     name='insights_bidders_list'),
     path('<uuid:pk>/',     views.bidder_details,   name='insights_bidder_details'),
 
     # path('<uuid:pk>/pdf/<str:fn>/', views.bdc_items_pdf,            name='bdc_articles_pdf'),

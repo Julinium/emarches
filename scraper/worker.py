@@ -77,7 +77,7 @@ def main():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'worker', f"Working on item { i }/{ count } = {tender.chrono}&{tender.acronym}")
+            helper.printMessage('INFO', 'worker', f"Working on item { i }/{ count } = {tender.chrono}&{tender.acronym}", 2)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
                 helper.printMessage('INFO', 'worker', f"\tMinutes found for item { i }/{ count }")
@@ -207,7 +207,7 @@ def main():
 
     ##### Show a digest
     work_duration = finished_time - started_time
-    helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {tenders_created}, updated {tenders_updated} Tenders.")
+    helper.printMessage('===', 'worker', f"⇉⇉⇉ Created {tenders_created}, updated {tenders_updated} Tenders.", 3)
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Downloaded {files_downloaded} DCE files, {files_failed} downloads failed.")
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Scanned {results_searched}, saved {results_saved} Tenders results.")
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")

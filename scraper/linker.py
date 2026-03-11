@@ -145,7 +145,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     count = 0
     if driver == None: return links
     
-    fillSearchForm(driver, back_days)
+    # fillSearchForm(driver, back_days)
     
     try:
         helper.printMessage('DEBUG', 'l.getLinks', 'Submitting search form with default dates and empty terms ...', 1)
@@ -204,3 +204,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         helper.printMessage('ERROR', 'l.getLinks', f'Discrepancy between links count {len(links):04} and items number {count:04}.', 2, 2)
 
     return links
+
+
+
+# rsync -av --dry-run --update -e 'ssh -p 19164' /home/jelite/Devel/tmp/media/dce/ insino@94.72.98.224:/var/opt/media/dce/

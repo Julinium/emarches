@@ -15,8 +15,8 @@ urlpatterns = i18n_patterns(
     path('accounts/',       include('allauth.urls')),
     path('user/',           include('nas.urls')),
     path('tenders/',        include('portal.urls')),
-    path('bdc/',            include('bdc.urls')),
-    path('insights/',       include('insights.urls')),
+    path('porders/',            include('bdc.urls')),
+    path('bidders/',        include('insights.urls')),
     path('bidding/',        include('bidding.urls')),
     
     path('__debug__/', include('debug_toolbar.urls')),

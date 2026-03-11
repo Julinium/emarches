@@ -28,7 +28,6 @@ urlpatterns = [
     path('companies/<uuid:pk>/qualifs/', views.manage_company_qualifs, name='nas_company_qualifs'),
     path('companies/<uuid:pk>/icify/', views.accept_iced_company, name='nas_company_icify'),
 
-
     path('companies/',                  views.companies_list,              name='nas_company_list'),
     path('companies/<uuid:pk>/files/<str:ft>/', views.company_file,   name='nas_company_file'),
     # path('x_companies/', views.CompanyListView.as_view(), name='x_nas_company_list'),
