@@ -7,8 +7,12 @@ from django.utils.translation import gettext_lazy as _
 from bidding.widgets import FilenameOnlyClearableFileInput
 
 from .iceberg import get_ice_checkup
-from .models import (Company, Favorite, Folder, NotificationSubscription,
-                     Profile, UserSetting, Manageriat, SignatureKey, Expirable)
+from .models import (
+        Company, Favorite, NotificationSubscription, 
+        Profile, UserSetting, 
+        Expirable,
+        # Manageriat, SignatureKey, Folder,
+    )
 
 ALLOW_INVALID_ICE = True
 
@@ -167,67 +171,14 @@ class CompanyForm(forms.ModelForm):
         return cj.get('n2') == cj.get('cs')
 
 
-class ManageriatForm(forms.ModelForm):
-
-    class Meta:
-        model = Manageriat
-        fields = [
-            # 'company', 
-            'name', 'identity',
-            'validity_start', 'validity_end', 'file',
-            ]
-
-        widgets = {
-            'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'validity_end'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note'          : forms.Textarea(attrs={'rows': 3}),
-            "file"          : FilenameOnlyClearableFileInput,
-        }
-
-    def __init__(self, *args, company=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.company = company
-
-        for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
-            field.label_suffix = ""
-
-
-class SignatureKeyForm(forms.ModelForm):
-
-    class Meta:
-        model = SignatureKey
-        fields = [
-            # 'company', 
-            'name', "serial", "issuer", "holder", 
-            # "owner",
-            'validity_start', 'validity_end', "file", "note",
-            ]
-
-        widgets = {
-            'validity_start': forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'validity_end'  : forms.DateInput(attrs={'type': 'date', 'class': 'date-input'}),
-            'note'          : forms.Textarea(attrs={'rows': 3}),
-            "file"          : FilenameOnlyClearableFileInput,
-        }
-
-    def __init__(self, *args, company=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.company = company
-
-        for field in self.fields.values():
-            field.widget.attrs["class"] = "form-control"
-            field.label_suffix = ""
-
-
 class ExpirableForm(forms.ModelForm):
 
     class Meta:
         model = Expirable
         fields = [
             # 'company', 
-            'name', "subject", "issuer", "holder",
-            'validity_start', 'validity_end', "file", "note",
+            "group", 'name', "subject", "issuer", 'validity_start', 'validity_end',
+             "amount_gross", "amount_taxes", "file", "note", 
             ]
 
         widgets = {

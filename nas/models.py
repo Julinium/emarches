@@ -12,8 +12,11 @@ from django.utils.translation import gettext_lazy as _
 from base.models import Agrement, Change, Qualif, Tender
 from bdc.models import PurchaseOrder
 
-from .choices import (FirstArticles, FullBarDays, ItemsPerPage, OrderingField,
-                      PurchaseOrderFullBarDays, PurchaseOrderOrderingField)
+from .choices import (
+        FirstArticles, FullBarDays, ItemsPerPage, 
+        OrderingField, ExpirableGroup, 
+        PurchaseOrderFullBarDays, PurchaseOrderOrderingField
+    )
 from .iceberg import get_ice_checkup
 from .imaging import squarify_image
 
@@ -155,22 +158,6 @@ class Company(models.Model):
         fs = 0
         if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
         return fs
-    
-    @property
-    def running_manageriats(self, *args, **kwargs):
-        wassa = datetime.now()
-        return self.manageriats.filter(
-            validity_start__lte = wassa,
-            validity_end__gte = wassa,
-        )
-    
-    @property
-    def running_signature_keys(self, *args, **kwargs):
-        wassa = datetime.now()
-        return self.signature_keys.filter(
-            validity_start__lte = wassa,
-            validity_end__gte = wassa,
-        )
     
     @property
     def running_expirables(self, *args, **kwargs):
@@ -441,54 +428,6 @@ class Sticky(models.Model):
         return f"{ self.purchase_order.chrono }@{ self.user.username }"
 
 
-class Comment(models.Model):
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments', editable=False, verbose_name=_('User'))
-    tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='comments', editable=False, verbose_name=_('Tender'))
-    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
-    title      = models.CharField(max_length=256, blank=True, null=True, editable=False, verbose_name=_('Title'))
-    content    = models.TextField(blank=True, null=True, editable=False, verbose_name=_('Content'))
-
-    class Meta:
-        db_table = 'nas_comment'
-        ordering = ['-when']
-
-    @property
-    def likes(self):
-        return self.reactions.filter(reaction='like').count()
-
-    @property
-    def dislikes(self):
-        return self.reactions.filter(reaction='dislike').count()
-
-    @property
-    def score(self):
-        return self.likes - self.dislikes
-
-    def __str__(self):
-        return f"{ self.user.username }-on-{ self.tender.chrono }"
-
-
-class Reaction(models.Model):
-    LIKE_CHOICES = [
-        ('like', _('Like')),
-        ('dislike', _('Dislike')),
-    ]
-
-    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reactions', editable=False, verbose_name=_('User'))
-    comment    = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='reactions', editable=False, verbose_name=_('Comment'))
-    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
-    reaction   = models.CharField(max_length=10, choices=LIKE_CHOICES, default='like', verbose_name=_('Reaction'))
-
-    class Meta:
-        db_table = 'nas_reaction'
-        ordering = ['-when']
-
-    def __str__(self):
-        return f"{ self.user.username }-{ self.reaction }-{ self.comment }"
-
-
 class UserSetting(models.Model):
 
     id                       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -525,107 +464,26 @@ class UserSetting(models.Model):
         return f'Settings for {self.user.username}'
 
 
-class Manageriat(models.Model):
-    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="manageriats", blank=True, null=True, verbose_name=_("Company"))
-    name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
-    identity       = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Identity"))
-    validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
-    validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
-    note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
-    file           = models.FileField(upload_to='nas/manageriats/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
-
-    class Meta:
-        db_table = 'nas_manageriat'
-        ordering = ['-validity_end', 'name']
-        verbose_name = _("Manageriat")
-    
-    def __str__(self):
-        return self.name
-
-    @property
-    def file_name(self):
-        if self.file: return os.path.basename(self.file.name)
-        return None
-
-    @property
-    def files_size(self):
-        fs = 0
-        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
-        return fs
-    
-    @property
-    def expired(self):
-        if self.validity_end: return is_past(self.validity_end)
-        return False
-    
-    @property
-    def days_to_go(self):
-        if self.validity_end: 
-            td = self.validity_end.date() - datetime.now().date()
-            return td.days
-        return None
-
-
-class SignatureKey(models.Model):
-    id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="signature_keys", blank=True, null=True, verbose_name=_("Company"))
-    name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
-    serial         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Serial Number"))
-    issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
-    holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
-    validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
-    validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
-    note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
-    file           = models.FileField(upload_to='nas/signature_keys/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
-
-    class Meta:
-        db_table = 'nas_signature_key'
-        ordering = ['-validity_end', 'name']
-        verbose_name = _("Signature Key")
-    
-    def __str__(self):
-        return self.name
-
-    @property
-    def file_name(self):
-        if self.file: return os.path.basename(self.file.name)
-        return None
-
-    @property
-    def files_size(self):
-        fs = 0
-        if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
-        return fs
-    
-    @property
-    def expired(self):
-        if self.validity_end: return is_past(self.validity_end)
-        return False
-    
-    @property
-    def days_to_go(self):
-        if self.validity_end: 
-            td = self.validity_end.date() - datetime.now().date()
-            return td.days
-        return None
-
-
 class Expirable(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="expirables", blank=True, null=True, verbose_name=_("Company"))
+    
+    group          = models.CharField(max_length=16, choices=ExpirableGroup.choices, default=ExpirableGroup.XPR_SIGNATURE, verbose_name=_('Group'))
     name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
     subject        = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Subject"))
     issuer         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Issuer"))
-    holder         = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Holder"))
     validity_start = models.DateTimeField(blank=True, null=True, verbose_name=_("Validity start"))
     validity_end   = models.DateTimeField(blank=True, null=True, verbose_name=_("Expiry date"))
+
+    amount_gross   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Paid Amount (incl. all taxes)"))
+    amount_taxes   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Taxes Amount"))
+
     note           = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_('Descritpion'))
     file           = models.FileField(upload_to='nas/expirables/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("File"))
 
     class Meta:
         db_table = 'nas_expirable'
-        ordering = ['-validity_end', 'name']
+        ordering = ['group', '-validity_end', 'name']
         verbose_name = _("Expirable")
     
     def __str__(self):

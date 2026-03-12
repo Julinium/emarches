@@ -97,15 +97,6 @@ class PurchaseOrderOrderingField(models.TextChoices):
     WIN_AMOUNT_ASC  = 'winner_amount', _('Winner amount') + ' ↗'
     WIN_AMOUNT_DES  = '-winner_amount',_('Winner amount') + ' ↘'
 
-class PurchaseOrderFullBarDays(models.TextChoices):
-    FBD_005 = '5',   "5"
-    FBD_007 = '7',   "7"
-    FBD_015 = '15',  "15"
-    FBD_020 = '20',  "20"
-    FBD_030 = '30',  "30"
-    FBD_060 = '60',  "60"
-    FBD_090 = '90',  "90"
-
 class FullBarDays(models.TextChoices):
     FBD_007 = '7',   "7"
     FBD_010 = '10',  "10"
@@ -118,6 +109,15 @@ class FullBarDays(models.TextChoices):
     FBD_180 = '180', "180"
     FBD_365 = '365', "365"
 
+class PurchaseOrderFullBarDays(models.TextChoices):
+    FBD_005 = '5',   "5"
+    FBD_007 = '7',   "7"
+    FBD_015 = '15',  "15"
+    FBD_020 = '20',  "20"
+    FBD_030 = '30',  "30"
+    FBD_060 = '60',  "60"
+    FBD_090 = '90',  "90"
+
 class FirstArticles(models.TextChoices):
     ATS_002 = '2',   "2"
     ATS_005 = '5',   "5"
@@ -126,5 +126,12 @@ class FirstArticles(models.TextChoices):
     ATS_025 = '25',  "25"
     ATS_050 = '50',  "50"
     ATS_100 = '100', "100"
+
+class ExpirableGroup(models.TextChoices):
+    XPR_SIGNATURE  = '20S', _('eSign Key')
+    XPR_MANAGERIAT = '10M', _('Manageriat')
+    XPR_RENTAL     = '30L', _('Rental')
+    XPR_SERVICES   = '40S', _('Services')
+    # XPR_OTHER      = '99X', _('Other')
 
 

@@ -122,58 +122,6 @@
             {% endif %}
 
 
-            {% if company.running_manageriats.all %}
-                <div class="">
-                    <span class="fw-light small me-1">{% trans "Administrative Management" %}:</span>
-                    {% for mgrt in company.running_manageriats.all %}
-                        <div class="ms-3 mb-2">
-                            <div class="text-secondary">{{ mgrt.name|default:'?' }}</div>
-                            {% if mgrt.days_to_go %}
-                                <div class="progress bg-danger p-0 m-0" 
-                                        style="height: 0.25rem;"
-                                        data-bs-toggle="tooltip"
-                                        title="{% trans 'Validity end' %}: {{ mgrt.validity_end|date }}">
-                                    {% with mgrt.days_to_go|barify:365 as green %}
-                                        <div class="progress-bar bg-success" 
-                                                role="progressbar" style="width: {{ green }}%;" 
-                                                aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                                aria-valuemax="100">
-                                        </div>
-                                    {% endwith %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% if company.running_signature_keys.all %}
-                <div class="">
-                    <span class="fw-light small me-1">{% trans "Eliectronic Signature" %}:</span>
-                    {% for sk in company.running_signature_keys.all %}
-                        <div class="ms-3 mb-2">
-                            <div class="text-secondary">{{ sk.name|default:'?' }} #{{ sk.serial|default:'?' }}</div>
-                            {% if sk.days_to_go %}
-                                <div class="progress bg-danger p-0 m-0" 
-                                        style="height: 0.25rem;"
-                                        data-bs-toggle="tooltip"
-                                        title="{% trans 'Validity end' %}: {{ sk.validity_end|date }}">
-                                    {% with sk.days_to_go|barify:365 as green %}
-                                        <div class="progress-bar bg-success" 
-                                                role="progressbar" style="width: {{ green }}%;" 
-                                                aria-valuenow="{{ green }}" aria-valuemin="0" 
-                                                aria-valuemax="100">
-                                        </div>
-                                    {% endwith %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                    {% endfor %}
-                </div>
-            {% endif %}
-
             {% if company.running_expirables.all %}
                 <div class="">
                     <span class="fw-light small me-1">{% trans "Expirables" %}:</span>

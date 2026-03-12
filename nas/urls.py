@@ -36,17 +36,6 @@ urlpatterns = [
     path('companies/<uuid:pk>/edit/', views.CompanyUpdateView.as_view(), name='nas_company_edit'),
     path('companies/<uuid:pk>/delete/', views.CompanyDeleteView.as_view(), name='nas_company_delete'),
 
-
-    path('manageriats/<uuid:ck>/create/',   views.manageriat_edit,   name='nas_manageriat_create'),
-    path('manageriats/<uuid:pk>/<uuid:ck>/edit/',     views.manageriat_edit,   name='nas_manageriat_edit'),
-    path('manageriats/<uuid:pk>/files/<str:ft>/', views.manageriat_file,   name='nas_manageriat_file'),
-    path('manageriats/<uuid:pk>/delete/',   views.manageriat_delete,   name='nas_manageriat_delete'),
-
-    path('signatures/<uuid:ck>/create/',   views.signature_key_edit,   name='nas_signature_key_create'),
-    path('signatures/<uuid:pk>/<uuid:ck>/edit/',     views.signature_key_edit,   name='nas_signature_key_edit'),
-    path('signatures/<uuid:pk>/files/<str:ft>/', views.signature_key_file,   name='nas_signature_key_file'),
-    path('signatures/<uuid:pk>/delete/',   views.signature_key_delete,   name='nas_signature_key_delete'),
-
     path('expirables/<uuid:ck>/create/',   views.expirable_edit,   name='nas_expirable_create'),
     path('expirables/<uuid:pk>/<uuid:ck>/edit/',     views.expirable_edit,   name='nas_expirable_edit'),
     path('expirables/<uuid:pk>/files/<str:ft>/', views.expirable_file,   name='nas_expirable_file'),

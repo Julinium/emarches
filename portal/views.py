@@ -397,7 +397,7 @@ def tender_list(request):
             "views",
             "openings",
             "downloads",
-            "comments",
+            # "comments",
             "changes",
         )
         .select_related("client", "category", "mode", "procedure")

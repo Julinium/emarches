@@ -32,15 +32,20 @@ from bidding.secu import (
         update_membership,
     )
 from nas.choices import BidStatus, BidResults, ExpenseStatus
-from nas.forms import (CompanyForm, NewsletterSubscriptionForm,
-                       NotificationSubscriptionForm, UserProfileForm,
-                       UserSettingsForm, ManageriatForm,
-                       SignatureKeyForm, ExpirableForm)
-from nas.models import (Company, Newsletter, NewsletterSubscription,
-                        Notification, NotificationSubscription, Profile,
-                        UserSetting, Manageriat, SignatureKey, Expirable)
-from nas.subbing import (subscribeUserToNewsletters,
-                         subscribeUserToNotifications)
+from nas.forms import (
+        CompanyForm, NewsletterSubscriptionForm,
+        NotificationSubscriptionForm, UserProfileForm,
+        UserSettingsForm, 
+        ExpirableForm
+        # ManageriatForm, SignatureKeyForm, 
+    )
+from nas.models import (
+        Company, Newsletter, NewsletterSubscription,
+        Notification, NotificationSubscription, Profile, UserSetting, 
+        Expirable
+        # Manageriat, SignatureKey,
+    )
+from nas.subbing import (subscribeUserToNewsletters, subscribeUserToNotifications)
 
 logger_portal = logging.getLogger("portal")
 COMPANIES_ITEMS_PER_PAGE = 10
@@ -260,19 +265,8 @@ def companies_list(request):
             bids_sum     = Sum('bids__bid_amount', filter=(submitted_bids | finished_bids)), 
             awards_sum   = Sum('bids__bid_amount', filter=(submitted_bids | finished_bids) & awarded_bids), 
             expenses_sum = Sum('bids__expenses__amount_paid', filter=(confirmed_exp | paid_exp)), 
-            
-            # bdcs_count=Count('purchase_orders', filter=Q(purchase_orders__deadline__gte=assa)),            
-            # part_count = Count('deposits', distinct=True), 
-            # manageriats_count = Count('manageriats', filter=manageriat_is_current, distinct=True, default=0), 
-            # signature_keys_count = Count('signature_keys', filter=signature_key_is_current, distinct=True, default=0), 
-            # expirables_count = Count('expirables', filter=expirable_is_current, distinct=True, default=0), 
-            # bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
-            # last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
-            # last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
-        # ).select_related(
-        #     "agrements", "qualifs",
         ).prefetch_related(
-            "manageriats", "expirables", "signature_keys",
+            "expirables", 
         ).order_by("-is_mine", "user__username", "name")
 
     pro_context = portal_context(request)
@@ -317,19 +311,6 @@ class CompanyDetailView(DetailView):
     def get_queryset(self):
 
         assa = datetime.now().date()
-
-        manageriat_is_current     = Q(
-                manageriats__validity_start__isnull = False,
-                manageriats__validity_end__isnull = False,
-                manageriats__validity_start__date__lte = assa,
-                manageriats__validity_end__date__gt = assa,
-            )
-        signature_key_is_current     = Q(
-                signature_keys__validity_start__isnull = False,
-                signature_keys__validity_end__isnull = False,
-                signature_keys__validity_start__date__lte = assa,
-                signature_keys__validity_end__date__gt = assa,
-            )
         expirable_is_current     = Q(
                 expirables__validity_start__isnull = False,
                 expirables__validity_end__isnull = False,
@@ -344,209 +325,8 @@ class CompanyDetailView(DetailView):
             ).filter(
                 user=self.request.user, active=True
             ).annotate(
-                manageriats_count = Count('manageriats', filter=manageriat_is_current, distinct=True), 
-                signature_keys_count = Count('signature_keys', filter=signature_key_is_current, distinct=True), 
                 expirables_count = Count('expirables', filter=expirable_is_current, distinct=True), 
             )
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def manageriat_edit(request, pk=None, ck=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
-
-    # team = get_or_create_team(user, request)
-    # request.team = team
-
-    if ck is None:
-        logger_portal.warning("E405: Bad request parameters", extra={"request": request})
-        return HttpResponse(_("Bad request or not allowed"), status=405)
-
-    company = None
-    try:
-        company = Company.objects.get(pk=ck)
-    except:
-        logger_portal.error("E404: Exception getting Company", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    if company is None:
-        logger_portal.warning("E404: Company not found", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    if company.user != user:
-        logger_portal.warning("E403: User does not own the company", extra={"request": request})
-        return HttpResponse(_("You do not own this company"), status=403)
-
-    manageriat = None
-
-    if pk:
-        try: 
-            manageriat = Manageriat.objects.get(pk=pk)
-        except:
-            logger_portal.error("E404: Manageriat not found", extra={"request": request})
-            return HttpResponse(_("Not found"), status=404)
-
-
-    redir = request.GET.get("redirect", None)
-    if redir and not url_has_allowed_host_and_scheme(
-        redir, allowed_hosts={request.get_host()}, 
-        require_https=request.is_secure()
-        ):
-        redir = None
-
-    if request.method == "POST":
-        form = ManageriatForm(
-            request.POST,
-            request.FILES,
-            instance=manageriat,
-            company=company,
-            # bid=bid,
-        )
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.company = company
-            # obj.creator = user
-            obj.save()
-            # form.save()
-
-            logger_portal.info("Manageriat details saved", extra={"request": request})
-
-            if redir:
-                return redirect(redir)
-
-            return redirect("nas_company_detail", company.id)
-        else:
-            logger_portal.warning("Submitted invalid bid form", extra={"request": request})
-            for field in form:
-                if field.errors:
-                    for error in field.errors:
-                        messages.error(request, f"{field.label}: {error}")
-    else:
-        form = ManageriatForm(
-            instance=manageriat,
-            company=company,
-            # bid=bid,
-        )
-        if manageriat is None:
-            form.fields["validity_start"].initial = datetime.now()
-            # form.fields["date_paid"].initial = datetime.now()
-
-            logger_portal.info("Manageriat create form view", extra={"request": request})
-        else:
-            logger_portal.info("Manageriat update form view", extra={"request": request})
-
-    context = {
-            "form": form,
-            "object": manageriat,
-            "company": company,
-            "redir": redir,
-        }
-
-    return render(request, "nas/manageriat-form.html", context)
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def signature_key_edit(request, pk=None, ck=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
-
-    # team = get_or_create_team(user, request)
-    # request.team = team
-
-    if ck is None:
-        logger_portal.warning("E405: Bad request parameters", extra={"request": request})
-        return HttpResponse(_("Bad request or not allowed"), status=405)
-
-    company = None
-    try:
-        company = Company.objects.get(pk=ck)
-    except:
-        logger_portal.error("E404: Exception getting Company", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    if company is None:
-        logger_portal.warning("E404: Company not found", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    if company.user != user:
-        logger_portal.warning("E403: User does not own the company", extra={"request": request})
-        return HttpResponse(_("You do not own this company"), status=403)
-
-    signature_key = None
-
-    if pk:
-        try: 
-            signature_key = SignatureKey.objects.get(pk=pk)
-        except:
-            logger_portal.error("E404: Signature Key not found", extra={"request": request})
-            return HttpResponse(_("Not found"), status=404)
-
-
-    redir = request.GET.get("redirect", None)
-    if redir and not url_has_allowed_host_and_scheme(
-        redir, allowed_hosts={request.get_host()}, 
-        require_https=request.is_secure()
-        ):
-        redir = None
-
-    if request.method == "POST":
-        form = SignatureKeyForm(
-            request.POST,
-            request.FILES,
-            instance=signature_key,
-            company=company,
-            # bid=bid,
-        )
-        if form.is_valid():
-            obj = form.save(commit=False)
-            obj.company = company
-            # obj.creator = user
-            obj.save()
-            # form.save()
-
-            logger_portal.info("Signature Key details saved", extra={"request": request})
-
-            if redir:
-                return redirect(redir)
-
-            return redirect("nas_company_detail", company.id)
-        else:
-            logger_portal.warning("Submitted invalid bid form", extra={"request": request})
-            for field in form:
-                if field.errors:
-                    for error in field.errors:
-                        messages.error(request, f"{field.label}: {error}")
-    else:
-        form = SignatureKeyForm(
-            instance=signature_key,
-            company=company,
-            # bid=bid,
-        )
-        if signature_key is None:
-            form.fields["validity_start"].initial = datetime.now()
-            # form.fields["date_paid"].initial = datetime.now()
-
-            logger_portal.info("Signature Key create form view", extra={"request": request})
-        else:
-            logger_portal.info("Signature Key update form view", extra={"request": request})
-
-    context = {
-            "form": form,
-            "object": signature_key,
-            "company": company,
-            "redir": redir,
-        }
-
-    return render(request, "nas/signature_key-form.html", context)
-
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -704,94 +484,6 @@ def company_file(request, pk=None, ft=None):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def manageriat_file(request, pk=None, ft=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenicated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if not ft:
-        logger_portal.warning("E404: Null file type parameter", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    manageriat = None
-    if pk:
-        manageriat = get_object_or_404(Manageriat, pk=pk)
-    if not manageriat:
-        logger_portal.warning("E403: Manageriat reading error", extra={"request": request})        
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if manageriat.company.user != user:
-        logger_portal.warning("E403: User does not own the company", extra={"request": request})
-        return HttpResponse(_("You do not own this company"), status=403)
-
-
-    if ft == "file":
-        file_path = manageriat.file.url
-    else:
-        logger_portal.warning("E404: Wrong manageriat file type", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    file_name = os.path.basename(file_path)
-    if not file_name:
-        logger_portal.error("E404: Manageriat file not found", extra={"request": request})
-        return HttpResponse(_("File not found"), status=404)
-
-    response = HttpResponse()
-    response["Content-Type"] = "application/octet-stream"
-    response["X-Accel-Redirect"] = f"/manageriats/{ ft }/{ file_name }"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-    logger_portal.info("Manageriat file download authorized", extra={"request": request})
-    return response
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def signature_key_file(request, pk=None, ft=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenicated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if not ft:
-        logger_portal.warning("E404: Null file type parameter", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    signature_key = None
-    if pk:
-        signature_key = get_object_or_404(SignatureKey, pk=pk)
-    if not signature_key:
-        logger_portal.warning("E403: Signature Key reading error", extra={"request": request})        
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if signature_key.company.user != user:
-        logger_portal.warning("E403: User does not own the company", extra={"request": request})
-        return HttpResponse(_("You do not own this company"), status=403)
-
-
-    if ft == "file":
-        file_path = signature_key.file.url
-    else:
-        logger_portal.warning("E404: Wrong Signature Key file type", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
-    file_name = os.path.basename(file_path)
-    if not file_name:
-        logger_portal.error("E404: Signature Key file not found", extra={"request": request})
-        return HttpResponse(_("File not found"), status=404)
-
-    response = HttpResponse()
-    response["Content-Type"] = "application/octet-stream"
-    response["X-Accel-Redirect"] = f"/signature_keys/{ ft }/{ file_name }"
-    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
-    logger_portal.info("Signature Key file download authorized", extra={"request": request})
-    return response
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def expirable_file(request, pk=None, ft=None):
 
     user = request.user
@@ -832,98 +524,6 @@ def expirable_file(request, pk=None, ft=None):
     response["Content-Disposition"] = f'attachment; filename="{file_name}"'
     logger_portal.info("Expirable file download authorized", extra={"request": request})
     return response
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def manageriat_delete(request, pk=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if request.method == "POST":
-        if pk:
-            manageriat = get_object_or_404(Manageriat, pk=pk)
-
-        company = manageriat.company
-        if not company:
-            logger_portal.warning("E403: Related company not found", extra={"request": request})
-            return HttpResponse(_("Related company not found or not allowed"), status=403)
-
-        if company.user != user:
-            logger_portal.warning("E403: User does not own the company", extra={"request": request})
-            return HttpResponse(_("Permission denied"), status=403)
-
-        redir = redirect("nas_company_detail", company.id)
-        referer = request.META.get("HTTP_REFERER", None)
-        if referer:
-            if url_has_allowed_host_and_scheme(
-                referer,
-                allowed_hosts={request.get_host()},
-                require_https=request.is_secure(),
-            ):
-                redir = redirect(referer)
-
-        try:
-            manageriat.delete()
-            messages.success(request, _("Manageriat deleted successfully"))
-            logger_portal.info("Manageriat deleted successfully", extra={"request": request})
-            return redir
-
-        except:
-            logger_portal.exception(f"E405: Exception deleting Manageriat", extra={"request": request})
-            return HttpResponse(_("Manageriat delete unsuccessful"), status=405)
-
-    logger_portal.warning(f"E405: Bad request method", extra={"request": request})
-    return HttpResponse(_("Bad request"), status=405)
-
-
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def signature_key_delete(request, pk=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
-
-    if request.method == "POST":
-        if pk:
-            signature_key = get_object_or_404(SignatureKey, pk=pk)
-
-        company = signature_key.company
-        if not company:
-            logger_portal.warning("E403: Related company not found", extra={"request": request})
-            return HttpResponse(_("Related company not found or not allowed"), status=403)
-
-        if company.user != user:
-            logger_portal.warning("E403: User does not own the company", extra={"request": request})
-            return HttpResponse(_("Permission denied"), status=403)
-
-        redir = redirect("nas_company_detail", company.id)
-        referer = request.META.get("HTTP_REFERER", None)
-        if referer:
-            if url_has_allowed_host_and_scheme(
-                referer,
-                allowed_hosts={request.get_host()},
-                require_https=request.is_secure(),
-            ):
-                redir = redirect(referer)
-
-        try:
-            signature_key.delete()
-            messages.success(request, _("Signature Key deleted successfully"))
-            logger_portal.info("Signature Key deleted successfully", extra={"request": request})
-            return redir
-
-        except:
-            logger_portal.exception(f"E405: Exception deleting Signature Key", extra={"request": request})
-            return HttpResponse(_("Signature Key delete unsuccessful"), status=405)
-
-    logger_portal.warning(f"E405: Bad request method", extra={"request": request})
-    return HttpResponse(_("Bad request"), status=405)
 
 
 @login_required(login_url="account_login")

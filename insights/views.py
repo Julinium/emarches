@@ -4,9 +4,7 @@ from urllib.parse import urlencode
 
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import (Count, DecimalField, ExpressionWrapper, F, Max,
-                              Min, Q, Sum)
-# from django.db.models.expressions import OrderBy
+from django.db.models import Count, DecimalField, ExpressionWrapper, F, Max, Min, Q, Sum
 from django.db.models.functions import NullIf, Round
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -199,6 +197,6 @@ def bidder_details(request, pk=None):
 
     context = {'bidder': bidder,}
 
-    logger_portal.info("Bidder details view", extra={"request": request})
+    logger_portal.info("Concurrent details view", extra={"request": request})
     return render(request, 'insights/bidder-details.html', context)
 
