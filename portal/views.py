@@ -724,7 +724,7 @@ def tender_favorite_list(request):
             "favorites",
             "views",
             "downloads",
-            "comments",
+            # "comments",
             "changes",
         )
         .annotate(

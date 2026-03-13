@@ -36,12 +36,13 @@ else
     deactivate
 
     # If operating from a remote machine, transfer files to the server.
+    # Pre-established SSH tunnel is required
     _local_file="$_crony_dir/.local"
     if ! test -e "$_local_file"; then
         echo "Transferring DCE files ..."
-        rsync -av --update -e 'ssh -p 19164' /home/jelite/Devel/tmp/media/dce/ insino@94.72.98.224:/var/opt/media/dce/
+        rsync -av --update -e 'ssh -p 19164' /home/jelite/Devel/tmp/media/dce/ insino@emarches.com:/var/opt/media/dce/
         echo "Transferring logs files ..."
-        rsync -av --update -e 'ssh -p 19164' $_logs_dir/ insino@94.72.98.224:/var/opt/emarches/scraper/logs
+        rsync -av --update -e 'ssh -p 19164' "$_logs_dir"/ insino@emarches.com:/var/opt/emarches/scraper/logs
     fi
 
     echo "Script finished executing. See logs and system journal for details." >> "$_logs_file"
