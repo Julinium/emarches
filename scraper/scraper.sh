@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "JOB STARTED >>>>>>>>>>>>>>>>>>>>>>>>"
+echo ">>>>>>>>>>> JOB STARTED >>>>>>>>>>>"
 
 # SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}" && cd ..)" && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -35,6 +35,7 @@ else
     python scraper/worker.py "$@" >> "$_logs_file"
     deactivate
 
+    # If operating from a remote machine, transfer files to the server.
     _local_file="$_crony_dir/.local"
     if ! test -e "$_local_file"; then
         echo "Transferring DCE files ..."
@@ -49,4 +50,4 @@ else
     fi
 fi
 
-echo "<<<<<<<<<<<<<<<<<<<< JOB FINISHED"
+echo "<<<<<<<<< JOB FINISHED <<<<<<<<<"
