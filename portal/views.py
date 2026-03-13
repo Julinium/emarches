@@ -397,7 +397,6 @@ def tender_list(request):
             "views",
             "openings",
             "downloads",
-            # "comments",
             "changes",
         )
         .select_related("client", "category", "mode", "procedure")
@@ -724,7 +723,6 @@ def tender_favorite_list(request):
             "favorites",
             "views",
             "downloads",
-            # "comments",
             "changes",
         )
         .annotate(

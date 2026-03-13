@@ -286,15 +286,6 @@
                             </span>
                             {% endif %}
 
-                            {% if tender.comments.all.count > 0 %}
-                            <span class="ms-2 small"
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Comments' %}">
-                                {{ tender.comments.all.count|metrify:0 }}
-                                <i class="{{ bicons.comments }} small"></i>
-                            </span>
-                            {% endif %}
-
                             {% if tender.downloads.all.count > 0 %}
                             <span class="ms-2 small"
                                 data-bs-toggle="tooltip"
