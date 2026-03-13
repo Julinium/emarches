@@ -23,16 +23,9 @@ from django.views.decorators.cache import cache_control
 
 from base.context_processors import portal_context
 from base.models import (
-    Agrement,
-    Category,
-    Client,
-    Crawler,
-    Deposit,
-    Domain,
-    Procedure,
-    Qualif,
-    Tender,
-)
+        Agrement, Category, Client, Crawler,
+        Deposit, Domain, Procedure, Qualif, Tender,
+    )
 from base.texter import normalize_text
 from bidding.models import Bid
 from bidding.secu import get_colleagues

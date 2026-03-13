@@ -36,13 +36,17 @@ else
     deactivate
 
     # If operating from a remote machine, transfer files to the server.
-    # Pre-established SSH tunnel is required
+    # This is checked by the existence of _local_file (which is created only on the server, not on remote machines)
     _local_file="$_crony_dir/.local"
     if ! test -e "$_local_file"; then
+        # rsync-dce and rsync-logs are aliases to rsync commands like 
+        # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-dce-folder/> <user>@emarches.com:<full-path-to-dce-folder>' 
+        # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-logs-folder/> <user>@emarches.com:<full-path-to-logs-folder>' 
+        # Note: pre-established SSH tunnel is required
         echo "Transferring DCE files ..."
-        rsync -av --update -e 'ssh -p 19164' /home/jelite/Devel/tmp/media/dce/ insino@emarches.com:/var/opt/media/dce/
+        bash -ic "rsync-dce"
         echo "Transferring logs files ..."
-        rsync -av --update -e 'ssh -p 19164' "$_logs_dir"/ insino@emarches.com:/var/opt/emarches/scraper/logs
+        bash -ic "rsync-logs"
     fi
 
     echo "Script finished executing. See logs and system journal for details." >> "$_logs_file"
@@ -54,3 +58,5 @@ else
 fi
 
 echo "<<<<<<<<< JOB FINISHED <<<<<<<<<"
+
+
