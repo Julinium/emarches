@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 _now=$(date +"%Y%m%d-%H%M%S")
 _logs_dir="$SCRIPT_DIR/logs"
-_logs_file="$_logs_dir/seleno-$_now.log"
+_logs_file="$_logs_dir/scraper-$_now.log"
 _crony_dir="$SCRIPT_DIR/crony"
 _lock_file="$_crony_dir/.lock"
 
@@ -19,7 +19,6 @@ if ! test -e "$_logs_file"; then
     mkdir -p $_logs_dir && touch $_logs_file
 fi
 
-# _lock_file_short="${$_lock_file#"$_crony_dir/"}"
 _lock_file_short=".lock"
 
 if test -e "$_lock_file"; then
@@ -32,11 +31,16 @@ else
     DJANGO_DIR="$SCRIPT_DIR/../"
 
     cd $DJANGO_DIR
-    # echo "Working directory: $(pwd)" >> "$_logs_file"
     source $DJANGO_DIR/.venv/bin/activate
-    # echo "Using python from: $(which python)" >> "$_logs_file"
     python scraper/worker.py "$@" >> "$_logs_file"
     deactivate
+
+    _local_file="$_crony_dir/.local"
+    if ! test -e "$_local_file"; then
+        echo "Transferring DCE files ..."
+        rsync -av --update -e 'ssh -p 19164' /home/jelite/Devel/tmp/media/dce/ insino@94.72.98.224:/var/opt/media/dce/
+    fi
+
     echo "Script finished executing. See logs and system journal for details." >> "$_logs_file"
     if test -e "$_lock_file"; then
         echo "Script finished. Trying to remove Lock file." >> "$_logs_file"
