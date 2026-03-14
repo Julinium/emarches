@@ -48,6 +48,11 @@ INSTALLED_APPS = [
     'user_agents',
     'debug_toolbar',
 
+    # TODO: "djicons" -> "https://pypi.org/project/djicons/",
+    # TODO: "django-query-doctor" -> "https://pypi.org/project/django-query-doctor/",
+    # TODO: "django-pg-audit" -> "https://pypi.org/project/django-pg-audit/",
+    # TODO: "web-fragments" -> "https://pypi.org/project/web-fragments/",
+
     # 'easy_pdf',
 
     'allauth',

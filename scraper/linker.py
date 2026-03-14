@@ -205,6 +205,3 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
 
     return links
 
-
-
-# rsync -av --dry-run --update -e 'ssh -p 19164' /home/jelite/Devel/tmp/media/dce/ insino@94.72.98.224:/var/opt/media/dce/
