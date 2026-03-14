@@ -20,13 +20,72 @@ def main():
 
     started_time = datetime.now()
 
+
+    def handle_links():
+        links_crawled, links_imported, links_from_saved = 0,0,0
+        links = []
+        if not C.IMPORT_LINKS:
+            links = linker.getLinks()
+            links_crawled = len(links)
+            links_saved = linker.getSavedLinks()
+            links_from_saved = len(links_saved)
+            helper.printMessage('INFO', 'worker', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
+            ml = 0
+            for l in links_saved:
+                if l not in links:
+                    ml += 1
+                    links.append(l)
+            helper.printMessage('INFO', 'worker', f"+++ Merged { ml } saved links to live")
+
+            linker.exportLinks(links)
+        else:
+            links = helper.importLinks()
+            links_imported = len(links)
+
+        ll = len(links)
+        helper.printMessage('DEBUG', 'worker', f"Count of links to handle: {ll} ...", 1)
+
+        return links, links_crawled, links_imported, links_from_saved
+
+    def handle_tenders(links=[]):
+        saving_errors = False
+        tenders_created, tenders_updated = 0 , 0
+        ll = len(links)
+        if ll > 0:
+            i = 0
+            handled = 0
+            helper.printMessage('INFO', 'worker', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
+            for l in links:
+                i += 1
+                helper.printMessage('INFO', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
+                jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
+                if jsono:
+                    handled += 1
+                    tender, creation_mode = merger.save(jsono)
+                    if creation_mode == True:
+                        tenders_created += 1
+                        helper.printMessage('INFO', 'worker', f"◁◁ Created Tender {tender.chrono}")
+                    elif creation_mode == False: 
+                        tenders_updated += 1
+                        helper.printMessage('INFO', 'worker', f"◁◁ Updated Tender {tender.chrono}")
+
+                if handled > 0:
+                    if handled % C.BURST_LENGTH == 0:
+                        helper.printMessage('DEBUG', 'worker', f"Sleeping << { handled } Tenders handled. Burst is { C.BURST_LENGTH }.", 1)
+                        helper.printMessage('INFO', 'worker', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
+                        helper.sleepRandom(10, 30)
+                        handled = 0
+        else:
+            saving_errors = True
+            helper.printMessage('ERROR', 'worker', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
+
+        return tenders_created, tenders_updated, saving_errors
     
     def handle_bdcs():
         if links_source == 'Crawl':
             helper.printMessage('===', 'worker', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
             bonner.save_bdcs()
             bonner.save_results()
-
 
     def handle_dce():
         i = 0
@@ -59,7 +118,6 @@ def main():
             
         return files_downloaded, files_failed
 
-
     def handle_results():
 
         results_saved, results_searched = 0, 0
@@ -68,7 +126,7 @@ def main():
 
         tenders = Tender.objects.filter(
             deadline__date__lte=assa,
-            openings__isnull=True, 
+            # openings__isnull=True,
             ).order_by('-deadline')
         count = tenders.count()
 
@@ -77,10 +135,10 @@ def main():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'worker', f"Working on item { i }/{ count } = {tender.chrono}&{tender.acronym}", 2)
+            helper.printMessage('INFO', 'worker', f"Started getting results for item { i }/{ count } = {tender.chrono}&{tender.acronym}", 2)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
-                helper.printMessage('INFO', 'worker', f"\tMinutes found for item { i }/{ count }")
+                helper.printMessage('INFO', 'worker', f"◁◁◁ Minutes found for item { i }/{ count }")
                 try:
                     if merger.mergeResults(result) == 0:
                         results_saved += 1
@@ -91,7 +149,7 @@ def main():
                     helper.printMessage('DEBUG', 'worker', f"Raised Exception: \n{ xc }\n")
                     traceback.print_exc()
             else:
-                helper.printMessage('INFO', 'worker', f"\tMinutes empty or not found for item { i }/{ count }")
+                helper.printMessage('INFO', 'worker', f"◀◀◀ Minutes empty or not found for item { i }/{ count }")
 
         return results_saved, i
 
@@ -106,85 +164,25 @@ def main():
     helper.printMessage('===', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }", 0, 3)
 
 
-
     ##### Collect the list of links to handle
-    links_crawled, links_imported, links_from_saved = 0,0,0
-    links = []
-    if not C.IMPORT_LINKS:
-        links = linker.getLinks()
-        links_crawled = len(links)
-        links_saved = linker.getSavedLinks()
-        links_from_saved = len(links_saved)
-        helper.printMessage('INFO', 'worker', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
-        ml = 0
-        for l in links_saved:
-            if l not in links:
-                ml += 1
-                links.append(l)
-        helper.printMessage('INFO', 'worker', f"+++ Merged { ml } saved links to live")
-
-        linker.exportLinks(links)
-    else:
-        links = helper.importLinks()
-        links_imported = len(links)
-
-    ll = len(links)
-    helper.printMessage('DEBUG', 'worker', f"Count of links to handle: {ll} ...", 1)
-
-
+    links, links_crawled, links_imported, links_from_saved = handle_links()
 
     ##### Get the Tenders data
-    saving_errors = False
-    tenders_created, tenders_updated = 0 , 0
-    if ll > 0:
-        i = 0
-        handled = 0
-        helper.printMessage('INFO', 'worker', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
-        for l in links:
-            i += 1
-            helper.printMessage('INFO', 'worker', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
-            jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
-            if jsono:
-                handled += 1
-                tender, creation_mode = merger.save(jsono)
-                if creation_mode == True:
-                    tenders_created += 1
-                    helper.printMessage('INFO', 'worker', f"◁◁ Created Tender {tender.chrono}")
-                elif creation_mode == False: 
-                    tenders_updated += 1
-                    helper.printMessage('INFO', 'worker', f"◁◁ Updated Tender {tender.chrono}")
-
-            if handled > 0:
-                if handled % C.BURST_LENGTH == 0:
-                    helper.printMessage('DEBUG', 'worker', f"Sleeping << { handled } Tenders handled. Burst is { C.BURST_LENGTH }.", 1)
-                    helper.printMessage('INFO', 'worker', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
-                    helper.sleepRandom(10, 30)
-                    handled = 0
-    else:
-        saving_errors = True
-        helper.printMessage('ERROR', 'worker', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
-
-
+    tenders_created, tenders_updated, saving_errors = handle_tenders(links)
 
     ##### Handle Purchase Orders
     handle_bdcs()
     helper.printMessage('===', 'worker', f"◀◀◀ Saving data finished.", 1)
-
-
 
     ##### Take care of DCE files
     files_downloaded, files_failed = 0, 0
     if C.SKIP_DCE: helper.printMessage('===', 'worker', "◆◆◆◆◆ SKIP_DCE set. Skipping DCE files ◆◆◆◆◆", 2)
     else: files_downloaded, files_failed = handle_dce()
 
-
-
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
     if links_source == 'Crawl':
         results_saved, results_searched = handle_results()
-
-
 
     ##### Keep track of update times
     finished_time = datetime.now()
@@ -202,8 +200,6 @@ def main():
         saving_errors = saving_errors
     )
     crawler.save()
-
-
 
     ##### Show a digest
     work_duration = finished_time - started_time

@@ -56,23 +56,26 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
-FILE_PREFIX   = 'eMarches.com'
+FILE_PREFIX   = 'eMarches.com' # Prefix before DCE files names
+# When a 4XX error is returned sleep a random time between SLEEP_4XX_MIN and SLEEP_4XX_MAX seconds
 SLEEP_4XX_MIN = 377
 SLEEP_4XX_MAX = 777
 
+# Read User Agents list from file
 ua_json = f'{ SELENO_DIR }/.env.ua.json'
 with open(ua_json) as f:
     USER_AGENTS = json.load(f)
-    
+
+# Read credentials list from file
 creds_json = f'{ SELENO_DIR }/.env.creds.json'
 with open(creds_json) as g:
     DCE_CREDS = json.load(g)
 
 
-LINES_PER_PAGE = "500"
-PORTAL_DDL_PAST_DAYS = 10 ##### 600
-PORTAL_DDL_FUTURE_DAYS = 365 * 5
-PORTAL_PUB_PAST_DAYS = 365 * 2
+LINES_PER_PAGE = "500" # Items per page on browser. Higher means less pages to handle by Chromium, and then less time
+PORTAL_DDL_PAST_DAYS = 365 * 5 # Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS in the past.
+PORTAL_DDL_FUTURE_DAYS = 365 * 5 # Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS in the future.
+PORTAL_PUB_PAST_DAYS = 365 * 5 # Look for Tenders published up to PORTAL_PUB_PAST_DAYS in the past.
 PORTAL_PUB_FUTURE_DAYS = 0
 
 LOADING_TIMEOUT = 1000 * 91
@@ -85,5 +88,5 @@ NA_PLH = ''
 TRUNCA = 32
 
 DCE_CLEANING_DAY = 7        # 1 to 28 (just to be sure)
-CLEAN_DCE_AFTER_DAYS = 30
-CLEAN_CONS_AFTER_DAYS = 6*365
+CLEAN_DCE_AFTER_DAYS = 90
+CLEAN_CONS_AFTER_DAYS = 10*365

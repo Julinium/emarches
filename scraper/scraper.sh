@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo ">>>>>>>>>>> JOB STARTED >>>>>>>>>>>"
+echo ">>>>>>>>>>>>JOB>STARTED>>>>>>>>>>>>"
 
 # SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}" && cd ..)" && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -23,17 +23,18 @@ _lock_file_short=".lock"
 
 if test -e "$_lock_file"; then
     echo "Execution prevented by a Lock file: $_lock_file_short" >> "$_logs_file"
-    echo "Another script is probably running or did not finish as expected." # >> "$_logs_file"
-    echo "The lock file will be removed on next boot. It can also be removed manually." # >> "$_logs_file"
 else
     echo "Lock file $_lock_file_short was not found." >> "$_logs_file"
     touch $_lock_file
     DJANGO_DIR="$SCRIPT_DIR/../"
 
+    echo "Working directory: $DJANGO_DIR" >> "$_logs_file"
+
     cd $DJANGO_DIR
+    echo "Current directory: $(pwd)" >> "$_logs_file"
+
     source $DJANGO_DIR/.venv/bin/activate
     python scraper/worker.py "$@" >> "$_logs_file"
-    deactivate
 
     # If operating from a remote machine, transfer files to the server.
     # This is checked by the existence of _local_file (which is created only on the server, not on remote machines)
@@ -43,10 +44,10 @@ else
         # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-dce-folder/> <user>@emarches.com:<full-path-to-dce-folder>' 
         # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-logs-folder/> <user>@emarches.com:<full-path-to-logs-folder>' 
         # Note: pre-established SSH tunnel is required
-        echo "Transferring DCE files ..."
-        bash -ic "rsync-dce"
-        echo "Transferring logs files ..."
-        bash -ic "rsync-logs"
+        echo "Transferring DCE files ..."  >> "$_logs_file"
+        bash -ic "rsync-dce" >> "$_logs_file"
+        echo "Transferring logs files ..." >> "$_logs_file"
+        bash -ic "rsync-logs" >> "$_logs_file"
     fi
 
     echo "Script finished executing. See logs and system journal for details." >> "$_logs_file"
@@ -57,6 +58,6 @@ else
     fi
 fi
 
-echo "<<<<<<<<< JOB FINISHED <<<<<<<<<"
+echo "<<<<<<<<<JOB<FINISHED<<<<<<<<<"
 
 
