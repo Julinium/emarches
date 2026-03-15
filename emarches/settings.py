@@ -23,6 +23,7 @@ ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 
 SITE_ID = 1
 
+
 INSTALLED_APPS = [
     
     'django.contrib.admin',
@@ -48,10 +49,18 @@ INSTALLED_APPS = [
     'user_agents',
     'debug_toolbar',
 
-    # TODO: "djicons" -> "https://pypi.org/project/djicons/",
-    # TODO: "django-query-doctor" -> "https://pypi.org/project/django-query-doctor/",
-    # TODO: "django-pg-audit" -> "https://pypi.org/project/django-pg-audit/",
-    # TODO: "web-fragments" -> "https://pypi.org/project/web-fragments/",
+
+    # TODO: "ics custom format"     -> "https://chatgpt.com/c/69b5e44d-6ca0-8331-aeb4-aec09baf9285",
+    # TODO: "modelsearch"           -> "https://pypi.org/project/modelsearch/",
+    # TODO: "django-altcha"         -> "https://pypi.org/project/django-altcha/",
+    # TODO: "django-blackbox"       -> "https://pypi.org/project/django-blackbox/",
+    # TODO: "django-cron-django5"   -> "https://pypi.org/project/django-cron-django5/",
+    # TODO: "djicons"               -> "https://pypi.org/project/djicons/",
+    # TODO: "django-query-doctor"   -> "https://pypi.org/project/django-query-doctor/",
+    # TODO: "django-pg-audit"       -> "https://pypi.org/project/django-pg-audit/",
+    # TODO: "web-fragments"         -> "https://pypi.org/project/web-fragments/",
+    # TODO: "streamlit-calendar"    -> "https://pypi.org/project/streamlit-calendar/",
+
 
     # 'easy_pdf',
 
