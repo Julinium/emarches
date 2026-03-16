@@ -37,7 +37,7 @@ if args.links: IMPORT_LINKS = args.links.lower() == "import"
 if args.found: REFRESH_EXISTING = args.found.lower() == "refresh"
 if args.dce: SKIP_DCE = args.dce.lower() != "download"
 
-HEADLESS_MODE = True
+HEADLESS_MODE = False
 
 SITE_ROOT = os.getenv("SITE_ROOT")
 SITE_INDEX = os.getenv("SITE_INDEX")
@@ -71,13 +71,17 @@ creds_json = f'{ SELENO_DIR }/.env.creds.json'
 with open(creds_json) as g:
     DCE_CREDS = json.load(g)
 
-
-LINES_PER_PAGE = "500" # Items per page on browser. Higher means less pages to handle by Chromium, and then less time
-PORTAL_DDL_PAST_DAYS = 365 * 5 # Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS in the past.
-PORTAL_DDL_FUTURE_DAYS = 365 * 5 # Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS in the future.
-PORTAL_PUB_PAST_DAYS = 365 * 5 # Look for Tenders published up to PORTAL_PUB_PAST_DAYS in the past.
+# Items per page on browser. Higher means less pages to handle by Chromium, and then less time
+LINES_PER_PAGE = "500" 
+# Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS in the past.
+PORTAL_DDL_PAST_DAYS = 365 * 1 
+# Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS in the future.
+PORTAL_DDL_FUTURE_DAYS = 365 * 1 
+# Look for Tenders published up to PORTAL_PUB_PAST_DAYS in the past.
+PORTAL_PUB_PAST_DAYS = 365 * 1 
+# Do not come from the future
 PORTAL_PUB_FUTURE_DAYS = 0
-
+# If a page does not load in LOADING_TIMEOUT, look at something else
 LOADING_TIMEOUT = 1000 * 91
 REQ_TIMEOUT = 60
 DLD_TIMEOUT = 60
@@ -88,5 +92,5 @@ NA_PLH = ''
 TRUNCA = 32
 
 DCE_CLEANING_DAY = 7        # 1 to 28 (just to be sure)
-CLEAN_DCE_AFTER_DAYS = 90
-CLEAN_CONS_AFTER_DAYS = 10*365
+CLEAN_DCE_AFTER_DAYS = 365 * 5
+CLEAN_CONS_AFTER_DAYS = 365 * 25

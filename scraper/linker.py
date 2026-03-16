@@ -28,9 +28,9 @@ def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
         el_ddl_start.send_keys(date_ddl_start)
         
     except Exception:
-        helper.printMessage('FATAL', 'l.fillSearchForm', 'Could not find date field:')
+        helper.printMessage('ERROR', 'l.fillSearchForm', 'Could not fill in DDL date field')
         traceback.print_exc()
-        
+
 
 def page2Links(driver, page_number, pages):
     """
@@ -73,6 +73,7 @@ def page2Links(driver, page_number, pages):
                 except: 
                     helper.printMessage('TRACE', 'l.page2Links', f'--- Next elemet {page_number:03}.{i:03} not found.', 0, 1)
                     details_btn = None
+                    traceback.print_exc()
     except Exception:
         helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
         traceback.print_exc()
@@ -145,15 +146,16 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     count = 0
     if driver == None: return links
     
-    # fillSearchForm(driver, back_days)
     
     try:
+        fillSearchForm(driver, back_days)
         helper.printMessage('DEBUG', 'l.getLinks', 'Submitting search form with default dates and empty terms ...', 1)
         org_search_field = driver.find_element("id", "ctl0_CONTENU_PAGE_AdvancedSearch_orgName")
         org_search_field.send_keys(Keys.ENTER)
     except Exception as e :
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while submitting search form: {str(e)}', 1, 1)
         if driver: driver.quit()
+        traceback.print_exc()
         return links
 
     try:
@@ -164,6 +166,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     except Exception as e :
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while changing page size: {str(e)}', 1, 1)
         if driver: driver.quit()
+        traceback.print_exc()
         return links
     
     try:
@@ -183,7 +186,9 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     # helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:03}/{pages:03} ... \n')
     links = page2Links(driver, i, pages)
     try: next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
-    except: next_page_button = None
+    except: 
+        next_page_button = None
+        traceback.print_exc()
     
     while next_page_button != None:
         next_page_button.click()
@@ -197,6 +202,7 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         except: 
             helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:03} not found', 0, 2)
             next_page_button = None
+            traceback.print_exc()
 
     if driver: driver.quit()
     

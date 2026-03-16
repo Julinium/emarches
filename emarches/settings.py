@@ -58,8 +58,8 @@ INSTALLED_APPS = [
     # TODO: "djicons"               -> "https://pypi.org/project/djicons/",
     # TODO: "django-query-doctor"   -> "https://pypi.org/project/django-query-doctor/",
     # TODO: "django-pg-audit"       -> "https://pypi.org/project/django-pg-audit/",
-    # TODO: "web-fragments"         -> "https://pypi.org/project/web-fragments/",
     # TODO: "streamlit-calendar"    -> "https://pypi.org/project/streamlit-calendar/",
+    # TODO: "web-fragments"         -> "https://pypi.org/project/web-fragments/",
 
 
     # 'easy_pdf',
