@@ -532,7 +532,7 @@ def save(tender_data):
             changed_fields.append(change)
 
     # Log changed fields, if any
-    target_date = datetime.now() - timedelta(days=C.CLEAN_DCE_AFTER_DAYS)
+    target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
     target_date = target_date.date()
     tender_date = tender.deadline.date()
 

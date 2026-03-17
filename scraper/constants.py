@@ -73,11 +73,13 @@ with open(creds_json) as g:
 
 # Items per page on browser. Higher means less pages to handle by Chromium, and then less time
 LINES_PER_PAGE = "500" 
-# Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS in the past.
+# Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS days in the past.
 PORTAL_DDL_PAST_DAYS = 365 * 1 
-# Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS in the future.
+# Download Tenders DCE with Deadline up to PORTAL_DCE_PAST_DAYS days in the past.
+PORTAL_DCE_PAST_DAYS = 365 * 1 
+# Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS days in the future.
 PORTAL_DDL_FUTURE_DAYS = 365 * 1 
-# Look for Tenders published up to PORTAL_PUB_PAST_DAYS in the past.
+# Look for Tenders published up to PORTAL_PUB_PAST_DAYS days in the past.
 PORTAL_PUB_PAST_DAYS = 365 * 1 
 # Do not come from the future
 PORTAL_PUB_FUTURE_DAYS = 0
@@ -92,5 +94,5 @@ NA_PLH = ''
 TRUNCA = 32
 
 DCE_CLEANING_DAY = 7        # 1 to 28 (just to be sure)
-CLEAN_DCE_AFTER_DAYS = 365 * 5
+CLEAN_DCE_AFTER_DAYS = 365 * 1
 CLEAN_CONS_AFTER_DAYS = 365 * 25
