@@ -77,11 +77,18 @@ def is_empty_or_nonexistent(folder_path):
     """
     if C.MACHINE == "remote":
         # Make sure an SSH tunnel is setup between remote machine and server.
-        pass
+        path = folder_path
+        user = C.REMOTE_USER
+        port = C.SSH_PORT
+        cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'    
+        result = subprocess.run(["ssh -p", f"{port} {user}@{host}", cmd])
+        return result.returncode == 0
     else:
         if not os.path.exists(folder_path):
             return True
         return not any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path))
+
+
 
 
 def getDCE(tender):
