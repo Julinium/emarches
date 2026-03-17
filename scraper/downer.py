@@ -75,10 +75,13 @@ def is_empty_or_nonexistent(folder_path):
     Check if a folder_path is empty or does not exist.
     # Return: Boolean
     """
-
-    if not os.path.exists(folder_path):
-        return True
-    return not any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path))
+    if C.MACHINE == "remote":
+        # Make sure an SSH tunnel is setup between remote machine and server.
+        pass
+    else:
+        if not os.path.exists(folder_path):
+            return True
+        return not any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path))
 
 
 def getDCE(tender):

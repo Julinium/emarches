@@ -9,6 +9,9 @@ SELENO_DIR = str(Path(__file__).resolve().parent)
 env_path = f'{ SELENO_DIR }/.env'
 load_dotenv(dotenv_path=env_path)
 
+# Tell whether script is running on local server or in a remote machine.
+MACHINE = os.getenv("MACHINE", 'local')
+
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
 
