@@ -16,6 +16,8 @@
 import os
 import random
 import re
+import shlex
+import subprocess
 import traceback
 from datetime import datetime, timedelta
 
@@ -63,9 +65,10 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
     helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
     for tender_id, chrono in current_tenders.values_list('id', 'chrono').iterator(chunk_size=batch_size):
         if chrono:
+            helper.printMessage("DEBUG", 'd.getEmpties', f"Checking files for {C.DL_PATH_PREFIX}{chrono}")
             if is_empty_or_nonexistent(f"{C.MEDIA_ROOT}/dce/{C.DL_PATH_PREFIX}{chrono}"):
                 tenders_without_files.append(tender_id)
-
+ 
     helper.printMessage("DEBUG", 'd.getEmpties', f"Found {current_tenders.count()} items ...")
     return current_tenders.filter(id__in=tenders_without_files)
 
@@ -80,8 +83,9 @@ def is_empty_or_nonexistent(folder_path):
         path = folder_path
         user = C.REMOTE_USER
         port = C.SSH_PORT
+        host = 'emarches.com'
         cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'    
-        result = subprocess.run(["ssh -p", f"{port} {user}@{host}", cmd])
+        result = subprocess.run(["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd])
         return result.returncode == 0
     else:
         if not os.path.exists(folder_path):
