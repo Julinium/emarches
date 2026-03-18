@@ -79,7 +79,7 @@ with open(creds_json) as g:
 # Items per page on browser. Higher means less pages to handle by Chromium, and then less time
 LINES_PER_PAGE = "500" 
 # Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS days in the past.
-PORTAL_DDL_PAST_DAYS = 365 * 1 
+PORTAL_DDL_PAST_DAYS = 90 # 365 * 1 
 # Download Tenders DCE with Deadline up to PORTAL_DCE_PAST_DAYS days in the past.
 PORTAL_DCE_PAST_DAYS = 90
 # Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS days in the future.

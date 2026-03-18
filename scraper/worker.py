@@ -179,6 +179,23 @@ def main():
     if C.SKIP_DCE: helper.printMessage('===', 'worker', "◆◆◆◆◆ SKIP_DCE set. Skipping DCE files ◆◆◆◆◆", 2)
     else: files_downloaded, files_failed = handle_dce()
 
+    # TODO: Also look at other downloads like "Avis de publicité"
+    # It may have a link captioned like "Fichier joint - Avis complémentaire en ligne"
+
+    # TODO: Consider other "types" of publications, like: 
+    """
+        # extraits de PV
+        résultats définitifs
+        rapports d'achèvement
+        rapports de présentation
+        décisions de résiliation        
+        Annonce de programme previsionnel
+        Annonce de synthèse de rapport d'audit
+        # bons de commande attribués
+        marchés attribués
+        conventions et des contrats de droit commun
+    """
+
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
     if links_source == 'Crawl':
