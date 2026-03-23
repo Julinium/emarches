@@ -82,10 +82,9 @@ def main():
         return tenders_created, tenders_updated, saving_errors
     
     def handle_bdcs():
-        if links_source == 'Crawl':
-            helper.printMessage('===', 'worker', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
-            bonner.save_bdcs()
-            bonner.save_results()
+        helper.printMessage('===', 'worker', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
+        bonner.save_bdcs()
+        bonner.save_results()
 
     def handle_dce():
         i = 0
@@ -174,8 +173,9 @@ def main():
     helper.printMessage('===', 'worker', f"◀◀◀ Finished saving tenders data.", 1)
 
     ##### Handle Purchase Orders
-    handle_bdcs()
-    helper.printMessage('===', 'worker', f"◀◀◀ Finished saving PO's data.", 1)
+    if links_source == 'Crawl':
+        handle_bdcs()
+        helper.printMessage('===', 'worker', f"◀◀◀ Finished saving PO's data.", 1)
 
     ##### Take care of DCE files
     files_downloaded, files_failed = 0, 0
