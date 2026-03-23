@@ -286,7 +286,8 @@ def getDCE(tender):
                 helper.printMessage('DEBUG', 'd.getDCE', f'File size bytes for id {chrono} was the same.')
         else:
             raise IOError("File size mismatch: Not all content was written.")
-        if os.path.getsize(filename) == 0: raise IOError("File was created but is empty. Go and know why!")
+        if os.path.getsize(filename) == 0: 
+            raise IOError("File was created but is empty. Go and know why!")
     except Exception as e:
         helper.printMessage('ERROR', 'd.getDCE', f"Error writing data to file: {e}")
         return 1
