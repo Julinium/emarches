@@ -90,6 +90,9 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'emarches.middleware.CustomLoggingMiddleware',
+
+
+    "query_doctor.QueryDoctorMiddleware",
 ]
 
 ROOT_URLCONF = 'emarches.urls'

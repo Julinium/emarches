@@ -553,6 +553,9 @@ def tender_get_file(request, pk=None, fn=None):
     )
     file_fp = os.path.join(dce_dir, fn)
 
+    # TODO: Allow users to request files for Tenders if not found. 
+    # In such case, add a FileToGet instance if not already added.
+
     if os.path.exists(file_fp):
         file_size = os.path.getsize(file_fp)
         response = HttpResponse()
