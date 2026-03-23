@@ -161,18 +161,21 @@ def main():
     logging_level = next((key for key, val in C.LOGS_LEVELS.items() if val == C.VERBOSITY), "None")
     links_source  = 'Import' if C.IMPORT_LINKS else 'Crawl'
     files_action  = 'Skip' if C.SKIP_DCE else 'Download'
-    helper.printMessage('===', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }", 0, 3)
+    results_action = 'Get' if C.GET_RESULTS else 'Skip'
+    helper.printMessage('===', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 3)
 
 
     ##### Collect the list of links to handle
     links, links_crawled, links_imported, links_from_saved = handle_links()
+    helper.printMessage('===', 'worker', f"◀◀◀ Finished getting links.", 1)
 
     ##### Get the Tenders data
     tenders_created, tenders_updated, saving_errors = handle_tenders(links)
+    helper.printMessage('===', 'worker', f"◀◀◀ Finished saving tenders data.", 1)
 
     ##### Handle Purchase Orders
     handle_bdcs()
-    helper.printMessage('===', 'worker', f"◀◀◀ Saving data finished.", 1)
+    helper.printMessage('===', 'worker', f"◀◀◀ Finished saving PO's data.", 1)
 
     ##### Take care of DCE files
     files_downloaded, files_failed = 0, 0
@@ -182,7 +185,7 @@ def main():
     # TODO: Also look at other downloads like "Avis de publicité"
     # It may have a link captioned like "Fichier joint - Avis complémentaire en ligne"
 
-    # TODO: Consider other "types" of publications, like: 
+    # TODO: Consider other "types" of publications, like:
     """
         # extraits de PV
         résultats définitifs
@@ -198,24 +201,24 @@ def main():
 
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
-    if links_source == 'Crawl':
-        results_saved, results_searched = handle_results()
+    if C.GET_RESULTS == False: helper.printMessage('===', 'worker', "◆◆◆◆◆ SKIP_RESULTS set. Skipping Results digests ◆◆◆◆◆", 2)
+    else: results_saved, results_searched = handle_results()
 
     ##### Keep track of update times
     finished_time = datetime.now()
     crawler = Crawler(
-        started = started_time,
-        finished = finished_time,
-        import_links = C.IMPORT_LINKS,
-        links_crawled = links_crawled,
-        links_imported = links_imported,
-        links_from_saved = links_from_saved,
-        tenders_created = tenders_created,
-        tenders_updated = tenders_updated,
-        files_downloaded = files_downloaded,
-        files_failed = files_failed,
-        saving_errors = saving_errors
-    )
+            started = started_time,
+            finished = finished_time,
+            import_links = C.IMPORT_LINKS,
+            links_crawled = links_crawled,
+            links_imported = links_imported,
+            links_from_saved = links_from_saved,
+            tenders_created = tenders_created,
+            tenders_updated = tenders_updated,
+            files_downloaded = files_downloaded,
+            files_failed = files_failed,
+            saving_errors = saving_errors
+        )
     crawler.save()
 
     ##### Show a digest

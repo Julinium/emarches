@@ -43,7 +43,7 @@ class Agrement(models.Model):
 
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    label = models.CharField(max_length=128, blank=True, null=True, verbose_name="Name")
+    label = models.CharField(max_length=128, blank=True, null=True, db_index=True, verbose_name="Name")
     
     class Meta:
         db_table = 'base_category'
@@ -68,7 +68,7 @@ class Category(models.Model):
 class Change(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="changes", db_column='tender', blank=True, null=True, verbose_name="Tender")
-    reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Date Reported")
+    reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date Reported")
     changes = models.TextField(blank=True, null=True, verbose_name="Changes")
 
     class Meta:
@@ -200,7 +200,7 @@ class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
     restricted = models.BooleanField(blank=True, null=True, default=False, verbose_name="Restricted")
-    name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+    name = models.CharField(max_length=2048, blank=True, null=True, db_index=True, verbose_name="Name")
 
     class Meta:
         db_table = 'base_procedure'
@@ -284,8 +284,8 @@ class Tender(models.Model):
     chrono = models.CharField(max_length=16, blank=True, null=True, verbose_name="Portal Id")
     title = models.TextField(blank=True, null=True, verbose_name="Title")
     reference = models.CharField(max_length=512, blank=True, null=True, verbose_name="Reference")
-    published = models.DateField(blank=True, null=True, verbose_name="Date published")
-    deadline = models.DateTimeField(blank=True, null=True, verbose_name="Bid deadline")
+    published = models.DateField(blank=True, null=True, db_index=True, verbose_name="Date published")
+    deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Bid deadline")
 
     lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name="Lots count")
     estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total estimate")
@@ -312,7 +312,8 @@ class Tender(models.Model):
     contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact phone")
     contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact email")
     contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact fax")
-    created = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Date created")
+
+    created = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
     updated = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
     cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name="Cancelled")
     deleted = models.BooleanField(blank=True, null=True, default=False, verbose_name="Deleted")
@@ -581,7 +582,7 @@ class FileToGet(models.Model):
 class Crawler(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     started = models.DateTimeField(blank=True, null=True, verbose_name="Started")
-    finished = models.DateTimeField(blank=True, null=True, verbose_name="Finished")
+    finished = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Finished")
     
     import_links = models.BooleanField(blank=True, null=True, default=False)
 
@@ -612,7 +613,7 @@ class Crawler(models.Model):
 
 class Concurrent(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
+    name      = models.CharField(max_length=255, db_index=True, default="MODE 777", verbose_name=_('Name'))
 
     @property
     def pseudo(self):
@@ -783,7 +784,7 @@ class Opening(models.Model):
     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="openings", blank=True, null=True)
     has_tech   = models.BooleanField(blank=True, null=True, default=True)
     failure    = models.TextField(blank=True, null=True)
-    date       = models.DateField(blank=True, null=True)
+    date       = models.DateField(blank=True, null=True, db_index=True)
     won_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     won_lots   = models.SmallIntegerField(blank=True, default=0)
     # xon_total  = models.BooleanField(blank=True, null=True, default=False)

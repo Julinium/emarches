@@ -25,12 +25,14 @@ LOGS_LEVELS = {"TRACE" : 1, "DEBUG" : 2, "INFO"  : 3, "WARN"  : 4, "ERROR" : 5, 
 IMPORT_LINKS = False
 REFRESH_EXISTING = True
 SKIP_DCE = False
+GET_RESULTS = True
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--level', type=str, required=False, help='debug for more verbose output.')
 parser.add_argument('--links', type=str, required=False, help='import to use already saved links.')
 parser.add_argument('--found', type=str, required=False, help='refresh to refresh existing items.')
-parser.add_argument('--dce', type=str, required=False, help='DCE files download.')
+parser.add_argument('--dce',   type=str, required=False, help='DCE files download.')
+parser.add_argument('--results', type=str, required=False, help='Get Rewarding results.')
 
 args = parser.parse_args()
 if args.level: 
@@ -41,8 +43,10 @@ if args.level:
 if args.links: IMPORT_LINKS = args.links.lower() == "import"
 if args.found: REFRESH_EXISTING = args.found.lower() == "refresh"
 if args.dce: SKIP_DCE = args.dce.lower() != "download"
+if args.results: GET_RESULTS = args.results.lower() != "ignore"
 
-HEADLESS_MODE = True
+
+HEADLESS_MODE = True # Set true if operating on a system without GUI.
 
 SITE_ROOT = os.getenv("SITE_ROOT")
 SITE_INDEX = os.getenv("SITE_INDEX")

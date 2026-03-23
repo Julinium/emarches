@@ -220,7 +220,7 @@ class Download(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='downloads', editable=False)
     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='downloads', editable=False, verbose_name=_('Tender'))
-    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Started'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, db_index=True, verbose_name=_('Date Started'))
     size_read  = models.CharField(max_length=128, blank=True, null=True, editable=False, verbose_name=_('Displayed Size'))
     size_bytes = models.BigIntegerField(blank=True, null=True, editable=False, verbose_name=_('Size in Bytes'))
 
@@ -238,7 +238,7 @@ class TenderView(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='views', editable=False)
     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='views', editable=False, verbose_name=_('Tender'))
-    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date'))
+    when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, db_index=True, verbose_name=_('Date'))
 
     class Meta:
         db_table = 'nas_tender_view'
@@ -417,7 +417,7 @@ class Sticky(models.Model):
     user            = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stickies', editable=False)
     purchase_order  = models.ForeignKey(PurchaseOrder, on_delete=models.CASCADE, related_name='stickies', editable=False, verbose_name=_('Purchase Order'))
     active          = models.BooleanField(null=True, default=True, editable=False)
-    when            = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
+    when            = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, editable=False, verbose_name=_('Date Added'))
     comment         = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
 
     class Meta:

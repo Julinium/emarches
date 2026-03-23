@@ -63,6 +63,7 @@ class JsonFormatter(logging.Formatter):
             ip_address = get_client_ip(request)
             log_data["ip"] = ip_address
             
+            location = {}
             try:
                 city_db_path = os.path.join(HOME_DIR, "geoip/GeoLite2-City.mmdb")
                 reader = geoip2.database.Reader(city_db_path)
@@ -70,7 +71,6 @@ class JsonFormatter(logging.Formatter):
                 country_name = response.country.name
                 country_code = response.country.iso_code
                 city_name    = response.city.name
-                location = {}
                 if country_name is not None: location["country"] = country_name
                 if country_code is not None: location["iso"] = country_code.lower()
                 if city_name is not None: location["city"] = city_name

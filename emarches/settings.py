@@ -18,7 +18,7 @@ DEBUG = ENVIRONMENT != 'production'
 
 # DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
+ALLOWED_HOSTS = ['127.0.0.1', 'testserver', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 
 
 SITE_ID = 1
@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'django_cleanup',
     'user_agents',
     'debug_toolbar',
+
+    "query_doctor",
 
 
     # TODO: "ics custom format"     -> "https://chatgpt.com/c/69b5e44d-6ca0-8331-aeb4-aec09baf9285",

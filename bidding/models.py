@@ -75,7 +75,7 @@ class TeamMember(models.Model):
     team      = models.ForeignKey(Team, on_delete=models.CASCADE, editable=False, related_name='memberships')
     active    = models.BooleanField(null=True, default=True, editable=False)
     manager   = models.BooleanField(null=True, default=False, editable=False)
-    joined    = models.DateTimeField(auto_now_add=True, editable=False)
+    joined    = models.DateTimeField(auto_now_add=True, editable=False, db_index=True)
 
     created   = models.DateTimeField(auto_now_add=True, editable=False)
     updated   = models.DateTimeField(auto_now=True, editable=False) 
@@ -674,4 +674,8 @@ def is_past(value):
         return value < date.today()
     
     return False
+
+
+
+
 
