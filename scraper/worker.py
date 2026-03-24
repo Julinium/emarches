@@ -117,15 +117,17 @@ def main():
             
         return files_downloaded, files_failed
 
-    def handle_results():
+    def handle_results(back_days=90):
 
         results_saved, results_searched = 0, 0
         helper.printMessage('INFO', 'worker', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 2, 1)
         assa = datetime.now().date()
+        assenn = assa - timedelta(days=back_days)
 
         tenders = Tender.objects.filter(
             deadline__date__lte=assa,
-            # openings__isnull=True,
+            deadline__date__gte=assenn,
+            openings__isnull=True,
             ).order_by('-deadline')
         count = tenders.count()
 

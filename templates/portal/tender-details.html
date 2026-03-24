@@ -549,6 +549,40 @@
             </div>
         </div>
 
+        <div id="dceRequestModal" class="modal fade" tabindex="-1" aria-labelledby="dceRequestModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="dceRequestModalLabel">{% translate "Request files" %}</h1>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center mb-2">
+                            <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
+                        </div>
+                        <div class="text-danger">{% translate "Files for this Tender are not ready, yet." %}</div>
+                        <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{% url 'portal_tender_req_file' tender.id %}" method="post">
+                            {{ csrf_token  }}
+                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                <span><i class="{{ bicons.send }}"></i></span>
+                                <span class="ms-1">{% translate 'Request' %}</span>
+                            </button>
+                        </form>
+                        <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
+                            <span><i class="bi bi-send"></i></span>
+                            <span class="ms-1">{% translate 'Contact Us' %}</span>
+                        </a>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                            <span><i class="{{ bicons.cancel }}"></i></span>
+                            <span class="ms-1">{% translate 'Close' %}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% include 'portal/snippets/tenders/tender-simulator-modal.html' %}
 
     </div>
@@ -595,7 +629,7 @@
                 </div>
                     <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-        </div> 
+        </div>
                     
         <div class="toast bg-success-subtle " id="copyToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
             <div class="d-flex  justify-content-between">
@@ -607,6 +641,39 @@
                     <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div> 
+
+        <div class="toast bg-success-subtle " id="reqToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="dlToastHeader">
+                        {% trans "Files request submitted" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+        <div class="toast bg-info-subtle " id="queuedToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-info">
+                    <strong class="me-auto" id="queuedToastHeader">
+                        {% trans "Files are already queued for download" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div class="toast bg-danger-subtle " id="failedReqToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-danger">
+                    <strong class="me-auto" id="failedReqToastHeader">
+                        {% trans "Operation failed" %}. {% trans "Please refresh the page or try again later" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
 
     </div>
 
@@ -647,6 +714,49 @@
                         failedAlert.show();
                         // alert('Operation Failed !')
                     }
+                    azrems.forEach(azrem => { azrem.classList.add('d-none'); });
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error while saving Favorite record');
+            };
+
+            xhr.send();
+        }
+        
+        function dceRequest() {
+            azrems.forEach(azrem => { azrem.classList.remove('d-none'); });
+            const token = document.getElementById('csrf_token').value;
+
+            const url = "{% url 'portal_tender_req_file' tender.id %}"
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('X-CSRFToken', token);
+            xhr.setRequestHeader('Accept', 'text/plain');
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+
+                        let reqToast = document.getElementById('reqToast');
+                        let reqAlert = new bootstrap.Toast(reqToast);
+                        reqAlert.show();
+
+                    }
+
+                    if (xhr.status === 201) {
+                        let queuedToast = document.getElementById('queuedToast');
+                        let queuedAlert = new bootstrap.Toast(queuedToast);
+                        queuedAlert.show();
+                    }
+
+                    if (xhr.status !== 200 && xhr.status !== 201) {
+                        let failedReqToast = document.getElementById('failedReqToast');
+                        let failedReqAlert = new bootstrap.Toast(failedReqToast);
+                        failedReqAlert.show();
+                    }
+
                     azrems.forEach(azrem => { azrem.classList.add('d-none'); });
                 }
             };

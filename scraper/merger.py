@@ -552,8 +552,6 @@ def save(tender_data):
             try:
                 helper.printMessage('TRACE', 'm.save', f"#### Adding DCE request for Tender {tender.chrono} ... ")
                 f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Updated'})
-                # f2d = FileToGet(tender=tender, reason="Updated")
-                # f2d.save()
             except:
                 helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
                 traceback.print_exc()
@@ -564,8 +562,6 @@ def save(tender_data):
             try:
                 helper.printMessage('TRACE', 'm.save', "#### Adding DCE request for Tender ... ")
                 f2d, _ = FileToGet.objects.update_or_create(tender=tender)
-                # f2d = FileToGet(tender=tender)
-                # f2d.save()
             except:
                 helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
                 traceback.print_exc()

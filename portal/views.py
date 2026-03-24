@@ -23,7 +23,7 @@ from django.views.decorators.cache import cache_control
 
 from base.context_processors import portal_context
 from base.models import (
-        Agrement, Category, Client, Crawler,
+        Agrement, Category, Client, Crawler, FileToGet, 
         Deposit, Domain, Procedure, Qualif, Tender,
     )
 from base.texter import normalize_text
@@ -575,6 +575,41 @@ def tender_get_file(request, pk=None, fn=None):
 
     logger_portal.warning("File not found", extra={"request": request})
     return HttpResponse(trans("Not found"), status=404)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_req_file(request, pk=None):
+
+    if request.method != "POST":
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    if pk is None:
+        logger_portal.warning("E405: Bad request paramters", extra={"request": request})
+        return HttpResponse(trans("Not found"), status=405)
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
+
+    tender = get_object_or_404(Tender, id=pk)
+    # if not tender:
+    #     return HttpResponse(trans("Not found"), status=404)
+
+    file_to_get = FileToGet.objects.filter(tender=tender).first()
+
+    if not file_to_get:
+        file_to_get = FileToGet.objects.create(
+            tender=tender,
+            reason='Requested',
+        )
+        logger_portal.info("Tender Files request created", extra={"request": request})
+        return HttpResponse(tender.id, status=200)
+
+    logger_portal.info("Tender Files already requested", extra={"request": request})
+    return HttpResponse(tender.id, status=201)
 
 
 @login_required(login_url="account_login")

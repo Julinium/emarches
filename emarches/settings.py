@@ -49,16 +49,12 @@ INSTALLED_APPS = [
     'user_agents',
     'debug_toolbar',
 
-    "query_doctor",
-
 
     # TODO: "ics custom format"     -> "https://chatgpt.com/c/69b5e44d-6ca0-8331-aeb4-aec09baf9285",
-    # TODO: "modelsearch"           -> "https://pypi.org/project/modelsearch/",
     # TODO: "django-altcha"         -> "https://pypi.org/project/django-altcha/",
     # TODO: "django-blackbox"       -> "https://pypi.org/project/django-blackbox/",
     # TODO: "django-cron-django5"   -> "https://pypi.org/project/django-cron-django5/",
     # TODO: "djicons"               -> "https://pypi.org/project/djicons/",
-    # TODO: "django-query-doctor"   -> "https://pypi.org/project/django-query-doctor/",
     # TODO: "django-pg-audit"       -> "https://pypi.org/project/django-pg-audit/",
     # TODO: "streamlit-calendar"    -> "https://pypi.org/project/streamlit-calendar/",
     # TODO: "web-fragments"         -> "https://pypi.org/project/web-fragments/",
@@ -93,8 +89,6 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'emarches.middleware.CustomLoggingMiddleware',
 
-
-    "query_doctor.QueryDoctorMiddleware",
 ]
 
 ROOT_URLCONF = 'emarches.urls'

@@ -80,7 +80,7 @@ def portal_context(request):
                             # box-arrow-in-up
                             # box-arrow-in-up-right
         'search'          : 'bi bi-search',
-        'sort'            : 'bi bi-arrow-down-up',
+        'sort'            : 'bi bi-sort-down',
         'sort_up'         : 'bi bi-arrow-up',
         'sort_down'       : 'bi bi-arrow-down',
         'backspace'       : 'bi bi-backspace',
@@ -97,7 +97,7 @@ def portal_context(request):
         'no_files'        : 'bi bi-file-earmark-break text-warning',
         'files_size'      : 'bi bi-folder2',
                             # exclamation-circle
-        'share'           : 'bi bi-share',
+        'share'           : 'bi bi-arrow-bar-up',
         'created'         : 'bi bi-calendar-plus',
         'create'          : 'bi bi-plus-lg',
                             # upload

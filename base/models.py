@@ -281,11 +281,11 @@ class Qualif(models.Model):
 
 class Tender(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    chrono = models.CharField(max_length=16, blank=True, null=True, verbose_name="Portal Id")
+    chrono = models.CharField(max_length=16, blank=True, null=True)
     title = models.TextField(blank=True, null=True, verbose_name="Title")
     reference = models.CharField(max_length=512, blank=True, null=True, verbose_name="Reference")
     published = models.DateField(blank=True, null=True, db_index=True, verbose_name="Date published")
-    deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Bid deadline")
+    deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Bidding deadline")
 
     lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name="Lots count")
     estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total estimate")
@@ -300,11 +300,11 @@ class Tender(models.Model):
     has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="In-site visits scheduled")
     has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
 
-    location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Works execution location")
-    ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bid")  # 1: Required, 0: Not required, Else: NA'
+    location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Execution location")
+    ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bidding")  # 1: Required, 0: Not required, Else: NA'
     esign = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic signature") # 1: Required, 0: Not required, Else: NA'
     size_read = models.CharField(max_length=128, blank=True, null=True, verbose_name="Files read size")
-    size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name="Files size (bytes)")
+    size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name="Files bytes")
     address_withdrawal = models.TextField(blank=True, null=True, verbose_name="Withdrawal address")
     address_bidding = models.TextField(blank=True, null=True, verbose_name="Bidding address")
     address_opening = models.TextField(blank=True, null=True, verbose_name="Awarding address")
@@ -312,11 +312,8 @@ class Tender(models.Model):
     contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact phone")
     contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact email")
     contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact fax")
-
-    created = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
-    updated = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
     cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name="Cancelled")
-    deleted = models.BooleanField(blank=True, null=True, default=False, verbose_name="Deleted")
+    deleted = models.BooleanField(blank=True, null=True, default=False)
     link = models.CharField(max_length=256, blank=True, null=True, verbose_name="Official link")
     acronym = models.CharField(max_length=8, blank=True, null=True)
 
@@ -336,6 +333,10 @@ class Tender(models.Model):
     refwords = models.TextField(blank=True, null=True, editable=False)
     locwords = models.TextField(blank=True, null=True, editable=False)
     domwords = models.TextField(blank=True, null=True, editable=False)
+
+    # digested = models.DateTimeField(blank=True, null=True)
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
 
 
     class Meta:

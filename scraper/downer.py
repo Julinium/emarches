@@ -40,7 +40,10 @@ def getFileables():
 
     target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
     helper.printMessage("DEBUG", 'd.getFileables', "Getting fresh Tenders (created or recently updated) ...")
-    fresh_tenders = Tender.objects.filter(files_to_get__closed=False, deadline__gte=target_date).distinct()
+    fresh_tenders = Tender.objects.filter(
+            files_to_get__closed=False, 
+            # deadline__gte=target_date, 
+        ).distinct()
     helper.printMessage("DEBUG", 'd.getFileables', f"Got {fresh_tenders.count()} fresh Tenders.")
     helper.printMessage("DEBUG", 'd.getFileables', "Getting Tenders with no or empty DCE folders ...")
     nodce_tenders = getEmpties().distinct()
