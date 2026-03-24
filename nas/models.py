@@ -74,7 +74,7 @@ class Company(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user      = models.ForeignKey(User, on_delete=models.CASCADE, related_name='companies', editable=False)
     active    = models.BooleanField(null=True, default=True, editable=False)
-    name      = models.CharField(max_length=255, default="MODE 777", verbose_name=_('Name'))
+    name      = models.CharField(max_length=255, db_index=True, default="MODE 777", verbose_name=_('Name'))
     forme     = models.CharField(max_length=255, blank=True, null=True, default='SARL', verbose_name=_('Juridic form'))
     ice       = models.CharField(max_length=64, blank=True, null=True, default='77777777777777', verbose_name="ICE")
     rc        = models.CharField(max_length=64, blank=True, null=True, default='7777777', verbose_name=_('Num. RC'))
@@ -175,28 +175,28 @@ class Company(models.Model):
     
 
 
-class Folder(models.Model):
-    id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='folders', editable=False)
-    name    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))
-    image   = models.ImageField(upload_to='folders/', null=True, blank=True, verbose_name=_('Image'))
-    color   = models.CharField(max_length=8, blank=True, null=True, default='#fd7e14', verbose_name=_('Color'))
-    comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
+# class Folder(models.Model):
+#     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='folders', editable=False)
+#     name    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))
+#     image   = models.ImageField(upload_to='folders/', null=True, blank=True, verbose_name=_('Image'))
+#     color   = models.CharField(max_length=8, blank=True, null=True, default='#fd7e14', verbose_name=_('Color'))
+#     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
 
-    class Meta:
-        db_table = 'nas_folder'
-        ordering = ['name']
+#     class Meta:
+#         db_table = 'nas_folder'
+#         ordering = ['name']
     
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
-    @property
-    def icon(self):
-        try:
-            icon = self.image.url
-        except:
-            icon = static('folders/default.png')
-        return icon
+#     @property
+#     def icon(self):
+#         try:
+#             icon = self.image.url
+#         except:
+#             icon = static('folders/default.png')
+#         return icon
 
 
 class Favorite(models.Model):
@@ -204,7 +204,7 @@ class Favorite(models.Model):
     user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites', editable=False)
     tender  = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='favorites', editable=False, verbose_name=_('Tender'))
     active  = models.BooleanField(null=True, default=True, editable=False)
-    when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, verbose_name=_('Date Added'))
+    when    = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, editable=False, verbose_name=_('Date Added'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
 
 

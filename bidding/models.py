@@ -129,13 +129,13 @@ class Bid(models.Model):
     company         = models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name=_('Company'), related_name='bids')
 
     title           = models.CharField(max_length=512, blank=True, null=True, verbose_name=_('Bid Title'))
-    date_submitted  = models.DateTimeField(blank=True, null=True, verbose_name="Date Submitted")
+    date_submitted  = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Date Submitted")
     status          = models.CharField(max_length=16, choices=BidStatus.choices, default=BidStatus.BID_PREPARING, verbose_name=_('Bid Status'))
     details         = models.TextField(blank=True, null=True, verbose_name=_('Details'))
 
     bid_amount        = models.DecimalField(max_digits=16, decimal_places=2, verbose_name=_("Bid Amount"))
 
-    bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_("Bond Amount"))
+    bond_amount     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, db_index=True, verbose_name=_("Bond Amount"))
     bond_status     = models.CharField(max_length=16, choices=BondStatus.choices, default=BondStatus.BOND_PREPARING, verbose_name=_('Bond Status'))
     bond_due_date   = models.DateTimeField(blank=True, null=True, verbose_name="Bond Due Date")
     file_bond       = models.FileField(upload_to='bidding/bond/', validators=EXTENSIONS_VALIDATORS, blank=True, null=True, verbose_name=_("Bond file"))
@@ -472,13 +472,13 @@ class Task(models.Model):
     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     bid       = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Bid'), related_name='tasks')
     title     = models.CharField(max_length=255, default=_('New Task'), verbose_name=_('Title'))
-    date_due  = models.DateField(blank=True, null=True, verbose_name="Due Date")
+    date_due  = models.DateField(blank=True, null=True, db_index=True, verbose_name="Due Date")
     # reminder  = models.SmallIntegerField(blank=True, null=True, verbose_name="Reminder days")
     # contact   = models.ForeignKey(Contact, on_delete=models.DO_NOTHING, blank=True, null=True, verbose_name=_('Contact'), related_name='tasks')
     details   = models.TextField(blank=True, null=True, verbose_name=_('Details'))
     assignee  = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_('Assigned to'), related_name='assigned_tasks')
     emergency = models.CharField(max_length=16, choices=TaskEmergency.choices, default=TaskEmergency.TASK_NORMAL, verbose_name=_('Emergency'))
-    status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, verbose_name=_('Status'))
+    status    = models.CharField(max_length=16, choices=TaskStatus.choices, default=TaskStatus.TASK_PENDING, db_index=True, verbose_name=_('Status'))
 
     creator   = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='tasks')
     created   = models.DateTimeField(auto_now_add=True, editable=False)

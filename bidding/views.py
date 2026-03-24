@@ -751,13 +751,15 @@ def tenders_list(request):
                 queryset=Bid.objects.filter(
                     creator__in=colleagues,
                     company__in=companies,
-                ),
+                ).select_related('company'),
                 to_attr="team_bids",
             ),
             "openings",
             "lots__bids__tasks",
             "lots__bids__expenses",
             "lots__bids__contracts",
+        ).select_related(
+            'client',
         ).order_by(
             "-deadline",
         ).distinct()

@@ -1,6 +1,6 @@
 from django.contrib import admin
-
-from .models import (Company, Folder, Newsletter, NewsletterSubscription,
+# from .models import Folder
+from .models import (Company, Newsletter, NewsletterSubscription,
                      Notification, NotificationSubscription)
 
 
@@ -10,9 +10,9 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ('active', 'address',)
     search_fields = ('name', 'ice', 'address')
 
-@admin.register(Folder)
-class FolderAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user', 'image', 'color', 'comment')
+# @admin.register(Folder)
+# class FolderAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'user', 'image', 'color', 'comment')
 
 
 @admin.register(Notification)

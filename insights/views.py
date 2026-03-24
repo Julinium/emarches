@@ -134,11 +134,13 @@ def bidders_list(request):
             wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True)), 
             last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
             last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
-        ).annotate(
+        # ).annotate(
             succ_rate = ExpressionWrapper(
                 Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 0),
                 output_field=DecimalField(max_digits=8, decimal_places=3),
             )
+        # ).prefetch_related(
+        #     'concurrent'
         )
 
 

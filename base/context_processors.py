@@ -6,7 +6,7 @@ from nas.models import Favorite, UserSetting
 def portal_context(request):
 
     context = {}
-    
+
     bicons = {
         'filters'         : 'bi bi-front text-warning',
         'estimate'        : 'bi bi-cash-coin',
@@ -237,7 +237,6 @@ def portal_context(request):
     # user = request.user
     # if user and user.is_superuser:
     #     show_bidders_names = True
-
 
     context['user_settings']      = user_settings
     context['faved_ids']          = faved_ids

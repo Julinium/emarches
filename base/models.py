@@ -433,7 +433,7 @@ class Tender(models.Model):
 
 class Lot(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    number = models.SmallIntegerField(blank=True, null=True, verbose_name="Number")
+    number = models.SmallIntegerField(blank=True, null=True, db_index=True, verbose_name="Number")
     title = models.TextField(blank=True, null=True, verbose_name="Title")
     description = models.TextField(blank=True, null=True, verbose_name="Description")
 
@@ -628,7 +628,11 @@ class Concurrent(models.Model):
 
     @property
     def winners_sum(self): 
-        return self.deposits.aggregate(total=Sum('amount_w', filter=Q(winner=True)))['total'] or 0
+        return self.deposits.aggregate(
+                total=Sum('amount_w', filter=Q(winner=True))
+            # ).prefetch_related(
+            #     'concurrent'
+            )['total'] or 0
 
     @property
     def admin_rejects(self):
@@ -875,9 +879,9 @@ class Deposit(models.Model):
     lot_number = models.SmallIntegerField(blank=True, null=True)
     admin      = models.CharField(max_length=1,blank=True, null=True, choices=Admin.choices, verbose_name='Admin Result')
     reject_t   = models.BooleanField(blank=True, null=True)
-    amount_b   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
-    amount_a   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
-    amount_w   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    amount_b   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, db_index=True, null=True)
+    amount_a   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, db_index=True, null=True)
+    amount_w   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, db_index=True, null=True)
     winner     = models.BooleanField(blank=True, null=True)
     justif     = models.TextField(blank=True, null=True)
     date       = models.DateField(blank=True, null=True)
