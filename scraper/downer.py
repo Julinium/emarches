@@ -62,17 +62,20 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with deadline older than {past_days} days ...")
     target_date = datetime.now() - timedelta(days=past_days)
     current_tenders = Tender.objects.filter(deadline__gte=target_date)
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Got {current_tenders.count()} Tenders deadline older than {past_days} days.")
+    ct_count = current_tenders.count()
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
 
     tenders_without_files = []
+    i = 0
     helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
     for tender_id, chrono in current_tenders.values_list('id', 'chrono').iterator(chunk_size=batch_size):
-        if chrono:
-            helper.printMessage("DEBUG", 'd.getEmpties', f"Checking files for {C.DL_PATH_PREFIX}{chrono}")
-            if is_empty_or_nonexistent(f"{C.MEDIA_ROOT}/dce/{C.DL_PATH_PREFIX}{chrono}"):
-                tenders_without_files.append(tender_id)
+        i += 1
+        helper.printMessage("TRACE", 'd.getEmpties', f"Checking [{i}/{ct_count}] files for {C.DL_PATH_PREFIX}{chrono}")
+        if is_empty_or_nonexistent(f"{C.MEDIA_ROOT}/dce/{C.DL_PATH_PREFIX}{chrono}"):
+            tenders_without_files.append(tender_id)
+            helper.printMessage("DEBUG", 'd.getEmpties', f"DCE not found or empty for {chrono}")
  
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Found {current_tenders.count()} items ...")
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Found {len(tenders_without_files)} items with empty orno DCE files")
     return current_tenders.filter(id__in=tenders_without_files)
 
 
@@ -296,5 +299,4 @@ def getDCE(tender):
         return 1
 
     return 0
-
 
