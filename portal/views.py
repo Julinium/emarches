@@ -598,17 +598,14 @@ def tender_req_file(request, pk=None):
     # if not tender:
     #     return HttpResponse(trans("Not found"), status=404)
 
-    file_to_get = FileToGet.objects.filter(tender=tender).first()
+    logger_portal.info("Tender Files requested", extra={"request": request})
 
+    file_to_get = FileToGet.objects.filter(tender=tender).first()
     if not file_to_get:
-        file_to_get = FileToGet.objects.create(
-            tender=tender,
-            reason='Requested',
-        )
-        logger_portal.info("Tender Files request created", extra={"request": request})
+        file_to_get = FileToGet.objects.create(tender=tender, reason='Requested')
         return HttpResponse(tender.id, status=200)
 
-    logger_portal.info("Tender Files already requested", extra={"request": request})
+    # logger_portal.info("Tender Files already requested", extra={"request": request})
     return HttpResponse(tender.id, status=201)
 
 

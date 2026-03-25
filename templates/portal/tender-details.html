@@ -541,10 +541,10 @@
                                 <span class="ms-1">{% translate 'Legal Information' %}</span>
                             </a>
                         {% else %}
-                            <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
-                                <span><i class="bi bi-send"></i></span>
+                            <!-- <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
+                                <span><i class="{{ bicons.send }}"></i></span>
                                 <span class="ms-1">{% translate 'Contact Us' %}</span>
-                            </a>
+                            </a> -->
                         {% endif %}
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <span><i class="bi bi-x-lg"></i></span>
@@ -559,27 +559,37 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="dceRequestModalLabel">{% translate "Request files" %}</h1>
+                        <h1 class="modal-title fs-5" id="dceRequestModalLabel">{% translate "Request Tender files" %}</h1>
                     </div>
                     <div class="modal-body">
-                        <div class="text-center mb-2">
+                        <!-- <div class="text-center mb-2">
                             <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
-                        </div>
-                        <div class="text-danger">{% translate "Files for this Tender are not ready, yet." %}</div>
-                        <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
+                        </div> -->
+                        {% if tender.files_to_get.first %}
+                            <div class="text-danger">{% translate "Files for this Tender are already queued" %}.</div>
+                        {% else %}
+                            <div class="small text-muted">{% translate "We will make this Tender files available as soon as possible." %}</div>
+                        {% endif %}
                     </div>
                     <div class="modal-footer">
-                        <form action="{% url 'portal_tender_req_file' tender.id %}" method="post">
-                            {{ csrf_token  }}
-                            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                        {% if not tender.files_to_get.first %}
+                            <!-- <form action="{% url 'portal_tender_req_file' tender.id %}" method="post">
+                                {{ csrf_token  }}
+                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
+                                    <span><i class="{{ bicons.send }}"></i></span>
+                                    <span class="ms-1">{% translate 'Request' %}</span>
+                                </button>
+                            </form> -->
+
+                            <button onclick="dceRequest()" class="btn btn-primary" data-bs-dismiss="modal">
                                 <span><i class="{{ bicons.send }}"></i></span>
                                 <span class="ms-1">{% translate 'Request' %}</span>
                             </button>
-                        </form>
-                        <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
-                            <span><i class="bi bi-send"></i></span>
+                        {% endif %}
+                        <!-- <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
+                            <span><i class="{{ bicons.send }}"></i></span>
                             <span class="ms-1">{% translate 'Contact Us' %}</span>
-                        </a>
+                        </a> -->
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <span><i class="{{ bicons.cancel }}"></i></span>
                             <span class="ms-1">{% translate 'Close' %}</span>

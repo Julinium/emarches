@@ -575,7 +575,8 @@ class FileToGet(models.Model):
         # verbose_name_plural = "Files to get")
 
     def save(self, *args, **kwargs):
-        if self.pk is not None:
+        # if self.pk :
+        if not self._state.adding:
             self.updated = timezone.now()
         super().save(*args, **kwargs)
 

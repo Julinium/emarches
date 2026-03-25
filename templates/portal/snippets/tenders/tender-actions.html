@@ -59,7 +59,7 @@
             </button>
         {% endif %}
     {% else %}
-        {% if tender.files_to_get.first %}
+        <!-- {% if tender.files_to_get.first %}
             <button class="m-1 btn btn-outline-secondary" disabled>
                 <span><i class="{{ bicons.deadline }}"></i></span>
                 <span class="ms-1">{% trans 'Files' %}</span>
@@ -70,7 +70,14 @@
                 <span><i class="{{ bicons.downloads }}"></i></span>
                 <span class="ms-1">{% trans 'Request Files' %}</span>
             </button>
-        {% endif %}
+        {% endif %} -->
+
+            <button class="m-1 btn btn-outline-secondary"
+                    data-bs-toggle="modal" data-bs-target="#dceRequestModal">
+                <span><i class="{{ bicons.downloads }}"></i></span>
+                <span class="ms-1">{% trans 'Files' %}</span>
+            </button>
+        
     {% endif %}
     
     
