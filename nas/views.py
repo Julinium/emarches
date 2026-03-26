@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.core.paginator import Paginator
 from datetime import datetime
-from django.db.models import Count, Sum, Q
+from django.db.models import Count, Sum, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -251,12 +251,17 @@ def companies_list(request):
         logger_portal.warning("E403: User is not an active team member", extra={"request": request})
         return HttpResponse(_("You are not an active team member"), status=403)
     
+    wassa = datetime.now()
+
     colleagues = get_colleagues(user)
     submitted_bids = Q(bids__status=BidStatus.BID_SUBMITTED)
     finished_bids  = Q(bids__status=BidStatus.BID_FINISHED)
     awarded_bids   = Q(bids__result=BidResults.BID_AWARDED)
     confirmed_exp  = Q(bids__expenses__status=ExpenseStatus.XPS_CONFIRMED)
     paid_exp       = Q(bids__expenses__status=ExpenseStatus.XPS_PAID)
+    # started_expir  = Q(expirables__validity_start__lte = wassa)
+    # unended_expir  = Q(expirables__validity_end__gte = wassa)
+    current_expirs = Q(validity_start__lte = wassa, validity_end__gte = wassa)
 
     team_companies = Company.objects.filter(
             user__in=colleagues,
@@ -265,8 +270,19 @@ def companies_list(request):
             bids_sum     = Sum('bids__bid_amount', filter=(submitted_bids | finished_bids)), 
             awards_sum   = Sum('bids__bid_amount', filter=(submitted_bids | finished_bids) & awarded_bids), 
             expenses_sum = Sum('bids__expenses__amount_paid', filter=(confirmed_exp | paid_exp)), 
+            # current_expirables = started_expir | unended_expir,
+            # current_expirables = current_expirs,
+        # ).prefetch_related(
+        #     "expirables", 
+
         ).prefetch_related(
-            "expirables", 
+            Prefetch(
+                "expirables",
+                queryset=Expirable.objects.filter(current_expirs),
+                to_attr="current_expirables"
+            )
+
+        # ).distinct(
         ).order_by("-is_mine", "user__username", "name")
 
     pro_context = portal_context(request)
@@ -286,6 +302,12 @@ def companies_list(request):
 
     context = {"page_obj": page_obj}
     logger_portal.info("Companies list view", extra={"request": request})
+
+    print(
+        '\n\n\n=================\n', 
+        len(team_companies.explain(analyze=True)), 
+        '\n===================\n\n\n'
+        )
 
     return render(request, 'nas/companies/companies-list.html', context)
 

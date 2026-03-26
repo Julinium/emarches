@@ -159,44 +159,18 @@ class Company(models.Model):
         if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
         return fs
     
-    @property
-    def running_expirables(self, *args, **kwargs):
-        wassa = datetime.now()
-        return self.expirables.filter(
-            validity_start__lte = wassa,
-            validity_end__gte = wassa,
-        )
+    # @property
+    # def running_expirables(self, *args, **kwargs):
+    #     wassa = datetime.now()
+    #     return self.expirables.filter(
+    #         validity_start__lte = wassa,
+    #         validity_end__gte = wassa,
+    #     )
     
     def save(self, *args, **kwargs):
         if self.image:
             self.image = squarify_image(self.image, str(self.id).split('-')[0])
         super().save(*args, **kwargs)
-
-    
-
-
-# class Folder(models.Model):
-#     id      = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     user    = models.ForeignKey(User, on_delete=models.CASCADE, related_name='folders', editable=False)
-#     name    = models.CharField(max_length=64, blank=True, null=True, verbose_name=_('Name'))
-#     image   = models.ImageField(upload_to='folders/', null=True, blank=True, verbose_name=_('Image'))
-#     color   = models.CharField(max_length=8, blank=True, null=True, default='#fd7e14', verbose_name=_('Color'))
-#     comment = models.TextField(blank=True, null=True, verbose_name=_('Comment'))
-
-#     class Meta:
-#         db_table = 'nas_folder'
-#         ordering = ['name']
-    
-#     def __str__(self):
-#         return self.name
-
-#     @property
-#     def icon(self):
-#         try:
-#             icon = self.image.url
-#         except:
-#             icon = static('folders/default.png')
-#         return icon
 
 
 class Favorite(models.Model):
@@ -467,7 +441,7 @@ class UserSetting(models.Model):
 class Expirable(models.Model):
     id             = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     company        = models.ForeignKey(Company, on_delete=models.CASCADE, related_name="expirables", blank=True, null=True, verbose_name=_("Company"))
-    
+
     group          = models.CharField(max_length=16, choices=ExpirableGroup.choices, default=ExpirableGroup.XPR_SIGNATURE, verbose_name=_('Group'))
     name           = models.CharField(max_length=256, validators=[MinLengthValidator(5)], verbose_name=_("Name"))
     subject        = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Subject"))

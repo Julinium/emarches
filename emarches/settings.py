@@ -87,7 +87,7 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'emarches.middleware.CustomLoggingMiddleware',
+    # 'emarches.middleware.CustomLoggingMiddleware',
 
 ]
 

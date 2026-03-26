@@ -122,10 +122,10 @@
             {% endif %}
 
 
-            {% if company.running_expirables.all %}
+            {% if company.current_expirables %}
                 <div class="">
-                    <span class="fw-light small me-1">{% trans "Expirables" %}:</span>
-                    {% for xp in company.running_expirables.all %}
+                    <span class="fw-light small me-1">{% trans "Expirables" %} ({{ company.current_expirables|length }}) :</span>
+                    {% for xp in company.current_expirables %}
                         <div class="ms-3 mb-2">
                             <div class="text-secondary">{{ xp.name|default:'?' }}: {{ xp.subject|default:'?' }}</div>
                             {% if xp.days_to_go %}
