@@ -473,7 +473,7 @@ def save_bdcs(published_since_days=1):
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'b.save_bdcs', f"Fetching item: { i } from { page } ...")
+            printMessage('INFO', 'b.save_bdcs', f"Fetching item: { i } from page { page } ...")
             try:
                 item = get_bdc(card)
                 if item != {} :
