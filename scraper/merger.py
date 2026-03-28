@@ -374,7 +374,7 @@ def save(tender_data):
                     meeting_serializer.is_valid(raise_exception=True)
                     meeting_serializer.save(lot=lot)
                     if not tender_create: 
-                        change = {"field": "meeting" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M")}
+                        change = {"field": "meeting" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M") if when else "-"}
                         changed_fields.append(change)
 
             # Remove Meetings not in JSON
@@ -384,7 +384,7 @@ def save(tender_data):
             for when, description in meetings_to_remove:
                 Meeting.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create:
-                    change = {"field": "meeting" , "old_value": when.strftime("%Y-%m-%d %H:%M"), "new_value": ""}
+                    change = {"field": "meeting" , "old_value": when.strftime("%Y-%m-%d %H:%M") if when else "-", "new_value": ""}
                     changed_fields.append(change)
 
             # Handle Samples
@@ -406,7 +406,7 @@ def save(tender_data):
                     sample_serializer.is_valid(raise_exception=True)
                     sample_serializer.save(lot=lot)
                     if not tender_create: 
-                        change = {"field": "sample" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M")}
+                        change = {"field": "sample" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M") if when else "-"}
                         changed_fields.append(change)
 
             # Remove Samples not in JSON
@@ -416,7 +416,7 @@ def save(tender_data):
             for when, description in samples_to_remove:
                 Sample.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create: 
-                    change = {"field": "sample" , "old_value": when.strftime("%Y-%m-%d %H:%M"), "new_value": ""}
+                    change = {"field": "sample" , "old_value": when.strftime("%Y-%m-%d %H:%M") if when else "-", "new_value": ""}
                     changed_fields.append(change)
 
             # Handle Visits
@@ -437,7 +437,7 @@ def save(tender_data):
                     visit_serializer.is_valid(raise_exception=True)
                     visit_serializer.save(lot=lot)
                     if not tender_create: 
-                        change = {"field": "visit" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M")}
+                        change = {"field": "visit" , "old_value": "", "new_value": when.strftime("%Y-%m-%d %H:%M") if when else "-"}
                         changed_fields.append(change)
 
             # Remove Visits not in JSON
@@ -447,7 +447,7 @@ def save(tender_data):
             for when, description in visits_to_remove:
                 Visit.objects.filter(when=when, description=description, lot=lot).delete()
                 if not tender_create: 
-                    change = {"field": "visit" , "old_value": when.strftime("%Y-%m-%d %H:%M"), "new_value": ""}
+                    change = {"field": "visit" , "old_value": when.strftime("%Y-%m-%d %H:%M") if when else "-", "new_value": ""}
                     changed_fields.append(change)
 
             # Handle Agrements (many-to-many)
