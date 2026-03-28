@@ -114,6 +114,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'emarches.wsgi.application'
 
+# DATABASES, EMAIL_BACKEND & AUTH_PASSWORD_VALIDATORS
 if ENVIRONMENT == 'production':
     DATABASES = {
         'default': {
@@ -148,9 +149,10 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-    AUTH_PASSWORD_VALIDATORS = []
 
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+    AUTH_PASSWORD_VALIDATORS = []
 
 
 LANGUAGE_CODE = 'en'
