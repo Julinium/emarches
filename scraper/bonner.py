@@ -439,10 +439,6 @@ def save_bdcs(published_since_days=1):
             "search_consultation_entreprise[pageSize]": "50"
         }
 
-        # print('\n\n====================')
-        # print('Searching POs with [dateMiseEnLigneStart] = ', assnna_str)
-        # print('====================\n\n')
-
         printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...")
 
         html = fetch_page(url, params=params)
@@ -596,3 +592,4 @@ def save_bdcs(published_since_days=1):
         page += 1
 
     return 0 if errors_happened == False else 1
+
