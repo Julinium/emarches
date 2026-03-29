@@ -15,7 +15,9 @@ from base.models import Tender
 from scraper import constants as C
 from scraper import helper
 
+
 REFRESH_SAVED = True
+
 
 def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
     assa = date.today()
