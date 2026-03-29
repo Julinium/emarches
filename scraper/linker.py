@@ -9,6 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 
+from selenium.common.exceptions import NoSuchElementException
+
 from base.models import Tender
 from scraper import constants as C
 from scraper import helper
@@ -70,10 +72,18 @@ def page2Links(driver, page_number, pages):
                 try: 
                     details_btn = body.find_element(By.XPATH, details_btn_xpath)
                     helper.printMessage('TRACE', 'l.page2Links', f'+++ Found next elemet: {page_number:03}.{i:03}')
-                except: 
+                except NoSuchElementException: 
                     helper.printMessage('TRACE', 'l.page2Links', f'--- Next elemet {page_number:03}.{i:03} not found.', 0, 1)
                     details_btn = None
                     traceback.print_exc()
+                except:
+                    helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
+                    traceback.print_exc()
+                    # continue  # skip missing IDs safely
+
+    # except NoSuchElementException:
+    #     continue  # skip missing IDs safely
+
     except Exception:
         helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
         traceback.print_exc()
@@ -185,7 +195,8 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     i = 1
     # helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:03}/{pages:03} ... \n')
     links = page2Links(driver, i, pages)
-    try: next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
+    try: 
+        next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
     except: 
         next_page_button = None
         traceback.print_exc()
