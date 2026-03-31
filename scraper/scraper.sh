@@ -34,7 +34,7 @@ else
     echo "Current directory: $(pwd)" >> "$_logs_file"
 
     source $DJANGO_DIR/.venv/bin/activate
-    python scraper/worker.py "$@" >> "$_logs_file"
+    python -u scraper/worker.py "$@" >> "$_logs_file"
 
     # If operating from a remote machine, transfer files to the server.
     # This is checked by the existence of _local_file (which is created only on the server, not on remote machines)

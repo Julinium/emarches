@@ -81,10 +81,6 @@ def page2Links(driver, page_number, pages):
                 except:
                     helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
                     traceback.print_exc()
-                    # continue  # skip missing IDs safely
-
-    # except NoSuchElementException:
-    #     continue  # skip missing IDs safely
 
     except Exception:
         helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
@@ -160,8 +156,8 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
     
     
     try:
+        helper.printMessage('DEBUG', 'l.getLinks', 'Submitting search form with empty terms ...', 1)
         fillSearchForm(driver, back_days)
-        helper.printMessage('DEBUG', 'l.getLinks', 'Submitting search form with default dates and empty terms ...', 1)
         org_search_field = driver.find_element("id", "ctl0_CONTENU_PAGE_AdvancedSearch_orgName")
         org_search_field.send_keys(Keys.ENTER)
     except Exception as e :
@@ -195,9 +191,14 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         return links
 
     i = 1
-    # helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:03}/{pages:03} ... \n')
-    links = page2Links(driver, i, pages)
-    try: 
+    helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:03}/{pages:03} ... \n')
+    try:
+        links = page2Links(driver, i, pages)
+    except:
+        helper.printMessage('ERROR', 'l.getLinks', f'Exception raised while getting links from page {i:03}/{pages:03}')
+        traceback.print_exc()
+        
+    try:
         next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
     except: 
         next_page_button = None
