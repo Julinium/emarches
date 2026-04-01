@@ -79,17 +79,39 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
     return current_tenders.filter(id__in=tenders_without_files)
 
 
+# def xxx_getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
+#     """
+#     Get Tenders with empty DCE folders or no DCE folder at all.
+#     # Return: Tender model QuerySet.
+#     """    
+
+#     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with deadline older than {past_days} days ...")
+#     target_date = datetime.now() - timedelta(days=past_days)
+#     current_tenders = Tender.objects.filter(deadline__gte=target_date)
+#     ct_count = current_tenders.count()
+#     helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
+
+#     tenders_without_files = []
+#     i = 0
+#     helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
+
+#     chronos_current = current_tenders.values_list('chrono', flat=True).iterator(chunk_size=batch_size)
+#     chronos_noddce = get_nodce_chronos(chronos_current)
+#     print("\n\n\n", "===============", chronos_noddce, "\n\n\n")
+#     return current_tenders.filter(chrono__in=chronos_noddce)
+
+
 def is_empty_or_nonexistent(folder_path):
     """
     Check if a folder_path is empty or does not exist.
     # Return: Boolean
     """
     if C.MACHINE == "remote":
-        # Make sure an SSH tunnel is setup between remote machine and server.
+        # TODO: Make sure an SSH tunnel to the server is setup.
         path = folder_path
         user = C.REMOTE_USER
         port = C.SSH_PORT
-        host = 'emarches.com'
+        host = C.SSH_HOST
         cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'    
         result = subprocess.run(["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd])
         return result.returncode == 0
@@ -300,3 +322,49 @@ def getDCE(tender):
 
     return 0
 
+
+# def get_nodce_chronos(chronos_list=[]):
+
+#     paths = [os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}{chrono}') for chrono in chronos_list]
+#     print("\n\n\n", f"Chronos count: {len(paths)}", "\n\n\n")
+#     remote_script = r'''
+#     import os, sys
+
+#     for line in sys.stdin:
+
+#         path = line.strip()        
+#         if not os.path.isdir(path):
+#             print(f"{path}")
+#         else:
+#             try:
+#                 has_files = any(
+#                     os.path.isfile(os.path.join(path, f))
+#                     for f in os.listdir(path)
+#                 )
+#                 if not has_files: print(f"{path}")
+#             except Exception:
+#                 print(f"{path}")
+#     '''
+
+#     user = C.REMOTE_USER
+#     port = C.SSH_PORT
+#     host = C.SSH_HOST
+
+#     try:
+#         cmd = f"""
+#             ssh -x -p {port} {user}@{host} 'python - << "EOF"
+#             {remote_script}
+#             EOF'
+#             """
+#         proc = subprocess.run(
+#             cmd,
+#             input="\n".join(paths),
+#             text=True,shell=True,
+#             capture_output=True,
+#             check=True
+#         )
+#     except subprocess.CalledProcessError as e:
+#         print("Return code:", e.returncode)
+#         print("STDOUT:", e.stdout)
+#         print("STDERR:", e.stderr)
+#         raise

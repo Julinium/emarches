@@ -13,6 +13,7 @@ load_dotenv(dotenv_path=env_path)
 MACHINE = os.getenv("MACHINE", 'local')
 REMOTE_USER = os.getenv("REMOTE_USER", 'emarches')
 SSH_PORT = os.getenv("SSH_PORT", 22)
+SSH_HOST = os.getenv("SSH_HOST", 'emarches.com')
 
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
