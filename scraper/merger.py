@@ -311,7 +311,7 @@ def save(tender_data):
             # Handle nested Category for Lot
             lot_category_data = lot_data["category"]
             lot_category = None
-            helper.printMessage('DEBUG', 'm.save', "#### Handling Lot Category ... ")
+            helper.printMessage('TRACE', 'm.save', "#### Handling Lot Category ... ")
             if lot_category_data:
                 label = lot_category_data.get('label')
                 if label and Category.objects.filter(label=label).exists():
