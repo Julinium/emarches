@@ -27,6 +27,10 @@ def fillSearchForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
     helper.printMessage('INFO', 'l.fillSearchForm', 'Submitting search form ...')
     try:
         helper.printMessage('INFO', 'l.fillSearchForm', f'Deadline backward days set to {C.PORTAL_DDL_PAST_DAYS} days.', 2)
+        # ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneStart
+        # ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneEnd
+        # ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneCalculeStart
+        # ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneCalculeEnd
         el_ddl_start = driver.find_element("id", "ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneStart")
         el_ddl_start.clear()
         el_ddl_start.send_keys(date_ddl_start)

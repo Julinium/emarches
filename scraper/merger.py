@@ -233,7 +233,9 @@ def save(tender_data):
                     if current_value == None or new_value == None:
                         keep_change = False
                 if keep_change:
-                    change = { "field": field , "old_value": str(current_value), "new_value": str(new_value)}
+                    current_str = current_value.strftime("%Y-%m-%d %H:%M") if isinstance(current_value, date) else str(current_value) 
+                    new_str = new_value.strftime("%Y-%m-%d %H:%M") if isinstance(new_value, date) else str(new_value) 
+                    change = { "field": field , "old_value": current_str, "new_value": new_str}
                     changed_fields.append(change)
         helper.printMessage('DEBUG', 'm.save', "+++ Tender already exists. Updating.")
     else:

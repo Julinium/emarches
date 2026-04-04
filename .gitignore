@@ -19,3 +19,4 @@ scraper/exports
 scraper/logs
 scraper/crony/.lock
 
+flows/
