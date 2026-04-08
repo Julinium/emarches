@@ -10,14 +10,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
 def main():
-    # from datetime import datetime
-
-    # from base.models import Tender
-    # from scraper import constants as C
-    # from scraper import downer
-    # print("------------", "")
-    # nodce = downer.getEmpties()
-    # print(nodce.count)
+    from scraper import constants as C
+    from scraper import downer
+    nodce = downer.getEmpties()
     pass
 
 

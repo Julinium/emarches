@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'bdc',
     'insights',
     'bidding',
+    'flows',
 
     'django_cleanup',
     'user_agents',

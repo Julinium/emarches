@@ -52,12 +52,12 @@ def getFileables():
     return fresh_tenders | nodce_tenders
 
 
-def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
+def xxx_getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
     """
     Get Tenders with empty DCE folders or no DCE folder at all.
 
     # Return: Tender model QuerySet.
-    """    
+    """
 
     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with deadline older than {past_days} days ...")
     target_date = datetime.now() - timedelta(days=past_days)
@@ -79,26 +79,57 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
     return current_tenders.filter(id__in=tenders_without_files)
 
 
-# def xxx_getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
-#     """
-#     Get Tenders with empty DCE folders or no DCE folder at all.
-#     # Return: Tender model QuerySet.
-#     """    
+def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
+    """
+    Get Tenders with empty DCE folders or no DCE folder at all.
 
-#     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with deadline older than {past_days} days ...")
-#     target_date = datetime.now() - timedelta(days=past_days)
-#     current_tenders = Tender.objects.filter(deadline__gte=target_date)
-#     ct_count = current_tenders.count()
-#     helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
+    # Return: Tender model QuerySet.
+    """
+    
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline older than {past_days} days ...")
+    target_date = datetime.now() - timedelta(days=past_days)
+    current_tenders = Tender.objects.filter(deadline__gte=target_date)
+    ct_count = current_tenders.count()
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
 
-#     tenders_without_files = []
-#     i = 0
-#     helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
+    tenders_without_files = []
+    i = 0
+    helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
+    chronos_list = list(current_tenders.values_list('chrono', flat=True))
 
-#     chronos_current = current_tenders.values_list('chrono', flat=True).iterator(chunk_size=batch_size)
-#     chronos_noddce = get_nodce_chronos(chronos_current)
-#     print("\n\n\n", "===============", chronos_noddce, "\n\n\n")
-#     return current_tenders.filter(chrono__in=chronos_noddce)
+
+    if C.MACHINE == "remote":
+        prefix = os.path.join(C.REMOTE_MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
+        chronos = " ".join(shlex.quote(c) for c in chronos_list)
+
+        user, port, host = C.REMOTE_USER, C.SSH_PORT, C.SSH_HOST
+
+        cmd = f"""
+        for chrono in {chronos}; do
+            if [ -d "{prefix}$chrono" ] && [ "$(ls -A "{prefix}$chrono")" ]; then
+                echo "$chrono"
+            fi
+        done
+        """
+
+        result = subprocess.run(
+            ["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd],
+            capture_output=True,
+            text=True,
+        )
+
+        non_empty_dirs = set(result.stdout.splitlines())
+    else:
+        non_empty_dirs = []
+        prefix = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
+        for chrono in chronos_list:
+            folder_path = prefix + chrono
+            if os.path.exists(folder_path) and any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path)):
+                non_empty_dirs.append(chrono)
+
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Found {ct_count - len(non_empty_dirs)} items with empty or no DCE files")
+    return current_tenders.exclude(chrono__in=non_empty_dirs)
+
 
 
 def is_empty_or_nonexistent(folder_path):
@@ -323,48 +354,25 @@ def getDCE(tender):
     return 0
 
 
-# def get_nodce_chronos(chronos_list=[]):
+def get_nodce_chronos(chronos=[]):
 
-#     paths = [os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}{chrono}') for chrono in chronos_list]
-#     print("\n\n\n", f"Chronos count: {len(paths)}", "\n\n\n")
-#     remote_script = r'''
-#     import os, sys
+    prefix = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
 
-#     for line in sys.stdin:
+    cmd = f"""
+    for chrono in {chronos}; do
+        if [ -d "{prefix}$chrono" ] && [ "$(ls -A "{prefix}$chrono")" ]; then
+            echo "$chrono"
+        fi
+    done
+    """
 
-#         path = line.strip()        
-#         if not os.path.isdir(path):
-#             print(f"{path}")
-#         else:
-#             try:
-#                 has_files = any(
-#                     os.path.isfile(os.path.join(path, f))
-#                     for f in os.listdir(path)
-#                 )
-#                 if not has_files: print(f"{path}")
-#             except Exception:
-#                 print(f"{path}")
-#     '''
+    result = subprocess.run(
+        ["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd],
+        capture_output=True,
+        text=True,
+    )
 
-#     user = C.REMOTE_USER
-#     port = C.SSH_PORT
-#     host = C.SSH_HOST
+    non_empty_dirs = set(result.stdout.splitlines())
 
-#     try:
-#         cmd = f"""
-#             ssh -x -p {port} {user}@{host} 'python - << "EOF"
-#             {remote_script}
-#             EOF'
-#             """
-#         proc = subprocess.run(
-#             cmd,
-#             input="\n".join(paths),
-#             text=True,shell=True,
-#             capture_output=True,
-#             check=True
-#         )
-#     except subprocess.CalledProcessError as e:
-#         print("Return code:", e.returncode)
-#         print("STDOUT:", e.stdout)
-#         print("STDERR:", e.stderr)
-#         raise
+    # Now filter your 1000 folders locally
+    existing_non_empty = [d for d in my_dirs if d in non_empty_dirs]

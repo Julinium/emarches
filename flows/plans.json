@@ -1,0 +1,23 @@
+[
+    {
+        "code": "plan_free",
+        "name": "Free",
+        "caption": "Free tier for basic usage and discovery",
+        "previous": "",
+        "price": 0
+    },
+    {
+        "code": "plan_startup",
+        "name": "Startup",
+        "caption": "Essential features for startups",
+        "previous": "plan_free",
+        "price": 500
+    },
+    {
+        "code": "plan_pro",
+        "name": "Pro",
+        "caption": "Max features for professionals",
+        "previous": "plan_startup",
+        "price": 800
+    }
+]

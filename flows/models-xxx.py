@@ -1,0 +1,1024 @@
+
+# import re
+# import os
+# import traceback
+# import uuid
+
+# import pytz
+# from django.conf import settings
+# from django.db import models
+# from django.db.models import Avg, Count, F, Max, Min, Q, Sum
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+
+# from .texter import normalize_text as nt
+
+
+# NOT_WORDS = {"des", "sur", "pour", "les"}
+
+class Trial(models.Model):
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class Plan(models.Model):
+    features = None
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class Feature(models.Model):
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class Subscription(models.Model):
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+# class Renewal(models.Model):
+#     pass
+    # created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    # updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class TopUp(models.Model):
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class Order(models.Model):
+    items = None
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class Payment(models.Model):
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+class Promo(models.Model):
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+
+# class Agrement(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+#     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+
+#     class Meta:
+#         db_table = 'base_agrement'
+#         ordering = ['name']
+#         verbose_name = "License"
+    
+#     def __str__(self):
+#         return self.name
+
+#     def save(self, *args, **kwargs):
+#         try:
+#             self.short = re.split(r'[.-]', self.name, maxsplit=1)[0]
+#         except Exception as x:
+#             self.short = None
+#             traceback.print_exc()
+        
+#         return super().save(*args, **kwargs)
+
+
+# class Category(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     label = models.CharField(max_length=128, blank=True, null=True, db_index=True, verbose_name="Name")
+    
+#     class Meta:
+#         db_table = 'base_category'
+#         ordering = ['label']
+#         verbose_name = "Category"
+#         verbose_name_plural = "Categories"
+    
+#     def __str__(self):
+#         return self.label
+
+#     @property
+#     def icon_bs_class(self):
+#         try:
+#             if self.label == "Fournitures": return 'bi bi-box-seam' # basket  boxes # cart3
+#             if self.label == "Services": return 'bi bi-gear'        # puzzle
+#             if self.label == "Travaux": return 'bi bi-cone-striped' #  bricks minecart-loaded rocket-takeoff 
+#         except: pass
+
+#         return 'bi bi-question-circle'
+
+
+# class Change(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="changes", db_column='tender', blank=True, null=True, verbose_name="Tender")
+#     reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date Reported")
+#     changes = models.TextField(blank=True, null=True, verbose_name="Changes")
+
+#     class Meta:
+#         db_table = 'base_change'
+#         ordering = ['-reported', 'tender']
+#         verbose_name = "Change"
+    
+#     def __str__(self):
+#         return f"{self.tender.chrono} - {self.reported}"
+
+
+# class Client(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+#     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+#     ministery = models.CharField(max_length=256, blank=True, null=True, verbose_name="Sector")
+
+#     keywords = models.TextField(blank=True, null=True, editable=False)
+
+#     class Meta:
+#         db_table = 'base_client'
+#         ordering = ['ministery', 'name']
+#         verbose_name = "Public Client"
+#         # verbose_name_plural = "")
+    
+#     def __str__(self):
+#         return self.name
+
+#     def save(self, *args, **kwargs):
+#         self.keywords = nt(self.name)
+#         try:
+#             if self.name.find("/") > -1:
+#                 self.ministery = self.name.split("/")[0].strip()
+#         except Exception as x:
+#             traceback.print_exc()
+#         try:
+#             # slash = ' / '
+#             # s = self.name
+#             # last_slash = s.rfind(slash)
+#             # if last_slash != -1:
+#             #     dash = s.find(' - ', last_slash + len(slash))
+#             #     if dash != -1:
+#             #         self.short = s[last_slash + len(slash):dash]
+
+#             # s = self.name
+#             # match = re.search(r'/\s*([^/]+?)\s*-', s)
+#             self.short = make_acronym(self.name)
+#         except Exception as x:
+#             traceback.print_exc()
+                    
+#         return super().save(*args, **kwargs)
+
+
+# class Domain(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Acronym")
+#     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+
+#     class Meta:
+#         db_table = 'base_domain'
+#         ordering = ['name']
+#         verbose_name = "Domain"
+    
+#     def __str__(self):
+#         return self.name
+
+#     def save(self, *args, **kwargs):
+#         try:
+#             if self.name.find("/") > -1:
+#                 self.short = self.name.rsplit("/", 1)[-1].strip()
+#         except Exception as x:
+#             self.short = None
+#             traceback.print_exc()
+        
+#         return super().save(*args, **kwargs)
+
+
+# class Kind(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+#     name = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Name")
+
+#     class Meta:
+#         db_table = 'base_kind'
+#         ordering = ['name']
+#         verbose_name = "Type"
+    
+#     def __str__(self):
+#         return self.name
+
+
+# class Meeting(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     when = models.DateTimeField(blank=True, null=True, verbose_name="Date")
+#     description = models.TextField(blank=True, null=True, verbose_name="Description")
+#     lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="meetings", db_column='lot', blank=True, null=True, verbose_name="Lot")
+
+#     class Meta:
+#         db_table = 'base_meeting'
+#         ordering = ['-when']
+#         verbose_name = "Meeting"
+    
+#     def __str__(self):
+#         return f"{ self.when.date() } - { self.description }"
+
+#     def save(self, *args, **kwargs):
+#         tender = self.lot.tender
+#         tender.has_meetings = True
+#         tender.save()
+
+#         super().save(*args, **kwargs)
+
+
+# class Mode(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+#     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+
+#     class Meta:
+#         db_table = 'base_mode'
+#         ordering = ['name']
+#         verbose_name = "Awarding Mode"
+    
+#     def __str__(self):
+#         return self.name
+
+
+# class Procedure(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+#     restricted = models.BooleanField(blank=True, null=True, default=False, verbose_name="Restricted")
+#     name = models.CharField(max_length=2048, blank=True, null=True, db_index=True, verbose_name="Name")
+
+#     class Meta:
+#         db_table = 'base_procedure'
+#         ordering = ['name']
+#         verbose_name = "Procedure"
+    
+#     def __str__(self):
+#         return self.name
+
+#     def save(self, *args, **kwargs):
+#         # if self.name
+#         lower_name = self.name.lower()
+#         restrictions = ['restreint', 'négocié', 'négociée', 'préselection', 'pré-selection']
+#         self.restricted = any(word.lower() in lower_name for word in restrictions)
+
+#         super().save(*args, **kwargs)
+
+
+# class Qualif(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     short = models.CharField(max_length=128, blank=True, null=True, verbose_name="Acronym")
+#     name = models.CharField(max_length=2048, blank=True, null=True, verbose_name="Name")
+#     domain = models.CharField(max_length=128, blank=True, null=True, verbose_name="Domain")
+#     classe = models.CharField(max_length=16, blank=True, null=True, verbose_name="Class")
+
+#     class Meta:
+#         db_table = 'base_qualif'
+#         ordering = ['name']
+#         verbose_name = "Qualification"
+#         # verbose_name_plural = "")
+    
+#     def __str__(self):
+#         return self.name
+
+#     def save(self, *args, **kwargs):
+#         try:
+#             if self.name.find("/ Classe ") > -1:
+#                 self.classe = self.name.rsplit("/ Classe ", 1)[-1].strip()
+#         except Exception as x:
+#             self.classe = None
+#             traceback.print_exc()
+#         try:
+#             if self.name.find("/") > -1:
+#                 self.domain = self.name.split("/", 1)[0].strip()
+#         except Exception as x:
+#             self.domain = None
+#             traceback.print_exc()
+
+#         try:
+#             short = None
+#             separator = "/"
+#             text = self.name
+#             first = text.find(separator)
+#             if first > 0:
+#                 second = text.find(separator, first + len(separator))
+#                 if second > 0:
+#                     third = text.find(separator, second + len(separator))
+#                     if third > 0:
+#                         start = second + len(separator)
+#                         short = text[start:third].strip()
+#                         if short.find(" ") > -1:
+#                             short = short.split(" ", 1)[0].strip()
+#                         if short.find("-") > -1:
+#                             short = short.strip("-")
+#                         f1 = short.find(".")
+#                         if f1 > 0:
+#                             s2 = short.find(".", f1 + len("."))
+#                             if s2 > 0:
+#                                 short = short[:s2]
+#             if short:
+#                 self.short = short
+#         except Exception as x:
+#             self.short = None
+#             traceback.print_exc()
+        
+#         return super().save(*args, **kwargs)
+
+
+# class Tender(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     chrono = models.CharField(max_length=16, blank=True, null=True)
+#     title = models.TextField(blank=True, null=True, verbose_name="Title")
+#     reference = models.CharField(max_length=512, blank=True, null=True, verbose_name="Reference")
+#     published = models.DateField(blank=True, null=True, db_index=True, verbose_name="Date published")
+#     deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Bidding deadline")
+
+#     lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name="Lots count")
+#     estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total estimate")
+#     bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total bond")
+#     plans_price = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Plans price")
+
+#     reserved = models.BooleanField(blank=True, null=True, verbose_name="Reserved to SMB+")
+#     variant = models.BooleanField(blank=True, null=True, verbose_name="Variants accepted")
+#     has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name="Licenses required")
+#     has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name="Qualifications required")
+#     has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name="Samples required")
+#     has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="In-site visits scheduled")
+#     has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
+
+#     location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Execution location")
+#     ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bidding")  # 1: Required, 0: Not required, Else: NA'
+#     esign = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic signature") # 1: Required, 0: Not required, Else: NA'
+#     size_read = models.CharField(max_length=128, blank=True, null=True, verbose_name="Files read size")
+#     size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name="Files bytes")
+#     address_withdrawal = models.TextField(blank=True, null=True, verbose_name="Withdrawal address")
+#     address_bidding = models.TextField(blank=True, null=True, verbose_name="Bidding address")
+#     address_opening = models.TextField(blank=True, null=True, verbose_name="Awarding address")
+#     contact_name = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact name")
+#     contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact phone")
+#     contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact email")
+#     contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact fax")
+#     cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name="Cancelled")
+#     deleted = models.BooleanField(blank=True, null=True, default=False)
+#     link = models.CharField(max_length=256, blank=True, null=True, verbose_name="Official link")
+#     acronym = models.CharField(max_length=8, blank=True, null=True)
+
+#     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="tenders", db_column='category', blank=True, null=True, verbose_name="Category")
+#     mode = models.ForeignKey(Mode, on_delete=models.DO_NOTHING, related_name='tenders', db_column='mode', blank=True, null=True, verbose_name="Awarding mode")
+#     procedure = models.ForeignKey(Procedure, on_delete=models.DO_NOTHING, related_name='tenders', db_column='procedure', blank=True, null=True, verbose_name="Procedure")
+#     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, related_name='tenders', db_column='client', blank=True, null=True, verbose_name="Public client")
+#     kind = models.ForeignKey(Kind, on_delete=models.DO_NOTHING, related_name='tenders', db_column='kind', blank=True, null=True)
+#     ###### /!\ If you get the following error when migrating for the first time:
+#     # django.core.exceptions.FieldDoesNotExist: RelDomainTender has no field named 'tender'
+#     # Comment out the 'domains' field in 'Tender' class and the whole 'RelDomainTender' class definition.
+#     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
+#     domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name="Domains of activity")
+
+#     keywords = models.TextField(blank=True, null=True, editable=False)
+#     cliwords = models.TextField(blank=True, null=True, editable=False)
+#     refwords = models.TextField(blank=True, null=True, editable=False)
+#     locwords = models.TextField(blank=True, null=True, editable=False)
+#     domwords = models.TextField(blank=True, null=True, editable=False)
+
+#     # digested = models.DateTimeField(blank=True, null=True)
+#     created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
+#     updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+
+#     class Meta:
+#         db_table = 'base_tender'
+#         ordering = ['-deadline', 'id']
+
+#     def __str__(self):
+#         return f"{self.chrono} - {self.reference}: {self.title}"
+    
+#     @property
+#     def expired(self):
+#         try:
+#             rabat_now = timezone.localtime(timezone.now(), timezone=pytz.timezone('Africa/Casablanca'))
+#             return self.deadline <= rabat_now
+#         except: return None
+    
+#     @property
+#     def days_to_go(self):
+#         try:
+#             rabat_now = timezone.localtime(timezone.now(), timezone=pytz.timezone('Africa/Casablanca'))
+#             delta_to_go = self.deadline.date() - rabat_now.date()
+#             return delta_to_go.days
+#         except: return 0
+
+#     @property
+#     def days_span(self):
+#         try:
+#             delta_span = self.deadline.date() - self.published
+#             return 1 + delta_span.days
+#         except: return 0
+
+#     @property
+#     def bond_ratio(self):
+#         try:
+#             if self.estimate != 0:
+#                 return 100 * self.bond / self.estimate
+#         except: pass
+#         return 0
+
+#     @property
+#     def files_info(self):
+
+#         files_list = []
+#         total_size = 0
+#         dce_dir = os.path.join(
+#             os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
+#             settings.DL_PATH_PREFIX + self.chrono,
+#         )
+#         if os.path.exists(dce_dir):
+#             files_list = os.listdir(dce_dir)
+
+#         files_info = []
+#         if len(files_list) > 0:
+#             for entry in files_list:
+#                 full_path = os.path.join(dce_dir, entry)
+#                 if os.path.exists(full_path):
+#                     if os.path.isfile(full_path):
+#                         sizens = os.path.getsize(full_path)
+#                         total_size += sizens
+#                         files_info.append({"name": entry, "size": sizens})
+
+#         return files_info
+
+
+#     @property
+#     def total_size(self):
+#         total_size = 0
+#         for f in self.files_info:
+#             total_size += f.get("size", 0)
+#         return total_size
+
+
+#     def save(self, *args, **kwargs):
+#         self.keywords = nt(f"{ self.title } { self.chrono }")
+#         self.cliwords = nt(self.client.name)
+#         self.refwords = nt(self.reference)
+#         self.locwords = nt(self.location)
+#         doms = self.domains.all()
+#         for dom in doms:
+#             if not self.domwords: self.domwords = ''
+#             self.domwords += nt(dom.name) + ' '
+
+#         self.has_agrements = any(lot.agrements.count() > 0 for lot in self.lots.all())
+#         self.has_qualifs = any(lot.qualifs.count() > 0 for lot in self.lots.all())
+#         self.has_meetings = any(lot.meetings.count() > 0 for lot in self.lots.all())
+#         self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
+#         self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
+
+#         self.updated = None
+#         if self.pk is not None:
+#             self.updated = timezone.now()
+
+#         super().save(*args, **kwargs)
+
+
+# class Lot(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     number = models.SmallIntegerField(blank=True, null=True, db_index=True, verbose_name="Number")
+#     title = models.TextField(blank=True, null=True, verbose_name="Title")
+#     description = models.TextField(blank=True, null=True, verbose_name="Description")
+
+#     estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name="Estimate")
+#     bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name="Bond")
+#     reserved = models.BooleanField(blank=True, null=True, verbose_name="Reserved to SMB+")
+#     variant = models.BooleanField(blank=True, null=True, verbose_name="Variants accepted")
+#     category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="lots", db_column='category', blank=True, null=True, verbose_name="Category")
+
+#     tender = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="lots", db_column='tender', blank=True, null=True)
+#     agrements = models.ManyToManyField(Agrement, through='RelAgrementLot', related_name='lots')
+#     qualifs = models.ManyToManyField(Qualif, through='RelQualifLot', related_name='lots')
+
+    
+#     class Meta:
+#         db_table = 'base_lot'
+#         ordering = ['number']
+    
+#     def __str__(self):
+#         return f"{ self.tender.chrono } - { self.number } - { self.title }"
+
+#     def save(self, *args, **kwargs):
+#         super().save(*args, **kwargs)
+#         tender = self.tender
+#         if tender:
+#             if self.title:
+#                 if tender.keywords: tender.keywords = nt(self.title)
+#                 else: tender.keywords += ' ' + nt(self.title)
+#             if self.description:
+#                 if tender.keywords: tender.keywords = nt(self.description)
+#                 else: tender.keywords += ' ' + nt(self.description)
+#             tender.has_agrements = self.agrements.count() > 0
+#             tender.has_qualifs = self.qualifs.count() > 0
+#             tender.has_samples = self.samples.count() > 0
+#             tender.has_meetings = self.meetings.count() > 0
+#             tender.has_visits = self.visits.count() > 0
+#             tender.save()
+
+
+# class RelAgrementLot(models.Model):
+#     pk = models.CompositePrimaryKey('agrement', 'lot')
+#     agrement = models.ForeignKey('Agrement', on_delete=models.CASCADE, db_column='agrement')
+#     lot = models.ForeignKey('Lot', on_delete=models.CASCADE, db_column='lot')
+
+#     class Meta:
+#         db_table = 'base_rel_agrement_lot'
+#         unique_together = ('agrement', 'lot')
+
+#     def save(self, *args, **kwargs):
+#         super().save(*args, **kwargs)
+#         self.lot.save()
+
+
+# class RelDomainTender(models.Model):
+#     ###### /!\ If you get the following error when migrating for the first time:
+#     # django.core.exceptions.FieldDoesNotExist: RelDomainTender has no field named 'tender'
+#     # Comment out the 'domains' field in 'Tender' class and the whole 'RelDomainTender' class definition.
+#     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
+#     pk = models.CompositePrimaryKey('domain', 'tender')
+#     tender = models.ForeignKey(Tender, on_delete=models.CASCADE, db_column='tender')
+#     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, db_column='domain')
+
+#     class Meta:
+#         db_table = 'base_rel_domain_tender'
+#         unique_together = ('domain', 'tender')
+
+
+# class RelQualifLot(models.Model):
+#     pk = models.CompositePrimaryKey('qualif', 'lot')
+#     qualif = models.ForeignKey(Qualif, on_delete=models.CASCADE, db_column='qualif')
+#     lot = models.ForeignKey(Lot, on_delete=models.CASCADE, db_column='lot')
+
+#     class Meta:
+#         db_table = 'base_rel_qualif_lot'
+#         unique_together = ('qualif', 'lot')
+
+#     def save(self, *args, **kwargs):
+#         super().save(*args, **kwargs)
+#         self.lot.save()
+
+
+# class Sample(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     when = models.DateTimeField(blank=True, null=True, verbose_name="Date")
+#     description = models.TextField(blank=True, null=True, verbose_name="Description")
+#     lot = models.ForeignKey(Lot, on_delete=models.CASCADE, related_name="samples", db_column='lot', blank=True, null=True, verbose_name="Lot")
+
+#     class Meta:
+#         db_table = 'base_sample'
+#         ordering = ['-when']
+#         # verbose_name = "Sample")
+    
+#     def __str__(self):
+#         return f"{ self.when.date() } - { self.description }"
+
+#     def save(self, *args, **kwargs):
+#         tender = self.lot.tender
+#         tender.has_samples = True
+#         tender.save()
+
+#         super().save(*args, **kwargs)
+
+
+# class Visit(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     when = models.DateTimeField(blank=True, null=True, verbose_name="Date")
+#     description = models.TextField(blank=True, null=True, verbose_name="Description")
+#     lot = models.ForeignKey('Lot', on_delete=models.CASCADE, related_name="visits", db_column='lot', blank=True, null=True, verbose_name="Lot")
+
+#     class Meta:
+#         db_table = 'base_visit'
+#         ordering = ['-when']
+#         # verbose_name = "Visit")
+    
+#     def __str__(self):
+#         return f"{ self.when.date() } - { self.description }"
+
+#     def save(self, *args, **kwargs):
+#         tender = self.lot.tender
+#         tender.has_visits = True
+#         tender.save()
+
+#         super().save(*args, **kwargs)
+
+
+# class FileToGet(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     closed = models.BooleanField(blank=True, null=True, default=False)
+#     created = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+#     updated = models.DateTimeField(blank=True, null=True)
+#     reason = models.CharField(max_length=256, blank=True, null=True, default="Created")
+#     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="files_to_get", db_column='tender', blank=True, null=True)
+    
+#     class Meta:
+#         db_table = 'base_file_to_get'
+#         ordering = ['-closed', 'created']
+#         # verbose_name = "File to get")
+#         # verbose_name_plural = "Files to get")
+
+#     def save(self, *args, **kwargs):
+#         # if self.pk :
+#         if not self._state.adding:
+#             self.updated = timezone.now()
+#         super().save(*args, **kwargs)
+
+
+# class Crawler(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     started = models.DateTimeField(blank=True, null=True, verbose_name="Started")
+#     finished = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Finished")
+    
+#     import_links = models.BooleanField(blank=True, null=True, default=False)
+
+#     links_crawled = models.SmallIntegerField(blank=True, null=True, default=0)
+#     links_imported = models.SmallIntegerField(blank=True, null=True, default=0)
+#     links_from_saved = models.SmallIntegerField(blank=True, null=True, default=0)
+
+#     tenders_created = models.SmallIntegerField(blank=True, null=True, default=0)
+#     tenders_updated = models.SmallIntegerField(blank=True, null=True, default=0)
+#     files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+#     files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+
+#     saving_errors = models.BooleanField(blank=True, null=True, default=False)
+
+#     class Meta:
+#         db_table = 'base_crawler'
+#         ordering = ['-finished']
+    
+#     def __str__(self):
+#         return f"{ self.started } - { self.finished }"
+    
+#     @property
+#     def duration(self):
+#         if self.started and self.finished:
+#             return self.finished - self.started
+#         return None
+
+
+# class Concurrent(models.Model):
+#     id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     name      = models.CharField(max_length=255, db_index=True, default="MODE 777", verbose_name=_('Name'))
+
+#     @property
+#     def pseudo(self):
+#         aydi = str(self.id)
+#         if len(aydi) > 8:
+#             aydi = aydi[-8:]
+#         return aydi.upper()
+
+#     @property
+#     def deposits_sum(self):
+#         return self.deposits.aggregate(total=Sum('amount_b'))['total'] or 0
+
+#     @property
+#     def winners_sum(self): 
+#         return self.deposits.aggregate(
+#                 total=Sum('amount_w', filter=Q(winner=True))
+#             # ).prefetch_related(
+#             #     'concurrent'
+#             )['total'] or 0
+
+#     @property
+#     def admin_rejects(self):
+#         return self.deposits.filter(admin='x')
+
+#     @property
+#     def admin_accepts(self):
+#         return self.deposits.filter(admin='a')
+
+#     @property
+#     def admin_reserves(self):
+#         return self.deposits.filter(admin='r')
+
+#     @property
+#     def tech_rejects(self):
+#         return self.deposits.filter(reject_t=True)
+
+#     @property
+#     def selects(self):
+#         return self.deposits.filter(amount_b__isnull=False)    
+
+#     @property
+#     def winners(self): 
+#         return self.deposits.filter(amount_w__isnull=False)    
+
+#     @property
+#     def selects_count(self):
+#         return self.deposits.aggregate(
+#             effectif=Count('id',
+#                 filter=Q(amount_b__isnull=False)
+#             )
+#         )['effectif'] or 0
+
+#     @property
+#     def winners_count(self):
+#         return self.deposits.aggregate(effectif=Count('id', filter=Q(amount_w__isnull=False)))['effectif'] or 0
+
+#     @property
+#     def highest_win(self):
+#         return self.deposits.aggregate(max_amount=Max('amount_w', filter=Q(amount_w__isnull=False)))['max_amount'] or None
+
+#     @property
+#     def lowest_win(self):
+#         return self.deposits.aggregate(min_amount=Min('amount_w', filter=Q(amount_w__isnull=False)))['min_amount'] or None
+
+#     @property
+#     def latest_win(self):
+#         lwb = self.deposits.order_by('-date').first()
+#         return lwb.date if lwb else None
+
+#     @property
+#     def first_win(self):
+#         fwb = self.deposits.order_by('date').first()
+#         return fwb.date if fwb else None
+
+#     @property
+#     def win_rate(self):
+#         if self.deposits_sum == 0 : return None
+#         return round(100 * self.winners_sum / self.deposits_sum, 2)
+
+#     @property
+#     def success_rate(self):
+#         all_depos = self.deposits.count()
+#         if all_depos == 0 : return None
+#         all_win = self.winners.count()
+#         return round(100 * all_win / all_depos, 2)
+
+#     @property
+#     def admin_reject_rate(self):
+#         all_depos = self.deposits.count()
+#         if all_depos == 0 : return None
+#         all_rej = self.admin_rejects.count()
+#         return round(100 * all_rej / all_depos, 2)
+
+#     @property
+#     def tech_reject_rate(self):
+#         all_depos = self.deposits.count()
+#         if all_depos == 0 : return None
+#         all_rej = self.tech_rejects.count()
+#         return round(100 * all_rej / all_depos, 2)
+
+#     @property
+#     def tech_offset(self):
+#         return self.success_rate + self.admin_reject_rate
+
+#     @property
+#     def tenders(self): 
+#         benders = self.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
+#         return benders #.order_by('-date')
+
+#     @property
+#     def clients(self):
+#         return Client.objects.filter(
+#             tenders__openings__deposits__concurrent=self
+#         ).annotate(
+#                 deposits_count=Count(
+#                     "tenders__openings",
+#                     distinct=True,
+#                 )
+#             ).order_by("-deposits_count", 'name')
+
+#     @property
+#     def domains(self):
+#         return Domain.objects.filter(
+#             tenders__openings__deposits__concurrent=self
+#         ).annotate(
+#                 deposits_count=Count(
+#                     "tenders__openings__deposits",
+#                     distinct=True,
+#                 )
+#             ).order_by("-deposits_count", 'name')
+
+#     @property
+#     def qualifs(self):
+#         return (
+#             Qualif.objects.filter(
+#                 lots__tender__openings__deposits__concurrent=self
+#             ).annotate(
+#                 deposits_count=Count(
+#                     "lots__tender__openings__deposits",
+#                     distinct=True,
+#                 )
+#             )
+#             .order_by("-deposits_count", 'short')
+#         )
+
+#     @property
+#     def licences(self):
+#         return (
+#             Agrement.objects.filter(
+#                 lots__tender__openings__deposits__concurrent=self
+#             ).annotate(
+#                 deposits_count=Count(
+#                     "lots__tender__openings__deposits",
+#                     # filter=Q(lots__tender__openings__deposits__concurrent=self),
+#                     distinct=True,
+#                 )
+#             )
+#             .order_by("-deposits_count", 'short')
+#         )
+    
+
+#     class Meta:
+#         db_table = 'base_concurrent'
+#         ordering = ['name']
+
+#     def __str__(self):
+#         return f'{self.name}'
+
+
+# class Opening(models.Model):
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name="openings", blank=True, null=True)
+#     has_tech   = models.BooleanField(blank=True, null=True, default=True)
+#     failure    = models.TextField(blank=True, null=True)
+#     date       = models.DateField(blank=True, null=True, db_index=True)
+#     won_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+#     won_lots   = models.SmallIntegerField(blank=True, default=0)
+#     # xon_total  = models.BooleanField(blank=True, null=True, default=False)
+#     # xin_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
+
+#     @property
+#     def offset(self):
+#         te = self.tender.estimate
+#         return 100 * (self.won_amount - te) / te if te != 0 else None
+
+#     @property
+#     def total_win(self):
+#         return self.won_lots == self.tender.lots_count
+
+
+#     @property
+#     def winners(self): 
+#         return Concurrent.objects.filter(
+#             deposits__opening=self,
+#             deposits__winner=True,
+#         )
+
+#     @property
+#     def bidders(self): 
+#         return Concurrent.objects.filter(
+#             deposits__opening=self,
+#         ).order_by('name').distinct('name')
+    
+#     @property
+#     def selected_bids(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             amount_a__isnull=False,
+#         )
+
+#     @property
+#     def winner_bids(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             amount_w__isnull=False,
+#         )
+
+#     @property
+#     def win_justifs(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             justif__isnull=False,
+#         )
+
+#     def admin_accepts(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             admin='a',
+#         )
+
+#     def admin_reserves(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             admin='r',
+#         )
+
+#     def admin_rejects(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             admin='x',
+#         )
+
+#     def tech_rejects(self): 
+#         return Deposit.objects.filter(
+#             opening=self,
+#             reject_t=True,
+#         )
+
+#     class Meta:
+#         db_table = 'base_opening'
+#         ordering = ['-date', 'tender']
+
+
+# class Deposit(models.Model):
+#     class Admin(models.TextChoices):
+#         ACCEPTED = 'a', 'Accepted'
+#         RESERVE  = 'r', 'Reserve'
+#         REJECTED = 'x', 'Rejected'
+
+#     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     opening    = models.ForeignKey(Opening, on_delete=models.CASCADE, related_name="deposits", blank=True, null=True)
+#     concurrent = models.ForeignKey(Concurrent, on_delete=models.CASCADE, related_name="deposits", blank=True, null=True)
+#     lot_number = models.SmallIntegerField(blank=True, null=True)
+#     admin      = models.CharField(max_length=1,blank=True, null=True, choices=Admin.choices, verbose_name='Admin Result')
+#     reject_t   = models.BooleanField(blank=True, null=True)
+#     amount_b   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, db_index=True, null=True)
+#     amount_a   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, db_index=True, null=True)
+#     amount_w   = models.DecimalField(max_digits=16, decimal_places=2, blank=True, db_index=True, null=True)
+#     winner     = models.BooleanField(blank=True, null=True)
+#     justif     = models.TextField(blank=True, null=True)
+#     date       = models.DateField(blank=True, null=True)
+
+#     @property
+#     def lot(self):
+#         return self.opening.tender.lots.filter(number=self.lot_number).first()
+    
+#     @property
+#     def composits(self):
+#         return Deposit.objects.filter(
+#             opening=self.opening,
+#             lot_number=self.lot_number,
+#             amount_a__isnull=False,
+#         )
+    
+#     @property
+#     def average(self):
+#         compos = self.composits
+#         return compos.aggregate(avg=Avg("amount_a"))["avg"]
+
+#     @property
+#     def optimum(self):
+#         avg = self.average
+#         if not avg: return None
+#         esti = self.lot.estimate
+#         if not esti: return None
+
+#         return (avg + esti) / 2
+
+#     @property
+#     def offset(self):
+#         esti = self.lot.estimate
+#         if not esti: return None
+#         offer = self.amount_a
+#         if not offer: return None
+#         if esti == 0 : return None
+
+#         return 100 * ((offer - esti) / esti)
+
+#     @property
+#     def score(self):
+#         opti = self.optimum
+#         if not opti: return None
+#         offer = self.amount_a
+#         if not offer: return None
+
+#         return offer - opti
+    
+
+
+#     class Meta:
+#         db_table = 'base_deposit'
+#         ordering = ['opening', 'lot_number', 'amount_a']
+
+
+# def make_acronym(s: str) -> str:
+#     # 1. keep part after last "/"
+#     s = s.lower()
+#     s = s.replace("d'", "d ")
+    
+#     s = s.split(" / ")[-1].strip()
+#     s = s.split(" - ")[-1].strip()
+
+#     # 2. split on spaces or dashes
+#     words = re.split(r"[ -]+", s)
+
+#     letters = []
+
+#     for w in words:
+#         w = w.strip()
+
+#         if not w:
+#             continue
+
+#         # 3. abbreviated word like "S."
+#         if re.fullmatch(r"[A-Z]\.", w):
+#             letters.append(w[0].upper())
+#             continue
+
+#         lw = w.lower()
+
+#         # 4. ignore stop words
+#         if lw in NOT_WORDS:
+#             continue
+
+#         # 5. ignore short words
+#         if len(w) < 3:
+#             continue
+
+#         letters.append(w[0].upper())
+
+#     return "".join(letters).upper()
+    
+
+
+
+
+
+

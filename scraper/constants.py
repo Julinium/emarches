@@ -66,6 +66,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+REMOTE_MEDIA_ROOT = os.getenv("REMOTE_MEDIA_ROOT")
 FILE_PREFIX   = 'eMarches.com' # Prefix before DCE files names
 # When a 4XX error is returned sleep a random time between SLEEP_4XX_MIN and SLEEP_4XX_MAX seconds
 SLEEP_4XX_MIN = 377

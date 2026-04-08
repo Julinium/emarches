@@ -1,0 +1,42 @@
+[
+    {
+        "use": 1,
+        "code": "MAD",
+        "prefix": "",
+        "suffix": "DH",
+        "name": "Moroccan Dirham",
+        "rate": 1
+    },
+    {
+        "use": 1,
+        "code": "USD",
+        "prefix": "$",
+        "suffix": "",
+        "name": "US Dollar",
+        "rate": 8
+    },
+    {
+        "use": 1,
+        "code": "EUR",
+        "prefix": "",
+        "suffix": "€",
+        "name": "Euro",
+        "rate": 9
+    },
+    {
+        "use": 0,
+        "code": "GBP",
+        "prefix": "£",
+        "suffix": "",
+        "name": "Pound Sterling",
+        "rate": 10
+    },
+    {
+        "use": 0,
+        "code": "CHF",
+        "prefix": "",
+        "suffix": "F",
+        "name": "Suiss Franc",
+        "rate": 9
+    }
+]
