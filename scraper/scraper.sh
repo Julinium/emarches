@@ -40,12 +40,15 @@ else
     # This is checked by the existence of _local_file (which is created only on the server, not on remote machines)
     _local_file="$_crony_dir/.local"
     if ! test -e "$_local_file"; then
-        # rsync-dce and rsync-logs are aliases to rsync commands like 
+        # rsync-dce, rsync-csv and rsync-logs are aliases to rsync commands like 
         # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-dce-folder/> <user>@<remote-server>:<full-path-to-server-dce-folder>' 
+        # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-csv-folder/> <user>@<remote-server>:<full-path-to-server-csv-folder>' 
         # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-logs-folder/> <user>@<remote-server>:<full-path-to-server-logs-folder>' 
         # Note: pre-configured SSH tunnel is required
         echo "Transferring DCE files ..."  >> "$_logs_file"
         bash -ic "rsync-dce" >> "$_logs_file"
+        echo "Transferring CSV items files ..."  >> "$_logs_file"
+        bash -ic "rsync-csv" >> "$_logs_file"
         echo "Transferring logs files ..." >> "$_logs_file"
         bash -ic "rsync-logs" >> "$_logs_file"
     fi

@@ -7,10 +7,10 @@ After=network.target
 
 [Service]
 Type=oneshot
-User=insino
-Group=insino
+User=[local_user]
+Group=[local_user]
 
-ExecStart=/var/opt/mppp/crony/delock.sh
+ExecStart=[absolute/path/to]/crony/delock.sh
 
 [Install]
 WantedBy=multi-user.target

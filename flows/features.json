@@ -1,5 +1,6 @@
 [
     {
+        "rank": "10",
         "category": "General",
         "features": [
             {
@@ -50,6 +51,7 @@
         ]
     },
     {
+        "rank": "20",
         "category": "Tenders",
         "features": [
             {
@@ -181,6 +183,7 @@
         ]
     },
     {
+        "rank": "30",
         "category": "Tenders results",
         "features": [
             {
@@ -213,11 +216,12 @@
         ]
     },
     {
+        "rank": "40",
         "category": "Market study",
         "features": [
             {
                 "code": "feature_market_concurrents",
-                "name": "Concurrents list",
+                "name": "Concurrents data",
                 "description": "View a detailed list of all conccurrents, with brief performances summary",
                 "kind": "binary",
                 "plan_free": 0,
@@ -272,6 +276,7 @@
         ]
     },
     {
+        "rank": "50",
         "category": "Bidding management",
         "features": [
             {
@@ -367,6 +372,7 @@
         ]
     },
     {
+        "rank": "60",
         "category": "Purchase orders",
         "features": [
             {
