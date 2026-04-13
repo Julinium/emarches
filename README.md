@@ -1,6 +1,6 @@
 # emarches
 emarches is a Python-based full-stack application aiming to provide a better alternative to the Moroccan Public Procurement portal.   
-To see it in action, you can visit our deployed website at https://new.emarches.com
+To see it in action, you can visit our deployed website at https://emarches.com. New test version available at https://new.emarches.com
 
 # Legal ?
 Always remember: scraping may be illegal or cause you to be banned or blacklisted.
@@ -13,8 +13,9 @@ This application uses Chromium web browser and relies on Cron jobs to update dat
 This won't probably work out of the box. Because scraping depends on the target website structure and how it serves content ...
 
 # How to test ?
+0. Make sure to install Python, Chromium and ChromeDriver (system packages).
 1. Clone the repo, extract and cd...
-2. Make a python virtual environment and install dependencies from both 'requirements.txt' and 'scraper/requirements.txt'.
+2. Make a python virtual environment and install dependencies from both 'requirements.txt'. 
 3. Setup your .env files by removing 'example' from 'exammple.env', 'scraper/example.env', 'scraper/example.env.creds.json' and 'scraper/example.env.ua.json'. Change the values in theses files according to your setup.
 4. Make migrations 'python manage.py makemigrations' and migrate 'python manage.py migrate'.
 5. For scraping, run 'scraper/worker.py' with appropriate arguments. See 'argparse.ArgumentParser()' in 'constants.py' for the list of supported arguments.
