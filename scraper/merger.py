@@ -101,6 +101,16 @@ def format(tender_json):
 @transaction.atomic
 def save(tender_data):    
 
+
+    def lottify(lot_no_str, default_int):
+        try:
+            s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
+            n = int(s.strip())
+            if n > 0: return n
+        except: pass
+        return default_int
+
+
     formatted_data = format(tender_data)
     helper.printMessage('DEBUG', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
 
@@ -568,15 +578,6 @@ def save(tender_data):
 
 
     helper.printMessage('DEBUG', 'g.save', '+++ Finished saving Tender data.')
-
-
-    def lottify(lot_no_str, default_int):
-        try:
-            s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
-            n = int(s.strip())
-            if n > 0: return n
-        except: pass
-        return default_int
 
 
     return tender, tender_create
