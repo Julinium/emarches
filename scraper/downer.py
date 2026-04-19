@@ -52,33 +52,6 @@ def getFileables():
     return fresh_tenders | nodce_tenders
 
 
-def xxx_getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
-    """
-    Get Tenders with empty DCE folders or no DCE folder at all.
-
-    # Return: Tender model QuerySet.
-    """
-
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with deadline older than {past_days} days ...")
-    target_date = datetime.now() - timedelta(days=past_days)
-    current_tenders = Tender.objects.filter(deadline__gte=target_date)
-    ct_count = current_tenders.count()
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
-
-    tenders_without_files = []
-    i = 0
-    helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
-    for tender_id, chrono in current_tenders.values_list('id', 'chrono').iterator(chunk_size=batch_size):
-        i += 1
-        helper.printMessage("TRACE", 'd.getEmpties', f"Checking [{i}/{ct_count}] files for {C.DL_PATH_PREFIX}{chrono}")
-        if is_empty_or_nonexistent(f"{C.MEDIA_ROOT}/dce/{C.DL_PATH_PREFIX}{chrono}"):
-            tenders_without_files.append(tender_id)
-            helper.printMessage("DEBUG", 'd.getEmpties', f"DCE not found or empty for {chrono}")
- 
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Found {len(tenders_without_files)} items with empty orno DCE files")
-    return current_tenders.filter(id__in=tenders_without_files)
-
-
 def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
     """
     Get Tenders with empty DCE folders or no DCE folder at all.
@@ -111,12 +84,15 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
             fi
         done
         """
+        helper.printMessage("TRACE", 'd.getEmpties', f"Constructed command to run on remote server:\n=========\n{cmd}\n=========\n")
 
         result = subprocess.run(
             ["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd],
             capture_output=True,
             text=True,
         )
+        helper.printMessage("TRACE", 'd.getEmpties', f"Command execuction stdout:\nooooooooooo>>>>>>>\n{result.stdout}<<<<<<<<ooooooooooo\n")
+        helper.printMessage("TRACE", 'd.getEmpties', f"Command execuction stderr:\neeeeeeeeeee>>>>>>>\n{result.stderr}<<<<<<<<eeeeeeeeeee\n")
 
         non_empty_dirs = set(result.stdout.splitlines())
     else:
@@ -129,29 +105,6 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
 
     helper.printMessage("DEBUG", 'd.getEmpties', f"Found {ct_count - len(non_empty_dirs)} items with empty or no DCE files")
     return current_tenders.exclude(chrono__in=non_empty_dirs)
-
-
-
-def is_empty_or_nonexistent(folder_path):
-    """
-    Check if a folder_path is empty or does not exist.
-    # Return: Boolean
-    """
-    if C.MACHINE == "remote":
-        # TODO: Make sure an SSH tunnel to the server is setup.
-        path = folder_path
-        user = C.REMOTE_USER
-        port = C.SSH_PORT
-        host = C.SSH_HOST
-        cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'    
-        result = subprocess.run(["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd])
-        return result.returncode == 0
-    else:
-        if not os.path.exists(folder_path):
-            return True
-        return not any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path))
-
-
 
 
 def getDCE(tender):
@@ -354,25 +307,72 @@ def getDCE(tender):
     return 0
 
 
-def get_nodce_chronos(chronos=[]):
 
-    prefix = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
+# def get_nodce_chronos(chronos=[]):
 
-    cmd = f"""
-    for chrono in {chronos}; do
-        if [ -d "{prefix}$chrono" ] && [ "$(ls -A "{prefix}$chrono")" ]; then
-            echo "$chrono"
-        fi
-    done
-    """
+#     prefix = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
 
-    result = subprocess.run(
-        ["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd],
-        capture_output=True,
-        text=True,
-    )
+#     cmd = f"""
+#     for chrono in {chronos}; do
+#         if [ -d "{prefix}$chrono" ] && [ "$(ls -A "{prefix}$chrono")" ]; then
+#             echo "$chrono"
+#         fi
+#     done
+#     """
 
-    non_empty_dirs = set(result.stdout.splitlines())
+#     result = subprocess.run(
+#         ["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd],
+#         capture_output=True,
+#         text=True,
+#     )
 
-    # Now filter your 1000 folders locally
-    existing_non_empty = [d for d in my_dirs if d in non_empty_dirs]
+#     non_empty_dirs = set(result.stdout.splitlines())
+
+#     # Now filter your 1000 folders locally
+#     existing_non_empty = [d for d in my_dirs if d in non_empty_dirs]
+
+
+# def is_empty_or_nonexistent(folder_path):
+#     """
+#     Check if a folder_path is empty or does not exist.
+#     # Return: Boolean
+#     """
+#     if C.MACHINE == "remote":
+#         path = folder_path
+#         user = C.REMOTE_USER
+#         port = C.SSH_PORT
+#         host = C.SSH_HOST
+#         cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'    
+#         result = subprocess.run(["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd])
+#         return result.returncode == 0
+#     else:
+#         if not os.path.exists(folder_path):
+#             return True
+#         return not any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path))
+
+
+# def xxx_getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS, batch_size=1000):
+#     """
+#     Get Tenders with empty DCE folders or no DCE folder at all.
+
+#     # Return: Tender model QuerySet.
+#     """
+
+#     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with deadline older than {past_days} days ...")
+#     target_date = datetime.now() - timedelta(days=past_days)
+#     current_tenders = Tender.objects.filter(deadline__gte=target_date)
+#     ct_count = current_tenders.count()
+#     helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
+
+#     tenders_without_files = []
+#     i = 0
+#     helper.printMessage("DEBUG", 'd.getEmpties', "Checking against files on disk ...")
+#     for tender_id, chrono in current_tenders.values_list('id', 'chrono').iterator(chunk_size=batch_size):
+#         i += 1
+#         helper.printMessage("TRACE", 'd.getEmpties', f"Checking [{i}/{ct_count}] files for {C.DL_PATH_PREFIX}{chrono}")
+#         if is_empty_or_nonexistent(f"{C.MEDIA_ROOT}/dce/{C.DL_PATH_PREFIX}{chrono}"):
+#             tenders_without_files.append(tender_id)
+#             helper.printMessage("DEBUG", 'd.getEmpties', f"DCE not found or empty for {chrono}")
+ 
+#     helper.printMessage("DEBUG", 'd.getEmpties', f"Found {len(tenders_without_files)} items with empty orno DCE files")
+#     return current_tenders.filter(id__in=tenders_without_files)

@@ -33,7 +33,7 @@ parser.add_argument('--level', type=str, required=False, help='debug for more ve
 parser.add_argument('--links', type=str, required=False, help='import to use already saved links.')
 parser.add_argument('--found', type=str, required=False, help='refresh to refresh existing items.')
 parser.add_argument('--dce',   type=str, required=False, help='DCE files download.')
-parser.add_argument('--results', type=str, required=False, help='Get Rewarding results.')
+parser.add_argument('--results', type=str, required=False, help='Get Rewarding results. Skipped set to `ignore`, scraped otherwise')
 
 args = parser.parse_args()
 if args.level: 

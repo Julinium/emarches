@@ -13,7 +13,7 @@ This application uses Chromium web browser and relies on Cron jobs to update dat
 This won't probably work out of the box. Because scraping depends on the target website structure and how it serves content ...
 
 # How to test ?
-0. Make sure to install Python, Chromium and ChromeDriver (system packages).
+0. Make sure to install Python, rsync, Chromium and ChromeDriver (system packages).
 1. Clone the repo, extract and cd...
 2. Make a python virtual environment and install dependencies from both 'requirements.txt'. 
 3. Setup your .env files by removing 'example' from 'exammple.env', 'scraper/example.env', 'scraper/example.env.creds.json' and 'scraper/example.env.ua.json'. Change the values in theses files according to your setup.

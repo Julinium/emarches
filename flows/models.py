@@ -6,6 +6,7 @@ from bidding.models import Team
 
 
 class Plan(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=100, unique=True)
     name = models.CharField(max_length=255)
     caption = models.CharField(max_length=512)
@@ -19,12 +20,13 @@ class Plan(models.Model):
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ("draft", "Draft"),
-        ("pending", "Pending Payment"),
-        ("confirmed", "Confirmed"),
-        ("cancelled", "Cancelled"),
+        ("draft", _("Draft")),
+        ("pending", _("Pending Payment")),
+        ("confirmed", _("Confirmed")),
+        ("cancelled", _("Cancelled")),
     ]
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -36,6 +38,8 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.id}"
+
+
 
 
 # class OrderItem(models.Model):
