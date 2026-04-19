@@ -310,6 +310,7 @@ def save(tender_data):
             lot_number_text = lot_data['number']
             lot_data['number'] = lottify(lot_number_text, i)
             helper.printMessage('DEBUG', 'm.save', f"#### Handling Lot {i}/{ll} ... ")
+            helper.printMessage("TRACE", 'm.save', f"Lot {i} raw data:\n=====================\n{lot_data}\n=====================\n")
             # Update Tender fields
             estimate_total += lot_data["estimate"]
             bond_total += lot_data["bond"]
@@ -346,9 +347,7 @@ def save(tender_data):
             lot = None
             helper.printMessage('TRACE', 'm.save', "#### Handling Lot details ... ")
             if lot_title and Lot.objects.filter(title=lot_title, number=lot_number, tender=tender).exists():
-                lot = Lot.objects.get(
-                    title=lot_title, number=lot_number, tender=tender,
-                    )
+                lot = Lot.objects.get(title=lot_title, number=lot_number, tender=tender,)
                 lot_serializer = LotSerializer(lot, data=lot_data, partial=True)
                 if lot_serializer.is_valid(): lot_serializer.save()
             else:
