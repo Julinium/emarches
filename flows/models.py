@@ -1,43 +1,43 @@
-from django.db import models
-from django.conf import settings
-from django.utils.translation import gettext_lazy as _
+# from django.db import models
+# from django.conf import settings
+# from django.utils.translation import gettext_lazy as _
 
-from bidding.models import Team
-
-
-class Plan(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    code = models.CharField(max_length=100, unique=True)
-    name = models.CharField(max_length=255)
-    caption = models.CharField(max_length=512)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    trial_days = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
+# from bidding.models import Team
 
 
-class Order(models.Model):
-    STATUS_CHOICES = [
-        ("draft", _("Draft")),
-        ("pending", _("Pending Payment")),
-        ("confirmed", _("Confirmed")),
-        ("cancelled", _("Cancelled")),
-    ]
+# class Plan(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     code = models.CharField(max_length=100, unique=True)
+#     name = models.CharField(max_length=255)
+#     caption = models.CharField(max_length=512)
+#     price = models.DecimalField(max_digits=10, decimal_places=2)
+#     trial_days = models.IntegerField(default=0)
+#     is_active = models.BooleanField(default=True)
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=10)
-    billing_email = models.EmailField()
+#     def __str__(self):
+#         return self.name
 
-    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Date created")
-    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
 
-    def __str__(self):
-        return f"Order #{self.id}"
+# class Order(models.Model):
+#     STATUS_CHOICES = [
+#         ("draft", _("Draft")),
+#         ("pending", _("Pending Payment")),
+#         ("confirmed", _("Confirmed")),
+#         ("cancelled", _("Cancelled")),
+#     ]
+
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     team = models.ForeignKey(Team, on_delete=models.CASCADE)
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="draft")
+#     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     currency = models.CharField(max_length=10)
+#     billing_email = models.EmailField()
+
+#     created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Date created")
+#     updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+
+#     def __str__(self):
+#         return f"Order #{self.id}"
 
 
 

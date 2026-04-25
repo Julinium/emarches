@@ -70,19 +70,20 @@ def page2Links(driver, page_number, pages):
             helper.printMessage('DEBUG', 'l.page2Links', f'+++ Got the link {page_number:03}.{i:03} = {portal_id_text}', 0, 1)
             i = 1 + i
             if i > int(C.LINES_PER_PAGE):
-                helper.printMessage('TRACE', 'l.page2Links', f'--- Hit the latest item in page.')
                 details_btn = None
+                helper.printMessage('TRACE', 'l.page2Links', f'--- Hit the latest item in page {page_number:03}.')
             else:
                 helper.printMessage('TRACE', 'l.page2Links', f'### Checking for the next elemet: {page_number:03}.{i:03}')
                 details_btn_xpath = 'tr[' + str(i) + ']/td[6]/div/a[1]'
-                try: 
+                try:
                     details_btn = body.find_element(By.XPATH, details_btn_xpath)
                     helper.printMessage('TRACE', 'l.page2Links', f'+++ Found next elemet: {page_number:03}.{i:03}')
                 except NoSuchElementException: 
-                    helper.printMessage('TRACE', 'l.page2Links', f'--- Next elemet {page_number:03}.{i:03} not found.', 0, 1)
                     details_btn = None
+                    helper.printMessage('TRACE', 'l.page2Links', f'--- Next elemet {page_number:03}.{i:03} not found.', 0, 1)
                     traceback.print_exc()
                 except:
+                    details_btn = None
                     helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
                     traceback.print_exc()
 
