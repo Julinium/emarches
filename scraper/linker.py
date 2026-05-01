@@ -81,10 +81,10 @@ def page2Links(driver, page_number, pages):
                 except NoSuchElementException: 
                     details_btn = None
                     helper.printMessage('TRACE', 'l.page2Links', f'--- Next elemet {page_number:03}.{i:03} not found.', 0, 1)
-                    traceback.print_exc()
+                    # traceback.print_exc()
                 except:
                     details_btn = None
-                    helper.printMessage('FATAL', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
+                    helper.printMessage('ERROR', 'l.page2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
                     traceback.print_exc()
 
     except Exception:
@@ -218,9 +218,13 @@ def getLinks(back_days=C.PORTAL_DDL_PAST_DAYS):
         try :
             next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
             helper.printMessage('TRACE', 'l.getLinks', f'+++ Next page found {i+1:03}')
-        except: 
-            helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:03} not found', 0, 2)
+        except NoSuchElementException: 
             next_page_button = None
+            helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:03} not found', 0, 2)
+            # traceback.print_exc()
+        except: 
+            next_page_button = None
+            helper.printMessage('ERROR', 'l.page2Links', f'Exception while looking for page {i+1:03}', 1, 2)
             traceback.print_exc()
 
     if driver: driver.quit()
