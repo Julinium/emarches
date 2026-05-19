@@ -158,8 +158,8 @@
                         </div>
                         {% if group.qahnsen|length > 1 %}
                             <div class="col-12 col-md-6 text-end">
-                                <span class="fw-light text-primary ms-2" >M=<span class="fw-bold">{{ group.amzgaro.average|floatformat:2 }}</span></span>
-                                <span class="small"><i class="bi bi-three-dots-vertical text-secondary me-1"></i></span>
+                                <!-- <span class="fw-light text-primary ms-2" >M=<span class="fw-bold">{{ group.amzgaro.average|floatformat:2 }}</span></span> -->
+                                <!-- <span class="small"><i class="bi bi-three-dots-vertical text-secondary me-1"></i></span> -->
                                 <span class="fw-light text-success float-end" >R=<span class="fw-bold">{{ group.amzgaro.optimum|floatformat:2 }}</span></span>
                             </div>
                         {% endif %}
@@ -177,7 +177,7 @@
                                 </div>
                             {% endif %}
                             
-                            {% if group.amzgaro.lot.estimate and group.amzgaro.average %}
+                            <!-- {% if group.amzgaro.lot.estimate and group.amzgaro.average %}
                                 {% progrefy group.amzgaro.lot.estimate group.amzgaro.average as avg_bar %}
                                 <div class="progress bg-light py-0 mt-1"
                                         style="height: 0.25rem;">
@@ -187,7 +187,7 @@
                                             aria-valuemax="100">
                                     </div>
                                 </div> 
-                            {% endif %}                   
+                            {% endif %}                    -->
                             
                             {% if group.amzgaro.lot.estimate and group.amzgaro.optimum %}
                                 {% progrefy group.amzgaro.lot.estimate group.amzgaro.optimum as ref_bar %}
