@@ -108,18 +108,18 @@ class VisitSerializer(serializers.ModelSerializer):
 
 class LotSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
-    agrements = AgrementSerializer(many=True, read_only=True)
-    qualifs = QualifSerializer(many=True, read_only=True)
-    samples = SampleSerializer(many=True, read_only=True)
-    meetings = MeetingSerializer(many=True, read_only=True)
-    visits = VisitSerializer(many=True, read_only=True)
+    # agrements = AgrementSerializer(many=True, read_only=True)
+    # qualifs = QualifSerializer(many=True, read_only=True)
+    # samples = SampleSerializer(many=True, read_only=True)
+    # meetings = MeetingSerializer(many=True, read_only=True)
+    # visits = VisitSerializer(many=True, read_only=True)
     
     class Meta:
         model = Lot
         fields = [
             'id', 'number', 'title', 'description', 'estimate', 'bond', 
             'reserved', 'variant', 'category', 'tender',
-            'agrements', 'qualifs', 'samples', 'meetings', 'visits'
+            # 'agrements', 'qualifs', 'samples', 'meetings', 'visits'
         ]
 
 
@@ -129,8 +129,8 @@ class TenderSerializer(serializers.ModelSerializer):
     kind = KindSerializer(read_only=True)
     mode = ModeSerializer(read_only=True)
     procedure = ProcedureSerializer(read_only=True)
-    domains = DomainSerializer(many=True, read_only=True)
-    lots = LotSerializer(many=True, read_only=True)
+    # domains = DomainSerializer(many=True, read_only=True)
+    # lots = LotSerializer(many=True, read_only=True)
     
     class Meta:
         model = Tender
@@ -141,7 +141,7 @@ class TenderSerializer(serializers.ModelSerializer):
             'size_bytes', 'address_withdrawal', 'address_bidding', 
             'address_opening', 'contact_name', 'contact_phone', 'contact_email', 
             'contact_fax', 'created', 'updated', 'cancelled', 'link', 'acronym', 
-            'category', 'mode', 'procedure', 'client', 'kind', 'domains', 'lots'
+            'category', 'mode', 'procedure', 'client', 'kind', #'domains', 'lots'
         ]
 
 

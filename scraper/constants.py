@@ -86,7 +86,7 @@ with open(creds_json) as g:
 LINES_PER_PAGE = "500" 
 
 # Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS days in the past.
-PORTAL_DDL_PAST_DAYS = 30 # 365 * 1 
+PORTAL_DDL_PAST_DAYS = 30
 
 # Download Tenders DCE with Deadline up to PORTAL_DCE_PAST_DAYS days in the past.
 PORTAL_DCE_PAST_DAYS = 30

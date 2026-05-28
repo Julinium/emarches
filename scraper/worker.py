@@ -20,14 +20,13 @@ def do_the_work():
 
     started_time = datetime.now()
 
-
     def handle_links():
         links_crawled, links_imported, links_from_saved = 0,0,0
         links = []
         if not C.IMPORT_LINKS:
             links = linker.getLinks()
             links_crawled = len(links)
-            links_saved = linker.pg2Links()
+            links_saved = linker.db2Links()
             links_from_saved = len(links_saved)
             helper.printMessage('INFO', 'worker', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
             ml = 0
@@ -61,7 +60,7 @@ def do_the_work():
                 jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
                 if jsono:
                     handled += 1
-                    tender, creation_mode = merger.save(jsono)
+                    tender, creation_mode = merger.saveTender(jsono)
                     if creation_mode == True:
                         tenders_created += 1
                         helper.printMessage('INFO', 'worker', f"◁◁ Created Tender {tender.chrono}")
