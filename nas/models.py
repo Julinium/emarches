@@ -408,7 +408,7 @@ class UserSetting(models.Model):
     active                   = models.BooleanField(null=True, default=True, editable=False)
     user                     = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, related_name='settings')
     
-    tenders_ordering_field   = models.CharField(max_length=16, choices=OrderingField.choices, default=OrderingField.DEADLINE_ASC, verbose_name=_('Default sort'))
+    tenders_ordering_field   = models.CharField(max_length=16, choices=OrderingField.choices, default=OrderingField.DEADLINE_DES, verbose_name=_('Default sort'))
     tenders_items_per_page   = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_010, verbose_name=_('Items per page'))
     tenders_full_bar_days    = models.CharField(max_length=16, choices=FullBarDays.choices, default=FullBarDays.FBD_030, verbose_name=_('Full progress bar days'))
     tenders_show_expired     = models.BooleanField(default=False, verbose_name=_("Show today's expired items"))

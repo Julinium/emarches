@@ -2,7 +2,7 @@ import json
 import logging
 import os
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from urllib.parse import urlencode
 from zoneinfo import ZoneInfo
@@ -33,7 +33,8 @@ from nas.models import Company, Download, Favorite, TenderView
 
 # Default Settings
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
-TENDERS_ITEMS_PER_PAGE = 10
+TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
+TENDERS_DEFAULT_RESULTS_PAST = settings.TENDERS_DEFAULT_RESULTS_PAST
 CLIENTS_ITEMS_PER_PAGE = 20
 TENDERS_ORDERING_FIELD = "deadline"
 SHOW_TODAYS_EXPIRED = True
@@ -112,9 +113,12 @@ def tender_list(request):
             if k in allowed_keys and v != "" and k not in ("page", "sort")
         }
 
-        if "ddlnn" not in query_dict:
-            # if query_unsorted == {}:
-            query_dict["ddlnn"] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
+        if "ddlnn" not in query_dict:            
+            if "results" in query_dict:
+                rd = datetime.now(RABAT_TZ).date() - timedelta(days=TENDERS_DEFAULT_RESULTS_PAST)
+                query_dict["ddlnn"] = rd.strftime("%Y-%m-%d")
+            else:
+                query_dict["ddlnn"] = datetime.now(RABAT_TZ).date().strftime("%Y-%m-%d")
 
         return query_dict, query_string, query_unsorted
 
@@ -595,8 +599,6 @@ def tender_req_file(request, pk=None):
         return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    # if not tender:
-    #     return HttpResponse(trans("Not found"), status=404)
 
     logger_portal.info("Tender Files requested", extra={"request": request})
 
@@ -605,7 +607,6 @@ def tender_req_file(request, pk=None):
         file_to_get = FileToGet.objects.create(tender=tender, reason='Requested')
         return HttpResponse(tender.id, status=200)
 
-    # logger_portal.info("Tender Files already requested", extra={"request": request})
     return HttpResponse(tender.id, status=201)
 
 
