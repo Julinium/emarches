@@ -110,19 +110,25 @@
                         <div class="d-inline me-2">
                             {% if tender.openings.all|length > 0 %}
                                 {% for opening in tender.openings.all %}
+                                    <span class="small">
+                                        <span class="badge small text-bg-secondary">
+                                            <i class="{{ bicons.bidding }} small me-1"></i>
+                                            <span class="small fw-light">{{ opening.bidders.all.count }}</span>
+                                        </span>
+                                    </span>
                                     <span class="small me-2" data-bs-toggle="tooltip"
                                           title="{% trans 'Awarding minutes found' %}: {{ opening.date }}">
                                         
                                         {% if opening.won_lots > 0 %}
                                             <span class="text-success">
-                                                <i class="{{ bicons.winner }} me-1"></i>
 
                                                 {% if opening.total_win == False %}
                                                     <span class="badge small text-bg-warning">
+                                                        <i class="{{ bicons.winner }} me-1"></i>
                                                         <span>{{ opening.won_lots }}/{{ opening.tender.lots_count }}</span>
                                                     </span>
                                                 {% else %}
-                                                    <span class="badge small text-bg-secondary">{% if opening.offset >= 0 %}+{% endif %}{{ opening.offset|floatformat:1 }}%</span>
+                                                    <span class="badge small text-bg-success"><i class="{{ bicons.winner }} me-1"></i>{% if opening.offset >= 0 %}+{% endif %}{{ opening.offset|floatformat:1 }}%</span>
                                                 {% endif %}
                                                 <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
                                                 {% for concurrent in opening.winners.all %}
