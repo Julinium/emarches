@@ -1,12 +1,13 @@
 [
     {
         "rank": "10",
+        "code": "category_general",
         "category": "General",
         "features": [
             {
                 "code": "feature_general_users",
                 "name": "Maximum number of users",
-                "description": "How many users can be added and work together",
+                "description": "Maximum number of users",
                 "kind": "integer",
                 "plan_free": 1,
                 "plan_startup": 1,
@@ -15,7 +16,7 @@
             {
                 "code": "feature_general_regular_support",
                 "name": "Regular Support",
-                "description": "Get support by web contact form, FAQ and email",
+                "description": "Support by email, web contact form and FAQ",
                 "kind": "binary",
                 "plan_free": 1,
                 "plan_startup": 1,
@@ -24,7 +25,7 @@
             {
                 "code": "feature_general_priority_support",
                 "name": "Priority Support",
-                "description": "Get support by phone calls or Instant messaging platforms",
+                "description": "Support by phone or Instant messaging",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -33,7 +34,7 @@
             {
                 "code": "feature_general_training",
                 "name": "Users training",
-                "description": "Free training for all your users",
+                "description": "Hands-on training for all users",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -52,12 +53,13 @@
     },
     {
         "rank": "20",
+        "code": "category_tenders",
         "category": "Tenders",
         "features": [
             {
                 "code": "feature_tenders_running",
-                "name": "Ongoing tenders list",
-                "description": "View a detailed list of all running Tenders",
+                "name": "Running tenders list",
+                "description": "Detailed list of running Tenders",
                 "kind": "binary",
                 "plan_free": 1,
                 "plan_startup": 1,
@@ -65,8 +67,8 @@
             },
             {
                 "code": "feature_tenders_search",
-                "name": "Advanced tenders search",
-                "description": "Search Tenders by Object, Reference, Client, Location, Domains, ...",
+                "name": "Advanced search",
+                "description": "Tenders search by Object, Reference, Client, Location, Domains, ...",
                 "kind": "binary",
                 "plan_free": 1,
                 "plan_startup": 1,
@@ -75,7 +77,7 @@
             {
                 "code": "feature_tenders_basic_filters",
                 "name": "Basic filters",
-                "description": "Filter results by basic fields: deadline, published date, estimate, category",
+                "description": "Tenders filtering by basic fields: deadline, published date, estimate, category",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -84,7 +86,7 @@
             {
                 "code": "feature_tenders_advanced_filters",
                 "name": "Advanced filters",
-                "description": "Filter results by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ...",
+                "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ...",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 0,
@@ -93,7 +95,7 @@
             {
                 "code": "feature_tenders_advanced_sort",
                 "name": "Advanced sort",
-                "description": "Sort Tenders by deadline, publication, estimate, guarantee, ...",
+                "description": "Tenders ordering by deadline, publication, estimate, guarantee, ...",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -102,7 +104,7 @@
             {
                 "code": "feature_tenders_categories_breakdown",
                 "name": "Categories breakdwon",
-                "description": "Breakdown tenders by category",
+                "description": "Tenders breakdown by category",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -111,7 +113,7 @@
             {
                 "code": "feature_tenders_advanced_breakdown",
                 "name": "Advanced breakdwon",
-                "description": "Group tenders by Client, Execution location or Domains of activity",
+                "description": "Tenders breakdown by Client, Execution location or Domains of activity",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 0,
@@ -120,7 +122,7 @@
             {
                 "code": "feature_tenders_details",
                 "name": "Tender details",
-                "description": "View regular details about individual Tenders",
+                "description": "Regular details about individual Tenders",
                 "kind": "binary",
                 "plan_free": 1,
                 "plan_startup": 1,
@@ -129,7 +131,7 @@
             {
                 "code": "feature_tenders_advanced_details",
                 "name": "Advanced details",
-                "description": "View advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Licences, qualifications, official portal link, views, downloads, ...",
+                "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ...",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -138,7 +140,7 @@
             {
                 "code": "feature_tenders_changes",
                 "name": "Changes history",
-                "description": "View eventual Changes made to Tenders since publication",
+                "description": "Changes made to Tenders since publication",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 0,
@@ -149,32 +151,32 @@
                 "name": "Favorite tenders",
                 "description": "Maximum number of Favorite tenders at a time",
                 "kind": "integer",
-                "plan_free": 10,
+                "plan_free": 5,
                 "plan_startup": 50,
                 "plan_pro": 1000
             },
             {
                 "code": "feature_tenders_dce_monthly",
-                "name": "Monthly DCE downloads",
-                "description": "Maximum number of Tenders Documents downloads per month",
+                "name": "Monthly DCE access",
+                "description": "Maximum number of Tenders Documents downloads per month. (Same tender can be downloaded many times.)",
                 "kind": "integer",
-                "plan_free": 25,
+                "plan_free": 15,
                 "plan_startup": 100,
                 "plan_pro": 5000
             },
             {
                 "code": "feature_tenders_dce_history",
                 "name": "DCE history",
-                "description": "Download Tenders files past their bidding deadline",
+                "description": "Tenders files dowload past bidding deadline",
                 "kind": "integer",
                 "plan_free": 0,
                 "plan_startup": 10,
-                "plan_pro": 90
+                "plan_pro": 60
             },
             {
                 "code": "feature_tenders_dce_request",
                 "name": "DCE requests",
-                "description": "Request Tenders files for items beyond history limit",
+                "description": "Tenders files request for items beyond history limit",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 0,
@@ -184,6 +186,7 @@
     },
     {
         "rank": "30",
+        "code": "category_results",
         "category": "Tenders results",
         "features": [
             {
@@ -217,12 +220,13 @@
     },
     {
         "rank": "40",
+        "code": "category_market_study",
         "category": "Market study",
         "features": [
             {
                 "code": "feature_market_concurrents",
                 "name": "Concurrents data",
-                "description": "View a detailed list of all conccurrents, with brief performances summary",
+                "description": "View a list of all conccurrents, with brief performances summary",
                 "kind": "binary",
                 "plan_free": 0,
                 "plan_startup": 1,
@@ -234,7 +238,7 @@
                 "description": "Search Consurrents, filter and sort results",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 0,
+                "plan_startup": 1,
                 "plan_pro": 1
             },
             {
@@ -243,7 +247,7 @@
                 "description": "View Concurrents effeciency, number of awarded bids and amounts",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 1,
+                "plan_startup": 0,
                 "plan_pro": 1
             },
             {
@@ -277,6 +281,7 @@
     },
     {
         "rank": "50",
+        "code": "category_bidding",
         "category": "Bidding management",
         "features": [
             {
@@ -286,7 +291,7 @@
                 "kind": "integer",
                 "plan_free": 1,
                 "plan_startup": 2,
-                "plan_pro": 10
+                "plan_pro": 15
             },
             {
                 "code": "feature_bidding_expirables",
@@ -301,18 +306,18 @@
                 "code": "feature_bidding_files_storage",
                 "name": "Files storage max size",
                 "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …",
-                "kind": "text",
-                "plan_free": "0",
-                "plan_startup": "256M",
-                "plan_pro": "2G"
+                "kind": "integer",
+                "plan_free": 0,
+                "plan_startup": 256000000,
+                "plan_pro": 2000000000
             },
             {
                 "code": "feature_bidding_yearly",
                 "name": "Yearly bids",
                 "description": "Maximum number of bids to manage per year",
                 "kind": "integer",
-                "plan_free": 50,
-                "plan_startup": 200,
+                "plan_free": 10,
+                "plan_startup": 100,
                 "plan_pro": 5000
             },
             {
@@ -365,14 +370,15 @@
                 "name": "Simulator",
                 "description": "Simulate financial offers competition for a given Tender or Lot",
                 "kind": "binary",
-                "plan_free": 0,
-                "plan_startup": 0,
+                "plan_free": 1,
+                "plan_startup": 1,
                 "plan_pro": 1
             }
         ]
     },
     {
         "rank": "60",
+        "code": "category_pos",
         "category": "Purchase orders",
         "features": [
             {

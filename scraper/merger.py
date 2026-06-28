@@ -98,6 +98,9 @@ def format(tender_json):
     return j
 
 
+# TODO: Saving lots related objects, try to change the approach.
+#       Always create new instances. At the end, delete orphans.
+
 @transaction.atomic
 def save(tender_data):    
 
