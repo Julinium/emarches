@@ -10,7 +10,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
 
-def main():
+def do_the_work():
     from datetime import datetime, timedelta
 
     from base.models import Crawler, Tender
@@ -193,12 +193,12 @@ def main():
         résultats définitifs
         rapports d'achèvement
         rapports de présentation
-        décisions de résiliation        
+        décisions de résiliation
         Annonce de programme previsionnel
         Annonce de synthèse de rapport d'audit
         # bons de commande attribués
         marchés attribués
-        conventions et des contrats de droit commun
+        conventions et contrats de droit commun
     """
 
     ##### Get Tenders results:
@@ -230,9 +230,9 @@ def main():
     helper.printMessage('===', 'worker', f"⇉⇉⇉ Scanned {results_searched}, saved {results_saved} Tenders results.")
     helper.printMessage('===', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")
     helper.printMessage('===', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
-    
+
 
 if __name__ == '__main__':
-    main()
+    do_the_work()
 
 

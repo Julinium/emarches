@@ -215,6 +215,15 @@
                 "plan_free": 0,
                 "plan_startup": 0,
                 "plan_pro": 1
+            },
+            {
+                "code": "feature_results_export",
+                "name": "Lists export",
+                "description": "Export results tables as Excel/csv files.",
+                "kind": "binary",
+                "plan_free": 0,
+                "plan_startup": 1,
+                "plan_pro": 1
             }
         ]
     },
