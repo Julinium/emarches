@@ -104,6 +104,16 @@ def format(tender_json):
 @transaction.atomic
 def save(tender_data):    
 
+
+    def lottify(lot_no_str, default_int):
+        try:
+            s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
+            n = int(s.strip())
+            if n > 0: return n
+        except: pass
+        return default_int
+
+
     formatted_data = format(tender_data)
     helper.printMessage('DEBUG', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
 
@@ -112,6 +122,7 @@ def save(tender_data):
     tender_serializer.is_valid(raise_exception=True)
     validated_data = tender_serializer.validated_data
 
+    changed_fields = []
 
     # Step x: Handle foreign key relationships (category, client, kind, mode, procedure)
     category_data  = formatted_data['category']
@@ -119,54 +130,127 @@ def save(tender_data):
     kind_data      = formatted_data['kind']
     mode_data      = formatted_data['mode']
     procedure_data = formatted_data['procedure']
-    lots_data      = formatted_data['lots']
-    domains_data   = formatted_data['domains']
 
-    category, client, kind, mode, procedure = create_cckmp(category_data, client_data, kind_data, mode_data, procedure_data)
+    ## Handle Category
+    category = None
+    helper.printMessage('TRACE', 'm.save', "### Handling Category ... ")
+    if category_data:
+        helper.printMessage('TRACE', 'm.save', "+++ Got Category data. Analyzing ... ")
+        label = category_data.get('label')
+
+        if label and Category.objects.filter(label=label).exists():
+            category = Category.objects.get(label=label)
+            category_serializer = CategorySerializer(category, data=category_data, partial=True)
+            helper.printMessage('DEBUG', 'm.save', "+++ Category already exists. Skipping.")
+        else:
+            category_serializer = CategorySerializer(data=category_data)
+            helper.printMessage('DEBUG', 'm.save', f"+++ Category to be created: {label[:C.TRUNCA]}...")
+            category_serializer.is_valid(raise_exception=True)
+            category = category_serializer.save()
+            change = {"field": "category" , "old_value": "", "new_value": category.label}
+            changed_fields.append(change)
+
+    else:
+        helper.printMessage('WARN', 'm.save', "--- Could not pop out Category data!", 1)
+
+    ## Handle Client
+    client = None
+    helper.printMessage('TRACE', 'm.save', "### Handling Client ... ")
+    if client_data:
+        name = client_data.get('name')
+        if name and Client.objects.filter(name=name).exists():
+            client = Client.objects.get(name=name)
+            client_serializer = ClientSerializer(client, data=client_data, partial=True)
+            helper.printMessage('DEBUG', 'm.save', "+++ Client already exists. Skipping.")
+        else:
+            client_serializer = ClientSerializer(data=client_data)
+            helper.printMessage('DEBUG', 'm.save', f"+++ Client to be created: {name[:C.TRUNCA]}...")
+            client_serializer.is_valid(raise_exception=True)
+            client = client_serializer.save()
+            change = {"field": "client" , "old_value": "", "new_value": client.name}
+            changed_fields.append(change)
+
+    ## Handle Kind
+    kind = None
+    helper.printMessage('TRACE', 'm.save', "### Handling Type ... ")
+    if kind_data:
+        name = kind_data.get('name')
+        if name and Kind.objects.filter(name=name).exists():
+            kind = Kind.objects.get(name=name)
+            kind_serializer = KindSerializer(kind, data=kind_data, partial=True)
+            helper.printMessage('DEBUG', 'm.save', "+++ Procedure Type already exists. Skipping.")
+        else:
+            kind_serializer = KindSerializer(data=kind_data)
+            helper.printMessage('DEBUG', 'm.save', f"+++ Procedure Type to be created: {name[:C.TRUNCA]}...")
+            kind_serializer.is_valid(raise_exception=True)
+            kind = kind_serializer.save()
+            change = {"field": "kind" , "old_value": "", "new_value": kind.name}
+            changed_fields.append(change)
+
+    ## Handle Mode
+    mode = None
+    helper.printMessage('TRACE', 'm.save', "### Handling Mode ... ")
+    if mode_data:
+        name = mode_data.get('name')
+        if name and Mode.objects.filter(name=name).exists():
+            mode = Mode.objects.get(name=name)
+            mode_serializer = ModeSerializer(mode, data=mode_data, partial=True)
+            helper.printMessage('DEBUG', 'm.save', "+++ Awarding Mode already exists. Skipping.")
+        else:
+            mode_serializer = ModeSerializer(data=mode_data)
+            helper.printMessage('DEBUG', 'm.save', f"+++ Awarding Mode to be created: {name[:C.TRUNCA]}...")
+            mode_serializer.is_valid(raise_exception=True)
+            mode = mode_serializer.save()
+            change = {"field": "mode" , "old_value": "", "new_value": mode.name}
+            changed_fields.append(change)
+
+    ## Handle Procedure
+    procedure = None
+    helper.printMessage('TRACE', 'm.save', "### Handling Procedure ... ")
+    if procedure_data:
+        name = procedure_data.get('name')
+        if name and Procedure.objects.filter(name=name).exists():
+            procedure = Procedure.objects.get(name=name)
+            procedure_serializer = ProcedureSerializer(procedure, data=procedure_data, partial=True)
+            helper.printMessage('DEBUG', 'm.save', "+++ Procedure already exists. Skipping.")
+        else:
+            procedure_serializer = ProcedureSerializer(data=procedure_data)
+            helper.printMessage('DEBUG', 'm.save', f"+++ Procedure to be created: {name[:C.TRUNCA]}...")
+            procedure_serializer.is_valid(raise_exception=True)
+            procedure = procedure_serializer.save()
+            change = {"field": "procedure" , "old_value": "", "new_value": procedure.name}
+            changed_fields.append(change)
 
 
-    ## Handle Tender base details
-    tender = Tender.objects.filter(chrono=chrono).first()
+    # Step x: Create or update Tender
+    chrono = validated_data.get('chrono')
+    tender = None
+    tender_create = False
+    helper.printMessage('TRACE', 'm.save', "### Handling Tender ... ")
+    if chrono and Tender.objects.filter(chrono=chrono).exists():
+        tender = Tender.objects.filter(chrono=chrono).first()
+        tender_serializer = TenderSerializer(tender, data=validated_data, partial=True)
+        for field, new_value in validated_data.items():
+            current_value = getattr(tender, field)
+            if current_value != new_value:
+                keep_change = True
+                if field == 'size_bytes':
+                    if current_value == None or new_value == None:
+                        keep_change = False
+                if keep_change:
+                    current_str = current_value.strftime("%Y-%m-%d %H:%M") if isinstance(current_value, date) else str(current_value) 
+                    new_str = new_value.strftime("%Y-%m-%d %H:%M") if isinstance(new_value, date) else str(new_value) 
+                    change = { "field": field , "old_value": current_str, "new_value": new_str}
+                    changed_fields.append(change)
+        helper.printMessage('DEBUG', 'm.save', "+++ Tender already exists. Updating.")
+    else:
+        tender_serializer = TenderSerializer(data=validated_data)
+        helper.printMessage('DEBUG', 'm.save', f"+++ Tender to be created: {chrono}")
+        changed_fields = []
+        tender_create = True
+    tender_serializer.is_valid(raise_exception=True)
+    tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
 
-    if tender is None:
-        ### Create a new Tender
-        tender = create_tender(validated_data, category, client, kind, mode, procedure)
-        if tender: 
-            domains = set_domains(domains_data, tender)
-            created_lots = create_lots(lots_data, tender)
-    else: 
-        ### Update existing Tender
-        lots_qs = tender.lots.all()##.prefetch_related("agrements", "qualifs", "samples", "meetings", "visits")
-        numbers_list = [lot['number'] for lot_data in lots_data]
-        numbers_list_qs = list(lots_qs.values_list('number', flat=True))
-
-        numbers_to_create = list(set(numbers_list) - set(numbers_list_qs))
-        numbers_to_update = list(set(numbers_list) & set(numbers_list_qs))
-        numbers_to_delete = list(set(numbers_list_qs) - set(numbers_list))
-
-        if len(numbers_to_create) > 0 or len(numbers_to_delete) > 0:
-            # TODO: Record change
-            pass
-
-        dll = delete_lots_list(numbers_to_delete, tender)
-        helper.printMessage('TRACE', 'm.save', f">>> Deleted Lots and objects: \n{dll}\n")
-
-        data_to_create = [obj for obj in lots_data if obj.get('number') in set(numbers_to_create)]
-        create_lots(data_to_create, tender)
-
-        data_to_update = [obj for obj in lots_data if obj.get('number') in set(numbers_to_update)]
-        update_lots(numbers_to_update, data_to_update, tender)
-
-
-        ll = len(lots_data) if lots_data else 0
-        if ll > 0:
-            for lot_data in lots_data:
-                lot_number = lot_data.get('number')
-                lot_number_qs = lots.qs.filter(number=lot_number)
-                if any(lot.number == lot_number for lot in lots_qs):
-                    print("lot_data is found in lots_qs!")
-
-    
 
     # Step x: Handle Domains (many-to-many)
     helper.printMessage('TRACE', 'm.save', "### Handling Domains ... ")
@@ -530,6 +614,11 @@ def mergeResults(digest):
         won_amount += helper.getAmount(w.get('amount'))
         won_lots += 1
 
+    # xon_total = won_lots == tender.lots_count
+
+    # xin_offset_t = None
+    # if xon_total and tender.estimate > 0:
+        # xin_offset_t = 100 * (won_amount - tender.estimate) / tender.estimate
 
 
     # Create or update Opening                
@@ -541,6 +630,8 @@ def mergeResults(digest):
             'date' : date,
             'won_amount'   : won_amount,
             'won_lots'     : won_lots,
+            # 'xon_total'    : xon_total,
+            # 'xin_offset'   : xin_offset_t,
             }
         )
     if created: 
@@ -550,6 +641,7 @@ def mergeResults(digest):
 
 
     fi_offers = digest.get('financial_offers', [])
+    # justifs = digest.get('winner_justifs', [])
     rejects_tech = digest.get('rejected_dt', [])
     rejects_admin = digest.get('rejected_da', [])
     reserves_admin = digest.get('reserved_da', [])
@@ -583,6 +675,7 @@ def mergeResults(digest):
             amount_b = None
             amount_w = None
             winner = None
+            # xep_offset = None
                         
             if next((item for item in accepts_admin if item.get("name") == name and item.get("lot") == lot), None): 
                 admin = 'a'
@@ -603,6 +696,8 @@ def mergeResults(digest):
                 amount_w = helper.getAmount(winner_item.get("amount"))
                 winner = True
                 found_depots += 1
+                # if lot_est and lot_est != 0:
+                    # xin_offset = round(100 * (amount_w - lot_est) / lot_est, 3)
                 
                 justifs = digest.get('winner_justifs', [])
                 justif_item = next((item for item in justifs if item.get("lot") == lot), None)
@@ -614,7 +709,8 @@ def mergeResults(digest):
                 amount_b = helper.getAmount(offer_item.get("pre_amount"))
                 amount_a = helper.getAmount(offer_item.get("amount"))
                 found_depots += 1
-
+                # if lot_est and lot_est != 0:
+                    # xep_offset = round(100 * (amount_a - lot_est) / lot_est, 3)
             if found_depots > 0:                
                 deposit, created_d = Deposit.objects.get_or_create(
                     opening=opening,
@@ -624,8 +720,10 @@ def mergeResults(digest):
                         'date'         : date,
                         'amount_b'     : amount_b,
                         'amount_a'     : amount_a,
+                        # 'xep_offset'   : xep_offset,
                         'amount_w'     : amount_w,
                         'winner'       : winner, 
+                        # 'xin_offset'   : xin_offset,
                         'justif'       : justif,
                         'reject_t'     : reject_t, 
                         'admin'        : admin, 
@@ -640,7 +738,6 @@ def mergeResults(digest):
     return 0
 
 
-
 def ensure_dt_rabat(snap, default_time=time(0,0)):
     rabat_tz = pytz.timezone("Africa/Casablanca")
     if not snap: return None
@@ -650,306 +747,3 @@ def ensure_dt_rabat(snap, default_time=time(0,0)):
     return snap
 
 
-def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_data):
-    
-    category = None
-    helper.printMessage('TRACE', 'm.save', "### Handling Category ... ")
-    if category_data:        
-        label = category_data.get('label')
-        if label:
-            category = Category.objects.filter(label=label).first()
-            if category == None:
-                category_serializer.is_valid(raise_exception=True)
-                category = category_serializer.save()
-                helper.printMessage('TRACE', 'm.save', f"+++ Created Category: {category.label}")
-            else:
-                helper.printMessage('TRACE', 'm.save', f"--- Category found. Skipping: {category.label}")
-    
-    client = None
-    helper.printMessage('TRACE', 'm.save', "### Handling Client ... ")
-    if client_data:        
-        name = client_data.get('name')
-        if name:
-            client = Client.objects.filter(name=name).first()
-            if client == None:
-                client_serializer.is_valid(raise_exception=True)
-                client = client_serializer.save()
-                helper.printMessage('TRACE', 'm.save', f"+++ Created Client: {client.name}")
-            else:
-                helper.printMessage('TRACE', 'm.save', f"--- Client found. Skipping: {client.name}")
-    
-    kind = None
-    helper.printMessage('TRACE', 'm.save', "### Handling Kind ... ")
-    if kind_data:        
-        name = kind_data.get('name')
-        if name:
-            kind = Kind.objects.filter(name=name).first()
-            if kind == None:
-                kind_serializer.is_valid(raise_exception=True)
-                kind = kind_serializer.save()
-                helper.printMessage('TRACE', 'm.save', f"+++ Created Kind: {kind.name}")
-            else:
-                helper.printMessage('TRACE', 'm.save', f"--- Kind found. Skipping: {kind.name}")
-    
-    mode = None
-    helper.printMessage('TRACE', 'm.save', "### Handling Mode ... ")
-    if mode_data:        
-        name = mode_data.get('name')
-        if name:
-            mode = Mode.objects.filter(name=name).first()
-            if mode == None:
-                mode_serializer.is_valid(raise_exception=True)
-                mode = mode_serializer.save()
-                helper.printMessage('TRACE', 'm.save', f"+++ Created Mode: {mode.name}")
-            else:
-                helper.printMessage('TRACE', 'm.save', f"--- Mode found. Skipping: {mode.name}")
-    
-    procedure = None
-    helper.printMessage('TRACE', 'm.save', "### Handling Procedure ... ")
-    if procedure_data:        
-        name = procedure_data.get('name')
-        if name:
-            procedure = Procedure.objects.filter(name=name).first()
-            if procedure == None:
-                procedure_serializer.is_valid(raise_exception=True)
-                procedure = procedure_serializer.save()
-                helper.printMessage('TRACE', 'm.save', f"+++ Created Procedure: {procedure.name}")
-            else:
-                helper.printMessage('TRACE', 'm.save', f"--- Procedure found. Skipping: {procedure.name}")
-    
-
-    return category, client, kind, mode, procedure
-
-
-def create_tender(input_data, category, client, kind, mode, procedure):
-    validated_data = input_data
-    chrono = validated_data.get('chrono')
-    tender = None
-    helper.printMessage('TRACE', 'm.save', "### Handling Tender ... ")
-    tender_serializer = TenderSerializer(data=validated_data, category=category, client=client, kind=kind, mode=mode, procedure=procedure )
-    helper.printMessage('DEBUG', 'm.save', f"+++ Tender to be created: {chrono}")
-    tender_serializer.is_valid(raise_exception=True)
-    tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
-
-    return tender
-
-
-def set_domains(input_data, tender):
-    helper.printMessage('TRACE', 'm.save', "### Handling Domains ... ")
-    domains_data = input_data
-    created_domains, skipped_domains = 0, 0
-    domains = []
-    for domain_data in domains_data:
-        name = domain_data.get('name')
-        if name and name != "":
-            domain = Domain.objects.filter(name=name).first()
-            if domain:
-                skipped_domains += 1
-                helper.printMessage('DEBUG', 'm.save', f"--- Domain already exists. Skipping: {name[:C.TRUNCA]}...")
-            else:
-                helper.printMessage('DEBUG', 'm.save', f"+++ Domain of Activiry to be created: {name[:C.TRUNCA]}...")
-                domain_serializer = DomainSerializer(data=domain_data)
-                domain_serializer.is_valid(raise_exception=True)
-                domain = domain_serializer.save()
-                created_domains += 1
-            domains.append(domain)
-    helper.printMessage('TRACE', 'm.save', f">>> Domains: Created {created_domains}, skipped {skipped_domains}.")
-
-    tender.domains.set(domains)
-    return len(domains)
-
-
-def create_lots(input_data, tender):
-    helper.printMessage('TRACE', 'm.create_lots', "### Handling Lots ... ")
-    lots_data = input_data
-    created_lots = 0
-    ll = len(lots_data) if lots_data else 0
-    if ll > 0:
-        helper.printMessage('TRACE', 'm.create_lots', f"#### Got data for {ll} Lots. ")
-        i = 0
-
-        helper.printMessage("TRACE", 'm.create_lots', f"Lots raw data:\n=====================\n{lots_data}\n=====================\n")
-
-        for lot_data in lots_data:
-            i += 1
-            lot_number_text = lot_data['number']
-            lot_data['number'] = lottify(lot_number_text, i)
-            helper.printMessage('DEBUG', 'm.create_lots', f"#### Handling Lot {i}/{ll} ... ")
-            helper.printMessage("TRACE", 'm.create_lots', f"Lot {i} raw data:\n=====================\n{lot_data}\n=====================\n")
-
-
-            # Handle nested Category for Lot
-            lot_category = create_category_if_none(lot_data["category"])
-
-            # Create Lot
-            lot = None
-            lot_title  = lot_data.get('title')
-            lot_number = lot_data.get('number', 1)
-            helper.printMessage('TRACE', 'm.create_lots', "#### Handling Lot details ... ")
-            if lot_title:
-                if not Lot.objects.filter(tender=tender, title=lot_title, number=lot_number).exists():
-                    lot_serializer = LotSerializer(data=lot_data)
-                    helper.printMessage('TRACE', 'm.create_lots', f"+++ Lot to be created: {lot_title[:C.TRUNCA]}...")
-                    lot_serializer.is_valid(raise_exception=True)
-                    lot = lot_serializer.create_lots(tender=tender, category=lot_category)
-
-
-            created_samples = create_samples(lot_data['samples'], lot)
-            created_meetings = create_meetings(lot_data['meetings'], lot)
-            created_visits = create_visits(lot_data['visits'], lot)
-            created_qualifs = create_qualifs(lot_data['qualifs'], lot)
-            created_agrements = create_agrements(lot_data['agrements'], lot)
-
-            helper.printMessage('TRACE', 'm.create_lots', f">>> Created: {created_samples} Samples, {created_meetings} Meetings, {created_visits} Visits, {created_qualifs} Qualifs, {created_agrements} Agrements, ")
-
-
-def create_category_if_none(input_data):
-    lot_category_data = input_data
-    lot_category = None
-    helper.printMessage('TRACE', 'm.save', "#### Handling Lot Category ... ")
-    if lot_category_data:
-        label = lot_category_data.get('label')
-        if label:
-            if not Category.objects.filter(label=label).exists():
-                helper.printMessage('TRACE', 'm.save', f"++++ Lot Category to be created: {label[:C.TRUNCA]}...")
-                lot_category_serializer = CategorySerializer(data=lot_category_data)                    
-                lot_category_serializer.is_valid(raise_exception=True)
-                lot_category = lot_category_serializer.save()
-            else:
-                helper.printMessage('TRACE', 'm.save', f"---- Lot Category exists. Skipping: : {label[:C.TRUNCA]}...")
-    return lot_category
-
-
-def create_samples(input_data, lot):
-    helper.printMessage('TRACE', 'm.save', "#### Handling Lot Samples ... ")
-    samples_data = input_data
-    created_samples = 0
-    for sample_data in samples_data:
-        sample_data['when'] = ensure_dt_rabat(sample_data.get('when'))
-        when = sample_data.get('when')
-        description = sample_data.get('description')
-        if when:
-            if not Sample.objects.filter(when=when, lot=lot).exists():
-                sample_serializer = SampleSerializer(data=sample_data)
-                helper.printMessage('TRACE', 'm.save', f"++++ Sample to be created: {when}")
-                sample_serializer.is_valid(raise_exception=True)
-                sample_serializer.save(lot=lot)
-                created_samples += 1
-    return created_samples
-
-
-def create_meetings(input_data, lot):
-    helper.printMessage('TRACE', 'm.save', "#### Handling Lot Meetings ... ")
-    meetings_data = input_data
-    created_meetings = 0
-    for meeting_data in meetings_data:
-        meeting_data['when'] = ensure_dt_rabat(meeting_data.get('when'))
-        when = meeting_data.get('when')
-        description = meeting_data.get('description')
-        if when:
-            if not Meeting.objects.filter(when=when, lot=lot).exists():
-                meeting_serializer = MeetingSerializer(data=meeting_data)
-                helper.printMessage('TRACE', 'm.save', f"++++ Meeting to be created: {when}")
-                meeting_serializer.is_valid(raise_exception=True)
-                meeting_serializer.save(lot=lot)
-                created_meetings += 1
-    return created_meetings
-
-
-def create_visits(input_data, lot):
-    helper.printMessage('TRACE', 'm.save', "#### Handling Lot Visitss ... ")
-    visits_data = input_data
-    created_visits = 0
-    for visit_data in visits_data:
-        visit_data['when'] = ensure_dt_rabat(visit_data.get('when'))
-        when = visit_data.get('when')
-        description = visit_data.get('description')
-        if when:
-            if not Visits.objects.filter(when=when, lot=lot).exists():
-                visit_serializer = VisitsSerializer(data=visit_data)
-                helper.printMessage('TRACE', 'm.save', f"++++ Visits to be created: {when}")
-                visit_serializer.is_valid(raise_exception=True)
-                visit_serializer.save(lot=lot)
-                created_visits += 1
-    return created_visits
-
-
-def create_qualifs(input_data, lot):
-    helper.printMessage('TRACE', 'm.save', "#### Handling Lot Qualifs ... ")
-    qualifs_data = input_data
-    qualifs = []
-    for qualif_data in qualifs_data:
-        short = qualif_data.get('short')
-        name = qualif_data.get('name')
-        qualif = None
-        if name:
-            if not Qualif.objects.filter(name=name).exists():
-                qualif_serializer = QualifSerializer(data=qualif_data)
-                helper.printMessage('TRACE', 'm.save', f"++++ Qualif to be created: {name[:C.TRUNCA]}...")
-                qualif_serializer.is_valid(raise_exception=True)
-                qualif = qualif_serializer.save()
-                qualifs.append(qualif)
-            else:
-                helper.printMessage('TRACE', 'm.save', "---- Qualif exists. Skipping.")                
-    lot.qualifs.set(qualifs)
-    return len(qualifs)
-
-
-def create_agrements(input_data, lot):
-    helper.printMessage('TRACE', 'm.save', "#### Handling Lot Agrements ... ")
-    agrements_data = input_data
-    agrements = []
-    for agrement_data in agrements_data:
-        short = agrement_data.get('short')
-        name = agrement_data.get('name')
-        agrement = None
-        if name:
-            if not Agrement.objects.filter(name=name).exists():
-                agrement_serializer = AgrementSerializer(data=agrement_data)
-                helper.printMessage('TRACE', 'm.save', f"++++ Agrement to be created: {name[:C.TRUNCA]}...")
-                agrement_serializer.is_valid(raise_exception=True)
-                agrement = agrement_serializer.save()
-                agrements.append(agrement)
-            else:
-                helper.printMessage('TRACE', 'm.save', "---- Agrement exists. Skipping.")
-    
-    lot.agrements.set(agrements)
-    return len(agrements)
-
-
-def lottify(lot_no_str, default_int):
-    try:
-        s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
-        n = int(s.strip())
-        if n > 0: return n
-    except: pass
-    return default_int
-
-
-def delete_lots_list(numbers_list=[], tender=None):       
-    if numbers_list == [] or tender == None: return None
-    try:
-        lots = Lot.objects.filter(tender=tender, number__in=numbers_list)
-        return lots.delete()
-    except Exception as xx:
-        helper.printMessage('ERROR', 'g.delete_lots_list', str(xx))
-        return None
-
-
-def update_lots(numbers, lots_data, tender):
-    lots_qs = tender.lots.filter(number__in=numbers).prefetch_related("agrements", "qualifs", "samples", "meetings", "visits")
-    for lot_qs in lots_qs:
-        lot_data = next((obj for obj in set(lots_data) if obj.get('number') == lot_qs.number), None)
-        if lot_data:
-            deleted_agrements = lot_qs.agrements.all().delete()
-            deleted_qualifs   = lot_qs.qualifs.all().delete()
-            deleted_samples   = lot_qs.samples.all().delete()
-            deleted_meetings  = lot_qs.meetings.all().delete()
-            deleted_visits    = lot_qs.visits.all().delete()
-
-            created_samples   = create_samples(lot_data['samples'], lot)
-            created_meetings  = create_meetings(lot_data['meetings'], lot)
-            created_visits    = create_visits(lot_data['visits'], lot)
-            created_qualifs   = create_qualifs(lot_data['qualifs'], lot)
-            created_agrements = create_agrements(lot_data['agrements'], lot)
-    return 0
