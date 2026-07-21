@@ -779,6 +779,8 @@ def update_lots(numbers, lots_data, tender):
         change = {"field": "lot" , "old_value": "-", "new_value": "-"}
         changes.append(change)
     
+    tender.save()
+    
     return changes
 
 
