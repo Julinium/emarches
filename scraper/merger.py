@@ -439,7 +439,7 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
         if input_data.get('bond') != tender.bond: return {"field": "bond", "old_value": tender.bond, "new_value": input_data.get('bond')}
         if input_data.get('cancelled') != tender.cancelled: return {"field": "cancelled", "old_value": tender.cancelled, "new_value": input_data.get('cancelled')}
         if input_data.get('size_read') != tender.size_read: return {"field": "size_read", "old_value": tender.size_read, "new_value": input_data.get('size_read')}
-        if input_data.get('size_bytes') != tender.size_bytes: return {"field": "size_bytes", "old_value": tender.size_bytes, "new_value": input_data.get('size_bytes')}
+        if input_data.get('size_bytes') and input_data.get('size_bytes') != tender.size_bytes: return {"field": "size_bytes", "old_value": tender.size_bytes, "new_value": input_data.get('size_bytes')}
         if input_data.get('contact_name') != tender.contact_name: return {"field": "contact_name", "old_value": tender.contact_name, "new_value": input_data.get('contact_name')}
         if input_data.get('contact_phone') != tender.contact_phone: return {"field": "contact_phone", "old_value": tender.contact_phone, "new_value": input_data.get('contact_phone')}
         if input_data.get('contact_email') != tender.contact_email: return {"field": "contact_email", "old_value": tender.contact_email, "new_value": input_data.get('contact_email')}
@@ -447,7 +447,6 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
         if input_data.get('address_withdrawal') != tender.address_withdrawal: return {"field": "address_withdrawal", "old_value": tender.address_withdrawal, "new_value": input_data.get('address_withdrawal')}
         if input_data.get('address_bidding') != tender.address_bidding: return {"field": "address_bidding", "old_value": tender.address_bidding, "new_value": input_data.get('address_bidding')}
         if input_data.get('address_opening') != tender.address_opening: return {"field": "address_opening", "old_value": tender.address_opening, "new_value": input_data.get('address_opening')}
-        # if domains_changed(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
         if (input_data.get('category') or {}).get('label', "") != tender.category.label: return {"field": "category", "old_value": tender.category.label, "new_value": (input_data.get('category') or {}).get('label', "")}
         if (input_data.get('kind') or {}).get('name', "") != tender.kind.name: return {"field": "type", "old_value": tender.kind.name, "new_value": (input_data.get('kind') or {}).get('name', "")}
         if (input_data.get('mode') or {}).get('name', "") != tender.mode.name: return{"field": "mode", "old_value": tender.mode.name, "new_value": (input_data.get('mode') or {}).get('name', "")}
@@ -464,6 +463,7 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
         if input_data.get('location') != tender.location: return {"field": "location", "old_value": tender.location, "new_value": input_data.get('location')}
         if input_data.get('acronym') != tender.acronym: return {"field": "acronym", "old_value": tender.acronym, "new_value": input_data.get('acronym')}
         if input_data.get('link') != tender.link: return {"field": "link", "old_value": tender.link, "new_value": input_data.get('link')}
+        if domains_changed(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
         # if input_data.get('ebid_esign') == "reponse-elec-oblig" and (tender.ebid == 0 or tender.esign == 1): return "esign"
         # if input_data.get('ebid_esign') == "reponse-elec" and (tender.ebid == 1 or tender.esign == 1): return "esign"
         # if input_data.get('ebid_esign') == "reponse-elec-oblig-avec-signature" and (tender.ebid == 0 or tender.esign == 0): return "esign"
