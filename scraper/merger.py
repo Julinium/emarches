@@ -125,11 +125,11 @@ def save(tender_data):
     chrono         = formatted_data["chrono"]
 
     category, client, kind, mode, procedure = create_cckmp(category_data, client_data, kind_data, mode_data, procedure_data)
-    # domains = create_domains(domains_data)
 
     ## Handle Tender base details
     tender = Tender.objects.filter(chrono=chrono).first()
     tender_create = tender == None
+    changed_fields = []
 
     if tender is None: ### Create a new Tender
         helper.printMessage('DEBUG', 'm.save', f"### Tender to be created: {chrono}")
@@ -138,9 +138,9 @@ def save(tender_data):
             domains = set_domains(domains_data, tender)
             created_lots = create_lots(lots_data, tender)
     else: ### Update existing Tender
+        # helper.printMessage('INFO', 'm.save', f"lc================{tender.lots_count}: Lots count.")
         helper.printMessage('INFO', 'm.save', f"### Tender exists. Updating: {chrono}")
-        changed_fields = []
-
+        
         lots_qs = tender.lots.all()##.prefetch_related("agrements", "qualifs", "samples", "meetings", "visits")
         numbers_list = [lot_data['number'] for lot_data in lots_data]
         numbers_list_qs = list(lots_qs.values_list('number', flat=True))
@@ -340,6 +340,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
         if label:
             category = Category.objects.filter(label=label).first()
             if category == None:
+                category_serializer = CategorySerializer(data=category_data)
                 category_serializer.is_valid(raise_exception=True)
                 category = category_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Category: {category.label}")
@@ -353,6 +354,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
         if name:
             client = Client.objects.filter(name=name).first()
             if client == None:
+                client_serializer = ClientSerializer(data=client_data)
                 client_serializer.is_valid(raise_exception=True)
                 client = client_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Client: {client.name}")
@@ -366,6 +368,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
         if name:
             kind = Kind.objects.filter(name=name).first()
             if kind == None:
+                kind_serializer = Kinderializer(kind_data)
                 kind_serializer.is_valid(raise_exception=True)
                 kind = kind_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Kind: {kind.name}")
@@ -379,6 +382,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
         if name:
             mode = Mode.objects.filter(name=name).first()
             if mode == None:
+                mode_serializer = ModeSerializer(data=mode_data)
                 mode_serializer.is_valid(raise_exception=True)
                 mode = mode_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Mode: {mode.name}")
@@ -392,6 +396,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
         if name:
             procedure = Procedure.objects.filter(name=name).first()
             if procedure == None:
+                procedure_serializer = ProcedureSerializer(data=procedure_data)
                 procedure_serializer.is_valid(raise_exception=True)
                 procedure = procedure_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Procedure: {procedure.name}")
@@ -406,8 +411,7 @@ def create_tender(input_data, category, client, kind, mode, procedure):
     validated_data = input_data
     chrono = validated_data.get('chrono')
     tender = None
-    # helper.printMessage('TRACE', 'm.create_tender', "### Handling Tender ... ")
-    tender_serializer = TenderSerializer(data=validated_data, category=category, client=client, kind=kind, mode=mode, procedure=procedure )
+    tender_serializer = TenderSerializer(data=validated_data)
     helper.printMessage('DEBUG', 'm.create_tender', f"+++ Tender to be created: {chrono}")
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
@@ -443,7 +447,7 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
         if input_data.get('address_withdrawal') != tender.address_withdrawal: return {"field": "address_withdrawal", "old_value": tender.address_withdrawal, "new_value": input_data.get('address_withdrawal')}
         if input_data.get('address_bidding') != tender.address_bidding: return {"field": "address_bidding", "old_value": tender.address_bidding, "new_value": input_data.get('address_bidding')}
         if input_data.get('address_opening') != tender.address_opening: return {"field": "address_opening", "old_value": tender.address_opening, "new_value": input_data.get('address_opening')}
-        if domains_changed(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
+        # if domains_changed(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
         if (input_data.get('category') or {}).get('label', "") != tender.category.label: return {"field": "category", "old_value": tender.category.label, "new_value": (input_data.get('category') or {}).get('label', "")}
         if (input_data.get('kind') or {}).get('name', "") != tender.kind.name: return {"field": "type", "old_value": tender.kind.name, "new_value": (input_data.get('kind') or {}).get('name', "")}
         if (input_data.get('mode') or {}).get('name', "") != tender.mode.name: return{"field": "mode", "old_value": tender.mode.name, "new_value": (input_data.get('mode') or {}).get('name', "")}
@@ -519,7 +523,7 @@ def create_lots(input_data, tender):
             i += 1
             lot_number_text = lot_data['number']
             # lot_data['number'] = lottify(lot_number_text, i)
-            helper.printMessage('DEBUG', 'm.create_lots', f"#### Handling Lot {i}/{ll} ... ", 1)
+            helper.printMessage('DEBUG', 'm.create_lots', f"#### Handling Lot {i}/{ll} ... ")
             helper.printMessage("TRACE", 'm.create_lots', f"Lot {i} raw data:\n=====================\n{lot_data}\n=====================")
 
 
@@ -689,7 +693,8 @@ def update_lots(numbers, lots_data, tender):
     def lot_changed(lot, lot_data):
         if lot_data.get('number') != lot.number: return "number"
         if lot_data.get('title') != lot.title: return "title"
-        if (lot_data.get('category') or {}).get('label', "") != lot.category.label: return "category"
+        cabel = lot.category.label if lot.category else None
+        if (lot_data.get('category') or {}).get('label', "") != cabel: return "category"
         if lot_data.get('estimate') != lot.estimate: return "estimate"
         if lot_data.get('bond') != lot.bond: return "bond"
         if lot_data.get('variant') != lot.variant: return "variant"
@@ -805,11 +810,11 @@ def update_lots(numbers, lots_data, tender):
 
 def log_changes(changed_fields, tender):
     # Log changed fields, if any
-    target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
-    target_date = target_date.date()
-    tender_date = tender.deadline.date()
-
     if len(changed_fields) > 0 :
+        target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
+        target_date = target_date.date()
+        tender_date = tender.deadline.date()
+
         try:
             helper.printMessage('TRACE', 'm.save', "#### Saving change record to databse ... ")
             change = Change(tender=tender, changes=changed_fields)
