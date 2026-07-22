@@ -59,17 +59,6 @@
         </div>
     {% endif %}
 
-    <!-- {% if tender.expired %}
-        <div class="my-3" id="tender-expired-top" >
-            <div class="text-bg-secondary rounded text-center my-2">
-                <div class="fw-bold p-1">
-                    <span><i class="{{ bicons.expired }} me-1"></i></span>
-                    <span>{% trans 'EXPIRED' %}</span>
-                </div>
-            </div>
-        </div>
-    {% endif %} -->
-
     {% include 'portal/snippets/tenders/tender-actions.html' %}
 
     <div id="accordionBids">
@@ -357,29 +346,19 @@
                                 <span><i class="{{ bicons.changes }}"></i></span>
                                 <span class="fw-bold ms-1">{{ tender.changes.count }}</span>
                                 <span class="ms-2 fw-light">{% trans "Changes" %}</span>
-                                <span><i class="bi bi-exclamation-diamond px-1 ms-2 small fw-light text-warning"> {% trans "Experimental" %}</i></span>
+                                <!-- <span><i class="bi bi-exclamation-diamond px-1 ms-2 small fw-light text-warning"> {% trans "Experimental" %}</i></span> -->
                             </button>
                         </h2>
                         <div id="changesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionChanges">
                             <div class="accordion-body small p-0">
                                 <div class="list-group">
-                                    {% trans 'Empty' as empty %}
+                                    <!-- {% trans 'Empty' as empty %} -->
                                     {% for change in tender.changes.all %}
                                         <div class="list-group-item list-group-item-action mb-0">
                                             <div class="">
-                                                <i class="{{ bicons.history }} me-1"></i>
+                                                <i class="{{ bicons.changes }} me-1"></i>
                                                 <span>{{ change.reported }}</span>  
                                             </div>
-
-                                            {% for mod in change.changes|dictify %}
-                                                <div class="border-bottom ms-3 mt-1">
-                                                    <i class="{{ bicons.changes }}"></i>
-                                                    <span class="fw-bold small">{{ mod.field }}:</span>
-                                                    <span class="text-muted">{{ mod.old_value|default:empty }}</span>
-                                                        <i class="bi bi-arrow-right"></i>
-                                                    <span class="fw-bold">{{ mod.new_value|default:empty }}</span>
-                                                </div>
-                                            {% endfor %}
                                         </div>
                                     {% endfor %}
                                 </div>                                                                  

@@ -40,7 +40,7 @@ def format(tender_json):
         match ebs:  # Look at the image ...
             case "reponse-elec-oblig": # cons_repec = 'RO'
                 j["ebid"] = 1
-                j["esign"] = 0                
+                j["esign"] = 0
             case "reponse-elec": #cons_repec = 'OO'
                 j["ebid"] = 0
                 j["esign"] = 0
@@ -50,7 +50,9 @@ def format(tender_json):
             case "reponse-elec-avec-signature": # cons_repec = 'OR'
                 j["ebid"] = 0
                 j["esign"] = 1
-            # case "reponse-elec-non": # cons_repec = 'I'
+            case _: # cons_repec = 'OR'
+                j["ebid"] = 9
+                j["esign"] = 9
 
         ll = j["lots"]
 
@@ -101,9 +103,6 @@ def format(tender_json):
     return j
 
 
-# TODO: Saving lots related objects, try to change the approach.
-#       Always create new instances. At the end, delete orphans.
-
 @transaction.atomic
 def save(tender_data):    
 
@@ -114,7 +113,6 @@ def save(tender_data):
     tender_serializer = TenderSerializer(data=formatted_data)
     tender_serializer.is_valid(raise_exception=True)
     validated_data = tender_serializer.validated_data
-
 
     # Step x: Handle foreign key relationships (category, client, kind, mode, procedure)
     category_data  = formatted_data['category']
@@ -127,23 +125,22 @@ def save(tender_data):
     chrono         = formatted_data["chrono"]
 
     category, client, kind, mode, procedure = create_cckmp(category_data, client_data, kind_data, mode_data, procedure_data)
-
+    # domains = create_domains(domains_data)
 
     ## Handle Tender base details
     tender = Tender.objects.filter(chrono=chrono).first()
     tender_create = tender == None
 
-    if tender is None:
-        ### Create a new Tender
+    if tender is None: ### Create a new Tender
         helper.printMessage('DEBUG', 'm.save', f"### Tender to be created: {chrono}")
         tender = create_tender(validated_data, category, client, kind, mode, procedure)
         if tender:
             domains = set_domains(domains_data, tender)
             created_lots = create_lots(lots_data, tender)
-    else: 
-        ### Update existing Tender
+    else: ### Update existing Tender
         helper.printMessage('INFO', 'm.save', f"### Tender exists. Updating: {chrono}")
         changed_fields = []
+
         lots_qs = tender.lots.all()##.prefetch_related("agrements", "qualifs", "samples", "meetings", "visits")
         numbers_list = [lot_data['number'] for lot_data in lots_data]
         numbers_list_qs = list(lots_qs.values_list('number', flat=True))
@@ -160,62 +157,27 @@ def save(tender_data):
         if len(numbers_to_delete) > 0:
             dll = delete_lots_list(numbers_to_delete, tender)
             helper.printMessage('TRACE', 'm.save', f">>> Deleted Lots and objects: \n{dll}\n")
-            change = {"field": "lot", "old_value": "-", "new_value": f"{-len(numbers_to_delete)}"}
-            changed_fields.append(change)
+            if tender.lots_count > 1:
+                change = {"field": "lot", "old_value": "-", "new_value": f"{-len(numbers_to_delete)}"}
+                changed_fields.append(change)
         if len(numbers_to_create) > 0 :
             data_to_create = [obj for obj in lots_data if obj.get('number') in set(numbers_to_create)]
             create_lots(data_to_create, tender)
-            change = {"field": "lot", "old_value": f"+{len(numbers_to_create)}", "new_value": f"-"}
-            changed_fields.append(change)
+            if tender.lots_count > 1:
+                change = {"field": "lot", "old_value": f"+{len(numbers_to_create)}", "new_value": f"-"}
+                changed_fields.append(change)
         if len(numbers_to_update) > 0 :
-            # TODO: Check for and record changes
             data_to_update = [obj for obj in lots_data if obj.get('number') in set(numbers_to_update)]
-            changes = update_lots(numbers_to_update, data_to_update, tender)
-            changed_fields += changes
+            if tender.lots_count > 1:
+                changes = update_lots(numbers_to_update, data_to_update, tender)
+                changed_fields += changes
 
+        tender_changes = update_tender(tender, formatted_data, category, client, kind, mode, procedure)
+        changed_fields += tender_changes
 
-    # Log changed fields, if any
-    target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
-    target_date = target_date.date()
-    tender_date = tender.deadline.date()
-
-    if len(changed_fields) > 0 :
-        try:
-            helper.printMessage('TRACE', 'm.save', "#### Saving change record to databse ... ")
-            change = Change(tender=tender, changes=changed_fields)
-            change.save()
-            log_message = f"Tender {tender.chrono} updated. Changes saved."
-            helper.printMessage('DEBUG', 'm.save', log_message)
-            helper.printMessage('DEBUG', 'm.save', f"Reported changes: {changed_fields}")
-        except:
-            helper.printMessage('WARN', 'm.save', "---- Exception raised saving change to database.")
-            traceback.print_exc()
-
-        if tender_date > target_date:
-            try:
-                helper.printMessage('TRACE', 'm.save', f"#### Adding DCE request for Tender {tender.chrono} ... ")
-                f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Updated'})
-            except:
-                helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
-                traceback.print_exc()
-
-    
-    # if tender_create:
-    #     if tender_date > target_date:
-    #         try:
-    #             helper.printMessage('TRACE', 'm.save', "#### Adding DCE request for Tender ... ")
-    #             f2d, _ = FileToGet.objects.update_or_create(tender=tender)
-    #         except:
-    #             helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
-    #             traceback.print_exc()
-    # else: # Update return boolean: True=Created, False=Updated, None=None
-    #     if len(changed_fields) == 0:
-    #         helper.printMessage('DEBUG', 'm.save', f"No change was found for {tender.chrono}" )
-    #         tender_create = None
-
-
+    log_changes(changed_fields, tender)
+   
     helper.printMessage('DEBUG', 'g.save', '+++ Finished saving Tender data.')
-
 
     return tender, tender_create
 
@@ -379,7 +341,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
             category = Category.objects.filter(label=label).first()
             if category == None:
                 category_serializer.is_valid(raise_exception=True)
-                category = category_serializer.create_cckmp()
+                category = category_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Category: {category.label}")
             else:
                 helper.printMessage('TRACE', 'm.create_cckmp', f"--- Category found. Skipping: {category.label}")
@@ -392,7 +354,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
             client = Client.objects.filter(name=name).first()
             if client == None:
                 client_serializer.is_valid(raise_exception=True)
-                client = client_serializer.create_cckmp()
+                client = client_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Client: {client.name}")
             else:
                 helper.printMessage('TRACE', 'm.create_cckmp', f"--- Client found. Skipping: {client.name}")
@@ -405,7 +367,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
             kind = Kind.objects.filter(name=name).first()
             if kind == None:
                 kind_serializer.is_valid(raise_exception=True)
-                kind = kind_serializer.create_cckmp()
+                kind = kind_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Kind: {kind.name}")
             else:
                 helper.printMessage('TRACE', 'm.create_cckmp', f"--- Kind found. Skipping: {kind.name}")
@@ -418,7 +380,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
             mode = Mode.objects.filter(name=name).first()
             if mode == None:
                 mode_serializer.is_valid(raise_exception=True)
-                mode = mode_serializer.create_cckmp()
+                mode = mode_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Mode: {mode.name}")
             else:
                 helper.printMessage('TRACE', 'm.create_cckmp', f"--- Mode found. Skipping: {mode.name}")
@@ -431,7 +393,7 @@ def create_cckmp(category_data, client_data, kind_data, mode_data, procedure_dat
             procedure = Procedure.objects.filter(name=name).first()
             if procedure == None:
                 procedure_serializer.is_valid(raise_exception=True)
-                procedure = procedure_serializer.create_cckmp()
+                procedure = procedure_serializer.save()
                 helper.printMessage('TRACE', 'm.create_cckmp', f"+++ Created Procedure: {procedure.name}")
             else:
                 helper.printMessage('TRACE', 'm.create_cckmp', f"--- Procedure found. Skipping: {procedure.name}")
@@ -444,13 +406,77 @@ def create_tender(input_data, category, client, kind, mode, procedure):
     validated_data = input_data
     chrono = validated_data.get('chrono')
     tender = None
-    helper.printMessage('TRACE', 'm.create_tender', "### Handling Tender ... ")
+    # helper.printMessage('TRACE', 'm.create_tender', "### Handling Tender ... ")
     tender_serializer = TenderSerializer(data=validated_data, category=category, client=client, kind=kind, mode=mode, procedure=procedure )
     helper.printMessage('DEBUG', 'm.create_tender', f"+++ Tender to be created: {chrono}")
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
 
     return tender
+
+
+def update_tender(tender, input_data, category, client, kind, mode, procedure):
+    helper.printMessage('TRACE', 'm.update_tender', f"### Tender {tender.chrono} to update with: \n{input_data}:")
+    
+    changes = []
+
+    def domains_changed(data, domains):
+        if len(data) != len(domains.all()): return True
+        i = 0
+        for domain_data in data:
+            domain = domains.all()[i]
+            if domain_data.get("name") != domain.name: return True
+            i += 1
+        return False
+
+    def tender_changed(tender, input_data):
+        if input_data.get('deadline') != tender.deadline: return {"field": "deadline", "old_value": tender.deadline, "new_value": input_data.get('deadline')}
+        if input_data.get('estimate') != tender.estimate: return {"field": "estimate", "old_value": tender.estimate, "new_value": input_data.get('estimate')}
+        if input_data.get('bond') != tender.bond: return {"field": "bond", "old_value": tender.bond, "new_value": input_data.get('bond')}
+        if input_data.get('cancelled') != tender.cancelled: return {"field": "cancelled", "old_value": tender.cancelled, "new_value": input_data.get('cancelled')}
+        if input_data.get('size_read') != tender.size_read: return {"field": "size_read", "old_value": tender.size_read, "new_value": input_data.get('size_read')}
+        if input_data.get('size_bytes') != tender.size_bytes: return {"field": "size_bytes", "old_value": tender.size_bytes, "new_value": input_data.get('size_bytes')}
+        if input_data.get('contact_name') != tender.contact_name: return {"field": "contact_name", "old_value": tender.contact_name, "new_value": input_data.get('contact_name')}
+        if input_data.get('contact_phone') != tender.contact_phone: return {"field": "contact_phone", "old_value": tender.contact_phone, "new_value": input_data.get('contact_phone')}
+        if input_data.get('contact_email') != tender.contact_email: return {"field": "contact_email", "old_value": tender.contact_email, "new_value": input_data.get('contact_email')}
+        if input_data.get('contact_fax') != tender.contact_fax: return {"field": "contact_fax", "old_value": tender.contact_fax, "new_value": input_data.get('contact_fax')}
+        if input_data.get('address_withdrawal') != tender.address_withdrawal: return {"field": "address_withdrawal", "old_value": tender.address_withdrawal, "new_value": input_data.get('address_withdrawal')}
+        if input_data.get('address_bidding') != tender.address_bidding: return {"field": "address_bidding", "old_value": tender.address_bidding, "new_value": input_data.get('address_bidding')}
+        if input_data.get('address_opening') != tender.address_opening: return {"field": "address_opening", "old_value": tender.address_opening, "new_value": input_data.get('address_opening')}
+        if domains_changed(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
+        if (input_data.get('category') or {}).get('label', "") != tender.category.label: return {"field": "category", "old_value": tender.category.label, "new_value": (input_data.get('category') or {}).get('label', "")}
+        if (input_data.get('kind') or {}).get('name', "") != tender.kind.name: return {"field": "type", "old_value": tender.kind.name, "new_value": (input_data.get('kind') or {}).get('name', "")}
+        if (input_data.get('mode') or {}).get('name', "") != tender.mode.name: return{"field": "mode", "old_value": tender.mode.name, "new_value": (input_data.get('mode') or {}).get('name', "")}
+        if (input_data.get('procedure') or {}).get('name', "") != tender.procedure.name: return{"field": "procedure", "old_value": tender.procedure.name, "new_value": (input_data.get('procedure') or {}).get('name', "")}
+        if (input_data.get('client') or {}).get('name', "") != tender.client.name: return{"field": "client", "old_value": tender.client.name, "new_value": (input_data.get('client') or {}).get('name', "")}
+        if input_data.get('title') != tender.title: return {"field": "title", "old_value": tender.title, "new_value": input_data.get('title')}
+        if input_data.get('reference') != tender.reference: return {"field": "reference", "old_value": tender.reference, "new_value": input_data.get('reference')}
+        if input_data.get('published') != tender.published: return {"field": "published", "old_value": tender.published, "new_value": input_data.get('published')}
+        if input_data.get('ebid') != tender.ebid: return {"field": "ebid", "old_value": tender.ebid, "new_value": input_data.get('ebid')}
+        if input_data.get('esign') != tender.esign: return {"field": "esign", "old_value": tender.esign, "new_value": input_data.get('esign')}
+        if input_data.get('plans_price') != tender.plans_price: return {"field": "plans_price", "old_value": tender.plans_price, "new_value": input_data.get('plans_price')}
+        if input_data.get('reserved') != tender.reserved: return {"field": "reserved", "old_value": tender.reserved, "new_value": input_data.get('reserved')}
+        if input_data.get('variant') != tender.variant: return {"field": "variant", "old_value": tender.variant, "new_value": input_data.get('variant')}
+        if input_data.get('location') != tender.location: return {"field": "location", "old_value": tender.location, "new_value": input_data.get('location')}
+        if input_data.get('acronym') != tender.acronym: return {"field": "acronym", "old_value": tender.acronym, "new_value": input_data.get('acronym')}
+        if input_data.get('link') != tender.link: return {"field": "link", "old_value": tender.link, "new_value": input_data.get('link')}
+        # if input_data.get('ebid_esign') == "reponse-elec-oblig" and (tender.ebid == 0 or tender.esign == 1): return "esign"
+        # if input_data.get('ebid_esign') == "reponse-elec" and (tender.ebid == 1 or tender.esign == 1): return "esign"
+        # if input_data.get('ebid_esign') == "reponse-elec-oblig-avec-signature" and (tender.ebid == 0 or tender.esign == 0): return "esign"
+        # if input_data.get('ebid_esign') == "reponse-elec-avec-signature" and (tender.ebid == 1 or tender.esign == 0): return "esign"
+        return None
+
+    tc = tender_changed(tender, input_data)
+    if tc:
+        tender_serializer = TenderSerializer(tender, data=input_data)
+        tender_serializer.is_valid(raise_exception=True)
+        tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
+        set_domains(input_data.get('domains'), tender)
+        helper.printMessage('DEBUG', 'm.update_tender', f"+++ Tender updated: {tender.chrono}")
+        # change = {"field": tc, "old_value": "-", "new_value": "-"}
+        changes.append(tc)
+
+    return changes
 
 
 def set_domains(input_data, tender):
@@ -668,13 +694,6 @@ def update_lots(numbers, lots_data, tender):
         if lot_data.get('bond') != lot.bond: return "bond"
         if lot_data.get('variant') != lot.variant: return "variant"
         if lot_data.get('reserved') != lot.reserved: return "reserved"
-
-        # if len(lot_data.get('qualifs')) != len(lot.qualifs.all()): return "qualifs"
-        # if len(lot_data.get('agrements')) != len(lot.agrements.all()): return "agrements"
-        # if len(lot_data.get('samples')) != len(lot.samples.all()): return "samples"
-        # if len(lot_data.get('meetings')) != len(lot.meetings.all()): return "meetings"
-        # if len(lot_data.get('visits')) != len(lot.visits.all()): return "visits"
-
         return None
 
     def qualifs_changed(qualifs, data):
@@ -782,6 +801,34 @@ def update_lots(numbers, lots_data, tender):
     tender.save()
     
     return changes
+
+
+def log_changes(changed_fields, tender):
+    # Log changed fields, if any
+    target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
+    target_date = target_date.date()
+    tender_date = tender.deadline.date()
+
+    if len(changed_fields) > 0 :
+        try:
+            helper.printMessage('TRACE', 'm.save', "#### Saving change record to databse ... ")
+            change = Change(tender=tender, changes=changed_fields)
+            change.save()
+            log_message = f"Tender {tender.chrono} updated. Changes saved."
+            helper.printMessage('DEBUG', 'm.save', log_message)
+            helper.printMessage('DEBUG', 'm.save', f"Reported changes: {changed_fields}")
+        except:
+            helper.printMessage('WARN', 'm.save', "---- Exception raised saving change to database.")
+            traceback.print_exc()
+
+        if tender_date > target_date:
+            try:
+                helper.printMessage('TRACE', 'm.save', f"#### Adding DCE request for Tender {tender.chrono} ... ")
+                f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Updated'})
+            except:
+                helper.printMessage('WARN', 'm.save', "---- Exception raised saving DCE request.")
+                traceback.print_exc()
+    
 
 
 
