@@ -109,12 +109,10 @@ def save(tender_data):
     formatted_data = format(tender_data)
     helper.printMessage('DEBUG', 'm.save', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
 
-    # Step x: Validate the JSON using TenderSerializer
     tender_serializer = TenderSerializer(data=formatted_data)
     tender_serializer.is_valid(raise_exception=True)
     validated_data = tender_serializer.validated_data
 
-    # Step x: Handle foreign key relationships (category, client, kind, mode, procedure)
     category_data  = formatted_data['category']
     client_data    = formatted_data['client']
     kind_data      = formatted_data['kind']
@@ -126,7 +124,6 @@ def save(tender_data):
 
     category, client, kind, mode, procedure = create_cckmp(category_data, client_data, kind_data, mode_data, procedure_data)
 
-    ## Handle Tender base details
     tender = Tender.objects.filter(chrono=chrono).first()
     tender_create = tender == None
     changed_fields = []
@@ -138,11 +135,10 @@ def save(tender_data):
             domains = set_domains(domains_data, tender)
             created_lots = create_lots(lots_data, tender)
     else: ### Update existing Tender
-        # helper.printMessage('INFO', 'm.save', f"lc================{tender.lots_count}: Lots count.")
         helper.printMessage('INFO', 'm.save', f"### Tender exists. Updating: {chrono}")
         
-        lots_qs = tender.lots.all()##.prefetch_related("agrements", "qualifs", "samples", "meetings", "visits")
-        numbers_list = [lot_data['number'] for lot_data in lots_data]
+        lots_qs = tender.lots.all()
+        numbers_list = [lot_data['number'] for lot_data in lots_data] if lots_data else []
         numbers_list_qs = list(lots_qs.values_list('number', flat=True))
 
         numbers_to_create = list(set(numbers_list) - set(numbers_list_qs))
@@ -176,8 +172,10 @@ def save(tender_data):
         changed_fields += tender_changes
 
     log_changes(changed_fields, tender)
-   
-    helper.printMessage('DEBUG', 'g.save', '+++ Finished saving Tender data.')
+    if len(changed_fields) < 1: 
+        helper.printMessage('DEBUG', 'g.save', '--- No changes were found. >>> Next.')
+    else:
+        helper.printMessage('DEBUG', 'g.save', '+++ Data saved successfully. >>> Next.')
 
     return tender, tender_create
 
@@ -425,13 +423,9 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
     changes = []
 
     def domains_changed(data, domains):
-        if len(data) != len(domains.all()): return True
-        i = 0
-        for domain_data in data:
-            domain = domains.all()[i]
-            if domain_data.get("name") != domain.name: return True
-            i += 1
-        return False
+        incoming_names = {item.get("name") for item in data}
+        existing_names = set(domains.values_list("name", flat=True))
+        return incoming_names != existing_names
 
     def tender_changed(tender, input_data):
         if input_data.get('deadline') != tender.deadline: return {"field": "deadline", "old_value": tender.deadline, "new_value": input_data.get('deadline')}
@@ -464,10 +458,6 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
         if input_data.get('acronym') != tender.acronym: return {"field": "acronym", "old_value": tender.acronym, "new_value": input_data.get('acronym')}
         if input_data.get('link') != tender.link: return {"field": "link", "old_value": tender.link, "new_value": input_data.get('link')}
         if domains_changed(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
-        # if input_data.get('ebid_esign') == "reponse-elec-oblig" and (tender.ebid == 0 or tender.esign == 1): return "esign"
-        # if input_data.get('ebid_esign') == "reponse-elec" and (tender.ebid == 1 or tender.esign == 1): return "esign"
-        # if input_data.get('ebid_esign') == "reponse-elec-oblig-avec-signature" and (tender.ebid == 0 or tender.esign == 0): return "esign"
-        # if input_data.get('ebid_esign') == "reponse-elec-avec-signature" and (tender.ebid == 1 or tender.esign == 0): return "esign"
         return None
 
     tc = tender_changed(tender, input_data)
@@ -477,31 +467,44 @@ def update_tender(tender, input_data, category, client, kind, mode, procedure):
         tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
         set_domains(input_data.get('domains'), tender)
         helper.printMessage('DEBUG', 'm.update_tender', f"+++ Tender updated: {tender.chrono}")
-        # change = {"field": tc, "old_value": "-", "new_value": "-"}
         changes.append(tc)
 
     return changes
 
 
 def set_domains(input_data, tender):
-    helper.printMessage('TRACE', 'm.set_domains', "### Handling Domains ... ")
-    domains_data = input_data
-    created_domains, skipped_domains = 0, 0
+    helper.printMessage('TRACE', 'm.set_domains', "### Handling Domains ... ")    
+    valid_data = [d for d in input_data if d.get('name')]
+    if not valid_data:
+        tender.domains.clear()
+        helper.printMessage('TRACE', 'm.set_domains', ">>> Domains: Created 0, skipped 0.")
+        return 0
+
+    names = [d['name'] for d in valid_data]
+    existing_domains = {d.name: d for d in Domain.objects.filter(name__in=names)}
+
     domains = []
-    for domain_data in domains_data:
-        name = domain_data.get('name')
-        if name and name != "":
-            domain = Domain.objects.filter(name=name).first()
-            if domain:
-                skipped_domains += 1
-                helper.printMessage('DEBUG', 'm.set_domains', f"--- Domain already exists. Skipping: {name[:C.TRUNCA]}...")
-            else:
-                helper.printMessage('DEBUG', 'm.set_domains', f"+++ Domain of Activiry to be created: {name[:C.TRUNCA]}...")
-                domain_serializer = DomainSerializer(data=domain_data)
-                domain_serializer.is_valid(raise_exception=True)
-                domain = domain_serializer.save()
-                created_domains += 1
-            domains.append(domain)
+    created_domains = 0
+    skipped_domains = 0
+
+    for domain_data in valid_data:
+        name = domain_data['name']
+        
+        if name in existing_domains:
+            domain = existing_domains[name]
+            skipped_domains += 1
+            helper.printMessage('DEBUG', 'm.set_domains', f"--- Domain already exists. Skipping: {name[:C.TRUNCA]}...")
+        else:
+            helper.printMessage('DEBUG', 'm.set_domains', f"+++ Domain of Activiry to be created: {name[:C.TRUNCA]}...")
+            domain_serializer = DomainSerializer(data=domain_data)
+            domain_serializer.is_valid(raise_exception=True)
+            domain = domain_serializer.save()
+            
+            existing_domains[name] = domain
+            created_domains += 1
+
+        domains.append(domain)
+
     helper.printMessage('TRACE', 'm.set_domains', f">>> Domains: Created {created_domains}, skipped {skipped_domains}.")
 
     tender.domains.set(domains)
@@ -509,12 +512,12 @@ def set_domains(input_data, tender):
 
 
 def create_lots(input_data, tender):
-    helper.printMessage('TRACE', 'm.create_lots', "### Handling Lots ... ")
+    helper.printMessage('TRACE', 'm.create_lots', f"### Handling { ll } Lots ... ")
     lots_data = input_data
     created_lots = 0
     ll = len(lots_data) if lots_data else 0
     if ll > 0:
-        helper.printMessage('TRACE', 'm.create_lots', f"#### Got data for {ll} Lots. ")
+        helper.printMessage('DEBUG', 'm.create_lots', f"#### Got data for {ll} Lots. ")
         i = 0
 
         helper.printMessage("TRACE", 'm.create_lots', f"Lots raw data:\n=====================\n{lots_data}\n=====================\n")
@@ -522,21 +525,16 @@ def create_lots(input_data, tender):
         for lot_data in lots_data:
             i += 1
             lot_number_text = lot_data['number']
-            # lot_data['number'] = lottify(lot_number_text, i)
             helper.printMessage('DEBUG', 'm.create_lots', f"#### Handling Lot {i}/{ll} ... ")
             helper.printMessage("TRACE", 'm.create_lots', f"Lot {i} raw data:\n=====================\n{lot_data}\n=====================")
 
-
-            # Handle nested Category for Lot
             lot_category = create_category(lot_data["category"])
 
-            # Create Lot
             lot = None
             lot_title  = lot_data.get('title')
             lot_number = lot_data.get('number', 1)
             helper.printMessage('TRACE', 'm.create_lots', "#### Handling Lot details ... ")
             if lot_title:
-                # if not Lot.objects.filter(tender=tender, title=lot_title, number=lot_number).exists():
                 lot_serializer = LotSerializer(data=lot_data)
                 helper.printMessage('TRACE', 'm.create_lots', f"+++ Lot to be created: {lot_title[:C.TRUNCA]}...")
                 lot_serializer.is_valid(raise_exception=True)
@@ -578,7 +576,6 @@ def create_samples(input_data, lot):
         when = sample_data.get('when')
         description = sample_data.get('description')
         if when:
-            # if not Sample.objects.filter(when=when, lot=lot).exists():
             sample_serializer = SampleSerializer(data=sample_data)
             helper.printMessage('TRACE', 'm.create_samples', f"++++ Sample to be created: {when}")
             sample_serializer.is_valid(raise_exception=True)
@@ -596,7 +593,6 @@ def create_meetings(input_data, lot):
         when = meeting_data.get('when')
         description = meeting_data.get('description')
         if when:
-            # if not Meeting.objects.filter(when=when, lot=lot).exists():
             meeting_serializer = MeetingSerializer(data=meeting_data)
             helper.printMessage('TRACE', 'm.create_meetings', f"++++ Meeting to be created: {when}")
             meeting_serializer.is_valid(raise_exception=True)
@@ -614,7 +610,6 @@ def create_visits(input_data, lot):
         when = visit_data.get('when')
         description = visit_data.get('description')
         if when:
-            # if not Visit.objects.filter(when=when, lot=lot).exists():
             visit_serializer = VisitSerializer(data=visit_data)
             helper.printMessage('TRACE', 'm.create_visits', f"++++ Visits to be created: {when}")
             visit_serializer.is_valid(raise_exception=True)
@@ -691,63 +686,52 @@ def update_lots(numbers, lots_data, tender):
     helper.printMessage('TRACE', 'm.update_lots', f">>> Found {len(lots_qs)} lot(s) in databas.")
 
     def lot_changed(lot, lot_data):
-        if lot_data.get('number') != lot.number: return "number"
-        if lot_data.get('title') != lot.title: return "title"
-        cabel = lot.category.label if lot.category else None
-        if (lot_data.get('category') or {}).get('label', "") != cabel: return "category"
-        if lot_data.get('estimate') != lot.estimate: return "estimate"
-        if lot_data.get('bond') != lot.bond: return "bond"
-        if lot_data.get('variant') != lot.variant: return "variant"
-        if lot_data.get('reserved') != lot.reserved: return "reserved"
-        return None
+        cat = lot_data.get('category')
+        dict_cat_label = cat.get('label') if cat else ""
+        obj_cat_label = lot.category.label if lot.category else None
+        if dict_cat_label != obj_cat_label: return "category"
+        attrs = ("number", "title", "estimate", "bond", "variant", "reserved")        
+        return next((attr for attr in attrs if lot_data.get(attr) != getattr(lot, attr)), None)
 
     def qualifs_changed(qualifs, data):
-        if len(data) != len(qualifs.all()): return True
-        i = 0
-        for qualif_data in data:
-            qualif = qualifs.all()[i]
-            if qualif_data.get("name") != qualif.name: return True
-            i += 1
-        return False
+        qualif_list = list(qualifs.all())        
+        if len(data) != len(qualif_list): return True
+        return any(
+            q_data.get("name") != qualif.name 
+            for q_data, qualif in zip(data, qualif_list)
+        )
 
     def agrements_changed(agrements, data):
-        if len(data) != len(agrements.all()): return True
-        i = 0
-        for agrement_data in data:
-            agrement = agrements.all()[i]
-            if agrement_data.get("name") != agrement.name: return True
-            i += 1
-        return False
+        agrement_list = list(agrements.all())        
+        if len(data) != len(agrement_list): return True
+        return any(
+            q_data.get("name") != agrement.name 
+            for q_data, agrement in zip(data, agrement_list)
+        )
 
     def samples_changed(samples, data):
-        if len(data) != len(samples.all()): return True
-        i = 0
-        for sample_data in data:
-            sample = samples.all()[i]
-            if sample_data.get("when") != sample.when: return True
-            if sample_data.get("description") != sample.description: return True
-            i += 1
-        return False
+        sample_list = list(samples.all())
+        if len(data) != len(sample_list): return True
+        return any(
+            s_data.get("when") != sample.when or s_data.get("description") != sample.description
+            for s_data, sample in zip(data, sample_list)
+        )
 
     def meetings_changed(meetings, data):
-        if len(data) != len(meetings.all()): return True
-        i = 0
-        for meeting_data in data:
-            meeting = meetings.all()[i]
-            if meeting_data.get("when") != meeting.when: return True
-            if meeting_data.get("description") != meeting.description: return True
-            i += 1
-        return False
+        meeting_list = list(meetings.all())
+        if len(data) != len(meeting_list): return True
+        return any(
+            s_data.get("when") != meeting.when or s_data.get("description") != meeting.description
+            for s_data, meeting in zip(data, meeting_list)
+        )
 
     def visits_changed(visits, data):
-        if len(data) != len(visits.all()): return True
-        i = 0
-        for visit_data in data:
-            visit = visits.all()[i]
-            if visit_data.get("when") != visit.when: return True
-            if visit_data.get("description") != visit.description: return True
-            i += 1
-        return False
+        visit_list = list(visits.all())
+        if len(data) != len(visit_list): return True
+        return any(
+            s_data.get("when") != visit.when or s_data.get("description") != visit.description
+            for s_data, visit in zip(data, visit_list)
+        )
 
     changes = []
     changed = False
