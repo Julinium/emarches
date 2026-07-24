@@ -171,14 +171,28 @@ def save(tender_data):
         tender_changes = update_tender(tender, formatted_data, category, client, kind, mode, procedure)
         changed_fields += tender_changes
 
-    log_changes(changed_fields, tender)
-    if len(changed_fields) < 1: 
-        helper.printMessage('DEBUG', 'g.save', '--- No changes were found. >>> Next.')
-    else:
-        helper.printMessage('DEBUG', 'g.save', '+++ Data saved successfully. >>> Next.')
+        log_changes(changed_fields, tender)
+        if len(changed_fields) < 1: 
+            helper.printMessage('DEBUG', 'g.save', '--- No changes were found.')
+    # else:
+    helper.printMessage('DEBUG', 'g.save', '+++ Data saved successfully.')
 
     return tender, tender_create
 
+    # 14:53:30 Started
+    # 14:54:06 Started Checking lots x392
+    # 14:56:30 Ended Checking lots
+    # 14:56:33 No changes found. End
+    # == 03:03 ================================= ~2.15 Lot/s
+
+    # 14:58:58 Started
+    # 14:59:06 Started Checking lots x26
+    # 14:59:08 Ended Checking lots
+    # 14:59:17 No changes found. End
+    # == 00:19 ================================= ~1.38 Lot/s
+
+    # 16:41 - 13:43 = 22 Lots with changes
+    # = 02:58 >> ======== ~0.13 Lot/s ~ 8 s/Lot
 
 @transaction.atomic
 def mergeResults(digest):
@@ -208,7 +222,6 @@ def mergeResults(digest):
     for w in winners: 
         won_amount += helper.getAmount(w.get('amount'))
         won_lots += 1
-
 
 
     # Create or update Opening                
@@ -512,10 +525,10 @@ def set_domains(input_data, tender):
 
 
 def create_lots(input_data, tender):
-    helper.printMessage('TRACE', 'm.create_lots', f"### Handling { ll } Lots ... ")
     lots_data = input_data
     created_lots = 0
     ll = len(lots_data) if lots_data else 0
+    helper.printMessage('TRACE', 'm.create_lots', f"### Handling { ll } Lots ... ")
     if ll > 0:
         helper.printMessage('DEBUG', 'm.create_lots', f"#### Got data for {ll} Lots. ")
         i = 0

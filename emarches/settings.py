@@ -161,7 +161,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 
-# TIME_ZONE = 'Africa/Casablanca'
+TIME_ZONE = 'Africa/Casablanca'
 USE_TZ = True
 
 EXTRA_LANG_INFO = {

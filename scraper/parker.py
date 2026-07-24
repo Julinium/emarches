@@ -27,7 +27,7 @@ def main():
         if not C.IMPORT_LINKS:
             links = linker.getLinks()
             links_crawled = len(links)
-            links_saved = linker.getSavedLinks()
+            links_saved = linker.pg2Links()
             links_from_saved = len(links_saved)
             helper.printMessage('INFO', 'worker', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
             ml = 0

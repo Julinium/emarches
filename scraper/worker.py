@@ -27,7 +27,7 @@ def do_the_work():
         if not C.IMPORT_LINKS:
             links = linker.getLinks()
             links_crawled = len(links)
-            links_saved = linker.getSavedLinks()
+            links_saved = linker.pg2Links()
             links_from_saved = len(links_saved)
             helper.printMessage('INFO', 'worker', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
             ml = 0
@@ -67,7 +67,7 @@ def do_the_work():
                         helper.printMessage('INFO', 'worker', f"◁◁ Created Tender {tender.chrono}")
                     elif creation_mode == False: 
                         tenders_updated += 1
-                        helper.printMessage('INFO', 'worker', f"◁◁ Updated Tender {tender.chrono}")
+                        helper.printMessage('INFO', 'worker', f"◁◁ Tender {tender.chrono} updated.")
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
