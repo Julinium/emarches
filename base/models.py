@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from .texter import normalize_text as nt
-
+from .helper import safe_eval_repr
 
 NOT_WORDS = {"des", "sur", "pour", "les"}
 
@@ -76,6 +76,13 @@ class Change(models.Model):
         ordering = ['-reported', 'tender']
         verbose_name = "Change"
     
+    @property
+    def parsed_changes(self):
+        try:
+            return safe_eval_repr(self.changes)
+        except (ValueError, SyntaxError, TypeError):
+            return []
+
     def __str__(self):
         return f"{self.tender.chrono} - {self.reported}"
 

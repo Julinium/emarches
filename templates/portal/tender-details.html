@@ -352,12 +352,25 @@
                         <div id="changesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionChanges">
                             <div class="accordion-body small p-0">
                                 <div class="list-group">
-                                    <!-- {% trans 'Empty' as empty %} -->
+                                    {% trans 'Empty' as empty %}
                                     {% for change in tender.changes.all %}
                                         <div class="list-group-item list-group-item-action mb-0">
                                             <div class="">
                                                 <i class="{{ bicons.history }} me-1"></i>
                                                 <span>{{ change.reported }} </span>  
+                                            </div>
+                                            <div class="ms-2 small">
+                                                <ul>
+                                                    {% for pc in change.parsed_changes %}
+                                                        <li>
+                                                            <span class="fw-semibold">{{ pc.field|upper }}: </span>
+                                                            <span class="">{{ pc.old_value }} > </span>
+                                                            <span class="fw-semibold">{{ pc.new_value }}</span>
+                                                        </li>
+                                                    {% empty %}
+                                                        <li>{{ empty }}</li>
+                                                    {% endfor %}
+                                                </ul>
                                             </div>
                                         </div>
                                     {% endfor %}

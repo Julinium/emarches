@@ -6,64 +6,72 @@ from django.utils.translation import gettext as _
 
 register = template.Library()
 
-CHANGES_FIELDS = {
-    'cancelled': _('Cancelled'),
-    'title': _('Tender Object'),
-    'reference':_('Reference'),
-    'published':_('Date Published'),
-    'deadline': _('Deadline'),
-    'estimate': _('Estimate'),
-    'bond': _('Guarantee'),
-    'size_bytes': _('Files bytes'),
-    'size_read': _('Files size'),
-    'contact_name': _('Contact name'),
-    'contact_phone': _('Contact phone'),
-    'contact_email': _('Contact email'),
-    'contact_fax': _('Contact fax'),
+# CHANGES_FIELDS = {
+#     'cancelled': _('Cancelled'),
+#     'title': _('Tender Object'),
+#     'reference':_('Reference'),
+#     'published':_('Date Published'),
+#     'deadline': _('Deadline'),
+#     'estimate': _('Estimate'),
+#     'bond': _('Guarantee'),
+#     'size_bytes': _('Files bytes'),
+#     'size_read': _('Files size'),
+#     'contact_name': _('Contact name'),
+#     'contact_phone': _('Contact phone'),
+#     'contact_email': _('Contact email'),
+#     'contact_fax': _('Contact fax'),
 
-    'address_opening': _('Opening Address'),
-    'address_bidding': _('Bidding Address'),
-    'address_withdrawal': _('Withdrawal Address'),
-    'esign': _('Electronic signature'),
-    'ebid': _('Electronic bidding'),
-    'location': _('Execution location'),
-    'variant': _('Variants'),
-    'reserved': _('Reserved'),
-    'plans_price': _('Plans price'),
-    'lots_count': _('Lots count'),
-    'lot': _('Lots'),
-    'link': _('Link'),
-    'acronym': _('Acronym'),
-    'chrono': _('Number'),
-    'category': _('Category'),
-    'mode': _('Mode'),
-    'procedure': _('Procedure'),
-    'client': _('Public client'),
+#     'address_opening': _('Opening Address'),
+#     'address_bidding': _('Bidding Address'),
+#     'address_withdrawal': _('Withdrawal Address'),
+#     'esign': _('Electronic signature'),
+#     'ebid': _('Electronic bidding'),
+#     'location': _('Execution location'),
+#     'variant': _('Variants'),
+#     'reserved': _('Reserved'),
+#     'plans_price': _('Plans price'),
+#     'lots_count': _('Lots count'),
+#     'lot': _('Lots'),
+#     'link': _('Link'),
+#     'acronym': _('Acronym'),
+#     'chrono': _('Number'),
+#     'category': _('Category'),
+#     'mode': _('Mode'),
+#     'procedure': _('Procedure'),
+#     'client': _('Public client'),
 
-    'qualif': _('Qualifications'),
-    'agrement': _('Licenses'),
-    'meeting': _('Meetings'),
-    'sample': _('Samples'),
-    'visit': _('Visits'),
-}
+#     'qualif': _('Qualifications'),
+#     'agrement': _('Licenses'),
+#     'meeting': _('Meetings'),
+#     'sample': _('Samples'),
+#     'visit': _('Visits'),
+
+#     'domains': _('Domains'),
+#     'qualifs': _('Qualifications'),
+#     'agrements': _('Licenses'),
+#     'meetings': _('Meetings'),
+#     'samples': _('Samples'),
+#     'visits': _('Visits'),
+# }
 
 
-@register.filter
-def dictify(value):
-    try:
-        evaled = ast.literal_eval(value)
-        json_str = json.dumps(evaled)
-        data = json.loads(json_str)
+# @register.filter
+# def dictify(value):
+#     try:
+#         evaled = ast.literal_eval(value)
+#         json_str = json.dumps(evaled)
+#         data = json.loads(json_str)
 
-        if any(item.get("field") == "size_read" for item in data):
-            data = [item for item in data if item.get("field") != "size_bytes"]
-                
-        for item in data:
-            item['field'] = str(CHANGES_FIELDS.get(item['field'], '--'))
+#         if any(item.get("field") == "size_read" for item in data):
+#             data = [item for item in data if item.get("field") != "size_bytes"]
+        
+#         for item in data:
+#             item['field'] = str(CHANGES_FIELDS.get(item['field'], '--'))
+            
 
-        return data
-    except json.JSONDecodeError:
-        return []
+#         return data
+#     except json.JSONDecodeError:
+#         return []
 
 @register.filter
 def stringify(value):

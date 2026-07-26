@@ -1,10 +1,8 @@
 from django import template
 
-# from django.urls import resolve, reverse
-# from django.conf import settings
-# from humanize import metric
 
 register = template.Library()
+
 
 @register.filter
 def metrify(value, precision=2):
@@ -15,7 +13,6 @@ def metrify(value, precision=2):
     except (ValueError, TypeError):
         return str(value)
     return metric(num, "", precision)#.replace(" ", '')
-
 
 
 @register.filter
