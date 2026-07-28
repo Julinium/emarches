@@ -4,15 +4,19 @@ from decimal import Decimal
 from django.db import transaction, reset_queries
 from datetime import date, datetime, time, timedelta, timezone
 
+
 from rest_framework import serializers
+
 
 from base.models import (
     Agrement, Category, Change, Client, Concurrent, Deposit, Domain, FileToGet,
     Kind, Lot, Meeting, Mode, Opening, Procedure, Qualif, RelAgrementLot,
     RelDomainTender, RelQualifLot, Sample, Tender, Visit)
 
+
 from scraper import constants as C
 from scraper import helper
+
 
 from scraper.serializers import (AgrementSerializer, CategorySerializer,
                                  ChangeSerializer, ClientSerializer,
@@ -154,13 +158,13 @@ def saveTender(tender_data):
             dll = deleteLots(numbers_to_delete, tender)
             helper.printMessage('TRACE', 'm.saveTender', f">>> Deleted Lots : \n{dll}\n")
             if tender.lots_count > 1:
-                change = {"field": "lot", "old_value": "-", "new_value": f"{-len(numbers_to_delete)}"}
+                change = {"level": "Tender", "field": "lots", "old_value": "-", "new_value": f"{-len(numbers_to_delete)}"}
                 changed_fields.append(change)
         if len(numbers_to_create) > 0 :
             data_to_create = [obj for obj in lots_data if obj.get('number') in set(numbers_to_create)]
             createLots(data_to_create, tender)
             if tender.lots_count > 1:
-                change = {"field": "lot", "old_value": f"+{len(numbers_to_create)}", "new_value": f"-"}
+                change = {"level": "Tender", "field": "lots", "old_value": "-", "new_value": f"+{len(numbers_to_create)}"}
                 changed_fields.append(change)
         if len(numbers_to_update) > 0 :
             data_to_update = [obj for obj in lots_data if obj.get('number') in set(numbers_to_update)]
@@ -409,13 +413,13 @@ def createTender(input_data, category, client, kind, mode, procedure):
     validated_data = input_data
     chrono = validated_data.get('chrono')
     tender = None
-    tender_serializer = TenderSerializer(data=validated_data)
-    helper.printMessage('DEBUG', 'm.createTender', f"+++ Tender to be created: {chrono}")
+    tender_serializer = TenderSerializer(data=validated_data)    
     helper.printMessage("TRACE", 'm.updateTender', f"Tender raw data:\n\t+++++###############\n{input_data}\n\t+++++###############")
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
-    
+
     if tender:
+        helper.printMessage('DEBUG', 'm.createTender', f"+++ Tender created successfully: {chrono}")
         try:
             helper.printMessage('TRACE', 'm.createTender', f"#### Adding DCE request for Tender {tender.chrono} ... ")
             f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Created'})
@@ -428,48 +432,104 @@ def createTender(input_data, category, client, kind, mode, procedure):
 
 @transaction.atomic
 def updateTender(tender, input_data, category, client, kind, mode, procedure):
+    
+    def domainsChanged(tender, domains_data):
+        existing_names = set(tender.domains.values_list('name', flat=True))
+        new_names = {data.get("name") for data in domains_data if "name" in data}
+        
+        if len(domains_data) != len(existing_names):
+            return {
+                "level": "Tender",
+                "field": "domains",
+                "old_value": f"{len(existing_names)}",
+                "new_value": f"{len(domains_data)}",
+            }
+        
+        added = new_names - existing_names
+        removed = existing_names - new_names
+        
+        if added or removed:
+            return {
+                "level": "Tender",
+                "field": "domain",
+                "old_value": ", ".join(sorted(existing_names)),
+                "new_value": ", ".join(sorted(new_names)),
+            }
+
+        return None
+
+
+    def tenderChanged(tender, input_data):
+
+        helper.printMessage('DEBUG', 'm.tenderChanged', f"#### Checking domains for changes ...")
+        CHECK_FIELDS = (
+            "cancelled", "deadline", "estimate", "bond", "size_read", "size_bytes",
+            "contact_name", "contact_phone", "contact_email", "contact_fax",
+            "address_withdrawal", "address_bidding", "address_opening",
+            "title", "reference", "published", "ebid", "esign",
+            "plans_price", "reserved", "variant", "location", "acronym", "link"
+        )
+
+        for field in CHECK_FIELDS:
+            if field in input_data:
+                new_value = input_data[field]
+                old_value = getattr(tender, field, None)
+                if field == "size_bytes" and old_value != None and new_value != None:
+
+                    old_value_display = old_value
+                    if type(old_value) is datetime: old_value_display = old_value.strftime('%Y-%m-%dT%H:%MZ')
+                    elif type(old_value) is date: old_value_display = old_value.strftime('%Y-%m-%d')
+                    # elif type(old_value) is Decimal: old_value_display = str(old_value)
+
+                    new_value_display = new_value
+                    if type(new_value) is datetime: new_value_display = new_value.strftime('%Y-%m-%dT%H:%MZ')
+                    elif type(new_value) is date: new_value_display = new_value.strftime('%Y-%m-%d')
+                    # elif type(new_value) is Decimal: new_value_display = str(new_value)
+
+                    if new_value != old_value:
+                        return {
+                            "level": "Tender",
+                            "field": field,
+                            "old_value": old_value_display,
+                            "new_value": new_value_display,
+                        }
+
+        RELATION_CONFIGS = (
+            ("category",  "Category",  "category",  "label"),
+            ("mode",      "Mode",      "mode",      "name"),
+            ("procedure", "Procedure", "procedure", "name"),
+            ("client",    "Client",    "client",    "name"),
+            ("kind",      "Type",      "kind",      "name"),
+        )
+
+        for input_key, field_name, attr_name, val_key in RELATION_CONFIGS:
+            rel_data = input_data.get(input_key)
+            if rel_data and isinstance(rel_data, dict):
+                new_val = rel_data.get(val_key)
+
+                related_obj = getattr(tender, attr_name, None)
+                old_val = getattr(related_obj, val_key, None) if related_obj else None
+
+                if related_obj and new_val != old_val:
+                    return {
+                        "level": "Tender",
+                        "field": field_name,
+                        "old_value": old_val,
+                        "new_value": new_val,
+                    }
+
+        domains_change = domainsChanged(tender, input_data.get('domains'))
+        if domains_change: 
+            helper.printMessage('TRACE', 'm.tenderChanged', f"++++ Change detected in Tender domains {domains_change}.")
+            return domains_change
+
+        helper.printMessage('DEBUG', 'm.tenderChanged', f"---- No changes found in domains.")        
+        return None
+
     helper.printMessage('DEBUG', 'm.updateTender', f"### Checking Tender {tender.chrono} for changes")
     helper.printMessage("TRACE", 'm.updateTender', f"Tender raw data:\n\t~~~~~###############\n{input_data}\n\t~~~~~###############")
     
     changes = []
-
-    def domainsChanged(data, domains):
-        incoming_names = {item.get("name") for item in data}
-        existing_names = set(domains.values_list("name", flat=True))
-        return incoming_names != existing_names
-
-    def tenderChanged(tender, input_data):
-        if input_data.get('deadline') != tender.deadline: return {"field": "deadline", "old_value": tender.deadline, "new_value": input_data.get('deadline')}
-        if input_data.get('estimate') != tender.estimate: return {"field": "estimate", "old_value": tender.estimate, "new_value": input_data.get('estimate')}
-        if input_data.get('bond') != tender.bond: return {"field": "bond", "old_value": tender.bond, "new_value": input_data.get('bond')}
-        if input_data.get('cancelled') != tender.cancelled: return {"field": "cancelled", "old_value": tender.cancelled, "new_value": input_data.get('cancelled')}
-        if input_data.get('size_read') != tender.size_read: return {"field": "size_read", "old_value": tender.size_read, "new_value": input_data.get('size_read')}
-        if input_data.get('size_bytes') and input_data.get('size_bytes') != tender.size_bytes: return {"field": "size_bytes", "old_value": tender.size_bytes, "new_value": input_data.get('size_bytes')}
-        if input_data.get('contact_name') != tender.contact_name: return {"field": "contact_name", "old_value": tender.contact_name, "new_value": input_data.get('contact_name')}
-        if input_data.get('contact_phone') != tender.contact_phone: return {"field": "contact_phone", "old_value": tender.contact_phone, "new_value": input_data.get('contact_phone')}
-        if input_data.get('contact_email') != tender.contact_email: return {"field": "contact_email", "old_value": tender.contact_email, "new_value": input_data.get('contact_email')}
-        if input_data.get('contact_fax') != tender.contact_fax: return {"field": "contact_fax", "old_value": tender.contact_fax, "new_value": input_data.get('contact_fax')}
-        if input_data.get('address_withdrawal') != tender.address_withdrawal: return {"field": "address_withdrawal", "old_value": tender.address_withdrawal, "new_value": input_data.get('address_withdrawal')}
-        if input_data.get('address_bidding') != tender.address_bidding: return {"field": "address_bidding", "old_value": tender.address_bidding, "new_value": input_data.get('address_bidding')}
-        if input_data.get('address_opening') != tender.address_opening: return {"field": "address_opening", "old_value": tender.address_opening, "new_value": input_data.get('address_opening')}
-        if (input_data.get('category') or {}).get('label', "") != tender.category.label: return {"field": "category", "old_value": tender.category.label, "new_value": (input_data.get('category') or {}).get('label', "")}
-        if (input_data.get('kind') or {}).get('name', "") != tender.kind.name: return {"field": "type", "old_value": tender.kind.name, "new_value": (input_data.get('kind') or {}).get('name', "")}
-        if (input_data.get('mode') or {}).get('name', "") != tender.mode.name: return{"field": "mode", "old_value": tender.mode.name, "new_value": (input_data.get('mode') or {}).get('name', "")}
-        if (input_data.get('procedure') or {}).get('name', "") != tender.procedure.name: return{"field": "procedure", "old_value": tender.procedure.name, "new_value": (input_data.get('procedure') or {}).get('name', "")}
-        if (input_data.get('client') or {}).get('name', "") != tender.client.name: return{"field": "client", "old_value": tender.client.name, "new_value": (input_data.get('client') or {}).get('name', "")}
-        if input_data.get('title') != tender.title: return {"field": "title", "old_value": tender.title, "new_value": input_data.get('title')}
-        if input_data.get('reference') != tender.reference: return {"field": "reference", "old_value": tender.reference, "new_value": input_data.get('reference')}
-        if input_data.get('published') != tender.published: return {"field": "published", "old_value": tender.published, "new_value": input_data.get('published')}
-        if input_data.get('ebid') != tender.ebid: return {"field": "ebid", "old_value": tender.ebid, "new_value": input_data.get('ebid')}
-        if input_data.get('esign') != tender.esign: return {"field": "esign", "old_value": tender.esign, "new_value": input_data.get('esign')}
-        if input_data.get('plans_price') != tender.plans_price: return {"field": "plans_price", "old_value": tender.plans_price, "new_value": input_data.get('plans_price')}
-        if input_data.get('reserved') != tender.reserved: return {"field": "reserved", "old_value": tender.reserved, "new_value": input_data.get('reserved')}
-        if input_data.get('variant') != tender.variant: return {"field": "variant", "old_value": tender.variant, "new_value": input_data.get('variant')}
-        if input_data.get('location') != tender.location: return {"field": "location", "old_value": tender.location, "new_value": input_data.get('location')}
-        if input_data.get('acronym') != tender.acronym: return {"field": "acronym", "old_value": tender.acronym, "new_value": input_data.get('acronym')}
-        if input_data.get('link') != tender.link: return {"field": "link", "old_value": tender.link, "new_value": input_data.get('link')}
-        if domainsChanged(input_data.get('domains'), tender.domains): return {"field": "domains", "old_value": len(tender.domains.all()), "new_value": len(input_data.get('domains'))}
-        return None
 
     tc = tenderChanged(tender, input_data)
     if tc:
@@ -477,23 +537,24 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
         tender_serializer.is_valid(raise_exception=True)
         tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
         setDomains(input_data.get('domains'), tender)
-        helper.printMessage('DEBUG', 'm.updateTender', f"+++ Tender updated: {tender.chrono}")
+        helper.printMessage('DEBUG', 'm.updateTender', f"+++ Tender updated with changes: {tender.chrono}")
         changes.append(tc)
     return changes
 
 
 def lotsChanged(lots_data, tender):
-    
-    def lotChanged(lot_data, lot):
+
+    def lotChanged(lot, lot_data):
         cat = lot_data.get('category')
         dict_cat_label = cat.get('label') if cat else ""
         obj_cat_label = lot.category.label if lot.category else None
         if dict_cat_label != obj_cat_label:
-            return {"field": "category" , "old_value": obj_cat_label, "new_value": dict_cat_label}
-        attrs = ("number", "title", "estimate", "bond", "variant", "reserved")
+            return {"level": f"Lot #{lot.number}", "field": "category" , "old_value": obj_cat_label, "new_value": dict_cat_label}
+        attrs = ("estimate", "bond", "reserved", "variant", "title", "number")        
         return next(
             (
                 {
+                    "level": f"Lot #{lot.number}",
                     "field": attr,
                     "old_value": getattr(lot, attr),
                     "new_value": lot_data.get(attr),
@@ -504,45 +565,143 @@ def lotsChanged(lots_data, tender):
             None,
         )
 
-    def qualifsChanged(qualifs, data):
-        qualif_list = list(qualifs.all())        
-        if len(data) != len(qualif_list): return True
-        return any(
-            q_data.get("name") != qualif.name 
-            for q_data, qualif in zip(data, qualif_list)
-        )
+    def qualifsChanged(lot, qualifs_data):
+        existing_names = set(lot.qualifs.values_list('name', flat=True))
+        new_names = {data.get("name") for data in qualifs_data if "name" in data}
+        
+        if len(qualifs_data) != len(existing_names):
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Qualifs",
+                "old_value": f"{len(existing_names)}",
+                "new_value": f"{len(qualifs_data)}",
+            }
+        
+        added = new_names - existing_names
+        removed = existing_names - new_names
+        
+        if added or removed:
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Qualif",
+                "old_value": ", ".join(sorted(existing_names)),
+                "new_value": ", ".join(sorted(new_names)),
+            }
+                
+        return None
+        
+    def agrementsChanged(lot, agrements_data):
+        existing_names = set(lot.agrements.values_list('name', flat=True))
+        new_names = {data.get("name") for data in agrements_data if "name" in data}
+        
+        if len(agrements_data) != len(existing_names):
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Agrements",
+                "old_value": f"{len(existing_names)}",
+                "new_value": f"{len(agrements_data)}",
+            }
+        
+        added = new_names - existing_names
+        removed = existing_names - new_names
+        
+        if added or removed:
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Agrement",
+                "old_value": ", ".join(sorted(existing_names)),
+                "new_value": ", ".join(sorted(new_names)),
+            }
 
-    def agrementsChanged(agrements, data):
-        agrement_list = list(agrements.all())        
-        if len(data) != len(agrement_list): return True
-        return any(
-            a_data.get("name") != agrement.name 
-            for a_data, agrement in zip(data, agrement_list)
-        )
+        return None
 
-    def samplesChanged(samples, data):
-        sample_list = list(samples.all())
-        if len(data) != len(sample_list): return True
-        return any(
-            s_data.get("when") != sample.when or s_data.get("description") != sample.description
-            for s_data, sample in zip(data, sample_list)
-        )
+    def samplesChanged(lot, samples_data):
+        existing_samples = set(lot.samples.values_list('when', 'description'))
+        
+        new_samples = {(data.get("when"), data.get("description")) for data in samples_data}
+        
+        if len(samples_data) != len(existing_samples):
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Samples",
+                "old_value": f"{len(existing_samples)}",
+                "new_value": f"{len(samples_data)}",
+            }
+        
+        if existing_samples != new_samples:
+            removed = existing_samples - new_samples
+            added = new_samples - existing_samples
+            
+            old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
+            new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
+            
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Samples",
+                "old_value": old_summary,
+                "new_value": new_summary,
+            }
 
-    def meetingsChanged(meetings, data):
-        meeting_list = list(meetings.all())
-        if len(data) != len(meeting_list): return True
-        return any(
-            m_data.get("when") != meeting.when or m_data.get("description") != meeting.description
-            for m_data, meeting in zip(data, meeting_list)
-        )
+        return None
 
-    def visitsChanged(visits, data):
-        visit_list = list(visits.all())
-        if len(data) != len(visit_list): return True
-        return any(
-            v_data.get("when") != visit.when or v_data.get("description") != visit.description
-            for v_data, visit in zip(data, visit_list)
-        )
+    def meetingsChanged(lot, meetings_data):
+        existing_meetings = set(lot.meetings.values_list('when', 'description'))
+        
+        new_meetings = {(data.get("when"), data.get("description")) for data in meetings_data}
+        
+        if len(meetings_data) != len(existing_meetings):
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Meetings",
+                "old_value": f"{len(existing_meetings)}",
+                "new_value": f"{len(meetings_data)}",
+            }
+        
+        if existing_meetings != new_meetings:
+            removed = existing_meetings - new_meetings
+            added = new_meetings - existing_meetings
+            
+            old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
+            new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
+            
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Meetings",
+                "old_value": old_summary,
+                "new_value": new_summary,
+            }
+                
+        return None
+
+    def visitsChanged(lot, visits_data):
+        existing_visits = set(lot.visits.values_list('when', 'description'))
+        
+        new_visits = {(data.get("when"), data.get("description")) for data in visits_data}
+        
+        if len(visits_data) != len(existing_visits):
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Visits",
+                "old_value": f"{len(existing_visits)}",
+                "new_value": f"{len(visits_data)}",
+            }
+        
+        if existing_visits != new_visits:
+            removed = existing_visits - new_visits
+            added = new_visits - existing_visits
+            
+            old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
+            new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
+            
+            return {
+                "level": f"Lot #{lot.number}",
+                "field": "Visits",
+                "old_value": old_summary,
+                "new_value": new_summary,
+            }
+                
+        return None
+
 
     lots = tender.lots.all().prefetch_related("agrements", "qualifs", "samples", "meetings", "visits")
     ll = len(lots)
@@ -556,50 +715,43 @@ def lotsChanged(lots_data, tender):
         lot_number = lot.number
         lot_data = data_by_number.get(lot_number)
 
-        details_change = lotChanged(lot_data, lot)
-        if details_change:
-            helper.printMessage('TRACE', 'm.lotsChanged', f"+++ Lot details changed: {details_change}")
-            return [details_change]
+        if tender.lots_count > 1:
+            details_change = lotChanged(lot, lot_data)
+            if details_change:
+                helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot details changed: {details_change}")
+                return [details_change]
+            helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot details.")
+            # If lots_count == 1, Changes should be detected at Tender level.
 
-        if qualifsChanged(lot.qualifs.all(), lot_data.get('qualifs')):
-            helper.printMessage('TRACE', 'm.lotsChanged', f"+++ Lot qualifs changed: {details_change}")
-            return [{
-                "field": 'qualifs',
-                "old_value": len(lot.qualifs.all()),
-                "new_value": len(lot_data.get('qualifs'))
-            }]
-        
-        if agrementsChanged(lot.agrements.all(), lot_data.get('agrements')):
-            helper.printMessage('TRACE', 'm.lotsChanged', f"+++ Lot agrements changed: {details_change}")
-            return [{
-                "field": 'agrements',
-                "old_value": len(lot.agrements.all()),
-                "new_value": len(lot_data.get('agrements'))
-            }]
-        
-        if samplesChanged(lot.samples.all(), lot_data.get('samples')):
-            helper.printMessage('TRACE', 'm.lotsChanged', f"+++ Lot samples changed: {details_change}")
-            return [{
-                "field": 'samples',
-                "old_value": len(lot.samples.all()),
-                "new_value": len(lot_data.get('samples'))
-            }]
+        qualifs_change = qualifsChanged(lot, lot_data.get('qualifs'))
+        if qualifs_change:
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot qualifs changed: {qualifs_change}")
+            return qualifs_change
+        helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Qualifs.")
 
-        if meetingsChanged(lot.meetings.all(), lot_data.get('meetings')):
-            helper.printMessage('TRACE', 'm.lotsChanged', f"+++ Lot meetings changed: {details_change}")
-            return [{
-                "field": 'meetings',
-                "old_value": len(lot.meetings.all()),
-                "new_value": len(lot_data.get('meetings'))
-            }]
-        
-        if visitsChanged(lot.visits.all(), lot_data.get('visits')):
-            helper.printMessage('TRACE', 'm.lotsChanged', f"+++ Lot visits changed: {details_change}")
-            return [{
-                "field": 'visits',
-                "old_value": len(lot.visits.all()),
-                "new_value": len(lot_data.get('visits'))
-            }]
+        agrements_change = agrementsChanged(lot, lot_data.get('agrements'))
+        if agrements_change:
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot agrements changed: {agrements_change}")
+            return agrements_change
+        helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Agrements.")
+       
+        samples_change = samplesChanged(lot, lot_data.get('samples'))
+        if samples_change:
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot samples changed: {samples_change}")
+            return samples_change
+        helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Samples.")
+       
+        meetings_change = meetingsChanged(lot, lot_data.get('meetings'))
+        if meetings_change:
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot meetings changed: {meetings_change}")
+            return meetings_change
+        helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Meetings.")
+       
+        visits_change = visitsChanged(lot, lot_data.get('visits'))
+        if visits_change:
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot visits changed: {visits_change}")
+            return visits_change
+        helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Visits.")
 
     helper.printMessage('DEBUG', 'm.lotsChanged', f"--- No changes found in {ll} Lots")
     return []
@@ -793,46 +945,65 @@ def createLots(input_data, tender):
                 label = cat_data['label']
                 if label not in category_cache and label not in new_categories:
                     new_categories[label] = Category(label=label)
+                    helper.printMessage("TRACE", 'm.createLots', f">>>> Category to be created: {label}")
 
         if new_categories:
             created_cats = Category.objects.bulk_create(new_categories.values())
             for cat in created_cats:
                 category_cache[cat.label] = cat
+                helper.printMessage("TRACE", 'm.createLots', f"++++ Created Category: {cat.label}")
+
 
         qualif_cache = {x.name: x for x in Qualif.objects.all()}
         new_qualifs = {}
         agrement_cache = {x.name: x for x in Agrement.objects.all()}
         new_agrements = {}
 
-        i = 0
+        helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Tender Qualifs and Agrements ... ")
         for lot_data in input_data:
-            i += 1
-            helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot {i}/{ll} ... ")
-            helper.printMessage("TRACE", 'm.createLots', f"Lot {i} raw data:\n\t+++++---------------\n{lot_data}\n\t+++++---------------")
             for q_data in lot_data.get('qualifs', []):
                 name = q_data.get('name')
                 if name and name not in qualif_cache and name not in new_qualifs:
                     new_qualifs[name] = Qualif(name=name)
+                    helper.printMessage("TRACE", 'm.createLots', f">>>> Qualif to be created: {name}")
+
             for a_data in lot_data.get('agrements', []):
                 name = a_data.get('name')
                 if name and name not in agrement_cache and name not in new_agrements:
                     new_agrements[name] = Agrement(name=name)
+                    helper.printMessage("TRACE", 'm.createLots', f">>>> Agrement to be created: {name}")
 
         if new_qualifs:
             created_qualifs = Qualif.objects.bulk_create(new_qualifs.values())
+            helper.printMessage("TRACE", 'm.createLots', f"++++ Created Qualifs: {len(created_qualifs)}")
             for x in created_qualifs:
                 qualif_cache[x.name] = x
+        else:
+            helper.printMessage("TRACE", 'm.createLots', "---- Tender has no new Qualifs.")
 
         if new_agrements:
             created_agrements = Qualif.objects.bulk_create(new_agrements.values())
+            helper.printMessage("TRACE", 'm.createLots', f"++++ Created Agrements: {len(created_agrements)}")
             for x in created_agrements:
                 agrement_cache[x.name] = x
-
+        else:
+            helper.printMessage("TRACE", 'm.createLots', "---- Tender has no new Agrements.")
 
         lots_to_create = []
+        samples_to_create = []
+        meetings_to_create = []
+        visits_to_create = []
+
+        m2m_qualif_instances = []
+        m2m_agrement_instances = []
+        LotQualifThrough = Lot.qualifs.through
+        LotAgrementThrough = Lot.agrements.through
+
         i = 0
         for lot_data in input_data:
             i += 1
+            helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot details {i}/{ll} ... ")
+            helper.printMessage("TRACE", 'm.createLots', f"Lot {i} raw data:\n\t+++++---------------\n{lot_data}\n\t+++++---------------")
             lot_title = lot_data.get('title')
             if not lot_title:
                 continue
@@ -850,74 +1021,90 @@ def createLots(input_data, tender):
         created_lots = Lot.objects.bulk_create(lots_to_create, batch_size=999)
         helper.printMessage('DEBUG', 'm.createLots', f"++++ Lots created: {len(created_lots)}.")
 
-        LotQualifThrough = Lot.qualifs.through
-        m2m_qualif_instances = []
-        LotAgrementThrough = Lot.agrements.through
-        m2m_agrement_instances = []
 
-        samples_to_create = []
-        meetings_to_create = []
-        visits_to_create = []
+        helper.printMessage('DEBUG', 'm.createLots', f">>>> Handling Lots relationships ...")
+        i = 0
+        print
+        for lot_data, created_lot in zip(input_data, created_lots):
+            i += 1
+            helper.printMessage('DEBUG', 'm.createLots', f">>>>> Handling #{i} relationships ...")
+            qualifs_data = lot_data.get('qualifs')
+            if len(qualifs_data) > 0 :
+                for data_item in qualifs_data:
+                    name = data_item.get('name')
+                    if name and name in qualif_cache:
+                        qualif_obj = qualif_cache[name]
+                        m2m_qualif_instances.append(LotQualifThrough(lot=created_lot, qualif=qualif_obj))
+                        helper.printMessage('TRACE', 'm.createLots', f">>>>> Lot Qualif to be linked {name} ...")
 
-        for lot_data, lot_obj in zip(input_data, created_lots):
-            for q_data in lot_data.get('qualifs', []):
-                name = q_data.get('name')
-                if name and name in qualif_cache:
-                    qualif_obj = qualif_cache[name]
-                    m2m_qualif_instances.append(LotQualifThrough(lot_id=lot_obj.id, qualif_id=qualif_obj.id))
+            agrements_data = lot_data.get('agrements')
+            if len(agrements_data) > 0 :
+                for data_item in agrements_data:
+                    name = data_item.get('name')
+                    if name and name in agrement_cache:
+                        agrement_obj = agrement_cache[name]
+                        m2m_agrement_instances.append(LotAgrementThrough(lot=created_lot, agrement=agrement_obj))
+                        helper.printMessage('TRACE', 'm.createLots', f">>>>> Lot Agrement to be linked {name} ...")
 
-            for q_data in lot_data.get('agrements', []):
-                name = q_data.get('name')
-                if name and name in agrement_cache:
-                    agrement_obj = agrement_cache[name]
-                    m2m_agrement_instances.append(LotAgrementThrough(lot_id=lot_obj.id, agrement_id=agrement_obj.id))
-        
-            for sample_data in lot_data.get('samples', []):
-                sample_to_create = Sample(lot_id=lot_obj.id, when=sample_data.get('when'), description=sample_data.get('description'))
-                samples_to_create.append(sample_to_create)
 
-            for meeting_data in lot_data.get('meetings', []):
-                meeting_to_create = Meeting(lot_id=lot_obj.id, when=meeting_data.get('when'), description=meeting_data.get('description'))
-                meetings_to_create.append(meeting_to_create)
+            samples_data = lot_data.get('samples')
+            if len(samples_data) > 0 :
+                for data_item in samples_data:
+                    sample_to_create = Sample(lot=created_lot, when=data_item.get('when'), description=data_item.get("description"))
+                    samples_to_create.append(sample_to_create)
+                    helper.printMessage('TRACE', 'm.createLots', f">>>>> Lot Sample to be created {sample_to_create.when} ...")
 
-            for visit_data in lot_data.get('visits', []):
-                visit_to_create = Visit(lot_id=lot_obj.id, when=visit_data.get('when'), description=visit_data.get('description'))
-                visits_to_create.append(visit_to_create)
+            meetings_data = lot_data.get('meetings')
+            if len(meetings_data) > 0 :
+                for data_item in meetings_data:
+                    meeting_to_create = Meeting(lot=created_lot, when=data_item.get('when'), description=data_item.get("description"))
+                    meetings_to_create.append(meeting_to_create)
+                    helper.printMessage('TRACE', 'm.createLots', f">>>>> Lot Meeting to be created {meeting_to_create.when} ...")
+
+            visits_data = lot_data.get('visits')
+            if len(visits_data) > 0 :
+                for data_item in visits_data:
+                    visit_to_create = Visit(lot=created_lot, when=data_item.get('when'), description=data_item.get("description"))
+                    visits_to_create.append(visit_to_create)
+                    helper.printMessage('TRACE', 'm.createLots', f">>>>> Lot Visit to be created {visit_to_create.when} ...")
+
 
         if m2m_qualif_instances:
             helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Qualifs ... ")
             created_qualifs = LotQualifThrough.objects.bulk_create(m2m_qualif_instances, batch_size=999, ignore_conflicts=True)
             helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Qualifs: {len(created_qualifs)}.")
         else:
-            helper.printMessage('DEBUG', 'm.createLots', f"---- Lot has no Qualifs.")
+            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Qualifs.")
 
         if m2m_agrement_instances:
             helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Agrements ... ")
             created_agrements = LotAgrementThrough.objects.bulk_create(m2m_agrement_instances, batch_size=999, ignore_conflicts=True)
             helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Agrements: {len(created_agrements)}.")
         else:
-            helper.printMessage('DEBUG', 'm.createLots', f"---- Lot has no Agrements.")
+            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Agrements.")
 
         if samples_to_create:
             helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Samples ... ")
             created_samples = Sample.objects.bulk_create(samples_to_create, batch_size=999) 
             helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Samples: {len(created_samples)}.")
         else:
-            helper.printMessage('DEBUG', 'm.createLots', f"---- Lot has no Samples.")
+            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Samples.")
 
         if meetings_to_create:
             helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Meetings ... ")
             created_meetings = Meeting.objects.bulk_create(meetings_to_create, batch_size=999) 
             helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Meetings: {len(created_meetings)}.")
         else:
-            helper.printMessage('DEBUG', 'm.createLots', f"---- Lot has no Samples.")
+            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Samples.")
 
         if visits_to_create:
             helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Visits ... ")
             created_visits = Visit.objects.bulk_create(visits_to_create, batch_size=999) 
             helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Visits: {len(created_visits)}.")
         else:
-            helper.printMessage('DEBUG', 'm.createLots', f"---- Lot has no Visits.")
+            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Visits.")
+
+        tender.save()
 
 
 def updateLots(input_data, tender):
@@ -1023,7 +1210,7 @@ def updateLots(input_data, tender):
         if lots_to_update:
             Lot.objects.bulk_update(
                 lots_to_update,
-                fields=['title', 'description', 'category', 'estimate', 'bond', 'variant', 'reserved'],
+                fields=["title", "description", "category", "estimate", "bond", "variant", "reserved"],
                 batch_size=999
             )
             helper.printMessage('DEBUG', 'm.updateLots', f"++++ Lots updated: {len(lots_to_update)}.")
@@ -1101,6 +1288,6 @@ def logChanges(changed_fields, tender):
         except:
             helper.printMessage('WARN', 'm.saveTender', "---- Exception raised saving DCE request.")
             traceback.print_exc()
-    
+
 
 

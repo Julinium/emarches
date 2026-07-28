@@ -361,15 +361,19 @@
                                             </div>
                                             <div class="ms-2 small">
                                                 <ul>
-                                                    {% for pc in change.parsed_changes %}
-                                                        <li>
-                                                            <span class="fw-semibold">{{ pc.field|upper }}: </span>
-                                                            <span class="">{{ pc.old_value }} > </span>
-                                                            <span class="fw-semibold">{{ pc.new_value }}</span>
-                                                        </li>
-                                                    {% empty %}
-                                                        <li>{{ empty }}</li>
-                                                    {% endfor %}
+                                                    {% if change.parsed_changes %}
+                                                        {% for pc in change.parsed_changes %}
+                                                            <li>
+                                                                <span class="fw-semibold">{% if pc.level %}{{ pc.level|upper }}: {% endif %}{{ pc.field|upper }}: </span>
+                                                                <span class="">{{ pc.old_value }} > </span>
+                                                                <span class="fw-semibold">{{ pc.new_value }}</span>
+                                                            </li>
+                                                        {% empty %}
+                                                            <li>{{ empty }}</li>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <li>{{ change.changes }}</li>
+                                                    {% endif %}
                                                 </ul>
                                             </div>
                                         </div>

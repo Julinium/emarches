@@ -3,6 +3,7 @@ import re
 import os
 import traceback
 import uuid
+import json
 # from os import path as path
 
 import pytz
@@ -70,7 +71,7 @@ class Change(models.Model):
     tender = models.ForeignKey('Tender', on_delete=models.CASCADE, related_name="changes", db_column='tender', blank=True, null=True, verbose_name="Tender")
     reported = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date Reported")
     changes = models.TextField(blank=True, null=True, verbose_name="Changes")
-
+    
     class Meta:
         db_table = 'base_change'
         ordering = ['-reported', 'tender']
@@ -82,6 +83,7 @@ class Change(models.Model):
             return safe_eval_repr(self.changes)
         except (ValueError, SyntaxError, TypeError):
             return []
+
 
     def __str__(self):
         return f"{self.tender.chrono} - {self.reported}"
