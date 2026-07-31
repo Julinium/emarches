@@ -548,6 +548,14 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
 
 def lotsChanged(lots_data, tender):
 
+    def format_wd(w, d, r, a):            
+        common_w = {w for w, _ in r} & {w for w, _ in a}
+        common_d = {d for _, d in r} & {d for _, d in a}
+
+        if w in common_w: return f"... {d}"
+        if d in common_d: return f"{w} ..."
+        return f"{w} ({d})" 
+    
     def lotChanged(lot, lot_data):
         cat = lot_data.get('category')
         dict_cat_label = cat.get('label') if cat else ""
@@ -635,9 +643,9 @@ def lotsChanged(lots_data, tender):
         if existing_samples != new_samples:
             removed = existing_samples - new_samples
             added = new_samples - existing_samples
-            
-            old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
-            new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
+
+            old_summary = "; ".join([format_wd(w, d, removed, added) for w, d in removed]) if removed else "-"
+            new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
             
             return {
                 "level": f"Lot #{lot.number}",
@@ -665,8 +673,8 @@ def lotsChanged(lots_data, tender):
             removed = existing_meetings - new_meetings
             added = new_meetings - existing_meetings
             
-            old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
-            new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
+            old_summary = "; ".join([format_wd(w, d, removed, added) for w, d in removed]) if removed else "-"
+            new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
             
             return {
                 "level": f"Lot #{lot.number}",
@@ -694,8 +702,8 @@ def lotsChanged(lots_data, tender):
             removed = existing_visits - new_visits
             added = new_visits - existing_visits
             
-            old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
-            new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
+            old_summary = "; ".join([format_wd(w, d, removed, added) for w, d in removed]) if removed else "-"
+            new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
 
             return {
                 "level": f"Lot #{lot.number}",
