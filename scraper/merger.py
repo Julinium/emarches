@@ -559,14 +559,17 @@ def lotsChanged(lots_data, tender):
     def lotChanged(lot, lot_data):
         cat = lot_data.get('category')
         dict_cat_label = cat.get('label') if cat else ""
-        obj_cat_label = lot.category.label if lot.category else None
+        obj_cat_label = lot.category.label if lot.category else None       
+        level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
+
         if dict_cat_label != obj_cat_label:
-            return {"level": f"Lot #{lot.number}", "field": "category" , "old_value": obj_cat_label, "new_value": dict_cat_label}
-        attrs = ("estimate", "bond", "reserved", "variant", "title", "number")        
+            return {"level": level, "field": "category" , "old_value": obj_cat_label, "new_value": dict_cat_label}
+        attrs = ("estimate", "bond", "reserved", "variant", "title", "number") 
+
         return next(
             (
                 {
-                    "level": f"Lot #{lot.number}",
+                    "level": level,
                     "field": attr,
                     "old_value": getattr(lot, attr),
                     "new_value": lot_data.get(attr),
@@ -580,10 +583,11 @@ def lotsChanged(lots_data, tender):
     def qualifsChanged(lot, qualifs_data):
         existing_names = set(lot.qualifs.values_list('name', flat=True))
         new_names = {data.get("name") for data in qualifs_data if "name" in data}
+        level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         
         if len(qualifs_data) != len(existing_names):
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Qualifs",
                 "old_value": f"{len(existing_names)}",
                 "new_value": f"{len(qualifs_data)}",
@@ -594,7 +598,7 @@ def lotsChanged(lots_data, tender):
         
         if added or removed:
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Qualif",
                 "old_value": ", ".join(sorted(existing_names)),
                 "new_value": ", ".join(sorted(new_names)),
@@ -605,10 +609,11 @@ def lotsChanged(lots_data, tender):
     def agrementsChanged(lot, agrements_data):
         existing_names = set(lot.agrements.values_list('name', flat=True))
         new_names = {data.get("name") for data in agrements_data if "name" in data}
-        
+        level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
+
         if len(agrements_data) != len(existing_names):
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Agrements",
                 "old_value": f"{len(existing_names)}",
                 "new_value": f"{len(agrements_data)}",
@@ -619,7 +624,7 @@ def lotsChanged(lots_data, tender):
         
         if added or removed:
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Agrement",
                 "old_value": ", ".join(sorted(existing_names)),
                 "new_value": ", ".join(sorted(new_names)),
@@ -632,9 +637,10 @@ def lotsChanged(lots_data, tender):
         
         new_samples = {(data.get("when"), data.get("description")) for data in samples_data}
         
+        level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(samples_data) != len(existing_samples):
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Samples",
                 "old_value": f"{len(existing_samples)}",
                 "new_value": f"{len(samples_data)}",
@@ -648,7 +654,7 @@ def lotsChanged(lots_data, tender):
             new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
             
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Samples",
                 "old_value": old_summary,
                 "new_value": new_summary,
@@ -660,10 +666,10 @@ def lotsChanged(lots_data, tender):
         existing_meetings = set(lot.meetings.values_list('when', 'description'))
         
         new_meetings = {(data.get("when"), data.get("description")) for data in meetings_data}
-        
+        level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(meetings_data) != len(existing_meetings):
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Meetings",
                 "old_value": f"{len(existing_meetings)}",
                 "new_value": f"{len(meetings_data)}",
@@ -677,7 +683,7 @@ def lotsChanged(lots_data, tender):
             new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
             
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Meetings",
                 "old_value": old_summary,
                 "new_value": new_summary,
@@ -689,10 +695,11 @@ def lotsChanged(lots_data, tender):
         existing_visits = set(lot.visits.values_list('when', 'description'))
         
         new_visits = {(data.get("when"), data.get("description")) for data in visits_data}
-        
+
+        level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(visits_data) != len(existing_visits):
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Visits",
                 "old_value": f"{len(existing_visits)}",
                 "new_value": f"{len(visits_data)}",
@@ -706,7 +713,7 @@ def lotsChanged(lots_data, tender):
             new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
 
             return {
-                "level": f"Lot #{lot.number}",
+                "level": level,
                 "field": "Visits",
                 "old_value": old_summary,
                 "new_value": new_summary,
