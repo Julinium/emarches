@@ -11,6 +11,7 @@ django.setup()
 
 
 def do_the_work():
+    from django.utils import timezone
     from datetime import datetime, timedelta
 
     from base.models import Crawler, Tender
@@ -18,7 +19,7 @@ def do_the_work():
     from scraper import constants as C
     from scraper import downer, getter, helper, linker, merger
 
-    started_time = datetime.now()
+    started_time = timezone.now()
 
     def handle_links():
         links_crawled, links_imported, links_from_saved = 0,0,0
@@ -120,7 +121,7 @@ def do_the_work():
 
         results_saved, results_searched = 0, 0
         helper.printMessage('INFO', 'worker', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 2, 1)
-        assa = datetime.now().date()
+        assa = timezone.now().date()
         assenn = assa - timedelta(days=back_days)
 
         tenders = Tender.objects.filter(
@@ -206,7 +207,7 @@ def do_the_work():
     else: results_saved, results_searched = handle_results()
 
     ##### Keep track of update times
-    finished_time = datetime.now()
+    finished_time = timezone.now()
     crawler = Crawler(
             started = started_time,
             finished = finished_time,

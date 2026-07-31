@@ -359,12 +359,15 @@
                                                 <i class="{{ bicons.history }} me-1"></i>
                                                 <span>{{ change.reported }} </span>  
                                             </div>
-                                            <div class="ms-2 small">
+                                            <div class="small">
                                                 <ul>
                                                     {% if change.parsed_changes %}
                                                         {% for pc in change.parsed_changes %}
                                                             <li>
-                                                                <span class="fw-semibold">{% if pc.level %}{{ pc.level|upper }}: {% endif %}{{ pc.field|upper }}: </span>
+                                                                {% if pc.level %}
+                                                                    <span class="">{{ pc.level|upper }}: </span>
+                                                                {% endif %}
+                                                                <span class="fw-semibold">{{ pc.field|upper }}: </span>
                                                                 <span class="">{{ pc.old_value }} > </span>
                                                                 <span class="fw-semibold">{{ pc.new_value }}</span>
                                                             </li>

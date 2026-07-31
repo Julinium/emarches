@@ -130,7 +130,7 @@ def saveTender(tender_data):
 
     tender = Tender.objects.filter(chrono=chrono).first()
     tender_create = tender == None
-    changed_fields = []
+    changes = []
 
     if tender is None:
         helper.printMessage('DEBUG', 'm.saveTender', f"### Tender to be created: {chrono}")
@@ -156,32 +156,38 @@ def saveTender(tender_data):
 
         if len(numbers_to_delete) > 0:
             dll = deleteLots(numbers_to_delete, tender)
-            helper.printMessage('TRACE', 'm.saveTender', f">>> Deleted Lots : \n{dll}\n")
+            helper.printMessage('DEBUG', 'm.saveTender', f">>> Deleted Lots : \n{dll}\n")
             if tender.lots_count > 1:
                 change = {"level": "Tender", "field": "lots", "old_value": "-", "new_value": f"{-len(numbers_to_delete)}"}
-                changed_fields.append(change)
+                helper.printMessage('TRACE', 'm.saveTender', f"~~~ Reported Deletion change : {change}")
+                changes.append(change)
+                helper.printMessage('TRACE', 'm.saveTender', f"~~~ Changed fields so far: {changes}")
         if len(numbers_to_create) > 0 :
             data_to_create = [obj for obj in lots_data if obj.get('number') in set(numbers_to_create)]
             createLots(data_to_create, tender)
             if tender.lots_count > 1:
                 change = {"level": "Tender", "field": "lots", "old_value": "-", "new_value": f"+{len(numbers_to_create)}"}
-                changed_fields.append(change)
+                helper.printMessage('TRACE', 'm.saveTender', f"~~~ Reported Creation change: {change}")
+                changes.append(change)
+                helper.printMessage('TRACE', 'm.saveTender', f"~~~ Changed fields so far: {changes}")
         if len(numbers_to_update) > 0 :
             data_to_update = [obj for obj in lots_data if obj.get('number') in set(numbers_to_update)]
-            
-            changes = lotsChanged(lots_data, tender)
 
-            if len(changes) > 0:
+            lots_changes = lotsChanged(lots_data, tender)
+
+            if len(lots_changes) > 0:
+                helper.printMessage('TRACE', 'm.saveTender', f"~~~ Reported Lots change: {lots_changes}")
                 updateLots(data_to_update, tender)
-                changed_fields += changes
+                changes += lots_changes
+                helper.printMessage('TRACE', 'm.saveTender', f"~~~ Changed fields so far: {changes}")
 
         tender_changes = updateTender(tender, formatted_data, category, client, kind, mode, procedure)
-        changed_fields += tender_changes
+        changes += tender_changes
 
-        logChanges(changed_fields, tender)
-        if len(changed_fields) < 1: 
+        logChanges(changes, tender)
+        if len(changes) < 1: 
             helper.printMessage('DEBUG', 'm.saveTender', '--- No changes were found in Tender.')
-    
+
     helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
 
     return tender, tender_create
@@ -414,7 +420,7 @@ def createTender(input_data, category, client, kind, mode, procedure):
     chrono = validated_data.get('chrono')
     tender = None
     tender_serializer = TenderSerializer(data=validated_data)    
-    helper.printMessage("TRACE", 'm.updateTender', f"Tender raw data:\n\t+++++###############\n{input_data}\n\t+++++###############")
+    helper.printMessage("TRACE", 'm.createTender', f"Tender raw data:\n\t+++++###############\n{input_data}\n\t+++++###############")
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
 
@@ -432,11 +438,11 @@ def createTender(input_data, category, client, kind, mode, procedure):
 
 @transaction.atomic
 def updateTender(tender, input_data, category, client, kind, mode, procedure):
-    
+
     def domainsChanged(tender, domains_data):
-        existing_names = set(tender.domains.values_list('name', flat=True))
+        existing_names = set(tender.domains.values_list("name", flat=True))
         new_names = {data.get("name") for data in domains_data if "name" in data}
-        
+
         if len(domains_data) != len(existing_names):
             return {
                 "level": "Tender",
@@ -479,12 +485,10 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
                     old_value_display = old_value
                     if type(old_value) is datetime: old_value_display = old_value.strftime('%Y-%m-%dT%H:%MZ')
                     elif type(old_value) is date: old_value_display = old_value.strftime('%Y-%m-%d')
-                    # elif type(old_value) is Decimal: old_value_display = str(old_value)
 
                     new_value_display = new_value
                     if type(new_value) is datetime: new_value_display = new_value.strftime('%Y-%m-%dT%H:%MZ')
                     elif type(new_value) is date: new_value_display = new_value.strftime('%Y-%m-%d')
-                    # elif type(new_value) is Decimal: new_value_display = str(new_value)
 
                     if new_value != old_value:
                         return {
@@ -685,21 +689,21 @@ def lotsChanged(lots_data, tender):
                 "old_value": f"{len(existing_visits)}",
                 "new_value": f"{len(visits_data)}",
             }
-        
+
         if existing_visits != new_visits:
             removed = existing_visits - new_visits
             added = new_visits - existing_visits
             
             old_summary = "; ".join([f"{w} ({d})" for w, d in removed]) if removed else "-"
             new_summary = "; ".join([f"{w} ({d})" for w, d in added]) if added else "-"
-            
+
             return {
                 "level": f"Lot #{lot.number}",
                 "field": "Visits",
                 "old_value": old_summary,
                 "new_value": new_summary,
             }
-                
+
         return None
 
 
@@ -708,6 +712,7 @@ def lotsChanged(lots_data, tender):
     helper.printMessage('DEBUG', 'm.lotsChanged', f"### Checking {ll} Lots for changes ...")
     data_by_number = {lot_data.get('number'): lot_data for lot_data in lots_data}
 
+    changes = []
     i = 0
     for lot in lots:
         i += 1
@@ -718,39 +723,45 @@ def lotsChanged(lots_data, tender):
         if tender.lots_count > 1:
             details_change = lotChanged(lot, lot_data)
             if details_change:
-                helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot details changed: {details_change}")
-                return [details_change]
-            helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot details.")
+                helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot #{lot_number} details changed: {details_change}")
+                changes.append(details_change)
+                return changes
+            helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot_number} details.")
             # If lots_count == 1, Changes should be detected at Tender level.
 
         qualifs_change = qualifsChanged(lot, lot_data.get('qualifs'))
         if qualifs_change:
-            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot qualifs changed: {qualifs_change}")
-            return qualifs_change
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot #{lot_number} qualifs changed: {qualifs_change}")
+            changes.append(qualifs_change)
+            return changes
         helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Qualifs.")
 
         agrements_change = agrementsChanged(lot, lot_data.get('agrements'))
         if agrements_change:
-            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot agrements changed: {agrements_change}")
-            return agrements_change
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot #{lot_number} agrements changed: {agrements_change}")
+            changes.append(agrements_change)
+            return changes
         helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Agrements.")
        
         samples_change = samplesChanged(lot, lot_data.get('samples'))
         if samples_change:
-            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot samples changed: {samples_change}")
-            return samples_change
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot #{lot_number} samples changed: {samples_change}")
+            changes.append(samples_change)
+            return changes
         helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Samples.")
        
         meetings_change = meetingsChanged(lot, lot_data.get('meetings'))
         if meetings_change:
-            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot meetings changed: {meetings_change}")
-            return meetings_change
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot #{lot_number} meetings changed: {meetings_change}")
+            changes.append(meetings_change)
+            return changes
         helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Meetings.")
        
         visits_change = visitsChanged(lot, lot_data.get('visits'))
         if visits_change:
-            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot visits changed: {visits_change}")
-            return visits_change
+            helper.printMessage('TRACE', 'm.lotsChanged', f"++++ Lot #{lot_number} visits changed: {visits_change}")
+            changes.append(visits_change)
+            return changes
         helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot.number} Visits.")
 
     helper.printMessage('DEBUG', 'm.lotsChanged', f"--- No changes found in {ll} Lots")
