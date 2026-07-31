@@ -17,20 +17,15 @@ def main():
     # from zoneinfo import ZoneInfo
 
     # from base.models import Change
+
     # records = Change.objects.all()
 
     # i = 0
     # for rec in records:
-    #     tzc = 'tzinfo=ZoneInfo("Africa/Casablanca")'
     #     i += 1
-    #     bs = '["level", "field", "old_value", "new_value"]'
-    #     if tzc in rec.changes:
-    #         print(f"{i} = {rec.changes}", '\n------\n')
-    #         data = eval(rec.changes, {"datetime": datetime, "ZoneInfo": ZoneInfo, "Decimal": Decimal})
-
-    #         rec.changes = convert_datetimes_to_iso(data)
-    #         rec.save()
-    #         print(f"==== {rec.changes}", '------\n')
+    #     sb = "size_bytes"
+    #     if sb in rec.changes:
+    #         print(f"{i} = {rec.changes}")
     pass
 
     

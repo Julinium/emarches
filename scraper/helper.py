@@ -210,3 +210,22 @@ def sleepRandom(Fm=35, To=65):
     return 0
 
 
+# import math
+
+# def format_bytes(size_in_bytes: int, decimals: int = 2, binary: bool = True) -> str:
+#     if size_in_bytes == 0: return "0 Bytes"
+#     if size_in_bytes < 0: raise ValueError("Byte value cannot be negative")
+#     base = 1024 if binary else 1000
+#     units = (
+#         ['Bi', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB']
+#         if binary else 
+#         ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']
+#     )
+#     i = int(math.floor(math.log(size_in_bytes, base)))
+#     i = min(i, len(units) - 1)
+#     formatted_size = round(size_in_bytes / (base ** i), decimals)
+    
+#     return f"{formatted_size:.{decimals}f} {units[i]}"
+
+
+    
