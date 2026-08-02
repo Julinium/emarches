@@ -2,7 +2,6 @@
 
 echo ">>>>>>>>>>>>JOB>STARTED>>>>>>>>>>>>"
 
-# SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}" && cd ..)" && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 _now=$(date +"%Y%m%d-%H%M%S")
@@ -22,7 +21,7 @@ fi
 _lock_file_short=".lock"
 
 if test -e "$_lock_file"; then
-    echo "Execution prevented by a Lock file: $_lock_file_short" >> "$_logs_file" 2>&1
+    echo "Execution prevented by a Lock file: $_lock_file_short" # >> "$_logs_file" 2>&1
 else
     echo "Lock file $_lock_file_short was not found." >> "$_logs_file" 2>&1
     touch $_lock_file
@@ -40,12 +39,6 @@ else
     # This is checked by the existence of _local_file (which is created only on the server, not on remote machines)
     _local_file="$_crony_dir/.local"
     if ! test -e "$_local_file"; then
-        # rsync-dce, rsync-csv and rsync-logs are aliases to rsync commands like 
-        # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-dce-folder/> <user>@<remote-server>:<full-path-to-server-dce-folder>' 
-        # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-csv-folder/> <user>@<remote-server>:<full-path-to-server-csv-folder>' 
-        # `rsync -av --update -e 'ssh [-p xxxx]' <full-path-to-local-logs-folder/> <user>@<remote-server>:<full-path-to-server-logs-folder>' 
-        # Note: Pre-configured SSH tunnel is required
-        # Note: For space saving, eventual cleanup is needed alongside with rsync.
         echo "Transferring DCE files ..."  >> "$_logs_file" 2>&1
         bash -ic "rsync-dce" >> "$_logs_file" 2>&1
         echo "Transferring CSV items files ..."  >> "$_logs_file" 2>&1

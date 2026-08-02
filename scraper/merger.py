@@ -581,7 +581,7 @@ def lotsChanged(lots_data, tender):
         )
 
     def qualifsChanged(lot, qualifs_data):
-        existing_names = set(lot.qualifs.values_list('name', flat=True))
+        existing_names = list(lot.qualifs.values_list('name', flat=True))
         new_names = {data.get("name") for data in qualifs_data if "name" in data}
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         
@@ -607,7 +607,7 @@ def lotsChanged(lots_data, tender):
         return None
         
     def agrementsChanged(lot, agrements_data):
-        existing_names = set(lot.agrements.values_list('name', flat=True))
+        existing_names = list(lot.agrements.values_list('name', flat=True))
         new_names = {data.get("name") for data in agrements_data if "name" in data}
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
 
@@ -633,7 +633,7 @@ def lotsChanged(lots_data, tender):
         return None
 
     def samplesChanged(lot, samples_data):
-        existing_samples = set(lot.samples.values_list('when', 'description'))
+        existing_samples = list(lot.samples.values_list('when', 'description'))
         
         new_samples = {(data.get("when"), data.get("description")) for data in samples_data}
         
@@ -663,7 +663,7 @@ def lotsChanged(lots_data, tender):
         return None
 
     def meetingsChanged(lot, meetings_data):
-        existing_meetings = set(lot.meetings.values_list('when', 'description'))
+        existing_meetings = list(lot.meetings.values_list('when', 'description'))
         
         new_meetings = {(data.get("when"), data.get("description")) for data in meetings_data}
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
@@ -692,7 +692,7 @@ def lotsChanged(lots_data, tender):
         return None
 
     def visitsChanged(lot, visits_data):
-        existing_visits = set(lot.visits.values_list('when', 'description'))
+        existing_visits = list(lot.visits.values_list('when', 'description'))
         
         new_visits = {(data.get("when"), data.get("description")) for data in visits_data}
 

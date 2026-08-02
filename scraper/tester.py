@@ -16,16 +16,7 @@ def main():
     # from decimal import Decimal
     # from zoneinfo import ZoneInfo
 
-    # from base.models import Change
-
-    # records = Change.objects.all()
-
-    # i = 0
-    # for rec in records:
-    #     i += 1
-    #     sb = "size_bytes"
-    #     if sb in rec.changes:
-    #         print(f"{i} = {rec.changes}")
+    # from base.models import Crawler
     pass
 
     
