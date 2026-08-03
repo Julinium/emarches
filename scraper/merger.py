@@ -440,8 +440,8 @@ def createTender(input_data, category, client, kind, mode, procedure):
 def updateTender(tender, input_data, category, client, kind, mode, procedure):
 
     def domainsChanged(tender, domains_data):
-        existing_names = set(tender.domains.values_list("name", flat=True))
-        new_names = {data.get("name") for data in domains_data if "name" in data}
+        existing_names = list(tender.domains.values_list("name", flat=True))
+        new_names = [data.get("name") for data in domains_data if "name" in data]
 
         if len(domains_data) != len(existing_names):
             return {
@@ -451,8 +451,8 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
                 "new_value": f"{len(domains_data)}",
             }
         
-        added = new_names - existing_names
-        removed = existing_names - new_names
+        added = set(new_names) - set(existing_names)
+        removed = set(existing_names) - set(new_names)
         
         if added or removed:
             return {
@@ -532,7 +532,7 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
 
     helper.printMessage('DEBUG', 'm.updateTender', f"### Checking Tender {tender.chrono} for changes")
     helper.printMessage("TRACE", 'm.updateTender', f"Tender raw data:\n\t~~~~~###############\n{input_data}\n\t~~~~~###############")
-    
+
     changes = []
 
     tc = tenderChanged(tender, input_data)
@@ -582,7 +582,7 @@ def lotsChanged(lots_data, tender):
 
     def qualifsChanged(lot, qualifs_data):
         existing_names = list(lot.qualifs.values_list('name', flat=True))
-        new_names = {data.get("name") for data in qualifs_data if "name" in data}
+        new_names = [data.get("name") for data in qualifs_data if "name" in data]
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         
         if len(qualifs_data) != len(existing_names):
@@ -593,8 +593,8 @@ def lotsChanged(lots_data, tender):
                 "new_value": f"{len(qualifs_data)}",
             }
         
-        added = new_names - existing_names
-        removed = existing_names - new_names
+        added = set(new_names) - set(existing_names)
+        removed = set(existing_names) - set(new_names)
         
         if added or removed:
             return {
@@ -608,7 +608,7 @@ def lotsChanged(lots_data, tender):
         
     def agrementsChanged(lot, agrements_data):
         existing_names = list(lot.agrements.values_list('name', flat=True))
-        new_names = {data.get("name") for data in agrements_data if "name" in data}
+        new_names = [data.get("name") for data in agrements_data if "name" in data]
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
 
         if len(agrements_data) != len(existing_names):
@@ -619,8 +619,8 @@ def lotsChanged(lots_data, tender):
                 "new_value": f"{len(agrements_data)}",
             }
         
-        added = new_names - existing_names
-        removed = existing_names - new_names
+        added = set(new_names) - set(existing_names)
+        removed = set(existing_names) - set(new_names)
         
         if added or removed:
             return {
@@ -633,9 +633,8 @@ def lotsChanged(lots_data, tender):
         return None
 
     def samplesChanged(lot, samples_data):
-        existing_samples = list(lot.samples.values_list('when', 'description'))
-        
-        new_samples = {(data.get("when"), data.get("description")) for data in samples_data}
+        existing_samples = list(lot.samples.values_list('when', 'description'))        
+        new_samples = [(data.get("when"), data.get("description")) for data in samples_data]
         
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(samples_data) != len(existing_samples):
@@ -647,8 +646,8 @@ def lotsChanged(lots_data, tender):
             }
         
         if existing_samples != new_samples:
-            removed = existing_samples - new_samples
-            added = new_samples - existing_samples
+            removed = set(existing_samples) - set(new_samples)
+            added = set(new_samples) - set(existing_samples)
 
             old_summary = "; ".join([format_wd(w, d, removed, added) for w, d in removed]) if removed else "-"
             new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
@@ -663,9 +662,8 @@ def lotsChanged(lots_data, tender):
         return None
 
     def meetingsChanged(lot, meetings_data):
-        existing_meetings = list(lot.meetings.values_list('when', 'description'))
-        
-        new_meetings = {(data.get("when"), data.get("description")) for data in meetings_data}
+        existing_meetings = list(lot.meetings.values_list('when', 'description'))        
+        new_meetings = [(data.get("when"), data.get("description")) for data in meetings_data]
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(meetings_data) != len(existing_meetings):
             return {
@@ -676,9 +674,9 @@ def lotsChanged(lots_data, tender):
             }
         
         if existing_meetings != new_meetings:
-            removed = existing_meetings - new_meetings
-            added = new_meetings - existing_meetings
-            
+            removed = set(existing_meetings) - set(new_meetings)
+            added = set(new_meetings) - set(existing_meetings)
+
             old_summary = "; ".join([format_wd(w, d, removed, added) for w, d in removed]) if removed else "-"
             new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
             
@@ -693,8 +691,7 @@ def lotsChanged(lots_data, tender):
 
     def visitsChanged(lot, visits_data):
         existing_visits = list(lot.visits.values_list('when', 'description'))
-        
-        new_visits = {(data.get("when"), data.get("description")) for data in visits_data}
+        new_visits = [(data.get("when"), data.get("description")) for data in visits_data]
 
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(visits_data) != len(existing_visits):
@@ -706,9 +703,9 @@ def lotsChanged(lots_data, tender):
             }
 
         if existing_visits != new_visits:
-            removed = existing_visits - new_visits
-            added = new_visits - existing_visits
-            
+            removed = set(existing_visits) - set(new_visits)
+            added = set(new_visits) - set(existing_visits)
+
             old_summary = "; ".join([format_wd(w, d, removed, added) for w, d in removed]) if removed else "-"
             new_summary = "; ".join([format_wd(w, d, removed, added) for w, d in added]) if added else "-"
 

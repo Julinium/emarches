@@ -14,15 +14,16 @@ if ! [ -d "$_crony_dir" ]; then
     mkdir -p $_crony_dir
 fi
 
-if ! test -e "$_logs_file"; then
-    mkdir -p $_logs_dir && touch $_logs_file
-fi
 
 _lock_file_short=".lock"
 
 if test -e "$_lock_file"; then
-    echo "Execution prevented by a Lock file: $_lock_file_short" # >> "$_logs_file" 2>&1
+    echo "Execution prevented by a Lock file: $_lock_file_short"
 else
+    if ! test -e "$_logs_file"; then
+        mkdir -p $_logs_dir && touch $_logs_file
+    fi
+
     echo "Lock file $_lock_file_short was not found." >> "$_logs_file" 2>&1
     touch $_lock_file
     DJANGO_DIR="$SCRIPT_DIR/../"
