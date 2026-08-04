@@ -145,9 +145,9 @@ def saveTender(tender_data):
         numbers_list = [lot_data['number'] for lot_data in lots_data] if lots_data else []
         numbers_list_qs = list(lots_qs.values_list('number', flat=True))
 
-        numbers_to_create = list(set(numbers_list) - set(numbers_list_qs))
-        numbers_to_update = list(set(numbers_list) & set(numbers_list_qs))
-        numbers_to_delete = list(set(numbers_list_qs) - set(numbers_list))
+        numbers_to_create = set(numbers_list) - set(numbers_list_qs)
+        numbers_to_update = set(numbers_list) & set(numbers_list_qs)
+        numbers_to_delete = set(numbers_list_qs) - set(numbers_list)
 
         helper.printMessage('DEBUG', 'm.saveTender', f"### Lots: +{len(numbers_to_create)}, -{len(numbers_to_delete)}, ~{len(numbers_to_update)}")
         helper.printMessage('TRACE', 'm.saveTender', f"### numbers_to_create: {numbers_to_create}")
@@ -155,7 +155,7 @@ def saveTender(tender_data):
         helper.printMessage('TRACE', 'm.saveTender', f"### numbers_to_delete: {numbers_to_delete}")
 
         if len(numbers_to_delete) > 0:
-            dll = deleteLots(numbers_to_delete, tender)
+            dll = deleteLots(list(numbers_to_delete), tender)
             helper.printMessage('DEBUG', 'm.saveTender', f">>> Deleted Lots : \n{dll}\n")
             if tender.lots_count > 1:
                 change = {"level": "Tender", "field": "lots", "old_value": "-", "new_value": f"{-len(numbers_to_delete)}"}
@@ -163,7 +163,7 @@ def saveTender(tender_data):
                 changes.append(change)
                 helper.printMessage('TRACE', 'm.saveTender', f"~~~ Changed fields so far: {changes}")
         if len(numbers_to_create) > 0 :
-            data_to_create = [obj for obj in lots_data if obj.get('number') in set(numbers_to_create)]
+            data_to_create = [obj for obj in lots_data if obj.get('number') in numbers_to_create]
             createLots(data_to_create, tender)
             if tender.lots_count > 1:
                 change = {"level": "Tender", "field": "lots", "old_value": "-", "new_value": f"+{len(numbers_to_create)}"}
@@ -171,7 +171,7 @@ def saveTender(tender_data):
                 changes.append(change)
                 helper.printMessage('TRACE', 'm.saveTender', f"~~~ Changed fields so far: {changes}")
         if len(numbers_to_update) > 0 :
-            data_to_update = [obj for obj in lots_data if obj.get('number') in set(numbers_to_update)]
+            data_to_update = [obj for obj in lots_data if obj.get('number') in numbers_to_update]
 
             lots_changes = lotsChanged(lots_data, tender)
 
@@ -645,7 +645,7 @@ def lotsChanged(lots_data, tender):
                 "new_value": f"{len(samples_data)}",
             }
         
-        if existing_samples != new_samples:
+        if set(existing_samples) != set(new_samples):
             removed = set(existing_samples) - set(new_samples)
             added = set(new_samples) - set(existing_samples)
 
@@ -673,7 +673,7 @@ def lotsChanged(lots_data, tender):
                 "new_value": f"{len(meetings_data)}",
             }
         
-        if existing_meetings != new_meetings:
+        if set(existing_meetings) != set(new_meetings):
             removed = set(existing_meetings) - set(new_meetings)
             added = set(new_meetings) - set(existing_meetings)
 
@@ -702,7 +702,7 @@ def lotsChanged(lots_data, tender):
                 "new_value": f"{len(visits_data)}",
             }
 
-        if existing_visits != new_visits:
+        if set(existing_visits) != set(new_visits):
             removed = set(existing_visits) - set(new_visits)
             added = set(new_visits) - set(existing_visits)
 
