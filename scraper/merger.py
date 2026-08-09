@@ -1093,16 +1093,16 @@ def createLots(input_data, tender):
 
 
         if m2m_qualif_instances:
-            helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Qualifs ... ")
-            created_qualifs = LotQualifThrough.objects.bulk_create(m2m_qualif_instances, batch_size=999, ignore_conflicts=True)
-            helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Qualifs: {len(created_qualifs)}.")
+            helper.printMessage('DEBUG', 'm.createLots', f"#### Linking Lot Qualifs ... ")
+            linked_qualifs = LotQualifThrough.objects.bulk_create(m2m_qualif_instances, batch_size=999, ignore_conflicts=True)
+            helper.printMessage('DEBUG', 'm.createLots', f"++++ Linked Qualifs: {len(linked_qualifs)}.")
         else:
             helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Qualifs.")
 
         if m2m_agrement_instances:
-            helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Agrements ... ")
-            created_agrements = LotAgrementThrough.objects.bulk_create(m2m_agrement_instances, batch_size=999, ignore_conflicts=True)
-            helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Agrements: {len(created_agrements)}.")
+            helper.printMessage('DEBUG', 'm.createLots', f"#### Linking Lot Agrements ... ")
+            linked_agrements = LotAgrementThrough.objects.bulk_create(m2m_agrement_instances, batch_size=999, ignore_conflicts=True)
+            helper.printMessage('DEBUG', 'm.createLots', f"++++ Linked Agrements: {len(linked_agrements)}.")
         else:
             helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Agrements.")
 
