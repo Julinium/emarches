@@ -21,10 +21,47 @@
                     <span class="">{% trans "Profile" %}</span>
                 </a>
             </li>
+
+
+            <li><hr class="dropdown-divider"></li>
+
+
+            <li class="">
+                <a href="{% url 'bidding_team_recap' %}" class="p-2 dropdown-item">
+                    <span><i class="{{ bicons.people }} me-2"></i></span>
+                    <span class="">{% trans "My Team" %}</span>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="{% url 'nas_company_list' %}" class="p-2 dropdown-item">
+                    <span><i class="{{ bicons.company }} me-2"></i></span>
+                    <span class="">{% trans "Companies" %}</span>
+                </a>
+            </li>
+
+            <li class="">
+                <a href="#" class="p-2 dropdown-item text-muted">
+                    <i class="{{ bicons.deadline }} text-danger"></i>
+                    <span><i class="{{ bicons.subscribe }} me-2"></i></span>
+                    <span class="">{% trans "Subscription" %}</span>
+                </a>
+            </li>
+
+            <li><hr class="dropdown-divider"></li>
+
             <li>
                 <a href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}" class="p-2 dropdown-item">
                     <span><i class="bi bi-gear me-2"></i></span>
                     <span class="">{% trans "Preferences" %}</span>
+                </a>
+            </li>
+        
+            <li>
+                <a href="#" class="p-2 dropdown-item text-muted">
+                    <i class="{{ bicons.deadline }} text-danger"></i>
+                    <span><i class="{{ bicons.insights }} me-2"></i></span>
+                    <span class="">{% trans "Stats" %}</span>
                 </a>
             </li>
             {% url 'mfa_index' as mfa_url_ %}

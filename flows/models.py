@@ -107,12 +107,21 @@
 #         ("expired",     _("Expired")),
 #     ]
 
+#     COMMIT_CHOICES = [
+#         (0, "0M"), 
+#         (12, "12M"), 
+#         (24, "24M"), 
+#         (60, "60M"),
+#     ]
+
 #     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     team = models.ForeignKey(Team, on_delete=models.PROTECT)
+#     team = models.ForeignKey(Team, on_delete=models.CASCADE)
+#     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
 #     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
-#     start_date = models.DateTimeField()
-#     ended_date = models.DateTimeField(null=True, blank=True)
+#     subscribed_date = models.DateTimeField(auto_now_add=True)
+#     commitment = models.IntegerField(choices=COMMIT_CHOICES, default=0)
+#     #ended_date = models.DateTimeField(null=True, blank=True)
 
 #     trial_end = models.DateTimeField(null=True, blank=True)
 #     cancel_at_period_end = models.BooleanField(default=False)
@@ -125,9 +134,9 @@
 # class Cycle(models.Model):
 
 #     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     subscription = models.ForeignKey(Subscription, on_delete=models.PROTECT)
-#     order = models.ForeignKey(Order, on_delete=models.PROTECT)
-#     plan = models.ForeignKey(Plan, on_delete=models.PROTECT)
+#     subscription = models.ForeignKey(Subscription, on_delete=models.CASCADE)
+#     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+#     #plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
 
 #     period_start = models.DateTimeField()
 #     period_end = models.DateTimeField()
@@ -141,7 +150,7 @@
 #         def is_running(self, milmi=None):
 #             if self.period_end is None: 
 #                 return False
-#             if milm is None:
+#             if milmi is None:
 #                 milmi = datetime.now()
 #             if self.period_end < milmi:
 #                 return False
@@ -153,7 +162,7 @@
 #             return True
 #         @property
 #         def remaining_days(self, milmi=None):
-#             if milm is None:
+#             if milmi is None:
 #                 milmi = datetime.now()
             
 #             rd = self.period_end - milmi
@@ -162,6 +171,17 @@
 
 
 
+
+
+
+# class Currency(models.Model):
+
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     symbol = models.CharField(max_length=5, default="$")
+#     label = models.CharField(max_length=8, default="USD")
+#     name = models.CharField(max_length=64, default=_("US Dollar"))
+#     value_in_dhs = models.DecimalField(max_digits=6, decimal_places=2, default=10)
+#     symbol_first = models.BooleanField(default=False)
 
 
 
@@ -250,7 +270,7 @@
 
 #     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
 
-#     method = models.CharField(max_length=20, choices=METHOD_CHOICES)
+#     method = models.CharField(max_length=20, choices=METHOD_CHOICES, default="cash")
 #     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
 
 #     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -274,3 +294,4 @@
 
 #     class Meta:
 #         unique_together = ("payment", "invoice")
+

@@ -8,20 +8,20 @@
 {% endblock title %}
 
 {% block content %}
-    <!-- <div class="mb-3 w-100 text-end text-md-start">
-        <span class="fs-3 blink d-none d-md-inline-block text-success"><i class="bi bi-arrow-up"></i></span>
-        <span class="small fw-light">{% trans "Use the menu to access all the features" %}.</span>
-        <span class="d-inline-block d-md-none">
-            <button 
-                    class="btn btn-sm px-2 py-0 btn-outline-primary"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#mainNavigationBar"
-                    aria-controls="mainNavigationBar"
-                    aria-expanded="false">
-                <span class="fs-3 blink"><i class="bi bi-list"></i></span>
-            </button>
-        </span>
-    </div> -->
+
+    <div class="container pb-5 text-center" id="lead">
+        <h1 class="display-4 py-2">{% trans "Your next great contract" %}</h1>
+        <div class="col mx-auto">
+        <p class="lead fs-5 mb-4">
+            {% trans "eMarches is your trusted partner in navigating the Moroccan public procurement market. With expertise and dedication, we help businesses succeed." %}
+        </p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <a href="{% url 'portal_tender_list' %}?&sort=deadline" class="btn btn-primary btn-preload btn-lg px-4 gap-3">{% trans "Tenders" %}</a>
+            <a href="{% url 'portal_client_list' %}?&sort=tenders_count" class="btn btn-outline-secondary btn-preload btn-lg px-4">{% trans "Clients" %}</a>
+        </div>
+        </div>
+    </div>
+
 
     <div class="">
         <div class="">

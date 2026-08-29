@@ -31,6 +31,14 @@ from scraper.serializers import (AgrementSerializer, CategorySerializer,
 
 def format(tender_json):
 
+    def lottify(lot_no_str, default_int = 1):
+        try:
+            s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
+            n = int(s.strip())
+            if n > 0: return n
+        except: pass
+        return default_int
+
     helper.printMessage('DEBUG', 'm.format', "### Started formatting Tender data ...")
     j = tender_json
     try:
@@ -250,7 +258,7 @@ def mergeResults(digest):
     tender_lots = list(tender.lots.values_list('number', flat=True))
 
     for cand in candidates:
-        name    = cand.get('name')
+        name    = cand.get('name', '-')
         helper.printMessage('DEBUG', 'm.mergeResults', f"\t##Handling Candidate: { name }")
         concurrent, created_c = Concurrent.objects.get_or_create(
             name = name,
@@ -868,15 +876,6 @@ def createVisits(input_data, lot):
             visit_serializer.save(lot=lot)
             created_visits += 1
     return created_visits
-
-
-def lottify(lot_no_str, default_int = 1):
-    try:
-        s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
-        n = int(s.strip())
-        if n > 0: return n
-    except: pass
-    return default_int
 
 
 def deleteLots(numbers_list=[], tender=None):       
