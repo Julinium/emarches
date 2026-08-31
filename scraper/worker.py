@@ -196,7 +196,7 @@ def do_the_work():
         décisions de résiliation
         Annonce de programme previsionnel
         Annonce de synthèse de rapport d'audit
-        # bons de commande attribués
+        bons de commande attribués
         marchés attribués
         conventions et contrats de droit commun
     """
@@ -221,7 +221,12 @@ def do_the_work():
             files_failed = files_failed,
             saving_errors = saving_errors
         )
-    crawler.save()
+    try:
+        crawler.save()
+    except Exception as xc:
+        helper.printMessage('ERROR', 'worker', f"⬢⬢⬢ Exception while saving Crawler object: { xc } ", 1)
+        traceback.print_exc()
+
 
     ##### Show a digest
     work_duration = finished_time - started_time
