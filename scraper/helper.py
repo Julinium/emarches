@@ -5,14 +5,13 @@ import re
 import time
 import traceback
 import unicodedata
-import zipfile
 import shutil
 import subprocess
+import pytz
 
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 
-import pytz
 from selenium import webdriver
 
 from scraper import constants as C
@@ -215,21 +214,20 @@ def sleepRandom(Fm=35, To=65):
 
 def syncDir(
     local_dir: str, 
-    remote_dir: str, 
+    remote_dir: str = C.REMOTE_MEDIA_ROOT + f"/dce/", 
     remote_user: str = C.REMOTE_USER, 
     remote_host: str = C.SSH_HOST,
     port: int = C.SSH_PORT,
-    remove_source: bool = True,
-):
+    remove_source: bool = True):
 
     """
-    Transfers a local directory to a remote server using rsync over SSH. 
-    SSH uses crendentials from the config file .env.
-    Deletes the source files after successful transfer. 
+        Transfers a local directory to a remote server using rsync over SSH. 
+        SSH uses crendentials from the config file .env and identity key from standard location like ~/.ssh/id_rsa.
+        The function constructs the rsync command and executes it, optionally removing the source files after a successful transfer.
     """
 
     printMessage('DEBUG', 'h.syncDir', f'Starting synchronization of {local_dir} to {remote_dir}')
-    try: 
+    try:
         local_dir = os.path.abspath(local_dir)
         source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
 
@@ -239,15 +237,15 @@ def syncDir(
         rsync_cmd = ["rsync", "-avuhP"]
         if remove_source: rsync_cmd.extend(["--remove-source-files"])
 
-        # rsync_cmd = ["rsync" "-avhP" "--remove-source-files" "--update" "-e" 'ssh -p 19164'\
-        # /var/opt/pmmp/emarches/scraper/media/dce/ 	insino@emarches.com:/var/opt/media/dce/ 	\
-        # && find /var/opt/pmmp/emarches/scraper/media/dce/ 	-mindepth 1 -type d -empty -delete"]
         rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
 
         if remove_source: rsync_cmd.extend(["&&", "find", source_path, "-mindepth", "1", "-type", "d", "-empty", "-delete"])
 
-        # Run rsync and clean up remaining empty source directory
-        subprocess.run(rsync_cmd, check=True)
+        printMessage('DEBUG', 'h.syncDir', f'Executing command: {" ".join(rsync_cmd)}')
+        result =subprocess.run(rsync_cmd, check=True, capture_output=True, text=True)
+        printMessage('DEBUG', 'h.syncDir', f'Successfully synchronized {local_dir} to {remote_dir}')
+        printMessage('TRACE', 'h.syncDir', f'Command output: {result.stdout}')
+        return result.stdout
 
     except subprocess.CalledProcessError as e:
         printMessage('ERROR', 'h.syncDir', f'Error during rsync: {e}')
@@ -257,7 +255,8 @@ def syncDir(
     except Exception as xc:
         printMessage('ERROR', 'h.syncDir', f'Unexpected error: {xc}')
         traceback.print_exc()
-    # shutil.rmtree(local_dir)
+        
+    return None
 
 
     

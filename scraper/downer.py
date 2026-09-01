@@ -108,11 +108,12 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
 
 
 def getDCE(tender):
+
     """
     The real job of downloading the DCE for a Tender and saving it to the local storage#
     # Arguments:
         ## Tender instance.
-    # Return: Integer: 0 if success, 1 else.
+    # Returns DCE folder path if successful, None otherwise.
     """
 
     chrono = tender.chrono
@@ -121,7 +122,6 @@ def getDCE(tender):
     def make_link(type=None):
         if type == 'query': return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDemandeTelechargementDce&refConsultation={chrono}&orgAcronyme={acro}'
         if type == 'file':  return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={chrono}&orgAcronym={acro}'
-                                 # f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadReglement&reference=OTQ1Mzcx&orgAcronyme={acro}'
         return None 
 
 
@@ -134,16 +134,16 @@ def getDCE(tender):
 
     if not os.path.exists(C.MEDIA_ROOT): 
         helper.printMessage('ERROR', 'd.getDCE', f'Could not read media root {C.MEDIA_ROOT}.')
-        return 1
+        return None
     if not chrono or not acro : 
         helper.printMessage('ERROR', 'd.getDCE', f'Incorrect parameter was received.')
-        return 1
+        return None
 
     con_path = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}{chrono}')
     if not os.path.exists(con_path): os.makedirs(con_path)
     if not os.path.exists(con_path):
         helper.printMessage('ERROR', 'd.getDCE', f'Could not find DCE directory {con_path}.')
-        return 1
+        return None
 
 
     if len(C.USER_AGENTS) == 0 : 
@@ -177,7 +177,7 @@ def getDCE(tender):
     try: request_query = http_session.get(url_query, headers=headino, timeout=C.REQ_TIMEOUT)
     except Exception as xc: 
         helper.printMessage('ERROR', 'd.getDCE', str(xc))
-        return 1
+        return None
 
     soup = BeautifulSoup(request_query.content, 'html.parser')
     
@@ -186,7 +186,7 @@ def getDCE(tender):
         helper.printMessage('TRACE', 'd.getDCE', f'\n\n\n===========\n{soup}\n===========\n\n')
         
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
-        return request_query.status_code
+        return None
     else:
         helper.printMessage('DEBUG', 'd.getDCE', f'Download query returned 200.')
 
@@ -234,12 +234,12 @@ def getDCE(tender):
     except Exception as xc: 
         helper.printMessage('ERROR', 'd.getDCE', 'Exception raised while submitting form.')
         helper.printMessage('ERROR', 'd.getDCE', str(xc)) 
-        return 1
+        return None
 
     if request_form.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Form submission: Response Status Code: {request_form.status_code} !')
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
-        return request_form.status_code
+        return None
     else: helper.printMessage('DEBUG', 'd.getDCE', f'Form submission: Successful')
 
     try:
@@ -249,7 +249,7 @@ def getDCE(tender):
         helper.printMessage('ERROR', 'd.getDCE', "Request timed out! Exception message: " + str(xc))
     except Exception as xc: 
         helper.printMessage('ERROR', 'd.getDCE', str(xc))
-        return 1
+        return None
 
     if request_file.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Getting file: Response Status Code: {request_file.status_code} !')
@@ -263,7 +263,7 @@ def getDCE(tender):
         helper.printMessage('WARN', 'd.getDCE', 'Could not get file name from portal.')
         helper.printMessage('WARN', 'd.getDCE', str(xc))
         helper.printMessage('ERROR', 'd.getDCE', 'Looks like the server sent back a page, not a file !')
-        return 1
+        return None
 
     fiel_name_base = os.path.splitext(filename_cd)[0]
     file_extension = os.path.splitext(filename_cd)[1]
@@ -302,9 +302,9 @@ def getDCE(tender):
             raise IOError("File was created but is empty. Go and know why!")
     except Exception as e:
         helper.printMessage('ERROR', 'd.getDCE', f"Error writing data to file: {e}")
-        return 1
+        return None
 
-    return 0
+    return con_path
 
 
 
@@ -342,7 +342,7 @@ def getDCE(tender):
 #         user = C.REMOTE_USER
 #         port = C.SSH_PORT
 #         host = C.SSH_HOST
-#         cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'    
+#         cmd = f'[ -d {shlex.quote(path)} ] && compgen -A file {shlex.quote(path)} > /dev/null'
 #         result = subprocess.run(["ssh", "-x", "-p", str(port), f"{user}@{host}", cmd])
 #         return result.returncode == 0
 #     else:

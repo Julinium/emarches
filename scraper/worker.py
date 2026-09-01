@@ -61,13 +61,14 @@ def do_the_work():
                 jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
                 if jsono:
                     handled += 1
-                    tender, creation_mode = merger.saveTender(jsono)
-                    if creation_mode == True:
+                    tender, creation_mode, changes_made = merger.saveTender(jsono)
+                    if creation_mode == True: 
                         tenders_created += 1
                         helper.printMessage('INFO', 'worker', f"◁◁ Created Tender {tender.chrono}")
-                    elif creation_mode == False: 
-                        tenders_updated += 1
-                        helper.printMessage('INFO', 'worker', f"◁◁ Tender {tender.chrono} updated.")
+                    else:
+                        if changes_made == True:
+                            tenders_updated += 1
+                            helper.printMessage('INFO', 'worker', f"◁◁ Tender {tender.chrono} updated.")
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
