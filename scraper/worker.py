@@ -189,7 +189,6 @@ def do_the_work():
 
     # TODO: Consider other "types" of publications, like:
     """
-        # extraits de PV
         résultats définitifs
         rapports d'achèvement
         rapports de présentation
@@ -241,3 +240,4 @@ if __name__ == '__main__':
     do_the_work()
 
 
+# This changes should go to the new test branch.
