@@ -6,6 +6,9 @@ import time
 import traceback
 import unicodedata
 import zipfile
+import shutil
+import subprocess
+
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 
@@ -210,22 +213,51 @@ def sleepRandom(Fm=35, To=65):
     return 0
 
 
-# import math
+def syncDir(
+    local_dir: str, 
+    remote_dir: str, 
+    remote_user: str = C.REMOTE_USER, 
+    remote_host: str = C.SSH_HOST,
+    port: int = C.SSH_PORT,
+    remove_source: bool = True,
+):
 
-# def format_bytes(size_in_bytes: int, decimals: int = 2, binary: bool = True) -> str:
-#     if size_in_bytes == 0: return "0 Bytes"
-#     if size_in_bytes < 0: raise ValueError("Byte value cannot be negative")
-#     base = 1024 if binary else 1000
-#     units = (
-#         ['Bi', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB']
-#         if binary else 
-#         ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']
-#     )
-#     i = int(math.floor(math.log(size_in_bytes, base)))
-#     i = min(i, len(units) - 1)
-#     formatted_size = round(size_in_bytes / (base ** i), decimals)
-    
-#     return f"{formatted_size:.{decimals}f} {units[i]}"
+    """
+    Transfers a local directory to a remote server using rsync over SSH. 
+    SSH uses crendentials from the config file .env.
+    Deletes the source files after successful transfer. 
+    """
+
+    printMessage('DEBUG', 'h.syncDir', f'Starting synchronization of {local_dir} to {remote_dir}')
+    try: 
+        local_dir = os.path.abspath(local_dir)
+        source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
+
+        folder_name = os.path.basename(local_dir)
+        target_path = f"{remote_user}@{remote_host}:{os.path.join(remote_dir, folder_name)}"
+
+        rsync_cmd = ["rsync", "-avuhP"]
+        if remove_source: rsync_cmd.extend(["--remove-source-files"])
+
+        # rsync_cmd = ["rsync" "-avhP" "--remove-source-files" "--update" "-e" 'ssh -p 19164'\
+        # /var/opt/pmmp/emarches/scraper/media/dce/ 	insino@emarches.com:/var/opt/media/dce/ 	\
+        # && find /var/opt/pmmp/emarches/scraper/media/dce/ 	-mindepth 1 -type d -empty -delete"]
+        rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
+
+        if remove_source: rsync_cmd.extend(["&&", "find", source_path, "-mindepth", "1", "-type", "d", "-empty", "-delete"])
+
+        # Run rsync and clean up remaining empty source directory
+        subprocess.run(rsync_cmd, check=True)
+
+    except subprocess.CalledProcessError as e:
+        printMessage('ERROR', 'h.syncDir', f'Error during rsync: {e}')
+        printMessage('ERROR', 'h.syncDir', f"Error output: {e.stderr.decode()}")
+        traceback.print_exc()
+
+    except Exception as xc:
+        printMessage('ERROR', 'h.syncDir', f'Unexpected error: {xc}')
+        traceback.print_exc()
+    # shutil.rmtree(local_dir)
 
 
     
