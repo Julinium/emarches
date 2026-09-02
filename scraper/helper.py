@@ -5,11 +5,13 @@ import re
 import time
 import traceback
 import unicodedata
-import zipfile
+import shutil
+import subprocess
+import pytz
+
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 
-import pytz
 from selenium import webdriver
 
 from scraper import constants as C
@@ -210,22 +212,53 @@ def sleepRandom(Fm=35, To=65):
     return 0
 
 
-# import math
+def syncDir(
+    local_dir: str, 
+    remote_dir: str = C.REMOTE_MEDIA_ROOT + f"/dce/", 
+    remote_user: str = C.REMOTE_USER, 
+    remote_host: str = C.SSH_HOST,
+    port: int = C.SSH_PORT,
+    remove_source: bool = True):
 
-# def format_bytes(size_in_bytes: int, decimals: int = 2, binary: bool = True) -> str:
-#     if size_in_bytes == 0: return "0 Bytes"
-#     if size_in_bytes < 0: raise ValueError("Byte value cannot be negative")
-#     base = 1024 if binary else 1000
-#     units = (
-#         ['Bi', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB']
-#         if binary else 
-#         ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']
-#     )
-#     i = int(math.floor(math.log(size_in_bytes, base)))
-#     i = min(i, len(units) - 1)
-#     formatted_size = round(size_in_bytes / (base ** i), decimals)
-    
-#     return f"{formatted_size:.{decimals}f} {units[i]}"
+    """
+        Transfers a local directory to a remote server using rsync over SSH. 
+        SSH uses crendentials from the config file .env and identity key from standard location like ~/.ssh/id_rsa.
+        The function constructs the rsync command and executes it, optionally removing the source files after a successful transfer.
+    """
+
+    printMessage('DEBUG', 'h.syncDir', f'Started syncing DCE files to remote server ...')
+    try:
+        local_dir = os.path.abspath(local_dir)
+        source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
+        printMessage('DEBUG', 'h.syncDir', f'Started syncing local {source_path.split("/")[-1]} to remote {remote_dir.split("/")[-1]} ...')
+
+        folder_name = os.path.basename(local_dir)
+        target_path = f"{remote_user}@{remote_host}:{remote_dir}"
+
+        rsync_cmd = ["rsync", "-avuhP"]
+        if remove_source: rsync_cmd.extend(["--remove-source-files"])
+
+        rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
+
+        printMessage('DEBUG', 'h.syncDir', f'Executing rsync command ...')
+        result = subprocess.run(rsync_cmd, check=True, capture_output=True, text=True)
+        printMessage('INFO', 'h.syncDir', f'Successfully saved DCE files to server.')
+
+        printMessage('TRACE', 'h.syncDir', f'Command output: \n{result.stdout}\n', 1, 1)
+        if result.stderr: printMessage('WARN', 'h.syncDir', f'Command error output: {result.stderr}', 3, 3)
+        return result.stdout
+
+    except subprocess.CalledProcessError as e:
+        printMessage('ERROR', 'h.syncDir', f'Error during rsync: {e}')
+        print("STDOUT:", e.stdout)
+        print("STDERR:", e.stderr)
+        traceback.print_exc()
+
+    except Exception as xc:
+        printMessage('ERROR', 'h.syncDir', f'Unexpected error: {xc}')
+        traceback.print_exc()
+
+    return None
 
 
     

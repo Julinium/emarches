@@ -1,21 +1,20 @@
+import os
 import traceback
 import pytz
 from decimal import Decimal
 from django.db import transaction, reset_queries
 from datetime import date, datetime, time, timedelta, timezone
 
-
 from rest_framework import serializers
-
 
 from base.models import (
     Agrement, Category, Change, Client, Concurrent, Deposit, Domain, FileToGet,
     Kind, Lot, Meeting, Mode, Opening, Procedure, Qualif, RelAgrementLot,
     RelDomainTender, RelQualifLot, Sample, Tender, Visit)
 
-
 from scraper import constants as C
 from scraper import helper
+from scraper.downer import getDCE
 
 
 from scraper.serializers import (AgrementSerializer, CategorySerializer,
@@ -195,10 +194,12 @@ def saveTender(tender_data):
         logChanges(changes, tender)
         if len(changes) < 1: 
             helper.printMessage('DEBUG', 'm.saveTender', '--- No changes were found in Tender.')
+    if tender_create or len(changes) > 0:
+        helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
+        if tender:
+            if not C.SKIP_DCE: handleDCE(tender)
 
-    helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
-
-    return tender, tender_create
+    return tender, tender_create, len(changes) > 0
 
 
 def mergeResults(digest):
@@ -423,6 +424,25 @@ def createCckmp(category_data, client_data, kind_data, mode_data, procedure_data
     return category, client, kind, mode, procedure
 
 
+def handleDCE(tender):
+    if tender:
+        try:
+            helper.printMessage('DEBUG', 'm.handleDCE', f"#### Getting DCE for Tender {tender.chrono} ... ")
+            dce_dir = getDCE(tender)
+            if dce_dir:
+                helper.printMessage('DEBUG', 'm.handleDCE', f"++++ Got DCE for Tender {tender.chrono} ... ")
+                if C.MACHINE == 'remote':
+                    helper.printMessage('TRACE', 'm.handleDCE', f"#### Syncing DCE to remote server ... ")
+                    media_dce = os.path.join(dce_dir, '..')
+                    helper.syncDir(media_dce)
+            else:
+                helper.printMessage('WARN', 'm.handleDCE', f"---- Could not get DCE for Tender {tender.chrono} ... ")
+
+        except:
+            helper.printMessage('WARN', 'm.handleDCE', "---- Exception raised saving DCE request.")
+            traceback.print_exc()
+
+
 def createTender(input_data, category, client, kind, mode, procedure):
     validated_data = input_data
     chrono = validated_data.get('chrono')
@@ -432,15 +452,9 @@ def createTender(input_data, category, client, kind, mode, procedure):
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
 
-    if tender:
-        helper.printMessage('DEBUG', 'm.createTender', f"+++ Tender created successfully: {chrono}")
-        try:
-            helper.printMessage('TRACE', 'm.createTender', f"#### Adding DCE request for Tender {tender.chrono} ... ")
-            f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Created'})
-            helper.printMessage('DEBUG', 'm.createTender', f"++++ Added DCE request for Tender {tender.chrono} ... ")
-        except:
-            helper.printMessage('WARN', 'm.createTender', "---- Exception raised saving DCE request.")
-            traceback.print_exc()
+    # if tender:
+    #     if not C.SKIP_DCE: handleDCE(tender)
+
     return tender
 
 
@@ -551,6 +565,9 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
         setDomains(input_data.get('domains'), tender)
         helper.printMessage('DEBUG', 'm.updateTender', f"+++ Tender updated with changes: {tender.chrono}")
         changes.append(tc)
+
+        # if not C.SKIP_DCE: handleDCE(tender)
+
     return changes
 
 

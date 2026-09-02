@@ -16,7 +16,14 @@ def main():
     # from decimal import Decimal
     # from zoneinfo import ZoneInfo
 
-    # from base.models import Crawler
+    from base.models import Tender
+    st = Tender.objects.filter(chrono='1028243').first()
+    if st:
+        print(f"Tender found: {st.chrono} - {st.title}")
+        st.delete()
+    else:
+        print("Tender not found.")
+
     pass
 
     
