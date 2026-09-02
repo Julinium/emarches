@@ -196,6 +196,8 @@ def saveTender(tender_data):
             helper.printMessage('DEBUG', 'm.saveTender', '--- No changes were found in Tender.')
     if tender_create or len(changes) > 0:
         helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
+        if tender:
+            if not C.SKIP_DCE: handleDCE(tender)
 
     return tender, tender_create, len(changes) > 0
 
@@ -424,9 +426,8 @@ def createCckmp(category_data, client_data, kind_data, mode_data, procedure_data
 
 def handleDCE(tender):
     if tender:
-        helper.printMessage('DEBUG', 'm.handleDCE', f"+++ Tender created successfully: {chrono}")
         try:
-            helper.printMessage('TRACE', 'm.handleDCE', f"#### Getting DCE for Tender {tender.chrono} ... ")
+            helper.printMessage('DEBUG', 'm.handleDCE', f"#### Getting DCE for Tender {tender.chrono} ... ")
             dce_dir = getDCE(tender)
             if dce_dir:
                 helper.printMessage('DEBUG', 'm.handleDCE', f"++++ Got DCE for Tender {tender.chrono} ... ")
@@ -451,8 +452,8 @@ def createTender(input_data, category, client, kind, mode, procedure):
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
 
-    if tender:
-        if not C.SKIP_DCE: hadleDCE(tender)
+    # if tender:
+    #     if not C.SKIP_DCE: handleDCE(tender)
 
     return tender
 
@@ -565,7 +566,7 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
         helper.printMessage('DEBUG', 'm.updateTender', f"+++ Tender updated with changes: {tender.chrono}")
         changes.append(tc)
 
-        if not C.SKIP_DCE: handleDCE(tender)
+        # if not C.SKIP_DCE: handleDCE(tender)
 
     return changes
 

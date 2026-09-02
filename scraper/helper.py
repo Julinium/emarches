@@ -226,36 +226,38 @@ def syncDir(
         The function constructs the rsync command and executes it, optionally removing the source files after a successful transfer.
     """
 
-    printMessage('DEBUG', 'h.syncDir', f'Starting synchronization of {local_dir} to {remote_dir}')
+    printMessage('DEBUG', 'h.syncDir', f'Started syncing DCE files to remote server ...')
     try:
         local_dir = os.path.abspath(local_dir)
         source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
+        printMessage('DEBUG', 'h.syncDir', f'Started syncing local {source_path.split("/")[-1]} to remote {remote_dir.split("/")[-1]} ...')
 
         folder_name = os.path.basename(local_dir)
-        target_path = f"{remote_user}@{remote_host}:{os.path.join(remote_dir, folder_name)}"
+        target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
         rsync_cmd = ["rsync", "-avuhP"]
         if remove_source: rsync_cmd.extend(["--remove-source-files"])
 
         rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
 
-        if remove_source: rsync_cmd.extend(["&&", "find", source_path, "-mindepth", "1", "-type", "d", "-empty", "-delete"])
+        printMessage('DEBUG', 'h.syncDir', f'Executing rsync command ...')
+        result = subprocess.run(rsync_cmd, check=True, capture_output=True, text=True)
+        printMessage('INFO', 'h.syncDir', f'Successfully saved DCE files to server.')
 
-        printMessage('DEBUG', 'h.syncDir', f'Executing command: {" ".join(rsync_cmd)}')
-        result =subprocess.run(rsync_cmd, check=True, capture_output=True, text=True)
-        printMessage('DEBUG', 'h.syncDir', f'Successfully synchronized {local_dir} to {remote_dir}')
-        printMessage('TRACE', 'h.syncDir', f'Command output: {result.stdout}')
+        printMessage('TRACE', 'h.syncDir', f'Command output: \n{result.stdout}\n', 1, 1)
+        if result.stderr: printMessage('WARN', 'h.syncDir', f'Command error output: {result.stderr}', 3, 3)
         return result.stdout
 
     except subprocess.CalledProcessError as e:
         printMessage('ERROR', 'h.syncDir', f'Error during rsync: {e}')
-        printMessage('ERROR', 'h.syncDir', f"Error output: {e.stderr.decode()}")
+        print("STDOUT:", e.stdout)
+        print("STDERR:", e.stderr)
         traceback.print_exc()
 
     except Exception as xc:
         printMessage('ERROR', 'h.syncDir', f'Unexpected error: {xc}')
         traceback.print_exc()
-        
+
     return None
 
 
