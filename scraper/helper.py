@@ -232,7 +232,7 @@ def syncDir(
         source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
         printMessage('DEBUG', 'h.syncDir', f'Started syncing local {source_path.split("/")[-1]} to remote {remote_dir.split("/")[-1]} ...')
 
-        folder_name = os.path.basename(local_dir)
+        # folder_name = os.path.basename(local_dir)
         target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
         rsync_cmd = ["rsync", "-avuhP"]
@@ -244,8 +244,9 @@ def syncDir(
         result = subprocess.run(rsync_cmd, check=True, capture_output=True, text=True)
         printMessage('INFO', 'h.syncDir', f'Successfully saved DCE files to server.')
 
-        printMessage('TRACE', 'h.syncDir', f'Command output: \n{result.stdout}\n', 1, 1)
-        if result.stderr: printMessage('WARN', 'h.syncDir', f'Command error output: {result.stderr}', 3, 3)
+        if result.stderr: 
+            printMessage('WARN', 'h.syncDir', f'Command error output: \n{result.stderr}\n', 3, 3)
+            printMessage('TRACE', 'h.syncDir', f'Command output: \n{result.stdout}\n', 3, 3)
         return result.stdout
 
     except subprocess.CalledProcessError as e:

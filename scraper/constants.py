@@ -18,7 +18,7 @@ SSH_HOST = os.getenv("SSH_HOST", 'emarches.com')
 MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
 
-VERBOSITY = 1
+VERBOSITY = 2
 BURST_LENGTH = 25
 
 LOGS_LEVELS = {"TRACE" : 1, "DEBUG" : 2, "INFO"  : 3, "WARN"  : 4, "ERROR" : 5, "FATAL" : 6,}

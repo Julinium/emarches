@@ -292,7 +292,7 @@ def getJson(link_item, skipExisting=False):
                     }
                 ]
         #####################################
-        # has_results = False
+        has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}') is not None
         # # has_results = ...
         # if has_results:
         #     results = getResults(cons_idddd, link_item[1])
@@ -328,7 +328,7 @@ def getJson(link_item, skipExisting=False):
             "link"              : cons_uri,
             "size_read"         : cons_sized,
             "size_bytes"        : cons_bytes,
-            # "results"           : results,
+            "has_minutes"       : has_minutes,
             }
 
         helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_item[0]}')

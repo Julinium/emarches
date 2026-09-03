@@ -15,6 +15,7 @@ from base.models import (
 from scraper import constants as C
 from scraper import helper
 from scraper.downer import getDCE
+from scraper.getter import getMinutes
 
 
 from scraper.serializers import (AgrementSerializer, CategorySerializer,
@@ -197,8 +198,34 @@ def saveTender(tender_data):
     if tender_create or len(changes) > 0:
         helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
         if tender:
-            if not C.SKIP_DCE: handleDCE(tender)
+            # Handling DCE
+            if not C.SKIP_DCE:
+                helper.printMessage('DEBUG', 'm.saveTender', f"### Handling DCE for Tender {tender.chrono} ...")
+                handleDCE(tender)
+            else:
+                helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping DCE for Tender {tender.chrono} ...")
 
+            # Handling Results
+            if C.GET_RESULTS == True:
+                helper.printMessage('DEBUG', 'm.saveTender', f"### Handling Results for Tender {tender.chrono} ...")
+                if tender.openings.count() == 0:
+                    has_minutes = formatted_data.get('has_minutes', False)
+                    if has_minutes:
+                        helper.printMessage('DEBUG', 'm.saveTender', f"### Tender {tender.chrono} has minutes. Getting them ...")
+                        minutes_digest = getMinutes(tender)
+                        if minutes_digest and minutes_digest != {}:
+                            if mergeResults(minutes_digest) == 0:
+                                helper.printMessage('DEBUG', 'm.saveTender', f"+++ Minutes for Tender {tender.chrono} saved successfully.")
+                            else:
+                                helper.printMessage('ERROR', 'm.saveTender', f"--- Error saving Minutes for Tender {tender.chrono}.")
+                        else:
+                            helper.printMessage('WARN', 'm.saveTender', f"--- No Minutes found for Tender {tender.chrono}.")
+                    else:
+                        helper.printMessage('DEBUG', 'm.saveTender', f"### Tender {tender.chrono} has no minutes. Skipping ...")
+                else:
+                    helper.printMessage('DEBUG', 'm.saveTender', f"### Tender {tender.chrono} already has results. Skipping ...")
+            else:
+                helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping Results for Tender {tender.chrono} ...")
     return tender, tender_create, len(changes) > 0
 
 

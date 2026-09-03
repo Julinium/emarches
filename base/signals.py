@@ -1,5 +1,5 @@
 import logging
-import hashlib
+# import hashlib
 
 from django.dispatch import receiver
 from allauth.account.signals import (

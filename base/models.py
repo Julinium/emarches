@@ -434,8 +434,9 @@ class Tender(models.Model):
         self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
         self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
 
-        self.updated = None
-        if self.pk is not None:
+        # self.updated = None
+        # if self.pk is not None:
+        if not self._state.adding:
             self.updated = timezone.now()
 
         super().save(*args, **kwargs)
