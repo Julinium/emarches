@@ -10,24 +10,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
 def main():
-
-    # import ast
-    # import datetime
-    # from decimal import Decimal
-    # from zoneinfo import ZoneInfo
-
-    from base.models import Tender
-    st = Tender.objects.filter(chrono='1028243').first()
-    if st:
-        print(f"Tender found: {st.chrono} - {st.title}")
-        st.delete()
-    else:
-        print("Tender not found.")
-
+    from downer import getFileables
+    ft = getFileables(past_days=90)
+    print(f"Found {len(ft)} Tenders with no DCE and deadline older than 90 days.")
     pass
-
-    
-        
 
 
 if __name__ == '__main__':

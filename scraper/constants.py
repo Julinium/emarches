@@ -11,7 +11,8 @@ load_dotenv(dotenv_path=env_path)
 
 # Tell whether script is running on local server or in a remote machine.
 MACHINE = os.getenv("MACHINE", 'local')
-REMOTE_USER = os.getenv("REMOTE_USER", 'emarches')
+
+REMOTE_USER = os.getenv("REMOTE_USER", 'insino')
 SSH_PORT = os.getenv("SSH_PORT", 22)
 SSH_HOST = os.getenv("SSH_HOST", 'emarches.com')
 

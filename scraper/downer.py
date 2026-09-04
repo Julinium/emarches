@@ -29,7 +29,7 @@ from scraper import constants as C
 from scraper import helper
 
 
-def getFileables():
+def getFileables(past_days=C.PORTAL_DCE_PAST_DAYS):
     """
     Get a list of Tenders that need DCE to be downloaded.
     That are either Tenders with an open FilesToGet instance (recently created or updated), or
@@ -38,12 +38,12 @@ def getFileables():
     # Return: Tender model QuerySet.
     """
 
-    target_date = datetime.now() - timedelta(days=C.PORTAL_DCE_PAST_DAYS)
+    target_date = datetime.now() - timedelta(days=past_days)
     helper.printMessage("DEBUG", 'd.getFileables', "Getting Tenders needing DCE download ...")
     fresh_tenders = Tender.objects.filter(files_to_get__closed=False).distinct()
     helper.printMessage("DEBUG", 'd.getFileables', f"Got {fresh_tenders.count()} Tenders needing DCE download.")
     helper.printMessage("DEBUG", 'd.getFileables', "Getting Tenders with no or empty DCE folders ...")
-    nodce_tenders = getEmpties().distinct()
+    nodce_tenders = getEmpties(past_days=past_days).distinct()
     helper.printMessage("DEBUG", 'd.getFileables', f"Got {nodce_tenders.count()} Tenders with no or empty folders.")
 
     return fresh_tenders | nodce_tenders
@@ -57,8 +57,9 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
     """
     
     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline older than {past_days} days ...")
-    target_date = datetime.now() - timedelta(days=past_days)
-    current_tenders = Tender.objects.filter(deadline__gte=target_date)
+    today_date = datetime.now()
+    target_date = today_date - timedelta(days=past_days)
+    current_tenders = Tender.objects.filter(deadline__gte=target_date, deadline__lte=today_date)
     ct_count = current_tenders.count()
     helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
 
@@ -275,14 +276,18 @@ def getDCE(tender):
             bytes_written = file.write(request_file.content)
             helper.printMessage('DEBUG', 'd.getDCE', f'... Bytes written: {bytes_written}/{len(request_file.content)}.')
         if bytes_written == len(request_file.content):
-            try:
-                helper.printMessage('DEBUG', 'd.getDCE', f'Trying to remove file request for {chrono}.')
-                f2g = tender.files_to_get.all()
-                f2g.delete()
-                helper.printMessage('DEBUG', 'd.getDCE', f'+++ Removed file request for {chrono}.')
-            except Exception as x:
-                helper.printMessage('ERROR', 'd.getDCE', "Exception removing file request.")
-                traceback.print_exc()
+            helper.printMessage('DEBUG', 'd.getDCE', f'Trying to remove file request for {chrono}.')
+            f2g = tender.files_to_get.all()
+            if f2g.count() > 0:
+                try:
+                    f2g.delete()
+                    helper.printMessage('DEBUG', 'd.getDCE', f'+++ Removed file request for {chrono}.')
+                except Exception as x:
+                    helper.printMessage('ERROR', 'd.getDCE', "--- Exception removing file request.")
+                    traceback.print_exc()
+            else:
+                helper.printMessage('DEBUG', 'd.getDCE', f'~~~ No file request found for {chrono}.')
+
             if tender.size_bytes != bytes_written:
                 try:
                     helper.printMessage('DEBUG', 'd.getDCE', f'Updating file size bytes for {chrono}.')
