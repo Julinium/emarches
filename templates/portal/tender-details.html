@@ -392,13 +392,14 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#metaCollapse" aria-expanded="true" aria-controls="metaCollapse">
-                            <span><i class="{{ bicons.database }}"></i></span>
+                            <span><i class="{{ bicons.address }}"></i></span>
+                            <span><i class="{{ bicons.contact }}"></i></span>
                             <span class="ms-2 fw-light">{% trans "Advanced data" %}</span>
                         </button>
                     </h2>
                     <div id="metaCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionMeta">
                         <div class="accordion-body py-0 px-3">
-                            <div class="row gx-3 gy-1">
+                            <div class="row gx-3 gy-1 small">
                                 {% timezone "UTC" %}
                                     {% trans 'Created' as key_value %}
                                     {% trans 'UTC' as unit %}
@@ -451,7 +452,6 @@
                         </div>
                     </div>
                 </div>
-                <div id="resultsBookmark"></div>
             </div>
 
         </div>
