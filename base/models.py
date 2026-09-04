@@ -535,7 +535,6 @@ class Sample(models.Model):
     class Meta:
         db_table = 'base_sample'
         ordering = ['-when']
-        # verbose_name = "Sample")
     
     def __str__(self):
         return f"{ self.when.date() } - { self.description }"

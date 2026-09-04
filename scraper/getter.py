@@ -291,14 +291,8 @@ def getJson(link_item, skipExisting=False):
                     "variant": cons_varia,
                     }
                 ]
-        #####################################
+
         has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}') is not None
-        # # has_results = ...
-        # if has_results:
-        #     results = getResults(cons_idddd, link_item[1])
-        # else:
-        #     results = {}
-        #####################################
 
         cons_dict = {
             "published"         : cons_pub_d,
@@ -376,6 +370,10 @@ def getLots(lots_href):
 
     soup = bowl.find(class_='content')
 
+    # print ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+    # print (soup)
+    # print ("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
     lots = []
 
     def iscomment(elem):
@@ -402,11 +400,10 @@ def getLots(lots_href):
             category = None
             category_elem = title_elem.find_next_sibling("div", class_="content-bloc bloc-600")
             category_text = category_elem.get_text().strip() if category_elem else NA_PLH
-            # if category_text and len(category_text) > 3:
             if category_text != NA_PLH:
                 category = {"label": category_text}
 
-            # Extract Description
+            # Description
             description_elem = category_elem.find_next_sibling("div", class_="content-bloc bloc-600")
             description = description_elem.get_text().strip() if description_elem else NA_PLH
 
@@ -438,12 +435,12 @@ def getLots(lots_href):
                     if qualif != NA_PLH : qualifs.append({"name": qualif})
 
             # Agrements
+            agrements = []
             div_id  = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_panelAgrements'
             span_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_agrements'
             agrements_div  = qualifs_div.find_next_sibling("div", id=div_id)
             agrements_span = agrements_div.find('span', id=span_id)
             agrements_lis = agrements_span.find_all('li')
-            agrements = []
             for agrements_li in agrements_lis :
                 agrement = agrements_li.get_text().strip() if agrements_li else NA_PLH
                 if agrement and len(agrement) > 3:
@@ -451,26 +448,27 @@ def getLots(lots_href):
                         agrements.append({"name": agrement,})
 
             # Samples
+            samples = []
             div_id  = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_panelEchantillons'
             samples_div  = agrements_div.find_next_sibling("div", id=div_id)
-            samples_lis = samples_div.find_all('li')
-            samples = []
-            for samples_li in samples_lis :
-                span_d_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_repeaterVisitesLieux_ctl1_Echantillons'
-                span_l_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_repeaterVisitesLieux_ctl1_Echantillons'
-                sample_spans = samples_li.find_all('span')
-                if sample_spans and len(sample_spans) > 1 :
-                    sample_date = sample_spans[0].get_text().strip() if sample_spans[0] else NA_PLH
-                    sample_lieu = sample_spans[1].get_text().strip() if sample_spans[1] else NA_PLH
+            samples_spans = samples_div.find_all("div", class_="content-bloc bloc-600")
+            for samples_span in samples_spans :
+                span_d_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_dateEchantillons'
+                span_l_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_adresseEchantillons'
+                sample_date_span = samples_span.find('span', id=span_d_id)
+                sample_lieu_span = samples_span.find('span', id=span_l_id)
+                
 
-                    if (sample_date and len(sample_date) > 3) or (sample_lieu and len(sample_lieu) > 3):
-                        if sample_date != NA_PLH or sample_lieu != NA_PLH:
-                            sample = {
-                                "when": re.sub(r'\s+', ' ', sample_date).strip(),
-                                "description": re.sub(r'\s+', ' ', sample_lieu).strip(),
-                                }
-                            samples.append(sample)
+                sample_date = sample_date_span.get_text().strip() if sample_date_span else NA_PLH
+                if len(sample_date) > 3:
+                    sample_lieu = sample_lieu_span.get_text().strip() if sample_lieu_span else NA_PLH
+                    sample = {
+                        "when": re.sub(r'\s+', ' ', sample_date).strip(),
+                        "description": re.sub(r'\s+', ' ', sample_lieu).strip(),
+                        }
+                    samples.append(sample)
 
+            # Meetings
             div_id  = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_panelReunion'
             span_id_d = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_dateReunion'
             span_id_a = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_adresseReunion'
@@ -483,8 +481,8 @@ def getLots(lots_href):
             if (meeting_d and len(meeting_d) > 3) or (meeting_a and len(meeting_a) > 3) : 
                 if meeting_d != NA_PLH or meeting_a != NA_PLH:
                     meetings.append({"when": meeting_d, "description": meeting_a})
-            
 
+            # Site surveys
             div_id  = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_panelVisitesLieux'
             visits_div  = meeting_div.find_next_sibling("div", id=div_id)
             visits_lis = visits_div.find_all('li')

@@ -688,6 +688,11 @@ def lotsChanged(lots_data, tender):
         existing_samples = list(lot.samples.values_list('when', 'description'))        
         new_samples = [(data.get("when"), data.get("description")) for data in samples_data]
         
+        # print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        # print(existing_samples)
+        # print("----------------------------------")
+        # print(new_samples)
+
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(samples_data) != len(existing_samples):
             return {
@@ -1302,6 +1307,7 @@ def updateLots(input_data, tender):
         meetings_to_create = []
         visits_to_create = []
 
+        tender_to_update = False
         for lot_data, lot_obj in lot_pair_map:
             for q_data in lot_data.get('qualifs', []):
                 name = q_data.get('name')
@@ -1324,15 +1330,22 @@ def updateLots(input_data, tender):
 
         if m2m_qualif_instances:
             LotQualifThrough.objects.bulk_create(m2m_qualif_instances, batch_size=999, ignore_conflicts=True)
+            tender_to_update = True
         if m2m_agrement_instances:
             LotAgrementThrough.objects.bulk_create(m2m_agrement_instances, batch_size=999, ignore_conflicts=True)
+            tender_to_update = True
         if samples_to_create:
             Sample.objects.bulk_create(samples_to_create, batch_size=999)
+            tender_to_update = True
         if meetings_to_create:
             Meeting.objects.bulk_create(meetings_to_create, batch_size=999)
+            tender_to_update = True
         if visits_to_create:
             Visit.objects.bulk_create(visits_to_create, batch_size=999)
+            tender_to_update = True
 
+        if tender_to_update:
+            tender.save()
 
 def logChanges(changed_fields, tender):
     if len(changed_fields) > 0 :

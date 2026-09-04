@@ -93,17 +93,17 @@
         {% include 'portal/snippets/lots/qu-ag.html' with caption=qualifs_caption objects=lot.qualifs.all %}
     {% endif %}
 
-    {% if tender.has_samples and lot.samples.all %}
+    {% if lot.samples.all %}
         {% trans 'Required Samples' as samples_caption %}
         {% include 'portal/snippets/lots/sa-me-vi.html' with caption=samples_caption objects=lot.samples.all %}
     {% endif %}
 
-    {% if tender.has_meetings and lot.meetings.all %}
+    {% if lot.meetings.all %}
         {% trans 'Scheduled Meetings' as meetings_caption %}
         {% include 'portal/snippets/lots/sa-me-vi.html' with caption=meetings_caption objects=lot.meetings.all %}
     {% endif %}
 
-    {% if tender.has_visits and lot.visits.all %}
+    {% if lot.visits.all %}
         {% trans 'Scheduled Visits' as visits_caption %}
         {% include 'portal/snippets/lots/sa-me-vi.html' with caption=visits_caption objects=lot.visits.all %}
     {% endif %}
