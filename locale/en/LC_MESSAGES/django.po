@@ -3502,7 +3502,7 @@ msgstr ""
 
 #: templates/portal/snippets/lots/lot-details.html:107
 #: templates/portal/tender-details.html:189
-msgid "Scheduled Visits"
+msgid "Site Survey"
 msgstr ""
 
 #: templates/portal/snippets/lots/lots-details.html:9

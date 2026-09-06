@@ -217,7 +217,7 @@
                     {% endif %}
 
                     {% if tender.lots.first.visits.all %}                    
-                        {% trans 'Scheduled Visits' as visits_caption %}
+                        {% trans 'Site Survey' as visits_caption %}
                         {% include 'portal/snippets/tenders/qu-ag.html' with caption=visits_caption|add:' - '|add:unit objects=tender.lots.first.visits.all kind='visit' ico_class=bicons.visits_ico val_class='small' border='bottom' liner='' %}
                     {% endif %}
                 {% endtimezone %}
