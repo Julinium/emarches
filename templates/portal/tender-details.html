@@ -392,8 +392,7 @@
                 <div class="accordion-item shadow-sm">
                     <h2 class="accordion-header">
                         <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#metaCollapse" aria-expanded="true" aria-controls="metaCollapse">
-                            <span><i class="{{ bicons.address }}"></i></span>
-                            <span><i class="{{ bicons.contact }}"></i></span>
+                            <span><i class="{{ bicons.database }}"></i></span>
                             <span class="ms-2 fw-light">{% trans "Advanced data" %}</span>
                         </button>
                     </h2>
@@ -405,7 +404,7 @@
                                     {% trans 'UTC' as unit %}
                                     {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-created' val_value=tender.created key_value=key_value uni_value=unit ico_class=bicons.created val_class='text-muted small' border='bottom' liner='' %}
                                 {% endtimezone %}
-                                
+
                                 {% timezone "UTC" %}
                                     {% trans 'UTC' as unit %}
                                     {% trans 'Last updated' as key_value %}
