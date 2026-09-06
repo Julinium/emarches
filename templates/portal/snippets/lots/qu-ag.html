@@ -5,12 +5,16 @@
             <span><i class="bi bi-dash-lg"></i></span>
             <span>{{ caption }}:</span>
         </div>
-        <div class="ms-2">
+        <div class="ul">
             {% for object in objects %}
-                <span class="">— {{ object.short }}: </span>
-                <span class="small">{{ object.name }}</span><br>                                    
+                <div class="li">
+                    <span class="">{{ object.short }}: </span>
+                    <span class="small">{{ object.name }}</span><br>
+                </div>
             {% empty %}
-                <span class="fw-light small text-muted my-2">{% trans 'Not found' %}</span>
+                <div class="li">
+                    <span class="fw-light small text-muted my-2">{% trans 'Not found' %}</span>
+                </div>
             {% endfor %}
         </div>
     </div>

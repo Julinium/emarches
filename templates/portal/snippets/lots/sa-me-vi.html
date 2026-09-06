@@ -5,12 +5,16 @@
             <span><i class="bi bi-dash-lg"></i></span>
             <span>{{ caption }}:</span>
         </div>
-        <div class="ms-4">
+        <div class="ul">
             {% for object in objects %}
-                <span class="fw-bold mt-2">{{ object.when }}</span>
-                <span class="small">{{ object.description }}</span><br>                                    
+                <div class="li">
+                    <span class="fw-bold mt-2">{{ object.when }}: </span>
+                    <span class="small">{{ object.description }}</span><br>
+                </div>
             {% empty %}
-                <span class="fw-light small text-muted mt-2">{% trans 'Not found' %}</span>
+                <div class="li">
+                    <span class="fw-light small text-muted my-2">{% trans 'Not found' %}</span>
+                </div>
             {% endfor %}
         </div>
     </div>
