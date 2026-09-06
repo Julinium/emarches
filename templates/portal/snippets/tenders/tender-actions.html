@@ -59,18 +59,6 @@
             </button>
         {% endif %}
     {% else %}
-        <!-- {% if tender.files_to_get.first %}
-            <button class="m-1 btn btn-outline-secondary" disabled>
-                <span><i class="{{ bicons.deadline }}"></i></span>
-                <span class="ms-1">{% trans 'Files' %}</span>
-            </button>
-        {% else %}
-            <button class="m-1 btn btn-outline-secondary" 
-                    onclick="dceRequest()">
-                <span><i class="{{ bicons.downloads }}"></i></span>
-                <span class="ms-1">{% trans 'Request Files' %}</span>
-            </button>
-        {% endif %} -->
 
             <button class="m-1 btn btn-outline-secondary"
                     data-bs-toggle="modal" data-bs-target="#dceRequestModal">
@@ -82,7 +70,7 @@
     
     
     {% if position != 'bottom' and tender.openings.all|length > 0 %}
-        <a class="btn btn-outline-success" href="#resultsBookmark">
+        <a class="btn btn-outline-success" href="#accordionResults">
             <span><i class="{{ bicons.deliberated }}"></i></span>
             <span class="ms-1">{% trans 'Results' %}</span>
         </a>
@@ -112,11 +100,17 @@
 
     {% endif %}
 
-    <a href="{{ link_prefix }}{{ tender.link }}"
-    class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
-    onclick="window.open(this.href, '_blank');">
-        <span><i class="{{ bicons.link }}"></i></span>
-        <span class="ms-1">{% trans 'Official Link' %}</span>
-    </a>
+
+    
+    
+    {% if position == 'bottom' and tender.openings.all|length > 0 %}    
+        <a href="{{ link_prefix }}{{ tender.link }}"
+        class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
+        onclick="window.open(this.href, '_blank');">
+            <span><i class="{{ bicons.link }}"></i></span>
+            <span class="ms-1">{% trans 'Official Link' %}</span>
+        </a>
+    {% endif %}
+
     
 </div>
