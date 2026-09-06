@@ -458,9 +458,9 @@
 
     </div>
 
-    <div id="openings">
-        {% if tender.expired %}
-            {% if tender.openings.all|length > 0 %}
+    {% if tender.expired %}
+        {% if tender.openings.all|length > 0 %}
+            <div id="openings">
                 <div class="accordion my-3" id="accordionResults">
                     <div class="accordion-item shadow-sm">
                         <h2 class="accordion-header">
@@ -482,9 +482,9 @@
                     {% trans 'No Minutes found' as value %}
                     {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_bidding|add:'-no-result' val_value=value key_value=key_value uni_value='' ico_class=bicons.deliberated val_class='text-danger small fw-light' full_width='yes' border='bottom' liner='' %}
                 </div>
-            {% endif %}
+            </div>
         {% endif %}
-    </div>
+    {% endif %}
 
     {% if tender.cancelled %}
         <div id="tender-cancelled-bottom class="my-3"" >
