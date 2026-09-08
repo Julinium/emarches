@@ -198,12 +198,12 @@ def saveTender(tender_data):
     if tender_create or len(changes) > 0:
         helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
         if tender:
-            # Handling DCE
             if not C.SKIP_DCE:
                 helper.printMessage('DEBUG', 'm.saveTender', f"### Handling DCE for Tender {tender.chrono} ...")
                 handleDCE(tender)
             else:
-                helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping DCE for Tender {tender.chrono} ...")
+                helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Skipping DCE for Tender {tender.chrono} ...")
+
 
             # Handling Results
             if C.GET_RESULTS == True:
@@ -452,6 +452,7 @@ def createCckmp(category_data, client_data, kind_data, mode_data, procedure_data
 
 
 def handleDCE(tender):
+    dce_dir, synced = None, None
     if tender:
         try:
             helper.printMessage('DEBUG', 'm.handleDCE', f"#### Getting DCE for Tender {tender.chrono} ... ")
@@ -461,13 +462,24 @@ def handleDCE(tender):
                 if C.MACHINE == 'remote':
                     helper.printMessage('TRACE', 'm.handleDCE', f"#### Syncing DCE to remote server ... ")
                     media_dce = os.path.join(dce_dir, '..')
-                    helper.syncDir(media_dce)
+                    synced = helper.syncDir(media_dce)
             else:
                 helper.printMessage('WARN', 'm.handleDCE', f"---- Could not get DCE for Tender {tender.chrono} ... ")
 
         except:
             helper.printMessage('WARN', 'm.handleDCE', "---- Exception raised saving DCE request.")
             traceback.print_exc()
+
+    if dce_dir == None or synced == None:
+        helper.printMessage('WARN', 'm.handleDCE', f"---- DCE handling failed for Tender {tender.chrono} ...")
+        try:
+            f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Failed'})
+            helper.printMessage('TRACE', 'm.handleDCE', f"~~~~ Filed a DCE request for Tender {tender.chrono}.")
+        except:
+            helper.printMessage('WARN', 'm.handleDCE', "---- Exception raised saving DCE request.")
+            traceback.print_exc()
+
+    return dce_dir
 
 
 def createTender(input_data, category, client, kind, mode, procedure):
@@ -1347,25 +1359,26 @@ def updateLots(input_data, tender):
         if tender_to_update:
             tender.save()
 
+
 def logChanges(changed_fields, tender):
     if len(changed_fields) > 0 :
         try:
-            helper.printMessage('TRACE', 'm.saveTender', ">>>> Saving change record to databse ... ")
+            helper.printMessage('TRACE', 'm.logChanges', ">>>> Saving change record to databse ... ")
             change = Change(tender=tender, changes=changed_fields)
             change.save()
             log_message = f"++++ Tender {tender.chrono} updated. Changes saved."
-            helper.printMessage('DEBUG', 'm.saveTender', log_message)
-            helper.printMessage('DEBUG', 'm.saveTender', f".... Reported changes: {changed_fields}")
+            helper.printMessage('DEBUG', 'm.logChanges', log_message)
+            helper.printMessage('DEBUG', 'm.logChanges', f".... Reported changes: {changed_fields}")
         except:
-            helper.printMessage('WARN', 'm.saveTender', "---- Exception raised saving change to database.")
+            helper.printMessage('WARN', 'm.logChanges', "---- Exception raised saving change to database.")
             traceback.print_exc()
 
         # if tender_date > target_date:
         try:
-            helper.printMessage('TRACE', 'm.saveTender', f"++++ Adding DCE request for Tender {tender.chrono} ... ")
+            helper.printMessage('TRACE', 'm.logChanges', f"++++ Adding DCE request for Tender {tender.chrono} ... ")
             f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Updated'})
         except:
-            helper.printMessage('WARN', 'm.saveTender', "---- Exception raised saving DCE request.")
+            helper.printMessage('WARN', 'm.logChanges', "---- Exception raised saving DCE request.")
             traceback.print_exc()
 
 

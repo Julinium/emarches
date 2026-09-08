@@ -6,6 +6,7 @@ from django.urls import include, path
 from django.http import HttpResponse
 
 from nas import views as nas_views
+from base.views import robots_txt
 
 
 urlpatterns = i18n_patterns(
@@ -21,6 +22,10 @@ urlpatterns = i18n_patterns(
     
     path('__debug__/', include('debug_toolbar.urls')),
 )
+
+urlpatterns += [
+    path("robots.txt", robots_txt, name="robots_txt"),
+]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

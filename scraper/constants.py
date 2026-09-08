@@ -92,6 +92,9 @@ PORTAL_DDL_PAST_DAYS = 30
 # Download Tenders DCE with Deadline up to PORTAL_DCE_PAST_DAYS days in the past.
 PORTAL_DCE_PAST_DAYS = 30
 
+# Check results for tenders with Deadline up to PORTAL_RES_PAST_DAYS days in the past.
+PORTAL_RES_PAST_DAYS = 60
+
 # Look for Tenders with Deadline up to PORTAL_DDL_FUTURE_DAYS days in the future.
 PORTAL_DDL_FUTURE_DAYS = 365 * 1 
 

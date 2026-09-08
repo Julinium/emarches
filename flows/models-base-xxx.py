@@ -335,7 +335,7 @@
 # #     has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name="Licenses required")
 # #     has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name="Qualifications required")
 # #     has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name="Samples required")
-# #     has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="In-site visits scheduled")
+# #     has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="Site survey scheduled")
 # #     has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
 
 # #     location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Execution location")

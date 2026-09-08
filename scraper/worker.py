@@ -22,12 +22,13 @@ def do_the_work():
     started_time = timezone.now()
 
     def handle_links():
-        links_crawled, links_imported, links_from_saved = 0,0,0
+        links_crawled, links_imported, links_from_saved = 0, 0, 0
         links = []
+        back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
         if not C.IMPORT_LINKS:
-            links = linker.getLinks()
+            links = linker.getLinks(back_days)
             links_crawled = len(links)
-            links_saved = linker.db2Links()
+            links_saved = linker.db2Links() if C.REFRESH_EXISTING else []
             links_from_saved = len(links_saved)
             helper.printMessage('INFO', 'worker', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
             ml = 0
@@ -35,7 +36,7 @@ def do_the_work():
                 if l not in links:
                     ml += 1
                     links.append(l)
-            helper.printMessage('INFO', 'worker', f"+++ Merged { ml } saved links to live")
+            helper.printMessage('INFO', 'worker', f"+++ Merged { ml } saved links to live links. Total links to handle: { len(links) }")
 
             linker.exportLinks(links)
         else:
@@ -118,7 +119,7 @@ def do_the_work():
             
         return files_downloaded, files_failed
 
-    def handle_results(back_days=90):
+    def handle_results(back_days=C.PORTAL_RES_PAST_DAYS):
 
         results_saved, results_searched = 0, 0
         helper.printMessage('INFO', 'worker', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 2, 1)
@@ -165,7 +166,6 @@ def do_the_work():
     files_action  = 'Skip' if C.SKIP_DCE else 'Download'
     results_action = 'Get' if C.GET_RESULTS else 'Skip'
     helper.printMessage('===', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 3)
-
 
     ##### Collect the list of links to handle
     links, links_crawled, links_imported, links_from_saved = handle_links()

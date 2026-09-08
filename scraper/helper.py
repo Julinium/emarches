@@ -232,7 +232,6 @@ def syncDir(
         source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
         printMessage('DEBUG', 'h.syncDir', f'Started syncing local {source_path.split("/")[-1]} to remote {remote_dir.split("/")[-1]} ...')
 
-        # folder_name = os.path.basename(local_dir)
         target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
         rsync_cmd = ["rsync", "-avuhP"]
@@ -254,10 +253,12 @@ def syncDir(
         print("STDOUT:", e.stdout)
         print("STDERR:", e.stderr)
         traceback.print_exc()
+        return None
 
     except Exception as xc:
         printMessage('ERROR', 'h.syncDir', f'Unexpected error: {xc}')
         traceback.print_exc()
+        return None
 
     return None
 

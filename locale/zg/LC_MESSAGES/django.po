@@ -5358,7 +5358,7 @@ msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:289
 #: templates/portal/snippets/tenders/tender-summary.html:243
-msgid "In-site visits scheduled"
+msgid "Site survey scheduled"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:300

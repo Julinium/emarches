@@ -306,8 +306,9 @@ class Tender(models.Model):
     has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name="Licenses required")
     has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name="Qualifications required")
     has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name="Samples required")
-    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="In-site visits scheduled")
+    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="Site survey scheduled")
     has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
+    has_minutes = models.BooleanField(blank=True, null=True, default=False, verbose_name="Minutes taken")
 
     location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Execution location")
     ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bidding")  # 1: Required, 0: Not required, Else: NA'

@@ -1,9 +1,11 @@
 {% extends 'base/base.html' %}
 {% load i18n static %}
 
-{% block title %}
-    {% trans "Tenders list" %}
-{% endblock title %}
+{% block title %}{% trans "Tenders list" %}{% endblock title %}
+{% block extra_keywords %}, {% trans "Tenders list" %}, {% trans "Results" %}, {% trans "Advanced Search" %}, {% trans "Filter" %}, {% trans "Sort" %}, {% endblock extra_keywords %}
+{% block extra_description %}, {% trans "Tenders list" %}, {% trans "Results" %}, {% trans "Advanced Search" %}, {% trans "Filter" %}, {% trans "Sort" %}, {% endblock extra_description %}
+{% block og_title_extra %} | {% trans "Tenders list" %}{% endblock og_title_extra %}
+{% block og_description_extra %} | {% trans "Tenders list" %}{% endblock og_description_extra %}
 
 {% block content %}
     <div class="d-flex justify-content-between px-2">

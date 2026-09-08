@@ -1,14 +1,49 @@
 <!DOCTYPE html>
 {% load static %}
 {% load i18n %}
+{% get_available_languages as LANGUAGES %}
 {% get_current_language_bidi as LB %}
 {% get_current_language as LANGUAGE_CODE %}
 
 
 <html dir="{% if LB %}rtl{% else %}ltr{% endif %}" lang="{{ LANGUAGE_CODE }}">
 	<head>
-		<title>eMarchés | {% block title %}{% endblock title %}</title>
-		{% include 'base/includes/head.html' %}
+		<title>eMarchés | {% block title %}{% endblock title %}</title>	
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="icon" type="image/png" href="{% static 'brand/insi-square.svg' %}">
+
+		<meta name="description" content="eMarches.com: {% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}, {% trans 'Tender' %}, {% trans 'Results' %}, {% trans 'Concurrent' %} {% block extra_description %}{% endblock %}">
+		<meta name="keywords" content="e-Marchés eMarchés eMarches.com {% translate 'PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free Listing Files Download' %}, {% trans 'Tender' %}, {% trans 'Results' %}, {% trans 'Concurrent' %} {% block extra_keywords %}{% endblock %}">
+		<meta property="og:title" content="eMarches.com{% block og_title_extra %}{% endblock %}">
+		<meta property="og:description" content="eMarches.com{% block og_description_extra %}{% endblock %}">
+
+		<meta property="og:image" content="https://www.emarches.com/static/img/success.webp">
+		<meta property="og:type" content="website">
+
+		<meta name="author" content="eMarches.com">
+
+		<link href="{% static 'styles/bootstrap-icons.min.css' %}" rel="stylesheet">
+		<link href="{% static 'styles/custom.css' %}" rel="stylesheet">
+
+		{% if LB %}
+			<link rel="stylesheet" href="{% static 'styles/bootstrap.rtl.min.css' %}">
+		{% else %}
+			<link rel="stylesheet" href="{% static 'styles/bootstrap.min.css' %}">
+		{% endif %}
+
+		{% for lang_code, lang_name in LANGUAGES %}
+			<link rel="alternate" hreflang="{{ lang_code }}" href="{{ request.get_host }}/{{ lang_code }}/">
+		{% endfor %}
+
+		<link rel="alternate" hreflang="x-default" href="{{ request.get_host }}/en/">
+
+
+
+
+
+
 	</head>
 	<body>
 

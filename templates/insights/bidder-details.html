@@ -1,9 +1,11 @@
 {% extends 'base/base.html' %}
 {% load i18n l10n static humanize groupify tz %}
 
-{% block title %}
-    {% trans "Concurrent details" %}: {{ bidder.name }}
-{% endblock title %}
+{% block title %}{% trans "Concurrent details" %}: {{ bidder.name }}{% endblock title %}
+{% block extra_keywords %}, {{ bidder.name }}, {% trans "Bidder" %}, {% trans "Concurrent" %}, {% trans "Stats" %}{% trans "Revenue" %}, {% trans "Participation" %}, {% trans "Award" %}, {% trans "Success Rate" %}, {% endblock extra_keywords %}
+{% block extra_description %}, {{ bidder.name }}, {% trans "Bidder" %}, {% trans "Concurrent" %}, {% trans "Stats" %}{% trans "Revenue" %}, {% trans "Participation" %}, {% trans "Award" %}, {% trans "Success Rate" %}, {% endblock extra_description %}
+{% block og_title_extra %} | {{ bidder.name }} | {% trans "Concurrent details" %}{% endblock og_title_extra %}
+{% block og_description_extra %} | {{ bidder.name }} | {% trans "Concurrent details" %}{% endblock og_description_extra %}
 
 {% block content %}
 

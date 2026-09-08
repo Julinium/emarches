@@ -77,33 +77,27 @@
     {% endif %}
 
 
-    {% if tender.expired == False %}
-
-        {% if tender.lots_count < 2 %}
-            <button class="m-1 btn btn-outline-primary
-                    {% if tender.estimate == 0 %} disabled {% endif %}" 
-                    type="button"
-                    data-bs-toggle="modal" data-bs-target="#modalSimulator">
-                <span><i class="{{ bicons.simulator }}"></i></span>
-                <span class="ms-1">{% trans 'Simulator' %}</span>
-            </button>
-
-        {% else %}
-            <a class="m-1 btn btn-outline-primary
-               {% if tender.estimate == 0 %} disabled {% endif %}" 
-               type="button" data-bs-toggle="modal" 
-               data-bs-target="#lotSelectModal">
-                <span><i class="{{ bicons.simulator }}"></i></span>
-                <span class="ms-1">{% trans 'Simulator' %}</span>
-            </a>
+    
+    {% if position == 'bottom' %}
+        {% if tender.estimate > 0 %}
+            {% if tender.expired == False %}
+                {% if tender.lots_count < 2 %}
+                    <button class="m-1 btn btn-outline-primary" type="button"
+                            data-bs-toggle="modal" data-bs-target="#modalSimulator">
+                        <span><i class="{{ bicons.simulator }}"></i></span>
+                        <span class="ms-1">{% trans 'Simulator' %}</span>
+                    </button>
+                {% else %}
+                    <a class="m-1 btn btn-outline-primary" 
+                    type="button" data-bs-toggle="modal" 
+                    data-bs-target="#lotSelectModal">
+                        <span><i class="{{ bicons.simulator }}"></i></span>
+                        <span class="ms-1">{% trans 'Simulator' %}</span>
+                    </a>
+                {% endif %}
+            {% endif %}
         {% endif %}
 
-    {% endif %}
-
-
-    
-    
-    {% if position == 'bottom' and tender.openings.all|length > 0 %}    
         <a href="{{ link_prefix }}{{ tender.link }}"
         class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
         onclick="window.open(this.href, '_blank');">

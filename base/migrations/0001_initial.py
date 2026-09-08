@@ -375,7 +375,7 @@ class Migration(migrations.Migration):
                 ('has_agrements', models.BooleanField(blank=True, default=False, null=True, verbose_name='Licenses required')),
                 ('has_qualifs', models.BooleanField(blank=True, default=False, null=True, verbose_name='Qualifications required')),
                 ('has_samples', models.BooleanField(blank=True, default=False, null=True, verbose_name='Samples required')),
-                ('has_meetings', models.BooleanField(blank=True, default=False, null=True, verbose_name='In-site visits scheduled')),
+                ('has_meetings', models.BooleanField(blank=True, default=False, null=True, verbose_name='Site survey scheduled')),
                 ('has_visits', models.BooleanField(blank=True, default=False, null=True, verbose_name='Meetings scheduled')),
                 ('location', models.CharField(blank=True, max_length=1024, null=True, verbose_name='Works execution location')),
                 ('ebid', models.SmallIntegerField(blank=True, default=9, null=True, verbose_name='Electronic bid')),

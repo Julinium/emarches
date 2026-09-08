@@ -107,22 +107,23 @@ def pg2Links(driver, page_number, pages):
     return links
 
 
-def exportLinks(links):
+def exportLinks(links, csv_name="links.csv"):
     """
     # Synopsis:
-        Exports links to a csv file. File is placed under {SELENO_DIR/exports} and named links.csv.
+        Exports links to a csv file. File is placed under {SELENO_DIR/exports} and named {csv_name}.
     # Params:
         links: List of links to export.
+        csv_name: Name of the csv file to create.
     # Return:
         full path to the exported csv file.
     """
-    helper.printMessage('INFO', 'l.exportLinks', 'Exporting links to a file ...\n')
+    helper.printMessage('INFO', 'l.exportLinks', f'Exporting links to {csv_name} ...\n')
     file = ''
     if len(links) > 0 :
         try:
             expo_dir = f'{C.SELENO_DIR}/exports'
             if not os.path.exists(expo_dir) : os.mkdir(expo_dir)
-            file = f'{expo_dir}/links.csv'
+            file = f'{expo_dir}/{csv_name}'
             with open(file, 'w', newline='') as linkscsv:
                 linkwriter = csv.writer(linkscsv)
                 for l in links:
@@ -130,10 +131,11 @@ def exportLinks(links):
         except Exception as e :
             helper.printMessage('FATAL', 'l.exportLinks', f'Something went wrong while exporting links')
             traceback.print_exc()
-            return ''
+            return None
         helper.printMessage('INFO', 'l.exportLinks', 'Exported links to file. No complains.\n')
     else:
         helper.printMessage('WARN', 'l.exportLinks', 'File was empty and was not exported.\n')
+
     return file
 
 

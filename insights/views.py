@@ -194,9 +194,6 @@ def bidder_details(request, pk=None):
 
     bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
 
-    # if not bidder :
-    #     return HttpResponse(_("Not found"), status=404)
-
     context = {'bidder': bidder,}
 
     logger_portal.info("Concurrent details view", extra={"request": request})

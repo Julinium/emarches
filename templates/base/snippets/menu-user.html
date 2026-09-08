@@ -21,10 +21,14 @@
                     <span class="">{% trans "Profile" %}</span>
                 </a>
             </li>
-
+            <li>
+                <a href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}" class="p-2 dropdown-item">
+                    <span><i class="bi bi-gear me-2"></i></span>
+                    <span class="">{% trans "Preferences" %}</span>
+                </a>
+            </li>
 
             <li><hr class="dropdown-divider"></li>
-
 
             <li class="">
                 <a href="{% url 'bidding_team_recap' %}" class="p-2 dropdown-item">
@@ -47,15 +51,6 @@
                     <span class="">{% trans "Subscription" %}</span>
                 </a>
             </li>
-
-            <li><hr class="dropdown-divider"></li>
-
-            <li>
-                <a href="{% url 'nas_user_settings' %}?&next={{ request.get_full_path }}" class="p-2 dropdown-item">
-                    <span><i class="bi bi-gear me-2"></i></span>
-                    <span class="">{% trans "Preferences" %}</span>
-                </a>
-            </li>
         
             <li>
                 <a href="#" class="p-2 dropdown-item text-muted">
@@ -64,6 +59,9 @@
                     <span class="">{% trans "Stats" %}</span>
                 </a>
             </li>
+
+            <li><hr class="dropdown-divider"></li>
+
             {% url 'mfa_index' as mfa_url_ %}
             {% if mfa_url_ %}
                 <li>
@@ -86,7 +84,6 @@
 
             {% if request.user.is_superuser %}
                 <div id="supersuser-section">
-                    <li><hr class="dropdown-divider"></li>
                     <li>
                         <a class="dropdown-item p-2" href="https://emarches.com/crm/supervision">
                             <i class="bi bi-eye-fill me-2"></i> {% translate 'Supervision' %}
@@ -94,11 +91,11 @@
                         </a>
                     </li>
                     <li><a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-tools me-2"></i> {% translate 'Administration' %}</a></li>
-                    <!-- <li><a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear me-2"></i> {% translate 'Database' %}</a></li>
+                    <li><a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear me-2"></i> {% translate 'Database' %}</a></li>
                     <li><a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot me-2"></i> Scraper Logs</a></li>
                     <li><a class="dropdown-item p-2" target="_blank" href="{% url 'base_view_log_file' 'portal' %}"><i class="bi bi-robot me-2"></i> Portal log</a></li>
                     <li><a class="dropdown-item p-2" target="_blank" href="{% url 'base_view_log_file' 'requests' %}"><i class="bi bi-robot me-2"></i> Requests log</a></li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a></li> -->
+                    <li><a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a></li>
                     <li><hr class="dropdown-divider"></li>
                 </div>
             {% endif %}

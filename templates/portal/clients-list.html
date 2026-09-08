@@ -2,9 +2,11 @@
 {% load i18n static %}
 {% load humanize %}
 
-{% block title %}
-    {% trans "Tenders' Clients" %}
-{% endblock title %}
+{% block title %}{% trans "Tenders' Clients" %}{% endblock title %}
+{% block extra_keywords %}, {% trans "Public Clients" %}, {% trans "Ongoing Tenders" %}, {% trans "Stats" %}, {% trans "Tendances" %}, {% trans "Administration" %}, {% endblock extra_keywords %}
+{% block extra_description %}, {% trans "Public Clients" %}, {% trans "Ongoing Tenders" %}, {% trans "Stats" %}, {% trans "Tendances" %}, {% trans "Administration" %}, {% endblock extra_description %}
+{% block og_title_extra %} | {% trans "Clients list" %}{% endblock og_title_extra %}
+{% block og_description_extra %} | {% trans "Clients list" %}{% endblock og_description_extra %}
 
 {% block content %}
     <div class="d-flex align-items-center justify-content-between px-0">

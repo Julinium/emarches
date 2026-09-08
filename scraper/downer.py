@@ -309,3 +309,4 @@ def getDCE(tender):
     return con_path
 
 
+# Exclude Tenders having has_minutes = False.

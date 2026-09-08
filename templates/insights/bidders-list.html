@@ -2,9 +2,11 @@
 {% load i18n l10n static %}
 {% load humanize %}
 
-{% block title %}
-    {% trans "Concurrents list" %}
-{% endblock title %}
+{% block title %}{% trans "Concurrents list" %}{% endblock title %}
+{% block extra_keywords %}, {% trans "Bidders list" %}, {% trans "Concurrents list" %} {% endblock extra_keywords %}
+{% block extra_description %}, {% trans "Bidders list" %}, {% trans "Concurrents list" %} {% endblock extra_description %}
+{% block og_title_extra %} | {% trans "Concurrents list" %} {% endblock og_title_extra %}
+{% block og_description_extra %} | {% trans "Concurrents list" %}{% endblock og_description_extra %}
 
 {% block content %}
 
