@@ -1,5 +1,4 @@
 from django import template
-# from django.urls import resolve, reverse
 from django.conf import settings
 
 register = template.Library()

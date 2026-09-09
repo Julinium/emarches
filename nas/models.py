@@ -210,7 +210,7 @@ class Download(models.Model):
 
 class TenderView(models.Model):
     id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user       = models.ForeignKey(User, on_delete=models.CASCADE, related_name='views', editable=False)
+    user       = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='views', editable=False)
     tender     = models.ForeignKey(Tender, on_delete=models.CASCADE, related_name='views', editable=False, verbose_name=_('Tender'))
     when       = models.DateTimeField(blank=True, null=True, auto_now_add=True, editable=False, db_index=True, verbose_name=_('Date'))
 
@@ -424,7 +424,7 @@ class UserSetting(models.Model):
     bidding_check_amount     = models.BooleanField(default=True, verbose_name=_("Check submitted amount when editing"))
     bidding_check_bond       = models.BooleanField(default=True, verbose_name=_("Check submitted bond when editing"))
 
-    general_wrap_long_text   = models.BooleanField(default=False, verbose_name=_("Do not wrap long text"))
+    general_wrap_long_text   = models.BooleanField(default=True, verbose_name=_("Do not wrap long text"))
     general_items_per_page   = models.CharField(max_length=16, choices=ItemsPerPage.choices, default=ItemsPerPage.IPP_020, verbose_name=_('List items per page'))
     general_show_invitations = models.BooleanField(default=True, verbose_name=_("Show invitations from other teams"))
     

@@ -24,12 +24,12 @@ from django.views.decorators.cache import cache_control
 from base.context_processors import portal_context
 from base.models import (
         Agrement, Category, Client, Crawler, FileToGet, 
-        Deposit, Domain, Procedure, Qualif, Tender,
+        Deposit, Domain, Procedure, Qualif, Tender
     )
 from base.texter import normalize_text
 from bidding.models import Bid
 from bidding.secu import get_colleagues
-from nas.models import Company, Download, Favorite, TenderView
+from nas.models import Company, Download, Favorite, TenderView, UserSetting
 
 # Default Settings
 TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
@@ -47,17 +47,19 @@ DCE_SHOW_MODAL = True
 logger_portal = logging.getLogger("portal")
 
 
-@login_required(login_url="account_login")
+# @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_list(request):
 
     user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
+    # if not user or not user.is_authenticated:
+    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
+    #     return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
-    us = pro_context["user_settings"]
+    def_us = UserSetting(user=None, general_wrap_long_text=True)
+
+    us = pro_context.get("user_settings", def_us)
     if us:
         TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
         TENDERS_ORDERING_FIELD = us.tenders_ordering_field
@@ -397,15 +399,24 @@ def tender_list(request):
             "changes",
         )
         .select_related("client", "category", "mode", "procedure")
-        .annotate(
+        # .annotate(
+        #     team_bids=Count(
+        #         "lots__bids",
+        #         filter=Q(lots__bids__creator__in=colleagues),
+        #         distinct=True,
+        #     )
+        # )
+        .order_by(*ordering)
+    )
+
+    if user and user.is_authenticated:
+        tenders = tenders.annotate(
             team_bids=Count(
                 "lots__bids",
                 filter=Q(lots__bids__creator__in=colleagues),
                 distinct=True,
             )
         )
-        .order_by(*ordering)
-    )
 
     context = define_context(request)
 
@@ -425,33 +436,14 @@ def tender_list(request):
     return render(request, "portal/tender-list.html", context)
 
 
-@login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def tender_details_chrono(request, ch=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
-
-    if not ch:
-        logger_portal.warning("E405: Bad request parameter", extra={"request": request})
-        return HttpResponse(trans("Bad request"), status=405)
-
-    tender = get_object_or_404(Tender, chrono=ch)
-
-    logger_portal.info("Tenders details chrono redirect", extra={"request": request})
-    return redirect("portal_tender_details", tender.id)
-
-
-@login_required(login_url="account_login")
+# @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_details(request, pk=None):
 
     user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
+    # if not user or not user.is_authenticated:
+    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
+    #     return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(
         Tender.objects.select_related(
@@ -477,10 +469,13 @@ def tender_details(request, pk=None):
     # if not tender:
     #     return HttpResponse(trans("Not found"), status=404)
 
-    favorited = tender.favorites.filter(user=user).first()
+    favorited = tender.favorites.filter(user=user).first() if user and user.is_authenticated else None
 
     pro_context = portal_context(request)
-    us = pro_context["user_settings"]
+    def_us = UserSetting(user=None, general_wrap_long_text=True)
+
+    us = pro_context.get("user_settings", def_us)
+
     full_bar_days = (
         int(us.tenders_full_bar_days)
         if us.tenders_full_bar_days
@@ -488,7 +483,7 @@ def tender_details(request, pk=None):
     )
 
     colleagues = get_colleagues(user)
-    companies = Company.objects.filter(user__in=colleagues)
+    companies = Company.objects.filter(user__in=colleagues) if user and user.is_authenticated else None
 
     bids = (
         Bid.objects.filter(
@@ -496,7 +491,7 @@ def tender_details(request, pk=None):
             creator__in=colleagues,
             company__in=companies,
         ).distinct().order_by("lot", "bid_amount", "date_submitted")
-    )
+    ) if user and user.is_authenticated else None
 
     context = {
         "tender": tender,
@@ -507,10 +502,8 @@ def tender_details(request, pk=None):
         "bids": bids,
     }
 
-    TenderView.objects.create(
-        tender=tender,
-        user=user,
-    )
+    if user and user.is_authenticated:
+        TenderView.objects.create(tender=tender, user=user) 
 
     tolerance_dn = 25.0
     if tender.category.label == "Travaux":
@@ -525,6 +518,25 @@ def tender_details(request, pk=None):
 
     logger_portal.info("Tenders details view", extra={"request": request})
     return render(request, "portal/tender-details.html", context)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_details_chrono(request, ch=None):
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
+
+    if not ch:
+        logger_portal.warning("E405: Bad request parameter", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    tender = get_object_or_404(Tender, chrono=ch)
+
+    logger_portal.info("Tenders details chrono redirect", extra={"request": request})
+    return redirect("portal_tender_details", tender.id)
 
 
 @login_required(login_url="account_login")
@@ -718,7 +730,7 @@ def tender_favorite_list(request):
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
-    us = pro_context["user_settings"]
+    us = pro_context.get("user_settings", None)
     if us:
         TENDER_FULL_PROGRESS_DAYS = int(us.tenders_full_bar_days)
         TENDERS_ORDERING_FIELD = us.tenders_ordering_field
@@ -754,15 +766,24 @@ def tender_favorite_list(request):
             "downloads",
             "changes",
         )
-        .annotate(
+        # .annotate(
+        #     team_bids=Count(
+        #         "lots__bids",
+        #         filter=Q(lots__bids__creator__in=colleagues),
+        #         distinct=True,
+        #     )
+        # )
+        .order_by(*ordering)
+    )
+
+    if user and user.is_authenticated:
+        tenders = tenders.annotate(
             team_bids=Count(
                 "lots__bids",
                 filter=Q(lots__bids__creator__in=colleagues),
                 distinct=True,
             )
         )
-        .order_by(*ordering)
-    )
 
     context = {}
     context["query_string"] = urlencode(query_string)
@@ -823,7 +844,7 @@ def client_list(request):
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
-    us = pro_context["user_settings"]
+    us = pro_context.get("user_settings", None)
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.general_items_per_page)
     CLIENTS_ORDERING_FIELD = "latest_published"
@@ -940,7 +961,7 @@ def domain_list(request):
         return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
-    us = pro_context["user_settings"]
+    us = pro_context.get("user_settings", None)
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
         SHOW_CANCELLED = us.tenders_show_cancelled

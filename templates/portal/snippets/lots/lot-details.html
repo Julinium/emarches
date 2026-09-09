@@ -1,5 +1,9 @@
 {% load i18n %}
+{% load censorify %}
 
+
+{% url 'account_login' as login_url_ %}
+{% trans 'Sign in' as btn_text %}
 
 <div class="row gx-4 gy-0 small">
 
@@ -48,7 +52,7 @@
                     {% trans 'Guarantee' %}:
                 </span>
                 <span class="">
-                    {{ lot.bond }}
+                    {% censorify request.user lot.bond login_url_ request.path btn_text %}
                 </span>
             </span>
 
@@ -78,7 +82,11 @@
                     {% trans 'Reserved' %}:
                 </span>
                 <span class="">
-                    {% if lot.reserved %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+                    {% if request.user.is_authenticated %}
+                        {% if lot.reserved %}{% trans 'Yes' %}{% else %}{% trans 'No' %}{% endif %}
+                    {% else %}
+                        {% censorify request.user '?' login_url_ request.path btn_text %}
+                    {% endif %}
                 </span>
             </span>
         </div>

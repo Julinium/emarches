@@ -13,17 +13,19 @@
         </div>
     </div>
 
-    <button onclick="heartToggle()"
+    <button {% if request.user.is_authenticated %}onclick="heartToggle(){% endif %}"
             id="{{ tender.chrono }}-fav"
-            class="m-1 btn btn-outline-primary favorite-toggle
+            class="m-1 btn btn-outline-primary favorite-toggle {% if not request.user.is_authenticated %}disabled{% endif%}
                 {% if favorited %}d-none{% endif %}">
+        {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
         <span><i class="{{ bicons.favorite }}"></i></span>
         <span class="ms-1">{% trans 'Favorite' %}</span>
     </button>
-    <button onclick="heartToggle('unfav')"
+    <button {% if request.user.is_authenticated %}onclick="heartToggle('unfav'){% endif %}"
             id="{{ tender.chrono }}-unfav"
-            class="m-1 btn btn-outline-primary favorite-toggle
+            class="m-1 btn btn-outline-primary favorite-toggle {% if not request.user.is_authenticated %}disabled{% endif%}
                 {% if not favorited %}d-none{% endif %}">
+        {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
         <span><i class="{{ bicons.unfavorite }}"></i></span>
         <span class="ms-1">{% trans 'Unfavorite' %}</span>
     </button>
@@ -39,8 +41,9 @@
             {% with tender.files_info|first as f %}
                 <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
                         class="m-1 btn btn-outline-primary" type="button">
-                    <span class="fw-bold">{{ tender.total_size|metrify:1 }}</span>
+                    {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
                     <span><i class="{{ bicons.downloads }}"></i></span>
+                    <span class="fw-bold">{{ tender.total_size|metrify:1 }}</span>
                     <span class="ms-1">{% trans 'Download' %}</span>
                 </a>
             {% endwith %}
@@ -53,6 +56,7 @@
                         {% endif %}" 
                     type="button" 
                     data-bs-toggle="modal" data-bs-target="#dceModal">
+                {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
                 <span><i class="{{ bicons.downloads }}"></i></span>
                 <span class="ms-1 fw-bold">{{ tender.total_size|metrify:1 }}</span>
                 <span class="ms-1">{% trans 'Files' %}</span>
@@ -62,6 +66,7 @@
 
             <button class="m-1 btn btn-outline-secondary"
                     data-bs-toggle="modal" data-bs-target="#dceRequestModal">
+                {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
                 <span><i class="{{ bicons.downloads }}"></i></span>
                 <span class="ms-1">{% trans 'Files' %}</span>
             </button>
@@ -71,6 +76,7 @@
     
     {% if position != 'bottom' and tender.openings.all|length > 0 %}
         <a class="btn btn-outline-success" href="#accordionResults">
+            {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
             <span><i class="{{ bicons.deliberated }}"></i></span>
             <span class="ms-1">{% trans 'Results' %}</span>
         </a>
@@ -82,15 +88,16 @@
         {% if tender.estimate > 0 %}
             {% if tender.expired == False %}
                 {% if tender.lots_count < 2 %}
-                    <button class="m-1 btn btn-outline-primary" type="button"
-                            data-bs-toggle="modal" data-bs-target="#modalSimulator">
+                    <button class="m-1 btn btn-outline-primary {% if not request.user.is_authenticated %}disabled{% endif%}" type="button"
+                            {% if request.user.is_authenticated %}data-bs-toggle="modal" data-bs-target="#modalSimulator"{% endif %}>
+                        {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
                         <span><i class="{{ bicons.simulator }}"></i></span>
                         <span class="ms-1">{% trans 'Simulator' %}</span>
                     </button>
                 {% else %}
-                    <a class="m-1 btn btn-outline-primary" 
-                    type="button" data-bs-toggle="modal" 
-                    data-bs-target="#lotSelectModal">
+                    <a class="m-1 btn btn-outline-primary {% if not request.user.is_authenticated %}disabled{% endif%}" type="button" 
+                        {% if request.user.is_authenticated %}data-bs-toggle="modal" data-bs-target="#lotSelectModal"{% endif %}>
+                        {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
                         <span><i class="{{ bicons.simulator }}"></i></span>
                         <span class="ms-1">{% trans 'Simulator' %}</span>
                     </a>
@@ -98,9 +105,10 @@
             {% endif %}
         {% endif %}
 
-        <a href="{{ link_prefix }}{{ tender.link }}"
+        <a href="{% if request.user.is_authenticated %}{{ link_prefix }}{{ tender.link }}{% else %}{% url 'account_login' %}?next={{ request.path }}{% endif %}"
         class="m-1 btn btn-outline-primary" data-bs-dismiss="modal"
         onclick="window.open(this.href, '_blank');">
+            {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
             <span><i class="{{ bicons.link }}"></i></span>
             <span class="ms-1">{% trans 'Official Link' %}</span>
         </a>

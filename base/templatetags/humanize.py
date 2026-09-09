@@ -12,7 +12,7 @@ def metrify(value, precision=2):
         num = int(value)
     except (ValueError, TypeError):
         return str(value)
-    return metric(num, "", precision)#.replace(" ", '')
+    return metric(num, "", precision)
 
 
 @register.filter

@@ -238,7 +238,7 @@ def portal_context(request):
     # if user and user.is_superuser:
     #     show_bidders_names = True
 
-    context['user_settings']      = user_settings
+    context['user_settings']      = user_settings if user_settings else None
     context['faved_ids']          = faved_ids
     context['pinned_ids']         = pinned_ids
     context['wrap_text']          = user_settings.general_wrap_long_text == True if user_settings else False

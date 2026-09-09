@@ -9,12 +9,12 @@ logger_portal = logging.getLogger("portal")
 
 
 def get_or_create_team(user=None, request=None):
-    if not user: return None
+    if not user or not user.is_authenticated: return None
     memberships = user.memberships.all()
     last_membership = memberships.order_by("-joined").first()
     if last_membership:
         try:
-            back48h = datetime.now() - timedelta(hours=60)
+            back48h = datetime.now() - timedelta(hours=48)
             canvs = user.invitations.filter(cancelled=True) | user.invitations.filter(expiry__lt=back48h)
             dc, dd = canvs.delete()
             logger_portal.debug(f"Deleted { dc } dead Invitations: { dd }", extra={"request": request})
@@ -125,7 +125,7 @@ def is_active_team_member(user, team):
     return False
 
 def get_colleagues(user=None):
-    if not user: return None
+    if not user or not user.is_authenticated: return None
     membership = user.memberships.order_by("joined").last()
     return membership.team.members.filter(is_active=True).all() if membership else None
 

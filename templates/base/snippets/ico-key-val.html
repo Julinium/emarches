@@ -1,4 +1,5 @@
-
+{% load i18n %}
+{% load censorify %}
 
 <div class="col-12 {% if not full_width %}col-md-6{% endif %}" 
      data-bs-toggle="tooltip" 
@@ -25,7 +26,14 @@
                 {{ key_value }}
             </div>
             <div id="{{ id_value }}" class="{% if wrap_text == False %}{{ liner }}{% endif %}">
-                <span class="{{ val_class }}">{{ val_value }}</span>
+                {% if mask == 'yes' and not request.user.is_authenticated %}
+                    {% url 'account_login' as login_url_ %}
+                    {% trans 'Sign in' as btn_text %}
+                    <span class="{{ val_class }}">{% censorify request.user val_value login_url_ request.path btn_text %}</span>
+                {% else %}
+                    <span class="{{ val_class }}">{{ val_value }}</span>
+                {% endif %}
+                
                 <span class="
                              {% if uni_class %}
                                  {{ uni_class }}

@@ -104,38 +104,38 @@
         <div class="row gx-4 gy-0">
             
             {% trans 'Object' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-title' val_value=tender.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-title' val_value=tender.title key_value=key_value uni_value='' ico_class=bicons.title full_width='yes' val_class='fw-bold' border='bottom' liner='threelines' mask='no' %}
             
             {% trans 'Public Client' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-client' val_value=tender.client.name key_value=key_value uni_value='' ico_class=bicons.client full_width='yes' val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-client' val_value=tender.client.name key_value=key_value uni_value='' ico_class=bicons.client full_width='yes' val_class='' border='bottom' liner='oneline' mask='no' %}
 
             {% trans 'Time to Deadline' as key_value %}
             {% trans 'days' as unit %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_to_go' val_value=tender.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_to_go' val_value=tender.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='' border='bottom' liner='oneline' mask='no' %}
             
             {% timezone "Africa/Casablanca" %}
                 {% trans 'Deadline' as key_value %}
                 {% trans 'Morocco time' as unit %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-deadline' val_value=tender.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-deadline' val_value=tender.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' mask='no' %}
             {% endtimezone %}
 
             {% trans 'Total Estimate' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-estimate' val_value=tender.estimate key_value=key_value uni_value='' ico_class=bicons.estimate val_class='fw-bold' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-estimate' val_value=tender.estimate key_value=key_value uni_value='' ico_class=bicons.estimate val_class='fw-bold' border='bottom' liner='oneline' mask='no' %}
             
             {% trans 'Total Guarantee' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond' val_value=tender.bond key_value=key_value uni_value='' ico_class=bicons.bond val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond' val_value=tender.bond key_value=key_value uni_value='' ico_class=bicons.bond val_class='' border='bottom' liner='oneline' mask='yes' %}
             
             {% trans 'Reference' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-reference' val_value=tender.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-reference' val_value=tender.reference key_value=key_value uni_value='' ico_class=bicons.reference val_class='' border='bottom' liner='oneline' mask='yes' %}
             
             {% trans 'Published' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-published' val_value=tender.published key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-published' val_value=tender.published key_value=key_value uni_value='' ico_class=bicons.published val_class='' border='bottom' liner='oneline' mask='yes' %}
 
             {% trans 'Main Category' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-category' val_value=tender.category.label key_value=key_value uni_value='' ico_class=bicons.category val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-category' val_value=tender.category.label key_value=key_value uni_value='' ico_class=bicons.category val_class='' border='bottom' liner='oneline' mask='no' %}
 
             {% trans 'Execution Location' as key_value %}
-            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-location' val_value=tender.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-location' val_value=tender.location key_value=key_value uni_value='' ico_class=bicons.location val_class='' border='bottom' liner='oneline' mask='yes' %}
         </div>
 
         <div class="row gx-4 gy-0">
@@ -176,7 +176,7 @@
                 {% else %}
                     {% trans 'No' as translated_value %}
                 {% endif %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-reserved' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.reserved_ico val_class='' border='bottom' liner='' %}
+                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-reserved' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.reserved_ico val_class='' border='bottom' liner=''  mask='yes' %}
             {% endwith %}
 
             {% trans 'Variants accepted' as key_value %}
@@ -306,34 +306,33 @@
                         <div class="accordion-body py-0 px-3">
                             <div class="row gx-3 gy-1 small">
                                 {% trans 'Withdrawal Address' as key_value %}
-                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_withdrawal|add:'-withdrawal' val_value=tender.address_withdrawal key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner='' %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_withdrawal|add:'-withdrawal' val_value=tender.address_withdrawal key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner=''  mask='yes' %}
                                 
                                 {% trans 'Bidding Address' as key_value %}
                                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_bidding|add:'-bidding' val_value=tender.address_bidding key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner='' %}
                                 
                                 {% trans 'Opening Address' as key_value %}
-                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_opening|add:'-opening' val_value=tender.address_opening key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner='' %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.address_opening|add:'-opening' val_value=tender.address_opening key_value=key_value ico_class=bicons.address val_class='' full_width='yes' border='bottom' liner=''  %}
                                 
                                 {% trans 'Person' as key_value %}
-                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_name' val_value=tender.contact_name key_value=key_value uni_value=uni_value ico_class=bicons.contact val_class='' border='bottom' liner='' %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_name' val_value=tender.contact_name key_value=key_value uni_value=uni_value ico_class=bicons.contact val_class='' border='bottom' liner=''  mask='yes' %}
                                 
                                 {% if tender.contact_phone and tender.contact_phone != '-' %}                                        
                                     {% trans 'Phone' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_phone' val_value=tender.contact_phone key_value=key_value uni_value=uni_value ico_class='bi bi-telephone' val_class='' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_phone' val_value=tender.contact_phone key_value=key_value uni_value=uni_value ico_class='bi bi-telephone' val_class='' border='bottom' liner=''  mask='yes' %}
                                 {% endif %}
 
                                 {% if tender.contact_email and tender.contact_email != '-' %}                                        
                                     {% trans 'Email' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_email' val_value=tender.contact_email key_value=key_value uni_value=uni_value ico_class='bi bi-envelope' val_class='' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_email' val_value=tender.contact_email key_value=key_value uni_value=uni_value ico_class='bi bi-envelope' val_class='' border='bottom' liner=''  mask='yes' %}
                                 {% endif %}
 
                                 {% if tender.contact_fax and tender.contact_fax != '-' %}                                        
                                     {% trans 'Fax' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_fax' val_value=tender.contact_fax key_value=key_value uni_value=uni_value ico_class='bi bi-printer' val_class='' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-contact_fax' val_value=tender.contact_fax key_value=key_value uni_value=uni_value ico_class='bi bi-printer' val_class='' border='bottom' liner=''  mask='yes' %}
                                 {% endif %}
 
                             </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -414,37 +413,37 @@
 
                                 {% trans 'Time on display' as key_value %}
                                 {% trans 'days' as uni_value %}
-                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_span' val_value=tender.days_span key_value=key_value uni_value=uni_value ico_class=bicons.days_span val_class='text-muted small' border='bottom' liner='' %}
+                                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_span' val_value=tender.days_span key_value=key_value uni_value=uni_value ico_class=bicons.days_span val_class='text-muted small' border='bottom' liner='' mask='yes' %}
 
                                 {% trans 'Guarantee ratio' as key_value %}
                                 {% with tender.bond_ratio|floatformat:3 as val_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-bond_ratio' val_value=val_value key_value=key_value uni_value='%' ico_class=bicons.ratio val_class='text-muted small' border='bottom' liner='' mask='yes' %}
                                 {% endwith %}
 
                                 {% if aliens_attack %}
                                     {% trans 'Database ID' as key_value %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-id' val_value=tender.id key_value=key_value uni_value='' ico_class=bicons.hash val_class='text-muted small' border='bottom' liner='' mask='yes' %}
                                 {% endif %}
 
                                 {% trans 'Views' as key_value %}
                                 {% with count=tender.views.all|length|metrify:0 %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-views' val_value=count key_value=key_value uni_value='' ico_class=bicons.views val_class='text-muted small' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-views' val_value=count key_value=key_value uni_value='' ico_class=bicons.views val_class='text-muted small' border='bottom' liner='' mask='yes' %}
                                 {% endwith %}
                                 {% if tender.views.all %}
                                     {% trans 'Latest view since' as key_value %}
                                     {% with latest=tender.views.first.when|timesince %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
+                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' mask='yes' %}
                                     {% endwith %}
                                 {% endif %}
 
                                 {% trans 'Downloads' as key_value %}
                                 {% with count=tender.downloads.all|length|metrify:0 %}
-                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-downloads' val_value=count key_value=key_value uni_value='' ico_class=bicons.downloads val_class='text-muted small' border='bottom' liner='' %}
+                                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-downloads' val_value=count key_value=key_value uni_value='' ico_class=bicons.downloads val_class='text-muted small' border='bottom' liner='' mask='yes' %}
                                 {% endwith %}
                                 {% if tender.downloads.all %}
                                     {% trans 'Latest download since' as key_value %}
                                     {% with latest=tender.downloads.first.when|timesince %}
-                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' %}
+                                        {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-latest' val_value=latest key_value=key_value uni_value='' ico_class=bicons.history val_class='text-muted small' border='bottom' liner='' mask='yes' %}
                                     {% endwith %}
                                 {% endif %}
                             </div>
