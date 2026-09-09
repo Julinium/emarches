@@ -1,4 +1,7 @@
-{% load i18n %}                    
+{% load i18n censorify %}
+
+{% url 'account_login' as login_url_ %}
+{% trans 'Sign in' as btn_text %}                    
 <div class="col-12">
     <div class="d-flex-inline my-1">
         <div class="text-muted small fw-light">
@@ -6,16 +9,20 @@
             <span>{{ caption }}:</span>
         </div>
         <div class="ul">
-            {% for object in objects %}
-                <div class="li">
-                    <span class="">{{ object.short }}: </span>
-                    <span class="small">{{ object.name }}</span><br>
-                </div>
-            {% empty %}
-                <div class="li">
-                    <span class="fw-light small text-muted my-2">{% trans 'Not found' %}</span>
-                </div>
-            {% endfor %}
+            {% if not request.user.is_authenticated %}
+                <span>{% censorify request.user '?' login_url_ request.path btn_text %}</span>
+            {% else %}
+                {% for object in objects %}
+                    <div class="li">
+                        <span class="">{{ object.short }}: </span>
+                        <span class="small">{{ object.name }}</span><br>
+                    </div>
+                {% empty %}
+                    <div class="li">
+                        <span class="fw-light small text-muted my-2">{% trans 'Not found' %}</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 </div>

@@ -221,20 +221,20 @@ def portal_context(request):
     # context['empty_items']   = ['-', '--', '_', '__', '---', '/', '?', ' ', '.', '']
 
     context['categories'] = Category.objects.all().order_by('label')
+    context['wrap_text'] = False
 
     user = request.user
     if not user or not user.is_authenticated:
         return context        
 
-    user_settings = UserSetting.objects.filter(user = request.user).first()
-    if not user_settings: user_settings = UserSetting.objects.create(user=request.user)
+    user_settings = UserSetting.objects.filter(user = user).first()
+    if not user_settings: user_settings = UserSetting.objects.create(user=user)
 
     faved_ids  = user.favorites.values_list('tender', flat=True)
     pinned_ids = user.stickies.values_list('purchase_order', flat=True)
 
     # # TODO: Permission logic
     # show_bidders_names = True
-    # user = request.user
     # if user and user.is_superuser:
     #     show_bidders_names = True
 

@@ -805,13 +805,13 @@ def tender_favorite_list(request):
     return render(request, "portal/tender-favorite-list.html", context)
 
 
-@login_required(login_url="account_login")
+# @login_required(login_url="account_login")
 def locations_list(request):
 
     user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
+    # if not user or not user.is_authenticated:
+    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
+    #     return HttpResponse(trans("Permission denied"), status=403)
 
     json_path = os.path.join(settings.BASE_DIR, "scraper", "data", "regions-cities.json")
 
@@ -835,16 +835,18 @@ def locations_list(request):
     return render(request, "portal/locations-list.html", context)
 
 
-@login_required(login_url="account_login")
+# @login_required(login_url="account_login")
 def client_list(request):
 
     user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
+    # if not user or not user.is_authenticated:
+    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
+    #     return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
-    us = pro_context.get("user_settings", None)
+    def_us = UserSetting(user=None, general_wrap_long_text=True)
+
+    us = pro_context.get("user_settings", def_us)
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.general_items_per_page)
     CLIENTS_ORDERING_FIELD = "latest_published"
@@ -952,16 +954,20 @@ def client_list(request):
     return render(request, "portal/clients-list.html", context)
 
 
-@login_required(login_url="account_login")
+# @login_required(login_url="account_login")
 def domain_list(request):
 
     user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
+    # if not user or not user.is_authenticated:
+    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
+    #     return HttpResponse(trans("Permission denied"), status=403)
+
 
     pro_context = portal_context(request)
-    us = pro_context.get("user_settings", None)
+    def_us = UserSetting(user=None, general_wrap_long_text=True)
+
+    us = pro_context.get("user_settings", def_us)
+
     if us:
         CLIENTS_ITEMS_PER_PAGE = int(us.tenders_items_per_page)
         SHOW_CANCELLED = us.tenders_show_cancelled
