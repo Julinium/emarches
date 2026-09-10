@@ -11,7 +11,7 @@
         <div class="">
             <span class="h3 me-1">{% trans "Domains of activity" %}</span>
         </div>
-        <div class="d-flex align-items-top">            
+        <div class="d-flex align-items-top">
             {% include 'portal/snippets/domains/domain-search-form.html' %}
             {% include 'portal/snippets/domains/domain-menu-sort.html' %}
         </div>
@@ -39,21 +39,57 @@
 
 
     {% if page_obj %}
+
         <div class="container py-4 px-0">
             {% for domain in page_obj %}
-                <a href="{% url 'portal_tender_list' %}?&q={{ domain.name }}&f=domains&exact=yes" 
-                    class="btn text-start w-100 p-0 mb-2">
-                    <div class="card shadow py-2 px-3">
-                        <div class="{% if wrap_text == False %}threelines{% endif %}">
-                            <span><i class="{{ bicons.domains }} me-2"></i></span>
-                            {{ domain.name }}
-                            <span class="ms-2 badge bg-secondary float-end">
-                                <i class="{{ bicons.count }} me-1"></i>{{ domain.tenders_count }}
-                                <i class="{{ bicons.estimate }} mx-1"></i>{{ domain.total_estimate|metrify }}
-                            </span>
+                    <div class="card shadow mb-3">
+                        <div class="card-header px-2 pt-1 pb-1">
+                            <div class="oneline">
+                                <span class="">
+                                    <span><i class="{{ bicons.domains }} me-1"></i></span>
+                                    <span class="fw-bold me-1">{{ domain.short|default:'-' }}</span>
+                                </span>
+                            </div>
                         </div>
+                        
+                        <div class="card-body p-0">
+                            {% include "portal/snippets/domains/domain-item.html" with domain=domain %}
+                        </div>
+                        <div class="card-footer text-secondary small px-2 py-1">
+
+                            <div class="d-flex justify-content-between">
+
+                                <div class="me-2">
+                                    {% if domain.total_estimate %}
+                                        <span class="text-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ domain.total_estimate }}">
+                                            <i class="{{ bicons.estimate }} small"></i>
+                                            <span class="fw-bold">{{ domain.total_estimate|metrify }}</span>
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <div class="twolines text-end">
+                                    <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Active Tenders' %}">
+                                        <span class="small fw-bold">{{ domain.tenders_count }}</span>
+                                        <span class="small fw-light fs-7">/</span>
+                                        <span class="small fw-light">{{ domain.all_tenders_count }}</span>
+                                    </span>
+                                    <span class="small fw-light fs-7">@</span>
+                                    <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Estimate average' %} ({{ domain.estimate_average }})">
+                                        <span class="small fw-light">{{ domain.estimate_average|metrify }}</span>
+                                    </span>
+                                    
+                                    <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
+
+                                    <span data-bs-toggle="tooltip" title="{% trans 'Latest published' %}">
+                                        <span class="small"><i class="{{ bicons.published }}"></i></span>
+                                        <span class="small">{{ domain.latest_published }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </a>
             {% endfor %}
         </div>
 

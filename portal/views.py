@@ -1018,17 +1018,38 @@ def domain_list(request):
         return context
 
     query_dict, query_string, query_unsorted = get_req_params(request)
+
     assa = timezone.now()
-
-    if SHOW_CANCELLED:
-        silter = Q(tenders__deadline__gte=assa)
-    else:
-        silter = Q(tenders__deadline__gte=assa, tenders__cancelled=False)
-
+    ongoing_tenders = Q(
+            tenders__deadline__gte=assa, 
+            # tenders__cancelled=False,
+        )
     all_domains = Domain.objects.annotate(
-        tenders_count=Count("tenders", filter=silter),
-        total_estimate=Sum("tenders__estimate", filter=silter),
-    ).filter(tenders_count__gt=0)
+            all_tenders_count=Count("tenders"),
+            all_total_estimate=Sum("tenders__estimate", default=0),
+            tenders_count=Count("tenders", filter=ongoing_tenders),
+            total_estimate=Sum("tenders__estimate", filter=ongoing_tenders, default=0),
+            latest_published = Max("tenders__published")
+        ).filter(
+            all_tenders_count__gt=0
+        )
+
+    domains, filters = filter_domains(all_domains, query_dict)
+
+
+
+
+    # assa = timezone.now()
+
+    # if SHOW_CANCELLED:
+    #     silter = Q(tenders__deadline__gte=assa)
+    # else:
+    #     silter = Q(tenders__deadline__gte=assa, tenders__cancelled=False)
+
+    # all_domains = Domain.objects.annotate(
+    #     tenders_count=Count("tenders", filter=silter),
+    #     total_estimate=Sum("tenders__estimate", filter=silter),
+    # ).filter(tenders_count__gt=0)
 
     domains, filters = filter_domains(all_domains, query_dict)
 
@@ -1061,6 +1082,13 @@ def domain_list(request):
         if int(page_number) > paginator.num_pages:
             page_number = paginator.num_pages
     page_obj = paginator.page(page_number)
+
+    for obj in page_obj:
+        obj.estimate_average = (
+            round(obj.all_total_estimate / obj.all_tenders_count, 2)
+            if obj.all_tenders_count != 0
+            else Decimal("0")
+        )
 
     context["page_obj"] = page_obj
     context["domains"] = domains

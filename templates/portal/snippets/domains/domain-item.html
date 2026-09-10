@@ -1,64 +1,64 @@
 {% load i18n %}
 {% load humanize %}
 
-<div id="cliennt-{{ client.id }}-line">
+<div id="domain-{{ domain.id }}-line">
 
-    <a data-bs-toggle="collapse" href="#cliennt-{{ client.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="cliennt-{{ client.id }}-collapse"
+    <a data-bs-toggle="collapse" href="#domain-{{ domain.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="domain-{{ domain.id }}-collapse"
        class="text-decoration-none text-reset">
 
-        <div id="cliennt-{{ client.id }}-digest" class="p-2">
-            <div class="{% if wrap_text == False %}threelines{% endif %} small text-muted">{{ client.name }}</div>             
+        <div id="domain-{{ domain.id }}-digest" class="p-2">
+            <div class="{% if wrap_text == False %}threelines{% endif %} small text-muted">{{ domain.name }}</div>             
         </div>
 
     </a>
 
-    <div id="cliennt-{{ client.id }}-collapse" class="collapse px-2 ms-4">  
+    <div id="domain-{{ domain.id }}-collapse" class="collapse px-2 ms-4">  
 
-        <div id="client-{{ client.id }}-extended" class="mx-0 mb-2 me-2">
+        <div id="domain-{{ domain.id }}-extended" class="mx-0 mb-2 me-2">
 
             <div class="text-secondary border-bottom mt-2 small">
                 <span class="fw-light me-1">{% trans "Latest published" %}:</span>
-                <span class="float-end">{{ client.latest_published }}</span>
+                <span class="float-end">{{ domain.latest_published }}</span>
             </div>
 
             <div class="text-secondary border-bottom mt-2 small">
                 <span class="fw-light me-1">{% trans "Active Tenders" %}:</span>
                 <span class="float-end">
-                    <span class="fw-bold">{{ client.tenders_count }}</span>
+                    <span class="fw-bold">{{ domain.tenders_count }}</span>
                     <span class="">/</span>
-                    <span class="">{{ client.all_tenders_count }}</span>
+                    <span class="">{{ domain.all_tenders_count }}</span>
                 </span>
             </div>
 
             <div class="text-secondary border-bottom mt-2 small">
                 <span class="fw-light me-1">{% trans "Estimate average" %}:</span>
-                <span class="float-end">{{ client.estimate_average }}</span>
+                <span class="float-end">{{ domain.estimate_average }}</span>
             </div>
             <div class="text-secondary border-bottom mt-2 small">
                 <span class="fw-light me-1">{% trans "Active Tenders estimate" %}:</span>
-                <span class="float-end fw-bold text-success">{{ client.total_estimate }}</span>
+                <span class="float-end fw-bold text-success">{{ domain.total_estimate }}</span>
             </div>
             <div class="text-secondary border-bottom mt-2 small">
                 <span class="fw-light me-1">{% trans "All Tenders estimate" %}:</span>
-                <span class="float-end">{{ client.all_total_estimate }}</span>
+                <span class="float-end">{{ domain.all_total_estimate }}</span>
             </div>
 
         </div>
         
-        <div id="cliennt-{{ client.id }}-actions" class="text-end mx-0 mb-3">
+        <div id="domain-{{ domain.id }}-actions" class="text-end mx-0 mb-3">
 
-            {% if client.tenders_count != 0 %}
+            {% if domain.tenders_count != 0 %}
                 <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
-                href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client">
+                href="{% url 'portal_tender_list' %}?&q={{ domain.name }}&f=domains&exact=yes">
                     <span><i class="{{ bicons.details }}"></i></span>
                     <span class="ms-1">{% trans 'Active Tenders' %}</span>
                 </a>
             {% endif %}
 
-            {% if client.tenders_count != client.all_tenders_count %}
+            {% if domain.tenders_count != domain.all_tenders_count %}
                 <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
-                href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client&ddlnn=1970-01-01">
+                href="{% url 'portal_tender_list' %}?&q={{ domain.name }}&f=domains&exact=yes&ddlnn=1970-01-01">
                     <span><i class="{{ bicons.details }}"></i></span>
                     <span class="ms-1">{% trans 'All Tenders' %}</span>
                 </a>

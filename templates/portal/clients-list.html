@@ -45,22 +45,10 @@
             {% for client in page_obj %}
                     <div class="card shadow mb-3">
 
-                        <div class="card-header px-2 py-1">                          
-                            <div class="d-flex justify-content-between">
-                                <div class="oneline">
-                                    <span><i class="{{ bicons.client }} me-1"></i></span>
-                                    <span class="fw-bold me-1">{{ client.short|default:'-' }}</span>
-                                </div>
-                                <div class="ms-2 text-end">
-                                    
-                                    {% if client.total_estimate %}
-                                        <span class="text-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ client.total_estimate }}">
-                                            <i class="{{ bicons.estimate }} small"></i>
-                                            <span class="fw-bold">{{ client.total_estimate|metrify }}</span>
-                                        </span>
-                                    {% endif %}
-                                    
-                                </div>
+                        <div class="card-header px-2 py-1">
+                            <div class="oneline">
+                                <span><i class="{{ bicons.client }} me-1"></i></span>
+                                <span class="fw-bold me-1">{{ client.short|default:'-' }}</span>
                             </div>
                         </div>
                         
@@ -69,23 +57,34 @@
                         </div>
                         <div class="card-footer text-secondary small px-2 py-1">
 
-                            <div class="twolines text-end">
-                                <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Active Tenders' %}">
-                                    <span class="small fw-bold">{{ client.tenders_count }}</span>
-                                    <span class="small fw-light fs-7">/</span>
-                                    <span class="small fw-light">{{ client.all_tenders_count }}</span>
-                                </span>
-                                <span class="small fw-light fs-7">@</span>
-                                <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Estimate average' %} ({{ client.estimate_average }})">
-                                    <span class="small fw-light">{{ client.estimate_average|metrify }}</span>
-                                </span>
-                                
-                                <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
+                            <div class="d-flex justify-content-between">
 
-                                <span data-bs-toggle="tooltip" title="{% trans 'Latest published' %}">
-                                    <span class="small"><i class="{{ bicons.published }}"></i></span>
-                                    <span class="small">{{ client.latest_published }}</span>
-                                </span>
+                                <div class="me-2">
+                                    {% if client.total_estimate %}
+                                        <span class="text-success" data-bs-toggle="tooltip" title="{% trans 'Active tenders estimate' %}: {{ client.total_estimate }}">
+                                            <i class="{{ bicons.estimate }} small"></i>
+                                            <span class="fw-bold">{{ client.total_estimate|metrify }}</span>
+                                        </span>
+                                    {% endif %}
+                                </div>
+                                <div class="twolines text-end">
+                                    <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Active Tenders' %}">
+                                        <span class="small fw-bold">{{ client.tenders_count }}</span>
+                                        <span class="small fw-light fs-7">/</span>
+                                        <span class="small fw-light">{{ client.all_tenders_count }}</span>
+                                    </span>
+                                    <span class="small fw-light fs-7">@</span>
+                                    <span class="fw-light small" data-bs-toggle="tooltip" title="{% trans 'Estimate average' %} ({{ client.estimate_average }})">
+                                        <span class="small fw-light">{{ client.estimate_average|metrify }}</span>
+                                    </span>
+                                    
+                                    <span><i class="{{ bicons.vertical }} small text-secondary"></i></span>
+
+                                    <span data-bs-toggle="tooltip" title="{% trans 'Latest published' %}">
+                                        <span class="small"><i class="{{ bicons.published }}"></i></span>
+                                        <span class="small">{{ client.latest_published }}</span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
