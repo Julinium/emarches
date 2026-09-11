@@ -4,7 +4,7 @@
 
 {% get_current_language as LANGUAGE_CODE %}
 
-<nav class="navbar navbar-expand-md pt-3 pb-4 my-0
+<nav class="navbar navbar-expand-md py-2 my-0
             navbar-light sticky-top">
   <div class="container container-fluid ">
     <a class="navbar-brand pt-0 pb-2 me-2" href="{% url 'base_home' %}">      
@@ -51,6 +51,7 @@
   </div>
 </nav>
 
+
 		
 <script>
     // Get the navbar
@@ -61,12 +62,12 @@
     window.addEventListener('scroll', () => {
       if (window.scrollY > scrollThreshold) {
         // Scrolled past threshold → shrink
-        navbar.classList.remove('pt-3', 'pb-4');
-        navbar.classList.add('py-0', 'shadow', 'bg-warning-subtle');
+        // navbar.classList.remove('pt-3', 'pb-4');
+        navbar.classList.add('shadow', 'bg-warning-subtle');
       } else {
         // At top → restore original padding
-        navbar.classList.remove('py-0', 'shadow', 'bg-warning-subtle');
-        navbar.classList.add('pt-3', 'pb-4');
+        navbar.classList.remove('shadow', 'bg-warning-subtle');
+        // navbar.classList.add('pt-3', 'pb-4');
       }
     });
   </script>

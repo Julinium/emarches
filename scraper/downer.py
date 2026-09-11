@@ -131,7 +131,7 @@ def getDCE(tender):
 
 
     if not os.path.exists(C.MEDIA_ROOT): 
-        helper.printMessage('ERROR', 'd.getDCE', f'Could not read media root {C.MEDIA_ROOT}.')
+        helper.printMessage('ERROR', 'd.getDCE', f'Could not read media root directory.')
         return None
     if not chrono or not acro : 
         helper.printMessage('ERROR', 'd.getDCE', f'Incorrect parameter was received.')
@@ -140,7 +140,7 @@ def getDCE(tender):
     con_path = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}{chrono}')
     if not os.path.exists(con_path): os.makedirs(con_path)
     if not os.path.exists(con_path):
-        helper.printMessage('ERROR', 'd.getDCE', f'Could not find DCE directory {con_path}.')
+        helper.printMessage('ERROR', 'd.getDCE', f'Could not find DCE directory.')
         return None
 
 
@@ -252,11 +252,15 @@ def getDCE(tender):
     if request_file.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Getting file: Response Status Code: {request_file.status_code} !')
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
-        return request_file.status_code
+        return None
     else: helper.printMessage('DEBUG', 'd.getDCE', f'Getting file returned Status Code: {request_file.status_code}')
 
     try:
-        filename_cd = get_filename(request_file.headers.get('content-disposition')).replace('"', '').replace(';', '')
+        filename_cd = get_filename(request_file.headers.get('content-disposition'))
+        if filename_cd == None:
+            filename_cd = tender.chrono
+        filename_cd = filename_cd.replace('"', '').replace(';', '')
+
     except Exception as xc:
         helper.printMessage('WARN', 'd.getDCE', 'Could not get file name from portal.')
         helper.printMessage('WARN', 'd.getDCE', str(xc))
@@ -288,16 +292,16 @@ def getDCE(tender):
             else:
                 helper.printMessage('DEBUG', 'd.getDCE', f'~~~ No file request found for {chrono}.')
 
-            if tender.size_bytes != bytes_written:
-                try:
-                    helper.printMessage('DEBUG', 'd.getDCE', f'Updating file size bytes for {chrono}.')
-                    tender.size_bytes = bytes_written
-                    tender.save()
-                except Exception as x:
-                    helper.printMessage('ERROR', 'd.getDCE', "Exception updating file size bytes.")
-                    traceback.print_exc()                
-            else:
-                helper.printMessage('DEBUG', 'd.getDCE', f'File size bytes for id {chrono} was the same.')
+            if tender.size_bytes == bytes_written:
+                helper.printMessage('TRACE', 'd.getDCE', f'File size bytes for id {chrono} was the same.')
+
+            try:
+                helper.printMessage('DEBUG', 'd.getDCE', f'Updating file size bytes for {chrono}.')
+                tender.size_bytes = bytes_written
+                tender.save()
+            except Exception as x:
+                helper.printMessage('ERROR', 'd.getDCE', "Exception updating file size bytes.")
+                traceback.print_exc()
         else:
             raise IOError("File size mismatch: Not all content was written.")
         if os.path.getsize(filename) == 0: 
@@ -309,4 +313,4 @@ def getDCE(tender):
     return con_path
 
 
-# Exclude Tenders having has_minutes = False.
+# Exclude Tenders having has_minutes = False ?

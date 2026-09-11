@@ -539,25 +539,26 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
 
         for field in CHECK_FIELDS:
             if field in input_data:
+                helper.printMessage('TRACE', 'm.tenderChanged', f"##### Checking changes for {field} ...")
                 new_value = input_data[field]
                 old_value = getattr(tender, field, None)
-                if field == "size_bytes" and old_value != None and new_value != None:
+                # if field == "size_bytes" and old_value != None and new_value != None:
 
-                    old_value_display = old_value
-                    if type(old_value) is datetime: old_value_display = old_value.strftime('%Y-%m-%dT%H:%MZ')
-                    elif type(old_value) is date: old_value_display = old_value.strftime('%Y-%m-%d')
+                old_value_display = old_value
+                if type(old_value) is datetime: old_value_display = old_value.strftime('%Y-%m-%dT%H:%MZ')
+                elif type(old_value) is date: old_value_display = old_value.strftime('%Y-%m-%d')
 
-                    new_value_display = new_value
-                    if type(new_value) is datetime: new_value_display = new_value.strftime('%Y-%m-%dT%H:%MZ')
-                    elif type(new_value) is date: new_value_display = new_value.strftime('%Y-%m-%d')
+                new_value_display = new_value
+                if type(new_value) is datetime: new_value_display = new_value.strftime('%Y-%m-%dT%H:%MZ')
+                elif type(new_value) is date: new_value_display = new_value.strftime('%Y-%m-%d')
 
-                    if new_value != old_value:
-                        return {
-                            "level": "Tender",
-                            "field": field,
-                            "old_value": old_value_display,
-                            "new_value": new_value_display,
-                        }
+                if new_value != old_value:
+                    return {
+                        "level": "Tender",
+                        "field": field,
+                        "old_value": old_value_display,
+                        "new_value": new_value_display,
+                    }
 
         RELATION_CONFIGS = (
             ("category",  "Category",  "category",  "label"),

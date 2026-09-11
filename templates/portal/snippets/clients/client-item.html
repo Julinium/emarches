@@ -1,55 +1,53 @@
 {% load i18n %}
 {% load humanize %}
 
-<div id="cliennt-{{ client.id }}-line">
+<div id="client-{{ client.id }}-line">
 
-    <a data-bs-toggle="collapse" href="#cliennt-{{ client.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="cliennt-{{ client.id }}-collapse"
+    <a data-bs-toggle="collapse" href="#client-{{ client.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="client-{{ client.id }}-collapse"
        class="text-decoration-none text-reset">
 
-        <div id="cliennt-{{ client.id }}-digest" class="p-2">
+        <div id="client-{{ client.id }}-digest" class="p-2">
             <div class="{% if wrap_text == False %}threelines{% endif %} small text-muted">{{ client.name }}</div>             
         </div>
 
     </a>
 
-    <div id="cliennt-{{ client.id }}-collapse" class="collapse px-2 ms-4">  
+    <div id="client-{{ client.id }}-collapse" class="collapse px-2 ms-2">  
 
-        <div id="client-{{ client.id }}-extended" class="mx-0 mb-2 me-2">
+        <div id="client-{{ client.id }}-extended" class="mx-0 mb-2">
 
-            <div class="text-secondary border-bottom mt-2 small">
-                <span class="fw-light me-1">{% trans "Latest published" %}:</span>
-                <span class="float-end">{{ client.latest_published }}</span>
-            </div>
-
-            <div class="text-secondary border-bottom mt-2 small">
-                <span class="fw-light me-1">{% trans "Active Tenders" %}:</span>
-                <span class="float-end">
-                    <span class="fw-bold">{{ client.tenders_count }}</span>
-                    <span class="">/</span>
-                    <span class="">{{ client.all_tenders_count }}</span>
-                </span>
-            </div>
-
-            <div class="text-secondary border-bottom mt-2 small">
-                <span class="fw-light me-1">{% trans "Estimate average" %}:</span>
-                <span class="float-end">{{ client.estimate_average }}</span>
-            </div>
-            <div class="text-secondary border-bottom mt-2 small">
-                <span class="fw-light me-1">{% trans "Active Tenders estimate" %}:</span>
-                <span class="float-end fw-bold text-success">{{ client.total_estimate }}</span>
-            </div>
-            <div class="text-secondary border-bottom mt-2 small">
-                <span class="fw-light me-1">{% trans "All Tenders estimate" %}:</span>
-                <span class="float-end">{{ client.all_total_estimate }}</span>
-            </div>
+            <table class="table border-0 small">
+                <tbody>
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0">{% trans "Active Tenders" %}</td>
+                        <td class="text-end pb-0 text-success">{{ client.tenders_count }}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0">{% trans "Active Tenders estimate" %}</td>
+                        <td class="text-end pb-0 fw-bold text-success">{{ client.total_estimate|metrify }}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0">{% trans "All Tenders" %}</td>
+                        <td class="text-end pb-0">{{ client.all_tenders_count }}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0">{% trans "All Tenders estimate" %}</td>
+                        <td class="text-end pb-0">{{ client.all_total_estimate|metrify }}</td>
+                    </tr>
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0">{% trans "Estimate average" %}</td>
+                        <td class="text-end pb-0">{{ client.estimate_average|metrify }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
         </div>
         
-        <div id="cliennt-{{ client.id }}-actions" class="text-end mx-0 mb-3">
+        <div id="client-{{ client.id }}-actions" class="text-end mx-0 mb-3">
 
             {% if client.tenders_count != 0 %}
-                <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
+                <a class="ms-2 mt-2 btn btn-sm btn-outline-success" 
                 href="{% url 'portal_tender_list' %}?&q={{ client.name }}&f=client">
                     <span><i class="{{ bicons.details }}"></i></span>
                     <span class="ms-1">{% trans 'Active Tenders' %}</span>

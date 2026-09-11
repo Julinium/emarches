@@ -100,12 +100,12 @@ def do_the_work():
                 i += 1
                 helper.printMessage('INFO', 'worker', f"▶▶ Getting DCE files for { i }/{ c } : { d.chrono } ...", 1)
                 getdce = downer.getDCE(d)
-                if getdce == 0:
+                if getdce:
                     files_downloaded += 1
                     helper.printMessage('INFO', 'worker', f"◀◀ DCE download for { d.chrono } was successfull.")
                 else:
                     files_failed += 1
-                    helper.printMessage('WARN', 'worker', f"⬢⬢⬢⬢⬢ Something went wrong whith DCE download for { d.chrono }.")
+                    helper.printMessage('WARN', 'worker', f"⬢⬢⬢⬢ Something went wrong whith DCE download for { d.chrono }.")
 
                 hceed = files_downloaded + files_failed
                 if hceed > 0:

@@ -51,7 +51,7 @@
                                 <span class="fw-bold me-1">{{ client.short|default:'-' }}</span>
                             </div>
                         </div>
-                        
+
                         <div class="card-body p-0">
                             {% include "portal/snippets/clients/client-item.html" with client=client %}
                         </div>
@@ -82,7 +82,7 @@
 
                                     <span data-bs-toggle="tooltip" title="{% trans 'Latest published' %}">
                                         <span class="small"><i class="{{ bicons.published }}"></i></span>
-                                        <span class="small">{{ client.latest_published }}</span>
+                                        <span class="small">{{ client.latest_published|date:"SHORT_DATE_FORMAT" }}</span>
                                     </span>
                                 </div>
                             </div>
