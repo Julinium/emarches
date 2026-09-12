@@ -1,0 +1,291 @@
+
+{% load static %}
+{% load i18n static humanize tz %}
+{% get_current_language_bidi as LB %}
+
+<!DOCTYPE html>
+<html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
+	<head>
+		{% include 'base/includes/head.html' %}
+
+        <title> eMarches.com : {{ bidder.name }}</title>
+
+        <meta name="dcterms.created" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
+        <meta name="dcterms.modified" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
+        <meta name="generator" content="eMarches.com">
+
+        <style>
+
+            @font-face {
+                font-family: "Ubuntu";
+                src: url("{% static 'fonts/Ubuntu-Medium.ttf' %}") format("ttf");
+                font-weight: 200;
+                /* font-style: normal;
+                font-display: swap; */
+            }
+
+            @font-face {
+                font-family: "Naskh";
+                src: url("{% static 'fonts/NotoNaskhArabic-VariableFont_wght.ttf' %}") format("ttf");
+                font-weight: 200;
+                /* font-style: normal;
+                font-display: swap; */
+            }
+
+            body {
+                font-family: "Ubuntu", sans-serif, serif, "Naskh";
+                unicode-bidi: plaintext;
+                line-height: 1.5;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+
+                margin-top: 20mm;
+                margin-bottom: 20mm;
+                margin-left: 15mm;
+                margin-right: 15mm;
+
+                @top-center {
+                    content: element(header);
+                    vertical-align: bottom;
+                    padding-bottom: 2mm;
+                }
+
+                @bottom-left {
+                    content: "{% now 'Y-m-d—H:i:s' %}";
+                    font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                    font-size: 9pt;
+                    color: #666;
+                    padding-bottom: 7mm;
+                }
+
+                @bottom-right {
+                    content: "PAGE " counter(page) "/" counter(pages);
+                    font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                    font-size: 10pt;
+                    color: #666;
+                    padding-bottom: 7mm;
+                }
+
+                @bottom-center {
+                    content: element(footer);
+                    vertical-align: bottom;
+                    padding-bottom: 10mm;
+                }
+
+                background: url("{% static 'brand/insi-wm.svg' %}") center center / 70mm auto;
+                background-repeat: repeat;
+            }
+
+            #header-svg {
+                position: running(header);
+                text-align: center;
+                width: 100%;
+                top: 0;
+                left: 0;
+            }
+
+            #footer-svg {
+                position: running(footer);
+                text-align: center;
+                /* width: 100%; */
+                height: 8mm;
+                bottom: 0;
+                left: 0;
+            }
+
+            /* To hide it on the HTML page when viewed in browser */
+            /* @media screen {
+                #header-svg { display: none; }
+            } */
+
+            body, div, table, p, .list-group, .list-group-item {
+                font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                background-color: transparent;
+            }
+
+        </style>
+
+	</head>
+
+	<body>
+
+        <div class="text-center">
+            <h2 class="mt-3 mb-4">
+                <span class="fw-bold">{% trans "Concurrent analysis" %}</span>
+            </h2>            
+        </div>
+
+        {% if bidder %}
+            <div class="mb-3" id="bidder-details">
+                <div id="header-svg">
+                    <img src="{% static 'brand/insi-header.svg' %}"
+                            class="img-fluid" alt="eMarches.com"
+                            style="height: auto; width: auto;">
+                </div>
+
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1">
+                        
+                        <div class="row gx-2 gy-0">
+
+                            <div class="col-12">
+                                <div class="d-flex my-3">
+                                    <div>
+                                        <i class="bi bi-card-heading"></i>
+                                    </div>
+                                    <div class="ms-2 w-100 border-0 border-bottom">
+                                        <span class="text-muted small fw-light me-2">
+                                            {% trans "Concurrent" %}:
+                                        </span>
+                                        <span class="">
+                                            <span class="fw-bold">{{ bidder.name }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="d-flex mb-3">
+                                    <div>
+                                        <i class="bi bi-briefcase"></i>
+                                    </div>
+                                    <div class="ms-2 w-100 border-0 border-bottom">
+                                        <span class="text-muted small fw-light me-2">
+                                            {% trans "Client" %}:
+                                        </span>
+                                        <span class="">
+                                            <span class="fw-bold">{{ bidder.client.name|default:'---' }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-end">
+                        <div class="">
+                            <img src="{{ qr_code }}"
+                                class="img-fluid" alt="QR Code"
+                                style="height: 30mm; width: 30mm;">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-12">
+                    <div class="d-flex mt-3">
+                        <div>
+                            <i class="bi bi-list-check"></i>
+                        </div>
+                        <div class="ms-2 mb-2 w-100">                    
+                            <span class="text-muted small fw-light">
+                                {% trans "Items details" %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
+                {% if bidder.articles.all %}
+                    {% for article in bidder.articles.all %}
+                        <div class="list-group mb-3">
+                            <div class="list-group-item">
+                                <div class="d-flex align-items-start">
+                                    <div class="flex-grow-1 me-2">
+                                        <span class="">#{{ article.number }}/{{ bidder.articles.all|length }}</span>
+                                    </div>
+                                    <div class="">
+                                        <span class="me-3">
+                                            <span class="small text-muted">{% trans "Quantity" %}:</span>
+                                            <span class="fw-bold">{{ article.quantity|floatformat:"-0" }}</span>
+                                            {% if article.uom %}
+                                                <span class="small text-muted">x</span>
+                                                <span class="fw-bold">{{ article.uom }}</span>
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                    <div class="">
+                                        <span class="small text-muted">{% trans "VAT" %}:</span>
+                                        <span class="">{{ article.vat_percent|floatformat:"-0" }}%</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-2">
+                                    <span class="fw-bold">{{ article.title }}</span>
+                                </div>
+
+                                {% if article.specifications %}
+                                    {% if not article.specifications in empty_items %}
+                                        {% if article.specifications != article.title %}
+                                            <div class="text-muted fw-light ms-2 mt-2">
+                                                <div class="float-start me-2">
+                                                    <i class="bi bi-card-list"></i>
+                                                </div>
+                                                <div class="ms-4">
+                                                    <span class="small me-1">{% trans "Specifications" %}:</span>
+                                                    <span class="">{{ article.specifications|default:'?' }} </span>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if article.warranties %}
+                                    {% if not article.warranties in empty_items %}
+                                        {% if article.warranties != article.title %}
+                                            {% if article.warranties != article.specifications %}
+                                                <div class="text-muted fw-light ms-2 mt-2">
+                                                    <div class="float-start me-2">
+                                                        <i class="bi bi-exclamation-diamond"></i>
+                                                    </div>
+                                                    <div class="ms-4">
+                                                        <span class="small me-1">{% trans "Warranties" %}:</span>
+                                                        <span class="">{{ article.warranties|default:'?' }} </span>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    {% empty %}
+                        <div class="text-danger small">{% trans "No items found" %}</div>
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="my-3" id="bidder-error">
+                        <div class="row gx-4 gy-0 text-danger">
+                            {% trans "Items not found." %}
+                        </div>
+                    </div>
+
+                {% endif %}
+
+                <div id="footer-svg">
+                    <img src="{% static 'brand/insi-footer.svg' %}"
+                            class="img-fluid" alt="MODE-777.com"
+                            style="height: auto; width: auto;">
+                </div>
+
+            </div>
+
+        {% else %}
+            <div class="my-3" id="bidder-error">
+                <div class="row gx-4 gy-0 text-danger">
+                    {% trans "Error: Bidder not found." %}
+                </div>
+            </div>
+        {% endif %}
+
+	</body>
+</html>
+

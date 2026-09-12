@@ -166,11 +166,14 @@ def portal_context(request):
         'bid'             : 'bi bi-envelope-arrow-up',
         'bid_fill'        : 'bi bi-envelope-arrow-up-fill text-primary',
 
+        'excel'           : 'bi bi-file-earmark-spreadsheet',
         'vertical'        : 'bi bi-three-dots-vertical',
         'details'         : 'bi bi-card-text',
         'edit'            : 'bi bi-pencil',
         'goto'            : 'bi bi-cursor',
         'download'        : 'bi bi-download',
+        'printer'         : 'bi bi-printer',
+        'pdf'             : 'bi bi-filetype-pdf',
         'section'         : 'bi bi-play',
 
         'team'            : 'bi bi-diagram-3',

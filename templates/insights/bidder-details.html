@@ -409,7 +409,8 @@
                                 <span class="small fw-bold ps-2">{{ bidder.selects.all|length }}</span>
                             </span>
                             {% if bidder.deposits_sum != 0 %}
-                                <span class="small px-2 float-end text-end">{{ bidder.deposits_sum }}</span>
+                                
+                                <span class="small px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ bidder.deposits_sum|metrify }}</span>
                             {% endif %}
                         </div>
                     </button>
@@ -475,7 +476,8 @@
                                 <span class="small fw-bold ps-2 {% if bidder.winners.all|length > 0 %}text-success{% endif %}">{{ bidder.winners.all|length }}</span>                                
                             </span>
                             {% if bidder.winners_sum != 0 %}
-                                <span class="small fw-bold px-2 float-end text-end">{{ bidder.winners_sum }}</span>
+                                
+                                <span class="small fw-bold px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ bidder.winners_sum|metrify }}</span>
                             {% endif %}
                         </div>
                     </button>
@@ -664,7 +666,70 @@
             </div>
         </div>
 
+
+        <div id="bidder-actions" class="text-center mx-0 my-3">
+            <a class="ms-2 mt-2 btn btn-outline-primary" 
+                href="{% url 'insights_bidder_details' bidder.id %}">
+                <span><i class="{{ bicons.pdf }}"></i></span>
+                <span class="ms-1">{% trans 'Print' %}</span>
+            </a>
+            <a class="ms-2 mt-2 btn btn-outline-secondary" 
+                type="button" onclick="shareBidderPage(`https://new.emarches.com`)">
+                <span><i class="{{ bicons.share }}"></i></span>
+                <span class="ms-1">{% trans 'Share' %}</span>
+            </a>
+
+            <a class="ms-2 mt-2 btn btn-outline-secondary" 
+                href="{% url 'insights_bidder_details' bidder.id %}">
+                <span><i class="{{ bicons.excel }}"></i></span>
+                <span class="ms-1">{% trans 'Export' %}</span>
+            </a>
+        </div>
+
     </div>
 
+
+    <div id="tosts-container" class="toast-container bottom-0 end-0 p-3" style="position: fixed; z-index: 99;">
+                    
+        <div class="toast bg-success-subtle " id="copyToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+            <div class="d-flex  justify-content-between">
+                <div class="toast-body alert-success">
+                    <strong class="me-auto" id="dlToastHeader">
+                        {% trans "URL was copied to clipboard" %}.
+                    </strong>
+                </div>
+                    <button type="button" class="btn-close me-2 m-2" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div> 
+
+    </div>
+
+    <script>
+
+        function shareBidderPage(host='https://www.emarches.com') {
+            const bidder_id = "{{ bidder.id|escapejs }}";    
+            const baseUrl = `${host}/bidders/`;
+            const fullUrl = baseUrl + bidder_id + "/";
+            const title = document.title;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: fullUrl
+                })
+                .then(() => console.log('Shared successfully'))
+                .catch((error) => console.error('Error sharing:', error));
+            } else {
+                navigator.clipboard.writeText(fullUrl)
+                    .then(() => {
+                        var toastElement = document.getElementById('copyToast');
+                            var toast = new bootstrap.Toast(toastElement);
+                            toast.show();
+                    })
+                    .catch((error) => console.error('Error copying URL:', error));
+            }
+        }
+
+    </script>
 
 {% endblock content %}
