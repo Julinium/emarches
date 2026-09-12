@@ -1,0 +1,43 @@
+{% load i18n humanize groupify tz %}
+
+{% group_depos bidder.selects as grouped_selects %}
+<div class="list-group">
+    {% for opening, depos in grouped_selects.items %}
+        <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+            href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
+            <div class="fw-light small">{{ opening.date }}</div>
+            <div class="twolines">
+                <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                {% if opening.tender.lots_count > 1 %}
+                    <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                {% endif %}
+                <span class="">{{ opening.tender.title }}</span>
+            </div>
+            <div class="mt-1">
+                {% for depo in depos %}                                           
+                    <div class="small text-end {% if depos|length > 1 %}py-1 border-top{% endif %}">
+                        {% if opening.tender.lots_count > 1 %}
+                            <span class="fw-light small">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                            <span class="fw-light">{{ depo.lot.estimate|metrify }}</span>
+                        {% else %}
+                            <span class="fw-light">{{ opening.tender.estimate|metrify }}</span>
+                        {% endif %}
+                        {% if depo.amount_a != depo.amount_b %}
+                            <span class="small fw-light text-decoration-line-through">{{ depo.amount_b }}</span>
+                        {% endif %}
+                        <span class="badge small text-bg-secondary">{% if depo.offset >= 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%</span>
+                        <span>=</span>
+                        {% if depo.winner %}
+                            <span class="small"><i class="{{ bicons.winner }} small text-success text-success"></i></span>
+                        {% endif %}
+                        <span class="fw-bold {% if depo.winner %}text-success{% endif %}">{{ depo.amount_a }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </a>
+    {% empty %}
+        <div class="list-group-item border-0 border-bottom">
+            <div class="fw-light small text-danger ">{% trans 'None' %}</div>
+        </div>
+    {% endfor %}
+</div>

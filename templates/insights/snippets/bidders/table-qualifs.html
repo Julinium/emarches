@@ -1,0 +1,23 @@
+{% load i18n humanize groupify tz %}
+
+<div class="list-group">
+    {% for qualif in bidder.qualifs %}
+        <div class="list-group-item list-group-item-action">
+            <div class="small">
+                <span class="fw-bold">{{ qualif.short }}</span>
+                <span>:</span>
+                <span>{{ qualif.name }}</span>
+            </div>
+            <div>
+                <span class="float-end">
+                        <span class="fw-light small">{% trans 'Bids' %}:</span>
+                    <span class="fw-bold">{{ qualif.deposits_count }}</span>
+                </span>
+            </div>
+        </div>
+    {% empty %}
+        <div class="list-group-item border-0 border-bottom">
+            <div class="fw-light small text-danger ">{% trans 'None' %}</div>
+        </div>
+    {% endfor %}
+</div>

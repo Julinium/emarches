@@ -1,6 +1,8 @@
-
+import logging
 import base64
 import csv
+import traceback
+
 from io import BytesIO
 from pathlib import Path
 
@@ -10,12 +12,10 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as trans
 from weasyprint import HTML
 
-# empty_items = ['-', '--', '_', '__', '---', '***', '/', 
-#     '?', '??', '???', ' ', '.', '..', '...', '',
-#     'Aucune', 'Non'
-# ]
+logger_portal = logging.getLogger("portal")
 
-def generate_pdf(bidder):
+
+def generate_pdf(request, bidder):
 
     if not bidder: 
         return None
@@ -29,30 +29,31 @@ def generate_pdf(bidder):
         qr_svg_base64 = base64.b64encode(qr_buffer.getvalue()).decode()
         qr_data_uri = f"data:image/svg+xml;base64,{ qr_svg_base64 }"
 
+        logger_portal.debug(f"Started generating PDF file for bidder { bidder.name }")
         context = {
+            "request": request,
             "bidder": bidder,
             "crm"           : f'{crm} eMarches.com',
             "qr_code"       : qr_data_uri,
         }
 
         html_string = render_to_string("insights/bidder-pdf.html", context)
-
         pdf_file_name = f'eMarches.com-{ bidder.id }-analysis.pdf'
-        output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf" / f"{ bidder.id }"
+        output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{ pdf_file_name }"
 
         static_dir  = Path(settings.BASE_DIR) / "static"
         static_uri  = static_dir.resolve().as_uri()
-        html_string = html_string.replace('/static/', f'{static_uri}/')
+        html_string = html_string.replace('/static/', f'{static_uri}/')        
         HTML(string=html_string).write_pdf(target=output_path)
-        
+
         return output_path
 
     except Exception as xc:
-        pritn(str(xc))
+        traceback.print_exc()
 
-        return None
+    return None
     
 
 
@@ -84,5 +85,6 @@ def bdc_generate_items_csv(bdc):
             ])
 
     return output_path
+
 
 

@@ -1,0 +1,34 @@
+{% load i18n humanize groupify tz %}
+
+{% group_tenders bidder.tech_rejects as grouped_tech_rej %}
+<div class="list-group">
+    {% for opening, lots in grouped_tech_rej.items %}
+        <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
+            href="{% url 'portal_tender_details' opening.tender.id %}#resultsBookmark">
+            <div class="fw-light small">{{ opening.date }}</div>
+            <div class="twolines">
+                <span class="small me-1"><i class="{{ opening.tender.category.icon_bs_class }}"></i></span>
+                {% if opening.tender.lots_count > 1 %}
+                    <span class="small me-1"><i class="{{ bicons.multi_lots }}"></i></span>
+                {% endif %}
+                <span class="">{{ opening.tender.title }}</span>
+            </div>
+            <div>
+                <span class="float-end small">
+                    {% if opening.tender.lots_count > 1 %}
+                        <span class="fw-light small">{% trans 'Lots' %}: </span> 
+                        <span>
+                            {% for lot in lots %}
+                                {{ lot }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    {% endif %}
+                </span>
+            </div>
+        </a>
+    {% empty %}
+        <div class="list-group-item border-0 border-bottom">
+            <div class="fw-light small text-danger ">{% trans 'None' %}</div>
+        </div>
+    {% endfor %}
+</div>

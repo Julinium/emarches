@@ -114,8 +114,8 @@
 
         <div class="text-center">
             <h2 class="mt-3 mb-4">
-                <span class="fw-bold">{% trans "Concurrent analysis" %}</span>
-            </h2>            
+                <span class="fw-bold">{% trans "Concurrent details" %}</span>
+            </h2>
         </div>
 
         {% if bidder %}
@@ -134,7 +134,7 @@
                             <div class="col-12">
                                 <div class="d-flex my-3">
                                     <div>
-                                        <i class="bi bi-card-heading"></i>
+                                        <i class="bi bi-briefcase"></i>
                                     </div>
                                     <div class="ms-2 w-100 border-0 border-bottom">
                                         <span class="text-muted small fw-light me-2">
@@ -150,14 +150,14 @@
                             <div class="col-12">
                                 <div class="d-flex mb-3">
                                     <div>
-                                        <i class="bi bi-briefcase"></i>
+                                        <i class="bi bi-cash-coin"></i>
                                     </div>
                                     <div class="ms-2 w-100 border-0 border-bottom">
                                         <span class="text-muted small fw-light me-2">
-                                            {% trans "Client" %}:
+                                            {% trans "Total awards" %}:
                                         </span>
                                         <span class="">
-                                            <span class="fw-bold">{{ bidder.client.name|default:'---' }}</span>
+                                            <span class="fw-bold">{{ bidder.winners_sum|default:'0' }}</span>
                                         </span>
                                     </div>
                                 </div>
@@ -176,99 +176,116 @@
                     </div>
                 </div>
 
+                <div id="bidder-summary" class="small fw-light ms-5 mb-5">
+                    <div class="ms-5">
+                        <table class="table border-0 small">
+                            <tbody>
+                                <tr class="border-bottom">
+                                    <td class="text-start pb-0">{% trans "Total awards" %}</td>
+                                    <td class="text-end pb-0 fw-bold">{{ bidder.winners_sum|default:'-'}}</td>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <td class="text-start pb-0">{% trans "Total Bids" %}</td>
+                                    <td class="text-end pb-0">{{ bidder.deposits_sum|default:'-' }}</td>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <td class="text-start pb-0">{% trans "Awarded bids" %}</td>
+                                    <td class="text-end pb-0">
+                                        <span>{{ bidder.winners|length }}</span>
+                                        <span>/</span>
+                                        <span>{{ bidder.deposits.all|length }}</span>
+                                        <span class="mx-1">=</span>
+                                        <span>{{ bidder.success_rate|floatformat:2|default:'0' }}%</span>
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <td class="text-start pb-0">{% trans "Highest award" %}</td>
+                                    <td class="text-end pb-0">{{ bidder.highest_win|default:'--' }}</td>
+                                </tr>
+                                <tr class="border-bottom">
+                                    <td class="text-start pb-0">{% trans "Latest award" %}</td>
+                                    <td class="text-end pb-0">{{ bidder.latest_win|default:'--' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                <div class="col-12">
-                    <div class="d-flex mt-3">
-                        <div>
-                            <i class="bi bi-list-check"></i>
+                <div id="data-tables" class="mb-5">
+                    <div id="table-tenders" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Participations' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.tenders.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-tenders.html' %}
                         </div>
-                        <div class="ms-2 mb-2 w-100">                    
-                            <span class="text-muted small fw-light">
-                                {% trans "Items details" %}
-                            </span>
+                    </div>
+                    <div id="table-admin-rejects" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Admin Rejects' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.admin_rejects.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-admin-rejects.html' %}
+                        </div>
+                    </div>
+                    <div id="table-admin-accepts" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Admin Accepts' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.admin_accepts.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-admin-accepts.html' %}
+                        </div>
+                    </div>
+                    <div id="table-admin-reserves" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Admin Reserves' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.admin_reserves.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-admin-reserves.html' %}
+                        </div>
+                    </div>
+                    <div id="table-tech-rejects" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Technical Rejects' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.tech_rejects.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-tech-rejects.html' %}
+                        </div>
+                    </div>
+                    <div id="table-financials" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Financial Offers' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.selects.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-financials.html' %}
+                        </div>
+                    </div>
+                    <div id="table-wins" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Awardings' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.winners.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-wins.html' %}
+                        </div>
+                    </div>
+                    <div id="table-clients" class="mb-5">
+                        <h2 class="border-bottom">
+                            <span>{% trans 'Clients' %}</span>
+                            <span class="ms-1 fw-bold float-end">{{ bidder.clients.all|length }}</span>
+                        </h2>
+                        <div class="ms-2">
+                            {% include 'insights/snippets/bidders/table-clients.html' %}
                         </div>
                     </div>
                 </div>
 
-
-                {% if bidder.articles.all %}
-                    {% for article in bidder.articles.all %}
-                        <div class="list-group mb-3">
-                            <div class="list-group-item">
-                                <div class="d-flex align-items-start">
-                                    <div class="flex-grow-1 me-2">
-                                        <span class="">#{{ article.number }}/{{ bidder.articles.all|length }}</span>
-                                    </div>
-                                    <div class="">
-                                        <span class="me-3">
-                                            <span class="small text-muted">{% trans "Quantity" %}:</span>
-                                            <span class="fw-bold">{{ article.quantity|floatformat:"-0" }}</span>
-                                            {% if article.uom %}
-                                                <span class="small text-muted">x</span>
-                                                <span class="fw-bold">{{ article.uom }}</span>
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                    <div class="">
-                                        <span class="small text-muted">{% trans "VAT" %}:</span>
-                                        <span class="">{{ article.vat_percent|floatformat:"-0" }}%</span>
-                                    </div>
-                                </div>
-
-                                <div class="mt-2">
-                                    <span class="fw-bold">{{ article.title }}</span>
-                                </div>
-
-                                {% if article.specifications %}
-                                    {% if not article.specifications in empty_items %}
-                                        {% if article.specifications != article.title %}
-                                            <div class="text-muted fw-light ms-2 mt-2">
-                                                <div class="float-start me-2">
-                                                    <i class="bi bi-card-list"></i>
-                                                </div>
-                                                <div class="ms-4">
-                                                    <span class="small me-1">{% trans "Specifications" %}:</span>
-                                                    <span class="">{{ article.specifications|default:'?' }} </span>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-
-                                {% if article.warranties %}
-                                    {% if not article.warranties in empty_items %}
-                                        {% if article.warranties != article.title %}
-                                            {% if article.warranties != article.specifications %}
-                                                <div class="text-muted fw-light ms-2 mt-2">
-                                                    <div class="float-start me-2">
-                                                        <i class="bi bi-exclamation-diamond"></i>
-                                                    </div>
-                                                    <div class="ms-4">
-                                                        <span class="small me-1">{% trans "Warranties" %}:</span>
-                                                        <span class="">{{ article.warranties|default:'?' }} </span>
-                                                    </div>
-                                                </div>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-
-                            </div>
-                        </div>
-
-                    {% empty %}
-                        <div class="text-danger small">{% trans "No items found" %}</div>
-                    {% endfor %}
-
-                {% else %}
-
-                    <div class="my-3" id="bidder-error">
-                        <div class="row gx-4 gy-0 text-danger">
-                            {% trans "Items not found." %}
-                        </div>
-                    </div>
-
-                {% endif %}
 
                 <div id="footer-svg">
                     <img src="{% static 'brand/insi-footer.svg' %}"

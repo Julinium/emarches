@@ -56,7 +56,12 @@
                 href="{% url 'insights_bidder_details' bidder.id %}">
                 <span><i class="{{ bicons.details }}"></i></span>
                 <span class="ms-1">{% trans 'Advanced analysis' %}</span>
-            </a>            
+            </a>
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank"
+                href="{% url 'insights_bidder_pdf' bidder.id %}">
+                <span><i class="{{ bicons.pdf }}"></i></span>
+                <span class="ms-1">{% trans 'PDF report' %}</span>
+            </a>
         </div>
 
     </div>

@@ -1,4 +1,6 @@
+import os
 import logging
+
 from decimal import Decimal
 from urllib.parse import urlencode
 
@@ -9,6 +11,7 @@ from django.db.models.functions import NullIf, Round
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_control
+from django.utils.translation import gettext_lazy as trans
 
 from base.context_processors import portal_context
 from base.models import Concurrent
@@ -204,55 +207,39 @@ def bidder_details(request, pk=None):
 
 
 @login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bidder_pdf(request, pk=None):
-
-    user = request.user
-    if not user or not user.is_authenticated:
-        logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(trans("Permission denied"), status=403)
-
-    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
-
-    context = {'bidder': bidder,}
-
-    logger_portal.info("Concurrent details view", extra={"request": request})
-
-
-    return render(request, 'insights/bidder-details.html', context)
-
-
-    # ##############
 
     user = request.user
     if not user or not user.is_authenticated : 
         logger_portal.warning("E403: User not authenticated", extra={"request": request})
-        return HttpResponse(_("Permission denied"), status=403)
+        return HttpResponse(trans("Permission denied"), status=403)
 
     if request.method != 'GET': 
         logger_portal.warning("E405: Bad request method", extra={"request": request})
-        return HttpResponse(_("Bad request"), status=405)
+        return HttpResponse(trans("Bad request"), status=405)
 
     if pk == None:
         logger_portal.warning("E405: Bad request parameters", extra={"request": request})
-        return HttpResponse(_("Bad request"), status=405)
+        return HttpResponse(trans("Bad request"), status=405)
 
-    bidder = get_object_or_404(Concurrent, id=pk)
+    # bidder = get_object_or_404(Concurrent, id=pk)
+    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
     if not bidder : 
         logger_portal.warning("E404: Bidder not found", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-    
-    # pdf_file_name = fn
-    # pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bidder" / "items" / "pdf" / f"{ bidder.id }"
-    # pdf_file_path = pdf_file_dir / f"{ pdf_file_name }"
+        return HttpResponse(trans("Not found") + f": id: { pk }", status=404)
 
-    pdf_file_path = weasy.bidder_pdf(bidder)
+    logger_portal.info("Concurrent digest PDF view", extra={"request": request})
+
+    print("===========view===========")
+    pdf_file_path = weasy.generate_pdf(request, bidder)
     if pdf_file_path:
         if os.path.exists(pdf_file_path):
+            pdf_file_name = os.path.basename(pdf_file_path)
             file_size = os.path.getsize(pdf_file_path)
             response = HttpResponse()
-            response['Content-Type'] = 'application/octet-stream'
-            response['X-Accel-Redirect'] = f'/items/pdf/{ bidder.id }/{ pdf_file_name }'
+            response['Content-Type'] = 'application/pdf'
+            response['X-Accel-Redirect'] = f'/digest/pdf/{ pdf_file_name }'
             response['Content-Disposition'] = f'attachment; filename="{ pdf_file_name }"'
             response['Content-Length'] = file_size
 
@@ -261,8 +248,8 @@ def bidder_pdf(request, pk=None):
         
 
         logger_portal.warning("E404: Files not found", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
+        return HttpResponse(trans("Not found") + f": File does not exist", status=404)
     
     logger_portal.warning("E404: Files not found", extra={"request": request})
-    return HttpResponse(_("Not found"), status=404)
+    return HttpResponse(trans("Not found") + f": File generator returned nothing", status=404)
 
