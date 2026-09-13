@@ -1,0 +1,33 @@
+{% load i18n humanize groupify tz %}
+
+
+<section style="margin-left: 1rem;">
+    {% for bid in bidder.tenders.all %}
+        <article style="margin-bottom: 2rem; padding-right: 0.5rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div>
+                        <small style="opacity: 0.7;">
+                            <span>{{ bid.opening.tender.deadline|date }}</span>
+                        </small>                        
+                    </div>
+                    <div>
+                        {% if bid.opening.tender.lots_count > 1 %}
+                            <span style="opacity: 0.7; padding-right: 0.5rem;">
+                                <span>{{ bid.opening.tender.lots_count }}</span>
+                                <span>{% trans 'Lots' %}:</span>
+                            </span>
+                        {% endif %}
+                        <span>{{ bid.opening.tender.estimate|default:'-' }}</span>
+                    </div>
+                </div>
+                <div>
+                    <span style="opacity: 0.7;">{{ bid.opening.tender.title }}</span>
+                </div>
+            </header>
+            
+        </article>
+    {% empty %}
+        <p style="color: var(--focus);">{% trans 'None' %}</p>
+    {% endfor %}
+</section>

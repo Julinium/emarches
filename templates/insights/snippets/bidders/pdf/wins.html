@@ -1,0 +1,31 @@
+{% load i18n humanize groupify tz %}
+
+{% group_depos bidder.winners as grouped_winners %}
+
+<section>
+    {% for opening, depos in grouped_winners.items %}
+        <article style="margin-bottom: 2rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+            <header>
+                <div style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
+                <div>
+                    <span style="opacity: 0.7;">{{ opening.tender.title }}</span>
+                </div>
+            </header>
+
+            <div style="margin-top: 0.5rem;">
+                {% for depo in depos %}
+                    <div style="text-align: right; {% if depos|length > 1 %}padding-top: 0.25rem; border-top: 1px solid var(--border);{% endif %}">
+                        <small>
+                            {% if opening.tender.lots_count > 1 %}
+                                <span style="opacity: 0.7;">{% trans 'Lot' %} {{ depo.lot_number }}:</span>
+                            {% endif %}
+                            <strong>{{ depo.amount_w }}</strong>
+                        </small>
+                    </div>
+                {% endfor %}
+            </div>
+        </article>
+    {% empty %}
+        <p style="color: var(--focus);">{% trans 'None' %}</p>
+    {% endfor %}
+</section>

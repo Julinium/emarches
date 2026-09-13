@@ -1,0 +1,37 @@
+{% load i18n humanize groupify tz %}
+
+{% group_depos bidder.selects as grouped_selects %}
+
+<section style="margin-left: 1rem;">
+    {% for opening, depos in grouped_selects.items %}
+        <article style="margin-bottom: 2rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+            <header>
+                <div style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
+                <div>
+                    <span style="opacity: 0.7;">{{ opening.tender.title }}</span>
+                </div>
+            </header>
+            
+            <div style="margin-top: 0.5rem;">
+                {% for depo in depos %}
+                    <div style="text-align: right; margin-bottom: 2px;">
+                        {% if depo.winner %}
+                            <span class="small">{% trans "Awarded" %}:</span>
+                        {% endif %}
+                       {% if opening.tender.lots_count > 1 %}
+                            <span style="opacity: 0.7;">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                            <span style="opacity: 0.7;">{{ depo.lot.estimate }}</span>
+                        {% else %}
+                            <span style="opacity: 0.7;">{{ opening.tender.estimate }}</span>
+                        {% endif %}
+                        <span style="opacity: 0.7;">(E{% if depo.offset > 0 %}+{% endif %}{% if depo.offset == 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%)</span>
+                        <span>=</span>
+                        <span>{{ depo.amount_a }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </article>
+    {% empty %}
+        <p style="color: var(--focus);">{% trans 'None' %}</p>
+    {% endfor %}
+</section>

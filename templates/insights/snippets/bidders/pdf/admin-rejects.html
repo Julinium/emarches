@@ -1,0 +1,31 @@
+{% load i18n humanize groupify tz %}
+
+{% group_tenders bidder.admin_rejects as grouped_ad_rej %}
+
+<section style="margin-left: 1rem;">
+    {% for opening, lots in grouped_ad_rej.items %}
+        <article style="margin-bottom: 2rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+            <header>
+                <div style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
+                <div>
+                    <span style="opacity: 0.7;">{{ opening.tender.title }}</span>
+                </div>
+            </header>
+            
+            <div style="margin-top: 0.5rem;">
+                {% for depo in depos %}
+                    <div style="text-align: right; margin-bottom: 2px;">
+                        <span style="opacity: 0.7;">{% trans 'Lots' %}: </span> 
+                        <span>
+                            {% for lot in lots %}
+                                {{ lot }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        </article>
+    {% empty %}
+        <p style="color: var(--focus);">{% trans 'None' %}</p>
+    {% endfor %}
+</section>

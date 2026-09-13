@@ -1,0 +1,24 @@
+{% load i18n %}
+
+<section style="margin-left: 1rem;">
+    {% for domain in bidder.domains %}
+        <article style="margin-bottom: 2rem; padding-right: 0.5rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+            <header>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <div>
+                        <div style="opacity: 0.7;">
+                            <span>{{ domain.name }}</span>
+                        </div>                        
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="opacity: 0.7;"><small></small>{% trans 'Bids' %}:</small></span>
+                    <span>{{ domain.deposits_count }}</span>
+                </div>
+            </header>
+            
+        </article>
+    {% empty %}
+        <p style="color: var(--focus);">{% trans 'None' %}</p>
+    {% endfor %}
+</section>
