@@ -13,10 +13,9 @@
                 </div>
                 <div style="text-align: right;">
                     <span style="opacity: 0.7;"><small>{% trans 'Bids' %}:</small></span>
-                    <span>{{ client.deposits_count }}</span>
+                    <span class="digital">{{ client.deposits_count }}</span>
                 </div>
-            </header>
-            
+            </header>            
         </article>
     {% empty %}
         <p style="color: var(--focus);">{% trans 'None' %}</p>

@@ -12,10 +12,13 @@ from django.template.loader import render_to_string
 from django.utils.translation import gettext_lazy as trans
 from weasyprint import HTML
 
+from datetime import datetime, timedelta, timezone
+
+
 logger_portal = logging.getLogger("portal")
 
 
-def generate_pdf(request, bidder):
+def generate_pdf(request, bidder, dir_name=None, file_name=None):
 
     if not bidder: 
         return None
@@ -37,10 +40,13 @@ def generate_pdf(request, bidder):
             "qr_code"       : qr_data_uri,
         }
 
+        output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"        
+        pdf_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.pdf'
+
         html_string = render_to_string("insights/bidder-pdf.html", context)
         pdf_file_name = f'eMarches.com-{ bidder.id }-analysis.pdf'
-        output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
-        output_dir.mkdir(parents=True, exist_ok=True)
+        # output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
+        # output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{ pdf_file_name }"
 
         static_dir  = Path(settings.BASE_DIR) / "static"
@@ -57,15 +63,15 @@ def generate_pdf(request, bidder):
     
 
 
-def generate_csv(bidder):
+def generate_csv(bidder, dir_name=None, file_name=None):
 
     if not bidder: 
         return None
 
     try:
+        output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"        
+        csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.csv'
 
-        csv_file_name = f'eMarches.com-{ bidder.id }-analysis.csv'
-        output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{ csv_file_name }"
 
@@ -121,4 +127,15 @@ def generate_csv(bidder):
     
 
 
+def recent_file_exists(file_path: str | Path, hours_ago: int) -> bool:
+    path = Path(file_path)
+
+    if not path.is_file(): return False
+
+    stat = path.stat()
+    creation_timestamp = getattr(stat, "st_birthtime", stat.st_ctime)
+    creation_time = datetime.fromtimestamp(creation_timestamp, tz=timezone.utc)
+
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_ago)
+    return creation_time > cutoff
 

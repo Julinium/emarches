@@ -17,8 +17,8 @@
         <style>
 
             @font-face {
-                font-family: "Duality";
-                src: url("{% static 'fonts/duality.ttf' %}") format("ttf");
+                font-family: "Condensed";
+                src: url("{% static 'fonts/UbuntuCondensed-Regular.ttf' %}") format("ttf");
                 font-weight: 100;
             }
             @font-face {
@@ -26,7 +26,11 @@
                 src: url("{% static 'fonts/Ubuntu-Medium.ttf' %}") format("ttf");
                 font-weight: 100;
             }
-
+            @font-face {
+                font-family: "Aldo";
+                src: url("{% static 'fonts/Aldo.ttf' %}") format("ttf");
+                font-weight: 100;
+            }
             @font-face {
                 font-family: "Naskh";
                 src: url("{% static 'fonts/NotoNaskhArabic-VariableFont_wght.ttf' %}") format("ttf");
@@ -56,7 +60,7 @@
 
                 @bottom-left {
                     content: "{% now 'Y-m-d—H:i:s' %}";
-                    font-family: "Ubuntu", "Naskh", sans-serif, serif;
+                    font-family: "Condensed", "Naskh", sans-serif, serif;
                     font-size: 8pt;
                     color: #808080;
                     padding-bottom: 7mm;
@@ -97,8 +101,13 @@
                 left: 0;
             }
 
-            body, div, table, p, .list-group, .list-group-item {
-                font-family: "Duality", "Naskh", sans-serif, serif;
+            body, div, table, p {
+                font-family: "Aldo", "Ubuntu", "Naskh", sans-serif, serif;
+                background-color: transparent;
+            }
+
+            .digital {
+                font-family: "Condensed";
                 background-color: transparent;
             }
 
@@ -126,12 +135,15 @@
                 {% include 'insights/snippets/bidders/pdf/digest-card.html' %}
             </div>
 
-            <div id="data-tables" class="mb-5">
+            <div id="data-tables">
 
                 <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Tenders' %}: {{ bidder.tenders.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Tenders' %}:</span> 
+                                <span class="digital">{{ bidder.tenders.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -142,7 +154,10 @@
                 <div id="table-admin-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Admin Rejects' %}: {{ bidder.admin_rejects.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Admin Rejects' %}:</span> 
+                                <span class="digital">{{ bidder.admin_rejects.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -153,7 +168,10 @@
                 <div id="table-admin-accepts" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Admin Accepts' %}: {{ bidder.admin_accepts.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Admin Accepts' %}:</span> 
+                                <span class="digital">{{ bidder.admin_accepts.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -164,7 +182,10 @@
                 <div id="table-admin-reserves" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Admin Reserves' %}: {{ bidder.admin_reserves.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Admin Reserves' %}:</span>
+                                <span class="digital">{{ bidder.admin_reserves.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -175,7 +196,10 @@
                 <div id="table-tech-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Technical Rejects' %}: {{ bidder.tech_rejects.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Technical Rejects' %}:</span>
+                                <span class="digital">{{ bidder.tech_rejects.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -186,7 +210,10 @@
                 <div id="table-financials" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Financial Offers' %}: {{ bidder.selects.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Financial Offers' %}:</span>
+                                <span class="digital">{{ bidder.selects.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -197,8 +224,11 @@
                 <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Awardings' %}: {{ bidder.winners.all|length }}</div>
-                            <div>{{ bidder.winners_sum|default:'-'}}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Awardings' %}:</span>
+                                <span class="digital">{{ bidder.winners.all|length }}</span>
+                            </div>
+                            <div class="digital">{{ bidder.winners_sum|default:'-'}}</div>
                         </div>
                     </h2>
                     <div>
@@ -209,7 +239,10 @@
                 <div id="table-clients" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Clients' %}: {{ bidder.clients.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Clients' %}:</span>
+                                <span class="digital">{{ bidder.clients.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -220,7 +253,10 @@
                 <div id="table-domains" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Domains' %}: {{ bidder.domains.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Domains' %}:</span>
+                                <span class="digital">{{ bidder.domains.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -231,7 +267,10 @@
                 <div id="table-qualifs" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Qualifications' %}: {{ bidder.qualifs.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Qualifications' %}:</span>
+                                <span class="digital">{{ bidder.qualifs.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>
@@ -242,7 +281,10 @@
                 <div id="table-licenses" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                            <div>{% trans 'Licenses' %}: {{ bidder.licences.all|length }}</div>
+                            <div>
+                                <span style="text-transform: uppercase;">{% trans 'Licenses' %}:</span>
+                                <span class="digital">{{ bidder.licences.all|length }}</span>
+                            </div>
                         </div>
                     </h2>
                     <div>

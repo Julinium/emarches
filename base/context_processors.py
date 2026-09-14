@@ -10,50 +10,41 @@ def portal_context(request):
     bicons = {
         'filters'         : 'bi bi-front text-warning',
         'estimate'        : 'bi bi-cash-coin',
-        'bond'            : 'bi bi-safe',    
-                            # bookmark-check
-                            # piggy-bank 
-                            # credit-card
+        'bond'            : 'bi bi-safe',
         'published'       : 'bi bi-clock',
-        'multi_lots'      : 'bi bi-ui-radios-grid',  
-                            # 'grid'
-                            # 'ui-checks-grid'
+        'multi_lots'      : 'bi bi-ui-radios-grid', 
+        
         'category'        : 'bi bi-grid',
         'location'        : 'bi bi-pin-map',
-                            # 'geo'
         'client'          : 'bi bi-briefcase',
-                            # 'house-door'         # 'bank'
         'deadline'        : 'bi bi-hourglass',
-                            # 'calendar4-event' -bottom
         'reference'       : 'bi bi-tag',
-        'restricted'      : 'bi bi-intersect text-danger',       
-                            # 'bell-slash-fill text-danger'
+        'restricted'      : 'bi bi-intersect text-danger',  
+        
         'reserved_ico'    : 'bi bi-sign-yield',
         'variant_ico'     : 'bi bi-shuffle',
         'reserved'        : 'bi bi-sign-yield-fill text-primary',
         'variant'         : 'bi bi-shuffle text-success',
         'count'           : 'bi bi-grid-3x3-gap',
-                            # '123' 
 
         'has_agrements'   : 'bi bi-shield-fill-check text-primary',
         'has_qualifs'     : 'bi bi-mortarboard-fill text-primary',
         'has_samples'     : 'bi bi-palette2 text-primary',
         'has_visits'      : 'bi bi-person-walking text-primary',
-                            # 'eye-fill'
+        
         'has_meetings'    : 'bi bi-chevron-bar-contract text-primary',
 
         'agrements_ico'   : 'bi bi-shield-check',
         'qualifs_ico'     : 'bi bi-mortarboard',
         'samples_ico'     : 'bi bi-palette2',
         'visits_ico'      : 'bi bi-person-walking',
-        'meetings_ico'    : 'bi bi-chevron-bar-contract',
-        
+        'meetings_ico'    : 'bi bi-chevron-bar-contract',        
         'changes'         : 'bi bi-activity',
-                            # 'pencil-square'
+        
         'favorites'       : 'bi bi-heart',
         'downloads'       : 'bi bi-arrow-down-square',
         'views'           : 'bi bi-eye', 
-                            # 'bi bi-compass',
+        
         'favorite'        : 'bi bi-heart',
         'favorited'       : 'bi bi-heart-fill',
         'unfavorite'      : 'bi bi-heartbreak',
@@ -62,32 +53,24 @@ def portal_context(request):
         'ebid_req'        : 'bi bi-laptop text-primary',
         'ebid_opt'        : 'bi bi-laptop text-success',
         'ebid_na'         : 'bi bi-laptop text-danger',
-                            # 'pc-display-horizontal'
+        
         'esign'           : 'bi bi-usb-drive', 
         'esign_req'       : 'bi bi-usb-drive text-primary', 
         'esign_opt'       : 'bi bi-usb-drive text-success', 
-        'esign_na'        : 'bi bi-usb-drive text-secondary',       
-                            # 'device-ssd'
+        'esign_na'        : 'bi bi-usb-drive text-secondary',  
+        
         'link'            : 'bi bi-box-arrow-up-right',
         'bidding'         : 'bi bi-envelope-arrow-up',
-                            # arrow-90deg-right
-                            # send-check
-                            # reply 
-                            # handbag 
-                            # arrow-up-right-square 
-                            # check-square
-                            # 
-                            # box-arrow-in-up
-                            # box-arrow-in-up-right
+        
         'search'          : 'bi bi-search',
         'sort'            : 'bi bi-sort-down',
         'sort_up'         : 'bi bi-arrow-up',
         'sort_down'       : 'bi bi-arrow-down',
         'backspace'       : 'bi bi-backspace',
         'filter'          : 'bi bi-funnel',
-                            # binoculars
+        
         'days_to_go'      : 'bi bi-stopwatch',
-                            # calendar-x
+        
         'title'           : 'bi bi-card-heading',
         'procedure'       : 'bi bi-book',
         'mode'            : 'bi bi-filter-left',
@@ -96,18 +79,18 @@ def portal_context(request):
         'contact'         : 'bi bi-person',
         'no_files'        : 'bi bi-file-earmark-break text-warning',
         'files_size'      : 'bi bi-folder2',
-                            # exclamation-circle
+        
         'share'           : 'bi bi-arrow-bar-up',
         'created'         : 'bi bi-calendar-plus',
         'create'          : 'bi bi-plus-lg',
-                            # upload
+        
         'updated'         : 'bi bi-arrow-repeat',
         'database'        : 'bi bi-database',
         'hash'            : 'bi bi-hash',
         'days_span'       : 'bi bi-calendar-range',
-                            # arrows-expand-vertical
+        
         'history'         : 'bi bi-clock-history',
-                            # 
+        
         'delete'          : 'bi bi-trash',
         'clean_expired'   : 'bi bi-hourglass-bottom',
         'clean_cancelled' : 'bi bi-x-octagon',
@@ -117,22 +100,15 @@ def portal_context(request):
         'simulator'       : 'bi bi-dpad',
 
         'tenders'         : 'bi bi-rocket-takeoff', 
-        'bid_tender'      : 'bi bi-reply-all', 
-                            # megaphone 
-                            # radioactive
-                            # shop-window
+        'bid_tender'      : 'bi bi-reply-all',         
         'bdc'             : 'bi bi-basket',
-                            # bar-chart-steps
-                            # controller
+        
         'plus'            : 'bi bi-plus-lg',
         'winner'          : 'bi bi-trophy-fill',
         'range'           : 'bi bi-arrows',
-                            # arrows-expand-vertical
-                            # arrow-left-right
         'range_min'       : 'bi bi-arrow-bar-up',
         'range_max'       : 'bi bi-arrow-bar-down',
         'target'          : 'bi bi-crosshair',
-                            # bullseye
 
         'mean'            : 'bi bi-arrows-collapse',
         'close'           : 'bi bi-x-lg',
@@ -154,12 +130,8 @@ def portal_context(request):
 
         'unsuccessful'    : 'bi bi-hand-thumbs-down-fill',
         'ongoing'         : 'bi bi-hourglass-top', 
-                            # calendar2-check
 
         'concurrence'     : 'bi bi-bar-chart-steps',
-                            # filter-left 
-                            # sort-up 
-                            # list-ol 
 
         'company'         : 'bi bi-buildings',
 
@@ -173,7 +145,7 @@ def portal_context(request):
         'goto'            : 'bi bi-cursor',
         'download'        : 'bi bi-download',
         'printer'         : 'bi bi-printer',
-        'pdf'             : 'bi bi-filetype-pdf',
+        'pdf'             : 'bi bi-file-earmark-pdf',
         'section'         : 'bi bi-play',
 
         'team'            : 'bi bi-diagram-3',
@@ -221,7 +193,6 @@ def portal_context(request):
     }
 
     context['bicons']        = bicons
-    # context['empty_items']   = ['-', '--', '_', '__', '---', '/', '?', ' ', '.', '']
 
     context['categories'] = Category.objects.all().order_by('label')
     context['wrap_text'] = False

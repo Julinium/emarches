@@ -1,9 +1,11 @@
 import os
 import logging
 
+from pathlib import Path
 from decimal import Decimal
 from urllib.parse import urlencode
 
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Count, DecimalField, ExpressionWrapper, F, Max, Min, Q, Sum
@@ -20,6 +22,7 @@ from . import weasy
 
 
 BIDDERS_ITEMS_PER_PAGE = 25
+BIDDER_FILES_EXPIRY_HOURS = 24
 
 logger_portal = logging.getLogger("portal")
 
@@ -229,7 +232,13 @@ def bidder_pdf(request, pk=None):
 
     logger_portal.info("Concurrent digest PDF view", extra={"request": request})
 
-    pdf_file_path = weasy.generate_pdf(request, bidder)
+    dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
+    file_name = f'eMarches.com-{ bidder.id }-analysis.pdf'
+    file_path = os.path.join(dir_name, file_name)
+    recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
+    pdf_file_path = file_path if recent_file_exists else weasy.generate_pdf(request, bidder, dir_name, file_name)
+
+    # pdf_file_path = weasy.generate_pdf(request, bidder)
     if pdf_file_path:
         if os.path.exists(pdf_file_path):
             pdf_file_name = os.path.basename(pdf_file_path)
@@ -274,7 +283,12 @@ def bidder_csv(request, pk=None):
 
     logger_portal.info("Concurrent digest CSV view", extra={"request": request})
 
-    csv_file_path = weasy.generate_csv(bidder)
+    dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"
+    file_name = f'eMarches.com-{ bidder.id }-analysis.csv'
+    file_path = os.path.join(dir_name, file_name)
+    recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
+    csv_file_path = file_path if recent_file_exists else weasy.generate_csv(bidder, dir_name, file_name)
+
     if csv_file_path:
         if os.path.exists(csv_file_path):
             csv_file_name = os.path.basename(csv_file_path)

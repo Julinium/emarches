@@ -52,17 +52,17 @@
         </div>
 
         <div id="bidder-{{ bidder.id }}-actions" class="text-end mx-0 mb-3">
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" 
+            <a class="ms-2 mt-2 btn btn-sm btn-primary" 
                 href="{% url 'insights_bidder_details' bidder.id %}">
                 <span><i class="{{ bicons.details }}"></i></span>
-                <span class="ms-1">{% trans 'Advanced analysis' %}</span>
+                <span class="ms-1">{% trans 'Details' %}</span>
             </a>
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank"
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" target="_blank"
                 href="{% url 'insights_bidder_pdf' bidder.id %}">
                 <span><i class="{{ bicons.pdf }}"></i></span>
                 <span class="ms-1">{% trans 'PDF Report' %}</span>
             </a>
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" target="_blank"
+            <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" target="_blank"
                 href="{% url 'insights_bidder_csv' bidder.id %}">
                 <span><i class="{{ bicons.excel }}"></i></span>
                 <span class="ms-1">{% trans 'CSV SpreadSheet' %}</span>

@@ -250,18 +250,19 @@
                 <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
                     href="{% url 'insights_bidder_pdf' bidder.id %}">
                     <span><i class="{{ bicons.pdf }}"></i></span>
-                    <span class="ms-1">{% trans 'Save PDF' %}</span>
+                    <span class="ms-1">{% trans 'PDF Report' %}</span>
                 </a>
-                <a class="ms-2 mt-2 btn btn-outline-secondary" 
+
+                <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
+                    href="{% url 'insights_bidder_csv' bidder.id %}">
+                    <span><i class="{{ bicons.excel }}"></i></span>
+                    <span class="ms-1">{% trans 'CSV SpreadSheet' %}</span>
+                </a>
+
+                <a class="ms-2 mt-2 btn btn-outline-primary" 
                     type="button" onclick="shareBidderPage(`https://new.emarches.com`)">
                     <span><i class="{{ bicons.share }}"></i></span>
                     <span class="ms-1">{% trans 'Share' %}</span>
-                </a>
-
-                <a class="ms-2 mt-2 btn btn-outline-secondary" target="_blank"
-                    href="{% url 'insights_bidder_csv' bidder.id %}">
-                    <span><i class="{{ bicons.excel }}"></i></span>
-                    <span class="ms-1">{% trans 'Export CSV' %}</span>
                 </a>
             </div>
         </div>
