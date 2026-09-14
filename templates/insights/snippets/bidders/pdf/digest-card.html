@@ -1,0 +1,93 @@
+{% load i18n l10n humanize groupify tz %}
+
+<article style="max-width: 100%; border: 1px solid var(--border); padding: 0; border-radius: 6px;">
+    <!-- Card Header -->
+    <div style="margin: 0 0 0.5rem 0; border-bottom: 1px solid var(--border);">
+        <div style="margin-top: 0.25rem; text-align: center; width: 100%; font-size:larger; font-weight: 700;">{{ bidder.name }}</div>
+    </div>
+
+
+    <!-- Card Body: Ring Progress & Extra Data -->
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        
+        <div id="round-progress" style="flex-shrink: 0; width: 7rem; height: 7rem;">
+            <svg viewBox="0 0 36 36" style="width: 100%; height: 100%;">
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      fill="none" stroke="#d8d8d8" stroke-width="1" />
+
+                {% if bidder.success_rate %}
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round"
+                          stroke-dasharray="{{ bidder.success_rate|unlocalize|default:'0' }}, 100"/>
+                {% endif %}
+
+                {% if bidder.admin_reject_rate %}
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none" stroke="#ff6d1f" stroke-width="2" stroke-linecap="round"
+                          stroke-dashoffset="-{{ bidder.success_rate|unlocalize|default:'0' }}"
+                          stroke-dasharray="{{ bidder.admin_reject_rate|unlocalize|default:'0' }}, 100"/>
+                {% endif %}
+
+                {% if bidder.tech_reject_rate %}
+                    <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          fill="none" stroke="#d8b000" stroke-width="2" stroke-linecap="round"
+                          stroke-dashoffset="-{{ bidder.tech_offset|unlocalize|default:'0' }}"
+                          stroke-dasharray="{{ bidder.tech_reject_rate|unlocalize|default:'0' }}, 100"/>
+                {% endif %}
+
+                <path d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"
+                      fill="none" stroke="#e0e0e0" stroke-width="1.5" />
+
+                {% if bidder.win_rate %}
+                    <path d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"
+                          fill="none" stroke="#28a745" stroke-width="2.5" stroke-linecap="round"
+                          stroke-dasharray="{% widthratio bidder.win_rate 100000 75398 %}, 100"/>
+                {% endif %}
+
+                <text x="18" y="20" fill="var(--text-main)" font-size="7" font-weight="bold" text-anchor="middle">                            
+                    {{ bidder.winners_sum|metrify:0|default:'' }}
+                </text>
+            </svg>
+        </div>
+
+        <div id="extra-data" style="text-align: right; font-size: 0.85rem; line-height: 1.4;">
+            <div>
+                <small style="color: var(--text-muted);">{% trans "Total awards" %}:</small>
+                <span style="font-weight: bolder;">{{ bidder.winners_sum|default:'--'}}</span>
+            </div>
+
+            <div>
+                <small style="color: var(--text-muted);">{% trans "Total Bids" %}:</small>
+                <span>{{ bidder.deposits_sum|default:'--' }}</span>
+            </div>
+
+            <div>
+                <small style="color: var(--text-muted);">{% trans "Awarded Bids" %}:</small>
+                <span>                    
+                    <span>{{ bidder.winners|length }}</span>
+                    <span>/</span>
+                    <span>{{ bidder.deposits.all|length }}</span>
+                    <span style="margin:.25rem;">=</span>
+                    <span>{{ bidder.success_rate|floatformat:2|default:'0' }}%</span>
+                </span>
+            </div>
+
+            <div>
+                <small style="color: var(--text-muted);">{% trans 'Latest award' %}:</small>
+                <span>{{ bidder.latest_win|default:'--' }}</span>
+            </div>
+
+            <div>
+                <small style="color: var(--text-muted);">{% trans 'Highest award' %}:</small>
+                <span>{{ bidder.highest_win|default:'--' }}</span>
+            </div>
+        </div>
+
+        <div>
+            <div style="align-items: center;">
+                <img src="{{ qr_code }}" alt="QR Code" style="height: 30mm; width: 30mm;">
+            </div>
+        </div>
+
+    </div>
+</article>

@@ -207,7 +207,6 @@ def bidder_details(request, pk=None):
 
 
 @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bidder_pdf(request, pk=None):
 
     user = request.user
@@ -223,7 +222,6 @@ def bidder_pdf(request, pk=None):
         logger_portal.warning("E405: Bad request parameters", extra={"request": request})
         return HttpResponse(trans("Bad request"), status=405)
 
-    # bidder = get_object_or_404(Concurrent, id=pk)
     bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
     if not bidder : 
         logger_portal.warning("E404: Bidder not found", extra={"request": request})
@@ -231,7 +229,6 @@ def bidder_pdf(request, pk=None):
 
     logger_portal.info("Concurrent digest PDF view", extra={"request": request})
 
-    print("===========view===========")
     pdf_file_path = weasy.generate_pdf(request, bidder)
     if pdf_file_path:
         if os.path.exists(pdf_file_path):
@@ -252,4 +249,50 @@ def bidder_pdf(request, pk=None):
     
     logger_portal.warning("E404: Files not found", extra={"request": request})
     return HttpResponse(trans("Not found") + f": File generator returned nothing", status=404)
+
+
+@login_required(login_url="account_login")
+def bidder_csv(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
+
+    if request.method != 'GET': 
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    if pk == None:
+        logger_portal.warning("E405: Bad request parameters", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
+    if not bidder : 
+        logger_portal.warning("E404: Bidder not found", extra={"request": request})
+        return HttpResponse(trans("Not found") + f": id: { pk }", status=404)
+
+    logger_portal.info("Concurrent digest CSV view", extra={"request": request})
+
+    csv_file_path = weasy.generate_csv(bidder)
+    if csv_file_path:
+        if os.path.exists(csv_file_path):
+            csv_file_name = os.path.basename(csv_file_path)
+            file_size = os.path.getsize(csv_file_path)
+            response = HttpResponse()
+            response['Content-Type'] = 'application/csv'
+            response['X-Accel-Redirect'] = f'/digest/csv/{ csv_file_name }'
+            response['Content-Disposition'] = f'attachment; filename="{ csv_file_name }"'
+            response['Content-Length'] = file_size
+
+            logger_portal.info("Bidder analysis CSV File Download allowed", extra={"request": request, "file_bytes": file_size})
+            return response
+        
+
+        logger_portal.warning("E404: Files not found", extra={"request": request})
+        return HttpResponse(trans("Not found") + f": File does not exist", status=404)
+    
+    logger_portal.warning("E404: Files not found", extra={"request": request})
+    return HttpResponse(trans("Not found") + f": File generator returned nothing", status=404)
+
 

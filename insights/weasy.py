@@ -57,34 +57,68 @@ def generate_pdf(request, bidder):
     
 
 
-def bdc_generate_items_csv(bdc):
+def generate_csv(bidder):
 
-    csv_file_name = f'eMarches.com-{ bdc.chrono }-items.csv'
-    output_dir = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / f"{ csv_file_name }"
-    
+    if not bidder: 
+        return None
 
-    with open(output_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            trans('Number'), trans('Title'), trans('UOM'), 
-            trans('Quantity'), trans('VAT') + '%', 
-            trans('Specifications'), trans('Warranties')
-            ])
+    try:
 
-        for item in bdc.articles.all():
+        csv_file_name = f'eMarches.com-{ bidder.id }-analysis.csv'
+        output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        output_path = output_dir / f"{ csv_file_name }"
+
+        with open(output_path, "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
             writer.writerow([
-                item.number,
-                item.title,
-                item.uom,
-                item.quantity,
-                item.vat_percent,
-                item.specifications,
-                item.warranties,
-            ])
+                trans('Tender'),
+                trans('Client'), 
+                trans('Deadline'), 
+                trans('Estimate'), 
+                trans('Bond'), 
+                trans('Opening date'), 
+                trans('Lot Number'), 
+                trans('Admin Exam'), 
+                trans('Tech Exam'), 
+                trans('Bid Amount'), 
+                trans('Corrected Amount'),
+                trans('Financial Race'),
+                trans('Awarded Amount'),
+                trans('Awarding justification'),
+                ])
 
-    return output_path
+            for dep in bidder.deposits.all():
+                tender = dep.opening.tender
+                admin_result = '?'
+                if dep.admin == 'a': admin_result = trans('Accepted') 
+                if dep.admin == 'x': admin_result = trans('Rejected') 
+                if dep.admin == 'r': admin_result = trans('Reserve') 
+                tech_result = trans('Rejected') if dep.reject_t else ""
+                fin_result = trans('Awarded') if dep.winner else ""
+                writer.writerow([
+                    tender.title,
+                    tender.client.name,
+                    tender.deadline.date(),
+                    tender.estimate,
+                    tender.bond,
+                    dep.opening.date,
+                    dep.lot_number,	
+                    admin_result,
+                    tech_result,
+                    dep.amount_b,
+                    dep.amount_a,
+                    fin_result,
+                    dep.amount_w,
+                    dep.justif,
+                ])
+        return output_path
+
+    except Exception as xc:
+        traceback.print_exc()
+
+    return None
+    
 
 
 

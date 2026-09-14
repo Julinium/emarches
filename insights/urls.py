@@ -10,8 +10,8 @@ urlpatterns = [
     path('<uuid:pk>/',     views.bidder_details,   name='insights_bidder_details'),
 
     path('pdf/<uuid:pk>/', views.bidder_pdf,       name='insights_bidder_pdf'),
+    path('csv/<uuid:pk>/', views.bidder_csv,       name='insights_bidder_csv'),
 
-    # path('<uuid:pk>/csv/<str:fn>/', views.bdc_items_csv,            name='bdc_articles_csv'),
 
     # path('loc/',                views.locations_list,           name='bdc_locations_list'),
     # path('cli/',                views.client_list,              name='bdc_client_list'),

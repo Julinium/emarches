@@ -108,237 +108,154 @@
 
 	<body>
 
-        <div class="text-center">
-            <h2 class="mt-3 mb-4">
-                <span class="fw-bold">{% trans "Concurrent details" %}</span>
-            </h2>
+        <div id="header-svg" style="max-width: 100%;">
+            <img src="{% static 'brand/insi-header.svg' %}"
+                    class="img-fluid" alt="eMarches.com"
+                    style="height: auto; width: auto; max-width: 100%;">
+        </div>
+
+        <div id="doc-title">
+            <div style="max-width: 100%; border: 1px solid var(--border); margin: 1rem 0; border-radius: 6px;">
+                <div style="text-align: center; width: 100%; margin: 0.5rem; margin-top: 1rem; font-size:larger; font-weight: 700;">{% trans "Concurrent details" %}</div>
+            </div>
         </div>
 
         {% if bidder %}
-            <div class="mb-3" id="bidder-details">
-                <div id="header-svg">
-                    <img src="{% static 'brand/insi-header.svg' %}"
-                            class="img-fluid" alt="eMarches.com"
-                            style="height: auto; width: auto;">
-                </div>
 
-                <div class="d-flex align-items-start">
-                    <div class="flex-grow-1">
-                        
-                        <div class="row gx-2 gy-0">
+            <div id="bidder-summary">
+                {% include 'insights/snippets/bidders/pdf/digest-card.html' %}
+            </div>
 
-                            <div class="col-12">
-                                <div class="d-flex my-3">
-                                    <div>
-                                        <i class="bi bi-briefcase"></i>
-                                    </div>
-                                    <div class="ms-2 w-100 border-0 border-bottom">
-                                        <span class="text-muted small fw-light me-2">
-                                            {% trans "Concurrent" %}:
-                                        </span>
-                                        <span class="">
-                                            <span class="fw-bold">{{ bidder.name }}</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+            <div id="data-tables" class="mb-5">
 
-                            <div class="col-12">
-                                <div class="d-flex mb-3">
-                                    <div>
-                                        <i class="bi bi-cash-coin"></i>
-                                    </div>
-                                    <div class="ms-2 w-100 border-0 border-bottom">
-                                        <span class="text-muted small fw-light me-2">
-                                            {% trans "Total awards" %}:
-                                        </span>
-                                        <span class="">
-                                            <span class="fw-bold">{{ bidder.winners_sum|default:'0' }}</span>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
+                <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Tenders' %}: {{ bidder.tenders.all|length }}</div>
                         </div>
-
-                    </div>
-
-                    <div class="text-end">
-                        <div class="">
-                            <img src="{{ qr_code }}"
-                                class="img-fluid" alt="QR Code"
-                                style="height: 30mm; width: 30mm;">
-                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/tenders.html' %}
                     </div>
                 </div>
 
-                <div id="bidder-summary" class="small fw-light ms-5 mb-5">
-                    <div class="ms-5">
-                        <table class="table border-0 small">
-                            <tbody>
-                                <tr class="border-bottom">
-                                    <td class="text-start pb-0">{% trans "Total awards" %}</td>
-                                    <td class="text-end pb-0 fw-bold">{{ bidder.winners_sum|default:'-'}}</td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td class="text-start pb-0">{% trans "Total Bids" %}</td>
-                                    <td class="text-end pb-0">{{ bidder.deposits_sum|default:'-' }}</td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td class="text-start pb-0">{% trans "Awarded bids" %}</td>
-                                    <td class="text-end pb-0">
-                                        <span>{{ bidder.winners|length }}</span>
-                                        <span>/</span>
-                                        <span>{{ bidder.deposits.all|length }}</span>
-                                        <span class="mx-1">=</span>
-                                        <span>{{ bidder.success_rate|floatformat:2|default:'0' }}%</span>
-                                    </td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td class="text-start pb-0">{% trans "Highest award" %}</td>
-                                    <td class="text-end pb-0">{{ bidder.highest_win|default:'--' }}</td>
-                                </tr>
-                                <tr class="border-bottom">
-                                    <td class="text-start pb-0">{% trans "Latest award" %}</td>
-                                    <td class="text-end pb-0">{{ bidder.latest_win|default:'--' }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div id="table-admin-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Admin Rejects' %}: {{ bidder.admin_rejects.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/admin-rejects.html' %}
                     </div>
                 </div>
 
-                <div id="data-tables" class="mb-5">
-
-                    <div id="table-wins" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Tenders' %}: {{ bidder.tenders.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/tenders.html' %}
+                <div id="table-admin-accepts" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Admin Accepts' %}: {{ bidder.admin_accepts.all|length }}</div>
                         </div>
-                    </div>
-
-                    <div id="table-admin-rejects" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Admin Rejects' %}: {{ bidder.admin_rejects.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/admin-rejects.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-admin-accepts" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Admin Accepts' %}: {{ bidder.admin_accepts.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/admin-accepts.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-admin-reserves" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Admin Reserves' %}: {{ bidder.admin_reserves.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/admin-reserves.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-tech-rejects" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Technical Rejects' %}: {{ bidder.tech_rejects.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/tech-rejects.html' %}
-                        </div>
-                    </div>
-                    
-                    <div id="table-financials" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Financial Offers' %}: {{ bidder.selects.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/financials.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-wins" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Awardings' %}: {{ bidder.winners.all|length }}</div>
-                                <div>{{ bidder.winners_sum|default:'-'}}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/wins.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-clients" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Clients' %}: {{ bidder.clients.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/clients.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-domains" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Domains' %}: {{ bidder.domains.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/domains.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-qualifs" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Qualifications' %}: {{ bidder.qualifs.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/qualifs.html' %}
-                        </div>
-                    </div>
-
-                    <div id="table-licenses" style="margin-top: 4rem;">
-                        <h2>
-                            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
-                                <div>{% trans 'Licenses' %}: {{ bidder.licences.all|length }}</div>
-                            </div>
-                        </h2>
-                        <div>
-                            {% include 'insights/snippets/bidders/pdf/licenses.html' %}
-                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/admin-accepts.html' %}
                     </div>
                 </div>
 
-
-                <div id="footer-svg">
-                    <img src="{% static 'brand/insi-footer.svg' %}"
-                            class="img-fluid" alt="MODE-777.com"
-                            style="height: auto; width: auto;">
+                <div id="table-admin-reserves" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Admin Reserves' %}: {{ bidder.admin_reserves.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/admin-reserves.html' %}
+                    </div>
                 </div>
 
+                <div id="table-tech-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Technical Rejects' %}: {{ bidder.tech_rejects.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/tech-rejects.html' %}
+                    </div>
+                </div>
+                
+                <div id="table-financials" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Financial Offers' %}: {{ bidder.selects.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/financials.html' %}
+                    </div>
+                </div>
+
+                <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Awardings' %}: {{ bidder.winners.all|length }}</div>
+                            <div>{{ bidder.winners_sum|default:'-'}}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/wins.html' %}
+                    </div>
+                </div>
+
+                <div id="table-clients" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Clients' %}: {{ bidder.clients.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/clients.html' %}
+                    </div>
+                </div>
+
+                <div id="table-domains" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Domains' %}: {{ bidder.domains.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/domains.html' %}
+                    </div>
+                </div>
+
+                <div id="table-qualifs" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Qualifications' %}: {{ bidder.qualifs.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/qualifs.html' %}
+                    </div>
+                </div>
+
+                <div id="table-licenses" style="margin-top: 4rem; margin-bottom:2rem;">
+                    <h2>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                            <div>{% trans 'Licenses' %}: {{ bidder.licences.all|length }}</div>
+                        </div>
+                    </h2>
+                    <div>
+                        {% include 'insights/snippets/bidders/pdf/licenses.html' %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="footer-svg">
+                <img src="{% static 'brand/insi-footer.svg' %}"
+                        class="img-fluid" alt="MODE-777.com"
+                        style="height: auto; width: auto;">
             </div>
 
         {% else %}
