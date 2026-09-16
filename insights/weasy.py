@@ -9,7 +9,7 @@ from pathlib import Path
 import segno
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.utils.translation import gettext_lazy as trans
+from django.utils.translation import get_language_from_request, gettext_lazy as trans
 from weasyprint import HTML
 
 from datetime import datetime, timedelta, timezone
@@ -28,7 +28,7 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
 
     try:
         qr_buffer = BytesIO()
-        segno.make(url, error='M').save(qr_buffer, kind='svg', scale=8)
+        segno.make(url).save(qr_buffer, kind='svg', scale=6, border=2)
         qr_svg_base64 = base64.b64encode(qr_buffer.getvalue()).decode()
         qr_data_uri = f"data:image/svg+xml;base64,{ qr_svg_base64 }"
 
@@ -36,17 +36,18 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
         context = {
             "request": request,
             "bidder": bidder,
+            "url": url,
             "crm"           : f'{crm} eMarches.com',
             "qr_code"       : qr_data_uri,
         }
 
-        output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"        
-        pdf_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.pdf'
+        lang_code = get_language_from_request(request, check_path=True)
+        if lang_code is None or lang_code == '': lang_code = 'en'
+   
+        pdf_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-{ lang_code }.pdf'
+        output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"     
 
         html_string = render_to_string("insights/bidder-pdf.html", context)
-        pdf_file_name = f'eMarches.com-{ bidder.id }-analysis.pdf'
-        # output_dir = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
-        # output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{ pdf_file_name }"
 
         static_dir  = Path(settings.BASE_DIR) / "static"
@@ -63,14 +64,18 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
     
 
 
-def generate_csv(bidder, dir_name=None, file_name=None):
+def generate_csv(request, bidder, dir_name=None, file_name=None):
 
     if not bidder: 
         return None
 
     try:
+        lang_code = get_language_from_request(request, check_path=True)
+        if lang_code is None or lang_code == '': lang_code = 'en'
+   
+        csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-{ lang_code }.csv'
         output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"        
-        csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.csv'
+        # csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.csv'
 
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{ csv_file_name }"

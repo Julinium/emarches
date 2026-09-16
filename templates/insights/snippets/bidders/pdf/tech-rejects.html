@@ -4,7 +4,7 @@
 
 <section style="margin-left: 1rem;">
     {% for opening, lots in grouped_tech_rej.items %}
-        <article style="margin-bottom: 2rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+        <article style="margin-bottom: 2rem; border-right: 0.25rem solid var(--bd-warning); padding-right: 0.5rem; border-radius: 2px;">
             <header>
                 <div class="digital" style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
                 <div>
@@ -29,6 +29,6 @@
             </div>
         </article>
     {% empty %}
-        <p style="color: var(--focus);">{% trans 'None' %}</p>
+        <p style="color: var(--text-muted);">--</p>
     {% endfor %}
 </section>

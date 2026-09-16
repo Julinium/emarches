@@ -4,7 +4,7 @@
 
 <section style="margin-left: 1rem;">
     {% for opening, depos in grouped_selects.items %}
-        <article style="margin-bottom: 2rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+        <article style="margin-bottom: 2rem; border-right: 0.25rem solid var(--bd-neutral); padding-right: 0.5rem; border-radius: 2px;">
             <header>
                 <div class="digital" style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
                 <div>
@@ -22,17 +22,17 @@
                             <span style="opacity: 0.7;">E={{ opening.tender.estimate }}</span>
                         {% endif %}
                         <span style="margin: 0 0.5rem;">—</span>
+                        {% if depo.winner %}
+                            <span class="digital">{% trans "Awarded" %}:</span>
+                        {% endif %}
                         <span style="opacity: 0.7;">E{% if depo.offset > 0 %}+{% endif %}{% if depo.offset == 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%</span>
                         <span>=</span>
-                        {% if depo.winner %}
-                            <span class="digital small">{% trans "Awarded" %}:</span>
-                        {% endif %}
                         <span class="digital">{{ depo.amount_a }}</span>
                     </div>
                 {% endfor %}
             </div>
         </article>
     {% empty %}
-        <p style="color: var(--focus);">{% trans 'None' %}</p>
+        <p style="color: var(--text-muted);">--</p>
     {% endfor %}
 </section>

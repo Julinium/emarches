@@ -3,7 +3,7 @@
 
 <section style="margin-left: 1rem;">
     {% for bid in bidder.tenders.all %}
-        <article style="margin-bottom: 2rem; padding-right: 0.5rem; border-right: 0.5rem solid var(--border); padding-right: 0.5rem;">
+        <article style="margin-bottom: 2rem; padding-right: 0.5rem; border-right: 0.25rem solid var(--bd-neutral); padding-right: 0.5rem; border-radius: 2px;">
             <header>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                     <div>
@@ -28,6 +28,6 @@
             
         </article>
     {% empty %}
-        <p style="color: var(--focus);">{% trans 'None' %}</p>
+        <p style="color: var(--text-muted);">--</p>
     {% endfor %}
 </section>

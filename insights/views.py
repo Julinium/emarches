@@ -13,7 +13,7 @@ from django.db.models.functions import NullIf, Round
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.cache import cache_control
-from django.utils.translation import gettext_lazy as trans
+from django.utils.translation import get_language_from_request, gettext_lazy as trans
 
 from base.context_processors import portal_context
 from base.models import Concurrent
@@ -232,13 +232,15 @@ def bidder_pdf(request, pk=None):
 
     logger_portal.info("Concurrent digest PDF view", extra={"request": request})
 
+    lang_code = get_language_from_request(request, check_path=True)
+    if lang_code is None or lang_code == '': lang_code = 'en'
+
+    file_name = f'eMarches.com-{ bidder.id }-{ lang_code }.pdf'
     dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
-    file_name = f'eMarches.com-{ bidder.id }-analysis.pdf'
     file_path = os.path.join(dir_name, file_name)
     recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
     pdf_file_path = file_path if recent_file_exists else weasy.generate_pdf(request, bidder, dir_name, file_name)
-
-    # pdf_file_path = weasy.generate_pdf(request, bidder)
+    
     if pdf_file_path:
         if os.path.exists(pdf_file_path):
             pdf_file_name = os.path.basename(pdf_file_path)
@@ -257,7 +259,7 @@ def bidder_pdf(request, pk=None):
         return HttpResponse(trans("Not found") + f": File does not exist", status=404)
     
     logger_portal.warning("E404: Files not found", extra={"request": request})
-    return HttpResponse(trans("Not found") + f": File generator returned nothing", status=404)
+    return HttpResponse(trans("Not found") + f": File generating failed", status=404)
 
 
 @login_required(login_url="account_login")
@@ -283,11 +285,15 @@ def bidder_csv(request, pk=None):
 
     logger_portal.info("Concurrent digest CSV view", extra={"request": request})
 
+    lang_code = get_language_from_request(request, check_path=True)
+    if lang_code is None or lang_code == '': lang_code = 'en'
+
+    file_name = f'eMarches.com-{ bidder.id }-{ lang_code }.csv'
     dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"
-    file_name = f'eMarches.com-{ bidder.id }-analysis.csv'
+    # file_name = f'eMarches.com-{ bidder.id }-analysis.csv'
     file_path = os.path.join(dir_name, file_name)
     recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
-    csv_file_path = file_path if recent_file_exists else weasy.generate_csv(bidder, dir_name, file_name)
+    csv_file_path = file_path if recent_file_exists else weasy.generate_csv(request, bidder, dir_name, file_name)
 
     if csv_file_path:
         if os.path.exists(csv_file_path):
@@ -307,6 +313,6 @@ def bidder_csv(request, pk=None):
         return HttpResponse(trans("Not found") + f": File does not exist", status=404)
     
     logger_portal.warning("E404: Files not found", extra={"request": request})
-    return HttpResponse(trans("Not found") + f": File generator returned nothing", status=404)
+    return HttpResponse(trans("Not found") + f": File generating failed", status=404)
 
 

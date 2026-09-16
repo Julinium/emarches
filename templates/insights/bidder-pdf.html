@@ -3,18 +3,37 @@
 {% load i18n static humanize tz %}
 {% get_current_language_bidi as LB %}
 
+
 <!DOCTYPE html>
 <html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
 	<head>
 
         <title> eMarches.com : {{ bidder.name }}</title>
-		<link href="{% static 'styles/water.css' %}" rel="stylesheet">
 
         <meta name="dcterms.created" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="dcterms.modified" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="generator" content="eMarches.com">
 
         <style>
+
+            :root {
+                --bg-neutral: #efefef;
+                --bg-success: #e5f5d4;
+                --bg-warning: #fffad7;
+                --bg-danger: #fae8e2;
+
+                --text-main: #363636;
+                --text-bright: #000;
+                --text-muted: #70777f;
+                --text-success: #4eb20c;
+                --text-warning: #ff9e2e;
+                --text-danger: #e82424;
+
+                --bd-neutral: #a4a4a4;
+                --bd-success: #5bb000;
+                --bd-warning: #ffb428;
+                --bd-danger: #ff5b25;
+            }
 
             @font-face {
                 font-family: "Condensed";
@@ -45,8 +64,7 @@
 
             @page {
                 size: A4;
-                margin: 0;
-
+                
                 margin-top: 20mm;
                 margin-bottom: 20mm;
                 margin-left: 15mm;
@@ -58,20 +76,23 @@
                     padding-bottom: 4mm;
                 }
 
-                @bottom-left {
+                /* @bottom-left {
                     content: "{% now 'Y-m-d—H:i:s' %}";
                     font-family: "Condensed", "Naskh", sans-serif, serif;
                     font-size: 8pt;
-                    color: #808080;
+                    color: var(--text-muted);
                     padding-bottom: 7mm;
-                }
+                } */
 
                 @bottom-right {
-                    content: "PAGE " counter(page) "/" counter(pages);
+                    content: counter(page) "/" counter(pages);
                     font-family: "Ubuntu", "Naskh", sans-serif, serif;
                     font-size: 10pt;
-                    color: #808080;
-                    padding-bottom: 7mm;
+                    color: var(--text-muted);
+                    margin-top: 0.5rem;
+                    padding: 0 0.5rem 2rem;
+                    background-color: var(--bg-neutral);
+                    border-top: 0.5rem solid var(--bd-neutral);
                 }
 
                 @bottom-center {
@@ -95,8 +116,7 @@
             #footer-svg {
                 position: running(footer);
                 text-align: center;
-                /* width: 100%; */
-                height: 8mm;
+                height: 10mm;
                 bottom: 0;
                 left: 0;
             }
@@ -110,6 +130,11 @@
                 font-family: "Condensed";
                 background-color: transparent;
             }
+            
+            .unstyled-link {
+                color: inherit;
+                text-decoration: none;
+            }
 
         </style>
 
@@ -118,14 +143,22 @@
 	<body>
 
         <div id="header-svg" style="max-width: 100%;">
-            <img src="{% static 'brand/insi-header.svg' %}"
-                    class="img-fluid" alt="eMarches.com"
-                    style="height: auto; width: auto; max-width: 100%;">
+            <img src="{% static 'brand/insi-header.svg' %}" alt="eMarches.com"
+                style="height: auto; width: auto; max-width: 100%;">
         </div>
 
         <div id="doc-title">
-            <div style="max-width: 100%; border: 1px solid var(--border); margin: 1rem 0; border-radius: 6px;">
-                <div style="text-align: center; width: 100%; margin: 0.5rem; margin-top: 1rem; font-size:larger; font-weight: 700;">{% trans "Concurrent details" %}</div>
+            <div style="max-width: 100%; border: 1px solid var(--bd-neutral); margin: 0 0 2rem; border-radius: 6px; background-color: var(--bg-neutral);">
+                <div style="text-align: center; width: 100%; padding: 0.5rem; font-size:larger; font-weight: 700;">{% trans "Concurrent details" %}</div>
+                <hr style="margin:0; padding: 0;">
+                <div style="font-size: smaller; padding: 0.5rem; font-weight: lighter; color: var(--text-warning);">
+                    <small>
+                        {% trans "This document was genrated using an automated system for information purposes only. Data it contains might be incomplete, outdated or wrong." %}
+                    </small>
+                    <small>
+                        {% trans "For more information, scan or tap the QR code below to go to our website" %}.
+                    </small>
+                </div>
             </div>
         </div>
 
@@ -139,7 +172,7 @@
 
                 <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
                                 <span style="text-transform: uppercase;">{% trans 'Tenders' %}:</span> 
                                 <span class="digital">{{ bidder.tenders.all|length }}</span>
@@ -153,9 +186,9 @@
 
                 <div id="table-admin-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Admin Rejects' %}:</span> 
+                                <span style="text-transform: uppercase;">{% trans 'Administrative Rejects' %}:</span> 
                                 <span class="digital">{{ bidder.admin_rejects.all|length }}</span>
                             </div>
                         </div>
@@ -167,9 +200,9 @@
 
                 <div id="table-admin-accepts" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Admin Accepts' %}:</span> 
+                                <span style="text-transform: uppercase;">{% trans 'Administrative Passes' %}:</span> 
                                 <span class="digital">{{ bidder.admin_accepts.all|length }}</span>
                             </div>
                         </div>
@@ -181,9 +214,9 @@
 
                 <div id="table-admin-reserves" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Admin Reserves' %}:</span>
+                                <span style="text-transform: uppercase;">{% trans 'Administrative Reserves' %}:</span>
                                 <span class="digital">{{ bidder.admin_reserves.all|length }}</span>
                             </div>
                         </div>
@@ -195,7 +228,7 @@
 
                 <div id="table-tech-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
                                 <span style="text-transform: uppercase;">{% trans 'Technical Rejects' %}:</span>
                                 <span class="digital">{{ bidder.tech_rejects.all|length }}</span>
@@ -209,9 +242,9 @@
                 
                 <div id="table-financials" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Financial Offers' %}:</span>
+                                <span style="text-transform: uppercase;">{% trans 'Financial Races' %}:</span>
                                 <span class="digital">{{ bidder.selects.all|length }}</span>
                             </div>
                         </div>
@@ -223,7 +256,7 @@
 
                 <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
                                 <span style="text-transform: uppercase;">{% trans 'Awardings' %}:</span>
                                 <span class="digital">{{ bidder.winners.all|length }}</span>
@@ -238,9 +271,9 @@
 
                 <div id="table-clients" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Clients' %}:</span>
+                                <span style="text-transform: uppercase;">{% trans 'Public Clients' %}:</span>
                                 <span class="digital">{{ bidder.clients.all|length }}</span>
                             </div>
                         </div>
@@ -252,9 +285,9 @@
 
                 <div id="table-domains" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Domains' %}:</span>
+                                <span style="text-transform: uppercase;">{% trans 'Domains of activity' %}:</span>
                                 <span class="digital">{{ bidder.domains.all|length }}</span>
                             </div>
                         </div>
@@ -266,7 +299,7 @@
 
                 <div id="table-qualifs" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
                                 <span style="text-transform: uppercase;">{% trans 'Qualifications' %}:</span>
                                 <span class="digital">{{ bidder.qualifs.all|length }}</span>
@@ -280,7 +313,7 @@
 
                 <div id="table-licenses" style="margin-top: 4rem; margin-bottom:2rem;">
                     <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
                             <div>
                                 <span style="text-transform: uppercase;">{% trans 'Licenses' %}:</span>
                                 <span class="digital">{{ bidder.licences.all|length }}</span>
@@ -294,16 +327,23 @@
             </div>
 
 
-            <div id="footer-svg">
-                <img src="{% static 'brand/insi-footer.svg' %}"
-                        class="img-fluid" alt="MODE-777.com"
-                        style="height: auto; width: auto;">
+            <div id="footer-svg" style="text-align: center;">
+                <div>
+                    <a href="https://mode-777.com/">
+                        <img src="{% static 'brand/insi-footer.svg' %}"
+                                class="img-fluid" alt="MODE-777.com"
+                                style="height: auto; width: auto;">
+                    </a>
+                </div>
+                <div>
+                    <small style="margin: 0; padding:0 0 2rem; color: var(--text-muted); font-size: 6pt;" class="digital">{% now 'Y-m-d—H:i:s' %}</small>
+                </div>
             </div>
 
         {% else %}
-            <div class="my-3" id="bidder-error">
-                <div class="row gx-4 gy-0 text-danger">
-                    {% trans "Error: Bidder not found." %}
+            <div id="bidder-error" style="margin: 2rem;">
+                <div style="color: var(--text-danger);">
+                    {% trans "Error: Not found." %}
                 </div>
             </div>
         {% endif %}
