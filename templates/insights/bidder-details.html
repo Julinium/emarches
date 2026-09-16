@@ -16,15 +16,15 @@
     {% include 'insights/snippets/bidders/digest-card.html' with bidder=bidder %}
 
 
-    <div class="m-4 text-danger">
-        unique_tenders: {{ unique_tenders|length }} <br>
-        all_openings: {{ all_openings|length }} <br>
+    <div class="m-4 text-danger d-none">
+        unique_tenders count: {{ unique_tenders|length }} <br>
+        all_deposits count: {{ all_deposits|length }} <br>
 
         all_deposits_sum: {{ all_deposits_sum }} <br>
         all_awards_sum: {{ all_awards_sum }} <br>
         latest_deposit: {{ latest_deposit }} <br>
-        latest_award: {{ latest_award }} <br>
-        highest_award: {{ highest_award }} <br>
+        latest_award_date: {{ latest_award_date }} <br>
+        highest_award_amount: {{ highest_award_amount }} <br>
 
         admin_rejects_deposits: {{ admin_rejects_deposits|length }} <br>
         admin_accepts_deposits: {{ admin_accepts_deposits|length }} <br>
