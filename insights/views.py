@@ -205,36 +205,31 @@ def bidder_details(request, pk=None):
     all_deposits = [ d.opening for d in bidder.deposits.all() if d.opening ]
 
     unique_tenders = { d.opening.tender for d in bidder.deposits.all() if d.opening and d.opening.tender }
-    all_deposits_sum = sum(d.amount_a for d in bidder.deposits.all() if d.amount_a is not None)
+    all_deposits_sum = sum(d.amount_b for d in bidder.deposits.all() if d.amount_b is not None)
     all_awards_sum = sum(d.amount_w for d in bidder.deposits.all() if d.amount_w is not None and d.winner == True)
     latest_deposit = max((d.date for d in bidder.deposits.all()), default=None)
     latest_award_date = max((d.date for d in bidder.deposits.all() if d.winner == True), default=None)
     highest_award_amount = max((d.amount_w for d in bidder.deposits.all() if d.winner == True), default=None)
-
-    all_deposits_sum = sum(d.amount_a for d in bidder.deposits.all() if d.amount_a is not None)
-    all_awards_sum = sum(d.amount_w for d in bidder.deposits.all() if d.amount_w is not None and d.winner == True)
 
     admin_rejects_deposits = bidder.deposits.filter(admin='x')
     admin_accepts_deposits = bidder.deposits.filter(admin='a')
     admin_reserves_deposits = bidder.deposits.filter(admin='r')
     tech_rejects_deposits = bidder.deposits.filter(reject_t=True)
     fin_races_deposits = bidder.deposits.filter(amount_b__isnull=False)
-    winner_deposits = bidder.deposits.filter(amount_w__isnull=False)
+    winners_deposits = bidder.deposits.filter(amount_w__isnull=False)
 
-    bids_success_rate = 100 * winner_deposits.count() / all_deposits.count() if all_deposits.count() != 0 else None
     finacial_success_rate = 100 * all_awards_sum / all_deposits_sum if all_deposits_sum != 0 else None
-
-    admin_reject_rate = 100 * admin_rejects_deposits.count() / all_deposits.count() if all_deposits.count() != 0 else None
-    admin_reserve_rate = 100 * admin_reserves_deposits.count() / all_deposits.count() if all_deposits.count() != 0 else None
-    tech_reject_rate = 100 * tech_rejects_deposits.count() / all_deposits.count() if all_deposits.count() != 0 else None
-
+    bids_success_rate = 100 * winners_deposits.count() / len(all_deposits) if len(all_deposits) != 0 else None
+    admin_reject_rate = 100 * admin_rejects_deposits.count() / len(all_deposits) if len(all_deposits) != 0 else None
+    admin_reserve_rate = 100 * admin_reserves_deposits.count() / len(all_deposits) if len(all_deposits) != 0 else None
+    tech_reject_rate = 100 * tech_rejects_deposits.count() / len(all_deposits) if len(all_deposits) != 0 else None
 
     context = {
         'bidder': bidder, 
-        'all_deposits': all_deposits,
-
+        
         'unique_tenders': { d.opening.tender for d in bidder.deposits.all() if d.opening and d.opening.tender },
 
+        'all_deposits': all_deposits,
         'all_deposits_sum': all_deposits_sum,
         'all_awards_sum': all_awards_sum,
         'latest_deposit': latest_deposit,
@@ -246,12 +241,14 @@ def bidder_details(request, pk=None):
         'admin_reserves_deposits': admin_reserves_deposits,
         'tech_rejects_deposits': tech_rejects_deposits,
         'fin_races_deposits': fin_races_deposits,
-        'winner_deposits': winner_deposits,
+        'winners_deposits': winners_deposits,
 
         'bids_success_rate': bids_success_rate,
         'finacial_success_rate': finacial_success_rate,
         'admin_reject_rate': admin_reject_rate,
-        'admin_reeserve_rate': admin_reeserve_rate,
+        'reserve_rate_offset': bids_success_rate + admin_reject_rate,
+        'tech_rate_offset': bids_success_rate + admin_reject_rate + admin_reserve_rate,
+        'admin_reserve_rate': admin_reserve_rate,
         'tech_reject_rate': tech_reject_rate,
 
         }

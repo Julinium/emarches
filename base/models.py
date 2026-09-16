@@ -731,7 +731,7 @@ class Concurrent(models.Model):
         return self.success_rate + self.admin_reject_rate
 
     @property
-    def tenders(self): 
+    def tenders(self):
         benders = self.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
         return benders #.order_by('-date')
 
@@ -803,8 +803,6 @@ class Opening(models.Model):
     date       = models.DateField(blank=True, null=True, db_index=True)
     won_amount = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     won_lots   = models.SmallIntegerField(blank=True, default=0)
-    # xon_total  = models.BooleanField(blank=True, null=True, default=False)
-    # xin_offset = models.DecimalField(max_digits=8, decimal_places=3, blank=True, null=True)
 
     @property
     def offset(self):

@@ -31,7 +31,15 @@
         admin_reserves_deposits: {{ admin_reserves_deposits|length }} <br>
         tech_rejects_deposits: {{ tech_rejects_deposits|length }} <br>
         fin_races_deposits: {{ fin_races_deposits|length }} <br>
-        winner_deposits: {{ winner_deposits|length }} <br>
+        winners_deposits: {{ winners_deposits|length }} <br>
+
+
+        bids_success_rate: {{ bids_success_rate }}<br>
+        finacial_success_rate: {{ finacial_success_rate }}<br>
+        admin_reject_rate: {{ admin_reject_rate }}<br>
+        reserve_rate_offset: {{ reserve_rate_offset }}<br>
+        tech_rate_offset: {{ tech_rate_offset }}<br>
+        tech_reject_rate: {{ tech_reject_rate }}<br>
     </div>
 
 
@@ -45,12 +53,12 @@
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tendersCollapse" aria-expanded="true" aria-controls="tendersCollapse">
                         <span><i class="bi bi-building-up me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Tenders" %}</span>
-                        <span class="small fw-bold ps-2">{{ bidder.tenders.all|length }}</span>
+                        <span class="small fw-bold ps-2">{{ unique_tenders|length }}</span>
                     </button>
                 </h2>
                 <div id="tendersCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTenders">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-tenders.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-tenders.html' %}
                     </div> 
                 </div> 
             </div>
@@ -64,17 +72,17 @@
                         <span><i class="bi bi-x-octagon me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Admin Rejects" %}</span>
                         <span class="small fw-bold ps-2 
-                                    {% if bidder.admin_rejects.all|length > 0 %}
+                                    {% if admin_rejects_deposits.all|length > 0 %}
                                         text-danger
                                     {% endif %}
                                     ">
-                            {{ bidder.admin_rejects.all|length }}
+                            {{ admin_rejects_deposits.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="adminRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminRejects">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-admin-rejects.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-admin-rejects.html' %}
                     </div> 
                 </div> 
             </div>
@@ -88,13 +96,13 @@
                         <span><i class="bi bi-fast-forward me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Admin Accepts" %}</span>
                         <span class="small fw-bold ps-2">
-                            {{ bidder.admin_accepts.all|length }}
+                            {{ admin_accepts_deposits.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="adminAcceptsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminAccepts">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-admin-accepts.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-admin-accepts.html' %}
                     </div> 
                 </div> 
             </div>
@@ -107,14 +115,17 @@
                     <button class="accordion-button p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#adminReservesCollapse" aria-expanded="true" aria-controls="adminReservesCollapse">
                         <span><i class="bi bi-fast-forward-circle me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Admin Reserves" %}</span>
-                        <span class="small fw-bold ps-2">
-                            {{ bidder.admin_reserves.all|length }}
+                        <span class="small fw-bold ps-2
+                                    {% if admin_reserves_deposits.all|length > 0 %}
+                                        text-warning
+                                    {% endif %}">
+                            {{ admin_reserves_deposits.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="adminReservesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionAdminReserves">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-admin-reserves.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-admin-reserves.html' %}
                     </div> 
                 </div> 
             </div>
@@ -128,17 +139,17 @@
                         <span><i class="bi bi-x-octagon me-1"></i></span>
                         <span class="fw-light text-uppercase">{% trans "Tech Rejects" %}</span>
                         <span class="small fw-bold ps-2 
-                                    {% if bidder.tech_rejects.all|length > 0 %}
-                                        text-warning
+                                    {% if tech_rejects_deposits.all|length > 0 %}
+                                        text-danger
                                     {% endif %}
                                     ">
-                            {{ bidder.tech_rejects.all|length }}
+                            {{ tech_rejects_deposits.all|length }}
                         </span>
                     </button>
                 </h2>
                 <div id="techRejectsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionTechRejects">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-tech-rejects.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-tech-rejects.html' %}
                     </div> 
                 </div> 
             </div>
@@ -153,7 +164,7 @@
                             <span>
                                 <span><i class="{{ bicons.estimate }} me-1"></i></span>
                                 <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
-                                <span class="small fw-bold ps-2">{{ bidder.selects.all|length }}</span>
+                                <span class="small fw-bold ps-2">{{ fin_races_deposits.all|length }}</span>
                             </span>
                             {% if bidder.deposits_sum != 0 %}                                
                                 <span class="small px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ bidder.deposits_sum|metrify }}</span>
@@ -163,7 +174,7 @@
                 </h2>
                 <div id="financialsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionFinancials">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-financials.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-financials.html' %}
                     </div> 
                 </div> 
             </div>
@@ -178,18 +189,17 @@
                             <span>
                                 <span><i class="{{ bicons.winner }} text-success me-1"></i></span>
                                 <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
-                                <span class="small fw-bold ps-2 {% if bidder.winners.all|length > 0 %}text-success{% endif %}">{{ bidder.winners.all|length }}</span>                                
+                                <span class="small fw-bold ps-2 {% if winners_deposits.all|length > 0 %}text-success{% endif %}">{{ winners_deposits.all|length }}</span>                                
                             </span>
-                            {% if bidder.winners_sum != 0 %}
-                                
-                                <span class="small fw-bold px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ bidder.winners_sum|metrify }}</span>
+                            {% if all_awards_sum != 0 %}                                
+                                <span class="small fw-bold px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ all_awards_sum|metrify }}</span>
                             {% endif %}
                         </div>
                     </button>
                 </h2>
                 <div id="winsCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionWins">
                     <div class="accordion-body p-0">
-                        {% include 'insights/snippets/bidders/table-wins.html' with bidder=bidder %}
+                        {% include 'insights/snippets/bidders/table-wins.html' %}
                     </div> 
                 </div> 
             </div>

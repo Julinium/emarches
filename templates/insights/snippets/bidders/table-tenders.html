@@ -1,26 +1,26 @@
 {% load i18n humanize groupify tz %}
 
 <div class="list-group">
-    {% for bid in bidder.tenders.all %}
+    {% for tender in unique_tenders %}
             <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 
-                href="{% url 'portal_tender_details' bid.opening.tender.id %}#resultsBookmark">
+                href="{% url 'portal_tender_details' tender.id %}#resultsBookmark">
                 <div>
-                    <span class="small">{{ bid.opening.date }}</span>
+                    <span class="small">{{ tender.deadline|date|default:'--' }}</span>
                     <span class="small">
                         <i class="bi bi-three-dots-vertical mx-1"></i>
-                        {% if bid.opening.tender.lots_count > 1 %}
+                        {% if tender.lots_count > 1 %}
                             <span class="small me-1">
-                                <span>{{ bid.opening.tender.lots_count }}</span>
+                                <span>{{ tender.lots_count }}</span>
                                 <i class="{{ bicons.multi_lots }}"></i>
                             </span>
                             <i class="bi bi-three-dots-vertical mx-1"></i>
                         {% endif %}
-                        <span class="fw-bold">{{ bid.opening.tender.estimate|metrify }}</span>
+                        <span class="fw-bold">{{ tender.estimate|metrify }}</span>
                     </span>
                 </div>
                 <div class="twolines">
-                    <span class="small me-1"><i class="{{ bid.opening.tender.category.icon_bs_class }}"></i></span>
-                    <span class="">{{ bid.opening.tender.title }}</span>
+                    <span class="small me-1"><i class="{{ tender.category.icon_bs_class }}"></i></span>
+                    <span class="">{{ tender.title }}</span>
                 </div>
             </a>
     {% empty %}

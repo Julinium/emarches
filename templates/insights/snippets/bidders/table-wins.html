@@ -1,6 +1,6 @@
 {% load i18n humanize groupify tz %}
 
-{% group_depos bidder.winners as grouped_winners %}
+{% group_depos winners_deposits as grouped_winners %}
 <div class="list-group">
     {% for opening, depos in grouped_winners.items %}
         <a class="list-group-item list-group-item-action border-0 border-bottom" target="_blank" 

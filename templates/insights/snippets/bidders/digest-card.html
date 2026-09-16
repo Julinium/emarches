@@ -1,6 +1,6 @@
 {% load i18n l10n humanize groupify tz %}
 
-<div class="d-none card shadow shadow-sm">
+<!-- <div class="card shadow shadow-sm my-4 d-none">
     <div class="card-header p-0">
         <div class="d-flex align-items-center justify-content-between px-2 py-1">
             <div class="fs-5 fw-bold">{{ bidder.name }}</div>
@@ -110,30 +110,15 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 <div class="card shadow shadow-sm">
     <div class="card-header p-0">
-        <div class="d-flex align-items-center justify-content-between px-2 py-1">
-            <div class="fs-5 fw-bold">{{ bidder.name }}</div>
-            <div class="badge bg-success">
-                <i class="{{ bicons.winner }} small"></i>
-                <span class="fw-bold">{{ all_awards_sum|metrify }}</span>
-            </div>
+        <div class="px-2 py-1">
+            <div class="fs-5 fw-bold text-center">{{ bidder.name }}</div>
         </div>
     </div>
-    <div id="linear-progress">
-        <div class="progress bg-secondary-subtle p-0 m-0"
-                style="height: 0.25rem;"
-                data-bs-toggle="tooltip"
-                title="{% trans 'Success rate' %}: {{ bidder.win_rate|default:'0' }}%">
-            <div class="progress-bar bg-success" 
-                    role="progressbar" style="width: {{ bidder.win_rate|unlocalize|default:'0' }}%;" 
-                    aria-valuenow="{{ bidder.win_rate|unlocalize|default:'0' }}" aria-valuemin="0" 
-                    aria-valuemax="100">
-            </div>
-        </div>
-    </div>
+
     <div class="card-body p-2">
         <div class="d-flex justify-content-between align-items-center">
             <div id="round-progress" class="mt-2">
@@ -147,9 +132,9 @@
                             a 15.9155 15.9155 0 0 1 0 31.831
                             a 15.9155 15.9155 0 0 1 0 -31.831"
                             fill="var(--bs-light)"
-                            stroke="#cccf"
+                            stroke="#ccc"
                             stroke-width="1" />
-                        {% if bidder.success_rate %}
+                        {% if bids_success_rate %}
                             <path
                                 d="M18 2.0845
                                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -157,9 +142,9 @@
                                 fill="none"
                                 stroke="var(--bs-success)"
                                 stroke-width="2" stroke-linecap="round"
-                                stroke-dasharray="{{ bidder.success_rate|unlocalize|default:'0' }}, 100"/>
+                                stroke-dasharray="{{ bids_success_rate|unlocalize|default:'0' }}, 100"/>
                         {% endif %}
-                        {% if bidder.admin_reject_rate %}
+                        {% if admin_reject_rate %}
                             <path
                                 d="M18 2.0845
                                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -167,10 +152,10 @@
                                 fill="none"
                                 stroke="var(--bs-danger)"
                                 stroke-width="2" stroke-linecap="round"
-                                stroke-dashoffset="-{{ bidder.success_rate|unlocalize|default:'0' }}"
-                                stroke-dasharray="{{ bidder.admin_reject_rate|unlocalize|default:'0' }}, 100"/>
+                                stroke-dashoffset="-{{ bids_success_rate|unlocalize|default:'0' }}"
+                                stroke-dasharray="{{ admin_reject_rate|unlocalize|default:'0' }}, 100"/>
                         {% endif %}
-                        {% if bidder.tech_reject_rate %}
+                        {% if admin_reserve_rate %}
                             <path
                                 d="M18 2.0845
                                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -178,15 +163,36 @@
                                 fill="none"
                                 stroke="var(--bs-warning)"
                                 stroke-width="2" stroke-linecap="round"
-                                stroke-dashoffset="-{{ bidder.tech_offset|unlocalize|default:'0' }}"
-                                stroke-dasharray="{{ bidder.tech_reject_rate|unlocalize|default:'0' }}, 100"/>
+                                stroke-dashoffset="-{{ reserve_rate_offset|unlocalize|default:'0' }}"
+                                stroke-dasharray="{{ admin_reserve_rate|unlocalize|default:'0' }}, 100"/>
+                        {% endif %}
+                        {% if tech_reject_rate %}
+                            <path
+                                d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                                fill="none"
+                                stroke="var(--bs-danger)"
+                                stroke-width="2" stroke-linecap="round"
+                                stroke-dashoffset="-{{ tech_rate_offset|unlocalize|default:'0' }}"
+                                stroke-dasharray="{{ tech_reject_rate|unlocalize|default:'0' }}, 100"/>
+                        {% endif %}
+
+
+                        <path d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"
+                            fill="none" stroke="#ccc" stroke-width="1.5" />
+
+                        {% if finacial_success_rate %}
+                            <path d="M18 6 a 12 12 0 0 1 0 24 a 12 12 0 0 1 0 -24"
+                                fill="none" stroke=var(--bs-success) stroke-width="2.5" stroke-linecap="round"
+                                stroke-dasharray="{% widthratio finacial_success_rate 100000 75398 %}, 100"/>
                         {% endif %}
 
                         <text x="18" y="20"
                             class="fw-semibold text-success"
                             font-size="5"
-                            text-anchor="middle">                            
-                            {{ bidder.success_rate|floatformat:0|default:'0' }}%
+                            text-anchor="middle">
+                            {{ all_awards_sum|metrify|default:'0' }}
                         </text>
 
                     </svg>
@@ -197,7 +203,7 @@
 
                 <div>
                     <span class="text-secondary">{% trans 'Awarded Bids' %}:</span>
-                    <span class="ms-1">{{ winner_deposits|length }}</span>
+                    <span class="ms-1">{{ winners_deposits|length }}</span>
                     <span class="small">/</span>
                     <span class="">{{ all_deposits|length }}</span>
                 </div>
