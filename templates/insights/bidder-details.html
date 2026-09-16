@@ -15,6 +15,28 @@
 
     {% include 'insights/snippets/bidders/digest-card.html' with bidder=bidder %}
 
+
+    <div class="m-4 text-danger">
+        unique_tenders: {{ unique_tenders|length }} <br>
+        all_openings: {{ all_openings|length }} <br>
+
+        all_deposits_sum: {{ all_deposits_sum }} <br>
+        all_awards_sum: {{ all_awards_sum }} <br>
+        latest_deposit: {{ latest_deposit }} <br>
+        latest_award: {{ latest_award }} <br>
+        highest_award: {{ highest_award }} <br>
+
+        admin_rejects_deposits: {{ admin_rejects_deposits|length }} <br>
+        admin_accepts_deposits: {{ admin_accepts_deposits|length }} <br>
+        admin_reserves_deposits: {{ admin_reserves_deposits|length }} <br>
+        tech_rejects_deposits: {{ tech_rejects_deposits|length }} <br>
+        fin_races_deposits: {{ fin_races_deposits|length }} <br>
+        winner_deposits: {{ winner_deposits|length }} <br>
+    </div>
+
+
+
+
     <div class="my-3" id="bidder-details">
 
         <div class="accordion my-3" id="accordionTenders">

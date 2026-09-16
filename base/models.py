@@ -642,6 +642,8 @@ class Concurrent(models.Model):
     def winners_sum(self): 
         return self.deposits.aggregate(
                 total=Sum('amount_w', filter=Q(winner=True))
+            # ).prefetch_related(
+            #     'concurrent'
             )['total'] or 0
 
     @property
@@ -666,11 +668,15 @@ class Concurrent(models.Model):
 
     @property
     def winners(self): 
-        return self.deposits.filter(amount_w__isnull=False)    
+        return self.deposits.filter(amount_w__isnull=False)
 
     @property
     def selects_count(self):
-        return self.deposits.aggregate(effectif=Count('id', filter=Q(amount_b__isnull=False)))['effectif'] or 0
+        return self.deposits.aggregate(
+            effectif=Count('id',
+                filter=Q(amount_b__isnull=False)
+            )
+        )['effectif'] or 0
 
     @property
     def winners_count(self):
@@ -686,7 +692,7 @@ class Concurrent(models.Model):
 
     @property
     def latest_win(self):
-        lwb = self.winners.order_by('-date').first()
+        lwb = self.deposits.order_by('-date').first()
         return lwb.date if lwb else None
 
     @property
@@ -726,7 +732,8 @@ class Concurrent(models.Model):
 
     @property
     def tenders(self): 
-        return self.deposits.annotate(tider = F('opening__tender')).distinct("tider").order_by('-date')        
+        benders = self.deposits.annotate(tider = F('opening__tender')).order_by('tider').distinct("tider")
+        return benders #.order_by('-date')
 
     @property
     def clients(self):
@@ -772,6 +779,7 @@ class Concurrent(models.Model):
             ).annotate(
                 deposits_count=Count(
                     "lots__tender__openings__deposits",
+                    # filter=Q(lots__tender__openings__deposits__concurrent=self),
                     distinct=True,
                 )
             )

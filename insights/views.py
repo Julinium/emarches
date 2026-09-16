@@ -201,9 +201,28 @@ def bidder_details(request, pk=None):
         logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(trans("Permission denied"), status=403)
 
-    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits'), id=pk)
+    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits__opening__tender'), id=pk)
+    all_openings = [ d.opening for d in bidder.deposits.all() if d.opening ]
 
-    context = {'bidder': bidder,}
+    context = {
+        'bidder': bidder, 
+        'all_openings': all_openings,
+
+        'unique_tenders': { d.opening.tender for d in bidder.deposits.all() if d.opening and d.opening.tender },
+
+        'all_deposits_sum': sum(d.amount_a for d in bidder.deposits.all() if d.amount_a is not None),
+        'all_awards_sum': sum(d.amount_w for d in bidder.deposits.all() if d.amount_w is not None and d.winner == True),
+        'latest_deposit': max((d.date for d in bidder.deposits.all()), default=None),
+        'latest_award': max((d.date for d in bidder.deposits.all() if d.winner == True), default=None),
+        'highest_award': max((d.amount_w for d in bidder.deposits.all() if d.winner == True), default=None),
+
+        'admin_rejects_deposits': bidder.deposits.filter(admin='x'),
+        'admin_accepts_deposits': bidder.deposits.filter(admin='a'),
+        'admin_reserves_deposits': bidder.deposits.filter(admin='r'),
+        'tech_rejects_deposits': bidder.deposits.filter(reject_t=True),
+        'fin_races_deposits': bidder.deposits.filter(amount_b__isnull=False),
+        'winner_deposits': bidder.deposits.filter(amount_w__isnull=False),
+        }
 
     logger_portal.info("Concurrent details view", extra={"request": request})
     return render(request, 'insights/bidder-details.html', context)
