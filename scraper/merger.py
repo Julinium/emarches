@@ -491,9 +491,6 @@ def createTender(input_data, category, client, kind, mode, procedure):
     tender_serializer.is_valid(raise_exception=True)
     tender = tender_serializer.save(category=category, client=client, kind=kind, mode=mode, procedure=procedure)
 
-    # if tender:
-    #     if not C.SKIP_DCE: handleDCE(tender)
-
     return tender
 
 
@@ -605,8 +602,6 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
         setDomains(input_data.get('domains'), tender)
         helper.printMessage('DEBUG', 'm.updateTender', f"+++ Tender updated with changes: {tender.chrono}")
         changes.append(tc)
-
-        # if not C.SKIP_DCE: handleDCE(tender)
 
     return changes
 
