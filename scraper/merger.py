@@ -479,7 +479,7 @@ def handleDCE(tender):
             helper.printMessage('WARN', 'm.handleDCE', "---- Exception raised saving DCE request.")
             traceback.print_exc()
 
-    return dce_dir
+    return dce_dir if synced else None
 
 
 def createTender(input_data, category, client, kind, mode, procedure):

@@ -46,7 +46,7 @@ def bidders_list(request):
     us = pro_context['user_settings']
     if us: 
         BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-    BIDDERS_ORDERING_FIELD = 'last_win' #'bidders_count'
+    BIDDERS_ORDERING_FIELD = 'last_part' #'bidders_count'
 
 
     def get_req_params(req):
@@ -142,14 +142,11 @@ def bidders_list(request):
             bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
             wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True)), 
             last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
-            last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
-        # ).annotate(
+            last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
             succ_rate = ExpressionWrapper(
                 Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 0),
                 output_field=DecimalField(max_digits=8, decimal_places=3),
             )
-        # ).prefetch_related(
-        #     'concurrent'
         )
 
 
@@ -224,6 +221,9 @@ def bidder_details(request, pk=None):
     admin_reserve_rate = 100 * admin_reserves_deposits.count() / len(all_deposits) if len(all_deposits) != 0 else None
     tech_reject_rate = 100 * tech_rejects_deposits.count() / len(all_deposits) if len(all_deposits) != 0 else None
 
+    reserve_rate_offset = bids_success_rate + admin_reject_rate
+    tech_rate_offset = bids_success_rate + admin_reject_rate + admin_reserve_rate
+
     context = {
         'bidder': bidder, 
         
@@ -246,10 +246,11 @@ def bidder_details(request, pk=None):
         'bids_success_rate': bids_success_rate,
         'finacial_success_rate': finacial_success_rate,
         'admin_reject_rate': admin_reject_rate,
-        'reserve_rate_offset': bids_success_rate + admin_reject_rate,
-        'tech_rate_offset': bids_success_rate + admin_reject_rate + admin_reserve_rate,
         'admin_reserve_rate': admin_reserve_rate,
         'tech_reject_rate': tech_reject_rate,
+        
+        'reserve_rate_offset': reserve_rate_offset,
+        'tech_rate_offset': tech_rate_offset,
 
         }
 
@@ -338,7 +339,6 @@ def bidder_csv(request, pk=None):
 
     file_name = f'eMarches.com-{ bidder.id }-{ lang_code }.csv'
     dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"
-    # file_name = f'eMarches.com-{ bidder.id }-analysis.csv'
     file_path = os.path.join(dir_name, file_name)
     recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
     csv_file_path = file_path if recent_file_exists else weasy.generate_csv(request, bidder, dir_name, file_name)

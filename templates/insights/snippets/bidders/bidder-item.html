@@ -3,52 +3,38 @@
 
 <div id="bidder-{{ bidder.id }}-line">
 
-    <a data-bs-toggle="collapse" href="#bidder-{{ bidder.id }}-collapse"
-       role="button" aria-expanded="false" aria-controls="bidder-{{ bidder.id }}-collapse"
-       class="text-decoration-none text-reset">
-        <div id="bidder-{{ bidder.id }}-digest" class="p-2">
-            <span><i class="{{ bicons.concurrence }} me-1 small fs-7 text-secondary"></i></span>
-            <span class="fw-bold me-1">{{ bidder.name|default:'?' }}</span>
-        </div>
-    </a>
+    <div id="bidder-{{ bidder.id }}-digest" class="p-2">
+        <span><i class="{{ bicons.concurrence }} me-1 small fs-7 text-secondary"></i></span>
+        <span class="fw-bold me-1">{{ bidder.name|default:'?' }}</span>
+    </div>
 
     <div id="bidder-{{ bidder.id }}-collapse" class="collapse px-2 ms-2">  
 
-        <div id="bidder-{{ bidder.id }}-extended" class="mx-0 mb-2">
+        <div id="bidder-{{ bidder.id }}-extended" class="d-none mx-0 mb-2">
 
             <table class="table border-0 small">
                 <tbody>
+
                     <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Awarded Sum" %}</td>
-                        <td class="text-end pb-0 fw-bold text-success">{{ bidder.wins_sum|metrify }}</td>
+                        <td class="text-start fw-light pb-0"><span>{% trans 'Awarded Bids' %}:</span></td>
+                        <td class="text-end pb-0">
+                            <span>{{ bidder.wins_count }}</span>
+                            <span>/</span>
+                            <span>{{ bidder.part_count }}</span>
+                        </td>
                     </tr>
+
                     <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Bids sum" %}</td>
-                        <td class="text-end pb-0">{{ bidder.bids_sum|metrify }}</td>
+                        <td class="text-start fw-light pb-0"><span>{% trans 'Awarded amount' %}:</span></td>
+                        <td class="text-end pb-0">
+                            <span>{{ bidder.wins_sum|metrify|default:'-' }}</span>
+                            <span>/</span>
+                            <span>{{ bidder.bids_sum|metrify|default:'-' }}</span> 
+                        </td>
                     </tr>
-                    <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Success rate" %}</td>
-                        <td class="text-end fw-bold pb-0">{{ bidder.succ_rate|default:'0' }}%</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Bids count" %}</td>
-                        <td class="text-end pb-0">{{ bidder.part_count }}</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Awards count" %}</td>
-                        <td class="text-end pb-0">{{ bidder.wins_count }}</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Latest bid" %}</td>
-                        <td class="text-end pb-0">{{ bidder.last_part|default:'--' }}</td>
-                    </tr>
-                    <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0">{% trans "Latest award" %}</td>
-                        <td class="text-end pb-0">{{ bidder.last_win|default:'--' }}</td>
-                    </tr>
+                    
                 </tbody>
             </table>
-
         </div>
 
         <div id="bidder-{{ bidder.id }}-actions" class="text-end mx-0 mb-3">

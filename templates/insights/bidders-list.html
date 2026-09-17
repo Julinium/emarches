@@ -52,24 +52,13 @@
         <div class="container py-4 px-0">
                 {% for bidder in page_obj %}
 
+    <a data-bs-toggle="collapse" href="#bidder-{{ bidder.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="bidder-{{ bidder.id }}-collapse"
+       class="text-decoration-none text-reset">
+    
                     <div class="card shadow mb-3">
 
-                        <div class="card-body p-0">
-                            {% include "insights/snippets/bidders/bidder-item.html" with bidder=bidder %}
-                        </div>
-
-                        <div class="progress bg-warning p-0 m-0"
-                                style="height: 2px;"
-                                data-bs-toggle="tooltip"
-                                title="{% trans 'Success rate' %}: {{ bidder.succ_rate|default:'0' }}%">
-                            <div class="progress-bar bg-success" 
-                                    role="progressbar" style="width: {{ bidder.succ_rate|unlocalize|default:'0' }}%;" 
-                                    aria-valuenow="{{ bidder.succ_rate|unlocalize|default:'0' }}" aria-valuemin="0" 
-                                    aria-valuemax="100">
-                            </div>
-                        </div>
-
-                        <div class="card-footer text-secondary small px-2 py-1">
+                        <div class="card-header text-secondary small px-2 py-1">
 
                             <div class="d-flex justify-content-between">
 
@@ -98,7 +87,22 @@
                             </div>
                         </div>
 
-                    </div>
+                        <div class="progress bg-warning p-0 m-0"
+                                style="height: 2px;"
+                                data-bs-toggle="tooltip"
+                                title="{% trans 'Success rate' %}: {{ bidder.succ_rate|default:'0' }}%">
+                            <div class="progress-bar bg-success" 
+                                    role="progressbar" style="width: {{ bidder.succ_rate|unlocalize|default:'0' }}%;" 
+                                    aria-valuenow="{{ bidder.succ_rate|unlocalize|default:'0' }}" aria-valuemin="0" 
+                                    aria-valuemax="100">
+                            </div>
+                        </div>
+
+                        <div class="card-body p-0">
+                            {% include "insights/snippets/bidders/bidder-item.html" with bidder=bidder %}
+                        </div>
+
+                    </div></a>
                 {% endfor %}
         </div>
 

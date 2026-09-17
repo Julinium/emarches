@@ -99,7 +99,7 @@ def do_the_work():
             for d in dceables:
                 i += 1
                 helper.printMessage('INFO', 'worker', f"▶▶ Getting DCE files for { i }/{ c } : { d.chrono } ...", 1)
-                getdce = downer.getDCE(d)
+                getdce = merger.handleDCE(d)
                 if getdce:
                     files_downloaded += 1
                     helper.printMessage('INFO', 'worker', f"◀◀ DCE download for { d.chrono } was successfull.")

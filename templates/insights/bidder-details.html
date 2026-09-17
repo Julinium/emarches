@@ -15,7 +15,6 @@
 
     {% include 'insights/snippets/bidders/digest-card.html' with bidder=bidder %}
 
-
     <div class="m-4 text-danger d-none">
         unique_tenders count: {{ unique_tenders|length }} <br>
         all_deposits count: {{ all_deposits|length }} <br>
@@ -41,9 +40,6 @@
         tech_rate_offset: {{ tech_rate_offset }}<br>
         tech_reject_rate: {{ tech_reject_rate }}<br>
     </div>
-
-
-
 
     <div class="my-3" id="bidder-details">
 
@@ -166,9 +162,6 @@
                                 <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
                                 <span class="small fw-bold ps-2">{{ fin_races_deposits.all|length }}</span>
                             </span>
-                            {% if bidder.deposits_sum != 0 %}                                
-                                <span class="small px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ bidder.deposits_sum|metrify }}</span>
-                            {% endif %}
                         </div>
                     </button>
                 </h2>
@@ -191,9 +184,6 @@
                                 <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
                                 <span class="small fw-bold ps-2 {% if winners_deposits.all|length > 0 %}text-success{% endif %}">{{ winners_deposits.all|length }}</span>                                
                             </span>
-                            {% if all_awards_sum != 0 %}                                
-                                <span class="small fw-bold px-2 float-end text-end"><span class="small fw-light text-secondary">=</span>{{ all_awards_sum|metrify }}</span>
-                            {% endif %}
                         </div>
                     </button>
                 </h2>
