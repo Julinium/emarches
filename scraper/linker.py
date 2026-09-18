@@ -156,8 +156,12 @@ def db2Links(back_days=C.PORTAL_DDL_PAST_DAYS):
     helper.printMessage('DEBUG', 'l.db2Links', f'Found { saved_tenders.count() } eligible saved items', 1)
     links = []
     for tender in saved_tenders:
-        item = [tender.chrono, tender.acronym, tender.published.strftime("%d/%m/%Y")]
-        links.append(item)
+        try:
+            item = [tender.chrono, tender.acronym, tender.published.strftime("%d/%m/%Y") if tender.published else None]
+            links.append(item)
+        except Exception as xc:
+            helper.printMessage('WARN', 'l.db2Links', f'Error adding item { tender.chrono } to links.', 1)
+            traceback.print_exc()
     helper.printMessage('DEBUG', 'l.db2Links', f'Constructed { len(links) } link items', 1)
 
     return links

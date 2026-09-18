@@ -226,8 +226,8 @@ def bidder_details(request, pk=None):
 
     context = {
         'bidder': bidder, 
-        
-        'unique_tenders': { d.opening.tender for d in bidder.deposits.all() if d.opening and d.opening.tender },
+
+        'unique_tenders': unique_tenders,
 
         'all_deposits': all_deposits,
         'all_deposits_sum': all_deposits_sum,
@@ -248,10 +248,9 @@ def bidder_details(request, pk=None):
         'admin_reject_rate': admin_reject_rate,
         'admin_reserve_rate': admin_reserve_rate,
         'tech_reject_rate': tech_reject_rate,
-        
+
         'reserve_rate_offset': reserve_rate_offset,
         'tech_rate_offset': tech_rate_offset,
-
         }
 
     logger_portal.info("Concurrent details view", extra={"request": request})
