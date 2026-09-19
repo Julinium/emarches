@@ -2,37 +2,43 @@
 
 {% group_depos bidder.selects as grouped_selects %}
 
-<section style="margin-left: 1rem;">
+<div class="repeater">
     {% for opening, depos in grouped_selects.items %}
-        <article style="margin-bottom: 2rem; border-right: 0.25rem solid var(--bd-neutral); padding-right: 0.5rem; border-radius: 2px;">
-            <header>
-                <div class="digital" style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
-                <div>
-                    <span style="opacity: 0.7;">{{ opening.tender.title }}</span>
+        <div class="repeater-container">
+            <div>
+                <div class="digital repeater-surtitle">
+                    <span>&#10148;</span>
+                    <span>{{ opening.date }}</span>
                 </div>
-            </header>
+                <div>
+                    <span class="repeater-title">{{ opening.tender.title }}</span>
+                </div>
+            </div>
             
-            <div style="margin-top: 0.5rem;">
+            <div class="repeater-subtitle">
                 {% for depo in depos %}
-                    <div style="text-align: right; margin-bottom: 2px;">
-                       {% if opening.tender.lots_count > 1 %}
-                            <span style="opacity: 0.7;">{% trans 'Lot' %} {{ depo.lot_number }}: </span>
-                            <span style="opacity: 0.7;">E={{ depo.lot.estimate }}</span>
-                        {% else %}
-                            <span style="opacity: 0.7;">E={{ opening.tender.estimate }}</span>
-                        {% endif %}
-                        <span style="margin: 0 0.5rem;">—</span>
-                        {% if depo.winner %}
-                            <span class="digital">{% trans "Awarded" %}:</span>
-                        {% endif %}
-                        <span style="opacity: 0.7;">E{% if depo.offset > 0 %}+{% endif %}{% if depo.offset == 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%</span>
-                        <span>=</span>
-                        <span class="digital">{{ depo.amount_a }}</span>
+                    <div class="repeater-tiny">
+                        <div class="flexirow">
+                            <div>
+                                <span>&mdash;</span>
+                                {% if opening.tender.lots_count > 1 %}
+                                    <span>{% trans 'Lot' %} {{ depo.lot_number }}: </span>
+                                    <span>E={{ depo.lot.estimate }}</span>
+                                {% else %}
+                                    <span>E={{ opening.tender.estimate }}</span>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <span>E{% if depo.offset > 0 %}+{% endif %}{% if depo.offset == 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%</span>
+                                <span>{% if depo.winner %}&starf;{% else %}&star;{% endif %}</span>                                
+                                <span class="digital">{{ depo.amount_a }}</span>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
             </div>
-        </article>
+        </div>
     {% empty %}
         <p style="color: var(--text-muted);">--</p>
     {% endfor %}
-</section>
+</div>

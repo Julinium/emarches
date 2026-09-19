@@ -5,15 +5,19 @@ import traceback
 
 from io import BytesIO
 from pathlib import Path
-
-import segno
+from datetime import datetime, timedelta, timezone
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.translation import get_language_from_request, gettext_lazy as trans
+
+from django.db.models import Prefetch, Count, Q
+
+import segno
+
 from weasyprint import HTML
 
-from datetime import datetime, timedelta, timezone
-
+from base.models import Domain, Client, Concurrent, Qualif, Agrement
 
 logger_portal = logging.getLogger("portal")
 
@@ -33,6 +37,8 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
         qr_data_uri = f"data:image/svg+xml;base64,{ qr_svg_base64 }"
 
         logger_portal.debug(f"Started generating PDF file for bidder { bidder.name }")
+        ctx = bidder_context(bidder.id)
+
         context = {
             "request": request,
             "bidder": bidder,
@@ -47,7 +53,7 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
         pdf_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-{ lang_code }.pdf'
         output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"     
 
-        html_string = render_to_string("insights/bidder-pdf.html", context)
+        html_string = render_to_string("insights/bidder-pdf.html", context | ctx)
         output_path = output_dir / f"{ pdf_file_name }"
 
         static_dir  = Path(settings.BASE_DIR) / "static"
@@ -144,3 +150,75 @@ def recent_file_exists(file_path: str | Path, hours_ago: int) -> bool:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_ago)
     return creation_time > cutoff
 
+
+
+def bidder_context(pk=None):
+    if not pk: return {}
+
+    bidder = get_object_or_404(Concurrent.objects.prefetch_related('deposits__opening__tender'), id=pk)
+    # deposits = [ d.opening for d in bidder.deposits.all() if d.opening ]
+    deposits = bidder.deposits.all()
+    
+    clients = Client.objects.filter(tenders__openings__deposits__concurrent_id=pk).annotate(deposits_count=Count('tenders__openings__deposits', filter=Q(tenders__openings__deposits__concurrent_id=pk), distinct=True)).order_by('-deposits_count', 'name').distinct()
+    domains = Domain.objects.filter(tenders__openings__deposits__concurrent_id=pk).annotate(deposits_count=Count('tenders__openings__deposits', filter=Q(tenders__openings__deposits__concurrent_id=pk), distinct=True)).order_by('-deposits_count', 'name').distinct()
+    qualifs = Qualif.objects.filter(lots__tender__openings__deposits__concurrent_id=pk).annotate(deposits_count=Count('lots__tender__openings__deposits', filter=Q(lots__tender__openings__deposits__concurrent_id=pk), distinct=True)).order_by('-deposits_count', 'name').distinct()
+    licenses = Agrement.objects.filter(lots__tender__openings__deposits__concurrent_id=pk).annotate(deposits_count=Count('lots__tender__openings__deposits', filter=Q(lots__tender__openings__deposits__concurrent_id=pk), distinct=True)).order_by('-deposits_count', 'name').distinct()
+
+    tenders = { d.opening.tender for d in deposits if d.opening and d.opening.tender }
+    deposits_sum = sum(d.amount_b for d in deposits if d.amount_b is not None)
+    awards_sum = sum(d.amount_w for d in deposits if d.amount_w is not None and d.winner == True)
+    latest_deposit = max((d.date for d in deposits), default=None)
+    latest_award_date = max((d.date for d in deposits if d.winner == True), default=None)
+    highest_award_amount = max((d.amount_w for d in deposits if d.winner == True), default=None)
+    
+    admin_rejects_deposits = bidder.deposits.filter(admin='x')
+    admin_accepts_deposits = bidder.deposits.filter(admin='a')
+    admin_reserves_deposits = bidder.deposits.filter(admin='r')
+    tech_rejects_deposits = bidder.deposits.filter(reject_t=True)
+    fin_races_deposits = bidder.deposits.filter(amount_b__isnull=False)
+    winners_deposits = bidder.deposits.filter(amount_w__isnull=False)
+
+    finacial_success_rate = 100 * awards_sum / deposits_sum if deposits_sum != 0 else None
+    bids_success_rate = 100 * winners_deposits.count() / len(deposits) if len(deposits) != 0 else None
+    admin_reject_rate = 100 * admin_rejects_deposits.count() / len(deposits) if len(deposits) != 0 else None
+    admin_reserve_rate = 100 * admin_reserves_deposits.count() / len(deposits) if len(deposits) != 0 else None
+    tech_reject_rate = 100 * tech_rejects_deposits.count() / len(deposits) if len(deposits) != 0 else None
+
+    reserve_rate_offset = bids_success_rate + admin_reject_rate
+    tech_rate_offset = bids_success_rate + admin_reject_rate + admin_reserve_rate
+
+    context = {
+        'bidder': bidder, 
+
+        'tenders': tenders,
+
+        'deposits': deposits,
+        'deposits_sum': deposits_sum,
+        'awards_sum': awards_sum,
+        'latest_deposit': latest_deposit,
+        'latest_award_date': latest_award_date,
+        'highest_award_amount': highest_award_amount,
+
+        'clients': clients,
+        'domains': domains,
+        'qualifs': qualifs,
+        'licenses': licenses,
+
+        'admin_rejects_deposits': admin_rejects_deposits,
+        'admin_accepts_deposits': admin_accepts_deposits,
+        'admin_reserves_deposits': admin_reserves_deposits,
+        'tech_rejects_deposits': tech_rejects_deposits,
+        'fin_races_deposits': fin_races_deposits,
+        'winners_deposits': winners_deposits,
+
+        'bids_success_rate': bids_success_rate,
+        'finacial_success_rate': finacial_success_rate,
+        'admin_reject_rate': admin_reject_rate,
+        'admin_reserve_rate': admin_reserve_rate,
+        'tech_reject_rate': tech_reject_rate,
+
+        'reserve_rate_offset': reserve_rate_offset,
+        'tech_rate_offset': tech_rate_offset,
+        }
+
+    return context

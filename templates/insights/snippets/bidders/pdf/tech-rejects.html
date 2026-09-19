@@ -2,33 +2,31 @@
 
 {% group_tenders bidder.tech_rejects as grouped_tech_rej %}
 
-<section style="margin-left: 1rem;">
+<div class="repeater">
     {% for opening, lots in grouped_tech_rej.items %}
-        <article style="margin-bottom: 2rem; border-right: 0.25rem solid var(--bd-warning); padding-right: 0.5rem; border-radius: 2px;">
-            <header>
-                <div class="digital" style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
-                <div>
-                    <span style="opacity: 0.7;">{{ opening.tender.title }}</span>
-                </div>
-            </header>
+        <div class="repeater-container">
             
-            <div style="margin-top: 0.5rem;">
+            <div class="digital repeater-surtitle">
+                <span>&#10148;</span>
+                <span>{{ opening.date }}</span>
+            </div>
+            <div class="repeater-title">
+                <span>{{ opening.tender.title }}</span>
+            </div>
+            
+            <div class="repeater-subtitle">
                 {% if opening.tender.lots_count > 1 %}
-                    <div style="text-align: right; margin-bottom: 2px;">
-                            <span style="opacity: 0.7;">{% trans 'Lots' %}: </span> 
-                            <span>
-                                {% for lot in lots %}
-                                    <span class="digital">{{ lot }}</span>
-                                    <span>{% if not forloop.last %}, {% endif %}</span>
-                                {% endfor %}
-                            </span>
-                         {% if opening.tender.lots_count > 1 %}
-                        {% endif %}
-                    </div>
+                    <span class="repeater-tiny">{% trans 'Lots' %}: </span> 
+                    <span>
+                        {% for lot in lots %}
+                            <span class="digital">{{ lot }}</span>
+                            <span>{% if not forloop.last %}, {% endif %}</span>
+                        {% endfor %}
+                    </span>
                 {% endif %}
             </div>
-        </article>
+        </div>
     {% empty %}
         <p style="color: var(--text-muted);">--</p>
     {% endfor %}
-</section>
+</div>

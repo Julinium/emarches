@@ -18,21 +18,21 @@
 
             :root {
                 --bg-neutral: #efefef;
-                --bg-success: #e5f5d4;
+                --bg-success: #d5f1b7;
                 --bg-warning: #fffad7;
                 --bg-danger: #fae8e2;
 
                 --text-main: #363636;
                 --text-bright: #000;
                 --text-muted: #70777f;
-                --text-success: #4eb20c;
-                --text-warning: #ff9e2e;
+                --text-success: #008202;
+                --text-warning: #ff8800;
                 --text-danger: #e82424;
 
                 --bd-neutral: #a4a4a4;
-                --bd-success: #5bb000;
+                --bd-success: #069810;
                 --bd-warning: #ffb428;
-                --bd-danger: #ff5b25;
+                --bd-danger: #ff4949;
             }
 
             @font-face {
@@ -51,6 +51,11 @@
                 font-weight: 100;
             }
             @font-face {
+                font-family: "Classy";
+                src: url("{% static 'fonts/ClassVariable.ttf' %}") format("ttf");
+                font-weight: 100;
+            }
+            @font-face {
                 font-family: "Naskh";
                 src: url("{% static 'fonts/NotoNaskhArabic-VariableFont_wght.ttf' %}") format("ttf");
                 font-weight: 100;
@@ -60,6 +65,8 @@
                 /* font-family: sans-serif, serif, "Ubuntu", "Naskh"; */
                 unicode-bidi: plaintext;
                 line-height: 1.2;
+                margin: 0;
+                padding:0;
             }
 
             @page {
@@ -76,14 +83,6 @@
                     padding-bottom: 4mm;
                 }
 
-                /* @bottom-left {
-                    content: "{% now 'Y-m-d—H:i:s' %}";
-                    font-family: "Condensed", "Naskh", sans-serif, serif;
-                    font-size: 8pt;
-                    color: var(--text-muted);
-                    padding-bottom: 7mm;
-                } */
-
                 @bottom-right {
                     content: counter(page) "/" counter(pages);
                     font-family: "Ubuntu", "Naskh", sans-serif, serif;
@@ -91,6 +90,8 @@
                     color: var(--text-muted);
                     margin-top: 0.5rem;
                     padding: 0 0.5rem 2rem;
+                    max-width: 8rem;
+                    /* min-width: 3rem; */
                     background-color: var(--bg-neutral);
                     border-top: 0.5rem solid var(--bd-neutral);
                 }
@@ -122,19 +123,93 @@
             }
 
             body, div, table, p {
-                font-family: "Aldo", "Ubuntu", "Naskh", sans-serif, serif;
+                font-family: "Classy", "Naskh", "Aldo", "Ubuntu", sans-serif, serif;
                 background-color: transparent;
             }
 
             .digital {
-                font-family: "Condensed";
-                background-color: transparent;
+                font-family: "Classy", "Condensed";
+                color: var(--text-main);
+                font-weight: 900;
+                font-size: medium;
             }
-            
+
             .unstyled-link {
                 color: inherit;
                 text-decoration: none;
             }
+
+            section {
+                margin: 4rem 0 2rem;
+            }
+
+            .section-header {
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center;  
+                padding: 0.25rem 0.5rem 0.25rem; 
+                border-radius: 0.25rem; 
+                border: 1px solid; 
+                margin-bottom: 1rem; 
+                background-color:  var(--bg-neutral);
+                text-transform: uppercase;
+                font-size: x-large;
+                font-weight: bold;
+            }
+            .flexirow {
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center;  
+                /* padding: 0.25rem 0.5rem 0.25rem; 
+                border-radius: 0.25rem; 
+                border: 1px solid; 
+                margin-bottom: 1rem; 
+                background-color:  var(--bg-neutral);
+                text-transform: uppercase;
+                font-size: x-large;
+                font-weight: bold; */
+            }
+
+            .tiny {
+                margin: 0; 
+                padding:0 0 2rem; 
+                color: var(--text-muted); 
+                font-size: 6pt;
+            }
+
+            .repeater {
+                margin-left: 1rem;
+            }
+
+            .repeater-container {
+                padding: 1rem 0.25rem 1rem; 
+                border-bottom: 1px solid var(--bd-neutral);
+            }
+
+            .repeater-surtitle {
+                opacity: 0.5;
+                margin: 0 0 0.25rem;
+                font-size: small;
+                font-weight: lighter;
+            }
+
+            .repeater-subtitle {
+                margin: 0.25rem 0 0;
+                font-size: small;
+                font-weight: lighter;
+                text-align: end;
+            }
+
+            .repeater-title {
+                opacity: 0.7;
+                font-size: medium;
+            }
+
+            .repeater-tiny {
+                /* opacity: 0.5; */
+                font-size: small;
+            }
+
 
         </style>
 
@@ -142,9 +217,11 @@
 
 	<body>
 
-        <div id="header-svg" style="max-width: 100%;">
-            <img src="{% static 'brand/insi-header.svg' %}" alt="eMarches.com"
-                style="height: auto; width: auto; max-width: 100%;">
+        <div id="page-header">
+            <div id="header-svg" style="max-width: 100%; bottom: 0;">
+                <img src="{% static 'brand/insi-header.svg' %}" alt="eMarches.com"
+                    style="height: auto; width: auto; max-width: 100%;">
+            </div>
         </div>
 
         <div id="doc-title">
@@ -170,164 +247,164 @@
 
             <div id="data-tables">
 
-                <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-tenders">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Tenders' %}:</span> 
-                                <span class="digital">{{ bidder.tenders.all|length }}</span>
+                                <span>{% trans 'Tenders' %}:</span> 
+                                <span>{{ bidder.tenders.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/tenders.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-admin-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-admin-rejects">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Administrative Rejects' %}:</span> 
-                                <span class="digital">{{ bidder.admin_rejects.all|length }}</span>
-                            </div>
+                                <span>{% trans 'Administrative Rejects' %}:</span> 
+                                <span>{{ admin_rejects_deposits.all|length }}</span>
+                            </div> 
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/admin-rejects.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-admin-accepts" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-admin-accepts">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Administrative Passes' %}:</span> 
-                                <span class="digital">{{ bidder.admin_accepts.all|length }}</span>
+                                <span>{% trans 'Administrative Passes' %}:</span> 
+                                <span>{{ admin_accepts_deposits.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/admin-accepts.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-admin-reserves" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-admin-reserves">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Administrative Reserves' %}:</span>
-                                <span class="digital">{{ bidder.admin_reserves.all|length }}</span>
+                                <span>{% trans 'Administrative Reserves' %}:</span>
+                                <span>{{ admin_reserves_deposits.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/admin-reserves.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-tech-rejects" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-tech-rejects">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Technical Rejects' %}:</span>
-                                <span class="digital">{{ bidder.tech_rejects.all|length }}</span>
+                                <span>{% trans 'Technical Rejects' %}:</span>
+                                <span>{{ tech_rejects_deposits.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/tech-rejects.html' %}
                     </div>
-                </div>
+                </section>
                 
-                <div id="table-financials" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-financials">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Financial Races' %}:</span>
-                                <span class="digital">{{ bidder.selects.all|length }}</span>
+                                <span>{% trans 'Financial Races' %}:</span>
+                                <span>{{ fin_races_deposits.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/financials.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-wins" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-wins">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Awardings' %}:</span>
-                                <span class="digital">{{ bidder.winners.all|length }}</span>
+                                <span>{% trans 'Awardings' %}:</span>
+                                <span>{{ winners_deposits.all|length }}</span>
                             </div>
-                            <div class="digital">{{ bidder.winners_sum|default:'-'}}</div>
+                            <div>{{ awards_sum|default:'-'}}</div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/wins.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-clients" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-clients">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Public Clients' %}:</span>
-                                <span class="digital">{{ bidder.clients.all|length }}</span>
+                                <span>{% trans 'Public Clients' %}:</span>
+                                <span>{{ clients.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/clients.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-domains" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-domains">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Domains of activity' %}:</span>
-                                <span class="digital">{{ bidder.domains.all|length }}</span>
+                                <span>{% trans 'Domains of activity' %}:</span>
+                                <span>{{ domains.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/domains.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-qualifs" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-qualifs">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Qualifications' %}:</span>
-                                <span class="digital">{{ bidder.qualifs.all|length }}</span>
+                                <span>{% trans 'Qualifications' %}:</span>
+                                <span>{{ qualifs.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/qualifs.html' %}
                     </div>
-                </div>
+                </section>
 
-                <div id="table-licenses" style="margin-top: 4rem; margin-bottom:2rem;">
-                    <h2>
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bd-neutral); padding-bottom: 0.5rem;">
+                <section id="table-licenses">
+                    
+                        <div class="section-header">
                             <div>
-                                <span style="text-transform: uppercase;">{% trans 'Licenses' %}:</span>
-                                <span class="digital">{{ bidder.licences.all|length }}</span>
+                                <span>{% trans 'Licenses' %}:</span>
+                                <span>{{ licenses.all|length }}</span>
                             </div>
                         </div>
-                    </h2>
+                    
                     <div>
                         {% include 'insights/snippets/bidders/pdf/licenses.html' %}
                     </div>
-                </div>
+                </section>
             </div>
 
 
-            <div id="footer-svg" style="text-align: center;">
+            <div id="footer-svg" style="text-align: center; top: 1rem;">
                 <div>
                     <a href="https://mode-777.com/">
                         <img src="{% static 'brand/insi-footer.svg' %}"
@@ -336,7 +413,7 @@
                     </a>
                 </div>
                 <div>
-                    <small style="margin: 0; padding:0 0 2rem; color: var(--text-muted); font-size: 6pt;" class="digital">{% now 'Y-m-d—H:i:s' %}</small>
+                    <small class="digital tiny">{% now 'Y-m-d—H:i:s' %}</small>
                 </div>
             </div>
 

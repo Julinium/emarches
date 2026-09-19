@@ -1,13 +1,11 @@
 {% load i18n l10n humanize groupify tz %}
 
 <article style="max-width: 100%; border: 1px solid var(--bd-neutral); padding: 0; border-radius: 6px;">
-    <!-- Card Header -->
-    <div style="margin: 0.25rem 0; border-bottom: 1px solid var(--bd-neutral);">
-        <div class="digital" style="text-align: center; width: 100%; font-size:larger; font-weight: 700;">{{ bidder.name }}</div>
+    
+    <div style="border-bottom: 1px solid var(--bd-neutral);">
+        <div class="digital" style="text-align: center; width: 100%; font-size:larger; font-weight: 700; padding: 0.5rem;">{{ bidder.name }}</div>
     </div>
 
-
-    <!-- Card Body: Ring Progress & Extra Data -->
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
         
         <div id="round-progress" style="flex-shrink: 0; margin: 0 0.5rem; width: 7rem; height: 7rem;">
@@ -44,7 +42,7 @@
                           stroke-dasharray="{% widthratio bidder.win_rate 100000 75398 %}, 100"/>
                 {% endif %}
 
-                <text class="digital" x="18" y="20" fill="#4eb20c" font-size="6" font-weight="bold" text-anchor="middle">                            
+                <text x="18" y="20" fill="#4eb20c" font-size="6" font-weight="bold" text-anchor="middle">                            
                     {{ bidder.winners_sum|metrify:1|default:'--' }}
                 </text>
             </svg>
@@ -92,4 +90,5 @@
         </div>
 
     </div>
+
 </article>

@@ -2,20 +2,23 @@
 
 {% group_tenders bidder.admin_reserves as grouped_ad_res %}
 
-<section style="margin-left: 1rem;">
+<div class="repeater">
     {% for opening, lots in grouped_ad_res.items %}
-        <article style="margin-bottom: 2rem; border-right: 0.25rem solid var(--bd-danger); padding-right: 0.5rem; border-radius: 2px;">
-            <header>
-                <div class="digital" style="opacity: 0.7; margin-bottom: 0.5rem;">{{ opening.date }}</div>
-                <div>
-                    <span style="opacity: 0.7;">{{ opening.tender.title }}</span>
+        <div class="repeater-container">
+            <div>
+                <div class="digital repeater-surtitle">
+                    <span>&#10148;</span>
+                    <span>{{ opening.date }}</span>
                 </div>
-            </header>
+                <div class="repeater-title">
+                    <span>{{ opening.tender.title }}</span>
+                </div>
+            </div>
             
-            <div style="margin-top: 0.5rem;">
+            <div class="repeater-subtitle">
                 {% if opening.tender.lots_count > 1 %}
-                    <div style="text-align: right; margin-bottom: 2px;">
-                        <span style="opacity: 0.7;">{% trans 'Lots' %}: </span> 
+                    <div class="repeater-tiny">
+                        <span>{% trans 'Lots' %}: </span> 
                         <span>
                             {% for lot in lots %}
                                 <span class="digital">{{ lot }}</span>
@@ -25,8 +28,8 @@
                     </div>
                 {% endif %}
             </div>
-        </article>
+        </div>
     {% empty %}
         <p style="color: var(--text-muted);">--</p>
     {% endfor %}
-</section>
+</div>

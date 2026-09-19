@@ -86,7 +86,7 @@
                             class="fw-bold text-success"
                             font-size="5"
                             text-anchor="middle">
-                            {{ all_awards_sum|metrify|default:'0' }}
+                            {{ awards_sum|metrify|default:'0' }}
                         </text>
                     </svg>
 
@@ -100,14 +100,14 @@
                     <span class="text-secondary">{% trans 'Awarded Bids' %}:</span>
                     <span class="ms-1">{{ winners_deposits|length }}</span>
                     <span class="small">/</span>
-                    <span class="">{{ all_deposits|length }}</span>
+                    <span class="">{{ deposits|length }}</span>
                 </div>
 
                 <div>
                     <span class="text-secondary">{% trans 'Awarded amount' %}:</span>
-                    <span class="ms-1">{{ all_awards_sum|metrify|default:'-' }}</span>
+                    <span class="ms-1">{{ awards_sum|metrify|default:'-' }}</span>
                     <span class="small">/</span>
-                    <span class="">{{ all_deposits_sum|metrify|default:'-' }}</span>                 
+                    <span class="">{{ deposits_sum|metrify|default:'-' }}</span>                 
                 </div>
 
                 <div>

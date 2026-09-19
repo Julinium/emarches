@@ -779,7 +779,6 @@ class Concurrent(models.Model):
             ).annotate(
                 deposits_count=Count(
                     "lots__tender__openings__deposits",
-                    # filter=Q(lots__tender__openings__deposits__concurrent=self),
                     distinct=True,
                 )
             )
