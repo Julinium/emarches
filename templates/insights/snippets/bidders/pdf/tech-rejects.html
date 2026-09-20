@@ -14,9 +14,9 @@
                 <span>{{ opening.tender.title }}</span>
             </div>
             
-            <div class="repeater-subtitle">
+            <div class="repeater-emphasis">
                 {% if opening.tender.lots_count > 1 %}
-                    <span class="repeater-tiny">{% trans 'Lots' %}: </span> 
+                    <span class="repeater-subtitle">{% trans 'Lots' %}: </span> 
                     <span>
                         {% for lot in lots %}
                             <span class="digital">{{ lot }}</span>

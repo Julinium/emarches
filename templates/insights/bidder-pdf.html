@@ -127,6 +127,16 @@
                 background-color: transparent;
             }
 
+            .head-title {
+                font-family: "Ubuntu", "Naskh", "Aldo", "Classy", sans-serif, serif;
+                text-align: center; 
+                width: 100%; 
+                font-size:x-large; 
+                font-weight: bolder; 
+                padding: 0.5rem; 
+                text-transform: uppercase;
+            }
+
             .digital {
                 font-family: "Classy", "Condensed";
                 color: var(--text-main);
@@ -159,15 +169,14 @@
             .flexirow {
                 display: flex; 
                 justify-content: space-between; 
-                align-items: center;  
-                /* padding: 0.25rem 0.5rem 0.25rem; 
-                border-radius: 0.25rem; 
-                border: 1px solid; 
-                margin-bottom: 1rem; 
-                background-color:  var(--bg-neutral);
-                text-transform: uppercase;
-                font-size: x-large;
-                font-weight: bold; */
+                align-items: center;
+                gap: 0.5rem;
+            }
+            .flexiline {
+                flex: 1;
+                height: 1px;
+                background-color: var(--bg-neutral);
+                margin-top: 0.25rem;
             }
 
             .tiny {
@@ -194,9 +203,18 @@
             }
 
             .repeater-subtitle {
+                opacity: 0.5;
                 margin: 0.25rem 0 0;
                 font-size: small;
                 font-weight: lighter;
+            }
+
+            .repeater-emphasis {
+                /* margin: 0.25rem 0 0; */
+                color: var(--text-main);
+                font-size: medium;
+                font-weight: bolder;
+                font-family: "Classy", "Condensed";
                 text-align: end;
             }
 
@@ -225,18 +243,22 @@
         </div>
 
         <div id="doc-title">
-            <div style="max-width: 100%; border: 1px solid var(--bd-neutral); margin: 0 0 2rem; border-radius: 6px; background-color: var(--bg-neutral);">
-                <div style="text-align: center; width: 100%; padding: 0.5rem; font-size:larger; font-weight: 700;">{% trans "Concurrent details" %}</div>
-                <hr style="margin:0; padding: 0;">
-                <div style="font-size: smaller; padding: 0.5rem; font-weight: lighter; color: var(--text-warning);">
-                    <small>
-                        {% trans "This document was genrated using an automated system for information purposes only. Data it contains might be incomplete, outdated or wrong." %}
-                    </small>
-                    <small>
-                        {% trans "For more information, scan or tap the QR code below to go to our website" %}.
-                    </small>
+
+            <article style="max-width: 100%; border: 1px solid var(--bd-neutral); margin-bottom: 2rem; border-radius: 6px;">
+                
+                <div style="border-bottom: 1px solid var(--bd-neutral);">
+                    <div class="head-title">{% trans "Concurrent details" %}</div>
                 </div>
-            </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+                    <div style="font-size: smaller; padding: 0.5rem; font-weight: lighter; color: var(--text-muted);">
+                        <small>
+                            {% trans "This document was generated using an automated system for information purposes only." %}
+                        </small>
+                    </div>
+                </div>
+
+            </article>
         </div>
 
         {% if bidder %}

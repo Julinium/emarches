@@ -59,7 +59,7 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline older than {past_days} days ...")
     today_date = datetime.now()
     target_date = today_date - timedelta(days=past_days)
-    current_tenders = Tender.objects.filter(deadline__gte=target_date, deadline__lte=today_date)
+    current_tenders = Tender.objects.filter(deadline__gte=target_date)
     ct_count = current_tenders.count()
     helper.printMessage("DEBUG", 'd.getEmpties', f"Got {ct_count} Tenders deadline older than {past_days} days.")
 

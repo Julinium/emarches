@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-15 20:36+0100\n"
+"POT-Creation-Date: 2026-09-20 23:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1182,7 +1182,7 @@ msgstr "Acheteur public"
 msgid "Nature of prestations"
 msgstr "Nature des prestations"
 
-#: bdc/models.py:32 templates/insights/snippets/bidders/bidder-item.html:34
+#: bdc/models.py:32
 msgid "Bids count"
 msgstr "Nombre d'offres"
 
@@ -1261,8 +1261,8 @@ msgstr "Requête invalide"
 #: templates/bidding/contract-details.html:460
 #: templates/bidding/snippets/bids/bid-item.html:166
 #: templates/bidding/snippets/bonds/bond-item.html:82
-#: templates/insights/snippets/bidders/pdf/financials.html:19
-#: templates/insights/snippets/bidders/pdf/wins.html:21
+#: templates/insights/snippets/bidders/pdf/financials.html:25
+#: templates/insights/snippets/bidders/pdf/wins.html:22
 #: templates/insights/snippets/bidders/table-financials.html:20
 #: templates/insights/snippets/bidders/table-wins.html:20
 #: templates/portal/snippets/tenders/bid-digest.html:27
@@ -1374,7 +1374,7 @@ msgstr "Statut de l'offre"
 #: templates/bidding/snippets/contracts/contract-item.html:40
 #: templates/bidding/snippets/expenses/expense-item.html:44
 #: templates/bidding/snippets/tasks/task-item.html:58
-#: templates/insights/snippets/bidders/bidder-item.html:58
+#: templates/insights/snippets/bidders/bidder-item.html:44
 msgid "Details"
 msgstr "Détails"
 
@@ -1929,7 +1929,6 @@ msgstr "Inconnu"
 
 #: nas/choices.py:28 templates/bdc/snippets/bdcs/menu-clean.html:33
 #: templates/bdc/snippets/bdcs/search-form.html:124
-#: templates/insights/snippets/bidders/pdf/financials.html:26
 msgid "Awarded"
 msgstr "Attribué"
 
@@ -2253,7 +2252,7 @@ msgstr "Logo"
 msgid "Agrements"
 msgstr "Agréments"
 
-#: nas/models.py:88 templates/insights/bidder-pdf.html:302
+#: nas/models.py:88 templates/insights/bidder-pdf.html:403
 #: templates/nas/companies/qualifs_form.html:20
 #: templates/nas/companies/snippets/company-item.html:33
 #: templates/nas/companies/snippets/qualif_list.html:12
@@ -3591,15 +3590,15 @@ msgstr ""
 "les entreprises à réussir."
 
 #: templates/base/home.html:19 templates/bidding/contract-details.html:102
-#: templates/insights/bidder-details.html:25
-#: templates/insights/bidder-pdf.html:175
+#: templates/insights/bidder-details.html:55
+#: templates/insights/bidder-pdf.html:276
 #: templates/nas/user-settings-edit.html:76
 #: templates/portal/snippets/menu-tenders.html:8
 msgid "Tenders"
 msgstr "Appels d'offres"
 
 #: templates/base/home.html:20 templates/bdc/snippets/menu-bdc.html:64
-#: templates/insights/bidder-details.html:182
+#: templates/insights/bidder-details.html:207
 #: templates/portal/snippets/menu-tenders.html:71
 msgid "Clients"
 msgstr "Acheteurs publics"
@@ -4202,7 +4201,7 @@ msgid "Unfavorite"
 msgstr "Retirer des favoris"
 
 #: templates/bdc/snippets/bdcs/bdc-actions.html:35
-#: templates/insights/bidder-details.html:265
+#: templates/insights/bidder-details.html:290
 #: templates/portal/snippets/tenders/tender-actions.html:36
 msgid "Share"
 msgstr "Partager"
@@ -4780,7 +4779,7 @@ msgstr "Restitution à venir"
 #: templates/insights/bidder-details.html:7
 #: templates/insights/bidder-details.html:8
 #: templates/insights/bidder-details.html:13
-#: templates/insights/bidder-pdf.html:150
+#: templates/insights/bidder-pdf.html:250
 msgid "Concurrent details"
 msgstr "Détails du concurrent"
 
@@ -4792,12 +4791,10 @@ msgstr "Offres remportées"
 #: templates/bidding/contract-details.html:44
 #: templates/bidding/contracts-list.html:64
 #: templates/bidding/contracts-list.html:81
-#: templates/insights/bidders-list.html:64
-#: templates/insights/bidders-list.html:85
-#: templates/insights/snippets/bidders/bidder-item.html:30
+#: templates/insights/bidders-list.html:74
+#: templates/insights/bidders-list.html:93
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:46
 #: templates/insights/snippets/bidders/bidder-search-form.html:76
-#: templates/insights/snippets/bidders/digest-card.html:17
 msgid "Success rate"
 msgstr "Taux de réussite"
 
@@ -4847,7 +4844,7 @@ msgid "None"
 msgstr "Aucun"
 
 #: templates/bidding/contract-details.html:148
-#: templates/insights/bidder-details.html:43
+#: templates/insights/bidder-details.html:72
 #: templates/portal/snippets/tenders/results-digest.html:37
 msgid "Admin Rejects"
 msgstr "Éliminations administratives"
@@ -4856,11 +4853,11 @@ msgstr "Éliminations administratives"
 #: templates/bidding/contract-details.html:228
 #: templates/bidding/contract-details.html:280
 #: templates/bidding/contract-details.html:336
-#: templates/insights/snippets/bidders/pdf/admin-accepts.html:18
-#: templates/insights/snippets/bidders/pdf/admin-rejects.html:18
-#: templates/insights/snippets/bidders/pdf/admin-reserves.html:18
-#: templates/insights/snippets/bidders/pdf/tech-rejects.html:18
-#: templates/insights/snippets/bidders/pdf/tenders.html:18
+#: templates/insights/snippets/bidders/pdf/admin-accepts.html:21
+#: templates/insights/snippets/bidders/pdf/admin-rejects.html:21
+#: templates/insights/snippets/bidders/pdf/admin-reserves.html:21
+#: templates/insights/snippets/bidders/pdf/tech-rejects.html:19
+#: templates/insights/snippets/bidders/pdf/tenders.html:21
 #: templates/insights/snippets/bidders/table-admin-accepts.html:19
 #: templates/insights/snippets/bidders/table-admin-rejects.html:19
 #: templates/insights/snippets/bidders/table-admin-reserves.html:19
@@ -4875,36 +4872,36 @@ msgid "Lots"
 msgstr "Lots"
 
 #: templates/bidding/contract-details.html:204
-#: templates/insights/bidder-details.html:67
+#: templates/insights/bidder-details.html:96
 #: templates/portal/snippets/tenders/results-digest.html:68
 msgid "Admin Accepts"
 msgstr "Admissions administratives"
 
 #: templates/bidding/contract-details.html:256
-#: templates/insights/bidder-details.html:87
+#: templates/insights/bidder-details.html:116
 #: templates/portal/snippets/tenders/results-digest.html:99
 msgid "Admin Reserves"
 msgstr "Réserves administratives"
 
 #: templates/bidding/contract-details.html:308
-#: templates/insights/bidder-details.html:107
+#: templates/insights/bidder-details.html:139
 #: templates/portal/snippets/tenders/results-digest.html:131
 msgid "Tech Rejects"
 msgstr "Éliminations techniques"
 
 #: templates/bidding/contract-details.html:366
-#: templates/insights/bidder-details.html:133
+#: templates/insights/bidder-details.html:165
 msgid "Fin. Offers"
 msgstr "Offres financières"
 
 #: templates/bidding/contract-details.html:432
-#: templates/insights/bidder-details.html:158
-#: templates/insights/bidder-pdf.html:259
+#: templates/insights/bidder-details.html:187
+#: templates/insights/bidder-pdf.html:360
 msgid "Awardings"
 msgstr "Attributions"
 
 #: templates/bidding/contract-details.html:485
-#: templates/insights/bidder-details.html:200
+#: templates/insights/bidder-details.html:225
 #: templates/portal/snippets/menu-tenders.html:85
 msgid "Domains"
 msgstr "Domaines"
@@ -4925,7 +4922,7 @@ msgid "Bids"
 msgstr "Candidatures"
 
 #: templates/bidding/contract-details.html:520
-#: templates/insights/bidder-details.html:218
+#: templates/insights/bidder-details.html:243
 #: templates/portal/snippets/tenders/search-form.html:214
 msgid "Qualifs"
 msgstr "Qualifications"
@@ -4936,7 +4933,7 @@ msgid "Class"
 msgstr "Classe"
 
 #: templates/bidding/contract-details.html:558
-#: templates/insights/bidder-details.html:236
+#: templates/insights/bidder-details.html:261
 #: templates/nas/companies/snippets/company-item.html:41
 msgid "Licences"
 msgstr "Agréments"
@@ -5534,7 +5531,7 @@ msgstr "Erreur"
 #: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
 msgid "Bidder"
-msgstr "Soumissionnaire"
+msgstr "Concurrent"
 
 #: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
@@ -5556,128 +5553,94 @@ msgstr "Attribution"
 msgid "Success Rate"
 msgstr "Taux de réussite"
 
-#: templates/insights/bidder-details.html:253
-#: templates/insights/snippets/bidders/bidder-item.html:63
+#: templates/insights/bidder-details.html:278
+#: templates/insights/snippets/bidders/bidder-item.html:49
 msgid "PDF Report"
-msgstr ""
+msgstr "Rapport PDF"
 
-#: templates/insights/bidder-details.html:259
-#: templates/insights/snippets/bidders/bidder-item.html:68
+#: templates/insights/bidder-details.html:284
+#: templates/insights/snippets/bidders/bidder-item.html:54
 msgid "CSV SpreadSheet"
-msgstr ""
+msgstr "Feuille CSV"
 
-#: templates/insights/bidder-details.html:279
+#: templates/insights/bidder-details.html:304
 #: templates/portal/tender-details.html:653
 msgid "URL was copied to clipboard"
 msgstr "L'URL a été copiée dans le presse-papiers"
 
-#: templates/insights/bidder-pdf.html:154
+#: templates/insights/bidder-pdf.html:256
 msgid ""
-"This document was genrated using an automated system for information "
-"purposes only. Data it contains might be incomplete, outdated or wrong."
-msgstr ""
+"This document was generated using an automated system for information "
+"purposes only."
+msgstr "Ce document a été généré par un système automatisé pour information seulement."
 
-#: templates/insights/bidder-pdf.html:157
-msgid ""
-"For more information, scan or tap the QR code below to go to our website"
-msgstr ""
-
-#: templates/insights/bidder-pdf.html:189
-#, fuzzy
-#| msgid "Admin Rejects"
+#: templates/insights/bidder-pdf.html:290
 msgid "Administrative Rejects"
 msgstr "Éliminations administratives"
 
-#: templates/insights/bidder-pdf.html:203
-#, fuzzy
-#| msgid "Administration"
+#: templates/insights/bidder-pdf.html:304
 msgid "Administrative Passes"
-msgstr "Administration"
+msgstr "Admissions administratives"
 
-#: templates/insights/bidder-pdf.html:217
-#, fuzzy
-#| msgid "Admin Reserves"
+#: templates/insights/bidder-pdf.html:318
 msgid "Administrative Reserves"
 msgstr "Réserves administratives"
 
-#: templates/insights/bidder-pdf.html:231
-#, fuzzy
-#| msgid "Tech Rejects"
+#: templates/insights/bidder-pdf.html:332
 msgid "Technical Rejects"
 msgstr "Éliminations techniques"
 
-#: templates/insights/bidder-pdf.html:245
-#, fuzzy
-#| msgid "Financial Offers"
+#: templates/insights/bidder-pdf.html:346
 msgid "Financial Races"
-msgstr "Offres financières"
+msgstr "Compétitions financières"
 
-#: templates/insights/bidder-pdf.html:274 templates/portal/clients-list.html:6
+#: templates/insights/bidder-pdf.html:375 templates/portal/clients-list.html:6
 #: templates/portal/clients-list.html:7
 msgid "Public Clients"
 msgstr "Acheteurs publics"
 
-#: templates/insights/bidder-pdf.html:288 templates/portal/domains-list.html:6
+#: templates/insights/bidder-pdf.html:389 templates/portal/domains-list.html:6
 #: templates/portal/domains-list.html:12
 #: templates/portal/snippets/tenders/search-form.html:43
 #: templates/portal/tender-details.html:273
 msgid "Domains of activity"
 msgstr "Domaines d'activité"
 
-#: templates/insights/bidder-pdf.html:316
+#: templates/insights/bidder-pdf.html:417
 #: templates/nas/companies/agrements_form.html:19
 #: templates/nas/companies/snippets/agrement_list.html:13
 #: templates/portal/snippets/tenders/search-form.html:203
 msgid "Licenses"
 msgstr "Agréments"
 
-#: templates/insights/bidder-pdf.html:344
-#, fuzzy
-#| msgid "Not found"
+#: templates/insights/bidder-pdf.html:445
 msgid "Error: Not found."
-msgstr "Introuvable"
+msgstr "Erreur: Introuvable"
 
 #: templates/insights/bidders-list.html:6
 #: templates/insights/bidders-list.html:7
 msgid "Bidders list"
-msgstr "Liste des candidats"
+msgstr "Liste Candidats"
 
-#: templates/insights/bidders-list.html:78
-#, fuzzy
-#| msgid "Awards"
+#: templates/insights/bidders-list.html:67
 msgid "Awards sum"
-msgstr "Attributions"
+msgstr "Somme Attributions"
 
-#: templates/insights/bidders-list.html:93
-#: templates/insights/snippets/bidders/bidder-item.html:42
-#: templates/insights/snippets/bidders/digest-card.html:101
+#: templates/insights/bidders-list.html:82
+#: templates/insights/snippets/bidders/digest-card.html:114
 msgid "Latest bid"
 msgstr "Dernière offre"
 
-#: templates/insights/snippets/bidders/bidder-item.html:22
-#, fuzzy
-#| msgid "Awarded"
-msgid "Awarded Sum"
-msgstr "Attribué"
+#: templates/insights/snippets/bidders/bidder-item.html:19
+#: templates/insights/snippets/bidders/digest-card.html:100
+#: templates/insights/snippets/bidders/pdf/digest-card.html:63
+msgid "Awarded Bids"
+msgstr "Offres attribuées"
 
-#: templates/insights/snippets/bidders/bidder-item.html:26
-#, fuzzy
-#| msgid "Bids list"
-msgid "Bids sum"
-msgstr "Liste des candidatures"
-
-#: templates/insights/snippets/bidders/bidder-item.html:38
-#, fuzzy
-#| msgid "Awarded amount"
-msgid "Awards count"
+#: templates/insights/snippets/bidders/bidder-item.html:28
+#: templates/insights/snippets/bidders/digest-card.html:107
+msgid "Awarded amount"
 msgstr "Montant attribué"
-
-#: templates/insights/snippets/bidders/bidder-item.html:46
-#: templates/insights/snippets/bidders/pdf/digest-card.html:76
-#, fuzzy
-#| msgid "Latest bid"
-msgid "Latest award"
-msgstr "Dernière offre"
 
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:18
 msgid "Latest Win"
@@ -5743,39 +5706,38 @@ msgstr "50%% ou plus"
 msgid "50%% or less"
 msgstr "50%% ou moins"
 
-#: templates/insights/snippets/bidders/digest-card.html:87
-#: templates/insights/snippets/bidders/pdf/digest-card.html:65
-msgid "Awarded Bids"
-msgstr "Offres attribuées"
-
-#: templates/insights/snippets/bidders/digest-card.html:94
-msgid "Awarded amount"
-msgstr "Montant attribué"
-
-#: templates/insights/snippets/bidders/digest-card.html:106
-#: templates/insights/snippets/bidders/pdf/digest-card.html:81
+#: templates/insights/snippets/bidders/digest-card.html:119
+#: templates/insights/snippets/bidders/pdf/digest-card.html:74
 msgid "Highest award"
-msgstr "Plus haute attribution"
+msgstr "Top Attribution"
 
-#: templates/insights/snippets/bidders/pdf/clients.html:15
-#: templates/insights/snippets/bidders/pdf/domains.html:15
-#: templates/insights/snippets/bidders/pdf/licenses.html:16
-#: templates/insights/snippets/bidders/pdf/qualifs.html:16
-#, fuzzy
-#| msgid "Bidding"
+#: templates/insights/snippets/bidders/pdf/clients.html:11
+#: templates/insights/snippets/bidders/pdf/domains.html:11
+#: templates/insights/snippets/bidders/pdf/licenses.html:12
+#: templates/insights/snippets/bidders/pdf/qualifs.html:12
 msgid "Biddings"
-msgstr "Soumission"
+msgstr "Soumissions"
 
-#: templates/insights/snippets/bidders/pdf/digest-card.html:55
+#: templates/insights/snippets/bidders/pdf/digest-card.html:53
 #: templates/nas/companies/snippets/company-item.html:71
 msgid "Total awards"
-msgstr "Total des attributions"
+msgstr "Total Attributions"
 
-#: templates/insights/snippets/bidders/pdf/digest-card.html:60
-#, fuzzy
-#| msgid "Total awards"
+#: templates/insights/snippets/bidders/pdf/digest-card.html:58
 msgid "Total Bids"
-msgstr "Total des attributions"
+msgstr "Total Soumissions"
+
+#: templates/insights/snippets/bidders/pdf/digest-card.html:79
+msgid "Latest award"
+msgstr "Dernière Attribution"
+
+#: templates/insights/snippets/bidders/table-financials.html:48
+msgid "Offers Sum"
+msgstr "Somme Offres"
+
+#: templates/insights/snippets/bidders/table-wins.html:37
+msgid "Awards Sum"
+msgstr "Somme Attributions"
 
 #: templates/mfa/authenticate.html:13
 msgid ""
@@ -6616,10 +6578,8 @@ msgid "Client Acronym"
 msgstr "Sigle de l'acheteur"
 
 #: templates/portal/snippets/domains/domain-menu-sort.html:24
-#, fuzzy
-#| msgid "Domains"
 msgid "Domain short"
-msgstr "Domaines"
+msgstr "Abrev. Domaine"
 
 #: templates/portal/snippets/domains/domain-menu-sort.html:29
 msgid "Domain Name"
@@ -7359,6 +7319,15 @@ msgstr "Actuelle"
 #: templates/usersessions/usersession_list.html:72
 msgid "Sign Out Other Sessions"
 msgstr "Déconnecter les autres sessions"
+
+#~ msgid "Awarded Sum"
+#~ msgstr "Somme Attribuée"
+
+#~ msgid "Bids sum"
+#~ msgstr "Somme des soumissions"
+
+#~ msgid "Awards count"
+#~ msgstr "Nombre d'attributions"
 
 #~ msgid "eMarches.com"
 #~ msgstr "eMarches.com"

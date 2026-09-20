@@ -15,13 +15,13 @@
                 </div>
             </div>
 
-            <div class="repeater-subtitle">
+            <div class="repeater-emphasis">
                 {% if opening.tender.lots_count > 1 %}
-                    <div class="repeater-tiny">
-                        <span>{% trans 'Lots' %}: </span> 
+                    <div>
+                        <span class="repeater-subtitle">{% trans 'Lots' %}: </span> 
                         <span>
                             {% for lot in lots %}
-                                <span class="digital">{{ lot }}</span>
+                                <span>{{ lot }}</span>
                                 <span>{% if not forloop.last %}, {% endif %}</span>
                             {% endfor %}
                         </span>

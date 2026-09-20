@@ -15,12 +15,12 @@
                 </div>
             </div>
             
-            <div class="repeater-subtitle">
+            <div>
                 {% for depo in depos %}
-                    <div class="repeater-tiny">
                         <div class="flexirow">
-                            <div>
-                                <span>&mdash;</span>
+                            <div class="repeater-subtitle">
+                                <span style="margin: 1rem;"></span>
+                                <span>&#10141;</span>
                                 {% if opening.tender.lots_count > 1 %}
                                     <span>{% trans 'Lot' %} {{ depo.lot_number }}: </span>
                                     <span>E={{ depo.lot.estimate }}</span>
@@ -28,13 +28,14 @@
                                     <span>E={{ opening.tender.estimate }}</span>
                                 {% endif %}
                             </div>
-                            <div>
-                                <span>E{% if depo.offset > 0 %}+{% endif %}{% if depo.offset == 0 %}+{% endif %}{{ depo.offset|default:'0'|floatformat:1 }}%</span>
-                                <span>{% if depo.winner %}&starf;{% else %}&star;{% endif %}</span>                                
-                                <span class="digital">{{ depo.amount_a }}</span>
+                            <div class="flexiline"></div>
+                            <div class="repeater-emphasis">
+                                <span class="repeater-subtitle">E{{ depo.offset_string }}%</span>
+                                <!-- <span style="color: brown;">{{ depo.offset|floatformat:3 }}</span> -->
+                                <span>{% if depo.winner %}&starf;{% else %}&star;{% endif %}</span> 
+                                <strong>{{ depo.amount_a }}</strong>
                             </div>
                         </div>
-                    </div>
                 {% endfor %}
             </div>
         </div>

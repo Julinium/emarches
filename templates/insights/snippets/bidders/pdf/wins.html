@@ -15,14 +15,13 @@
                 <span>{{ opening.tender.title }}</span>
             </div>
 
-            <div class="repeater-subtitle">
+            <div class="repeater-emphasis">
                 {% for depo in depos %}
-                    <div class="repeater-tiny">
+                    <div>
                         {% if opening.tender.lots_count > 1 %}
-                                <span>{% trans 'Lot' %} </span>
-                                <span>{{ depo.lot_number }}:</span>
+                                <span class="repeater-subtitle">{% trans 'Lot' %} {{ depo.lot_number }}:</span>
                         {% endif %}
-                        <strong class="digital">{{ depo.amount_w }}</strong>
+                        <strong>{{ depo.amount_w }}</strong>
                     </div>
                 {% endfor %}
             </div>

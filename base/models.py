@@ -931,6 +931,17 @@ class Deposit(models.Model):
 
         return 100 * ((offer - esti) / esti)
 
+
+    @property
+    def offset_string(self):
+        decimals = 0
+        if not self.amount_a: return '-'
+        if not self.lot.estimate: return '-'
+        if self.lot.estimate == self.amount_a: return '=0'
+        if not self.offset: return '-'
+        return f'{self.offset:+.{decimals}f}'
+
+
     @property
     def score(self):
         opti = self.optimum

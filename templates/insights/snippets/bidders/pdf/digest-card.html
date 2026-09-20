@@ -3,7 +3,7 @@
 <article style="max-width: 100%; border: 1px solid var(--bd-neutral); padding: 0; border-radius: 6px;">
     
     <div style="border-bottom: 1px solid var(--bd-neutral);">
-        <div class="digital" style="text-align: center; width: 100%; font-size:larger; font-weight: 700; padding: 0.5rem;">{{ bidder.name }}</div>
+        <div class="digital" style="text-align: center; width: 100%; font-size:x-large; font-weight: 900; padding: 0.5rem;">{{ bidder.name }}</div>
     </div>
 
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
@@ -51,12 +51,12 @@
         <div id="extra-data" style="text-align: right; font-size: 0.85rem; line-height: 1.4;">
             <div>
                 <small style="color: var(--text-muted);">{% trans "Total awards" %}:</small>
-                <span class="digital" style="font-weight: bolder;">{{ bidder.winners_sum|default:'0'}}</span>
+                <span class="digital" style="font-weight: bolder;">{{ bidder.winners_sum|metrify:1|default:'--' }}</span>
             </div>
 
             <div>
                 <small style="color: var(--text-muted);">{% trans "Total Bids" %}:</small>
-                <span class="digital">{{ bidder.deposits_sum|default:'0' }}</span>
+                <span class="digital">{{ bidder.deposits_sum|metrify:1|default:'--' }}</span>
             </div>
 
             <div>
@@ -65,23 +65,23 @@
                     <span>{{ bidder.winners|length }}</span>
                     <span>/</span>
                     <span>{{ bidder.deposits.all|length }}</span>
-                    <span>=</span>
-                    <span>{{ bidder.success_rate|floatformat:1|default:'0' }}%</span>
+                    <!-- <span>=</span>
+                    <span>{{ bidder.success_rate|floatformat:1|metrify:1|default:'--' }}%</span> -->
                 </span>
             </div>
 
             <div>
-                <small style="color: var(--text-muted);">{% trans 'Latest award' %}:</small>
-                <span class="digital">{{ bidder.latest_win|default:'--' }}</span>
+                <small style="color: var(--text-muted);">{% trans 'Highest award' %}:</small>
+                <span class="digital">{{ bidder.highest_win|metrify:1|default:'--' }}</span>
             </div>
 
             <div>
-                <small style="color: var(--text-muted);">{% trans 'Highest award' %}:</small>
-                <span class="digital">{{ bidder.highest_win|default:'--' }}</span>
+                <small style="color: var(--text-muted);">{% trans 'Latest award' %}:</small>
+                <span class="digital">{{ bidder.latest_win|date:'SHORT_DATE_FORMAT'|default:'--' }}</span>
             </div>
         </div>
 
-        <div>
+        <div id="qr-image">
             <div style="align-items: center; margin: 0 0.25rem 0;">
                 <a href="{{ url }}" class="unstyled-link">
                     <img src="{{ qr_code }}" alt="QR" style="height: 30mm; width: 30mm;">

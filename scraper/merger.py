@@ -84,24 +84,36 @@ def format(tender_json):
                 bond_t += l["bond"]
                 l["variant"] = l["variant"] == "Oui"
                 l["reserved"] = l["reserved"] == "Oui"
+
                 ss = l["samples"]
                 sl = len(ss) if ss else 0
                 if sl > 0:
                     for s in ss:
                         s["when"] = helper.getDateTime(s["when"])
                     l["samples"] = ss
+
                 mm = l["meetings"]
                 ml = len(mm) if mm else 0
                 if ml > 0:
                     for m in mm:
                         m["when"] = helper.getDateTime(m["when"])
                     l["meetings"] = mm
+
                 vv = l["visits"]
                 vl = len(vv) if vv else 0
                 if vl > 0:
                     for v in vv:
                         v["when"] = helper.getDateTime(v["when"])
                     l["visits"] = vv
+
+                
+                raw_qualifs = l.get('qualifs', [])
+                unique_qualifs = list({obj.get('name'): obj for obj in raw_qualifs if 'name' in obj}.values())
+                l['qualifs'] = unique_qualifs
+                raw_agrements = l.get('agrements', [])
+                unique_agrements = list({obj.get('name'): obj for obj in raw_agrements if 'name' in obj}.values())
+                l['agrements'] = unique_agrements
+
             j["lots"] = ll
             j["reserved"] = reserved_t
             j["variant"] = variant_t
@@ -1038,9 +1050,11 @@ def createLots(input_data, tender):
         agrement_cache = {x.name: x for x in Agrement.objects.all()}
         new_agrements = {}
 
+
         helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Tender Qualifs and Agrements ... ")
         for lot_data in input_data:
-            for q_data in lot_data.get('qualifs', []):
+
+            for q_data in unique_qualifs:
                 name = q_data.get('name')
                 if name and name not in qualif_cache and name not in new_qualifs:
                     new_qualifs[name] = Qualif(name=name)

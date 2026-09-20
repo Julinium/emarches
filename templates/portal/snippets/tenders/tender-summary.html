@@ -129,7 +129,7 @@
                                                         <span>{{ opening.won_lots }}/{{ opening.tender.lots_count }}</span>
                                                     </span>
                                                 {% else %}
-                                                    <span class="badge small text-bg-success"><i class="{{ bicons.winner }} me-1"></i>{% if opening.offset >= 0 %}+{% endif %}{{ opening.offset|floatformat:1 }}%</span>
+                                                    <span class="badge small text-bg-success"><i class="{{ bicons.winner }} me-1"></i>{{ opening.offset|floatformat:'+1' }}%</span>
                                                 {% endif %}
                                                 <span class="fw-bold">{{ opening.won_amount|metrify }}</span>
                                                 {% for concurrent in opening.winners.all %}

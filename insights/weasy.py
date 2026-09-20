@@ -90,6 +90,9 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
             writer = csv.writer(f)
             writer.writerow([
                 trans('Tender'),
+                trans('Category'),
+                trans('Reference'),
+                trans('Published'),
                 trans('Client'), 
                 trans('Deadline'), 
                 trans('Estimate'), 
@@ -115,8 +118,11 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
                 fin_result = trans('Awarded') if dep.winner else ""
                 writer.writerow([
                     tender.title,
+                    tender.category,
+                    tender.reference,
+                    tender.published,
                     tender.client.name,
-                    tender.deadline.date(),
+                    tender.deadline,
                     tender.estimate,
                     tender.bond,
                     dep.opening.date,
