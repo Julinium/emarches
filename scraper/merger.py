@@ -1053,8 +1053,7 @@ def createLots(input_data, tender):
 
         helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Tender Qualifs and Agrements ... ")
         for lot_data in input_data:
-
-            for q_data in unique_qualifs:
+            for q_data in lot_data.get('qualifs', []):
                 name = q_data.get('name')
                 if name and name not in qualif_cache and name not in new_qualifs:
                     new_qualifs[name] = Qualif(name=name)

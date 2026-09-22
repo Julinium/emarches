@@ -901,16 +901,11 @@ class Deposit(models.Model):
     
     @property
     def composits(self):
-        return Deposit.objects.filter(
-            opening=self.opening,
-            lot_number=self.lot_number,
-            amount_a__isnull=False,
-        )
+        return Deposit.objects.filter(opening=self.opening, lot_number=self.lot_number, amount_a__isnull=False,)
     
     @property
     def average(self):
-        compos = self.composits
-        return compos.aggregate(avg=Avg("amount_a"))["avg"]
+        return self.composits.aggregate(avg=Avg("amount_a"))["avg"]
 
     @property
     def optimum(self):
@@ -931,16 +926,14 @@ class Deposit(models.Model):
 
         return 100 * ((offer - esti) / esti)
 
-
     @property
     def offset_string(self):
-        decimals = 0
+        decimals = 1
         if not self.amount_a: return '-'
         if not self.lot.estimate: return '-'
-        if self.lot.estimate == self.amount_a: return '=0'
+        if self.lot.estimate == self.amount_a: return '+0'
         if not self.offset: return '-'
         return f'{self.offset:+.{decimals}f}'
-
 
     @property
     def score(self):
@@ -948,9 +941,7 @@ class Deposit(models.Model):
         if not opti: return None
         offer = self.amount_a
         if not offer: return None
-
         return offer - opti
-    
 
 
     class Meta:
