@@ -47,7 +47,6 @@ DCE_SHOW_MODAL = True
 logger_portal = logging.getLogger("portal")
 
 
-# @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_list(request):
 
@@ -436,15 +435,10 @@ def tender_list(request):
     return render(request, "portal/tender-list.html", context)
 
 
-# @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_details(request, pk=None):
 
     user = request.user
-    # if not user or not user.is_authenticated:
-    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
-    #     return HttpResponse(trans("Permission denied"), status=403)
-
     tender = get_object_or_404(
         Tender.objects.select_related(
             "client", "category", "mode", "procedure"
@@ -460,14 +454,10 @@ def tender_details(request, pk=None):
             "lots__meetings",
             "lots__samples",
             "lots__visits",
-            # "lots__bids",
-            # "bids",
         ),
         id=pk,
     )
 
-    # if not tender:
-    #     return HttpResponse(trans("Not found"), status=404)
 
     favorited = tender.favorites.filter(user=user).first() if user and user.is_authenticated else None
 
@@ -557,20 +547,12 @@ def tender_get_file(request, pk=None, fn=None):
         return HttpResponse(trans("Permission denied"), status=403)
 
     tender = get_object_or_404(Tender, id=pk)
-    # if not tender:
-    #     return HttpResponse(trans("Not found"), status=404)
 
-    dce_dir = os.path.join(
-        os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
-        settings.DL_PATH_PREFIX + tender.chrono,
-    )
-    file_path = os.path.join(
-        os.path.join("dce", settings.DL_PATH_PREFIX + tender.chrono), fn
-    )
-    file_fp = os.path.join(dce_dir, fn)
-
-    # TODO: Allow users to request files for Tenders if not found. 
-    # In such case, add a FileToGet instance if not already added.
+    dce_root  = os.path.join(settings.DCE_MEDIA_ROOT, "dce")
+    dce_dir   = os.path.join(dce_root, settings.DL_PATH_PREFIX + tender.chrono,)
+    dce_file  = os.path.join("dce", settings.DL_PATH_PREFIX + tender.chrono)
+    file_path = os.path.join(dce_file, fn)
+    file_fp   = os.path.join(dce_dir, fn)
 
     if os.path.exists(file_fp):
         file_size = os.path.getsize(file_fp)

@@ -313,4 +313,116 @@ def getDCE(tender):
     return con_path
 
 
-# Exclude Tenders having has_minutes = False ?
+
+
+def getExtraFiles(tender=None, extra_files=[]):
+
+    # chrono = tender.chrono
+    # acro   = tender.acronym
+
+    # def make_link(type=None):
+    #     if type == 'query': return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDemandeTelechargementDce&refConsultation={chrono}&orgAcronyme={acro}'
+    #     if type == 'file':  return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={chrono}&orgAcronym={acro}'
+    #     return None 
+
+    if not tender: return None
+
+    if len(extra_files) < 1 : 
+        helper.printMessage('ERROR', 'd.getExtraFile', f'Received empty files list.')
+        return None
+
+    if not os.path.exists(C.MEDIA_ROOT): 
+        helper.printMessage('ERROR', 'd.getExtraFile', f'Could not read media root directory.')
+        return None
+
+    def _get_filename(cd):
+        if not cd: return None
+        fname = re.findall('filename=(.+)', cd)
+        if len(fname) == 0: return None
+        return fname[0]
+
+    extra_path = os.path.join(C.MEDIA_ROOT, f'tenders/extra/EXT-{tender.chrono}')
+    if not os.path.exists(extra_path): os.makedirs(extra_path)
+    if not os.path.exists(extra_path):
+        helper.printMessage('ERROR', 'd.getExtraFile', f'Could not find Extra directory.')
+        return None
+
+    if len(C.USER_AGENTS) == 0 : 
+        DEFAULT_UA = 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+        helper.printMessage('DEBUG', 'd.getExtraFile', f'UA list was empty. Using default: {DEFAULT_UA}.')
+        headino = {"User-Agent": DEFAULT_UA}
+    else :
+        rua = helper.getUa()
+        rua_label = "Random"
+        try:
+            start_delimiter = "Mozilla/5.0 ("
+            end_delimiter = "; "
+            start_index = rua.index(start_delimiter) + len(start_delimiter)
+            end_index = rua.index(end_delimiter, start_index)
+            rua_label = rua[start_index:end_index]
+        except ValueError as ve:
+            helper.printMessage('ERROR', 'd.getExtraFile', f'Error trimming UA: {str(ve)}')
+
+        helper.printMessage('DEBUG', 'd.getExtraFile', f'Using random UA: {rua_label}.')
+        headino = {"User-Agent":  rua}
+
+    http_session = requests.Session()
+
+    added_files = []
+
+    for extra_file in extra_files:
+        file_url = f"{C.SITE_ROOT}{extra_file.get('link', '')}"
+    
+        helper.printMessage('TRACE', 'd.getExtraFile', f'Extra file link : {file_url}')
+
+        try:
+            helper.printMessage('DEBUG', 'd.getExtraFile', f'Requesting Extra file for Tender { tender.chrono }')
+            request_file = http_session.get(file_url, headers=headino, timeout=C.DLD_TIMEOUT)
+        except requests.exceptions.Timeout:
+            helper.printMessage('ERROR', 'd.getExtraFile', "Request timed out! Exception message: " + str(xc))
+        except Exception as xc: 
+            helper.printMessage('ERROR', 'd.getExtraFile', str(xc))
+            continue
+
+        if request_file.status_code != 200 :
+            helper.printMessage('ERROR', 'd.getExtraFile', f'Getting file: Response Status Code: {request_file.status_code} !')
+            helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
+            continue
+
+        else: helper.printMessage('DEBUG', 'd.getExtraFile', f'Getting file returned Status Code: {request_file.status_code}')
+
+        try:
+            filename_cd = _get_filename(request_file.headers.get('content-disposition'))
+            if filename_cd == None:
+                filename_cd = f'extra-{tender.chrono}'
+            filename_cd = filename_cd.replace('"', '').replace(';', '')
+
+        except Exception as xc:
+            helper.printMessage('WARN', 'd.getExtraFile', 'Could not get Extra file name from portal.')
+            helper.printMessage('WARN', 'd.getExtraFile', str(xc))
+            helper.printMessage('ERROR', 'd.getExtraFile', 'Looks like the server sent back a page, not a file !')
+            continue
+
+        fiel_name_base = os.path.splitext(filename_cd)[0]
+        file_extension = os.path.splitext(filename_cd)[1]
+        cleaned_name = helper.text2Alphanum(fiel_name_base, allCapps=True, dash='-', minLen=8, firstAlpha='M', fillerChar='0')
+
+        filename_base = f'{C.FILE_PREFIX}-{cleaned_name}{file_extension}'
+        filename = os.path.join(extra_path, filename_base)
+        helper.printMessage('DEBUG', 'd.getExtraFile', f'Writing file content to {filename_base} ... ')
+
+        try:
+            with open(filename, 'wb') as file:
+                bytes_written = file.write(request_file.content)
+                helper.printMessage('DEBUG', 'd.getExtraFile', f'... Bytes written: {bytes_written}/{len(request_file.content)}.')
+            if bytes_written != len(request_file.content):
+                raise IOError("File size mismatch: Not all content was written.")
+            if os.path.getsize(filename) == 0: 
+                raise IOError("File was created but is empty. Go and know why!")
+            added_files.append(filename)
+        except Exception as e:
+            helper.printMessage('ERROR', 'd.getExtraFile', f"Error writing data to file: {e}")
+            continue
+
+
+    return {'path': extra_path, 'files': added_files}

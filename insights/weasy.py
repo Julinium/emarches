@@ -102,9 +102,9 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
                 _('Admin Exam'), 
                 _('Tech Exam'), 
                 _('Bid Amount'), 
-                _('Corrected Amount'),
-                _('Financial Race'),
-                _('Awarded Amount'),
+                _('Corrected Amount'), 
+                _('Financial Race'), 
+                _('Awarded Amount'), 
                 _('Awarding justification'),
                 ])
 

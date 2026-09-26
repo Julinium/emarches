@@ -30,9 +30,12 @@
                             </div>
                             <div class="flexiline"></div>
                             <div class="repeater-emphasis">
-                                <span class="repeater-subtitle">E{{ depo.offset_string }}%</span>
-                                <!-- <span style="color: brown;">{{ depo.offset|floatformat:3 }}</span> -->
-                                <span>{% if depo.winner %}&starf;{% else %}&star;{% endif %}</span> 
+                                <span class="repeater-subtitle"><small>E{{ depo.offset_string }}%</small></span>
+                                {% if depo.winner %}
+                                    <span class="green-badge">&starf;</span> 
+                                {% else %}
+                                    <span class="gray-badge">&#9747;</span>
+                                {% endif %}
                                 <strong>{{ depo.amount_a }}</strong>
                             </div>
                         </div>

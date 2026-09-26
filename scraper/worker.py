@@ -130,7 +130,8 @@ def do_the_work():
             deadline__date__lte=assa,
             deadline__date__gte=assenn,
             openings__isnull=True,
-            ).order_by('-deadline')
+            has_minutes=False,
+            ).order_by('deadline')
         count = tenders.count()
 
         i = 0
@@ -138,7 +139,7 @@ def do_the_work():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'w.handle_results', f"Started getting results for item { i }/{ count } = {tender.chrono}&{tender.acronym}", 2)
+            helper.printMessage('INFO', 'w.handle_results', f"Started getting results for item { i }/{ count }", 2)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
                 helper.printMessage('INFO', 'w.handle_results', f"◁◁◁ Minutes found for item { i }/{ count }")
@@ -155,7 +156,6 @@ def do_the_work():
                 helper.printMessage('INFO', 'w.handle_results', f"◀◀◀ Minutes empty or not found for item { i }/{ count }")
 
         return results_saved, i
-
 
 
     ##### Proudly let the magic happen
@@ -185,9 +185,6 @@ def do_the_work():
     if C.SKIP_DCE: helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_DCE set. Skipping DCE files ◆◆◆◆◆", 2)
     else: files_downloaded, files_failed = handle_dce()
 
-    # TODO: Also look at other downloads like "Avis de publicité"
-    # It may have a link captioned like "Fichier joint - Avis complémentaire en ligne"
-
     # TODO: Consider other "types" of publications, like:
     """
         résultats définitifs
@@ -203,8 +200,10 @@ def do_the_work():
 
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
-    if C.GET_RESULTS == False: helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_RESULTS set. Skipping Results digests ◆◆◆◆◆", 2)
-    else: results_saved, results_searched = handle_results()
+    if C.GET_RESULTS == False: 
+        helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_RESULTS set. Skipping Results digests ◆◆◆◆◆", 2)
+    else:
+        results_saved, results_searched = handle_results()
 
     ##### Keep track of update times
     finished_time = timezone.now()

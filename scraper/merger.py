@@ -5,6 +5,10 @@ from decimal import Decimal
 from django.db import transaction, reset_queries
 from datetime import date, datetime, time, timedelta, timezone
 
+from typing import Optional, Tuple, Union, Dict, List, Any, Type
+from django.db.models import Model
+from rest_framework.serializers import Serializer
+
 from rest_framework import serializers
 
 from base.models import (
@@ -14,9 +18,8 @@ from base.models import (
 
 from scraper import constants as C
 from scraper import helper
-from scraper.downer import getDCE
+from scraper.downer import getDCE, getExtraFiles
 from scraper.getter import getMinutes
-
 
 from scraper.serializers import (AgrementSerializer, CategorySerializer,
                                  ChangeSerializer, ClientSerializer,
@@ -29,9 +32,51 @@ from scraper.serializers import (AgrementSerializer, CategorySerializer,
                                  TenderSerializer, VisitSerializer)
 
 
-def format(tender_json):
 
-    def lottify(lot_no_str, default_int = 1):
+def format(tender_json: dict) -> dict:
+    """Parses, normalizes, and cleans raw tender JSON data in-place.
+
+    Converts raw string fields into structured types (dates, floats, booleans),
+    maps e-bidding/e-signature flags, standardizes lot metadata, and 
+    aggregates totals across all associated lots.
+
+    Args:
+        tender_json (dict): Raw tender dictionary containing fields such as 
+            published dates, prices, e-submission flags, and lot details.
+
+    Returns:
+        dict: The updated, structured tender dictionary. Returns the original 
+            dictionary partially processed if an unexpected error occurs during execution.
+
+    Notes:
+        - `ebid` and `esign` flags map as follows: 1 (Required), 0 (Optional/Not required), 9 (N/A).
+        - Automatically deducts `acronym` from the tender URL parameters.
+        - Deduplicates qualification (`qualifs`) and accreditation (`agrements`) lists per lot.
+    """
+
+    def lottify(lot_no_str: str, default_int: int = 1) -> int:
+        """Parses a raw lot string into a positive integer.
+
+        Strips common lot prefixes (e.g., 'lot', ':', '#') and whitespace, converting
+        the remaining numeric string to an integer. Returns a default fallback integer 
+        if parsing fails, raises an exception, or yields a non-positive value.
+
+        Args:
+            lot_no_str (str): The raw lot identifier string to clean and parse.
+            default_int (int, optional): Fallback value to return if parsing fails 
+                or yields a value <= 0. Defaults to 1.
+
+        Returns:
+            int: The parsed positive lot number, or `default_int` on failure.
+
+        Examples:
+            >>> lottify("Lot #3")
+            3
+            >>> lottify("lot: 12")
+            12
+            >>> lottify("invalid_lot", default_int=5)
+            5
+        """
         try:
             s = lot_no_str.lower().replace('lot', '').replace(':', '').replace('#', '')
             n = int(s.strip())
@@ -145,6 +190,7 @@ def saveTender(tender_data):
     lots_data      = formatted_data['lots']
     domains_data   = formatted_data['domains']
     chrono         = formatted_data["chrono"]
+    extra_files    = formatted_data["extra_files"]
 
     category, client, kind, mode, procedure = createCckmp(category_data, client_data, kind_data, mode_data, procedure_data)
 
@@ -160,7 +206,7 @@ def saveTender(tender_data):
             created_lots = createLots(lots_data, tender)
     else:
         helper.printMessage('INFO', 'm.saveTender', f"### Tender exists: {chrono}")
-        
+
         lots_qs = tender.lots.all()
         numbers_list = [lot_data['number'] for lot_data in lots_data] if lots_data else []
         numbers_list_qs = list(lots_qs.values_list('number', flat=True))
@@ -213,6 +259,11 @@ def saveTender(tender_data):
             if not C.SKIP_DCE:
                 helper.printMessage('DEBUG', 'm.saveTender', f"### Handling DCE for Tender {tender.chrono} ...")
                 handleDCE(tender)
+                if len(extra_files) > 0:
+                    helper.printMessage('DEBUG', 'm.saveTender', f"### Handling Extra files for Tender {tender.chrono} ...")
+                    handleExtra(tender, extra_files)
+                else:
+                    helper.printMessage('DEBUG', 'm.saveTender', f"--- No Extra files found for Tender {tender.chrono} ...")
             else:
                 helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Skipping DCE for Tender {tender.chrono} ...")
 
@@ -224,7 +275,7 @@ def saveTender(tender_data):
                     has_minutes = formatted_data.get('has_minutes', False)
                     if has_minutes:
                         helper.printMessage('DEBUG', 'm.saveTender', f"### Tender {tender.chrono} has minutes. Getting them ...")
-                        minutes_digest = getMinutes(tender)
+                        minutes_digest = getMinutes(tender.chrono, tender.acronym)
                         if minutes_digest and minutes_digest != {}:
                             if mergeResults(minutes_digest) == 0:
                                 helper.printMessage('DEBUG', 'm.saveTender', f"+++ Minutes for Tender {tender.chrono} saved successfully.")
@@ -241,7 +292,37 @@ def saveTender(tender_data):
     return tender, tender_create, len(changes) > 0
 
 
-def mergeResults(digest):
+def mergeResults(digest: dict) -> int:
+    """Merges processed tender results into the database via Django ORM.
+
+    Retrieves a target Tender model using identifying metadata from the digest, 
+    creates or updates its associated Opening record, and iterates through candidate 
+    bidders to log individual lot deposits, financial offers, administrative status, 
+    and winning attributes.
+
+    Args:
+        digest (dict): Dictionary containing raw or parsed result details for a tender.
+            Expected keys include:
+            - 'chrono' (str): Chronological identifier for the tender.
+            - 'acronym' (str): Acronym identifier for the tender.
+            - 'date_finished' (str): Completion date formatted as 'DD/MM/YYYY'.
+            - 'winner_offers' (list[dict]): Winning bids containing 'amount', 'name', 'lot'.
+            - 'financial_offers' (list[dict]): Offers containing 'pre_amount', 'amount', 'name', 'lot'.
+            - 'bidders' (list[dict]): Candidate bidder objects containing at least a 'name'.
+            - 'rejected_dt', 'rejected_da', 'reserved_da', 'accepted_da' (list[dict]): Status lists
+              used to evaluate technical and administrative outcomes per lot.
+
+    Returns:
+        int: Execution status code:
+            - 0: Successfully merged results into the database.
+            - 1: Failed to merge because no matching Tender was found.
+
+    Side Effects:
+        - Creates or updates an `Opening` record tied to the matching `Tender`.
+        - Creates `Concurrent` (bidder) records if they do not already exist.
+        - Creates or updates `Deposit` records mapping bidders to specific tender lots.
+        - Logs informational, debug, warning, and error messages via `helper.printMessage`.
+    """
 
     chro = digest.get('chrono', '?')
     acro = digest.get('acronym', '?')    
@@ -250,15 +331,17 @@ def mergeResults(digest):
     tender = Tender.objects.filter(chrono=chro, acronym=acro).first()
     if not tender: 
         helper.printMessage('ERROR', 'm.mergeResults', f"### Error: Tender not found for {chro}&{acro}. No result saved", 1)
-        return None
+        return 1
 
     failures_text = digest.get('failures_text', '-')
     date_str = digest.get('date_finished', '')
     try: 
         date = datetime.strptime(date_str, "%d/%m/%Y").date()
     except Exception as xc:
-        date = None
-        helper.printMessage('ERROR', 'm.mergeResults', f"\tCould not extract date from {date}")
+        # date = None
+        helper.printMessage('WARN', 'm.mergeResults', f"\tCould not extract date from [{date_str}]")
+        date = tender.deadline.date()
+        helper.printMessage('INFO', 'm.mergeResults', f"\tResults date fell back to Tender deadline: [{date}]")
         helper.printMessage('DEBUG', 'm.mergeResults', f"\tRaised exception: {xc}")
 
     has_tech = digest.get('has_tech', None)
@@ -321,7 +404,7 @@ def mergeResults(digest):
             amount_b = None
             amount_w = None
             winner = None
-                        
+
             if next((item for item in accepts_admin if item.get("name") == name and item.get("lot") == lot), None): 
                 admin = 'a'
                 found_depots += 1
@@ -334,14 +417,14 @@ def mergeResults(digest):
             
             if next((item for item in rejects_tech if item.get("name") == name and item.get("lot") == lot), None): 
                 reject_t = True
-                found_depots += 1            
+                found_depots += 1
             
             winner_item = next((item for item in winners if item.get("name") == name and item.get("lot") == lot), None)
             if winner_item:
                 amount_w = helper.getAmount(winner_item.get("amount"))
                 winner = True
                 found_depots += 1
-                
+
                 justifs = digest.get('winner_justifs', [])
                 justif_item = next((item for item in justifs if item.get("lot") == lot), None)
                 if justif_item:
@@ -353,7 +436,7 @@ def mergeResults(digest):
                 amount_a = helper.getAmount(offer_item.get("amount"))
                 found_depots += 1
 
-            if found_depots > 0:                
+            if found_depots > 0:
                 deposit, created_d = Deposit.objects.get_or_create(
                     opening=opening,
                     concurrent=concurrent,
@@ -371,14 +454,35 @@ def mergeResults(digest):
                 )
 
                 if created_d:
-                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Deposit instance, Lot { lot}, for { name }")
+                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Created Deposit, Lot { lot}, for { name }")
                 else:
-                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Updated existing Deposit instance, Lot { lot}, for { name }")
+                    helper.printMessage('DEBUG', 'm.mergeResults', f"\t==Updated existing Deposit, Lot { lot}, for { name }")
       
     return 0
 
 
-def timeRabat(snap, default_time=time(0,0)):
+def timeRabat(snap: Union[datetime, date, None], default_time: time = time(0, 0)) -> Optional[datetime]:
+    """Converts a date or naive datetime object to a timezone-aware Casablanca datetime.
+
+    If given a `date` instance (and not already a `datetime`), it combines the date 
+    with `default_time` and attaches the `Africa/Casablanca` timezone. If given a 
+    `datetime` instance, it returns it as-is without modification.
+
+    Args:
+        snap (Union[datetime, date, None]): The input date, datetime, or None.
+        default_time (time, optional): Time component used when `snap` is a `date` 
+            object. Defaults to midnight (`time(0, 0)`).
+
+    Returns:
+        Optional[datetime]: A localized `datetime` object in Casablanca timezone, 
+            the unchanged `datetime` if already provided, or `None` if `snap` is falsy.
+
+    Note:
+        This function assumes that non-datetime inputs can be safely passed to 
+        `datetime.combine()` (e.g., standard `datetime.date` instances). Passing an 
+        already timezone-aware `datetime` will return it unmodified without converting 
+        its timezone to Casablanca.
+    """
     rabat_tz = pytz.timezone("Africa/Casablanca")
     if not snap: return None
     if not isinstance(snap, datetime):
@@ -387,83 +491,105 @@ def timeRabat(snap, default_time=time(0,0)):
     return snap
 
 
-def createCckmp(category_data, client_data, kind_data, mode_data, procedure_data):
-    
-    category = None
-    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Category ... ")
-    if category_data:        
-        label = category_data.get('label')
-        if label:
-            category = Category.objects.filter(label=label).first()
-            if category == None:
-                category_serializer = CategorySerializer(data=category_data)
-                category_serializer.is_valid(raise_exception=True)
-                category = category_serializer.save()
-                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Category: {category.label}")
-            else:
-                helper.printMessage('TRACE', 'm.createCckmp', f"--- Category found. Skipping: {category.label}")
-    
-    client = None
-    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Client ... ")
-    if client_data:        
-        name = client_data.get('name')
-        if name:
-            client = Client.objects.filter(name=name).first()
-            if client == None:
-                client_serializer = ClientSerializer(data=client_data)
-                client_serializer.is_valid(raise_exception=True)
-                client = client_serializer.save()
-                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Client: {client.name}")
-            else:
-                helper.printMessage('TRACE', 'm.createCckmp', f"--- Client found. Skipping: {client.name}")
-    
-    kind = None
-    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Kind ... ")
-    if kind_data:        
-        name = kind_data.get('name')
-        if name:
-            kind = Kind.objects.filter(name=name).first()
-            if kind == None:
-                kind_serializer = Kinderializer(kind_data)
-                kind_serializer.is_valid(raise_exception=True)
-                kind = kind_serializer.save()
-                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Kind: {kind.name}")
-            else:
-                helper.printMessage('TRACE', 'm.createCckmp', f"--- Kind found. Skipping: {kind.name}")
-    
-    mode = None
-    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Mode ... ")
-    if mode_data:        
-        name = mode_data.get('name')
-        if name:
-            mode = Mode.objects.filter(name=name).first()
-            if mode == None:
-                mode_serializer = ModeSerializer(data=mode_data)
-                mode_serializer.is_valid(raise_exception=True)
-                mode = mode_serializer.save()
-                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Mode: {mode.name}")
-            else:
-                helper.printMessage('TRACE', 'm.createCckmp', f"--- Mode found. Skipping: {mode.name}")
-    
-    procedure = None
-    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Procedure ... ")
-    if procedure_data:        
-        name = procedure_data.get('name')
-        if name:
-            procedure = Procedure.objects.filter(name=name).first()
-            if procedure == None:
-                procedure_serializer = ProcedureSerializer(data=procedure_data)
-                procedure_serializer.is_valid(raise_exception=True)
-                procedure = procedure_serializer.save()
-                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Procedure: {procedure.name}")
-            else:
-                helper.printMessage('TRACE', 'm.createCckmp', f"--- Procedure found. Skipping: {procedure.name}")
-    
+def createCckmp(
+        category_data: Optional[Dict[str, Any]],
+        client_data: Optional[Dict[str, Any]],
+        kind_data: Optional[Dict[str, Any]],
+        mode_data: Optional[Dict[str, Any]],
+        procedure_data: Optional[Dict[str, Any]]
+    ) -> Tuple[
+        Optional[Category], 
+        Optional[Client], 
+        Optional[Kind], 
+        Optional[Mode], 
+        Optional[Procedure]
+    ]:
+    """Ensures presence of core reference entities (Category, Client, Kind, Mode, Procedure).
+
+    Checks if each entity exists by its unique lookup field. If found, returns the 
+    existing record; otherwise, validates the payload using its corresponding DRF 
+    serializer and persists a new instance to the database.
+
+    Args:
+        category_data (dict, optional): Serializer data for Category (lookup field: 'label').
+        client_data (dict, optional): Serializer data for Client (lookup field: 'name').
+        kind_data (dict, optional): Serializer data for Kind (lookup field: 'name').
+        mode_data (dict, optional): Serializer data for Mode (lookup field: 'name').
+        procedure_data (dict, optional): Serializer data for Procedure (lookup field: 'name').
+
+    Returns:
+        tuple: A 5-element tuple containing (Category, Client, Kind, Mode, Procedure) instances.
+    """
+
+    def _get_or_create_entity(
+            model_cls: Type[Model],
+            serializer_cls: Type[Serializer],
+            data: Optional[Dict[str, Any]],
+            lookup_field: str = 'name',
+            caller_name: str = 'm.createCckmp'
+        ) -> Optional[Model]:
+        """Helper to retrieve an existing model instance or validate and save a new one via serializer."""
+        entity_type = model_cls.__name__
+        helper.printMessage('TRACE', caller_name, f"### Handling {entity_type} ... ")
+
+        if not data:
+            return None
+
+        lookup_val = data.get(lookup_field)
+        if not lookup_val:
+            return None
+
+        # Check if instance already exists
+        instance = model_cls.objects.filter(**{lookup_field: lookup_val}).first()
+        if instance:
+            display_name = getattr(instance, lookup_field, str(instance))
+            helper.printMessage('TRACE', caller_name, f"--- {entity_type} found. Skipping: {display_name}")
+            return instance
+
+        # Validate and create via serializer
+        serializer = serializer_cls(data=data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        
+        display_name = getattr(instance, lookup_field, str(instance))
+        helper.printMessage('TRACE', caller_name, f"+++ Created {entity_type}: {display_name}")
+        return instance
+
+
+    category = _get_or_create_entity(Category, CategorySerializer, category_data, lookup_field='label')
+    client = _get_or_create_entity(Client, ClientSerializer, client_data, lookup_field='name')
+    kind = _get_or_create_entity(Kind, KindSerializer, kind_data, lookup_field='name')
+    mode = _get_or_create_entity(Mode, ModeSerializer, mode_data, lookup_field='name')
+    procedure = _get_or_create_entity(Procedure, ProcedureSerializer, procedure_data, lookup_field='name')
 
     return category, client, kind, mode, procedure
 
 
-def handleDCE(tender):
+def handleDCE(tender: Optional[Tender]) -> Optional[str]:
+    """Downloads and syncs DCE (Dossier de Consultation Eléctronique) documents for a tender.
+
+    Attempts to doenload DCE files to a local DCE directory for the specified tender. 
+    If running on a remote machine (`C.MACHINE == 'remote'`), it synchronizes the local 
+    media directory with the remote server. If retrieval or synchronization fails, it logs 
+    a failure record in the `FileToGet` tracking table.
+
+    Args:
+        tender (Tender): The Django model instance representing the target tender. 
+            Must have a `chrono` attribute.
+
+    Returns:
+        Optional[str]: The local directory path (`dce_dir`) to the DCE files if retrieval 
+            and synchronization succeed; otherwise `None`.
+
+    Side Effects:
+        - May invoke external file download logic (`getDCE`).
+        - May perform directory network synchronization (`helper.syncDir`).
+        - On failure or incomplete execution, creates or updates a `FileToGet` record 
+          with `reason='Failed'`.
+        - Logs progress, warnings, and errors using `helper.printMessage`.
+        - Prints stack traces on exceptions via `traceback.print_exc()`.
+    """
+
     dce_dir, synced = None, None
     if tender:
         try:
@@ -475,6 +601,8 @@ def handleDCE(tender):
                     helper.printMessage('TRACE', 'm.handleDCE', f"#### Syncing DCE to remote server ... ")
                     media_dce = os.path.join(dce_dir, '..')
                     synced = helper.syncDir(media_dce)
+                else:
+                    synced = True
             else:
                 helper.printMessage('WARN', 'm.handleDCE', f"---- Could not get DCE for Tender {tender.chrono} ... ")
 
@@ -494,7 +622,73 @@ def handleDCE(tender):
     return dce_dir if synced else None
 
 
-def createTender(input_data, category, client, kind, mode, procedure):
+def handleExtra(tender: Optional[Tender], extra_files):
+
+    extra_dir, synced = None, None
+    if tender:
+        try:
+            helper.printMessage('DEBUG', 'm.handleExtra', f"#### Getting Extra for Tender {tender.chrono} ... ")
+            added_files = getExtraFiles(tender, extra_files)
+            if added_files == None:
+                return None
+            extra_dir = added_files.get('path', None)
+            if extra_dir:
+                helper.printMessage('DEBUG', 'm.handleExtra', f"++++ Got Extra for Tender {tender.chrono} ... ")
+                if C.MACHINE == 'remote':
+                    helper.printMessage('TRACE', 'm.handleExtra', f"#### Syncing Extra to remote server ... ")
+                    media_extra = os.path.join(extra_dir, '..')
+                    synced = helper.syncDir(media_extra)
+                else:
+                    synced = True
+            else:
+                helper.printMessage('WARN', 'm.handleExtra', f"---- Could not get Extra for Tender {tender.chrono} ... ")
+
+        except:
+            helper.printMessage('WARN', 'm.handleExtra', "---- Exception raised saving Extra request.")
+            traceback.print_exc()
+
+    if extra_dir == None or synced == None:
+        helper.printMessage('WARN', 'm.handleExtra', f"---- Extra handling failed for Tender {tender.chrono} ...")
+        # try:
+        #     f2d, _ = FileToGet.objects.update_or_create(tender=tender, defaults={'reason': 'Failed'})
+        #     helper.printMessage('TRACE', 'm.handleExtra', f"~~~~ Filed a Extra request for Tender {tender.chrono}.")
+        # except:
+        #     helper.printMessage('WARN', 'm.handleExtra', "---- Exception raised saving Extra request.")
+        #     traceback.print_exc()
+
+    return extra_dir if synced else None
+
+
+def createTender(
+        input_data: Dict[str, Any],
+        category: Optional[Category],
+        client: Optional[Client],
+        kind: Optional[Kind],
+        mode: Optional[Mode],
+        procedure: Optional[Procedure]
+    ) -> Tender:
+    """Validates raw input data and creates a new Tender database record.
+
+    Logs the raw dictionary payload for tracing, validates the data using 
+    `TenderSerializer`, and persists the new instance while binding its associated 
+    foreign key relations (Category, Client, Kind, Mode, and Procedure).
+
+    Args:
+        input_data (Dict[str, Any]): Dictionary containing raw attributes to build 
+            the tender object.
+        category (Optional[Category]): Resolved Category model instance to attach.
+        client (Optional[Client]): Resolved Client model instance to attach.
+        kind (Optional[Kind]): Resolved Kind model instance to attach.
+        mode (Optional[Mode]): Resolved Mode model instance to attach.
+        procedure (Optional[Procedure]): Resolved Procedure model instance to attach.
+
+    Returns:
+        Tender: The newly created and saved Tender Django model instance.
+
+    Raises:
+        rest_framework.exceptions.ValidationError: If `input_data` fails 
+            serializer validation rules.
+    """
     validated_data = input_data
     chrono = validated_data.get('chrono')
     tender = None
@@ -507,9 +701,73 @@ def createTender(input_data, category, client, kind, mode, procedure):
 
 
 @transaction.atomic
-def updateTender(tender, input_data, category, client, kind, mode, procedure):
+def updateTender(
+        tender: Any,
+        input_data: Dict[str, Any],
+        category: Optional[Category],
+        client: Optional[Client],
+        kind: Optional[Kind],
+        mode: Optional[Mode],
+        procedure: Optional[Procedure]
+    ) -> List[Dict[str, Any]]:
+    """Evaluates an existing Tender for changes and updates it atomically if modified.
 
-    def domainsChanged(tender, domains_data):
+    Uses inner helpers (`tenderChanged` and `domainsChanged`) to detect discrepancies 
+    between the current Tender model state and the incoming dictionary payload. If a change 
+    is detected, the function validates the updated data via `TenderSerializer`, persists 
+    the model changes along with foreign key relations, updates domain mappings via `setDomains`, 
+    and returns a summary of the modification.
+
+    Args:
+        tender (Tender): The existing Django model instance to evaluate and update.
+        input_data (Dict[str, Any]): Updated raw dictionary attributes for the tender.
+        category (Optional[Category]): Foreign key Category model instance to attach.
+        client (Optional[Client]): Foreign key Client model instance to attach.
+        kind (Optional[Kind]): Foreign key Kind model instance to attach.
+        mode (Optional[Mode]): Foreign key Mode model instance to attach.
+        procedure (Optional[Procedure]): Foreign key Procedure model instance to attach.
+
+    Returns:
+        List[Dict[str, Any]]: A list containing a change descriptor dictionary if an 
+            update occurred (e.g., `[{'level': 'Tender', 'field': ..., 'old_value': ..., 'new_value': ...}]`), 
+            or an empty list `[]` if no changes were detected.
+
+    Side Effects:
+        - Executes within a database transaction block (`@transaction.atomic`). Any failure 
+          during serializer validation or domain updates rolls back all database operations.
+        - Mutates the `tender` record in the database if differences are detected.
+        - Invokes `setDomains` to replace or update related `Domain` records on the tender.
+        - Logs tracing and debugging output via `helper.printMessage`.
+
+    Raises:
+        rest_framework.exceptions.ValidationError: If `input_data` fails serializer validation 
+            when changes are detected.
+    """
+
+    def domainsChanged(tender: Any, domains_data: List[Dict[str, Any]]) -> Optional[Dict[str, str]]:
+        """Detects changes between a tender's existing database domains and new incoming domains data.
+
+        Compares domain counts first. If counts differ, returns a change dictionary summarizing
+        the count discrepancy. If counts match, evaluates set differences between domain names.
+        Returns details on modified domain names if differences are detected.
+
+        Args:
+            tender (Tender): The Django model instance containing existing domain relations.
+            domains_data (List[Dict[str, Any]]): A list of dictionaries containing updated domain
+                payloads (e.g., `[{'name': 'IT'}, {'name': 'Telecom'}]`).
+
+        Returns:
+            Optional[Dict[str, str]]: A dictionary detailing the detected change with keys:
+                `level`, `field`, `old_value`, and `new_value`. Returns `None` if no changes
+                are detected.
+
+        Note:
+            - If domain counts differ, the returned dictionary sets `field` to `"domains"` 
+            and reports counts as string values.
+            - If counts match but contents differ, the returned dictionary sets `field` to `"domain"` 
+            and lists comma-separated domain names sorted alphabetically.
+            - Duplicate names in `domains_data` may trigger set logic checks even if list lengths match.
+        """
         existing_names = list(tender.domains.values_list("name", flat=True))
         new_names = [data.get("name") for data in domains_data if "name" in data]
 
@@ -534,8 +792,32 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
 
         return None
 
+    def tenderChanged(tender: Any, input_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+        """Compares an existing Tender model instance against incoming payload data for changes.
 
-    def tenderChanged(tender, input_data):
+        Evaluates simple model fields, foreign key relationships, and attached domain lists 
+        in order. Returns immediately on the first detected field discrepancy.
+
+        Args:
+            tender (Tender): The existing Django model instance representing the tender.
+            input_data (Dict[str, Any]): Dictionary containing updated key-value attributes 
+                to compare against the current tender state.
+
+        Returns:
+            Optional[Dict[str, Any]]: A dictionary describing the first detected change with keys:
+                - `level` (str): Scope of the change (always `"Tender"`).
+                - `field` (str): Name of the changed attribute or entity.
+                - `old_value` (Any): Formatted string representation of the old value.
+                - `new_value` (Any): Formatted string representation of the new value.
+                Returns `None` if no changes are detected across all checked fields.
+
+        Notes:
+            - Evaluation follows a strict order: primitive fields -> foreign key attributes -> domains list.
+            - `datetime` objects are formatted as `YYYY-MM-THH:MZ` for display.
+            - `date` objects are formatted as `YYYY-MM-DD` for display.
+            - Foreign key relationships (`category`, `mode`, `procedure`, `client`, `kind`) are only 
+            evaluated if the target related object already exists on `tender`.
+        """
 
         helper.printMessage('DEBUG', 'm.tenderChanged', f"#### Checking domains for changes ...")
         CHECK_FIELDS = (
@@ -551,7 +833,6 @@ def updateTender(tender, input_data, category, client, kind, mode, procedure):
                 helper.printMessage('TRACE', 'm.tenderChanged', f"##### Checking changes for {field} ...")
                 new_value = input_data[field]
                 old_value = getattr(tender, field, None)
-                # if field == "size_bytes" and old_value != None and new_value != None:
 
                 old_value_display = old_value
                 if type(old_value) is datetime: old_value_display = old_value.strftime('%Y-%m-%dT%H:%MZ')
@@ -707,11 +988,6 @@ def lotsChanged(lots_data, tender):
     def samplesChanged(lot, samples_data):
         existing_samples = list(lot.samples.values_list('when', 'description'))        
         new_samples = [(data.get("when"), data.get("description")) for data in samples_data]
-        
-        # print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-        # print(existing_samples)
-        # print("----------------------------------")
-        # print(new_samples)
 
         level = f"Lot #{lot.number}" if lot.tender.lots_count > 1 else "Tender"
         if len(samples_data) != len(existing_samples):
@@ -1392,3 +1668,79 @@ def logChanges(changed_fields, tender):
 
 
 
+
+
+def x_createCckmp(category_data, client_data, kind_data, mode_data, procedure_data):
+    
+    category = None
+    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Category ... ")
+    if category_data:        
+        label = category_data.get('label')
+        if label:
+            category = Category.objects.filter(label=label).first()
+            if category == None:
+                category_serializer = CategorySerializer(data=category_data)
+                category_serializer.is_valid(raise_exception=True)
+                category = category_serializer.save()
+                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Category: {category.label}")
+            else:
+                helper.printMessage('TRACE', 'm.createCckmp', f"--- Category found. Skipping: {category.label}")
+    
+    client = None
+    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Client ... ")
+    if client_data:        
+        name = client_data.get('name')
+        if name:
+            client = Client.objects.filter(name=name).first()
+            if client == None:
+                client_serializer = ClientSerializer(data=client_data)
+                client_serializer.is_valid(raise_exception=True)
+                client = client_serializer.save()
+                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Client: {client.name}")
+            else:
+                helper.printMessage('TRACE', 'm.createCckmp', f"--- Client found. Skipping: {client.name}")
+    
+    kind = None
+    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Kind ... ")
+    if kind_data:        
+        name = kind_data.get('name')
+        if name:
+            kind = Kind.objects.filter(name=name).first()
+            if kind == None:
+                kind_serializer = KindSerializer(kind_data)
+                kind_serializer.is_valid(raise_exception=True)
+                kind = kind_serializer.save()
+                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Kind: {kind.name}")
+            else:
+                helper.printMessage('TRACE', 'm.createCckmp', f"--- Kind found. Skipping: {kind.name}")
+    
+    mode = None
+    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Mode ... ")
+    if mode_data:        
+        name = mode_data.get('name')
+        if name:
+            mode = Mode.objects.filter(name=name).first()
+            if mode == None:
+                mode_serializer = ModeSerializer(data=mode_data)
+                mode_serializer.is_valid(raise_exception=True)
+                mode = mode_serializer.save()
+                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Mode: {mode.name}")
+            else:
+                helper.printMessage('TRACE', 'm.createCckmp', f"--- Mode found. Skipping: {mode.name}")
+    
+    procedure = None
+    helper.printMessage('TRACE', 'm.createCckmp', "### Handling Procedure ... ")
+    if procedure_data:        
+        name = procedure_data.get('name')
+        if name:
+            procedure = Procedure.objects.filter(name=name).first()
+            if procedure == None:
+                procedure_serializer = ProcedureSerializer(data=procedure_data)
+                procedure_serializer.is_valid(raise_exception=True)
+                procedure = procedure_serializer.save()
+                helper.printMessage('TRACE', 'm.createCckmp', f"+++ Created Procedure: {procedure.name}")
+            else:
+                helper.printMessage('TRACE', 'm.createCckmp', f"--- Procedure found. Skipping: {procedure.name}")
+    
+
+    return category, client, kind, mode, procedure

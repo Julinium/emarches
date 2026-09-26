@@ -512,9 +512,9 @@
                     </div>
                     <div class="modal-body">
 
-                        {% if tender.files_info  %}
+                        {% if tender.dce_files_info  %}
                             <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
-                            {% for f in tender.files_info %}
+                            {% for f in tender.dce_files_info %}
                                 <a id="dce-{{ tender.chrono }}000{{ forloop.counter }}"
                                 class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
                                 href="{% url 'portal_tender_get_file' tender.id f.name %}">
@@ -524,25 +524,21 @@
                                 </a>
                             {% endfor %}
                         {% else %}
-                        <div class="text-center mb-2">
-                            <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
-                        </div>
-                        <div class="text-danger">{% translate "Files for this Tender are not ready, yet." %}</div>
-                        <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
+                            <div class="text-center mb-2">
+                                <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
+                            </div>
+                            <div class="text-danger">{% translate "Files for this Tender are not ready, yet." %}</div>
+                            <div class="small text-muted">{% translate "Please try again later, or contact us if this problem persists." %}</div>
                         {% endif %}
 
                     </div>
                     <div class="modal-footer">
-                        {% if tender.files_info  %}
+                        {% if tender.dce_files_info  %}
                             <a href="/base_legal'" target="_blank" class="btn btn-outline-secondary">
                                 <span><i class="bi bi-shield-exclamation"></i></span>
                                 <span class="ms-1">{% translate 'Legal Information' %}</span>
                             </a>
                         {% else %}
-                            <!-- <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
-                                <span><i class="{{ bicons.send }}"></i></span>
-                                <span class="ms-1">{% translate 'Contact Us' %}</span>
-                            </a> -->
                         {% endif %}
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <span><i class="bi bi-x-lg"></i></span>
@@ -602,7 +598,7 @@
         
     </div>
 
-    {% if tender.files_info|length == 1 %}
+    {% if tender.dce_files_info|length == 1 %}
         <script>
             document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {
                 bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();

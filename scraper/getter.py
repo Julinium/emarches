@@ -270,6 +270,16 @@ def getJson(link_item, skipExisting=False):
             lots_href = lots_span['href']
 
         #######################
+        has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}') is not None
+
+        extra_files = []
+        results_link = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}')
+        extra_btn = soup.find("a", href=re.compile(r"index\.php\?page=entreprise\.EntrepriseDownloadAvisJAL.*&idAvis=\d+"))
+
+        if extra_btn: extra_files.append({'link': extra_btn["href"], 'name': extra_btn.get_text(strip=True),})
+
+
+        #######################
 
         if len(lots_href) > 2:
             cons_lots = getLots(lots_href)
@@ -292,7 +302,6 @@ def getJson(link_item, skipExisting=False):
                     }
                 ]
 
-        has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}') is not None
 
         cons_dict = {
             "published"         : cons_pub_d,
@@ -322,8 +331,11 @@ def getJson(link_item, skipExisting=False):
             "link"              : cons_uri,
             "size_read"         : cons_sized,
             "size_bytes"        : cons_bytes,
+            "results_link"      : results_link,
+            "extra_files"       : extra_files,
             "has_minutes"       : has_minutes,
             }
+
 
         helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_item[0]}')
         return cons_dict

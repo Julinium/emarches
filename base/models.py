@@ -387,7 +387,7 @@ class Tender(models.Model):
         return 0
 
     @property
-    def files_info(self):
+    def dce_files_info(self):
 
         files_list = []
         total_size = 0
@@ -398,7 +398,7 @@ class Tender(models.Model):
         if os.path.exists(dce_dir):
             files_list = os.listdir(dce_dir)
 
-        files_info = []
+        dce_files_info = []
         if len(files_list) > 0:
             for entry in files_list:
                 full_path = os.path.join(dce_dir, entry)
@@ -406,15 +406,39 @@ class Tender(models.Model):
                     if os.path.isfile(full_path):
                         sizens = os.path.getsize(full_path)
                         total_size += sizens
-                        files_info.append({"name": entry, "size": sizens})
+                        dce_files_info.append({"name": entry, "size": sizens})
 
-        return files_info
+        return dce_files_info
+
+    @property
+    def extra_files_info(self):
+
+        files_list = []
+        total_size = 0
+        dce_dir = os.path.join(
+            os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
+            settings.DL_PATH_PREFIX + self.chrono,
+        )
+        if os.path.exists(dce_dir):
+            files_list = os.listdir(dce_dir)
+
+        extra_files_info = []
+        if len(files_list) > 0:
+            for entry in files_list:
+                full_path = os.path.join(dce_dir, entry)
+                if os.path.exists(full_path):
+                    if os.path.isfile(full_path):
+                        sizens = os.path.getsize(full_path)
+                        total_size += sizens
+                        extra_files_info.append({"name": entry, "size": sizens})
+
+        return extra_files_info
 
 
     @property
     def total_size(self):
         total_size = 0
-        for f in self.files_info:
+        for f in self.dce_files_info:
             total_size += f.get("size", 0)
         return total_size
 

@@ -141,7 +141,7 @@ class TenderSerializer(serializers.ModelSerializer):
             'size_bytes', 'address_withdrawal', 'address_bidding', 
             'address_opening', 'contact_name', 'contact_phone', 'contact_email', 
             'contact_fax', 'created', 'updated', 'cancelled', 'link', 'acronym', 
-            'category', 'mode', 'procedure', 'client', 'kind', #'domains', 'lots'
+            'category', 'mode', 'procedure', 'client', 'kind', 'has_minutes', #'lots'
         ]
 
 

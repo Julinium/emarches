@@ -116,7 +116,7 @@
                         <span class="fw-light text-uppercase">{% trans "Admin Reserves" %}</span>
                         <span class="small fw-bold ps-2
                                     {% if admin_reserves_deposits.all|length > 0 %}
-                                        text-warning
+                                        text-secondary
                                     {% endif %}">
                             {{ admin_reserves_deposits.all|length }}
                         </span>
@@ -139,7 +139,7 @@
                         <span class="fw-light text-uppercase">{% trans "Tech Rejects" %}</span>
                         <span class="small fw-bold ps-2 
                                     {% if tech_rejects_deposits.all|length > 0 %}
-                                        text-danger
+                                        text-warning
                                     {% endif %}
                                     ">
                             {{ tech_rejects_deposits.all|length }}
