@@ -1,0 +1,285 @@
+:root {
+    --bg-neutral: #efefef;
+    --bg-success: #d5f1b7;
+    --bg-warning: #fffad7;
+    --bg-danger: #fae8e2;
+
+    --text-main: #363636;
+    --text-bright: #000;
+    --text-muted: #70777f;
+    --text-success: #008202;
+    --text-warning: #ff8800;
+    --text-danger: #e82424;
+
+    --bd-neutral: #a4a4a4;
+    --bd-success: #069810;
+    --bd-warning: #ffb428;
+    --bd-danger: #ff4949;
+}
+
+@font-face {
+    font-family: "Condensed";
+    src: url('../fonts/UbuntuCondensed-Regular.ttf') format("ttf");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Ubuntu";
+    src: url('../fonts/Ubuntu-Medium.ttf') format("ttf");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Aldo";
+    src: url('../fonts/Aldo.ttf') format("ttf");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Classy";
+    src: url('../fonts/ClassVariable.ttf') format("ttf");
+    font-weight: 100;
+}
+
+@font-face {
+    font-family: "Naskh";
+    src: url('../fonts/NotoNaskhArabic-VariableFont_wght.ttf') format("ttf");
+    font-weight: 100;
+}
+
+body {
+    /* font-family: sans-serif, serif, "Ubuntu", "Naskh"; */
+    unicode-bidi: plaintext;
+    line-height: 1.2;
+    margin: 0;
+    padding: 0;
+}
+
+@page {
+    size: A4;
+
+    margin-top: 20mm;
+    margin-bottom: 20mm;
+    margin-left: 15mm;
+    margin-right: 15mm;
+
+    @top-center {
+        content: element(header);
+        vertical-align: bottom;
+        padding-bottom: 4mm;
+    }
+
+    @bottom-right {
+        content: counter(page) "/" counter(pages);
+        font-family: "Ubuntu", "Naskh", sans-serif, serif;
+        font-size: 10pt;
+        color: var(--text-muted);
+        margin-top: 0.5rem;
+        padding: 0 0.5rem 2rem;
+        max-width: 8rem;
+        /* min-width: 3rem; */
+        background-color: var(--bg-neutral);
+        border-top: 0.5rem solid var(--bd-neutral);
+    }
+
+    @bottom-center {
+        content: element(footer);
+        vertical-align: bottom;
+        padding-bottom: 10mm;
+    }
+
+    background: url('brand/insi-wm.svg') center center / 70mm auto;
+    background-repeat: repeat;
+}
+
+#header-svg {
+    position: running(header);
+    text-align: center;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+#footer-svg {
+    position: running(footer);
+    text-align: center;
+    height: 10mm;
+    bottom: 0;
+    left: 0;
+}
+
+body,
+div,
+table,
+p {
+    font-family: "Classy", "Naskh", "Aldo", "Ubuntu", sans-serif, serif;
+    background-color: transparent;
+}
+
+.head-title {
+    font-family: "Ubuntu", "Naskh", "Aldo", "Classy", sans-serif, serif;
+    text-align: center;
+    width: 100%;
+    font-size: x-large;
+    font-weight: bolder;
+    padding: 0.5rem;
+    text-transform: uppercase;
+}
+
+.digital {
+    font-family: "Classy", "Condensed";
+    color: var(--text-main);
+    font-weight: 900;
+    font-size: medium;
+}
+
+.unstyled-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+section {
+    margin: 6rem 0 2rem;
+    /* break-before: page; */
+}
+
+.section-header {
+    display: block;
+    align-items: center;
+    padding: 0.25rem 0.5rem 0.25rem;
+    border-radius: 0.25rem;
+    border: 1px solid;
+    margin-bottom: 1rem;
+    background-color: var(--bg-neutral);
+    text-transform: uppercase;
+    font-size: x-large;
+    font-weight: bold;
+    break-inside: avoid;
+}
+
+.flexirow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.flexiline {
+    flex: 1;
+    height: 1px;
+    background-color: var(--bg-neutral);
+    margin-top: 0.25rem;
+}
+
+.tiny {
+    margin: 0;
+    padding: 0 0 2rem;
+    color: var(--text-muted);
+    font-size: 6pt;
+}
+
+.repeater {
+    margin-left: 1rem;
+}
+
+.repeater-container {
+    display: block;
+    break-inside: avoid;
+    padding: 1rem 0.25rem 1rem;
+    border-bottom: 1px solid var(--bd-neutral);
+}
+
+.repeater-surtitle {
+    opacity: 0.5;
+    margin: 0 0 0.25rem;
+    font-size: small;
+    font-weight: lighter;
+}
+
+.repeater-subtitle {
+    opacity: 0.5;
+    margin: 0.25rem 0 0;
+    font-size: small;
+    font-weight: lighter;
+}
+
+.repeater-emphasis {
+    /* margin: 0.25rem 0 0; */
+    color: var(--text-main);
+    font-size: medium;
+    font-weight: bolder;
+    font-family: "Classy", "Condensed";
+    text-align: end;
+}
+
+.repeater-title {
+    opacity: 0.7;
+    font-size: medium;
+}
+
+.repeater-tiny {
+    /* opacity: 0.5; */
+    font-size: small;
+}
+
+.green-badge {
+    background-color: var(--bg-success);
+    border-radius: 0.2rem;
+    padding: 0 0.2rem;
+    color: var(--text-success);
+}
+
+.gray-badge {
+    background-color: var(--bg-neutral);
+    border-radius: 0.2rem;
+    padding: 0 0.2rem;
+    color: var(--text-muted);
+}
+
+.page-break {
+    page-break-before: always;
+}
+
+/* --- Table of Contents Styling --- */
+
+.toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.toc li {
+    margin-bottom: 0;
+}
+
+.toc a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    text-decoration: none;
+    color: inherit;
+    margin: 0.5rem 0 0.5rem 1rem;
+    border-bottom: 1px dotted var(--bd-neutral);
+}
+
+/* Fills the gap between text and page number with dots */
+.toc a::before {
+    content: "";
+    order: 2;
+    flex-grow: 1;
+    margin: 0 1rem;
+    /* border-bottom: 1px dotted #000; */
+}
+
+/* Title text stays on the left */
+.toc a span {
+    order: 1;
+}
+
+/* Page number forced to the right */
+.toc a::after {
+    content: target-counter(attr(href), page);
+    order: 3;
+    font-weight: lighter;
+    color: var(--bd-neutral);
+}

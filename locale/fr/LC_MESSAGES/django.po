@@ -8,17 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-20 23:15+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2026-09-27 23:31+0100\n"
+"PO-Revision-Date: 2026-09-27 23:31+0100\n"
+"Last-Translator: Amina Bouhou <a.bouhou@emarches.com>\n"
+"Language-Team: FR <a.bouhou@emarches.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: base/models.py:628 bdc/models.py:118 bidding/models.py:42 nas/models.py:77
+#: base/models.py:653 bdc/models.py:118 bidding/models.py:42 nas/models.py:77
 #: nas/models.py:259 nas/models.py:301 nas/models.py:446
 #: templates/bidding/team-recap.html:114 templates/bidding/team-recap.html:291
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:60
@@ -28,6 +28,34 @@ msgstr ""
 #: templates/nas/companies/snippets/iced_modal.html:45
 msgid "Name"
 msgstr "Nom"
+
+#: base/models.py:654
+msgid "Business Id - ICE"
+msgstr "ICE"
+
+#: base/models.py:655
+msgid "Commerce Registry Number"
+msgstr "Numéro de Registre du Commerce"
+
+#: base/models.py:656
+msgid "Commerce Registry City"
+msgstr "Ville de Registre du Commerce"
+
+#: base/models.py:657
+msgid "Capital"
+msgstr "Capital"
+
+#: base/models.py:658 nas/models.py:84
+msgid "Activity"
+msgstr "Activité"
+
+#: base/models.py:659
+msgid "Legal Status"
+msgstr "Statut légal"
+
+#: base/models.py:660
+msgid "Date Established"
+msgstr "Date de création"
 
 #: base/templates/base/about.html:5 base/templates/base/about.html:11
 msgid "About Us"
@@ -626,8 +654,7 @@ msgid "Question still unanswered ?"
 msgstr "Vous n'avez pas trouvé réponse à votre question ?"
 
 #: base/templates/base/faqs.html:175 base/templates/base/legal.html:77
-#: base/templates/base/legal.html:135 templates/portal/tender-details.html:544
-#: templates/portal/tender-details.html:589
+#: base/templates/base/legal.html:135 templates/portal/tender-details.html:585
 msgid "Contact Us"
 msgstr "Contactez-nous"
 
@@ -1073,7 +1100,7 @@ msgstr ""
 msgid "Clear current"
 msgstr "Effacer le fichier actuel"
 
-#: base/views.py:27 bdc/views.py:365 bdc/views.py:436 bdc/views.py:454
+#: base/views.py:29 bdc/views.py:365 bdc/views.py:436 bdc/views.py:454
 #: bdc/views.py:472 bdc/views.py:477 bdc/views.py:495 bdc/views.py:641
 #: bdc/views.py:644 bdc/views.py:666 bdc/views.py:673 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
@@ -1086,7 +1113,7 @@ msgstr "Effacer le fichier actuel"
 msgid "Not found"
 msgstr "Introuvable"
 
-#: base/views.py:32 base/views.py:36 bdc/views.py:69 bdc/views.py:287
+#: base/views.py:34 base/views.py:38 bdc/views.py:69 bdc/views.py:287
 #: bdc/views.py:355 bdc/views.py:423 bdc/views.py:464 bdc/views.py:505
 #: bdc/views.py:638 bdc/views.py:670 bdc/views.py:694 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
@@ -1109,7 +1136,7 @@ msgstr "Introuvable"
 msgid "Permission denied"
 msgstr "Permission refusée"
 
-#: base/views.py:41 bidding/views.py:2131 bidding/views.py:2186
+#: base/views.py:43 bidding/views.py:2131 bidding/views.py:2186
 #: nas/views.py:497 nas/views.py:541
 msgid "File not found"
 msgstr "Fichier introuvable"
@@ -1128,7 +1155,7 @@ msgid "Title"
 msgstr "Titre"
 
 #: bdc/models.py:18 bidding/models.py:429 bidding/models.py:538
-#: bidding/models.py:595 bidding/models.py:629
+#: bidding/models.py:595 bidding/models.py:629 insights/weasy.py:94
 #: templates/bdc/bdc-details.html:72
 #: templates/bdc/snippets/bdcs/search-form.html:39
 #: templates/bidding/bid-form.html:64
@@ -1167,7 +1194,7 @@ msgstr "Infructueux"
 msgid "Official link"
 msgstr "Lien officiel"
 
-#: bdc/models.py:28 templates/bdc/bdc-details.html:81
+#: bdc/models.py:28 insights/weasy.py:93 templates/bdc/bdc-details.html:81
 #: templates/bdc/snippets/bdcs/search-form.html:107
 #: templates/portal/snippets/lots/lot-details.html:62
 #: templates/portal/snippets/tenders/search-form.html:108
@@ -1378,8 +1405,8 @@ msgstr "Statut de l'offre"
 msgid "Details"
 msgstr "Détails"
 
-#: bidding/models.py:136 templates/bidding/bid-details.html:84
-#: templates/bidding/expense-form.html:48
+#: bidding/models.py:136 insights/weasy.py:104
+#: templates/bidding/bid-details.html:84 templates/bidding/expense-form.html:48
 #: templates/bidding/snippets/bids/bid-menu-sort.html:40
 #: templates/bidding/snippets/bonds/bond-menu-sort.html:32
 #: templates/bidding/snippets/tasks/task-menu-sort.html:32
@@ -1493,7 +1520,7 @@ msgid "Bid"
 msgstr "Offre"
 
 #: bidding/models.py:431 bidding/models.py:599 bidding/models.py:639
-#: templates/bdc/bdc-articles-pdf.html:156
+#: insights/weasy.py:96 templates/bdc/bdc-articles-pdf.html:156
 #: templates/bdc/snippets/bdcs/search-form.html:40
 #: templates/bidding/bid-details.html:226 templates/bidding/bid-form.html:44
 #: templates/bidding/expense-form.html:28 templates/bidding/task-form.html:28
@@ -1846,29 +1873,122 @@ msgstr "Dépense supprimée avec succès"
 msgid "Expense creator is not an active team member"
 msgstr "Le créateur de la dépense n'est pas un membre actif de l'équipe"
 
-#: emarches/settings.py:181
+#: emarches/settings.py:177
 msgid "English"
 msgstr "Anglais"
 
-#: emarches/settings.py:182
+#: emarches/settings.py:178
 msgid "French"
 msgstr "Français"
 
-#: emarches/settings.py:183
+#: emarches/settings.py:179
 msgid "Arabic"
 msgstr "Arabe"
 
-#: emarches/settings.py:184
+#: emarches/settings.py:180
 msgid "Amazigh"
 msgstr "Amazighe"
 
-#: emarches/settings.py:185
+#: emarches/settings.py:181
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: emarches/settings.py:186
+#: emarches/settings.py:182
 msgid "German"
 msgstr "Allemand"
+
+#: insights/weasy.py:30
+msgid "Generated by "
+msgstr "Généré par"
+
+#: insights/weasy.py:92 nas/models.py:179 nas/models.py:196 nas/models.py:214
+#: templates/base/base.html:17 templates/base/base.html:18
+#: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
+#: templates/bidding/snippets/bids/bid-actions.html:13
+#: templates/bidding/snippets/bids/bid-item.html:160
+#: templates/bidding/snippets/bonds/bond-item.html:76
+msgid "Tender"
+msgstr "Appel d'offres"
+
+#: insights/weasy.py:95 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
+#: nas/choices.py:94 templates/bdc/bdc-details.html:76
+#: templates/bdc/snippets/bdcs/menu-sort.html:23
+#: templates/bidding/bid-form.html:64
+#: templates/portal/snippets/tenders/menu-sort.html:35
+#: templates/portal/tender-details.html:131
+msgid "Published"
+msgstr "Publié"
+
+#: insights/weasy.py:97 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
+#: nas/choices.py:92 templates/bdc/bdc-details.html:63
+#: templates/bdc/snippets/bdcs/menu-sort.html:17
+#: templates/portal/snippets/tenders/menu-sort.html:17
+#: templates/portal/tender-details.html:117
+msgid "Deadline"
+msgstr "Date limite"
+
+#: insights/weasy.py:98 nas/choices.py:83 nas/choices.py:84
+#: templates/bidding/bid-details.html:101 templates/bidding/bid-form.html:94
+#: templates/portal/snippets/lots/lot-details.html:42
+#: templates/portal/snippets/tenders/menu-sort.html:23
+#: templates/portal/snippets/tenders/tender-simulator-modal.html:140
+msgid "Estimate"
+msgstr "Estimation"
+
+#: insights/weasy.py:99 templates/bidding/bid-form.html:74
+msgid "Bond"
+msgstr "Cautionnement"
+
+#: insights/weasy.py:100
+msgid "Opening date"
+msgstr "Date d'ouverture"
+
+#: insights/weasy.py:101
+msgid "Lot Number"
+msgstr "Lot Numéro"
+
+#: insights/weasy.py:102
+msgid "Admin Exam"
+msgstr "Examen administratif"
+
+#: insights/weasy.py:103
+msgid "Tech Exam"
+msgstr "Examen Technique"
+
+#: insights/weasy.py:105
+msgid "Corrected Amount"
+msgstr "Montant du cautionnement"
+
+#: insights/weasy.py:106
+msgid "Financial Race"
+msgstr "Compétitions financières"
+
+#: insights/weasy.py:107
+msgid "Awarded Amount"
+msgstr "Montant attribué"
+
+#: insights/weasy.py:108
+msgid "Awarding justification"
+msgstr "Justification d'attribution'"
+
+#: insights/weasy.py:114 nas/choices.py:62 nas/choices.py:67
+#: templates/portal/snippets/tenders/search-form.html:166
+msgid "Accepted"
+msgstr "Accepté"
+
+#: insights/weasy.py:115 insights/weasy.py:117
+msgid "Rejected"
+msgstr "Rejeté"
+
+#: insights/weasy.py:116
+msgid "Reserve"
+msgstr "Réservé"
+
+#: insights/weasy.py:118 nas/choices.py:28
+#: templates/bdc/snippets/bdcs/menu-clean.html:33
+#: templates/bdc/snippets/bdcs/search-form.html:124
+msgid "Awarded"
+msgstr "Attribué"
 
 #: nas/choices.py:6
 msgid "Mr."
@@ -1926,11 +2046,6 @@ msgstr "Perdu"
 #: nas/choices.py:27 templates/bdc/bdc-details.html:130
 msgid "Unknown"
 msgstr "Inconnu"
-
-#: nas/choices.py:28 templates/bdc/snippets/bdcs/menu-clean.html:33
-#: templates/bdc/snippets/bdcs/search-form.html:124
-msgid "Awarded"
-msgstr "Attribué"
 
 #: nas/choices.py:29
 msgid "Admin Reject"
@@ -1996,36 +2111,6 @@ msgstr "Confirmé"
 #: nas/choices.py:61
 msgid "Denied"
 msgstr "Refusé"
-
-#: nas/choices.py:62 nas/choices.py:67
-#: templates/portal/snippets/tenders/search-form.html:166
-msgid "Accepted"
-msgstr "Accepté"
-
-#: nas/choices.py:81 nas/choices.py:82 nas/choices.py:91 nas/choices.py:92
-#: templates/bdc/bdc-details.html:63
-#: templates/bdc/snippets/bdcs/menu-sort.html:17
-#: templates/portal/snippets/tenders/menu-sort.html:17
-#: templates/portal/tender-details.html:117
-msgid "Deadline"
-msgstr "Date limite"
-
-#: nas/choices.py:83 nas/choices.py:84 templates/bidding/bid-details.html:101
-#: templates/bidding/bid-form.html:94
-#: templates/portal/snippets/lots/lot-details.html:42
-#: templates/portal/snippets/tenders/menu-sort.html:23
-#: templates/portal/snippets/tenders/tender-simulator-modal.html:140
-msgid "Estimate"
-msgstr "Estimation"
-
-#: nas/choices.py:87 nas/choices.py:88 nas/choices.py:93 nas/choices.py:94
-#: templates/bdc/bdc-details.html:76
-#: templates/bdc/snippets/bdcs/menu-sort.html:23
-#: templates/bidding/bid-form.html:64
-#: templates/portal/snippets/tenders/menu-sort.html:35
-#: templates/portal/tender-details.html:131
-msgid "Published"
-msgstr "Publié"
 
 #: nas/choices.py:95 nas/choices.py:96
 #: templates/bdc/snippets/bdcs/menu-clean.html:43
@@ -2236,10 +2321,6 @@ msgstr "Adresse"
 msgid "Website"
 msgstr "Site web"
 
-#: nas/models.py:84
-msgid "Activity"
-msgstr "Activité"
-
 #: nas/models.py:85 nas/models.py:455
 msgid "Descritpion"
 msgstr "Description"
@@ -2252,7 +2333,8 @@ msgstr "Logo"
 msgid "Agrements"
 msgstr "Agréments"
 
-#: nas/models.py:88 templates/insights/bidder-pdf.html:403
+#: nas/models.py:88 templates/insights/bidder-pdf.html:103
+#: templates/insights/bidder-pdf.html:252
 #: templates/nas/companies/qualifs_form.html:20
 #: templates/nas/companies/snippets/company-item.html:33
 #: templates/nas/companies/snippets/qualif_list.html:12
@@ -2266,15 +2348,6 @@ msgstr "Qualifications"
 #: templates/nas/snippets/menu-account.html:42
 msgid "Companies"
 msgstr "Entreprises"
-
-#: nas/models.py:179 nas/models.py:196 nas/models.py:214
-#: templates/base/base.html:17 templates/base/base.html:18
-#: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
-#: templates/bidding/snippets/bids/bid-actions.html:13
-#: templates/bidding/snippets/bids/bid-item.html:160
-#: templates/bidding/snippets/bonds/bond-item.html:76
-msgid "Tender"
-msgstr "Appel d'offres"
 
 #: nas/models.py:181 nas/models.py:394
 msgid "Date Added"
@@ -3140,11 +3213,6 @@ msgid "Bad Token"
 msgstr "Jeton invalide"
 
 #: templates/account/password_reset_from_key.html:18
-#, fuzzy, python-format
-#| msgid ""
-#| "The password reset link was invalid, possibly because it has already been "
-#| "used. Please request a <a href=\"%(passwd_reset_url)s\">new password "
-#| "reset</a>."
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
@@ -3591,17 +3659,15 @@ msgstr ""
 
 #: templates/base/home.html:19 templates/bidding/contract-details.html:102
 #: templates/insights/bidder-details.html:55
-#: templates/insights/bidder-pdf.html:276
+#: templates/insights/bidder-pdf.html:58 templates/insights/bidder-pdf.html:123
 #: templates/nas/user-settings-edit.html:76
 #: templates/portal/snippets/menu-tenders.html:8
 msgid "Tenders"
 msgstr "Appels d'offres"
 
-#: templates/base/home.html:20 templates/bdc/snippets/menu-bdc.html:64
-#: templates/insights/bidder-details.html:207
-#: templates/portal/snippets/menu-tenders.html:71
-msgid "Clients"
-msgstr "Acheteurs publics"
+#: templates/base/home.html:20 templates/bidding/snippets/menu-bidding.html:15
+msgid "Concurrents"
+msgstr "Concurrents"
 
 #: templates/base/home.html:39
 msgid ""
@@ -4095,8 +4161,8 @@ msgstr ""
 #: templates/portal/snippets/lots/lots-details.html:22
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:28
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:170
-#: templates/portal/tender-details.html:549
-#: templates/portal/tender-details.html:593
+#: templates/portal/tender-details.html:545
+#: templates/portal/tender-details.html:589
 msgid "Close"
 msgstr "Fermer"
 
@@ -4110,15 +4176,15 @@ msgstr "Élément retiré des favoris avec succès"
 
 #: templates/bdc/bdc-details.html:284
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:642
-#: templates/portal/tender-details.html:686
+#: templates/portal/tender-details.html:638
+#: templates/portal/tender-details.html:682
 msgid "Operation failed"
 msgstr "Échec de l'opération"
 
 #: templates/bdc/bdc-details.html:284
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:642
-#: templates/portal/tender-details.html:686
+#: templates/portal/tender-details.html:638
+#: templates/portal/tender-details.html:682
 msgid "Please refresh the page or try again later"
 msgstr "Veuillez rafraîchir la page ou réessayer plus tard"
 
@@ -4528,6 +4594,12 @@ msgstr "Fournitures"
 msgid "Works"
 msgstr "Travaux"
 
+#: templates/bdc/snippets/menu-bdc.html:64
+#: templates/insights/bidder-details.html:207
+#: templates/portal/snippets/menu-tenders.html:71
+msgid "Clients"
+msgstr "Acheteurs publics"
+
 #: templates/bdc/snippets/menu-bdc.html:71
 #: templates/portal/snippets/menu-tenders.html:78
 msgid "Locations"
@@ -4700,10 +4772,6 @@ msgstr "ANNULÉ"
 msgid "Execution location"
 msgstr "Lieu d'exécution"
 
-#: templates/bidding/bid-form.html:74
-msgid "Bond"
-msgstr "Cautionnement"
-
 #: templates/bidding/bid-form.html:164 templates/bidding/expense-form.html:101
 #: templates/bidding/task-form.html:101 templates/bidding/team-recap.html:367
 #: templates/mfa/webauthn/edit_form.html:18
@@ -4779,7 +4847,7 @@ msgstr "Restitution à venir"
 #: templates/insights/bidder-details.html:7
 #: templates/insights/bidder-details.html:8
 #: templates/insights/bidder-details.html:13
-#: templates/insights/bidder-pdf.html:250
+#: templates/insights/bidder-pdf.html:32
 msgid "Concurrent details"
 msgstr "Détails du concurrent"
 
@@ -4896,7 +4964,7 @@ msgstr "Offres financières"
 
 #: templates/bidding/contract-details.html:432
 #: templates/insights/bidder-details.html:187
-#: templates/insights/bidder-pdf.html:360
+#: templates/insights/bidder-pdf.html:88 templates/insights/bidder-pdf.html:208
 msgid "Awardings"
 msgstr "Attributions"
 
@@ -5200,10 +5268,6 @@ msgstr "Admin"
 #: templates/nas/user-settings-edit.html:240
 msgid "Bidding"
 msgstr "Soumission"
-
-#: templates/bidding/snippets/menu-bidding.html:15
-msgid "Concurrents"
-msgstr "Concurrents"
 
 #: templates/bidding/snippets/menu-bidding.html:31
 #: templates/nas/companies/snippets/company-item.html:179
@@ -5564,56 +5628,67 @@ msgid "CSV SpreadSheet"
 msgstr "Feuille CSV"
 
 #: templates/insights/bidder-details.html:304
-#: templates/portal/tender-details.html:653
+#: templates/portal/tender-details.html:649
 msgid "URL was copied to clipboard"
 msgstr "L'URL a été copiée dans le presse-papiers"
 
-#: templates/insights/bidder-pdf.html:256
+#: templates/insights/bidder-pdf.html:38
 msgid ""
 "This document was generated using an automated system for information "
 "purposes only."
-msgstr "Ce document a été généré par un système automatisé pour information seulement."
+msgstr ""
+"Ce document a été généré par un système automatisé pour information "
+"seulement."
 
-#: templates/insights/bidder-pdf.html:290
+#: templates/insights/bidder-pdf.html:53
+msgid "Table of Contents"
+msgstr "Table des matières"
+
+#: templates/insights/bidder-pdf.html:63 templates/insights/bidder-pdf.html:137
 msgid "Administrative Rejects"
 msgstr "Éliminations administratives"
 
-#: templates/insights/bidder-pdf.html:304
+#: templates/insights/bidder-pdf.html:68 templates/insights/bidder-pdf.html:151
 msgid "Administrative Passes"
 msgstr "Admissions administratives"
 
-#: templates/insights/bidder-pdf.html:318
+#: templates/insights/bidder-pdf.html:73 templates/insights/bidder-pdf.html:165
 msgid "Administrative Reserves"
 msgstr "Réserves administratives"
 
-#: templates/insights/bidder-pdf.html:332
+#: templates/insights/bidder-pdf.html:78 templates/insights/bidder-pdf.html:179
 msgid "Technical Rejects"
 msgstr "Éliminations techniques"
 
-#: templates/insights/bidder-pdf.html:346
+#: templates/insights/bidder-pdf.html:83 templates/insights/bidder-pdf.html:193
 msgid "Financial Races"
 msgstr "Compétitions financières"
 
-#: templates/insights/bidder-pdf.html:375 templates/portal/clients-list.html:6
-#: templates/portal/clients-list.html:7
+#: templates/insights/bidder-pdf.html:93 templates/insights/bidder-pdf.html:224
+#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
 msgid "Public Clients"
 msgstr "Acheteurs publics"
 
-#: templates/insights/bidder-pdf.html:389 templates/portal/domains-list.html:6
-#: templates/portal/domains-list.html:12
-#: templates/portal/snippets/tenders/search-form.html:43
-#: templates/portal/tender-details.html:273
-msgid "Domains of activity"
+#: templates/insights/bidder-pdf.html:98
+msgid "Domains of Activity"
 msgstr "Domaines d'activité"
 
-#: templates/insights/bidder-pdf.html:417
+#: templates/insights/bidder-pdf.html:108
+#: templates/insights/bidder-pdf.html:266
 #: templates/nas/companies/agrements_form.html:19
 #: templates/nas/companies/snippets/agrement_list.html:13
 #: templates/portal/snippets/tenders/search-form.html:203
 msgid "Licenses"
 msgstr "Agréments"
 
-#: templates/insights/bidder-pdf.html:445
+#: templates/insights/bidder-pdf.html:238 templates/portal/domains-list.html:6
+#: templates/portal/domains-list.html:12
+#: templates/portal/snippets/tenders/search-form.html:43
+#: templates/portal/tender-details.html:273
+msgid "Domains of activity"
+msgstr "Domaines d'activité"
+
+#: templates/insights/bidder-pdf.html:294
 msgid "Error: Not found."
 msgstr "Erreur: Introuvable"
 
@@ -5633,7 +5708,7 @@ msgstr "Dernière offre"
 
 #: templates/insights/snippets/bidders/bidder-item.html:19
 #: templates/insights/snippets/bidders/digest-card.html:100
-#: templates/insights/snippets/bidders/pdf/digest-card.html:63
+#: templates/insights/snippets/bidders/pdf/digest-card.html:80
 msgid "Awarded Bids"
 msgstr "Offres attribuées"
 
@@ -5707,7 +5782,7 @@ msgid "50%% or less"
 msgstr "50%% ou moins"
 
 #: templates/insights/snippets/bidders/digest-card.html:119
-#: templates/insights/snippets/bidders/pdf/digest-card.html:74
+#: templates/insights/snippets/bidders/pdf/digest-card.html:108
 msgid "Highest award"
 msgstr "Top Attribution"
 
@@ -5718,16 +5793,15 @@ msgstr "Top Attribution"
 msgid "Biddings"
 msgstr "Soumissions"
 
-#: templates/insights/snippets/bidders/pdf/digest-card.html:53
-#: templates/nas/companies/snippets/company-item.html:71
-msgid "Total awards"
-msgstr "Total Attributions"
+#: templates/insights/snippets/bidders/pdf/digest-card.html:91
+msgid "Total Awardings"
+msgstr "Total des Attributions"
 
-#: templates/insights/snippets/bidders/pdf/digest-card.html:58
+#: templates/insights/snippets/bidders/pdf/digest-card.html:98
 msgid "Total Bids"
 msgstr "Total Soumissions"
 
-#: templates/insights/snippets/bidders/pdf/digest-card.html:79
+#: templates/insights/snippets/bidders/pdf/digest-card.html:103
 msgid "Latest award"
 msgstr "Dernière Attribution"
 
@@ -6200,6 +6274,10 @@ msgstr "Total des dépenses"
 #: templates/nas/companies/snippets/company-item.html:63
 msgid "Total submitted bids"
 msgstr "Total des candidatures soumises"
+
+#: templates/nas/companies/snippets/company-item.html:71
+msgid "Total awards"
+msgstr "Total Attributions"
 
 #: templates/nas/companies/snippets/company-item.html:98
 #: templates/nas/companies/snippets/iced_modal.html:27
@@ -7121,38 +7199,38 @@ msgstr "Fichiers de l'appel d'offres"
 msgid "Files for this Tender are not ready, yet."
 msgstr "Les fichiers pour cet appel d'offres ne sont pas encore prêts."
 
-#: templates/portal/tender-details.html:560
+#: templates/portal/tender-details.html:556
 msgid "Request Tender files"
 msgstr "Demander les fichiers de l'appel d'offres"
 
-#: templates/portal/tender-details.html:567
+#: templates/portal/tender-details.html:563
 msgid "Files for this Tender are already queued"
 msgstr "Les fichiers pour cet appel d'offres sont déjà en file d'attente"
 
-#: templates/portal/tender-details.html:569
+#: templates/portal/tender-details.html:565
 msgid "We will make this Tender files available as soon as possible."
 msgstr ""
 "Nous rendrons les fichiers de cet appel d'offres disponibles dès que "
 "possible."
 
-#: templates/portal/tender-details.html:578
-#: templates/portal/tender-details.html:584
+#: templates/portal/tender-details.html:574
+#: templates/portal/tender-details.html:580
 msgid "Request"
 msgstr "Demander"
 
-#: templates/portal/tender-details.html:620
+#: templates/portal/tender-details.html:616
 msgid "Item added to Favourites"
 msgstr "Élément ajouté aux favoris"
 
-#: templates/portal/tender-details.html:631
+#: templates/portal/tender-details.html:627
 msgid "Item removed from Favourites"
 msgstr "Élément retiré des favoris"
 
-#: templates/portal/tender-details.html:664
+#: templates/portal/tender-details.html:660
 msgid "Files request submitted"
 msgstr "Demande de fichiers transmise"
 
-#: templates/portal/tender-details.html:675
+#: templates/portal/tender-details.html:671
 msgid "Files are already queued for download"
 msgstr "Les fichiers sont déjà en attente de téléchargement"
 

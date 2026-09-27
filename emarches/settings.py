@@ -12,21 +12,18 @@ env_path = BASE_DIR / '.env'
 load_dotenv(dotenv_path=env_path)
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = ENVIRONMENT != 'production'
-
+SITE_HOST = os.getenv("SITE_HOST")
 
 # DEBUG = True
+ALLOWED_HOSTS = [
+        os.getenv("DOMAIN_NAME"),
+        os.getenv("IP_ADDRESS")
+    ]
 
-ALLOWED_HOSTS = ['127.0.0.1', 'testserver', os.getenv("DOMAIN_NAME"), os.getenv("IP_ADDRESS")]
 
-
-SITE_ID = 1
-
-
-INSTALLED_APPS = [
-    
+INSTALLED_APPS = [    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.sites',
@@ -34,8 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django.contrib.postgres',
-
+    'django.contrib.sitemaps',
 
     'emarches',
     'base',
@@ -51,7 +47,6 @@ INSTALLED_APPS = [
     'user_agents',
     'debug_toolbar',
 
-
     # TODO: "ics custom format"     -> "https://chatgpt.com/c/69b5e44d-6ca0-8331-aeb4-aec09baf9285",
     # TODO: "django-altcha"         -> "https://pypi.org/project/django-altcha/",
     # TODO: "django-blackbox"       -> "https://pypi.org/project/django-blackbox/",
@@ -60,7 +55,6 @@ INSTALLED_APPS = [
     # TODO: "django-pg-audit"       -> "https://pypi.org/project/django-pg-audit/",
     # TODO: "streamlit-calendar"    -> "https://pypi.org/project/streamlit-calendar/",
     # TODO: "web-fragments"         -> "https://pypi.org/project/web-fragments/",
-
 
     # 'easy_pdf',
 
@@ -76,6 +70,8 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.github',
     # 'allauth.socialaccount.providers.twitter',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

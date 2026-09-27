@@ -25,7 +25,7 @@ from django.template.loader import render_to_string
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as trans
-from django.views.decorators.cache import cache_control, never_cache
+from django.views.decorators.cache import cache_control
 from weasyprint import HTML
 
 from base.context_processors import portal_context

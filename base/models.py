@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models import Avg, Count, F, Max, Min, Q, Sum
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse
 
 from .texter import normalize_text as nt
 from .helper import safe_eval_repr
@@ -344,7 +345,6 @@ class Tender(models.Model):
     locwords = models.TextField(blank=True, null=True, editable=False)
     domwords = models.TextField(blank=True, null=True, editable=False)
 
-    # digested = models.DateTimeField(blank=True, null=True)
     created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
     updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
 
@@ -434,14 +434,12 @@ class Tender(models.Model):
 
         return extra_files_info
 
-
     @property
     def total_size(self):
         total_size = 0
         for f in self.dce_files_info:
             total_size += f.get("size", 0)
         return total_size
-
 
     def save(self, *args, **kwargs):
         self.keywords = nt(f"{ self.title } { self.chrono }")
@@ -465,6 +463,9 @@ class Tender(models.Model):
             self.updated = timezone.now()
 
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse("portal_tender_details", kwargs={"pk": self.id})
 
 
 class Lot(models.Model):
@@ -648,8 +649,15 @@ class Crawler(models.Model):
 
 
 class Concurrent(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name      = models.CharField(max_length=255, db_index=True, default="MODE 777", verbose_name=_('Name'))
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name        = models.CharField(max_length=255, db_index=True, default="MODE 777", verbose_name=_('Name'))
+    ice         = models.CharField(max_length=16, db_index=True, null=True, verbose_name=_('Enterprise Id - ICE'))
+    rc_number   = models.CharField(max_length=16, db_index=True, null=True, verbose_name=_('Commerce Registry Number'))
+    rc_city     = models.CharField(max_length=16, null=True, verbose_name=_('Commerce Registry City'))
+    capital     = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, verbose_name=_('Capital'))
+    activity    = models.TextField(null=True, verbose_name=_('Activity'))
+    status      = models.CharField(max_length=32, null=True, verbose_name=_('Legal Status'))
+    established = models.DateField(null=True, blank=True, verbose_name=_("Date Established"))
 
     @property
     def pseudo(self):
@@ -666,8 +674,6 @@ class Concurrent(models.Model):
     def winners_sum(self): 
         return self.deposits.aggregate(
                 total=Sum('amount_w', filter=Q(winner=True))
-            # ).prefetch_related(
-            #     'concurrent'
             )['total'] or 0
 
     @property
@@ -808,7 +814,6 @@ class Concurrent(models.Model):
             )
             .order_by("-deposits_count", 'short')
         )
-    
 
     class Meta:
         db_table = 'base_concurrent'
@@ -816,6 +821,9 @@ class Concurrent(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_absolute_url(self):
+        return reverse("insights_bidder_details", kwargs={"pk": self.id})
 
 
 class Opening(models.Model):
@@ -1011,9 +1019,3 @@ def make_acronym(s: str) -> str:
 
     return "".join(letters).upper()
     
-
-
-
-
-
-

@@ -136,7 +136,9 @@ def bidders_list(request):
 
     query_dict, query_string, query_unsorted = get_req_params(request)
 
-    all_bidders = Concurrent.objects.annotate(
+    all_bidders = Concurrent.objects.filter(
+            deposits__isnull=False
+        ).annotate(
             part_count = Count('deposits', distinct=True), 
             wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
             bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 

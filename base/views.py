@@ -8,7 +8,9 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponse
 
-from django.http import StreamingHttpResponse
+from django.contrib.sitemaps.views import index as sitemap_index_view
+from django.contrib.sitemaps.views import sitemap as sitemap_view
+
 
 logger_portal = logging.getLogger("portal")
 
@@ -50,25 +52,21 @@ def robots_txt(request):
         # "Disallow: /porders/",
         # "Disallow: /bidders/",
         "Disallow: /bidding/",
+        "Sitemap: https://new.emarches.com/sitemap.xml",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 
-# def portal_log_json(request):
-    # def generate():
-    #     yield "[\n\n"
-    #     first = True
-    #     with open(log_file) as f:
-    #         for line in f:
-    #             line = line.strip()
-    #             if not line:
-    #                 continue
-    #             if not first:
-    #                 yield ",\n\n"
-    #             yield line
-    #             first = False
-    #     yield "\n\n]\n"
 
-    # logger_portal.info(f"Log file view: { logger }.log", extra={"request": request})
-    # return StreamingHttpResponse(generate(), content_type="application/json")
+def clean_sitemap_index(request, sitemaps):
+    response = sitemap_index_view(request, sitemaps=sitemaps)
+    # Strip the header if Django or an app attached it
+    response.headers.pop('X-Robots-Tag', None)
+    response.headers.pop('x-robots-tag', None)
+    return response
 
-
+def clean_sitemap(request, sitemaps, section=None):
+    response = sitemap_view(request, sitemaps=sitemaps, section=section)
+    # Strip the header if Django or an app attached it
+    response.headers.pop('X-Robots-Tag', None)
+    response.headers.pop('x-robots-tag', None)
+    return response
