@@ -56,12 +56,13 @@ body {
 }
 
 @page {
-    size: A4;
+    size: A4 ;
+    margin: 20mm;
 
-    margin-top: 20mm;
+    /* margin-top: 20mm;
     margin-bottom: 20mm;
     margin-left: 15mm;
-    margin-right: 15mm;
+    margin-right: 15mm; */
 
     @top-center {
         content: element(header);
@@ -108,10 +109,7 @@ body {
     left: 0;
 }
 
-body,
-div,
-table,
-p {
+body, div, table, p {
     font-family: "Classy", "Naskh", "Aldo", "Ubuntu", sans-serif, serif;
     background-color: transparent;
 }
@@ -139,22 +137,28 @@ p {
 }
 
 section {
-    margin: 6rem 0 2rem;
+    margin: 1rem 0 5rem 0;
     /* break-before: page; */
 }
 
 .section-header {
     display: block;
     align-items: center;
-    padding: 0.25rem 0.5rem 0.25rem;
-    border-radius: 0.25rem;
-    border: 1px solid;
+    padding: 0.25rem 0.5rem 0;
+    /* border-radius: 0.25rem; */
+    border-bottom: 1px solid;
     margin-bottom: 1rem;
-    background-color: var(--bg-neutral);
+    /* background-color: var(--bg-neutral); */
     text-transform: uppercase;
+    text-decoration: none;
     font-size: x-large;
     font-weight: bold;
     break-inside: avoid;
+}
+
+.section-header a {
+    color: inherit;
+    text-decoration: none;
 }
 
 .flexirow {
@@ -186,7 +190,8 @@ section {
     display: block;
     break-inside: avoid;
     padding: 1rem 0.25rem 1rem;
-    border-bottom: 1px solid var(--bd-neutral);
+    margin: 1rem 0 1rem;
+    border-bottom: 1px dotted var(--bd-neutral);
 }
 
 .repeater-surtitle {
@@ -258,7 +263,7 @@ section {
     align-items: baseline;
     text-decoration: none;
     color: inherit;
-    margin: 0.5rem 0 0.5rem 1rem;
+    margin: 1rem 0 1rem 2rem;
     border-bottom: 1px dotted var(--bd-neutral);
 }
 

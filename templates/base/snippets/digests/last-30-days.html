@@ -1,0 +1,52 @@
+{% load i18n %}
+
+
+<section class="py-2">
+  <div class="d-none container">
+    <!-- Section Header -->
+    <div class="d-flex align-items-center mb-4">
+      <div>
+        <small class="font-weight-bold mb-1">{% trans "Things are moving" %}</small>
+        <!-- <p class="text-muted small mb-0">Overview of key metrics for the past month</p> -->
+      </div>
+      <small
+        class="badge bg-primary-subtle text-muted border border-primary-subtle px-2 py-1 rounded-pill small ms-2 fw-lighter">
+        <small class="fs-7">{% trans "30 Days" %}</small>
+      </small>
+    </div>
+
+    <div class="row g-3">
+      {% trans "New Tenders" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='bar-chart-fill' d_metric='1,234' d_key=d_key %}
+
+      {% trans "Opening minutes" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='people-fill' d_metric='567' d_key=d_key %}
+
+      {% trans "Awarded Amount" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='currency-dollar' d_metric='$89M' d_key=d_key %}
+
+      {% trans "Success rate" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='graph-up-arrow' d_metric='87.5%' d_key=d_key %}
+
+    </div>
+  </div>
+</section>
+
+
+<section id="latest-metrics" class="">
+  <div class="d-flex flex-wrap gap-4">
+
+      {% trans "New Tenders" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='bar-chart-fill' d_metric='1,234' d_key=d_key %}
+
+      {% trans "Opening minutes" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='people-fill' d_metric='567' d_key=d_key %}
+
+      {% trans "Awarded Amount" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='currency-dollar' d_metric='$89M' d_key=d_key %}
+
+      {% trans "Success rate" as d_key %}
+      {% include "base/snippets/digests/carddito.html" with d_bicon='graph-up-arrow' d_metric='87.5%' d_key=d_key %}
+
+  </div>
+</section>

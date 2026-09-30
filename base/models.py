@@ -975,10 +975,91 @@ class Deposit(models.Model):
         if not offer: return None
         return offer - opti
 
-
     class Meta:
         db_table = 'base_deposit'
         ordering = ['opening', 'lot_number', 'amount_a']
+
+
+class Machine(models.Model):
+    id       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ip       = models.CharField(max_length=64, default='IP.ADD.RE.SS')
+    name     = models.CharField(max_length=64, default='HOST')
+    python   = models.CharField(max_length=64)
+    base_dir = models.CharField(max_length=512)
+
+    class Meta:
+        db_table = 'base_machine'
+        ordering = ['name']
+
+
+class Parkour(models.Model):
+    id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    started       = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    finished      = models.DateTimeField(blank=True, null=True)
+    machine       = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name="parcours", blank=True, null=True)
+    deadline_min  = models.DateField()
+    deadline_max  = models.DateField()
+    published_min = models.DateField()
+    published_max = models.DateField()
+    page_length   = models.CharField(max_length=8, default='500')
+
+    class Meta:
+        db_table = 'base_parkour'
+        ordering = ['-finished']
+
+
+class Link(models.Model):
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created   = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    updated   = models.DateTimeField(blank=True, null=True)
+
+    published = models.DateField()
+    chrono    = models.CharField(max_length=16, blank=True, null=True)
+    acronym   = models.CharField(max_length=8, blank=True, null=True)
+    enviro    = models.BooleanField(default=False)
+
+    parkour   = models.ForeignKey(Parkour, on_delete=models.SET_NULL, related_name="links", blank=True, null=True)
+    tender    = models.ForeignKey(Tender, on_delete=models.SET_NULL, related_name="crawler_links", blank=True, null=True)
+
+    class Meta:
+        db_table = 'base_link'
+        ordering = ['-created']
+
+    # TODO: Add enviro field to Lot and Tender.
+    # TODO: Handle Tenders found in Database, but removed from official site.
+    # Add a field to flag such tenders as 'Discarded' ?
+
+
+class Harvest(models.Model):
+    id       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    started  = models.DateTimeField(blank=True, null=True, auto_now_add=True, verbose_name="Started")
+    finished = models.DateTimeField(blank=True, null=True, verbose_name="Finished")
+
+    machine  = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name="harvests", blank=True, null=True)
+
+    links_handled = models.SmallIntegerField(blank=True, null=True, default=0)
+    tenders_created = models.SmallIntegerField(blank=True, null=True, default=0)
+    tenders_updated = models.SmallIntegerField(blank=True, null=True, default=0)
+    tenders_discarded = models.SmallIntegerField(blank=True, null=True, default=0)
+
+    dce_files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+    extra_files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+    dce_files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+    extra_files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+
+    successfull = models.BooleanField(blank=True, null=True, default=True)
+
+    class Meta:
+        db_table = 'base_harvest'
+        ordering = ['-finished']
+
+    @property
+    def duration(self):
+        if self.started and self.finished:
+            return self.finished - self.started
+        return None
+
+
 
 
 def make_acronym(s: str) -> str:

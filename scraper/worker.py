@@ -73,8 +73,8 @@ def do_the_work():
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.handle_tenders', f"Sleeping << { tenders_created + tenders_updated } Tenders handled ({ tenders_created } new + {tenders_updated } updates). Burst is { C.BURST_LENGTH }.", 1)
-                        helper.printMessage('INFO', 'w.handle_tenders', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
+                        helper.printMessage('DEBUG', 'w.handle_tenders', f"Burst ({ C.BURST_LENGTH }) ended at {i:03}/{ll:03}. Tenders handled: { tenders_created + tenders_updated } ({ tenders_created } new + {tenders_updated } updates).", 1)
+                        helper.printMessage('DEBUG', 'w.handle_tenders', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
                         helper.sleepRandom(20, 45)
                         handled = 0
         else:

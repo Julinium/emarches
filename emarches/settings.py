@@ -122,12 +122,13 @@ if ENVIRONMENT == 'production':
             'NAME':     os.getenv("DB_NAME"),
             'USER':     os.getenv("DB_USER"),
             'PASSWORD': os.getenv("DB_PASS"),
+            'CONN_HEALTH_CHECKS': True,
         }
     }
 
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_USE_SSL = False
-    EMAIL_USE_TLS = True
+    EMAIL_BACKEND       = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_USE_SSL       = False
+    EMAIL_USE_TLS       = True
     EMAIL_HOST          = os.getenv("EMAIL_HOST")
     EMAIL_PORT          = os.getenv("EMAIL_PORT")
     EMAIL_HOST_USER     = os.getenv("EMAIL_HOST_USER")
@@ -153,13 +154,13 @@ else:
     AUTH_PASSWORD_VALIDATORS = []
 
 
-LANGUAGE_CODE = 'en'
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_L10N = True
+LANGUAGE_CODE   = 'en'
+TIME_ZONE       = 'UTC'
+USE_I18N        = True
+USE_L10N        = True
 
-TIME_ZONE = 'Africa/Casablanca'
-USE_TZ = True
+TIME_ZONE   = 'Africa/Casablanca'
+USE_TZ      = True
 
 EXTRA_LANG_INFO = {
     'zg': {

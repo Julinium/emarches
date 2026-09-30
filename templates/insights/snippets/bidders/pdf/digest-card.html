@@ -112,7 +112,7 @@
 
         <div id="qr-image">
             <div style="align-items: center; margin: 0 0.25rem 0;">
-                <a href="{{ url }}" class="unstyled-link">
+                <a href="{% url 'insights_bidder_details' bidder.id %}" class="unstyled-link" target="_blank">
                     <img src="{{ qr_code }}" alt="QR" style="height: 30mm; width: 30mm;">
                 </a>
             </div>

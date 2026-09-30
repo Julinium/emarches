@@ -11,7 +11,10 @@
         <meta name="dcterms.created" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="dcterms.modified" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="generator" content="eMarches.com">
+        
 		<link href="{% static 'styles/bidder-pdf.css' %}" rel="stylesheet">
+
+        <base href="{{ request.scheme }}://{{ request.get_host }}">
 
 	</head>
 
@@ -48,6 +51,8 @@
             <div id="bidder-summary">
                 {% include 'insights/snippets/bidders/pdf/digest-card.html' %}
             </div>
+
+            <div style="margin: 4rem 0;"></div>
 
             <section class="toc" id="table-of-content">
                 <h2>{% trans 'Table of Contents' %}</h2>
@@ -119,10 +124,14 @@
                 <section id="table-tenders">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Tenders' %}:</span> 
                                 <span>{{ bidder.tenders.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Tenders' %}:</span> 
+                                <span>{{ bidder.tenders.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -133,10 +142,14 @@
                 <section id="table-admin-rejects">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Administrative Rejects' %}:</span> 
                                 <span>{{ admin_rejects_deposits.all|length }}</span>
-                            </div> 
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Administrative Rejects' %}:</span> 
+                                <span>{{ admin_rejects_deposits.all|length }}</span>
+                            </div>  -->
                         </div>
                     
                     <div>
@@ -147,10 +160,14 @@
                 <section id="table-admin-accepts">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Administrative Passes' %}:</span> 
                                 <span>{{ admin_accepts_deposits.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Administrative Passes' %}:</span> 
+                                <span>{{ admin_accepts_deposits.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -161,10 +178,14 @@
                 <section id="table-admin-reserves">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Administrative Reserves' %}:</span>
                                 <span>{{ admin_reserves_deposits.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Administrative Reserves' %}:</span>
+                                <span>{{ admin_reserves_deposits.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -175,10 +196,14 @@
                 <section id="table-tech-rejects">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Technical Rejects' %}:</span>
                                 <span>{{ tech_rejects_deposits.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Technical Rejects' %}:</span>
+                                <span>{{ tech_rejects_deposits.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -187,13 +212,22 @@
                 </section>
                 
                 <section id="table-financials">
-                    
+                                        
                         <div class="section-header">
-                            <div>
-                                <span>{% trans 'Financial Races' %}:</span>
-                                <span>{{ fin_races_deposits.all|length }}</span>
+                            <div style="display: flex; justify-content: space-between;">
+
+                                <a href="#table-of-content">
+                                    <span>{% trans 'Financial Races' %}:</span>
+                                    <span>{{ fin_races_deposits.all|length }}</span>
+                                </a>
+                                {% if deposits_sum %}
+                                    <div>
+                                        <!-- <span class="green-badge">&starf;</span> -->
+                                        <span>{{ deposits_sum|default:'-' }}</span>
+                                    </div>
+                                {% endif %}
                             </div>
-                        </div>
+                        </div>                    
                     
                     <div>
                         {% include 'insights/snippets/bidders/pdf/financials.html' %}
@@ -204,11 +238,17 @@
                     
                         <div class="section-header">
                             <div style="display: flex; justify-content: space-between;">
-                                <div>
+
+                                <a href="#table-of-content">
                                     <span>{% trans 'Awardings' %}:</span>
                                     <span>{{ winners_deposits.all|length }}</span>
-                                </div>
-                                <div>{{ awards_sum|default:'-'}}</div>
+                                </a>
+                                {% if awards_sum %}
+                                    <div>
+                                        <!-- <span class="green-badge">&starf;</span> -->
+                                        <span>{{ awards_sum|default:'-' }}</span>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     
@@ -220,10 +260,14 @@
                 <section id="table-clients">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Public Clients' %}:</span>
                                 <span>{{ clients.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Public Clients' %}:</span>
+                                <span>{{ clients.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -234,10 +278,14 @@
                 <section id="table-domains">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Domains of activity' %}:</span>
                                 <span>{{ domains.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Domains of activity' %}:</span>
+                                <span>{{ domains.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -248,10 +296,14 @@
                 <section id="table-qualifs">
                     
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Qualifications' %}:</span>
                                 <span>{{ qualifs.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Qualifications' %}:</span>
+                                <span>{{ qualifs.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -260,12 +312,15 @@
                 </section>
 
                 <section id="table-licenses">
-                    
                         <div class="section-header">
-                            <div>
+                            <a href="#table-of-content">
                                 <span>{% trans 'Licenses' %}:</span>
                                 <span>{{ licenses.all|length }}</span>
-                            </div>
+                            </a>
+                            <!-- <div>
+                                <span>{% trans 'Licenses' %}:</span>
+                                <span>{{ licenses.all|length }}</span>
+                            </div> -->
                         </div>
                     
                     <div>
@@ -277,7 +332,7 @@
 
             <div id="footer-svg" style="text-align: center; top: 1rem;">
                 <div>
-                    <a href="https://mode-777.com/">
+                    <a href="https://mode-777.com/" target="_blank">
                         <img src="{% static 'brand/insi-footer.svg' %}"
                                 class="img-fluid" alt="MODE-777.com"
                                 style="height: auto; width: auto;">
