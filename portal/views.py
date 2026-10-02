@@ -577,6 +577,52 @@ def tender_get_file(request, pk=None, fn=None):
 
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def tender_get_extra_file(request, pk=None, fn=None):
+
+    if request.method != "GET":
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    if pk is None or fn is None:
+        logger_portal.warning("E405: Bad request paramters", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    user = request.user
+    if not user or not user.is_authenticated:
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
+
+    tender = get_object_or_404(Tender, id=pk)
+
+    extra_root  = os.path.join(settings.DCE_MEDIA_ROOT, "extra")
+    extra_dir   = os.path.join(extra_root, settings.EXTRA_PATH_PREFIX + tender.chrono,)
+    extra_file  = os.path.join("extra", settings.EXTRA_PATH_PREFIX + tender.chrono)
+    file_path = os.path.join(extra_file, fn)
+    file_fp   = os.path.join(extra_dir, fn)
+
+    if os.path.exists(file_fp):
+        file_size = os.path.getsize(file_fp)
+        response = HttpResponse()
+        response["Content-Type"] = "application/octet-stream"
+        response["X-Accel-Redirect"] = f"/extra/{file_path}"
+        response["Content-Disposition"] = f'attachment; filename="{fn}"'
+        response["Content-Length"] = os.path.getsize(file_fp)
+        # Download.objects.create(
+        #     tender=tender,
+        #     user=user,
+        #     size_read=tender.size_read,
+        #     size_bytes=file_size if file_size else tender.size_bytes,
+        # )
+
+        logger_portal.info("Tenders extr file download launched", extra={"request": request})
+        return response
+
+    logger_portal.warning("File not found", extra={"request": request})
+    return HttpResponse(trans("Not found"), status=404)
+
+
+@login_required(login_url="account_login")
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def tender_req_file(request, pk=None):
 
     if request.method != "POST":

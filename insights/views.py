@@ -4,6 +4,8 @@ import logging
 from pathlib import Path
 from decimal import Decimal
 from urllib.parse import urlencode
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -143,8 +145,10 @@ def bidders_list(request):
             wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
             bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
             wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True)), 
-            last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
-            last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
+            # last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
+            # last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
+            last_win   = Max('deposits__opening__tender__deadline', filter=Q(deposits__winner=True)), 
+            last_part  = Max('deposits__opening__tender__deadline', filter=Q(deposits__amount_b__isnull=False)),
             succ_rate = ExpressionWrapper(
                 Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 0),
                 output_field=DecimalField(max_digits=8, decimal_places=3),
@@ -154,6 +158,17 @@ def bidders_list(request):
 
     bidders, filters = filter_bidders(all_bidders, query_dict)
     query_dict['filters'] = filters
+
+    RABAT_TZ = ZoneInfo("Africa/Casablanca")
+
+    assa = datetime.now(RABAT_TZ)
+    for b in bidders:
+        if b.last_win:
+            if b.last_win > assa:
+                b.last_win = assa
+        if b.last_part:
+            if b.last_part > assa:
+                b.last_part = assa
 
 
     sort = query_dict['sort']

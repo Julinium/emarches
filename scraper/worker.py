@@ -14,41 +14,29 @@ def do_the_work():
     from django.utils import timezone
     from datetime import datetime, timedelta
 
-    from base.models import Crawler, Tender
+    from base.models import Crawler, Tender, Link, Parkour
     from scraper import bonner
     from scraper import constants as C
     from scraper import downer, getter, helper, linker, merger
 
     started_time = timezone.now()
 
-    def handle_links():
-        links_crawled, links_imported, links_from_saved = 0, 0, 0
-        links = []
+    def linkify():
         back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
         if not C.IMPORT_LINKS:
-            links = linker.getLinks(back_days)
-            links_crawled = len(links)
-            links_saved = linker.db2Links() if C.REFRESH_EXISTING else []
-            links_from_saved = len(links_saved)
-            helper.printMessage('INFO', 'w.handle_links', f"Merging links:{ links_crawled } live and { links_from_saved } from saved")
-            ml = 0
-            for l in links_saved:
-                if l not in links:
-                    ml += 1
-                    links.append(l)
-            helper.printMessage('INFO', 'w.handle_links', f"+++ Merged { ml } saved links to live links. Total links to handle: { len(links) }")
+            links_crawled = linker.getLinks(back_days)
+            links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
+            helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_crawled) } Crawled links ...")
+            merged_links_crawled = linker.mergeLinks(links_crawled)
+            helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_saved) } found links ...")
+            merged_links_saved = linker.mergeLinks(links_saved)
+ 
+        unhandled_links = Link.objects.filter(handled=False) if C.REFRESH_EXISTING else Link.objects.filter(tender__isnull=True)
+        helper.printMessage('DEBUG', 'w.linkify', f"Count of links to handle: {len(unhandled_links)} ...", 1)
+        
+        return unhandled_links
 
-            linker.exportLinks(links)
-        else:
-            links = helper.importLinks()
-            links_imported = len(links)
-
-        ll = len(links)
-        helper.printMessage('DEBUG', 'w.handle_links', f"Count of links to handle: {ll} ...", 1)
-
-        return links, links_crawled, links_imported, links_from_saved
-
-    def handle_tenders(links=[]):
+    def tenderify(links=[]):
         saving_errors = False
         tenders_created, tenders_updated = 0 , 0
         ll = len(links)
@@ -62,8 +50,8 @@ def do_the_work():
                 jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
                 if jsono:
                     handled += 1
-                    tender, creation_mode, changes_found = merger.saveTender(jsono)
-                    if creation_mode == True: 
+                    tender, creation_mode, changes_found = merger.saveTender(jsono, l)
+                    if creation_mode == True:
                         tenders_created += 1
                         helper.printMessage('INFO', 'w.handle_tenders', f"◁◁ Created Tender {tender.chrono}")
                     else:
@@ -83,6 +71,7 @@ def do_the_work():
 
         return tenders_created, tenders_updated, saving_errors
     
+
     def handle_bdcs():
         helper.printMessage('===', 'w.handle_bdcs', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
         bonner.save_bdcs()
@@ -168,11 +157,11 @@ def do_the_work():
     helper.printMessage('INFO', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 3)
 
     ##### Collect the list of links to handle
-    links, links_crawled, links_imported, links_from_saved = handle_links()
-    helper.printMessage('INFO', 'worker', f"◀◀◀ Finished getting links.", 1)
+    links = linkify()
+    helper.printMessage('INFO', 'worker', f"◀◀◀ Finished getting {len(links)} links.", 1)
 
     ##### Get the Tenders data
-    tenders_created, tenders_updated, saving_errors = handle_tenders(links)
+    tenders_created, tenders_updated, saving_errors = tenderify(links)
     helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving tenders data.", 1)
 
     ##### Handle Purchase Orders

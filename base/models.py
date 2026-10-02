@@ -310,6 +310,7 @@ class Tender(models.Model):
     has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="Site survey scheduled")
     has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
     has_minutes = models.BooleanField(blank=True, null=True, default=False, verbose_name="Minutes taken")
+    has_enviro = models.BooleanField(blank=True, null=True, default=False, verbose_name="Environment clauses")
 
     location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Execution location")
     ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bidding")  # 1: Required, 0: Not required, Else: NA'
@@ -415,17 +416,17 @@ class Tender(models.Model):
 
         files_list = []
         total_size = 0
-        dce_dir = os.path.join(
-            os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
-            settings.DL_PATH_PREFIX + self.chrono,
+        extra_dir = os.path.join(
+            os.path.join(settings.DCE_MEDIA_ROOT, "extra"),
+            settings.EXTRA_PATH_PREFIX + self.chrono,
         )
-        if os.path.exists(dce_dir):
-            files_list = os.listdir(dce_dir)
+        if os.path.exists(extra_dir):
+            files_list = os.listdir(extra_dir)
 
         extra_files_info = []
         if len(files_list) > 0:
             for entry in files_list:
-                full_path = os.path.join(dce_dir, entry)
+                full_path = os.path.join(extra_dir, entry)
                 if os.path.exists(full_path):
                     if os.path.isfile(full_path):
                         sizens = os.path.getsize(full_path)
@@ -438,6 +439,8 @@ class Tender(models.Model):
     def total_size(self):
         total_size = 0
         for f in self.dce_files_info:
+            total_size += f.get("size", 0)
+        for f in self.extra_files_info:
             total_size += f.get("size", 0)
         return total_size
 
@@ -981,26 +984,30 @@ class Deposit(models.Model):
 
 
 class Machine(models.Model):
-    id       = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    ip       = models.CharField(max_length=64, default='IP.ADD.RE.SS')
-    name     = models.CharField(max_length=64, default='HOST')
-    python   = models.CharField(max_length=64)
-    base_dir = models.CharField(max_length=512)
+    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    hostname  = models.CharField(max_length=64, default='-')
+    os_family = models.CharField(max_length=64, default='-')
+    processor = models.CharField(max_length=64, default='-')
+    ip_address = models.CharField(max_length=64, default='127.0.0.1')
+    os_version = models.CharField(max_length=64, default='-')
+    os_release = models.CharField(max_length=64, default='-')
+    architecture = models.CharField(max_length=64, default='-')
+    python_version = models.CharField(max_length=64, default='-')
 
     class Meta:
         db_table = 'base_machine'
-        ordering = ['name']
+        ordering = ['hostname']
 
 
 class Parkour(models.Model):
     id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    started       = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    started       = models.DateTimeField(blank=True, null=True)
     finished      = models.DateTimeField(blank=True, null=True)
     machine       = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name="parcours", blank=True, null=True)
-    deadline_min  = models.DateField()
-    deadline_max  = models.DateField()
-    published_min = models.DateField()
-    published_max = models.DateField()
+    deadline_min  = models.DateField(blank=True, null=True)
+    deadline_max  = models.DateField(blank=True, null=True)
+    published_min = models.DateField(blank=True, null=True)
+    published_max = models.DateField(blank=True, null=True)
     page_length   = models.CharField(max_length=8, default='500')
 
     class Meta:
@@ -1009,23 +1016,23 @@ class Parkour(models.Model):
 
 
 class Link(models.Model):
-    id        = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created   = models.DateTimeField(blank=True, null=True, auto_now_add=True)
-    updated   = models.DateTimeField(blank=True, null=True)
+    id         = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    handled    = models.BooleanField(default=False)
+    created    = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+    updated    = models.DateTimeField(blank=True, null=True, auto_now=True)
 
-    published = models.DateField()
-    chrono    = models.CharField(max_length=16, blank=True, null=True)
-    acronym   = models.CharField(max_length=8, blank=True, null=True)
-    enviro    = models.BooleanField(default=False)
+    published  = models.DateField(null=True)
+    chrono     = models.CharField(max_length=16, unique=True)
+    acronym    = models.CharField(max_length=8, blank=True, null=True)
+    has_enviro = models.BooleanField(default=False, blank=True, null=True)
 
-    parkour   = models.ForeignKey(Parkour, on_delete=models.SET_NULL, related_name="links", blank=True, null=True)
-    tender    = models.ForeignKey(Tender, on_delete=models.SET_NULL, related_name="crawler_links", blank=True, null=True)
+    parkour    = models.ForeignKey(Parkour, on_delete=models.SET_NULL, related_name="links", blank=True, null=True)
+    tender     = models.ForeignKey(Tender, on_delete=models.SET_NULL, related_name="crawler_links", blank=True, null=True)
 
     class Meta:
         db_table = 'base_link'
-        ordering = ['-created']
+        ordering = ['handled', '-created']
 
-    # TODO: Add enviro field to Lot and Tender.
     # TODO: Handle Tenders found in Database, but removed from official site.
     # Add a field to flag such tenders as 'Discarded' ?
 

@@ -19,7 +19,7 @@ import re
 import shlex
 import subprocess
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import requests
 from bs4 import BeautifulSoup
@@ -38,7 +38,7 @@ def getFileables(past_days=C.PORTAL_DCE_PAST_DAYS):
     # Return: Tender model QuerySet.
     """
 
-    target_date = datetime.now() - timedelta(days=past_days)
+    target_date = timezone.now() - timedelta(days=past_days)
     helper.printMessage("DEBUG", 'd.getFileables', "Getting Tenders needing DCE download ...")
     fresh_tenders = Tender.objects.filter(files_to_get__closed=False).distinct()
     helper.printMessage("DEBUG", 'd.getFileables', f"Got {fresh_tenders.count()} Tenders needing DCE download.")
@@ -57,7 +57,7 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
     """
     
     helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline older than {past_days} days ...")
-    today_date = datetime.now()
+    today_date = timezone.now()
     target_date = today_date - timedelta(days=past_days)
     current_tenders = Tender.objects.filter(deadline__gte=target_date)
     ct_count = current_tenders.count()
@@ -129,6 +129,7 @@ def getDCE(tender):
         if len(fname) == 0: return None
         return fname[0]
 
+    os.makedirs(C.MEDIA_ROOT, exist_ok=True)
 
     if not os.path.exists(C.MEDIA_ROOT): 
         helper.printMessage('ERROR', 'd.getDCE', f'Could not read media root directory.')
@@ -341,7 +342,7 @@ def getExtraFiles(tender=None, extra_files=[]):
         if len(fname) == 0: return None
         return fname[0]
 
-    extra_path = os.path.join(C.MEDIA_ROOT, f'tenders/extra/EXT-{tender.chrono}')
+    extra_path = os.path.join(C.MEDIA_ROOT, f'extra/{C.EXTRA_PATH_PREFIX}{tender.chrono}')
     if not os.path.exists(extra_path): os.makedirs(extra_path)
     if not os.path.exists(extra_path):
         helper.printMessage('ERROR', 'd.getExtraFile', f'Could not find Extra directory.')

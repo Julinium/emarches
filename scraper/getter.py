@@ -11,33 +11,35 @@ from scraper import helper
 NA_PLH = None
 
 
-def getJson(link_item, skipExisting=False):
+def getJson(link, skipExisting=False):
 
     """
     # Synapsis:
         From a link, gets a structured object (JSON) representing data of the Consultation and all its related objects
     # Params:
-        link_item: a line of the generated links file, containing pudlication date, portal id and organization acronym.
+        link: a line of the generated links file, containing pudlication date, portal id and organization acronym.
     # Return:
         JSON object representing data.
     """
-
     
 
-    if link_item == None or len(link_item) < 3:
-        helper.printMessage('ERROR', 'g.getJson', 'Got an invalid link item.')
+    if not link:
+        helper.printMessage('ERROR', 'g.getJson', 'Got an invalid link.')
         return None
-    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = {link_item[0]}')
+    
+    link_chrono = link.chrono
+    link_acronym = link.acronym
+    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = {link_chrono}')
     if skipExisting:
-        e = Tender.objects.filter(chrono=link_item[0])
+        e = Tender.objects.filter(chrono=link_chrono)
         if e.first():
-            helper.printMessage('DEBUG', 'g.getJson', f'Tender {link_item[0]} exists and Skipping ON.', 0, 1)
+            helper.printMessage('DEBUG', 'g.getJson', f'Tender {link_chrono} exists and Skipping ON.', 0, 1)
             return None
     
 
-    cons_uri = f"{link_item[0]}{C.LINK_STITCH}{link_item[1]}"
+    cons_uri = f"{link_chrono}{C.LINK_STITCH}{link_acronym}"
     cons_link = f'{C.LINK_PREFIX}{cons_uri}'
-    dce_link = f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={link_item[0]}&orgAcronym={link_item[1]}'
+    dce_link = f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={link_chrono}&orgAcronym={link_acronym}'
 
     rua = helper.getUa()
     rua_label = "Random"
@@ -71,29 +73,6 @@ def getJson(link_item, skipExisting=False):
         # return None
 
     try: 
-
-
-        #####################
-        # qs_chro = "page=entreprise.ExtraitPV&refConsultation"
-        # qs_acro = "orgAcronyme"
-        # digest_link = f"{C.SITE_INDEX}?{qs_chro}={link_item[0]}&{ qs_acro }={link_item[1]}"
-        # request_digest = sessiono.get(digest_link, headers=headino, timeout=C.REQ_TIMEOUT)
-        # pot = BeautifulSoup(request_digest.text, 'html.parser')
-        # bowl = pot.find(id='ctl0_CONTENU_PAGE_mainPart')
-
-        # request_digest = sessiono.get(digest_link, headers=headino, timeout=C.REQ_TIMEOUT)
-
-        # if bowl: 
-        #     print("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n")
-        #     print(bowl)
-        #     print("\nYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\n")
-        # else:
-        #     print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
-
-        #####################
-
-
-
         request_cons = sessiono.get(cons_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
     except Exception as x:
         helper.printMessage('ERROR', 'g.getJson', f'Exception getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
@@ -107,14 +86,8 @@ def getJson(link_item, skipExisting=False):
         return None
 
     bowl = BeautifulSoup(request_cons.text, 'html.parser')
-
-
     soup = bowl.find(class_='recap-bloc')
 
-    cons_idddd = link_item[0].strip()
-    cons_pub_d = link_item[2].strip()
-
-    #############
     try:
         deadl_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateHeureLimiteRemisePlis')
         cons_deadl = deadl_span.get_text().strip() if deadl_span else NA_PLH
@@ -138,7 +111,7 @@ def getJson(link_item, skipExisting=False):
         objet_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_objet')
         cons_objet = objet_span.get_text().strip() if objet_span else NA_PLH
 
-        helper.printMessage('DEBUG', 'g.getJson', f'Found item {cons_idddd}')
+        helper.printMessage('DEBUG', 'g.getJson', f'Found item {link_chrono}')
 
         client = None
         achet_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_entiteAchat')
@@ -269,17 +242,13 @@ def getJson(link_item, skipExisting=False):
         if lots_span and lots_span.has_attr('href'): 
             lots_href = lots_span['href']
 
-        #######################
-        has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}') is not None
+        has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_chrono}&orgAcronyme={link_acronym}') is not None
 
         extra_files = []
-        results_link = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_item[0]}&orgAcronyme={link_item[1]}')
+        results_link = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_chrono}&orgAcronyme={link_acronym}')
         extra_btn = soup.find("a", href=re.compile(r"index\.php\?page=entreprise\.EntrepriseDownloadAvisJAL.*&idAvis=\d+"))
 
         if extra_btn: extra_files.append({'link': extra_btn["href"], 'name': extra_btn.get_text(strip=True),})
-
-
-        #######################
 
         if len(lots_href) > 2:
             cons_lots = getLots(lots_href)
@@ -304,7 +273,7 @@ def getJson(link_item, skipExisting=False):
 
 
         cons_dict = {
-            "published"         : cons_pub_d,
+            "published"         : link.published,
             "deadline"          : cons_deadl,
             "cancelled"         : cons_cance,
             "reference"         : cons_refce,
@@ -327,21 +296,22 @@ def getJson(link_item, skipExisting=False):
             "contact_email"     : cons_adm_m,
             "contact_phone"     : cons_adm_t,
             "contact_fax"       : cons_adm_f,
-            "chrono"            : cons_idddd,
+            "chrono"            : link.chrono,
             "link"              : cons_uri,
             "size_read"         : cons_sized,
             "size_bytes"        : cons_bytes,
             "results_link"      : results_link,
             "extra_files"       : extra_files,
             "has_minutes"       : has_minutes,
+            "has_enviro"        : link.has_enviro,
             }
 
 
-        helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_item[0]}')
+        helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_chrono}')
         return cons_dict
 
     except:
-        helper.printMessage('ERROR', 'g.getJson', f'Exception getting objects for item {link_item[0]}')
+        helper.printMessage('ERROR', 'g.getJson', f'Exception getting objects for item {link_chrono}')
         traceback.print_exc()
         return None
 

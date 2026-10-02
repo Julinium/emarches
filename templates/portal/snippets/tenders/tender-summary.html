@@ -209,6 +209,14 @@
                                 {% endif %}
                             {% endif %}
 
+                            {% if tender.has_enviro %}
+                                <span class="small me-2"
+                                    data-bs-toggle="tooltip"
+                                    title="{% trans 'Contains environment-related clauses' %}">
+                                    <i class="{{ bicons.has_enviro }}"></i>
+                                </span>
+                            {% endif %}
+
                             {% if tender.reserved %}
                                 <span class="small me-2"
                                     data-bs-toggle="tooltip"

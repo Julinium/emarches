@@ -513,7 +513,8 @@
                     <div class="modal-body">
 
                         {% if tender.dce_files_info  %}
-                            <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div>
+                            <!-- <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div> -->
+                            <div class="text-muted fw-semibold mt-3">{% translate "DCE Files" %}:</div>
                             {% for f in tender.dce_files_info %}
                                 <a id="dce-{{ tender.chrono }}000{{ forloop.counter }}"
                                 class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
@@ -523,6 +524,18 @@
                                     <span class="ms-1">{{ f.name }}</span>
                                 </a>
                             {% endfor %}
+                            {% if tender.extra_files_info  %}
+                            <div class="text-muted fw-semibold mt-3">{% translate "Extra Files" %}:</div>
+                                {% for f in tender.extra_files_info %}
+                                    <a id="extra-{{ tender.chrono }}000{{ forloop.counter }}"
+                                    class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
+                                    href="{% url 'portal_tender_get_extra_file' tender.id f.name %}">
+                                        <span class=""><i class="{{ bicons.downloads }}"></i></span>
+                                        <span class="ms-1 badge text-bg-primary">{{ f.size|metrify:0 }}</span>
+                                        <span class="ms-1">{{ f.name }}</span>
+                                    </a>
+                                {% endfor %}
+                            {% endif %}
                         {% else %}
                             <div class="text-center mb-2">
                                 <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
@@ -597,15 +610,16 @@
 
         
     </div>
-
-    {% if tender.dce_files_info|length == 1 %}
-        <script>
-            document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {
-                bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
-                document.getElementById('dceModal').classList.toggle('show');
-            });
-        </script>
-    {% endif %}
+    {% with total_items=tender.dce_files_info|add:tender.extra_files_info %}
+        {% if total_items|length == 1 %}
+            <script>
+                document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {
+                    bootstrap.Modal.getInstance(document.getElementById('dceModal')).hide();
+                    document.getElementById('dceModal').classList.toggle('show');
+                });
+            </script>
+        {% endif %}
+    {% endwith %}
 
     <div id="tosts-container" class="toast-container bottom-0 end-0 p-3" style="position: fixed; z-index: 99;">
             

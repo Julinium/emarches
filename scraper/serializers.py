@@ -140,8 +140,8 @@ class TenderSerializer(serializers.ModelSerializer):
             'variant', 'location', 'ebid', 'esign', 'size_read', 
             'size_bytes', 'address_withdrawal', 'address_bidding', 
             'address_opening', 'contact_name', 'contact_phone', 'contact_email', 
-            'contact_fax', 'created', 'updated', 'cancelled', 'link', 'acronym', 
-            'category', 'mode', 'procedure', 'client', 'kind', 'has_minutes', #'lots'
+            'contact_fax', 'created', 'updated', 'cancelled', 'link', 'acronym',
+            'category', 'mode', 'procedure', 'client', 'kind', 'has_minutes', 'has_enviro'
         ]
 
 

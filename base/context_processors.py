@@ -31,8 +31,9 @@ def portal_context(request):
         'has_qualifs'     : 'bi bi-mortarboard-fill text-primary',
         'has_samples'     : 'bi bi-palette2 text-primary',
         'has_visits'      : 'bi bi-person-walking text-primary',
-        
         'has_meetings'    : 'bi bi-chevron-bar-contract text-primary',
+        'has_enviro'      : 'bi bi-leaf-fill text-success',
+        # 'has_enviro'      : 'bi bi-bluesky text-success',
 
         'agrements_ico'   : 'bi bi-shield-check',
         'qualifs_ico'     : 'bi bi-mortarboard',

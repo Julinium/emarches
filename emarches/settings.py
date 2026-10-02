@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = ENVIRONMENT != 'production'
 SITE_HOST = os.getenv("SITE_HOST")
 
-# DEBUG = True
+DEBUG = True
 ALLOWED_HOSTS = [
         os.getenv("DOMAIN_NAME"),
         os.getenv("IP_ADDRESS")
@@ -293,6 +293,7 @@ load_dotenv(dotenv_path=env_scraper_path)
 DCE_MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 LINK_PREFIX = os.getenv("LINK_PREFIX")
 DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
+EXTRA_PATH_PREFIX = os.getenv("EXTRA_PATH_PREFIX")
 
 
 TENDER_FULL_PROGRESS_DAYS = 30

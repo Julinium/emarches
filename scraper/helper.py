@@ -8,6 +8,8 @@ import unicodedata
 import shutil
 import subprocess
 import pytz
+import socket
+import platform
 
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
@@ -263,4 +265,23 @@ def syncDir(
     return None
 
 
-    
+def get_system_info():
+    hostname = socket.gethostname()
+    try:
+        ip_address = socket.gethostbyname(hostname)
+    except socket.gaierror:
+        ip_address = "127.0.0.1"
+
+    info = {
+        "hostname": hostname,
+        "ip_address": ip_address,
+        "os_family": platform.system(),
+        "os_version": platform.version(),
+        "os_release": platform.release(),
+        "architecture": platform.machine(),
+        "processor": platform.processor(),
+        "python_version": platform.python_version()
+    }
+    return info
+
+

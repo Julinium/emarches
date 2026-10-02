@@ -87,7 +87,7 @@ def format(tender_json: dict) -> dict:
     helper.printMessage('DEBUG', 'm.format', "### Started formatting Tender data ...")
     j = tender_json
     try:
-        j["published"] = helper.getDateTime(j["published"])
+        j["published"] = j["published"]
         j["deadline"] = helper.getDateTime(j["deadline"])
         j["cancelled"] = j["cancelled"] == "Oui"
         j["plans_price"] = helper.getAmount(j["plans_price"])
@@ -173,7 +173,7 @@ def format(tender_json: dict) -> dict:
 
 
 @transaction.atomic
-def saveTender(tender_data):    
+def saveTender(tender_data, link=None):    
 
     formatted_data = format(tender_data)
     helper.printMessage('DEBUG', 'm.saveTender', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
@@ -266,7 +266,9 @@ def saveTender(tender_data):
                     helper.printMessage('DEBUG', 'm.saveTender', f"--- No Extra files found for Tender {tender.chrono} ...")
             else:
                 helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Skipping DCE for Tender {tender.chrono} ...")
-
+            if link: link.tender = tender
+                # link.handled = True
+                # link.save()
 
             # Handling Results
             if C.GET_RESULTS == True:
@@ -289,6 +291,11 @@ def saveTender(tender_data):
                     helper.printMessage('DEBUG', 'm.saveTender', f"### Tender {tender.chrono} already has results. Skipping ...")
             else:
                 helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping Results for Tender {tender.chrono} ...")
+
+    if link:
+        link.handled = True
+        link.save()
+    
     return tender, tender_create, len(changes) > 0
 
 
@@ -1092,7 +1099,6 @@ def lotsChanged(lots_data, tender):
                 changes.append(details_change)
                 return changes
             helper.printMessage('TRACE', 'm.lotsChanged', f"---- No changes found in Lot #{lot_number} details.")
-            # If lots_count == 1, Changes should be detected at Tender level.
 
         qualifs_change = qualifsChanged(lot, lot_data.get('qualifs'))
         if qualifs_change:
