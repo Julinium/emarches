@@ -1003,7 +1003,7 @@ class Parkour(models.Model):
     id            = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     started       = models.DateTimeField(blank=True, null=True)
     finished      = models.DateTimeField(blank=True, null=True)
-    machine       = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name="parcours", blank=True, null=True)
+    machine       = models.ForeignKey(Machine, on_delete=models.CASCADE, related_name="parkours", blank=True, null=True)
     deadline_min  = models.DateField(blank=True, null=True)
     deadline_max  = models.DateField(blank=True, null=True)
     published_min = models.DateField(blank=True, null=True)

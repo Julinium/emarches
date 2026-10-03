@@ -14,7 +14,7 @@ def do_the_work():
     from django.utils import timezone
     from datetime import datetime, timedelta
 
-    from base.models import Crawler, Tender, Link, Parkour
+    from base.models import Crawler, Tender, Link, Machine, Parkour
     from scraper import bonner
     from scraper import constants as C
     from scraper import downer, getter, helper, linker, merger
@@ -37,6 +37,7 @@ def do_the_work():
         return unhandled_links
 
     def tenderify(links=[]):
+        started = datetime.now()        
         saving_errors = False
         tenders_created, tenders_updated = 0 , 0
         ll = len(links)
@@ -61,7 +62,7 @@ def do_the_work():
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.handle_tenders', f"Burst ({ C.BURST_LENGTH }) ended at {i:03}/{ll:03}. Tenders handled: { tenders_created + tenders_updated } ({ tenders_created } new + {tenders_updated } updates).", 1)
+                        helper.printMessage('DEBUG', 'w.handle_tenders', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{ll:03}. Handled: { tenders_created + tenders_updated } tenders. ({ tenders_created } new + {tenders_updated } old).", 1)
                         helper.printMessage('DEBUG', 'w.handle_tenders', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
                         helper.sleepRandom(20, 45)
                         handled = 0
@@ -69,8 +70,52 @@ def do_the_work():
             saving_errors = True
             helper.printMessage('ERROR', 'w.handle_tenders', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
 
+        ############
+        try:
+            machine_info = helper.get_system_info()
+            machine, created = Machine.objects.get_or_create(
+                hostname=machine_info['hostname'],
+                os_family=machine_info['os_family'],
+                processor=machine_info['processor'],
+                defaults={
+                    "ip_address": machine_info['ip_address'],
+                    "os_version": machine_info['os_version'],
+                    "os_release": machine_info['os_release'],
+                    "architecture": machine_info['architecture'],
+                    "python_version": machine_info['python_version'],
+                }
+            )
+            if created:
+                helper.printMessage('INFO', 'l.getLinks', f'Created Machine info: {machine_info['hostname']}')
+            else:
+                helper.printMessage('INFO', 'l.getLinks', f'Machine info already exists: {machine_info['hostname']}')
+
+            harvest = Harvest.objects.create(
+                    started       = started,
+                    finished      = timezone.now(),
+                    machine       = machine,
+                    links_handled = ll,
+                    tenders_created = tenders_created,
+                    tenders_updated = tenders_updated,
+                    # tenders_discarded = models.SmallIntegerField(blank=True, null=True, default=0)
+                    # dce_files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+                    # extra_files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+                    # dce_files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+                    # extra_files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+                    successfull = not saving_errors,
+                )
+
+            if harvest:
+                helper.printMessage('DEBUG', 'l.getLinks', 'Created Harvest record.')
+            else:
+                helper.printMessage('ERROR', 'l.getLinks', 'Errors occurred while creating Harvest record.')
+
+        except Exception as e:
+            helper.printMessage('ERROR', 'l.getLinks', f'Error while handling Machine info: {str(e)}', 2,2)
+
+        ############
+        
         return tenders_created, tenders_updated, saving_errors
-    
 
     def handle_bdcs():
         helper.printMessage('===', 'w.handle_bdcs', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
@@ -111,7 +156,7 @@ def do_the_work():
     def handle_results(back_days=C.PORTAL_RES_PAST_DAYS):
 
         results_saved, results_searched = 0, 0
-        helper.printMessage('INFO', 'w.handle_results', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 2, 1)
+        helper.printMessage('INFO', 'w.handle_results', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 0, 0)
         assa = timezone.now().date()
         assenn = assa - timedelta(days=back_days)
 
@@ -128,7 +173,7 @@ def do_the_work():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'w.handle_results', f"Started getting results for item { i }/{ count }", 2)
+            helper.printMessage('INFO', 'w.handle_results', f"Started getting results for item { i }/{ count }", 0)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
                 helper.printMessage('INFO', 'w.handle_results', f"◁◁◁ Minutes found for item { i }/{ count }")
@@ -149,29 +194,29 @@ def do_the_work():
 
     ##### Proudly let the magic happen
     helper.printBanner()
-    helper.printMessage('INFO', 'worker', "▶▷▶▷ The unlazy worker started working ◁◀◁◀", 1, 1)
+    helper.printMessage('INFO', 'worker', "▶▷▶▷ The unlazy worker started working ◁◀◁◀", 0, 0)
     logging_level = next((key for key, val in C.LOGS_LEVELS.items() if val == C.VERBOSITY), "None")
     links_source  = 'Import' if C.IMPORT_LINKS else 'Crawl'
     files_action  = 'Skip' if C.SKIP_DCE else 'Download'
     results_action = 'Get' if C.GET_RESULTS else 'Skip'
-    helper.printMessage('INFO', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 3)
+    helper.printMessage('INFO', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 0)
 
     ##### Collect the list of links to handle
     links = linkify()
-    helper.printMessage('INFO', 'worker', f"◀◀◀ Finished getting {len(links)} links.", 1)
+    helper.printMessage('INFO', 'worker', f"◀◀◀ Finished getting {len(links)} links.", 0)
 
     ##### Get the Tenders data
     tenders_created, tenders_updated, saving_errors = tenderify(links)
-    helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving tenders data.", 1)
+    helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving tenders data.", 0)
 
     ##### Handle Purchase Orders
     if links_source == 'Crawl':
         handle_bdcs()
-        helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving PO's data.", 1)
+        helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving PO's data.", 0)
 
     ##### Take care of DCE files
     files_downloaded, files_failed = 0, 0
-    if C.SKIP_DCE: helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_DCE set. Skipping DCE files ◆◆◆◆◆", 2)
+    if C.SKIP_DCE: helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_DCE set. Skipping DCE files ◆◆◆◆◆", 1)
     else: files_downloaded, files_failed = handle_dce()
 
     # TODO: Consider other "types" of publications, like:
@@ -190,7 +235,7 @@ def do_the_work():
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
     if C.GET_RESULTS == False: 
-        helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_RESULTS set. Skipping Results digests ◆◆◆◆◆", 2)
+        helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_RESULTS set. Skipping Results digests ◆◆◆◆◆", 1)
     else:
         results_saved, results_searched = handle_results()
 
@@ -200,9 +245,9 @@ def do_the_work():
             started = started_time,
             finished = finished_time,
             import_links = C.IMPORT_LINKS,
-            links_crawled = links_crawled,
-            links_imported = links_imported,
-            links_from_saved = links_from_saved,
+            # links_crawled = links_crawled,
+            # links_imported = links_imported,
+            # links_from_saved = links_from_saved,
             tenders_created = tenders_created,
             tenders_updated = tenders_updated,
             files_downloaded = files_downloaded,
@@ -222,7 +267,7 @@ def do_the_work():
     helper.printMessage('INFO', 'worker', f"⇉⇉⇉ Downloaded {files_downloaded} DCE files, {files_failed} downloads failed.")
     helper.printMessage('INFO', 'worker', f"⇉⇉⇉ Scanned {results_searched}, saved {results_saved} Tenders results.")
     helper.printMessage('INFO', 'worker', f"⇉⇉⇉ That took our unlazy worker { work_duration }.")
-    helper.printMessage('INFO', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 1)
+    helper.printMessage('INFO', 'worker', f"▶▷▶▷▶▷▶▷▶▷ The unlazy worker is done working ◀◁◀◁◀◁◀◁◀◁", 1, 0)
 
 
 if __name__ == '__main__':

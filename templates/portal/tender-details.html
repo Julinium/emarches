@@ -547,7 +547,7 @@
                     </div>
                     <div class="modal-footer">
                         {% if tender.dce_files_info  %}
-                            <a href="/base_legal'" target="_blank" class="btn btn-outline-secondary">
+                            <a href="/base_legal" target="_blank" class="btn btn-outline-secondary">
                                 <span><i class="bi bi-shield-exclamation"></i></span>
                                 <span class="ms-1">{% translate 'Legal Information' %}</span>
                             </a>
@@ -608,8 +608,8 @@
 
         {% include 'portal/snippets/tenders/tender-simulator-modal.html' %}
 
-        
     </div>
+    
     {% with total_items=tender.dce_files_info|add:tender.extra_files_info %}
         {% if total_items|length == 1 %}
             <script>

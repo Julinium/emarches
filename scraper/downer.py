@@ -19,7 +19,8 @@ import re
 import shlex
 import subprocess
 import traceback
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 import requests
 from bs4 import BeautifulSoup

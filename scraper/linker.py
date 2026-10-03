@@ -55,7 +55,7 @@ def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
 
 
 def pg2Links(driver, page_number, pages):
-    helper.printMessage('INFO', 'l.pg2Links', f'### Getting links from page {page_number:03}/{pages:03}...')
+    helper.printMessage('INFO', 'l.pg2Links', f'### Getting links from page {page_number:02}/{pages:02}...')
     links = []
     try:
         i = 1
@@ -91,16 +91,16 @@ def pg2Links(driver, page_number, pages):
                 }
                 links.append(link)
 
-                helper.printMessage('TRACE', 'l.pg2Links', f'+++ Got the link {page_number:03}.{i:03} = {portal_id_text}')
+                helper.printMessage('TRACE', 'l.pg2Links', f'+++ Got the link {page_number:02}.{i:02} = {portal_id_text}')
             else:
-                helper.printMessage('ERROR', 'l.pg2Links', f'Could not get link for {page_number:03}.{i:03}', 1, 2)
+                helper.printMessage('ERROR', 'l.pg2Links', f'Could not get link for {page_number:02}.{i:02}', 1, 2)
             i += 1
 
     except Exception:
-        helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
+        helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:02}', 1, 2)
         traceback.print_exc()
 
-    helper.printMessage('DEBUG', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:03}')
+    helper.printMessage('DEBUG', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:02}')
     
     return links
 
@@ -200,16 +200,6 @@ def db2Links(back_days=30):
 
 
 def getLinks(back_days=30):
-    """
-    # Synopsis:
-        Get a list of available Consultations on Portal.
-    # Params:
-        None.
-    # Return:
-        List of extremely abbriged Consultations.
-        Each item represents [chrono, acronym, published] for a Consultation.
-        The first two values can be used to obtain a working link to the Consultaion on the portal.
-    """
 
     started = timezone.now()
     url = f"{C.SITE_INDEX}?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons"
@@ -249,7 +239,7 @@ def getLinks(back_days=30):
         pages = int(pages_field.get_attribute("innerText").strip())
         count_field = driver.find_element("id", "ctl0_CONTENU_PAGE_resultSearch_nombreElement")
         count = count_field.get_attribute("innerText").strip()
-        helper.printMessage('INFO', 'l.getLinks', f'Number of items: {count:04}. Number of pages: {pages:03}', 0, 1)
+        helper.printMessage('INFO', 'l.getLinks', f'Number of items: {count:04}. Number of pages: {pages:02}', 0, 1)
     except :
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while getting links and pages counts', 1, 1)
         traceback.print_exc()
@@ -257,11 +247,11 @@ def getLinks(back_days=30):
         return links
 
     i = 1
-    helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:03}/{pages:03} ...')
+    helper.printMessage('DEBUG', 'l.getLinks', f'Reading links from page {i:02}/{pages:02} ...')
     try:
         links = pg2Links(driver, i, pages)
     except:
-        helper.printMessage('ERROR', 'l.getLinks', f'Exception raised while getting links from page {i:03}/{pages:03}')
+        helper.printMessage('ERROR', 'l.getLinks', f'Exception raised while getting links from page {i:02}/{pages:02}')
         traceback.print_exc()
         
     try:
@@ -274,17 +264,17 @@ def getLinks(back_days=30):
         next_page_button.click()
         i += 1
         links += pg2Links(driver, i, pages)
-        helper.printMessage('TRACE', 'l.getLinks', f'### Looking for next page {i+1:03} ... ')
+        helper.printMessage('TRACE', 'l.getLinks', f'### Looking for next page {i+1:02} ... ')
 
         try :
             next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
-            helper.printMessage('TRACE', 'l.getLinks', f'+++ Next page found {i+1:03}')
+            helper.printMessage('TRACE', 'l.getLinks', f'+++ Next page found {i+1:02}')
         except NoSuchElementException: 
             next_page_button = None
-            helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:03} not found', 0, 2)
+            helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:02} not found', 0, 2)
         except: 
             next_page_button = None
-            helper.printMessage('ERROR', 'l.pg2Links', f'Exception while looking for page {i+1:03}', 1, 2)
+            helper.printMessage('ERROR', 'l.pg2Links', f'Exception while looking for page {i+1:02}', 1, 2)
             traceback.print_exc()
 
     if driver: driver.quit()
@@ -334,88 +324,3 @@ def getLinks(back_days=30):
     return links
 
 
-
-# def db3Links(back_days=C.PORTAL_DDL_PAST_DAYS):
-#     """
-#     # Synopsis:
-#         Fetch Tenders already on database, with a deadline in the N days back from today (N=back_days).
-#     # Params:
-#         back_days: Number of days to look back for Tenders.
-#     # Return:
-#         List of found Tenders, in abbreviated format [chrono, acronym, published].
-#     """
-#     helper.printMessage('INFO', 'l.db2Links', f'Getting links for saved items, deadline from { back_days } days back ...', 1)
-#     # assa = date.today()
-#     assa = timezone.now()
-#     dt_ddl_start = assa - timedelta(days=back_days)
-#     saved_tenders = Tender.objects.filter(deadline__gte=dt_ddl_start)
-#     helper.printMessage('DEBUG', 'l.db2Links', f'Found { saved_tenders.count() } eligible saved items', 1)
-#     links = []
-#     for tender in saved_tenders:
-#         try:
-#             item = [tender.chrono, tender.acronym, tender.published.strftime("%d/%m/%Y") if tender.published else None]
-#             links.append(item)
-#         except Exception as xc:
-#             helper.printMessage('WARN', 'l.db2Links', f'Error adding item { tender.chrono } to links.', 1)
-#             traceback.print_exc()
-#     helper.printMessage('DEBUG', 'l.db2Links', f'Constructed { len(links) } link items', 1)
-
-#     return links
-
-
-# def pg3Links(driver, page_number, pages):
-#     """
-#     # Synopsis:
-#         Get a list of available Consultations from a given page.
-#     # Params:
-#         driver: Instance of Chrome Webdriver object (web browser window).
-#         page_number : Page number to scrape.
-#     # Return:
-#         List of extremely abbriged Consultations visible on the page.
-#         Each element represents [chrono, acronym, published] of a Consultation.
-#     """
-#     helper.printMessage('INFO', 'l.pg2Links', f'### Getting links from page {page_number:03}/{pages:03}:', 2, 1)
-#     links = []
-#     try:
-#         i = 1
-#         body = driver.find_element(By.XPATH, '/html/body/form/div[3]/div[2]/div/div[5]/div[1]/div[2]/div[2]/table/tbody')
-        
-#         details_btn_xpath = 'tr[1]/td[6]/div/a[1]'
-#         details_btn = body.find_element(By.XPATH, details_btn_xpath)
-#         while details_btn != None:
-#             helper.printMessage('DEBUG', 'l.pg2Links', f'### Getting link {page_number:03}.{i:03} ...')
-#             pub_date_xpath = details_btn_xpath.replace('td[6]/div/a[1]', 'td[2]/div[4]')
-#             pub_date_element = body.find_element(By.XPATH, pub_date_xpath)
-#             env_xpath = details_btn_xpath.replace('td[6]/div/a[1]', 'td[2]/div[5]/a/img')
-#             print(f">>>>> Checking for {env_xpath}")
-#             has_enviro = len(body.find_elements(By.XPATH, env_xpath)) > 0
-            
-#             drat = details_btn.get_attribute("href").replace(C.LINK_PREFIX, '')
-#             portal_id_text = drat.split(C.LINK_STITCH)[0]
-#             organism_text = drat.split(C.LINK_STITCH)[1]
-#             links.append([portal_id_text, organism_text, pub_date_element.get_attribute("innerText")])
-#             helper.printMessage('DEBUG', 'l.pg2Links', f'+++ Got the link {page_number:03}.{i:03} = {portal_id_text}', 0, 1)
-#             i = 1 + i
-#             if i > int(C.LINES_PER_PAGE):
-#                 details_btn = None
-#                 helper.printMessage('TRACE', 'l.pg2Links', f'--- Hit the latest item in page {page_number:03}.')
-#             else:
-#                 helper.printMessage('TRACE', 'l.pg2Links', f'### Checking for the next elemet: {page_number:03}.{i:03}')
-#                 details_btn_xpath = 'tr[' + str(i) + ']/td[6]/div/a[1]'
-#                 try:
-#                     details_btn = body.find_element(By.XPATH, details_btn_xpath)
-#                     helper.printMessage('TRACE', 'l.pg2Links', f'+++ Found next elemet: {page_number:03}.{i:03}')
-#                 except NoSuchElementException: 
-#                     details_btn = None
-#                     helper.printMessage('TRACE', 'l.pg2Links', f'--- Next elemet {page_number:03}.{i:03} not found.', 0, 1)
-#                     # traceback.print_exc()
-#                 except:
-#                     details_btn = None
-#                     helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
-#                     traceback.print_exc()
-
-#     except Exception:
-#         helper.printMessage('FATAL', 'l.pg2Links', f'Exception while getting links from page {page_number:03}', 1, 2)
-#         traceback.print_exc()
-
-#     return links
