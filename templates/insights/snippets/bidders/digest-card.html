@@ -100,7 +100,7 @@
                     <span class="text-secondary">{% trans 'Awarded Bids' %}:</span>
                     <span class="ms-1">{{ winners_deposits|length }}</span>
                     <span class="small">/</span>
-                    <span class="">{{ deposits|length }}</span>
+                    <span class="">{{ all_deposits|length }}</span>
                 </div>
 
                 <div>
@@ -111,7 +111,7 @@
                 </div>
 
                 <div>
-                    <span class="text-secondary">{% trans 'Latest bid' %}:</span>
+                    <span class="text-secondary">{% trans 'Latest award' %}:</span>
                     <span class="ms-1">{{ latest_award_date|default:'-' }}</span>                    
                 </div>
 

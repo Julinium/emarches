@@ -79,9 +79,9 @@
             <div>
                 <small style="color: var(--text-muted);">{% trans "Awarded Bids" %}:</small>
                 <span class="digital">                    
-                    <span>{{ bidder.winners|length }}</span>
+                    <span>{{ bwinners_deposits|length }}</span>
                     <span>/</span>
-                    <span>{{ bidder.deposits.all|length }}</span>
+                    <span>{{ all_deposits|length }}</span>
                     <!-- <span>=</span>
                     <span>{{ bidder.success_rate|floatformat:1|metrify:1|default:'--' }}%</span> -->
                 </span>
@@ -89,9 +89,9 @@
 
             <div>
                 <small style="color: var(--text-muted);">{% trans "Total Awardings" %}:</small>
-                <span class="digital" style="font-weight: bolder;">{{ bidder.winners_sum|metrify:1|default:'--' }}</span>
+                <span class="digital" style="font-weight: bolder;">{{ awards_sum|metrify:1|default:'--' }}</span>
                     <span>/</span>
-                <span class="digital" style="font-weight: lighter;">{{ bidder.deposits_sum|metrify:1|default:'--' }}</span>
+                <span class="digital" style="font-weight: lighter;">{{ deposits_sum|metrify:1|default:'--' }}</span>
             </div>
 
             <!-- <div>
@@ -101,12 +101,12 @@
 
             <div>
                 <small style="color: var(--text-muted);">{% trans 'Latest award' %}:</small>
-                <span class="digital">{{ bidder.latest_win|date:'SHORT_DATE_FORMAT'|default:'--' }}</span>
+                <span class="digital">{{ latest_award_date|date:'SHORT_DATE_FORMAT'|default:'--' }}</span>
             </div>
 
             <div>
                 <small style="color: var(--text-muted);">{% trans 'Highest award' %}:</small>
-                <span class="digital">{{ bidder.highest_win|metrify:1|default:'--' }}</span>
+                <span class="digital">{{ highest_award_amount|metrify:1|default:'--' }}</span>
             </div>
         </div>
 

@@ -14,7 +14,7 @@ def do_the_work():
     from django.utils import timezone
     from datetime import datetime, timedelta
 
-    from base.models import Crawler, Tender, Link, Machine, Parkour
+    from base.models import Crawler, Tender, Link, Machine, Parkour, Harvest
     from scraper import bonner
     from scraper import constants as C
     from scraper import downer, getter, helper, linker, merger

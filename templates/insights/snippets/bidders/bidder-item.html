@@ -10,13 +10,13 @@
 
     <div id="bidder-{{ bidder.id }}-collapse" class="collapse px-2 ms-2">  
 
-        <div id="bidder-{{ bidder.id }}-extended" class="d-none mx-0 mb-2">
+        <div id="bidder-{{ bidder.id }}-extended" class="mx-0 mb-2">
 
             <table class="table border-0 small">
                 <tbody>
 
                     <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0"><span>{% trans 'Awarded Bids' %}:</span></td>
+                        <td class="text-start fw-light pb-0 me-2"><span>{% trans 'Awarded Bids' %}</span></td>
                         <td class="text-end pb-0">
                             <span>{{ bidder.wins_count }}</span>
                             <span>/</span>
@@ -25,11 +25,25 @@
                     </tr>
 
                     <tr class="border-bottom">
-                        <td class="text-start fw-light pb-0"><span>{% trans 'Awarded amount' %}:</span></td>
+                        <td class="text-start fw-light pb-0 me-2"><span>{% trans 'Awarded amount' %}</span></td>
                         <td class="text-end pb-0">
-                            <span>{{ bidder.wins_sum|metrify|default:'-' }}</span>
+                            <span class="text-bold text-success">{{ bidder.wins_sum|metrify|default:'-' }}</span>
                             <span>/</span>
                             <span>{{ bidder.bids_sum|metrify|default:'-' }}</span> 
+                        </td>
+                    </tr>
+
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0 me-2"><span>{% trans 'Latest bid' %}</span></td>
+                        <td class="text-end pb-0">
+                            <span>{{ bidder.last_part|date }}</span>
+                        </td>
+                    </tr>
+
+                    <tr class="border-bottom">
+                        <td class="text-start fw-light pb-0 me-2"><span>{% trans 'Financial efficiency' %}</span></td>
+                        <td class="text-end pb-0">
+                            <span>{{ bidder.succ_rate|default:'-' }}%</span>
                         </td>
                     </tr>
                     

@@ -189,6 +189,18 @@
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-variant' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.variant_ico val_class='' border='bottom' liner='' %}
             {% endwith %}
 
+            {% if tender.has_enviro %}
+                {% trans 'Environmental clauses' as key_value %}
+                {% with translated_value="" %}
+                    {% if tender.has_enviro %}
+                        {% trans 'Yes' as translated_value %}
+                    {% else %}
+                        {% trans 'No' as translated_value %}
+                    {% endif %}
+                    {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-enviro' val_value=translated_value key_value=key_value uni_value='' ico_class=bicons.has_enviro val_class='' border='bottom' liner='' %}
+                {% endwith %}
+            {% endif %}
+
             {% if tender.plans_price > 0 %}
                 {% trans 'Price of Plans' as key_value %}
                 {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-plans_price' val_value=tender.plans_price key_value=key_value uni_value='' ico_class=bicons.plans_price val_class='' border='bottom' liner='' %}
