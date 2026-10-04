@@ -17,23 +17,23 @@
     --bd-danger: #ff4949;
 }
 
-@font-face {
+/* @font-face {
     font-family: "Condensed";
     src: url('../fonts/UbuntuCondensed-Regular.ttf') format("ttf");
     font-weight: 100;
-}
+} */
 
-@font-face {
+/* @font-face {
     font-family: "Ubuntu";
     src: url('../fonts/Ubuntu-Medium.ttf') format("ttf");
     font-weight: 100;
-}
+} */
 
-@font-face {
+/* @font-face {
     font-family: "Aldo";
     src: url('../fonts/Aldo.ttf') format("ttf");
     font-weight: 100;
-}
+} */
 
 @font-face {
     font-family: "Classy";
@@ -46,6 +46,12 @@
     src: url('../fonts/NotoNaskhArabic-VariableFont_wght.ttf') format("ttf");
     font-weight: 100;
 }
+
+/* @font-face {
+    font-family: "StencilRegular";
+    src: url('../fonts/stencil/Regular.ttf') format("ttf");
+    font-weight: 100;
+} */
 
 body {
     /* font-family: sans-serif, serif, "Ubuntu", "Naskh"; */
@@ -110,12 +116,12 @@ body {
 }
 
 body, div, table, p {
-    font-family: "Classy", "Naskh", "Aldo", "Ubuntu", sans-serif, serif;
+    font-family: "Classy", "Naskh";
     background-color: transparent;
 }
 
 .head-title {
-    font-family: "Ubuntu", "Naskh", "Aldo", "Classy", sans-serif, serif;
+    font-family: "Classy", "Naskh";
     text-align: center;
     width: 100%;
     font-size: x-large;

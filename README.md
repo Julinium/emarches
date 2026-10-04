@@ -38,7 +38,7 @@ This won't probably work out of the box. Because scraping depends on the target 
     DB_USER = "dbuser"
     DB_PASS = "$trongP@ssw0rd-999"
 
-    MEDIA_ROOT  = '/some/path/to/media' # Preferably absolute paths. Make sure they exist and are writeable.
+    FILES_MEDIA_ROOT  = '/some/path/to/media' # Preferably absolute paths. Make sure they exist and are writeable.
     SELENO_DIR = '/some/main/path'
 
 2. .env.creds.json: # Credentials to use to download DCE files. Use as many as possible. They are randomly shuffled.

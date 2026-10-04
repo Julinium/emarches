@@ -420,7 +420,7 @@
 # #         files_list = []
 # #         total_size = 0
 # #         dce_dir = os.path.join(
-# #             os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
+# #             os.path.join(settings.TENDERS_FILES_ROOT, "dce"),
 # #             settings.DL_PATH_PREFIX + self.chrono,
 # #         )
 # #         if os.path.exists(dce_dir):

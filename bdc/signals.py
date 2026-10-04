@@ -9,9 +9,9 @@ from bdc.models import PurchaseOrder
 
 @receiver(post_delete, sender=PurchaseOrder)
 def bdc_post_delete(sender, instance, using, **kwargs):
-    pdf_items_path = Path(settings.MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
+    pdf_items_path = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
     delete_flat_dir(pdf_items_path)
-    csv_items_path = Path(settings.MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
+    csv_items_path = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
     delete_flat_dir(csv_items_path)
 
 def delete_flat_dir(path: Path) -> bool:

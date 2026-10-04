@@ -71,7 +71,7 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
 
 
     if C.MACHINE == "remote":
-        prefix = os.path.join(C.REMOTE_MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
+        prefix = os.path.join(C.REMOTE_MEDIA_ROOT, f'tenders/dce/{C.DL_PATH_PREFIX}')
         chronos = " ".join(shlex.quote(c) for c in chronos_list)
 
         user, port, host = C.REMOTE_USER, C.SSH_PORT, C.SSH_HOST
@@ -96,7 +96,7 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
         non_empty_dirs = set(result.stdout.splitlines())
     else:
         non_empty_dirs = []
-        prefix = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}')
+        prefix = os.path.join(C.TENDERS_FILES_ROOT, f'dce/{C.DL_PATH_PREFIX}')
         for chrono in chronos_list:
             folder_path = prefix + chrono
             if os.path.exists(folder_path) and any(os.path.isfile(os.path.join(folder_path, item)) for item in os.listdir(folder_path)):
@@ -130,16 +130,16 @@ def getDCE(tender):
         if len(fname) == 0: return None
         return fname[0]
 
-    os.makedirs(C.MEDIA_ROOT, exist_ok=True)
+    os.makedirs(C.TENDERS_FILES_ROOT, exist_ok=True)
 
-    if not os.path.exists(C.MEDIA_ROOT): 
+    if not os.path.exists(C.TENDERS_FILES_ROOT): 
         helper.printMessage('ERROR', 'd.getDCE', f'Could not read media root directory.')
         return None
     if not chrono or not acro : 
         helper.printMessage('ERROR', 'd.getDCE', f'Incorrect parameter was received.')
         return None
 
-    con_path = os.path.join(C.MEDIA_ROOT, f'dce/{C.DL_PATH_PREFIX}{chrono}')
+    con_path = os.path.join(C.TENDERS_FILES_ROOT, f'dce/{C.DL_PATH_PREFIX}{chrono}')
     if not os.path.exists(con_path): os.makedirs(con_path)
     if not os.path.exists(con_path):
         helper.printMessage('ERROR', 'd.getDCE', f'Could not find DCE directory.')
@@ -333,7 +333,7 @@ def getExtraFiles(tender=None, extra_files=[]):
         helper.printMessage('ERROR', 'd.getExtraFile', f'Received empty files list.')
         return None
 
-    if not os.path.exists(C.MEDIA_ROOT): 
+    if not os.path.exists(C.TENDERS_FILES_ROOT): 
         helper.printMessage('ERROR', 'd.getExtraFile', f'Could not read media root directory.')
         return None
 
@@ -343,7 +343,7 @@ def getExtraFiles(tender=None, extra_files=[]):
         if len(fname) == 0: return None
         return fname[0]
 
-    extra_path = os.path.join(C.MEDIA_ROOT, f'extra/{C.EXTRA_PATH_PREFIX}{tender.chrono}')
+    extra_path = os.path.join(C.TENDERS_FILES_ROOT, f'extra/{C.EXTRA_PATH_PREFIX}{tender.chrono}')
     if not os.path.exists(extra_path): os.makedirs(extra_path)
     if not os.path.exists(extra_path):
         helper.printMessage('ERROR', 'd.getExtraFile', f'Could not find Extra directory.')

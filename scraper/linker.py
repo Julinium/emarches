@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 
-from base.models import Tender, Crawler, Link, Parkour, Machine
+from base.models import Tender, Crawler, Link, Parkour, Machine, Harvest
 from scraper import constants as C
 from scraper import helper
 

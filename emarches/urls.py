@@ -46,31 +46,10 @@ sitemaps = {
     'tenders': TenderSitemap,
 }
 
-# urlpatterns += [
-#     # path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-#     # 1. Main index file listing all sub-sitemaps
-#     path(
-#         'sitemap.xml', 
-#         # cache_page(86400)(index), 
-#         index,
-#         {'sitemaps': sitemaps}, 
-#         name='django.contrib.sitemaps.views.index'
-#     ),
-    
-#     # 2. Individual paginated sitemaps (e.g. sitemap-items.xml?p=1)
-#     path(
-#         'sitemap-<section>.xml', 
-#         # cache_page(86400)(sitemap),
-#         sitemap,
-#         {'sitemaps': sitemaps}, 
-#         name='django.contrib.sitemaps.views.sitemap'
-#     ),
-# ]
 
 urlpatterns += [
     path(
-        'sitemap.xml', 
-        # clean_sitemap_index, 
+        'sitemap.xml',
         cache_page(86400)(clean_sitemap_index),
         {'sitemaps': sitemaps}, 
         name='django.contrib.sitemaps.views.index'
@@ -78,7 +57,6 @@ urlpatterns += [
 
     path(
         'sitemap-<section>.xml', 
-        # clean_sitemap, 
         cache_page(86400)(clean_sitemap),
         {'sitemaps': sitemaps}, 
         name='django.contrib.sitemaps.views.sitemap'

@@ -173,7 +173,7 @@ def do_the_work():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'w.handle_results', f"Started getting results for item { i }/{ count }", 0)
+            helper.printMessage('INFO', 'w.handle_results', f"▷▷▷ Getting results for item { i }/{ count }", 0)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
                 helper.printMessage('INFO', 'w.handle_results', f"◁◁◁ Minutes found for item { i }/{ count }")
@@ -187,7 +187,7 @@ def do_the_work():
                     helper.printMessage('DEBUG', 'w.handle_results', f"Raised Exception: \n{ xc }\n")
                     traceback.print_exc()
             else:
-                helper.printMessage('INFO', 'w.handle_results', f"◀◀◀ Minutes empty or not found for item { i }/{ count }")
+                helper.printMessage('INFO', 'w.handle_results', f"◀◀◀ No Minutes found for item { i }/{ count }")
 
         return results_saved, i
 

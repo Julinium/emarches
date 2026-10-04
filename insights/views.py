@@ -248,7 +248,7 @@ def bidder_pdf(request, pk=None):
     if lang_code is None or lang_code == '': lang_code = 'en'
 
     file_name = f'eMarches.com-{ bidder.id }-{ lang_code }.pdf'
-    dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"
+    dir_name  = Path(settings.FILES_MEDIA_ROOT) / "bidders" / "pdf"
     file_path = os.path.join(dir_name, file_name)
     recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
     pdf_file_path = file_path if recent_file_exists else weasy.generate_pdf(request, bidder, dir_name, file_name)
@@ -265,13 +265,30 @@ def bidder_pdf(request, pk=None):
 
             logger_portal.info("Bidder analysis pdf File Download allowed", extra={"request": request, "file_bytes": file_size})
             # return render(request, 'insights/bidder-pdf.html', {'bidder': bidder})
-            return response
-        
+            return response        
 
         logger_portal.warning("E404: Files not found", extra={"request": request})
         return HttpResponse(trans("Not found") + f": File does not exist", status=404)
     
+    
     logger_portal.warning("E404: Files not found", extra={"request": request})
+
+    ########################
+    print(f"============= file_path (existed={ recent_file_exists }):\n", file_path, "=============")
+    s = {
+        "file_path": file_path,
+        "recent_file_exists": recent_file_exists,
+        "pdf_file_path": pdf_file_path,
+        }
+    r = {
+        'file_path': '/var/opt/media/tenders/bidders/pdf/eMarches.com-3f39c0f1-5116-40a7-a353-eaff0e36f4b8-en.pdf', 
+        'recent_file_exists': False, 
+        'pdf_file_path': None
+        }
+    return HttpResponse(trans("Not found") + f": File generating failed\n\n\n{s}", status=404)
+    ########################
+
+
     return HttpResponse(trans("Not found") + f": File generating failed", status=404)
 
 
@@ -302,7 +319,7 @@ def bidder_csv(request, pk=None):
     if lang_code is None or lang_code == '': lang_code = 'en'
 
     file_name = f'eMarches.com-{ bidder.id }-{ lang_code }.csv'
-    dir_name  = Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"
+    dir_name  = Path(settings.FILES_MEDIA_ROOT) / "bidders" / "csv"
     file_path = os.path.join(dir_name, file_name)
     recent_file_exists = weasy.recent_file_exists(file_path, BIDDER_FILES_EXPIRY_HOURS)
     csv_file_path = file_path if recent_file_exists else weasy.generate_csv(request, bidder, dir_name, file_name)

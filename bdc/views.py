@@ -384,11 +384,11 @@ def bdc_details(request, pk=None):
     show_print = 'yes'
 
     pdf_file_name = f'eMarches.com-{ bdc.chrono }-items.pdf'
-    pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
+    pdf_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
     pdf_file_path = pdf_file_dir / f"{ pdf_file_name }"
 
     csv_file_name = f'eMarches.com-{ bdc.chrono }-items.csv'
-    csv_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
+    csv_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
     csv_file_path = csv_file_dir / f"{ csv_file_name }"
 
     show_print = "yes" if pdf_file_path.exists() else "no"
@@ -436,7 +436,7 @@ def bdc_items_pdf(request, pk=None, fn=None):
         return HttpResponse(_("Not found"), status=404)
     
     pdf_file_name = fn
-    pdf_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
+    pdf_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
     pdf_file_path = pdf_file_dir / f"{ pdf_file_name }"
 
     if os.path.exists(pdf_file_path):
@@ -477,7 +477,7 @@ def bdc_items_csv(request, pk=None, fn=None):
         return HttpResponse(_("Not found"), status=404)
     
     csv_file_name = fn
-    csv_file_dir  = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
+    csv_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
     csv_file_path = csv_file_dir / f"{ csv_file_name }"
 
     if os.path.exists(csv_file_path):

@@ -548,7 +548,7 @@ def tender_get_file(request, pk=None, fn=None):
 
     tender = get_object_or_404(Tender, id=pk)
 
-    dce_root  = os.path.join(settings.DCE_MEDIA_ROOT, "dce")
+    dce_root  = os.path.join(settings.TENDERS_FILES_ROOT, "dce")
     dce_dir   = os.path.join(dce_root, settings.DL_PATH_PREFIX + tender.chrono,)
     dce_file  = os.path.join("dce", settings.DL_PATH_PREFIX + tender.chrono)
     file_path = os.path.join(dce_file, fn)
@@ -594,7 +594,7 @@ def tender_get_extra_file(request, pk=None, fn=None):
 
     tender = get_object_or_404(Tender, id=pk)
 
-    extra_root  = os.path.join(settings.DCE_MEDIA_ROOT, "extra")
+    extra_root  = os.path.join(settings.TENDERS_FILES_ROOT, "extra")
     extra_dir   = os.path.join(extra_root, settings.EXTRA_PATH_PREFIX + tender.chrono,)
     extra_file  = os.path.join("extra", settings.EXTRA_PATH_PREFIX + tender.chrono)
     file_path = os.path.join(extra_file, fn)

@@ -290,11 +290,11 @@ MESSAGE_TAGS = {
 
 env_scraper_path = BASE_DIR / 'scraper/.env'
 load_dotenv(dotenv_path=env_scraper_path)
-DCE_MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+FILES_MEDIA_ROOT = os.getenv("FILES_MEDIA_ROOT")
+TENDERS_FILES_ROOT = os.getenv("TENDERS_FILES_ROOT")
 LINK_PREFIX = os.getenv("LINK_PREFIX")
 DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
 EXTRA_PATH_PREFIX = os.getenv("EXTRA_PATH_PREFIX")
-
 
 TENDER_FULL_PROGRESS_DAYS = 30
 TENDERS_ITEMS_PER_PAGE = 10

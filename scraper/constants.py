@@ -16,7 +16,6 @@ REMOTE_USER = os.getenv("REMOTE_USER", 'insino')
 SSH_PORT = os.getenv("SSH_PORT", 22)
 SSH_HOST = os.getenv("SSH_HOST", 'emarches.com')
 
-MEDIA_ROOT = os.getenv("MEDIA_ROOT")
 DL_PATH_PREFIX = os.getenv("DL_PATH_PREFIX")
 
 VERBOSITY = 2
@@ -66,8 +65,10 @@ DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
-MEDIA_ROOT = os.getenv("MEDIA_ROOT")
+FILES_MEDIA_ROOT = os.getenv("FILES_MEDIA_ROOT")
+TENDERS_FILES_ROOT = os.getenv("TENDERS_FILES_ROOT")
 REMOTE_MEDIA_ROOT = os.getenv("REMOTE_MEDIA_ROOT")
+
 FILE_PREFIX   = 'eMarches.com' # Prefix before DCE files names
 # When a 4XX error is returned sleep a random time between SLEEP_4XX_MIN and SLEEP_4XX_MAX seconds
 SLEEP_4XX_MIN = 377

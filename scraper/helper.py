@@ -216,7 +216,7 @@ def sleepRandom(Fm=35, To=65):
 
 def syncDir(
     local_dir: str, 
-    remote_dir: str = C.REMOTE_MEDIA_ROOT + f"/dce/", 
+    remote_dir: str = C.REMOTE_MEDIA_ROOT + f"/tenders/dce/", 
     remote_user: str = C.REMOTE_USER, 
     remote_host: str = C.SSH_HOST,
     port: int = C.SSH_PORT,

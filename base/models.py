@@ -4,9 +4,8 @@ import os
 import traceback
 import uuid
 import json
-# from os import path as path
-
 import pytz
+
 from django.conf import settings
 from django.db import models
 from django.db.models import Avg, Count, F, Max, Min, Q, Sum
@@ -393,7 +392,7 @@ class Tender(models.Model):
         files_list = []
         total_size = 0
         dce_dir = os.path.join(
-            os.path.join(settings.DCE_MEDIA_ROOT, "dce"),
+            os.path.join(settings.TENDERS_FILES_ROOT, "dce"),
             settings.DL_PATH_PREFIX + self.chrono,
         )
         if os.path.exists(dce_dir):
@@ -417,7 +416,7 @@ class Tender(models.Model):
         files_list = []
         total_size = 0
         extra_dir = os.path.join(
-            os.path.join(settings.DCE_MEDIA_ROOT, "extra"),
+            os.path.join(settings.TENDERS_FILES_ROOT, "extra"),
             settings.EXTRA_PATH_PREFIX + self.chrono,
         )
         if os.path.exists(extra_dir):
@@ -460,8 +459,6 @@ class Tender(models.Model):
         self.has_samples = any(lot.samples.count() > 0 for lot in self.lots.all())
         self.has_visits = any(lot.visits.count() > 0 for lot in self.lots.all())
 
-        # self.updated = None
-        # if self.pk is not None:
         if not self._state.adding:
             self.updated = timezone.now()
 

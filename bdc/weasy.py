@@ -37,7 +37,7 @@ def create_bdc_items_pdf(bdc):
     html_string = render_to_string("bdc/bdc-articles-pdf.html", context)
 
     pdf_file_name = f'eMarches.com-{ bdc.chrono }-items.pdf'
-    output_dir = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
+    output_dir = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{ pdf_file_name }"
 
@@ -54,7 +54,7 @@ def create_bdc_items_pdf(bdc):
 def bdc_generate_items_csv(bdc):
 
     csv_file_name = f'eMarches.com-{ bdc.chrono }-items.csv'
-    output_dir = Path(settings.DCE_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
+    output_dir = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / f"{ csv_file_name }"
     

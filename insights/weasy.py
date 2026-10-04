@@ -51,7 +51,7 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
         if lang_code is None or lang_code == '': lang_code = 'en'
    
         pdf_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-{ lang_code }.pdf'
-        output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "pdf"     
+        output_dir = dir_name if dir_name else Path(settings.FILES_MEDIA_ROOT) / "bidders" / "pdf"     
 
         html_string = render_to_string("insights/bidder-pdf.html", context | ctx)
         output_path = output_dir / f"{ pdf_file_name }"
@@ -61,6 +61,7 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
         html_string = html_string.replace('/static/', f'{static_uri}/')        
         HTML(string=html_string).write_pdf(target=output_path)
 
+        print("============= output_path:\n", output_path, "=============")
         return output_path
 
     except Exception as xc:
@@ -80,7 +81,7 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
         if lang_code is None or lang_code == '': lang_code = 'en'
    
         csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-{ lang_code }.csv'
-        output_dir = dir_name if dir_name else Path(settings.DCE_MEDIA_ROOT) / "bidders" / "csv"        
+        output_dir = dir_name if dir_name else Path(settings.FILES_MEDIA_ROOT) / "bidders" / "csv"        
         # csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.csv'
 
         output_dir.mkdir(parents=True, exist_ok=True)
