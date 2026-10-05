@@ -77,7 +77,7 @@ def getJson(link, skipExisting=False):
     except Exception as x:
         helper.printMessage('ERROR', 'g.getJson', f'Exception getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         return None
-    helper.printMessage('DEBUG', 'g.getJson', f'Getting Tender page : {request_cons}')
+    helper.printMessage('TRACE', 'g.getJson', f'Getting Tender page : {request_cons}')
     if request_cons.status_code != 200 :
         helper.printMessage('ERROR', 'g.getJson', f'Request to Tender page returned a {request_cons.status_code} status code.')
         if request_cons.status_code == 429:

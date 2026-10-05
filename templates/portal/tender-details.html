@@ -581,9 +581,6 @@
                         <h1 class="modal-title fs-5" id="dceRequestModalLabel">{% translate "Request Tender files" %}</h1>
                     </div>
                     <div class="modal-body">
-                        <!-- <div class="text-center mb-2">
-                            <img class="img-fluid" style="max-height: 6rem;" src="{% static 'graphics/wheelbarrow.svg' %}" alt="X">
-                        </div> -->
                         {% if tender.files_to_get.first %}
                             <div class="text-danger">{% translate "Files for this Tender are already queued" %}.</div>
                         {% else %}
@@ -592,23 +589,12 @@
                     </div>
                     <div class="modal-footer">
                         {% if not tender.files_to_get.first %}
-                            <!-- <form action="{% url 'portal_tender_req_file' tender.id %}" method="post">
-                                {{ csrf_token  }}
-                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">
-                                    <span><i class="{{ bicons.send }}"></i></span>
-                                    <span class="ms-1">{% translate 'Request' %}</span>
-                                </button>
-                            </form> -->
 
                             <button onclick="dceRequest()" class="btn btn-primary" data-bs-dismiss="modal">
                                 <span><i class="{{ bicons.send }}"></i></span>
                                 <span class="ms-1">{% translate 'Request' %}</span>
                             </button>
                         {% endif %}
-                        <!-- <a href="/base_contact" target="_blank" class="btn btn-outline-primary">
-                            <span><i class="{{ bicons.send }}"></i></span>
-                            <span class="ms-1">{% translate 'Contact Us' %}</span>
-                        </a> -->
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <span><i class="{{ bicons.cancel }}"></i></span>
                             <span class="ms-1">{% translate 'Close' %}</span>

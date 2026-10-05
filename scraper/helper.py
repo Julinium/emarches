@@ -150,7 +150,7 @@ def getDriver(url=''):
     if url == '' or url == None:
         printMessage('DEBUG', 'h.getDriver', 'Returning a driver with an empty url.\n')
         return driver
-    printMessage('DEBUG', 'h.getDriver', f'Loading web address to driver: {url.replace(C.SITE_INDEX, "[held]")}')
+    printMessage('DEBUG', 'h.getDriver', f'Loading web address to driver ...')
     try:
         driver.get(url)
         printMessage('DEBUG', 'h.getDriver', 'Chromium driver instance is setup and ready.')

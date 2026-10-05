@@ -135,7 +135,9 @@
                                 <span class="fw-light text-uppercase">{% trans "Fin. Offers" %}</span>
                                 <span class="small fw-bold ps-2">{{ fin_races_deposits.all|length }}</span>
                             </span>
-                            <span class="mx-2 float-end">= {{ deposits_sum|default:'-' }}</span>
+                            {% if deposits_sum %}
+                                <span class="mx-2 float-end">= {{ deposits_sum|default:'-' }}</span>
+                            {% endif %}
                         </div>
                     </button>
                 </h2>
@@ -158,7 +160,9 @@
                                 <span class="fw-bold text-uppercase">{% trans "Awardings" %}</span>
                                 <span class="small fw-bold ps-2 {% if winners_deposits.all|length > 0 %}text-success{% endif %}">{{ winners_deposits.all|length }}</span>                                
                             </span>
-                            <span class="mx-2 float-end">= {{ awards_sum|default:'-' }}</span>
+                            {% if awards_sum %}
+                                <span class="mx-2 float-end">= {{ awards_sum|default:'-' }}</span>
+                            {% endif %}
                         </div>
                     </button>
                 </h2>

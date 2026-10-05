@@ -14,7 +14,7 @@ from rest_framework import serializers
 from base.models import (
     Agrement, Category, Change, Client, Concurrent, Deposit, Domain, FileToGet,
     Kind, Lot, Meeting, Mode, Opening, Procedure, Qualif, RelAgrementLot,
-    RelDomainTender, RelQualifLot, Sample, Tender, Visit)
+    RelDomainTender, RelQualifLot, Sample, Tender, Visit, Link)
 
 from scraper import constants as C
 from scraper import helper
@@ -173,10 +173,10 @@ def format(tender_json: dict) -> dict:
 
 
 @transaction.atomic
-def saveTender(tender_data, link=None):    
-
+def saveTender(tender_data, link=None):
+ 
     formatted_data = format(tender_data)
-    helper.printMessage('DEBUG', 'm.saveTender', f"### Started saving formatted Tender data {formatted_data["chrono"]}")
+    helper.printMessage('DEBUG', 'm.saveTender', f"### Saving formatted Tender data {formatted_data["chrono"]}")
 
     tender_serializer = TenderSerializer(data=formatted_data)
     tender_serializer.is_valid(raise_exception=True)
@@ -289,11 +289,27 @@ def saveTender(tender_data, link=None):
             else:
                 helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping Results for Tender {tender.chrono} ...")
 
-    if link and link._state.adding == False:
-        # print('=====link======', link.chrono, link._state.adding, link.acronym)
-        link.tender = tender
-        link.handled = True
-        link.save()
+    if link:
+        try:
+            helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Matching link to tender with { link.chrono } ...")
+            matched = link.tender != None
+            if matched:
+                helper.printMessage('DEBUG', 'm.saveTender', f"--- Already matched on { link.chrono }.")
+            else:
+                related_links = Link.objects.filter(id=link.id)
+                related_links = Link.objects.filter(chrono=link.chrono)
+                updated_links = related_links.update(
+                    tender=tender,
+                    handled=True
+                )
+                if updated_links > 0:
+                    helper.printMessage('DEBUG', 'm.saveTender', f"+++ Link and Tender liked successfully on { link.chrono }.")
+                else:
+                    # msg = f"--- No matching made on { link.chrono }"
+                    helper.printMessage('DEBUG', 'm.saveTender', f"--- No matching made on { link.chrono }.")
+        except Exception as xc:
+            helper.printMessage('WARN', 'm.saveTender', f"xxx Error matching on {link.chrono}.")
+            traceback.print_exc()
     
     return tender, tender_create, len(changes) > 0
 
@@ -1749,3 +1765,12 @@ def x_createCckmp(category_data, client_data, kind_data, mode_data, procedure_da
     
 
     return category, client, kind, mode, procedure
+
+
+
+
+# link.pk: 208f9b5c-44a7-41cd-972d-4c50b64df18c
+# link.chrono: 1040353
+# adding: False
+# [{'pk': UUID('6440eec3-df42-4a79-93a7-f2e85ce4141a'), 'chrono': '1040353', 'tender_id': UUID('3057f307-06a1-4c9e-afce-daa3b59e2b97'), 'handled': True}]
+# PK exists: False

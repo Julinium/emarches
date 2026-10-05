@@ -22,22 +22,24 @@ def do_the_work():
     started_time = timezone.now()
 
     def linkify():
-        unhandled_links = list(Link.objects.filter(handled=False) | Link.objects.filter(tender__isnull=True))
-        
+        # unhandled_links = list(Link.objects.filter(handled=False) | Link.objects.filter(tender__isnull=True))
+        unhandled_links = []
+
         if not C.IMPORT_LINKS:
             back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
             links_crawled = linker.getLinks(back_days)
             helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_crawled) } Crawled links ...")
             merged_links_crawled = linker.mergeLinks(links_crawled)
-            unhandled_links += merged_links_crawled
+            # unhandled_links += merged_links_crawled
+            # unhandled_links = set(unhandled_links) | set(merged_links_crawled)
+            unhandled_links = set(merged_links_crawled)
 
         if C.REFRESH_EXISTING:
             links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
             helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_saved) } found links ...")
             merged_links_saved = linker.mergeLinks(links_saved)
-            unhandled_links += merged_links_saved
-
-        # if C.REFRESH_EXISTING: unhandled_links |= merged_links_crawled | merged_links_saved
+            # unhandled_links += merged_links_saved
+            unhandled_links = set(unhandled_links) | set(merged_links_saved)
 
         helper.printMessage('DEBUG', 'w.linkify', f"Count of links to handle: {len(unhandled_links)} ...", 1)
     
@@ -51,31 +53,32 @@ def do_the_work():
         if ll > 0:
             i = 0
             handled = 0
-            helper.printMessage('INFO', 'w.handle_tenders', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
+            helper.printMessage('INFO', 'w.tenderify', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
             for l in links:
                 i += 1
-                helper.printMessage('INFO', 'w.handle_tenders', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
+                helper.printMessage('INFO', 'w.tenderify', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
                 jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
                 if jsono:
                     handled += 1
                     tender, creation_mode, changes_found = merger.saveTender(jsono, l)
+                    # linked = merger.linder(tender, l)
                     if creation_mode == True:
                         tenders_created += 1
-                        helper.printMessage('INFO', 'w.handle_tenders', f"◁◁ Created Tender {tender.chrono}")
+                        helper.printMessage('INFO', 'w.tenderify', f"◁◁ Created Tender {tender.chrono}")
                     else:
                         if changes_found == True:
                             tenders_updated += 1
-                            helper.printMessage('INFO', 'w.handle_tenders', f"◁◁ Tender {tender.chrono} updated.")
+                            helper.printMessage('INFO', 'w.tenderify', f"◁◁ Tender {tender.chrono} updated.")
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.handle_tenders', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{ll:03}. Handled: { tenders_created + tenders_updated } tenders. ({ tenders_created } new + {tenders_updated } old).", 1)
-                        helper.printMessage('DEBUG', 'w.handle_tenders', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
+                        helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{ll:03}. Handled: { tenders_created + tenders_updated } tenders. ({ tenders_created } new + {tenders_updated } old).", 1)
+                        helper.printMessage('DEBUG', 'w.tenderify', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
                         helper.sleepRandom(20, 45)
                         handled = 0
         else:
             saving_errors = True
-            helper.printMessage('ERROR', 'w.handle_tenders', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
+            helper.printMessage('ERROR', 'w.tenderify', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
 
         ############
         try:
@@ -104,11 +107,11 @@ def do_the_work():
                     links_handled = ll,
                     tenders_created = tenders_created,
                     tenders_updated = tenders_updated,
-                    # tenders_discarded = models.SmallIntegerField(blank=True, null=True, default=0)
-                    # dce_files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
-                    # extra_files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
-                    # dce_files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
-                    # extra_files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+                    # tenders_discarded = 0,
+                    # dce_files_downloaded = 0,
+                    # extra_files_downloaded = 0,
+                    # dce_files_failed = 0,
+                    # extra_files_failed = 0,
                     successfull = not saving_errors,
                 )
 
