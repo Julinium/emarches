@@ -20,6 +20,11 @@ def home(request):
     return render(request, 'base/home.html')
 
 
+def about(request):
+    logger_portal.info(f"About page view", extra={"request": request})
+    return render(request, 'base/about.html')
+
+
 @login_required(login_url="account_login")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def view_log_file(request, logger='portal'):
@@ -42,6 +47,7 @@ def view_log_file(request, logger='portal'):
         logger_portal.warning("E404: Logger not found", extra={"request": request})
         return HttpResponse(_("File not found"), status=404)
     
+
 def robots_txt(request):
     lines = [
         "User-Agent: *",
@@ -63,6 +69,7 @@ def clean_sitemap_index(request, sitemaps):
     response.headers.pop('X-Robots-Tag', None)
     response.headers.pop('x-robots-tag', None)
     return response
+
 
 def clean_sitemap(request, sitemaps, section=None):
     response = sitemap_view(request, sitemaps=sitemaps, section=section)

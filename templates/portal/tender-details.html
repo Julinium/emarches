@@ -520,13 +520,13 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="dceModalLabel">{% translate "Tender's files" %}</h1>
+                        <h1 class="modal-title fs-5" id="dceModalLabel">{% translate "Tender downloads" %}</h1>
                     </div>
                     <div class="modal-body">
 
                         {% if tender.dce_files_info  %}
                             <!-- <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div> -->
-                            <div class="text-muted fw-semibold mt-3">{% translate "DCE Files" %}:</div>
+                            <div class="text-muted fw-semibold">{% translate "DCE Files" %}:</div>
                             {% for f in tender.dce_files_info %}
                                 <a id="dce-{{ tender.chrono }}000{{ forloop.counter }}"
                                 class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
@@ -537,7 +537,7 @@
                                 </a>
                             {% endfor %}
                             {% if tender.extra_files_info  %}
-                            <div class="text-muted fw-semibold mt-3">{% translate "Extra Files" %}:</div>
+                                <div class="text-muted fw-semibold mt-3">{% translate "Extra Files" %}:</div>
                                 {% for f in tender.extra_files_info %}
                                     <a id="extra-{{ tender.chrono }}000{{ forloop.counter }}"
                                     class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 

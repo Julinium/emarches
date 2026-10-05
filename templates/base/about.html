@@ -1,0 +1,509 @@
+{% extends "base/base.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% translate "About eMarchés" %}
+{% endblock %}
+
+
+
+
+
+
+{% block content %}
+
+    <!-- Hero -->
+    <section class="py-5 bg-light">
+        <div class="container py-4">
+            <div class="row align-items-center g-5">
+                <div class="mx-auto text-center">
+                    <span class="badge text-bg-primary mb-3">
+                        {% translate "Public Procurement Intelligence" %}
+                    </span>
+
+                <h1 class="display-4 fw-bold mb-4">
+                    {% translate "Turn Public Procurement Data Into Business Opportunities" %}
+                </h1>
+
+                <p class="lead text-secondary mb-4">
+                    {% translate "Know the Market. Find the Right Tenders. Win More Business." %}
+                </p>
+
+                <p class="fs-5 text-secondary mb-0">
+                    {% translate "eMarchés is a public procurement intelligence platform built for businesses operating in Morocco. We transform complex and dispersed procurement information into actionable business intelligence, helping companies discover relevant opportunities, understand the market, monitor competitors, and make better decisions." %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    </section>
+
+    <!-- Introduction -->
+    <section class="py-5">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <h2 class="fw-bold mb-4">
+                        {% translate "Because finding a tender is not enough." %}
+                    </h2>
+
+                <p class="lead text-secondary mb-0">
+                    {% translate "You need to know which opportunities are worth pursuing." %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    </section>
+
+    <!-- Competitive Advantage -->
+    <section class="py-5 bg-light">
+        <div class="container py-4">
+
+        <div class="row justify-content-center mb-5">
+            <div class="col text-center">
+                <h2 class="fw-bold mb-3">
+                    {% translate "Your Competitive Advantage Starts With Better Information" %}
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    {% translate "Every day, Moroccan public institutions publish procurement opportunities across construction, services, supplies, technology, consulting, infrastructure, and many other sectors. The challenge is finding the right opportunities, understanding them quickly, and knowing what happened before." %}
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-12 col-lg-6">
+                <div class="card h-80 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h5 fw-bold mb-3">
+                            {% translate "Find Opportunities That Matter" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Discover tenders based on your business activity, target locations, contract values, procurement categories, contracting authorities, and other criteria relevant to your company." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+                <div class="card h-80 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h5 fw-bold mb-3">
+                            {% translate "Understand Your Market" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Explore procurement activity by institution, sector, location, domain, and contract value to identify patterns and emerging opportunities." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+                <div class="card h-80 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h5 fw-bold mb-3">
+                            {% translate "Know Your Competition" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Understand who is participating in your market and who is winning contracts. Explore competitors, previous awards, submitted offers, and historical procurement activity." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+                <div class="card h-80 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h5 fw-bold mb-3">
+                            {% translate "Make Decisions With Data" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Use historical procurement information to assess potential markets, benchmark contracts, identify active buyers, and prioritize opportunities." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    </section>
+
+    <!-- Procurement Intelligence -->
+    <section class="py-5">
+        <div class="container py-4">
+
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <h2 class="fw-bold mb-3">
+                    {% translate "From Tender Search to Procurement Intelligence" %}
+                </h2>
+
+                <p class="text-secondary">
+                    {% translate "Traditional tender discovery is reactive. You find a notice, read the documents, and decide whether to bid." %}
+                </p>
+
+                <p class="text-secondary mb-0">
+                    {% translate "eMarchés helps you take a broader approach by giving you the tools to discover, analyze, compare, prioritize, and act on procurement opportunities." %}
+                </p>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="row g-3 text-center">
+
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded-3 p-4 h-100">
+                            <div class="fw-bold fs-5">{% translate "Discover" %}</div>
+                            <small class="text-secondary">
+                                {% translate "Find relevant opportunities" %}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded-3 p-4 h-100">
+                            <div class="fw-bold fs-5">{% translate "Analyze" %}</div>
+                            <small class="text-secondary">
+                                {% translate "Understand the market" %}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded-3 p-4 h-100">
+                            <div class="fw-bold fs-5">{% translate "Compare" %}</div>
+                            <small class="text-secondary">
+                                {% translate "Benchmark opportunities" %}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded-3 p-4 h-100">
+                            <div class="fw-bold fs-5">{% translate "Prioritize" %}</div>
+                            <small class="text-secondary">
+                                {% translate "Focus your resources" %}
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4">
+                        <div class="border rounded-3 p-4 h-100">
+                            <div class="fw-bold fs-5">{% translate "Act" %}</div>
+                            <small class="text-secondary">
+                                {% translate "Pursue the right opportunities" %}
+                            </small>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </section>
+
+    <!-- Who It's For -->
+    <section class="py-5 bg-light">
+        <div class="container py-4">
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold mb-3">
+                    {% translate "Built for Companies That Want to Grow" %}
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    {% translate "Whether you are a small business looking for new customers or an established company managing a large public-sector sales pipeline, eMarchés helps you turn procurement data into a business-development resource." %}
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            {% translate "Construction & Infrastructure" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Identify projects, contracting authorities, competitors, and historical contract activity." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            {% translate "Technology & Digital Services" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Track public-sector demand for software, IT infrastructure, telecommunications, consulting, and digital transformation." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            {% translate "Equipment & Supplies" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Discover purchasing activity across institutions and identify recurring procurement needs." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card h-100 border-0">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            {% translate "Professional & Business Services" %}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Find opportunities across consulting, engineering, training, facility management, security, catering, logistics, and other services." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="lead mb-0">
+                {% translate "If the public sector is part of your market, eMarchés is built for you." %}
+            </p>
+        </div>
+
+    </div>
+
+    </section>
+
+    <!-- Benefits -->
+    <section class="py-5">
+        <div class="container py-4">
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+                <h2 class="fw-bold mb-3">
+                    {% translate "Replace Hours of Research With One Platform" %}
+                </h2>
+
+                <p class="text-secondary mb-0">
+                    {% translate "Public procurement research can consume valuable commercial resources. eMarchés gives your team a centralized environment for exploring procurement intelligence instead of repeatedly searching, collecting, comparing, and organizing information manually." %}
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <span class="badge rounded-pill text-bg-primary">01</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold">{% translate "Less Searching" %}</h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Find relevant opportunities faster." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <span class="badge rounded-pill text-bg-primary">02</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold">{% translate "Less Uncertainty" %}</h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Understand the context behind an opportunity." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <span class="badge rounded-pill text-bg-primary">03</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold">{% translate "Better Prioritization" %}</h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Focus your resources on tenders that fit your business." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <span class="badge rounded-pill text-bg-primary">04</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold">{% translate "Better Market Visibility" %}</h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Understand buyers, competitors, sectors, and procurement activity." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+                <div class="d-flex gap-3">
+                    <div class="flex-shrink-0">
+                        <span class="badge rounded-pill text-bg-primary">05</span>
+                    </div>
+                    <div>
+                        <h3 class="h5 fw-bold">{% translate "Better Decisions" %}</h3>
+                        <p class="text-secondary mb-0">
+                            {% translate "Base your business-development strategy on data rather than assumptions." %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    </section>
+
+    <!-- Platform -->
+    <section class="py-5 bg-dark text-white">
+        <div class="container py-4">
+
+        <div class="row justify-content-center text-center mb-5">
+            <div class="col-lg-8">
+                <h2 class="fw-bold mb-3">
+                    {% translate "Your Procurement Intelligence Platform" %}
+                </h2>
+
+                <p class="text-white-50 mb-0">
+                    {% translate "eMarchés is more than a tender database. It is a business intelligence platform for the Moroccan public procurement market." %}
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-6 col-lg">
+                <div class="text-center">
+                    <h3 class="h5 fw-bold">{% translate "Discover" %}</h3>
+                    <p class="small text-white-50 mb-0">
+                        {% translate "Find procurement opportunities relevant to your business." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="text-center">
+                    <h3 class="h5 fw-bold">{% translate "Monitor" %}</h3>
+                    <p class="small text-white-50 mb-0">
+                        {% translate "Keep track of markets, buyers, sectors, and competitors." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="text-center">
+                    <h3 class="h5 fw-bold">{% translate "Analyze" %}</h3>
+                    <p class="small text-white-50 mb-0">
+                        {% translate "Explore historical procurement and contract information." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="text-center">
+                    <h3 class="h5 fw-bold">{% translate "Benchmark" %}</h3>
+                    <p class="small text-white-50 mb-0">
+                        {% translate "Compare contract values, participants, and previous results." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="text-center">
+                    <h3 class="h5 fw-bold">{% translate "Plan" %}</h3>
+                    <p class="small text-white-50 mb-0">
+                        {% translate "Identify markets and opportunities worth pursuing." %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-6 col-lg">
+                <div class="text-center">
+                    <h3 class="h5 fw-bold">{% translate "Grow" %}</h3>
+                    <p class="small text-white-50 mb-0">
+                        {% translate "Build a more systematic public-sector sales strategy." %}
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    </section>
+
+    <!-- CTA -->
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-8">
+
+                <h2 class="display-6 fw-bold mb-3">
+                    {% translate "The Public Procurement Market Is Too Valuable to Navigate Blind" %}
+                </h2>
+
+                <p class="lead text-secondary mb-4">
+                    {% translate "Your competitors are already looking for opportunities. The difference is how quickly and intelligently you can identify them." %}
+                </p>
+
+                <p class="text-secondary mb-4">
+                    {% translate "With eMarchés, procurement information becomes a strategic asset for your business." %}
+                </p>
+
+                <h3 class="h4 fw-bold mb-4">
+                    {% translate "Start Turning Procurement Data Into Opportunities" %}
+                </h3>
+
+                <p class="text-secondary mb-4">
+                    {% translate "Explore the platform and see what is happening in your market." %}
+                </p>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-center gap-2">
+                    <a href="{% url 'portal_tender_list' %}" class="btn btn-primary btn-lg px-4">
+                        {% translate "Start Exploring" %}
+                    </a>
+
+                    <a href="/" class="btn btn-outline-secondary btn-lg px-4">
+                        {% translate "View Plans" %}
+                    </a>
+                </div>
+
+                <p class="mt-4 mb-0 fw-medium">
+                    {% translate "Discover opportunities. Understand your competition. Make better decisions." %}
+                </p>
+
+            </div>
+        </div>
+    </div>
+
+    </section>
+
+{% endblock %}

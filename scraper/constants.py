@@ -29,7 +29,7 @@ SKIP_DCE = False
 GET_RESULTS = True
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--level', type=str, required=False, help='debug for more verbose output.')
+parser.add_argument('--level', type=str, required=False, help='debug or trace for more verbose output.')
 parser.add_argument('--links', type=str, required=False, help='import to use already saved links.')
 parser.add_argument('--found', type=str, required=False, help='refresh to refresh existing items.')
 parser.add_argument('--dce',   type=str, required=False, help='DCE files download.')

@@ -252,7 +252,7 @@ def saveTender(tender_data, link=None):
 
         logChanges(changes, tender)
         if len(changes) < 1: 
-            helper.printMessage('DEBUG', 'm.saveTender', '--- No changes were found in Tender.')
+            helper.printMessage('INFO', 'm.saveTender', '--- No changes were found in Tender.')
     if tender_create or len(changes) > 0:
         helper.printMessage('DEBUG', 'm.saveTender', '+++ Data saved successfully.')
         if tender:
@@ -266,9 +266,6 @@ def saveTender(tender_data, link=None):
                     helper.printMessage('DEBUG', 'm.saveTender', f"--- No Extra files found for Tender {tender.chrono} ...")
             else:
                 helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Skipping DCE for Tender {tender.chrono} ...")
-            if link: link.tender = tender
-                # link.handled = True
-                # link.save()
 
             # Handling Results
             if C.GET_RESULTS == True:
@@ -292,7 +289,9 @@ def saveTender(tender_data, link=None):
             else:
                 helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping Results for Tender {tender.chrono} ...")
 
-    if link:
+    if link and link._state.adding == False:
+        # print('=====link======', link.chrono, link._state.adding, link.acronym)
+        link.tender = tender
         link.handled = True
         link.save()
     

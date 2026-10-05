@@ -22,18 +22,25 @@ def do_the_work():
     started_time = timezone.now()
 
     def linkify():
-        back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
+        unhandled_links = list(Link.objects.filter(handled=False) | Link.objects.filter(tender__isnull=True))
+        
         if not C.IMPORT_LINKS:
+            back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
             links_crawled = linker.getLinks(back_days)
-            links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
             helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_crawled) } Crawled links ...")
             merged_links_crawled = linker.mergeLinks(links_crawled)
+            unhandled_links += merged_links_crawled
+
+        if C.REFRESH_EXISTING:
+            links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
             helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_saved) } found links ...")
             merged_links_saved = linker.mergeLinks(links_saved)
- 
-        unhandled_links = Link.objects.filter(handled=False) if C.REFRESH_EXISTING else Link.objects.filter(tender__isnull=True)
+            unhandled_links += merged_links_saved
+
+        # if C.REFRESH_EXISTING: unhandled_links |= merged_links_crawled | merged_links_saved
+
         helper.printMessage('DEBUG', 'w.linkify', f"Count of links to handle: {len(unhandled_links)} ...", 1)
-        
+    
         return unhandled_links
 
     def tenderify(links=[]):
@@ -173,7 +180,7 @@ def do_the_work():
             i += 1
             if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
 
-            helper.printMessage('INFO', 'w.handle_results', f"▷▷▷ Getting results for item { i }/{ count }", 0)
+            helper.printMessage('INFO', 'w.handle_results', f"▷▷▷ Getting results for item { i }/{ count }", 1)
             result = getter.getMinutes(tender.chrono, tender.acronym)
             if result and result != {}:
                 helper.printMessage('INFO', 'w.handle_results', f"◁◁◁ Minutes found for item { i }/{ count }")

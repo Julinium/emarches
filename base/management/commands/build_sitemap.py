@@ -21,15 +21,9 @@ class Command(BaseCommand):
             default=getattr(settings, 'SITE_HOST', 'https://new.emarches.com'),
             help='Base domain (with protocol) used to generate sitemap index URLs.'
         )
-        # parser.add_argument(
-        #     '--ping',
-        #     action='store_true',
-        #     help='Ping Google with the new sitemap index URL after generation.'
-        # )
 
     def handle(self, *args, **options):
         base_domain = options['domain'].rstrip('/')
-        # ping_google = options['ping']
 
         sitemaps = {
             'tenders': TenderSitemap,
@@ -111,16 +105,3 @@ class Command(BaseCommand):
                 f"Successfully generated sitemap_index.xml referencing {len(generated_sitemap_urls)} file(s)."
             )
         )
-
-        # 4. Optional: Ping Google Search Console
-        # if ping_google:
-        #     index_url = f"{base_domain}/sitemap.xml"
-        #     self.stdout.write(f"Pinging Google with {index_url}...")
-        #     try:
-        #         ping_endpoint = f"https://www.google.com/ping?sitemap={urllib.parse.quote(index_url)}"
-        #         req = urllib.request.Request(ping_endpoint, headers={'User-Agent': 'Mozilla/5.0'})
-        #         with urllib.request.urlopen(req) as response:
-        #             if response.status == 200:
-        #                 self.stdout.write(self.style.SUCCESS("Google ping successful."))
-        #     except Exception as e:
-        #         self.stdout.write(self.style.ERROR(f"Failed to ping Google: {e}")) 
