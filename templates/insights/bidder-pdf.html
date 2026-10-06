@@ -329,7 +329,7 @@
             </div>
 
 
-            <div id="footer-svg" style="text-align: center; top: 1rem;">
+            <div id="footer-svg" style="text-align: center; top: 1rem; break-inside: avoid;; height: auto">
                 <div>
                     <a href="https://mode-777.com/" target="_blank">
                         <img src="{% static 'brand/insi-footer.svg' %}"
@@ -338,7 +338,7 @@
                     </a>
                 </div>
                 <div>
-                    <small class="digital tiny">{% now 'Y-m-d—H:i:s' %}</small>
+                    <small class="digital tiny" style="margin-bottom: 2rem;">{% now 'Y-m-d—H:i:s' %}</small>
                 </div>
             </div>
 
@@ -351,5 +351,9 @@
         {% endif %}
 
 	</body>
+
+    {% if format == "html" %}
+        <script>window.addEventListener('load', () => { window.print(); });</script>
+    {% endif %}
 </html>
 

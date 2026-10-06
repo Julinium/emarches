@@ -1,18 +1,18 @@
 {% load i18n static tz %}
 
 <div class="my-3">
-    {% if last_updated %}
+    
         {% timezone "UTC" %}
             <div class="my-4 text-muted"
                 data-bs-toggle="tooltip"
                 title="{{ last_updated }} {% trans 'UTC' %}">
                 <span class="small fw-light"><i class="bi bi-arrow-repeat"></i></span>
-                <span class="small fw-light">{% trans 'Updated since' %}</span>
-                    <span class=" small fw-bold">{{ last_updated|timesince }}</span>
-                    <!-- <span class="small">{{ last_updated }} {% trans 'UTC' %}</span> -->
+                <span class="small fw-light">{% trans 'Updated since' %}:</span>
+                <span class=" small fw-bold">{{ last_updated|timesince|default:'-' }}</span>
+                <!-- <span class="small">{{ last_updated }} {% trans 'UTC' %}</span> -->
             </div>
         {% endtimezone %}
-    {% endif %}
+    
 
     <div class="accordion" id="accordionLegend">
         <div class="accordion-item">

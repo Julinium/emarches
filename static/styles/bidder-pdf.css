@@ -83,8 +83,7 @@ body {
         color: var(--text-muted);
         margin-top: 0.5rem;
         padding: 0 0.5rem 2rem;
-        max-width: 8rem;
-        /* min-width: 3rem; */
+        margin-left: 10rem;
         background-color: var(--bg-neutral);
         border-top: 0.5rem solid var(--bd-neutral);
     }

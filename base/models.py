@@ -616,36 +616,36 @@ class FileToGet(models.Model):
         super().save(*args, **kwargs)
 
 
-class Crawler(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    started = models.DateTimeField(blank=True, null=True, verbose_name="Started")
-    finished = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Finished")
+# class Crawler(models.Model):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     started = models.DateTimeField(blank=True, null=True, verbose_name="Started")
+#     finished = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Finished")
     
-    import_links = models.BooleanField(blank=True, null=True, default=False)
+#     import_links = models.BooleanField(blank=True, null=True, default=False)
 
-    links_crawled = models.SmallIntegerField(blank=True, null=True, default=0)
-    links_imported = models.SmallIntegerField(blank=True, null=True, default=0)
-    links_from_saved = models.SmallIntegerField(blank=True, null=True, default=0)
+#     links_crawled = models.SmallIntegerField(blank=True, null=True, default=0)
+#     links_imported = models.SmallIntegerField(blank=True, null=True, default=0)
+#     links_from_saved = models.SmallIntegerField(blank=True, null=True, default=0)
 
-    tenders_created = models.SmallIntegerField(blank=True, null=True, default=0)
-    tenders_updated = models.SmallIntegerField(blank=True, null=True, default=0)
-    files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
-    files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
+#     tenders_created = models.SmallIntegerField(blank=True, null=True, default=0)
+#     tenders_updated = models.SmallIntegerField(blank=True, null=True, default=0)
+#     files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
+#     files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
 
-    saving_errors = models.BooleanField(blank=True, null=True, default=False)
+#     saving_errors = models.BooleanField(blank=True, null=True, default=False)
 
-    class Meta:
-        db_table = 'base_crawler'
-        ordering = ['-finished']
+#     class Meta:
+#         db_table = 'base_crawler'
+#         ordering = ['-finished']
     
-    def __str__(self):
-        return f"{ self.started } - { self.finished }"
+#     def __str__(self):
+#         return f"{ self.started } - { self.finished }"
     
-    @property
-    def duration(self):
-        if self.started and self.finished:
-            return self.finished - self.started
-        return None
+#     @property
+#     def duration(self):
+#         if self.started and self.finished:
+#             return self.finished - self.started
+#         return None
 
 
 class Concurrent(models.Model):

@@ -23,8 +23,8 @@ from django.views.decorators.cache import cache_control
 
 from base.context_processors import portal_context
 from base.models import (
-        Agrement, Category, Client, Crawler, FileToGet, 
-        Deposit, Domain, Procedure, Qualif, Tender
+        Agrement, Category, Client, FileToGet, 
+        Deposit, Domain, Procedure, Qualif, Tender, Harvest
     )
 from base.texter import normalize_text
 from bidding.models import Bid
@@ -348,12 +348,8 @@ def tender_list(request):
         all_categories = Category.objects.all()
         all_procedures = Procedure.objects.all()
 
-        last_crawler = (
-            Crawler.objects.filter(saving_errors=False, import_links=False)
-            .order_by("finished")
-            .last()
-        )
-        last_updated = last_crawler.finished if last_crawler else None
+        last_harvest = Harvest.objects.filter(successfull=True, finished__isnull=False).order_by("finished").last()
+        last_updated = last_harvest.finished if last_harvest else None
 
         context["query_string"] = urlencode(query_string)
         context["query_unsorted"] = urlencode(query_unsorted)

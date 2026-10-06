@@ -1,45 +1,35 @@
 from django.contrib import admin
 
-from base.models import Crawler  # , Category
+# from base.models import Crawler  # , Category
 from bdc.models import PurchaseOrder
 from nas.models import Download, TenderView
 
 # from modeltranslation.admin import TranslationAdmin
 
-@admin.register(Crawler)
-class CrawlerAdmin(admin.ModelAdmin):
-    list_display = (
-        'started', 'formatted_duration', 'import_links', 'links_digest', 
-        'tenders_digest', 'saving_errors', 'files_digest')
-    list_filter = ('finished', 'saving_errors')
-    # actions = None
-    # list_display_links = None
+# @admin.register(Crawler)
+# class CrawlerAdmin(admin.ModelAdmin):
+#     list_display = (
+#         'started', 'formatted_duration', 'import_links', 'links_digest', 
+#         'tenders_digest', 'saving_errors', 'files_digest')
+#     list_filter = ('finished', 'saving_errors')
 
-    def has_add_permission(self, request):
-        return False
 
-    def has_change_permission(self, request, obj=None):
-        return False
+#     def formatted_duration(self, obj):
+#         return str(obj.duration).split('.')[0]
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+#     def links_digest(self, obj):
+#         return f"{ obj.links_crawled } ⏤ { obj.links_imported } ⏤ { obj.links_from_saved }"
 
-    def formatted_duration(self, obj):
-        return str(obj.duration).split('.')[0]
+#     def tenders_digest(self, obj):
+#         return f"{ obj.tenders_created } ⏤ { obj.tenders_updated }"
 
-    def links_digest(self, obj):
-        return f"{ obj.links_crawled } ⏤ { obj.links_imported } ⏤ { obj.links_from_saved }"
+#     def files_digest(self, obj):
+#         return f"{ obj.files_downloaded } ⏤ { obj.files_failed }"
 
-    def tenders_digest(self, obj):
-        return f"{ obj.tenders_created } ⏤ { obj.tenders_updated }"
-
-    def files_digest(self, obj):
-        return f"{ obj.files_downloaded } ⏤ { obj.files_failed }"
-
-    formatted_duration.short_description = 'Duration'
-    links_digest.short_description = 'Links C ⏤ I ⏤ S'
-    tenders_digest.short_description = 'Tenders C ⏤ U'
-    files_digest.short_description = 'Files D ⏤ F'
+#     formatted_duration.short_description = 'Duration'
+#     links_digest.short_description = 'Links C ⏤ I ⏤ S'
+#     tenders_digest.short_description = 'Tenders C ⏤ U'
+#     files_digest.short_description = 'Files D ⏤ F'
 
 
 @admin.register(TenderView)

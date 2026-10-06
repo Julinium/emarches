@@ -36,14 +36,22 @@
                     <tr class="border-bottom">
                         <td class="text-start fw-light pb-0 me-2"><span>{% trans 'Latest bid' %}</span></td>
                         <td class="text-end pb-0">
-                            <span>{{ bidder.last_part|date }}</span>
+                            {% if bidder.last_part %}
+                                <span>{{ bidder.last_part|date }}</span>
+                            {% else %}
+                                <span>--</span>
+                            {% endif %}
                         </td>
                     </tr>
 
                     <tr class="border-bottom">
                         <td class="text-start fw-light pb-0 me-2"><span>{% trans 'Financial efficiency' %}</span></td>
                         <td class="text-end pb-0">
-                            <span>{{ bidder.succ_rate|default:'-' }}%</span>
+                            {% if bidder.succ_rate %}
+                                <span>{{ bidder.succ_rate }}%</span>
+                            {% else %}
+                                <span>--</span>
+                            {% endif %}
                         </td>
                     </tr>
                     
@@ -57,16 +65,16 @@
                 <span><i class="{{ bicons.details }}"></i></span>
                 <span class="ms-1">{% trans 'Details' %}</span>
             </a>
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" target="_blank"
+            <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" target="_blank"
                 href="{% url 'insights_bidder_pdf' bidder.id %}">
                 <span><i class="{{ bicons.pdf }}"></i></span>
                 <span class="ms-1">{% trans 'PDF Report' %}</span>
-            </a>
-            <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" target="_blank"
+            </a> -->
+            <!-- <a class="ms-2 mt-2 btn btn-sm btn-outline-primary" target="_blank"
                 href="{% url 'insights_bidder_csv' bidder.id %}">
                 <span><i class="{{ bicons.excel }}"></i></span>
                 <span class="ms-1">{% trans 'CSV SpreadSheet' %}</span>
-            </a>
+            </a> -->
         </div>
 
     </div>

@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 
-from base.models import Tender, Crawler, Link, Parkour, Machine, Harvest
+from base.models import Tender, Link, Parkour, Machine, Harvest
 from scraper import constants as C
 from scraper import helper
 
@@ -31,10 +31,8 @@ def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
     # Return:
         Nothing. Raises an exception if something goes wrong.
     """
-    # TODO: Set dateMiseEnLigneCalculeStart to the latest successful Crawler -1 day.
 
     try:
-        # assa = date.today()
         assa = timezone.now()
         dt_ddl_start = assa - timedelta(days=back_days)
         date_ddl_start = dt_ddl_start.strftime("%d/%m/%Y")

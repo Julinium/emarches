@@ -136,7 +136,7 @@
                                 <span class="small fw-bold ps-2">{{ fin_races_deposits.all|length }}</span>
                             </span>
                             {% if deposits_sum %}
-                                <span class="mx-2 float-end">= {{ deposits_sum|default:'-' }}</span>
+                                <span class="mx-2 float-end"><i class="small text-secondary {{ bicons.section }}"></i> {{ deposits_sum|default:'-' }}</span>
                             {% endif %}
                         </div>
                     </button>
@@ -161,7 +161,10 @@
                                 <span class="small fw-bold ps-2 {% if winners_deposits.all|length > 0 %}text-success{% endif %}">{{ winners_deposits.all|length }}</span>                                
                             </span>
                             {% if awards_sum %}
-                                <span class="mx-2 float-end">= {{ awards_sum|default:'-' }}</span>
+                                <span class="mx-2 float-end">
+                                    <i class="small text-secondary {{ bicons.section }}"></i>
+                                    <span class="fw-bold text-success">{{ awards_sum|default:'-' }}</span>
+                                </span>
                             {% endif %}
                         </div>
                     </button>
@@ -253,17 +256,20 @@
                     <span><i class="{{ bicons.pdf }}"></i></span>
                     <span class="ms-1">{% trans 'PDF Report' %}</span>
                 </a>
-
                 <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
                     href="{% url 'insights_bidder_csv' bidder.id %}">
                     <span><i class="{{ bicons.excel }}"></i></span>
                     <span class="ms-1">{% trans 'CSV SpreadSheet' %}</span>
                 </a>
-
                 <a class="ms-2 mt-2 btn btn-outline-primary" 
                     type="button" onclick="shareBidderPage(`https://new.emarches.com`)">
                     <span><i class="{{ bicons.share }}"></i></span>
                     <span class="ms-1">{% trans 'Share' %}</span>
+                </a>
+                <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
+                    href="{% url 'insights_bidder_printable' bidder.id %}">
+                    <span><i class="{{ bicons.printer }}"></i></span>
+                    <span class="ms-1">{% trans 'Print' %}</span>
                 </a>
             </div>
         </div>

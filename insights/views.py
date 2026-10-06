@@ -274,22 +274,46 @@ def bidder_pdf(request, pk=None):
     logger_portal.warning("E404: Files not found", extra={"request": request})
 
     ########################
-    print(f"============= file_path (existed={ recent_file_exists }):\n", file_path, "=============")
-    s = {
-        "file_path": file_path,
-        "recent_file_exists": recent_file_exists,
-        "pdf_file_path": pdf_file_path,
-        }
-    r = {
-        'file_path': '/var/opt/media/tenders/bidders/pdf/eMarches.com-3f39c0f1-5116-40a7-a353-eaff0e36f4b8-en.pdf', 
-        'recent_file_exists': False, 
-        'pdf_file_path': None
-        }
-    return HttpResponse(trans("Not found") + f": File generating failed\n\n\n{s}", status=404)
+    # print(f"============= file_path (existed={ recent_file_exists }):\n", file_path, "=============")
+    # s = {
+    #     "file_path": file_path,
+    #     "recent_file_exists": recent_file_exists,
+    #     "pdf_file_path": pdf_file_path,
+    #     }
+    # return HttpResponse(trans("Not found") + f": File generating failed\n\n\n{s}", status=404)
     ########################
 
 
     return HttpResponse(trans("Not found") + f": File generating failed", status=404)
+
+
+@login_required(login_url="account_login")
+def bidder_printable(request, pk=None):
+
+    user = request.user
+    if not user or not user.is_authenticated : 
+        logger_portal.warning("E403: User not authenticated", extra={"request": request})
+        return HttpResponse(trans("Permission denied"), status=403)
+
+    if request.method != 'GET': 
+        logger_portal.warning("E405: Bad request method", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    if pk == None:
+        logger_portal.warning("E405: Bad request parameters", extra={"request": request})
+        return HttpResponse(trans("Bad request"), status=405)
+
+    bidder = get_object_or_404(Concurrent, id=pk)
+    if not bidder : 
+        logger_portal.warning("E404: Bidder not found", extra={"request": request})
+        return HttpResponse(trans("Not found") + f": id: { pk }", status=404)
+
+    logger_portal.info("Concurrent digest printable version view", extra={"request": request})
+    context = weasy.bidder_context(pk)
+
+    logger_portal.info("Concurrent details view", extra={"request": request})
+
+    return render(request, 'insights/bidder-pdf.html', {"format": "html"} | context)
 
 
 @login_required(login_url="account_login")

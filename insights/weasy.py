@@ -2,6 +2,7 @@ import logging
 import base64
 import csv
 import traceback
+import segno
 
 from io import BytesIO
 from pathlib import Path
@@ -10,16 +11,22 @@ from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils.translation import get_language_from_request, gettext_lazy as _
-
 from django.db.models import Prefetch, Count, Q
-
-import segno
-
 from weasyprint import HTML
-
 from base.models import Domain, Client, Concurrent, Qualif, Agrement
 
 logger_portal = logging.getLogger("portal")
+
+
+def getQR(bidder, host="https://new.emarches.com/bidders"):
+    try:
+        url = f"{host}/{bidder.id}/"
+        qr_buffer = BytesIO()
+        segno.make(url).save(qr_buffer, kind='svg', scale=6, border=2)
+        qr_svg_base64 = base64.b64encode(qr_buffer.getvalue()).decode()
+        return f"data:image/svg+xml;base64,{ qr_svg_base64 }"
+    except:
+        return ""
 
 
 def generate_pdf(request, bidder, dir_name=None, file_name=None):
@@ -31,13 +38,8 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
     url = f"https://new.emarches.com/bidders/{bidder.id}/"
 
     try:
-        qr_buffer = BytesIO()
-        segno.make(url).save(qr_buffer, kind='svg', scale=6, border=2)
-        qr_svg_base64 = base64.b64encode(qr_buffer.getvalue()).decode()
-        qr_data_uri = f"data:image/svg+xml;base64,{ qr_svg_base64 }"
-
-        logger_portal.debug(f"Started generating PDF file for bidder { bidder.name }")
         ctx = bidder_context(bidder.id)
+        qr_data_uri = getQR(bidder)
 
         context = {
             "request": request,
@@ -61,14 +63,12 @@ def generate_pdf(request, bidder, dir_name=None, file_name=None):
         html_string = html_string.replace('/static/', f'{static_uri}/')        
         HTML(string=html_string).write_pdf(target=output_path)
 
-        print("============= output_path:\n", output_path, "=============")
         return output_path
 
     except Exception as xc:
         traceback.print_exc()
 
     return None
-    
 
 
 def generate_csv(request, bidder, dir_name=None, file_name=None):
@@ -144,7 +144,6 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
     return None
     
 
-
 def recent_file_exists(file_path: str | Path, hours_ago: int) -> bool:
     path = Path(file_path)
 
@@ -156,7 +155,6 @@ def recent_file_exists(file_path: str | Path, hours_ago: int) -> bool:
 
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours_ago)
     return creation_time > cutoff
-
 
 
 def bidder_context(pk=None):
@@ -194,8 +192,11 @@ def bidder_context(pk=None):
     reserve_rate_offset = bids_success_rate + admin_reject_rate
     tech_rate_offset = bids_success_rate + admin_reject_rate + admin_reserve_rate
 
+    qr_data_uri = getQR(bidder)
+
     context = {
         'bidder': bidder, 
+        "qr_code"       : qr_data_uri,
         'tenders': tenders,
         'all_deposits': all_deposits,
         'deposits_sum': deposits_sum,
@@ -227,3 +228,4 @@ def bidder_context(pk=None):
         }
 
     return context
+

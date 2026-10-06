@@ -14,7 +14,7 @@ def do_the_work():
     from django.utils import timezone
     from datetime import datetime, timedelta
 
-    from base.models import Crawler, Tender, Link, Machine, Parkour, Harvest
+    from base.models import Tender, Link, Machine, Parkour, Harvest
     from scraper import bonner
     from scraper import constants as C
     from scraper import downer, getter, helper, linker, merger
@@ -104,8 +104,7 @@ def do_the_work():
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{ll:03}. Handled { tenders_created + tenders_updated } tenders. ({ tenders_created } + {tenders_updated }).", 1)
-                        helper.printMessage('DEBUG', 'w.tenderify', "zzzzzzzzzz Sleeping for a while zzzzzzzzzz", 1)
+                        helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{ll:03}. Handled { tenders_created + tenders_updated } tenders ({ tenders_created } + {tenders_updated }).", 1)
                         helper.sleepRandom(20, 45)
                         handled = 0
         else:
@@ -283,24 +282,24 @@ def do_the_work():
 
     ##### Keep track of update times
     finished_time = timezone.now()
-    crawler = Crawler(
-            started = started_time,
-            finished = finished_time,
-            import_links = C.IMPORT_LINKS,
-            # links_crawled = links_crawled,
-            # links_imported = links_imported,
-            # links_from_saved = links_from_saved,
-            tenders_created = tenders_created,
-            tenders_updated = tenders_updated,
-            files_downloaded = files_downloaded,
-            files_failed = files_failed,
-            saving_errors = saving_errors
-        )
-    try:
-        crawler.save()
-    except Exception as xc:
-        helper.printMessage('ERROR', 'worker', f"⬢⬢⬢ Exception while saving Crawler object: { xc } ", 1)
-        traceback.print_exc()
+    # crawler = Crawler(
+    #         started = started_time,
+    #         finished = finished_time,
+    #         import_links = C.IMPORT_LINKS,
+    #         # links_crawled = links_crawled,
+    #         # links_imported = links_imported,
+    #         # links_from_saved = links_from_saved,
+    #         tenders_created = tenders_created,
+    #         tenders_updated = tenders_updated,
+    #         files_downloaded = files_downloaded,
+    #         files_failed = files_failed,
+    #         saving_errors = saving_errors
+    #     )
+    # try:
+    #     crawler.save()
+    # except Exception as xc:
+    #     helper.printMessage('ERROR', 'worker', f"⬢⬢⬢ Exception while saving Crawler object: { xc } ", 1)
+    #     traceback.print_exc()
 
 
     ##### Show a digest

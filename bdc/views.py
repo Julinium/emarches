@@ -29,7 +29,7 @@ from django.views.decorators.cache import cache_control
 from weasyprint import HTML
 
 from base.context_processors import portal_context
-from base.models import Category, Client, Crawler
+from base.models import Category, Client, Harvest
 from base.texter import normalize_text
 from bdc.models import PurchaseOrder
 from nas.models import Sticky
@@ -209,10 +209,6 @@ def bdc_list(request):
                     bdcs = bdcs.filter(winner_entity__isnull=False)
                 case 'unsuccessful':
                     bdcs = bdcs.filter(unsuccessful=True)
-                # case 'articles':
-                #     bdcs = afas(bdcs, ['articles__title', 'articles__specifications', 'articles__warranties'], q)
-                # case _:
-                #     bdcs = afas(bdcs, ['keywords'], q)
 
         return bdcs.distinct(), ff
 
@@ -226,9 +222,9 @@ def bdc_list(request):
         context['full_bar_days']      = BDC_FULL_PROGRESS_DAYS
 
         return context
-         
-    last_crawler = Crawler.objects.filter(saving_errors=False, import_links=False).order_by('finished').last()
-    last_updated = last_crawler.finished if last_crawler else None
+
+    last_harvest = Harvest.objects.filter(successfull=True, finished__isnull=False).order_by("finished").last()
+    last_updated = last_harvest.finished if last_harvest else None
     
 
     query_dict, query_string, query_unsorted = get_req_params(request)
