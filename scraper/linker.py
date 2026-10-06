@@ -226,7 +226,7 @@ def getLinks(back_days=30):
         page_size = Select(driver.find_element("id", "ctl0_CONTENU_PAGE_resultSearch_listePageSizeTop"))
         helper.printMessage('DEBUG', 'l.getLinks', f'Selecting page size { C.LINES_PER_PAGE }')
         page_size.select_by_visible_text(C.LINES_PER_PAGE)
-        helper.printMessage('DEBUG', 'l.getLinks', f'Page size set to{ C.LINES_PER_PAGE }.')
+        helper.printMessage('DEBUG', 'l.getLinks', f'Page size set to { C.LINES_PER_PAGE }.')
     except Exception as e :
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while changing page size: {str(e)}', 1, 1)
         if driver: driver.quit()
