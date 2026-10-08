@@ -282,25 +282,6 @@ def do_the_work():
 
     ##### Keep track of update times
     finished_time = timezone.now()
-    # crawler = Crawler(
-    #         started = started_time,
-    #         finished = finished_time,
-    #         import_links = C.IMPORT_LINKS,
-    #         # links_crawled = links_crawled,
-    #         # links_imported = links_imported,
-    #         # links_from_saved = links_from_saved,
-    #         tenders_created = tenders_created,
-    #         tenders_updated = tenders_updated,
-    #         files_downloaded = files_downloaded,
-    #         files_failed = files_failed,
-    #         saving_errors = saving_errors
-    #     )
-    # try:
-    #     crawler.save()
-    # except Exception as xc:
-    #     helper.printMessage('ERROR', 'worker', f"⬢⬢⬢ Exception while saving Crawler object: { xc } ", 1)
-    #     traceback.print_exc()
-
 
     ##### Show a digest
     work_duration = finished_time - started_time

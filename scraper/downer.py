@@ -183,7 +183,7 @@ def getDCE(tender):
     
     if request_query.status_code != 200 : 
         helper.printMessage('ERROR', 'd.getDCE', f'Download query: Response Status Code: {request_query.status_code} !')
-        helper.printMessage('TRACE', 'd.getDCE', f'\n\n\n===========\n{soup}\n===========\n\n')
+        # helper.printMessage('TRACE', 'd.getDCE', f'\n\n\n===========\n{soup}\n===========\n\n')
         
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
         return None
@@ -313,8 +313,6 @@ def getDCE(tender):
         return None
 
     return con_path
-
-
 
 
 def getExtraFiles(tender=None, extra_files=[]):
