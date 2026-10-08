@@ -6,7 +6,7 @@
 <html dir="{% if LB %}rtl{% else %}ltr{% endif %}">
 	<head>
 
-        <title>eMarches.com : {{ bidder.name }}</title>
+        <title>eMarches.com | {% translate "Concurrent details" %}: {{ bidder.name }}</title>
 
         <meta name="dcterms.created" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
         <meta name="dcterms.modified" content="{% now 'Y-m-d\TH:i:s' %}+00:00">
@@ -353,7 +353,10 @@
 	</body>
 
     {% if format == "html" %}
-        <script>window.addEventListener('load', () => { window.print(); });</script>
+        <script>
+            window.addEventListener('load', () => { window.print(); });
+            window.addEventListener('afterprint', () => { window.close(); });
+        </script>
     {% endif %}
 </html>
 

@@ -14,6 +14,7 @@ from django.db.models import Count, DecimalField, ExpressionWrapper, F, Max, Min
 from django.db.models.functions import NullIf, Round
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
+from django.template.loader import render_to_string
 from django.views.decorators.cache import cache_control
 from django.utils.translation import get_language_from_request, gettext_lazy as trans
 

@@ -81,7 +81,8 @@ def portal_context(request):
         'no_files'        : 'bi bi-file-earmark-break text-warning',
         'files_size'      : 'bi bi-folder2',
         
-        'share'           : 'bi bi-arrow-bar-up',
+        'share'           : 'bi bi-share',
+        # 'share'           : 'bi bi-arrow-bar-up',
         'created'         : 'bi bi-calendar-plus',
         'create'          : 'bi bi-plus-lg',
         

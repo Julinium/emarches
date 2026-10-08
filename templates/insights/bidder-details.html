@@ -136,7 +136,7 @@
                                 <span class="small fw-bold ps-2">{{ fin_races_deposits.all|length }}</span>
                             </span>
                             {% if deposits_sum %}
-                                <span class="mx-2 float-end"><i class="small text-secondary {{ bicons.section }}"></i> {{ deposits_sum|default:'-' }}</span>
+                                <span class="mx-2 float-end"><i class="small text-secondary {{ bicons.section }}"></i> {{ deposits_sum|metrify|default:'-' }}</span>
                             {% endif %}
                         </div>
                     </button>
@@ -163,7 +163,7 @@
                             {% if awards_sum %}
                                 <span class="mx-2 float-end">
                                     <i class="small text-secondary {{ bicons.section }}"></i>
-                                    <span class="fw-bold text-success">{{ awards_sum|default:'-' }}</span>
+                                    <span class="fw-bold text-success">{{ awards_sum|metrify|default:'-' }}</span>
                                 </span>
                             {% endif %}
                         </div>
@@ -254,19 +254,19 @@
                 <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
                     href="{% url 'insights_bidder_pdf' bidder.id %}">
                     <span><i class="{{ bicons.pdf }}"></i></span>
-                    <span class="ms-1">{% trans 'PDF Report' %}</span>
+                    <span class="ms-1">{% trans 'PDF' %}</span>
                 </a>
                 <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
                     href="{% url 'insights_bidder_csv' bidder.id %}">
                     <span><i class="{{ bicons.excel }}"></i></span>
-                    <span class="ms-1">{% trans 'CSV SpreadSheet' %}</span>
+                    <span class="ms-1">{% trans 'CSV' %}</span>
                 </a>
                 <a class="ms-2 mt-2 btn btn-outline-primary" 
                     type="button" onclick="shareBidderPage(`https://new.emarches.com`)">
                     <span><i class="{{ bicons.share }}"></i></span>
                     <span class="ms-1">{% trans 'Share' %}</span>
                 </a>
-                <a class="ms-2 mt-2 btn btn-outline-primary" target="_blank"
+                <a class="ms-2 mt-2 btn btn-outline-primary print-link" target="_blank"
                     href="{% url 'insights_bidder_printable' bidder.id %}">
                     <span><i class="{{ bicons.printer }}"></i></span>
                     <span class="ms-1">{% trans 'Print' %}</span>
@@ -291,9 +291,16 @@
         </div> 
 
     </div>
+    <script>
+        document.querySelectorAll('.print-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link opening
+                window.open(link.href, '_blank'); // Opens tab with window.close() permission
+            });
+        });
+    </script>
 
     <script>
-
         function shareBidderPage(host='https://www.emarches.com') {
             const bidder_id = "{{ bidder.id|escapejs }}";    
             const baseUrl = `${host}/bidders/`;
@@ -317,7 +324,6 @@
                     .catch((error) => console.error('Error copying URL:', error));
             }
         }
-
     </script>
 
 {% endblock content %}
