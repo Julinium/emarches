@@ -81,19 +81,18 @@ def do_the_work():
         started = datetime.now()        
         saving_errors = False
         tenders_created, tenders_updated = 0 , 0
-        ll = len(links)
-        if ll > 0:
+        links_length = len(links)
+        if links_length > 0:
             i = 0
             handled = 0
-            helper.printMessage('INFO', 'w.tenderify', f"▶▶▶ Getting Data for {ll} links ... ", 2, 0)
+            helper.printMessage('INFO', 'w.tenderify', f"▶▶▶ Getting Data for {links_length} links ... ", 2, 0)
             for l in links:
                 i += 1
-                helper.printMessage('INFO', 'w.tenderify', f"▷▷ Getting Data for link {i:03}/{ll:03}", 1)
+                helper.printMessage('INFO', 'w.tenderify', f"▷▷ Getting Data for link {i:03}/{links_length:03}", 1)
                 jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
                 if jsono:
                     handled += 1
                     tender, creation_mode, changes_found = merger.saveTender(jsono, l)
-                    # linked = merger.linder(tender, l)
                     if creation_mode == True:
                         tenders_created += 1
                         helper.printMessage('INFO', 'w.tenderify', f"◁◁ Created Tender {tender.chrono}")
@@ -104,7 +103,7 @@ def do_the_work():
 
                 if handled > 0:
                     if handled % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{ll:03}. Handled { tenders_created + tenders_updated } tenders ({ tenders_created } + {tenders_updated }).", 1)
+                        helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{links_length:03}. Handled { tenders_created + tenders_updated } tenders ({ tenders_created } + {tenders_updated }).", 1)
                         helper.sleepRandom(20, 45)
                         handled = 0
         else:
@@ -132,10 +131,10 @@ def do_the_work():
                 helper.printMessage('INFO', 'l.getLinks', f'Machine info already exists: {machine_info['hostname']}')
 
             harvest = Harvest.objects.create(
-                    started       = started,
-                    finished      = timezone.now(),
-                    machine       = machine,
-                    links_handled = ll,
+                    started         = started,
+                    finished        = datetime.now(),
+                    machine         = machine,
+                    links_handled   = links_length,
                     tenders_created = tenders_created,
                     tenders_updated = tenders_updated,
                     # tenders_discarded = 0,

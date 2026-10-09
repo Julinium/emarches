@@ -387,7 +387,7 @@ class Tender(models.Model):
         return 0
 
     @property
-    def dce_files_info(self):
+    def dce_files_list(self):
 
         files_list = []
         total_size = 0
@@ -398,7 +398,7 @@ class Tender(models.Model):
         if os.path.exists(dce_dir):
             files_list = os.listdir(dce_dir)
 
-        dce_files_info = []
+        dce_files_list = []
         if len(files_list) > 0:
             for entry in files_list:
                 full_path = os.path.join(dce_dir, entry)
@@ -406,12 +406,11 @@ class Tender(models.Model):
                     if os.path.isfile(full_path):
                         sizens = os.path.getsize(full_path)
                         total_size += sizens
-                        dce_files_info.append({"name": entry, "size": sizens})
-
-        return dce_files_info
+                        dce_files_list.append({"name": entry, "size": sizens})
+        return dce_files_list
 
     @property
-    def extra_files_info(self):
+    def extra_files_list(self):
 
         files_list = []
         total_size = 0
@@ -422,7 +421,7 @@ class Tender(models.Model):
         if os.path.exists(extra_dir):
             files_list = os.listdir(extra_dir)
 
-        extra_files_info = []
+        extra_files_list = []
         if len(files_list) > 0:
             for entry in files_list:
                 full_path = os.path.join(extra_dir, entry)
@@ -430,16 +429,15 @@ class Tender(models.Model):
                     if os.path.isfile(full_path):
                         sizens = os.path.getsize(full_path)
                         total_size += sizens
-                        extra_files_info.append({"name": entry, "size": sizens})
-
-        return extra_files_info
+                        extra_files_list.append({"name": entry, "size": sizens})
+        return extra_files_list
 
     @property
     def total_size(self):
         total_size = 0
-        for f in self.dce_files_info:
+        for f in self.dce_files_list:
             total_size += f.get("size", 0)
-        for f in self.extra_files_info:
+        for f in self.extra_files_list:
             total_size += f.get("size", 0)
         return total_size
 
@@ -614,38 +612,6 @@ class FileToGet(models.Model):
         if not self._state.adding:
             self.updated = timezone.now()
         super().save(*args, **kwargs)
-
-
-# class Crawler(models.Model):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     started = models.DateTimeField(blank=True, null=True, verbose_name="Started")
-#     finished = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Finished")
-    
-#     import_links = models.BooleanField(blank=True, null=True, default=False)
-
-#     links_crawled = models.SmallIntegerField(blank=True, null=True, default=0)
-#     links_imported = models.SmallIntegerField(blank=True, null=True, default=0)
-#     links_from_saved = models.SmallIntegerField(blank=True, null=True, default=0)
-
-#     tenders_created = models.SmallIntegerField(blank=True, null=True, default=0)
-#     tenders_updated = models.SmallIntegerField(blank=True, null=True, default=0)
-#     files_downloaded = models.SmallIntegerField(blank=True, null=True, default=0)
-#     files_failed = models.SmallIntegerField(blank=True, null=True, default=0)
-
-#     saving_errors = models.BooleanField(blank=True, null=True, default=False)
-
-#     class Meta:
-#         db_table = 'base_crawler'
-#         ordering = ['-finished']
-    
-#     def __str__(self):
-#         return f"{ self.started } - { self.finished }"
-    
-#     @property
-#     def duration(self):
-#         if self.started and self.finished:
-#             return self.finished - self.started
-#         return None
 
 
 class Concurrent(models.Model):

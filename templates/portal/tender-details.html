@@ -524,10 +524,10 @@
                     </div>
                     <div class="modal-body">
 
-                        {% if tender.dce_files_info  %}
+                        {% if tender.dce_files_list  %}
                             <!-- <div class="small text-muted my-2">{% translate "Once you click on an item, your browser or device should handle the download process." %}</div> -->
                             <div class="text-muted fw-semibold">{% translate "DCE Files" %}:</div>
-                            {% for f in tender.dce_files_info %}
+                            {% for f in tender.dce_files_list %}
                                 <a id="dce-{{ tender.chrono }}000{{ forloop.counter }}"
                                 class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
                                 href="{% url 'portal_tender_get_file' tender.id f.name %}">
@@ -536,9 +536,9 @@
                                     <span class="ms-1">{{ f.name }}</span>
                                 </a>
                             {% endfor %}
-                            {% if tender.extra_files_info  %}
+                            {% if tender.extra_files_list  %}
                                 <div class="text-muted fw-semibold mt-3">{% translate "Extra Files" %}:</div>
-                                {% for f in tender.extra_files_info %}
+                                {% for f in tender.extra_files_list %}
                                     <a id="extra-{{ tender.chrono }}000{{ forloop.counter }}"
                                     class="text-decoration-none w-100 btn btn-outline-primary text-start mt-2" 
                                     href="{% url 'portal_tender_get_extra_file' tender.id f.name %}">
@@ -558,7 +558,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        {% if tender.dce_files_info  %}
+                        {% if tender.dce_files_list  %}
                             <a href="/base_legal" target="_blank" class="btn btn-outline-secondary">
                                 <span><i class="bi bi-shield-exclamation"></i></span>
                                 <span class="ms-1">{% translate 'Legal Information' %}</span>
@@ -608,7 +608,7 @@
 
     </div>
     
-    {% with total_items=tender.dce_files_info|add:tender.extra_files_info %}
+    {% with total_items=tender.dce_files_list|add:tender.extra_files_list %}
         {% if total_items|length == 1 %}
             <script>
                 document.getElementById('dce-{{ tender.chrono }}0001').addEventListener('click', () => {

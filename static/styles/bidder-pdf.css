@@ -63,12 +63,12 @@ body {
 
 @page {
     size: A4 ;
-    margin: 20mm;
+    /* margin: 20mm; */
 
-    /* margin-top: 20mm;
+    margin-top: 20mm;
     margin-bottom: 20mm;
     margin-left: 15mm;
-    margin-right: 15mm; */
+    margin-right: 15mm;
 
     @top-center {
         content: element(header);
@@ -84,9 +84,7 @@ body {
         color: var(--text-muted);
         margin-top: 0.5rem;
         padding: 0 0.5rem 2rem;
-        /* max-width: 6rem; */
-        background-color: var(--bg-neutral);
-        border-top: 1px solid var(--bd-neutral);
+        border-top: 0.5rem solid var(--bd-neutral);
     }
 
     @bottom-center {
@@ -144,17 +142,14 @@ body, div, table, p {
 
 section {
     margin: 1rem 0 5rem 0;
-    /* break-before: page; */
 }
 
 .section-header {
     display: block;
     align-items: center;
     padding: 0.25rem 0.5rem 0;
-    /* border-radius: 0.25rem; */
     border-bottom: 1px solid;
     margin-bottom: 1rem;
-    /* background-color: var(--bg-neutral); */
     text-transform: uppercase;
     text-decoration: none;
     font-size: x-large;
@@ -215,7 +210,6 @@ section {
 }
 
 .repeater-emphasis {
-    /* margin: 0.25rem 0 0; */
     color: var(--text-main);
     font-size: medium;
     font-weight: bolder;
@@ -229,7 +223,6 @@ section {
 }
 
 .repeater-tiny {
-    /* opacity: 0.5; */
     font-size: small;
 }
 
@@ -250,6 +243,7 @@ section {
 .page-break {
     page-break-before: always;
 }
+
 
 /* --- Table of Contents Styling --- */
 
@@ -279,7 +273,6 @@ section {
     order: 2;
     flex-grow: 1;
     margin: 0 1rem;
-    /* border-bottom: 1px dotted #000; */
 }
 
 /* Title text stays on the left */

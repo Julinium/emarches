@@ -275,7 +275,8 @@ def getDCE(tender):
 
     filename_base = f'{C.FILE_PREFIX}-{cleaned_name}{file_extension}'
     filename = os.path.join(con_path, filename_base)
-    helper.printMessage('DEBUG', 'd.getDCE', f'Writing file content to {filename_base} ... ')
+    helper.printMessage('DEBUG', 'd.getDCE', f'Writing file content to file ... ')
+    helper.printMessage('TRACE', 'd.getDCE', f'File name: {filename_base} ... ')
 
     try:
         with open(filename, 'wb') as file:
@@ -409,7 +410,8 @@ def getExtraFiles(tender=None, extra_files=[]):
 
         filename_base = f'{C.FILE_PREFIX}-{cleaned_name}{file_extension}'
         filename = os.path.join(extra_path, filename_base)
-        helper.printMessage('DEBUG', 'd.getExtraFile', f'Writing file content to {filename_base} ... ')
+        helper.printMessage('DEBUG', 'd.getExtraFile', 'Writing file content to file ... ')
+        helper.printMessage('TRACE', 'd.getExtraFile', f'File name: {filename_base} ... ')
 
         try:
             with open(filename, 'wb') as file:

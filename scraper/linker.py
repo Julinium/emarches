@@ -53,7 +53,7 @@ def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
 
 
 def pg2Links(driver, page_number, pages):
-    helper.printMessage('DEBUG', 'l.pg2Links', f'### Getting links from page {page_number:02}/{pages:02}...')
+    helper.printMessage('DEBUG', 'l.pg2Links', f'### Looking at page {page_number:02}/{pages:02}...')
     links = []
     try:
         i = 1

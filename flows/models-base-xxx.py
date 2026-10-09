@@ -415,7 +415,7 @@
 # #         return 0
 
 # #     @property
-# #     def dce_files_info(self):
+# #     def dce_files_list(self):
 
 # #         files_list = []
 # #         total_size = 0
@@ -426,7 +426,7 @@
 # #         if os.path.exists(dce_dir):
 # #             files_list = os.listdir(dce_dir)
 
-# #         dce_files_info = []
+# #         dce_files_list = []
 # #         if len(files_list) > 0:
 # #             for entry in files_list:
 # #                 full_path = os.path.join(dce_dir, entry)
@@ -434,15 +434,15 @@
 # #                     if os.path.isfile(full_path):
 # #                         sizens = os.path.getsize(full_path)
 # #                         total_size += sizens
-# #                         dce_files_info.append({"name": entry, "size": sizens})
+# #                         dce_files_list.append({"name": entry, "size": sizens})
 
-# #         return dce_files_info
+# #         return dce_files_list
 
 
 # #     @property
 # #     def total_size(self):
 # #         total_size = 0
-# #         for f in self.dce_files_info:
+# #         for f in self.dce_files_list:
 # #             total_size += f.get("size", 0)
 # #         return total_size
 

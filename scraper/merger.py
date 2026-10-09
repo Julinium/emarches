@@ -290,23 +290,17 @@ def saveTender(tender_data, link=None):
                 helper.printMessage('DEBUG', 'm.saveTender', f"### Skipping Results for Tender {tender.chrono} ...")
 
     if link:
+        related_link = Link.objects.filter(chrono=link.chrono).first()
         try:
-            helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Matching link to tender with { link.chrono } ...")
-            matched = link.tender != None
+            helper.printMessage('DEBUG', 'm.saveTender', f"~~~ Matching link to tender on { link.chrono } ...")
+            matched = related_link.tender == tender
             if matched:
                 helper.printMessage('DEBUG', 'm.saveTender', f"--- Already matched on { link.chrono }.")
             else:
-                related_links = Link.objects.filter(id=link.id)
-                related_links = Link.objects.filter(chrono=link.chrono)
-                updated_links = related_links.update(
-                    tender=tender,
-                    handled=True
-                )
-                if updated_links > 0:
-                    helper.printMessage('DEBUG', 'm.saveTender', f"+++ Link and Tender liked successfully on { link.chrono }.")
-                else:
-                    # msg = f"--- No matching made on { link.chrono }"
-                    helper.printMessage('DEBUG', 'm.saveTender', f"--- No matching made on { link.chrono }.")
+                related_link.tender = tender
+                related_link.handled = True
+                related_link.save()
+                helper.printMessage('DEBUG', 'm.saveTender', f"+++ Link and Tender liked successfully on { link.chrono }.")
         except Exception as xc:
             helper.printMessage('WARN', 'm.saveTender', f"xxx Error matching on {link.chrono}.")
             traceback.print_exc()

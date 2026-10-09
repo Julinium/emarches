@@ -236,7 +236,7 @@ def syncDir(
 
         target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
-        rsync_cmd = ["rsync", "-avuhP", "--delete"]
+        rsync_cmd = ["rsync", "-avuhP"]
         if remove_source: rsync_cmd.extend(["--remove-source-files"])
         rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
 

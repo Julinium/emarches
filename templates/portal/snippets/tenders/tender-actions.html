@@ -37,8 +37,8 @@
     </a>
 
     {% if tender.total_size > 0 %}
-        {% if tender.dce_files_info|length == 1 and not dce_modal %}
-            {% with tender.dce_files_info|first as f %}
+        {% if tender.dce_files_list|length == 1 and not dce_modal %}
+            {% with tender.dce_files_list|first as f %}
                 <a href="{% url 'portal_tender_get_file' tender.id f.name %}"
                         class="m-1 btn btn-outline-primary" type="button">
                     {% if not request.user.is_authenticated %}<i class="bi bi-lock text-danger me-1"></i>{% endif %}
@@ -49,7 +49,7 @@
             {% endwith %}
         {% else %}
             <button class="m-1 btn 
-                        {% if tender.dce_files_info|length == 0 %}
+                        {% if tender.dce_files_list|length == 0 %}
                                 btn-outline-secondary
                         {% else %}
                                 btn-outline-primary 
