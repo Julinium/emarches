@@ -394,13 +394,6 @@ def tender_list(request):
             "changes",
         )
         .select_related("client", "category", "mode", "procedure")
-        # .annotate(
-        #     team_bids=Count(
-        #         "lots__bids",
-        #         filter=Q(lots__bids__creator__in=colleagues),
-        #         distinct=True,
-        #     )
-        # )
         .order_by(*ordering)
     )
 

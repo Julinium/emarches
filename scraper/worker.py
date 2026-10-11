@@ -78,7 +78,7 @@ def do_the_work():
         return unhandled_links
 
     def tenderify(links=[]):
-        started = datetime.now()        
+        started = timezone.now()        
         saving_errors = False
         tenders_created, tenders_updated = 0 , 0
         links_length = len(links)
@@ -132,7 +132,7 @@ def do_the_work():
 
             harvest = Harvest.objects.create(
                     started         = started,
-                    finished        = datetime.now(),
+                    finished        = timezone.now(),
                     machine         = machine,
                     links_handled   = links_length,
                     tenders_created = tenders_created,

@@ -318,14 +318,6 @@ def getDCE(tender):
 
 def getExtraFiles(tender=None, extra_files=[]):
 
-    # chrono = tender.chrono
-    # acro   = tender.acronym
-
-    # def make_link(type=None):
-    #     if type == 'query': return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDemandeTelechargementDce&refConsultation={chrono}&orgAcronyme={acro}'
-    #     if type == 'file':  return f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={chrono}&orgAcronym={acro}'
-    #     return None 
-
     if not tender: return None
 
     if len(extra_files) < 1 : 
@@ -419,12 +411,11 @@ def getExtraFiles(tender=None, extra_files=[]):
                 helper.printMessage('DEBUG', 'd.getExtraFile', f'... Bytes written: {bytes_written}/{len(request_file.content)}.')
             if bytes_written != len(request_file.content):
                 raise IOError("File size mismatch: Not all content was written.")
-            if os.path.getsize(filename) == 0: 
+            if os.path.getsize(filename) == 0:
                 raise IOError("File was created but is empty. Go and know why!")
             added_files.append(filename)
         except Exception as e:
             helper.printMessage('ERROR', 'd.getExtraFile', f"Error writing data to file: {e}")
             continue
-
 
     return {'path': extra_path, 'files': added_files}

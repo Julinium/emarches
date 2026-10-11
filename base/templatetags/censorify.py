@@ -1,6 +1,6 @@
 from django import template
 from django.utils.html import format_html
-from django.utils.translation import gettext_lazy as trans
+from django.utils.translation import gettext_lazy as _
 from urllib.parse import urlencode
 
 register = template.Library()
@@ -9,7 +9,7 @@ register = template.Library()
 def censorify(user, value='-', url="/accounts/login/", next_path=None, btn_text=None):
     
     if not user or not user.is_authenticated:
-        if not btn_text: btn_text = trans("Sign in")
+        if not btn_text: btn_text = _("Sign in")
         # url = "/accounts/login/"
 
         if next_path:
