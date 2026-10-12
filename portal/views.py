@@ -39,10 +39,9 @@ CLIENTS_ITEMS_PER_PAGE = 20
 TENDERS_ORDERING_FIELD = "deadline"
 SHOW_TODAYS_EXPIRED = True
 SHOW_CANCELLED = True
+DCE_SHOW_MODAL = True
 LINK_PREFIX = settings.LINK_PREFIX
 RABAT_TZ = ZoneInfo("Africa/Casablanca")
-
-DCE_SHOW_MODAL = True
 
 logger_portal = logging.getLogger("portal")
 
@@ -51,9 +50,6 @@ logger_portal = logging.getLogger("portal")
 def tender_list(request):
 
     user = request.user
-    # if not user or not user.is_authenticated:
-    #     logger_portal.warning("E403: User not authenticated", extra={"request": request})
-    #     return HttpResponse(trans("Permission denied"), status=403)
 
     pro_context = portal_context(request)
     def_us = UserSetting(user=None, general_wrap_long_text=True)
@@ -69,32 +65,11 @@ def tender_list(request):
     def get_req_params(req):
         query_pars = req.GET.items()
         allowed_keys = [
-            "q",
-            "f",
-            "estin",
-            "estix",
-            "bondn",
-            "bondx",
-            "ddlnn",
-            "ddlnx",
-            "publn",
-            "publx",
-            "allotted",
-            "category",
-            "procedure",
-            "ebid",
-            "esign",
-            "pme",
-            "variant",
-            "agrements",
-            "qualifs",
-            "samples",
-            "meetings",
-            "visits",
-            "page",
-            "sort",
-            "results",
-            "exact",
+            "q", "f", "estin", "estix", "bondn", "bondx", "ddlnn", 
+            "ddlnx", "publn", "publx", "allotted","category", 
+            "procedure", "ebid", "esign", "pme","variant", 
+            "agrements", "qualifs", "samples", "meetings", 
+            "visits", "page", "sort", "results", "exact",
         ]
 
         query_dict = {k: v for k, v in query_pars if k in allowed_keys and v != ""}
@@ -401,11 +376,7 @@ def tender_list(request):
     colleagues = get_colleagues(user)
 
     tenders = tenders.prefetch_related(
-            "favorites",
-            "views",
-            "openings",
-            "downloads",
-            "changes",
+            "favorites", "views", "openings", "downloads", "changes",
         ).select_related(
             "client", "category", "mode", "procedure"
         ).order_by(
@@ -777,37 +748,64 @@ def tender_favorite_list(request):
 
     sort = request.GET.get("sort", TENDERS_ORDERING_FIELD)
 
+    allowed_keys = [
+        "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
+        "minutes_end", "-minutes_end", "published", "-published", 
+        "views_count", "-views_count", "downloads_count", "-downloads_count", 
+        "favorites_count", "-favorites_count"
+        ]
+
+
+
+    # if sort and sort != "":
+    #     ordering = [sort]
+    # else:
+    #     ordering = []
+
+    # ordering.append("id")
+
+    if sort not in allowed_keys: sort = None
+
     if sort and sort != "":
+        reversed_keys = [
+            "published", "-published", "views_count", "-views_count", 
+            "downloads_count", "-downloads_count", "favorites_count", "-favorites_count"
+            ]
+        if sort in reversed_keys:
+            if sort.startswith("-"): sort = sort.lstrip("-")
+            else: sort = f"-{sort}"
         ordering = [sort]
     else:
         ordering = []
 
+    ordering.append("-created")
     ordering.append("id")
+
+    # query_dict["filters"] = filters
+
 
     pontext = portal_context(request)
     faved_ids = pontext.get("faved_ids", None)
 
     tenders = Tender.objects.filter(id__in=faved_ids)
+    
+    if "minutes_end" in ordering or "-minutes_end" in ordering: tenders = tenders.annotate(minutes_end=Max("openings__date"))
+    if "views_count" in ordering or "-views_count" in ordering: tenders = tenders.annotate(views_count=Count("views", distinct=True))
+    if "downloads_count" in ordering or "-downloads_count" in ordering: tenders = tenders.annotate(downloads_count=Count("downloads", distinct=True))
+    if "favorites_count" in ordering or "-favorites_count" in ordering: tenders = tenders.annotate(favorites_count=Count("favorites", distinct=True))
 
     colleagues = get_colleagues(user)
 
-    tenders = (
-        tenders.select_related("client", "category", "mode", "procedure")
-        .prefetch_related(
+    tenders = tenders.select_related(
+            "client", "category", "mode", "procedure"
+        ).prefetch_related(
             "favorites",
             "views",
             "downloads",
             "changes",
+        ).order_by(
+            *ordering
         )
-        # .annotate(
-        #     team_bids=Count(
-        #         "lots__bids",
-        #         filter=Q(lots__bids__creator__in=colleagues),
-        #         distinct=True,
-        #     )
-        # )
-        .order_by(*ordering)
-    )
 
     if user and user.is_authenticated:
         tenders = tenders.annotate(
