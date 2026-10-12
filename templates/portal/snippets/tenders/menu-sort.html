@@ -35,11 +35,26 @@
                 {% trans 'Published' as caption %}
                 {% include 'base/snippets/menu-sort-item.html' with caption=caption field='published' icon=bicons.published %}
             </li>
-            
             <li><hr class="dropdown-divider"></li>
             <li>
                 {% trans 'Minutes finished' as caption %}
                 {% include 'base/snippets/menu-sort-item.html' with caption=caption field='minutes_end' icon=bicons.deliberated %}
+            </li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                {% trans 'Views' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='views_count' icon=bicons.views %}
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                {% trans 'Downloads' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='downloads_count' icon=bicons.download %}
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                {% trans 'Favourisations' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='favorites_count' icon=bicons.favorite %}
             </li>
 <!-- 
             <li><hr class="dropdown-divider"></li>

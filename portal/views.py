@@ -367,36 +367,52 @@ def tender_list(request):
 
     sort = query_dict["sort"]
 
+    allowed_keys = [
+        "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
+        "minutes_end", "-minutes_end", "published", "-published", 
+        "views_count", "-views_count", "downloads_count", "-downloads_count", 
+        "favorites_count", "-favorites_count"
+        ]
+
+    if sort not in allowed_keys: sort = None
+
     if sort and sort != "":
+        reversed_keys = [
+            "published", "-published", "views_count", "-views_count", 
+            "downloads_count", "-downloads_count", "favorites_count", "-favorites_count"
+            ]
+        if sort in reversed_keys:
+            if sort.startswith("-"): sort = sort.lstrip("-")
+            else: sort = f"-{sort}"
         ordering = [sort]
-        if sort == "published":
-            ordering = ["-published"]
-        if sort == "-published":
-            ordering = ["published"]
     else:
         ordering = []
 
     ordering.append("-created")
+    ordering.append("id")
 
     query_dict["filters"] = filters
 
-    if "minutes_end" in ordering or "-minutes_end" in ordering:
-        tenders = tenders.annotate(minutes_end=F("openings__date"))
+    if "minutes_end" in ordering or "-minutes_end" in ordering: tenders = tenders.annotate(minutes_end=Max("openings__date"))
+    if "views_count" in ordering or "-views_count" in ordering: tenders = tenders.annotate(views_count=Count("views", distinct=True))
+    if "downloads_count" in ordering or "-downloads_count" in ordering: tenders = tenders.annotate(downloads_count=Count("downloads", distinct=True))
+    if "favorites_count" in ordering or "-favorites_count" in ordering: tenders = tenders.annotate(favorites_count=Count("favorites", distinct=True))
 
     colleagues = get_colleagues(user)
 
-    tenders = (
-        tenders.prefetch_related(
+    tenders = tenders.prefetch_related(
             "favorites",
             "views",
             "openings",
             "downloads",
             "changes",
+        ).select_related(
+            "client", "category", "mode", "procedure"
+        ).order_by(
+            *ordering
         )
-        .select_related("client", "category", "mode", "procedure")
-        .order_by(*ordering)
-    )
-
+    
+    
     if user and user.is_authenticated:
         tenders = tenders.annotate(
             team_bids=Count(

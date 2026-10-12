@@ -7,6 +7,8 @@ db.sqlite3
 media/
 emarches/logs
 logs/
+sitemaps/
+
 .tmp/
 __pycache__/
 
