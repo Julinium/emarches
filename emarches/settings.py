@@ -22,6 +22,13 @@ ALLOWED_HOSTS = [
         os.getenv("IP_ADDRESS")
     ]
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 
 INSTALLED_APPS = [    
     'django.contrib.admin',
@@ -46,6 +53,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'user_agents',
     'debug_toolbar',
+    'parler',
 
     # TODO: "ics custom format"     -> "https://chatgpt.com/c/69b5e44d-6ca0-8331-aeb4-aec09baf9285",
     # TODO: "django-altcha"         -> "https://pypi.org/project/django-altcha/",
@@ -182,6 +190,23 @@ LANGUAGES = [
     ("es", _("Spanish")),
     ("de", _("German")),
     ]
+
+PARLER_LANGUAGES = {
+    1: (
+        {"code": "en"},
+        {"code": "fr"},
+        {"code": "ar"},
+        {"code": "zg"},
+        {"code": "es"},
+        {"code": "de"},
+    ),
+    "default": {
+        "fallbacks": ["en"],
+        "hide_untranslated": False,
+    },
+}
+
+
 
 
 LOCALE_PATHS = [BASE_DIR / "locale", ]

@@ -1,14 +1,15 @@
 from django.contrib import admin
 # from .models import Folder
-from .models import (Company, Newsletter, NewsletterSubscription,
+from .models import (Newsletter, NewsletterSubscription,
                      Notification, NotificationSubscription)
 
 
-@admin.register(Company)
-class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'ice', 'user', 'address', 'active', 'created')
-    list_filter = ('active', 'address',)
-    search_fields = ('name', 'ice', 'address')
+# @admin.register(Company)
+# class CompanyAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'ice', 'user', 'address', 'active', 'created')
+#     list_filter = ('active', 'address',)
+#     search_fields = ('name', 'ice', 'address')
+    
 
 # @admin.register(Folder)
 # class FolderAdmin(admin.ModelAdmin):

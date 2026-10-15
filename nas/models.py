@@ -159,13 +159,6 @@ class Company(models.Model):
         if self.file and self.file.storage.exists(self.file.name) : fs += self.file.size
         return fs
     
-    # @property
-    # def running_expirables(self, *args, **kwargs):
-    #     wassa = datetime.now()
-    #     return self.expirables.filter(
-    #         validity_start__lte = wassa,
-    #         validity_end__gte = wassa,
-    #     )
     
     def save(self, *args, **kwargs):
         if self.image:

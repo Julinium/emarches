@@ -1,0 +1,110 @@
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th scope="col" style="min-width: 220px;">
+                
+                </th>
+
+                {% for plan in plans %}
+                    <th scope="col" class="text-center"
+                        style="min-width: 150px;">
+                        <div class="fw-bold">{{ plan.name }}</div>
+                        <div class="d-none fs-5 mt-2">
+                            {{ plan.monthly_price|floatformat:0 }}
+                            <small class="fs-6 fw-normal">MAD/mo</small>
+                        </div>
+                        <a href="url 'subscription_create' plan.code"
+                           class="btn btn-primary btn-sm mt-2">
+                            Choose plan
+                        </a>
+                    </th>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th scope="col" style="min-width: 220px;">
+                    Monthly price (MAD)
+                </th>
+
+                {% for plan in plans %}
+                    <th scope="col" class="text-center"
+                        style="min-width: 150px;">
+                        <div class="fw-bold">{{ plan.monthly_price|floatformat:0 }}</div>
+                    </th>
+                {% endfor %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for group in category_groups %}
+                <tr class="table-light">
+                    <th colspan="{{ plans|length|add:1 }}"
+                        scope="colgroup">
+                        {% if group.category %}
+                            {{ group.category.name }}
+                        {% else %}
+                            Other features
+                        {% endif %}
+                    </th>
+                </tr>
+
+                {% for row in group.rows %}
+                    <tr>
+                        <th scope="row" class="fw-normal">
+                            <span class="small"
+                                  {% if row.feature.description %}
+                                      data-bs-toggle="tooltip"
+                                      data-bs-placement="top"
+                                      title="{{ row.feature.description }}"
+                                      tabindex="0"
+                                  {% endif %}>
+                                {{ row.feature.name }}
+                            </span>
+                        </th>
+
+                        {% for cell in row.cells %}
+                            <td class="text-center">
+                                {% if not cell.configured %}
+                                    <span class="text-muted">&mdash;</span>
+                                {% elif row.feature.is_binary %}
+                                    {% if cell.capability %}
+                                        <i class="bi bi-check-lg text-success"
+                                           aria-label="Yes"></i>
+                                    {% else %}
+                                        <i class="bi bi-x-lg text-danger"
+                                           aria-label="No"></i>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="fw-semibold">
+                                        {{ cell.capability }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% empty %}
+                <tr>
+                    <td colspan="{{ plans|length|add:1 }}"
+                        class="text-center text-muted py-4">
+                        No features available.
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th scope="row">Get started</th>
+                {% for plan in plans %}
+                    <td class="text-center">
+                        <a href="url 'subscription_create' plan.code"
+                           class="btn btn-primary btn-sm">
+                            Choose plan
+                        </a>
+                    </td>
+                {% endfor %}
+            </tr>
+        </tfoot>
+    </table>
+</div>

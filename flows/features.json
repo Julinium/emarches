@@ -1,10 +1,12 @@
 [
     {
+        "active": 1,
         "rank": "10",
         "code": "category_general",
         "category": "General",
         "features": [
             {
+                "active": 1,
                 "code": "feature_general_users",
                 "name": "Maximum number of users",
                 "description": "Maximum number of users",
@@ -14,6 +16,7 @@
                 "plan_pro": 5
             },
             {
+                "active": 1,
                 "code": "feature_general_regular_support",
                 "name": "Regular Support",
                 "description": "Support by email, web contact form and FAQ",
@@ -23,6 +26,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_general_priority_support",
                 "name": "Priority Support",
                 "description": "Support by phone or Instant messaging",
@@ -32,6 +36,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_general_training",
                 "name": "Users training",
                 "description": "Hands-on training for all users",
@@ -39,24 +44,17 @@
                 "plan_free": 0,
                 "plan_startup": 1,
                 "plan_pro": 1
-            },
-            {
-                "code": "feature_general_trial",
-                "name": "Trial period",
-                "description": "Use your plan for free and pay only when you are ready. No question asked",
-                "kind": "integer",
-                "plan_free": 0,
-                "plan_startup": 30,
-                "plan_pro": 30
             }
         ]
     },
     {
+        "active": 1,
         "rank": "20",
         "code": "category_tenders",
         "category": "Tenders",
         "features": [
             {
+                "active": 1,
                 "code": "feature_tenders_running",
                 "name": "Running tenders list",
                 "description": "Detailed list of running Tenders",
@@ -66,6 +64,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_search",
                 "name": "Advanced search",
                 "description": "Tenders search by Object, Reference, Client, Location, Domains, ...",
@@ -75,6 +74,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_basic_filters",
                 "name": "Basic filters",
                 "description": "Tenders filtering by basic fields: deadline, published date, estimate, category",
@@ -84,15 +84,17 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_advanced_filters",
                 "name": "Advanced filters",
                 "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ...",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 0,
+                "plan_startup": 1,
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_advanced_sort",
                 "name": "Advanced sort",
                 "description": "Tenders ordering by deadline, publication, estimate, guarantee, ...",
@@ -102,6 +104,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_categories_breakdown",
                 "name": "Categories breakdwon",
                 "description": "Tenders breakdown by category",
@@ -111,6 +114,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_advanced_breakdown",
                 "name": "Advanced breakdwon",
                 "description": "Tenders breakdown by Client, Execution location or Domains of activity",
@@ -120,6 +124,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_details",
                 "name": "Tender details",
                 "description": "Regular details about individual Tenders",
@@ -129,6 +134,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_advanced_details",
                 "name": "Advanced details",
                 "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ...",
@@ -138,6 +144,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_changes",
                 "name": "Changes history",
                 "description": "Changes made to Tenders since publication",
@@ -147,49 +154,55 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_tenders_favorites_max",
                 "name": "Favorite tenders",
-                "description": "Maximum number of Favorite tenders at a time",
+                "description": "Maximum number of concurrent Favorite tenders per user",
                 "kind": "integer",
                 "plan_free": 5,
                 "plan_startup": 50,
                 "plan_pro": 1000
             },
             {
+                "active": 1,
                 "code": "feature_tenders_dce_monthly",
                 "name": "Monthly DCE access",
-                "description": "Maximum number of Tenders Documents downloads per month. (Same tender can be downloaded many times.)",
+                "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)",
                 "kind": "integer",
-                "plan_free": 15,
+                "plan_free": 20,
                 "plan_startup": 100,
                 "plan_pro": 5000
             },
             {
+                "active": 1,
                 "code": "feature_tenders_dce_history",
                 "name": "DCE history",
                 "description": "Tenders files dowload past bidding deadline",
                 "kind": "integer",
                 "plan_free": 0,
-                "plan_startup": 10,
-                "plan_pro": 60
+                "plan_startup": 5,
+                "plan_pro": 30
             },
             {
+                "active": 1,
                 "code": "feature_tenders_dce_request",
                 "name": "DCE requests",
                 "description": "Tenders files request for items beyond history limit",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 0,
+                "plan_startup": 1,
                 "plan_pro": 1
             }
         ]
     },
     {
+        "active": 1,
         "rank": "30",
         "code": "category_results",
         "category": "Tenders results",
         "features": [
             {
+                "active": 1,
                 "code": "feature_results_summary",
                 "name": "Results summary",
                 "description": "View Tenders winners and awarded amounts",
@@ -199,6 +212,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_results_minutes",
                 "name": "Results minutes",
                 "description": "View awarding minutes, including administrative and eventually technical contests",
@@ -208,6 +222,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_results_financial",
                 "name": "Financial analysis",
                 "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ...",
@@ -217,6 +232,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 0,
                 "code": "feature_results_export",
                 "name": "Lists export",
                 "description": "Export results tables as Excel/csv files.",
@@ -228,47 +244,53 @@
         ]
     },
     {
+        "active": 1,
         "rank": "40",
         "code": "category_market_study",
         "category": "Market study",
         "features": [
             {
+                "active": 1,
                 "code": "feature_market_concurrents",
                 "name": "Concurrents data",
                 "description": "View a list of all conccurrents, with brief performances summary",
                 "kind": "binary",
-                "plan_free": 0,
+                "plan_free": 1,
                 "plan_startup": 1,
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_market_search",
                 "name": "Concurrents search and filters",
                 "description": "Search Consurrents, filter and sort results",
                 "kind": "binary",
-                "plan_free": 0,
+                "plan_free": 1,
                 "plan_startup": 1,
                 "plan_pro": 1
             },
             {
+                "active": 0,
                 "code": "feature_market_summary",
                 "name": "Performance summary",
                 "description": "View Concurrents effeciency, number of awarded bids and amounts",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 0,
+                "plan_startup": 1,
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_market_participations",
                 "name": "Administrative and Technical analysis",
                 "description": "View Concurrents bid Tenders, Administrative and Technical contests performance",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 0,
+                "plan_startup": 1,
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_market_financial",
                 "name": "Financial analysis",
                 "description": "View Concurrents financial offers and get usefull patterns",
@@ -278,6 +300,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_market_aggregations",
                 "name": "Advanced aggregations",
                 "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses",
@@ -289,20 +312,23 @@
         ]
     },
     {
+        "active": 1,
         "rank": "50",
         "code": "category_bidding",
         "category": "Bidding management",
         "features": [
             {
+                "active": 1,
                 "code": "feature_bidding_companies",
                 "name": "Maximum number of companies",
                 "description": "How many companies can be managed",
                 "kind": "integer",
                 "plan_free": 1,
                 "plan_startup": 2,
-                "plan_pro": 15
+                "plan_pro": 10
             },
             {
+                "active": 1,
                 "code": "feature_bidding_expirables",
                 "name": "Manage companies expirables",
                 "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )",
@@ -312,24 +338,27 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_bidding_files_storage",
                 "name": "Files storage max size",
                 "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …",
                 "kind": "integer",
                 "plan_free": 0,
-                "plan_startup": 256000000,
-                "plan_pro": 2000000000
+                "plan_startup": 4,
+                "plan_pro": 20
             },
             {
+                "active": 1,
                 "code": "feature_bidding_yearly",
                 "name": "Yearly bids",
                 "description": "Maximum number of bids to manage per year",
                 "kind": "integer",
                 "plan_free": 10,
-                "plan_startup": 100,
+                "plan_startup": 120,
                 "plan_pro": 5000
             },
             {
+                "active": 1,
                 "code": "feature_bidding_timeline",
                 "name": "Rich timeline",
                 "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks.",
@@ -339,6 +368,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_bidding_tasks",
                 "name": "Bidding Tasks",
                 "description": "Manage Tasks related to Bids.",
@@ -348,6 +378,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_bidding_expenses",
                 "name": "Bidding Expenses",
                 "description": "Manage Expenses related to Bids.",
@@ -357,15 +388,17 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_bidding_bonds",
                 "name": "Bonds management",
                 "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )",
                 "kind": "binary",
                 "plan_free": 0,
-                "plan_startup": 0,
+                "plan_startup": 1,
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_bidding_allotted",
                 "name": "Allotted Tenders",
                 "description": "Manage bidding for allotted Tenders (with 2 lots or more)",
@@ -375,6 +408,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_bidding_simulator",
                 "name": "Simulator",
                 "description": "Simulate financial offers competition for a given Tender or Lot",
@@ -386,11 +420,13 @@
         ]
     },
     {
+        "active": 1,
         "rank": "60",
         "code": "category_pos",
         "category": "Purchase orders",
         "features": [
             {
+                "active": 1,
                 "code": "feature_po_list",
                 "name": "Running PO's",
                 "description": "View a list of running PO’s with concise details",
@@ -400,6 +436,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_po_search",
                 "name": "Advanced search",
                 "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ...",
@@ -409,6 +446,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_po_filters",
                 "name": "Filters and sort",
                 "description": "Apply advanced filters and sort results by many fields",
@@ -418,6 +456,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_po_details",
                 "name": "PO details",
                 "description": "View regular details about individual PO’s.",
@@ -427,6 +466,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_po_items_details",
                 "name": "PO items details",
                 "description": "View details about individual PO items.",
@@ -436,6 +476,7 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_po_items_export_csv",
                 "name": "Export items as csv",
                 "description": "Export and download detailed items data as a .csv file.",
@@ -445,33 +486,37 @@
                 "plan_pro": 1
             },
             {
+                "active": 1,
                 "code": "feature_po_favorites_max",
                 "name": "Favorite PO's",
-                "description": "Maximum number of Favorite PO's at a time",
+                "description": "Maximum number of concurrent Favorite PO's per user",
                 "kind": "integer",
                 "plan_free": 10,
-                "plan_startup": 50,
-                "plan_pro": 1000
+                "plan_startup": 30,
+                "plan_pro": 500
             },
             {
+                "active": 1,
                 "code": "feature_po_dce_monthly",
                 "name": "Monthly DCE downloads",
                 "description": "Maximum number of PO files downloads per month",
                 "kind": "integer",
                 "plan_free": 25,
                 "plan_startup": 100,
-                "plan_pro": 5000
+                "plan_pro": 500
             },
             {
+                "active": 1,
                 "code": "feature_po_dce_history",
-                "name": "DCE history",
+                "name": "DCE history access",
                 "description": "Download PO's files past their bidding deadline",
                 "kind": "integer",
                 "plan_free": 0,
                 "plan_startup": 5,
-                "plan_pro": 45
+                "plan_pro": 15
             },
             {
+                "active": 1,
                 "code": "feature_po_results_summary",
                 "name": "Results summary",
                 "description": "View winners names and amounts of awarded PO’s.",

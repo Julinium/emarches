@@ -11,12 +11,15 @@ from django.http import HttpResponse
 from django.contrib.sitemaps.views import index as sitemap_index_view
 from django.contrib.sitemaps.views import sitemap as sitemap_view
 
+from flows.helper import get_plans
 
 logger_portal = logging.getLogger("portal")
 
 
 def home(request):
     logger_portal.info(f"Home page view", extra={"request": request})
+    # plans, category_groups = get_plans()
+    # return render(request, 'base/home.html', {'plans': plans, 'category_groups': category_groups})
     return render(request, 'base/home.html')
 
 
