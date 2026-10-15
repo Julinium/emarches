@@ -23,26 +23,17 @@
         </div>
     </div>
 
-    <br class="d-none mb-6">
+    <br class="mb-6">
 
-    <div class="d-none pb-5">
+    <div class="pb-5">
         {% include "base/snippets/digests/last-30-days.html" %}
     </div>
 
 
-    <br class="d-none mb-6">
+    <br class="mb-6">
 
-    <div class="d-none pb-5">  
+    <div class="pb-5">  
         {% include "flows/snippets/plans-table.html" %}      
-        <div class="d-none row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-            {% for plan in plans %}
-                {% include "flows/snippets/plan-digest.html" with plan=plan %}
-            {% empty %}
-                <div class="col-12">
-                    <p class="text-muted">No plans are currently available.</p>
-                </div>
-            {% endfor %}
-        </div>
     </div>
     
 

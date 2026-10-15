@@ -250,9 +250,9 @@ class PlanAdmin(TranslatableAdmin):
 
     display_name.short_description = _("Name")
 
-    # def get_queryset(self, request):
-    #     qs = super().get_queryset(request)
-    #     return qs.translated("en").distinct()
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.translated("en").distinct()
 
 
 @admin.register(Allowance)

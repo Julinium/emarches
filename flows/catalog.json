@@ -1,0 +1,1844 @@
+[
+  {
+    "active": 1,
+    "rank": "10",
+    "code": "category_general",
+    "features": [
+      {
+        "active": 1,
+        "rank": 10,
+        "code": "feature_general_users",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 5,
+        "translations": {
+          "en": {
+            "name": "Maximum number of users",
+            "description": "Maximum number of users"
+          },
+          "fr": {
+            "name": "Nombre maximal d’utilisateurs",
+            "description": "Maximum number of users"
+          },
+          "ar": {
+            "name": "العدد الأقصى للمستخدمين",
+            "description": "Maximum number of users"
+          },
+          "zg": {
+            "name": "Amḍan afellay n iseqdacen",
+            "description": "Maximum number of users"
+          },
+          "es": {
+            "name": "Número máximo de usuarios",
+            "description": "Maximum number of users"
+          },
+          "de": {
+            "name": "Maximale Benutzeranzahl",
+            "description": "Maximum number of users"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 20,
+        "code": "feature_general_regular_support",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Regular Support",
+            "description": "Support by email, web contact form and FAQ"
+          },
+          "fr": {
+            "name": "Assistance standard",
+            "description": "Support by email, web contact form and FAQ"
+          },
+          "ar": {
+            "name": "الدعم العادي",
+            "description": "Support by email, web contact form and FAQ"
+          },
+          "zg": {
+            "name": "Tallalt tamagnut",
+            "description": "Support by email, web contact form and FAQ"
+          },
+          "es": {
+            "name": "Soporte estándar",
+            "description": "Support by email, web contact form and FAQ"
+          },
+          "de": {
+            "name": "Standard-Support",
+            "description": "Support by email, web contact form and FAQ"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 30,
+        "code": "feature_general_priority_support",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Priority Support",
+            "description": "Support by phone or Instant messaging"
+          },
+          "fr": {
+            "name": "Assistance prioritaire",
+            "description": "Support by phone or Instant messaging"
+          },
+          "ar": {
+            "name": "الدعم ذو الأولوية",
+            "description": "Support by phone or Instant messaging"
+          },
+          "zg": {
+            "name": "Tallalt tamezwart",
+            "description": "Support by phone or Instant messaging"
+          },
+          "es": {
+            "name": "Soporte prioritario",
+            "description": "Support by phone or Instant messaging"
+          },
+          "de": {
+            "name": "Prioritäts-Support",
+            "description": "Support by phone or Instant messaging"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 40,
+        "code": "feature_general_training",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Users training",
+            "description": "Hands-on training for all users"
+          },
+          "fr": {
+            "name": "Formation des utilisateurs",
+            "description": "Hands-on training for all users"
+          },
+          "ar": {
+            "name": "تدريب المستخدمين",
+            "description": "Hands-on training for all users"
+          },
+          "zg": {
+            "name": "Aselmed n iseqdacen",
+            "description": "Hands-on training for all users"
+          },
+          "es": {
+            "name": "Formación de usuarios",
+            "description": "Hands-on training for all users"
+          },
+          "de": {
+            "name": "Benutzerschulung",
+            "description": "Hands-on training for all users"
+          }
+        },
+        "is_binary": true
+      }
+    ],
+    "translations": {
+      "en": {
+        "name": "General"
+      },
+      "fr": {
+        "name": "Général"
+      },
+      "ar": {
+        "name": "عام"
+      },
+      "zg": {
+        "name": "Amatu"
+      },
+      "es": {
+        "name": "General"
+      },
+      "de": {
+        "name": "Allgemein"
+      }
+    }
+  },
+  {
+    "active": 1,
+    "rank": "20",
+    "code": "category_tenders",
+    "features": [
+      {
+        "active": 1,
+        "rank": 10,
+        "code": "feature_tenders_running",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Running tenders list",
+            "description": "Detailed list of running Tenders"
+          },
+          "fr": {
+            "name": "Liste des appels d’offres en cours",
+            "description": "Detailed list of running Tenders"
+          },
+          "ar": {
+            "name": "قائمة طلبات العروض الجارية",
+            "description": "Detailed list of running Tenders"
+          },
+          "zg": {
+            "name": "Tabdart n isutar yellan",
+            "description": "Detailed list of running Tenders"
+          },
+          "es": {
+            "name": "Lista de licitaciones activas",
+            "description": "Detailed list of running Tenders"
+          },
+          "de": {
+            "name": "Liste laufender Ausschreibungen",
+            "description": "Detailed list of running Tenders"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 20,
+        "code": "feature_tenders_search",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced search",
+            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+          },
+          "fr": {
+            "name": "Recherche avancée",
+            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+          },
+          "ar": {
+            "name": "بحث متقدم",
+            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+          },
+          "zg": {
+            "name": "Anadi afellay",
+            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+          },
+          "es": {
+            "name": "Búsqueda avanzada",
+            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+          },
+          "de": {
+            "name": "Erweiterte Suche",
+            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 30,
+        "code": "feature_tenders_basic_filters",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Basic filters",
+            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+          },
+          "fr": {
+            "name": "Filtres de base",
+            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+          },
+          "ar": {
+            "name": "مرشحات أساسية",
+            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+          },
+          "zg": {
+            "name": "Imzizd n uzadur",
+            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+          },
+          "es": {
+            "name": "Filtros básicos",
+            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+          },
+          "de": {
+            "name": "Basisfilter",
+            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 40,
+        "code": "feature_tenders_advanced_filters",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced filters",
+            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+          },
+          "fr": {
+            "name": "Filtres avancés",
+            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+          },
+          "ar": {
+            "name": "مرشحات متقدمة",
+            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+          },
+          "zg": {
+            "name": "Imzizd ifessasen",
+            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+          },
+          "es": {
+            "name": "Filtros avanzados",
+            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+          },
+          "de": {
+            "name": "Erweiterte Filter",
+            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 50,
+        "code": "feature_tenders_advanced_sort",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced sort",
+            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+          },
+          "fr": {
+            "name": "Tri avancé",
+            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+          },
+          "ar": {
+            "name": "ترتيب متقدم",
+            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+          },
+          "zg": {
+            "name": "Asmizzwer ifessasen",
+            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+          },
+          "es": {
+            "name": "Ordenación avanzada",
+            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+          },
+          "de": {
+            "name": "Erweiterte Sortierung",
+            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 60,
+        "code": "feature_tenders_categories_breakdown",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Categories breakdown",
+            "description": "Tenders breakdown by category"
+          },
+          "fr": {
+            "name": "Répartition par catégorie",
+            "description": "Tenders breakdown by category"
+          },
+          "ar": {
+            "name": "التوزيع حسب الفئة",
+            "description": "Tenders breakdown by category"
+          },
+          "zg": {
+            "name": "Bḍu ɣef taggayt",
+            "description": "Tenders breakdown by category"
+          },
+          "es": {
+            "name": "Desglose por categoría",
+            "description": "Tenders breakdown by category"
+          },
+          "de": {
+            "name": "Aufschlüsselung nach Kategorie",
+            "description": "Tenders breakdown by category"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 70,
+        "code": "feature_tenders_advanced_breakdown",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced breakdown",
+            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+          },
+          "fr": {
+            "name": "Répartition avancée",
+            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+          },
+          "ar": {
+            "name": "توزيع متقدم",
+            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+          },
+          "zg": {
+            "name": "Bḍu afellay",
+            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+          },
+          "es": {
+            "name": "Desglose avanzado",
+            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+          },
+          "de": {
+            "name": "Erweiterte Aufschlüsselung",
+            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 80,
+        "code": "feature_tenders_details",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Tender details",
+            "description": "Regular details about individual Tenders"
+          },
+          "fr": {
+            "name": "Détails des appels d’offres",
+            "description": "Regular details about individual Tenders"
+          },
+          "ar": {
+            "name": "تفاصيل طلبات العروض",
+            "description": "Regular details about individual Tenders"
+          },
+          "zg": {
+            "name": "Talqayt n usutar",
+            "description": "Regular details about individual Tenders"
+          },
+          "es": {
+            "name": "Detalles de licitaciones",
+            "description": "Regular details about individual Tenders"
+          },
+          "de": {
+            "name": "Ausschreibungsdetails",
+            "description": "Regular details about individual Tenders"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 90,
+        "code": "feature_tenders_advanced_details",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced details",
+            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+          },
+          "fr": {
+            "name": "Détails avancés",
+            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+          },
+          "ar": {
+            "name": "تفاصيل متقدمة",
+            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+          },
+          "zg": {
+            "name": "Talqayt ifessasen",
+            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+          },
+          "es": {
+            "name": "Detalles avanzados",
+            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+          },
+          "de": {
+            "name": "Erweiterte Details",
+            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 100,
+        "code": "feature_tenders_changes",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Changes history",
+            "description": "Changes made to Tenders since publication"
+          },
+          "fr": {
+            "name": "Historique des modifications",
+            "description": "Changes made to Tenders since publication"
+          },
+          "ar": {
+            "name": "سجل التغييرات",
+            "description": "Changes made to Tenders since publication"
+          },
+          "zg": {
+            "name": "Amazray n ibeddilen",
+            "description": "Changes made to Tenders since publication"
+          },
+          "es": {
+            "name": "Historial de cambios",
+            "description": "Changes made to Tenders since publication"
+          },
+          "de": {
+            "name": "Änderungsverlauf",
+            "description": "Changes made to Tenders since publication"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 110,
+        "code": "feature_tenders_favorites_max",
+        "plan_free": 5,
+        "plan_startup": 50,
+        "plan_pro": 500,
+        "translations": {
+          "en": {
+            "name": "Favorite tenders",
+            "description": "Maximum number of concurrent Favorite tenders per user"
+          },
+          "fr": {
+            "name": "Appels d’offres favoris",
+            "description": "Maximum number of concurrent Favorite tenders per user"
+          },
+          "ar": {
+            "name": "طلبات العروض المفضلة",
+            "description": "Maximum number of concurrent Favorite tenders per user"
+          },
+          "zg": {
+            "name": "Isutar inurifen",
+            "description": "Maximum number of concurrent Favorite tenders per user"
+          },
+          "es": {
+            "name": "Licitaciones favoritas",
+            "description": "Maximum number of concurrent Favorite tenders per user"
+          },
+          "de": {
+            "name": "Favorisierte Ausschreibungen",
+            "description": "Maximum number of concurrent Favorite tenders per user"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 120,
+        "code": "feature_tenders_dce_monthly",
+        "plan_free": 20,
+        "plan_startup": 100,
+        "plan_pro": 500,
+        "translations": {
+          "en": {
+            "name": "Monthly DCE access",
+            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+          },
+          "fr": {
+            "name": "Téléchargements mensuels des DCE",
+            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+          },
+          "ar": {
+            "name": "تنزيلات ملفات طلبات العروض شهريًا",
+            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+          },
+          "zg": {
+            "name": "Isider n DCE s waggur",
+            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+          },
+          "es": {
+            "name": "Descargas mensuales de DCE",
+            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+          },
+          "de": {
+            "name": "Monatliche DCE-Downloads",
+            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 130,
+        "code": "feature_tenders_dce_history",
+        "plan_free": 0,
+        "plan_startup": 5,
+        "plan_pro": 30,
+        "translations": {
+          "en": {
+            "name": "DCE history",
+            "description": "Tenders files dowload past bidding deadline"
+          },
+          "fr": {
+            "name": "Historique des DCE",
+            "description": "Tenders files dowload past bidding deadline"
+          },
+          "ar": {
+            "name": "أرشيف ملفات طلبات العروض",
+            "description": "Tenders files dowload past bidding deadline"
+          },
+          "zg": {
+            "name": "Amazray n DCE",
+            "description": "Tenders files dowload past bidding deadline"
+          },
+          "es": {
+            "name": "Historial de DCE",
+            "description": "Tenders files dowload past bidding deadline"
+          },
+          "de": {
+            "name": "DCE-Archivzugriff",
+            "description": "Tenders files dowload past bidding deadline"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 140,
+        "code": "feature_tenders_dce_request",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "DCE requests",
+            "description": "Tenders files request for items beyond history limit"
+          },
+          "fr": {
+            "name": "Demandes de DCE",
+            "description": "Tenders files request for items beyond history limit"
+          },
+          "ar": {
+            "name": "طلبات ملفات طلبات العروض",
+            "description": "Tenders files request for items beyond history limit"
+          },
+          "zg": {
+            "name": "Isuturen n DCE",
+            "description": "Tenders files request for items beyond history limit"
+          },
+          "es": {
+            "name": "Solicitudes de DCE",
+            "description": "Tenders files request for items beyond history limit"
+          },
+          "de": {
+            "name": "DCE-Anfragen",
+            "description": "Tenders files request for items beyond history limit"
+          }
+        },
+        "is_binary": true
+      }
+    ],
+    "translations": {
+      "en": {
+        "name": "Tenders"
+      },
+      "fr": {
+        "name": "Appels d’offres"
+      },
+      "ar": {
+        "name": "طلبات العروض"
+      },
+      "zg": {
+        "name": "Isutar"
+      },
+      "es": {
+        "name": "Licitaciones"
+      },
+      "de": {
+        "name": "Ausschreibungen"
+      }
+    }
+  },
+  {
+    "active": 1,
+    "rank": "30",
+    "code": "category_results",
+    "features": [
+      {
+        "active": 1,
+        "rank": 10,
+        "code": "feature_results_summary",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Results summary",
+            "description": "View Tenders winners and awarded amounts"
+          },
+          "fr": {
+            "name": "Synthèse des résultats",
+            "description": "View Tenders winners and awarded amounts"
+          },
+          "ar": {
+            "name": "ملخص النتائج",
+            "description": "View Tenders winners and awarded amounts"
+          },
+          "zg": {
+            "name": "Agzul n igmaḍ",
+            "description": "View Tenders winners and awarded amounts"
+          },
+          "es": {
+            "name": "Resumen de resultados",
+            "description": "View Tenders winners and awarded amounts"
+          },
+          "de": {
+            "name": "Ergebnisübersicht",
+            "description": "View Tenders winners and awarded amounts"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 20,
+        "code": "feature_results_minutes",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Results minutes",
+            "description": "View awarding minutes, including administrative and eventually technical contests"
+          },
+          "fr": {
+            "name": "Procès-verbaux des résultats",
+            "description": "View awarding minutes, including administrative and eventually technical contests"
+          },
+          "ar": {
+            "name": "محاضر النتائج",
+            "description": "View awarding minutes, including administrative and eventually technical contests"
+          },
+          "zg": {
+            "name": "Tiwriqin n igmaḍ",
+            "description": "View awarding minutes, including administrative and eventually technical contests"
+          },
+          "es": {
+            "name": "Actas de resultados",
+            "description": "View awarding minutes, including administrative and eventually technical contests"
+          },
+          "de": {
+            "name": "Ergebnisprotokolle",
+            "description": "View awarding minutes, including administrative and eventually technical contests"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 30,
+        "code": "feature_results_financial",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Financial analysis",
+            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+          },
+          "fr": {
+            "name": "Analyse financière",
+            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+          },
+          "ar": {
+            "name": "التحليل المالي",
+            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+          },
+          "zg": {
+            "name": "Tasleḍt tanflusant",
+            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+          },
+          "es": {
+            "name": "Análisis financiero",
+            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+          },
+          "de": {
+            "name": "Finanzanalyse",
+            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 0,
+        "rank": 40,
+        "code": "feature_results_export",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Lists export",
+            "description": "Export results tables as Excel/csv files."
+          },
+          "fr": {
+            "name": "Export des listes",
+            "description": "Export results tables as Excel/csv files."
+          },
+          "ar": {
+            "name": "تصدير القوائم",
+            "description": "Export results tables as Excel/csv files."
+          },
+          "zg": {
+            "name": "Asifeḍ n tebdarin",
+            "description": "Export results tables as Excel/csv files."
+          },
+          "es": {
+            "name": "Exportación de listas",
+            "description": "Export results tables as Excel/csv files."
+          },
+          "de": {
+            "name": "Listenexport",
+            "description": "Export results tables as Excel/csv files."
+          }
+        },
+        "is_binary": true
+      }
+    ],
+    "translations": {
+      "en": {
+        "name": "Tender results"
+      },
+      "fr": {
+        "name": "Résultats des appels d’offres"
+      },
+      "ar": {
+        "name": "نتائج طلبات العروض"
+      },
+      "zg": {
+        "name": "Igmaḍ n isutar"
+      },
+      "es": {
+        "name": "Resultados de licitaciones"
+      },
+      "de": {
+        "name": "Ausschreibungsergebnisse"
+      }
+    }
+  },
+  {
+    "active": 1,
+    "rank": "40",
+    "code": "category_market_study",
+    "features": [
+      {
+        "active": 1,
+        "rank": 10,
+        "code": "feature_market_concurrents",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Competitor data",
+            "description": "View a list of all conccurrents, with brief performances summary"
+          },
+          "fr": {
+            "name": "Données sur les concurrents",
+            "description": "View a list of all conccurrents, with brief performances summary"
+          },
+          "ar": {
+            "name": "بيانات المنافسين",
+            "description": "View a list of all conccurrents, with brief performances summary"
+          },
+          "zg": {
+            "name": "Isallan ɣef imnaɣen",
+            "description": "View a list of all conccurrents, with brief performances summary"
+          },
+          "es": {
+            "name": "Datos de competidores",
+            "description": "View a list of all conccurrents, with brief performances summary"
+          },
+          "de": {
+            "name": "Wettbewerberdaten",
+            "description": "View a list of all conccurrents, with brief performances summary"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 20,
+        "code": "feature_market_search",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Competitor search and filters",
+            "description": "Search Consurrents, filter and sort results"
+          },
+          "fr": {
+            "name": "Recherche et filtres des concurrents",
+            "description": "Search Consurrents, filter and sort results"
+          },
+          "ar": {
+            "name": "البحث عن المنافسين وتصفيتهم",
+            "description": "Search Consurrents, filter and sort results"
+          },
+          "zg": {
+            "name": "Anadi d imzizd n imnaɣen",
+            "description": "Search Consurrents, filter and sort results"
+          },
+          "es": {
+            "name": "Búsqueda y filtros de competidores",
+            "description": "Search Consurrents, filter and sort results"
+          },
+          "de": {
+            "name": "Wettbewerbersuche und Filter",
+            "description": "Search Consurrents, filter and sort results"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 0,
+        "rank": 30,
+        "code": "feature_market_summary",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Performance summary",
+            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+          },
+          "fr": {
+            "name": "Synthèse des performances",
+            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+          },
+          "ar": {
+            "name": "ملخص الأداء",
+            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+          },
+          "zg": {
+            "name": "Agzul n tɣellist",
+            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+          },
+          "es": {
+            "name": "Resumen de rendimiento",
+            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+          },
+          "de": {
+            "name": "Leistungsübersicht",
+            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 40,
+        "code": "feature_market_participations",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Administrative and Technical analysis",
+            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+          },
+          "fr": {
+            "name": "Analyse administrative et technique",
+            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+          },
+          "ar": {
+            "name": "التحليل الإداري والتقني",
+            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+          },
+          "zg": {
+            "name": "Tasleḍt tadministrative d teknik",
+            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+          },
+          "es": {
+            "name": "Análisis administrativo y técnico",
+            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+          },
+          "de": {
+            "name": "Administrative und technische Analyse",
+            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 50,
+        "code": "feature_market_financial",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Financial analysis",
+            "description": "View Concurrents financial offers and get usefull patterns"
+          },
+          "fr": {
+            "name": "Analyse financière",
+            "description": "View Concurrents financial offers and get usefull patterns"
+          },
+          "ar": {
+            "name": "التحليل المالي",
+            "description": "View Concurrents financial offers and get usefull patterns"
+          },
+          "zg": {
+            "name": "Tasleḍt tanflusant",
+            "description": "View Concurrents financial offers and get usefull patterns"
+          },
+          "es": {
+            "name": "Análisis financiero",
+            "description": "View Concurrents financial offers and get usefull patterns"
+          },
+          "de": {
+            "name": "Finanzanalyse",
+            "description": "View Concurrents financial offers and get usefull patterns"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 60,
+        "code": "feature_market_aggregations",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced aggregations",
+            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+          },
+          "fr": {
+            "name": "Regroupements avancés",
+            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+          },
+          "ar": {
+            "name": "تجميعات متقدمة",
+            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+          },
+          "zg": {
+            "name": "Asdukkel afellay",
+            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+          },
+          "es": {
+            "name": "Agregaciones avanzadas",
+            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+          },
+          "de": {
+            "name": "Erweiterte Aggregationen",
+            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+          }
+        },
+        "is_binary": true
+      }
+    ],
+    "translations": {
+      "en": {
+        "name": "Market study"
+      },
+      "fr": {
+        "name": "Étude de marché"
+      },
+      "ar": {
+        "name": "دراسة السوق"
+      },
+      "zg": {
+        "name": "Tazrawt n souq"
+      },
+      "es": {
+        "name": "Estudio de mercado"
+      },
+      "de": {
+        "name": "Marktanalyse"
+      }
+    }
+  },
+  {
+    "active": 1,
+    "rank": "50",
+    "code": "category_bidding",
+    "features": [
+      {
+        "active": 1,
+        "rank": 10,
+        "code": "feature_bidding_companies",
+        "plan_free": 1,
+        "plan_startup": 2,
+        "plan_pro": 10,
+        "translations": {
+          "en": {
+            "name": "Maximum number of companies",
+            "description": "How many companies can be managed"
+          },
+          "fr": {
+            "name": "Nombre maximal d’entreprises",
+            "description": "How many companies can be managed"
+          },
+          "ar": {
+            "name": "العدد الأقصى للشركات",
+            "description": "How many companies can be managed"
+          },
+          "zg": {
+            "name": "Amḍan afellay n tkebbaniyin",
+            "description": "How many companies can be managed"
+          },
+          "es": {
+            "name": "Número máximo de empresas",
+            "description": "How many companies can be managed"
+          },
+          "de": {
+            "name": "Maximale Unternehmensanzahl",
+            "description": "How many companies can be managed"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 20,
+        "code": "feature_bidding_expirables",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Manage companies expirables",
+            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+          },
+          "fr": {
+            "name": "Suivi des échéances des entreprises",
+            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+          },
+          "ar": {
+            "name": "إدارة صلاحية وثائق الشركة",
+            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+          },
+          "zg": {
+            "name": "Asefrek n wazalen",
+            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+          },
+          "es": {
+            "name": "Gestión de vencimientos de empresas",
+            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+          },
+          "de": {
+            "name": "Ablaufdaten von Unternehmen verwalten",
+            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 30,
+        "code": "feature_bidding_files_storage",
+        "plan_free": 0,
+        "plan_startup": 4,
+        "plan_pro": 20,
+        "translations": {
+          "en": {
+            "name": "Files storage max size (MB)",
+            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+          },
+          "fr": {
+            "name": "Taille maximale de stockage des fichiers (MB)",
+            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+          },
+          "ar": {
+            "name": "الحد الأقصى لتخزين الملفات (MB)",
+            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+          },
+          "zg": {
+            "name": "Asekles afellay n yifuyla (MB)",
+            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+          },
+          "es": {
+            "name": "Almacenamiento máximo de archivos (MB)",
+            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+          },
+          "de": {
+            "name": "Maximaler Dateispeicher (MB)",
+            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 40,
+        "code": "feature_bidding_yearly",
+        "plan_free": 10,
+        "plan_startup": 120,
+        "plan_pro": 500,
+        "translations": {
+          "en": {
+            "name": "Yearly bids",
+            "description": "Maximum number of bids to manage per year"
+          },
+          "fr": {
+            "name": "Offres annuelles",
+            "description": "Maximum number of bids to manage per year"
+          },
+          "ar": {
+            "name": "العروض السنوية",
+            "description": "Maximum number of bids to manage per year"
+          },
+          "zg": {
+            "name": "Isɣalen n useggas",
+            "description": "Maximum number of bids to manage per year"
+          },
+          "es": {
+            "name": "Ofertas anuales",
+            "description": "Maximum number of bids to manage per year"
+          },
+          "de": {
+            "name": "Jährliche Angebote",
+            "description": "Maximum number of bids to manage per year"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 50,
+        "code": "feature_bidding_timeline",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Rich timeline",
+            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+          },
+          "fr": {
+            "name": "Chronologie détaillée",
+            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+          },
+          "ar": {
+            "name": "جدول زمني مفصل",
+            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+          },
+          "zg": {
+            "name": "Azemz ifessasen",
+            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+          },
+          "es": {
+            "name": "Cronología detallada",
+            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+          },
+          "de": {
+            "name": "Detaillierter Zeitplan",
+            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 60,
+        "code": "feature_bidding_tasks",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Bidding Tasks",
+            "description": "Manage Tasks related to Bids."
+          },
+          "fr": {
+            "name": "Tâches des offres",
+            "description": "Manage Tasks related to Bids."
+          },
+          "ar": {
+            "name": "مهام العروض",
+            "description": "Manage Tasks related to Bids."
+          },
+          "zg": {
+            "name": "Tiwuriwin n yisɣalen",
+            "description": "Manage Tasks related to Bids."
+          },
+          "es": {
+            "name": "Tareas de ofertas",
+            "description": "Manage Tasks related to Bids."
+          },
+          "de": {
+            "name": "Angebotsaufgaben",
+            "description": "Manage Tasks related to Bids."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 70,
+        "code": "feature_bidding_expenses",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Bidding Expenses",
+            "description": "Manage Expenses related to Bids."
+          },
+          "fr": {
+            "name": "Dépenses des offres",
+            "description": "Manage Expenses related to Bids."
+          },
+          "ar": {
+            "name": "مصاريف العروض",
+            "description": "Manage Expenses related to Bids."
+          },
+          "zg": {
+            "name": "Isufɣen n yisɣalen",
+            "description": "Manage Expenses related to Bids."
+          },
+          "es": {
+            "name": "Gastos de ofertas",
+            "description": "Manage Expenses related to Bids."
+          },
+          "de": {
+            "name": "Angebotskosten",
+            "description": "Manage Expenses related to Bids."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 80,
+        "code": "feature_bidding_bonds",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Bonds management",
+            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+          },
+          "fr": {
+            "name": "Gestion des cautions",
+            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+          },
+          "ar": {
+            "name": "إدارة الضمانات",
+            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+          },
+          "zg": {
+            "name": "Asefrek n iselkan",
+            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+          },
+          "es": {
+            "name": "Gestión de garantías",
+            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+          },
+          "de": {
+            "name": "Sicherheitenverwaltung",
+            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 90,
+        "code": "feature_bidding_allotted",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Allotted Tenders",
+            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+          },
+          "fr": {
+            "name": "Appels d’offres attribués",
+            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+          },
+          "ar": {
+            "name": "طلبات العروض المسندة",
+            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+          },
+          "zg": {
+            "name": "Isutar yettunefken",
+            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+          },
+          "es": {
+            "name": "Licitaciones adjudicadas",
+            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+          },
+          "de": {
+            "name": "Zugeschlagene Ausschreibungen",
+            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 100,
+        "code": "feature_bidding_simulator",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Simulator",
+            "description": "Simulate financial offers competition for a given Tender or Lot"
+          },
+          "fr": {
+            "name": "Simulateur d’offres",
+            "description": "Simulate financial offers competition for a given Tender or Lot"
+          },
+          "ar": {
+            "name": "محاكي العروض",
+            "description": "Simulate financial offers competition for a given Tender or Lot"
+          },
+          "zg": {
+            "name": "Amselɣan n yisɣalen",
+            "description": "Simulate financial offers competition for a given Tender or Lot"
+          },
+          "es": {
+            "name": "Simulador de ofertas",
+            "description": "Simulate financial offers competition for a given Tender or Lot"
+          },
+          "de": {
+            "name": "Angebotssimulator",
+            "description": "Simulate financial offers competition for a given Tender or Lot"
+          }
+        },
+        "is_binary": true
+      }
+    ],
+    "translations": {
+      "en": {
+        "name": "Bidding management"
+      },
+      "fr": {
+        "name": "Gestion des soumissions"
+      },
+      "ar": {
+        "name": "إدارة المناقصات"
+      },
+      "zg": {
+        "name": "Asefrek n isutar"
+      },
+      "es": {
+        "name": "Gestión de licitaciones"
+      },
+      "de": {
+        "name": "Angebotsverwaltung"
+      }
+    }
+  },
+  {
+    "active": 1,
+    "rank": "60",
+    "code": "category_pos",
+    "features": [
+      {
+        "active": 1,
+        "rank": 10,
+        "code": "feature_po_list",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Running PO's",
+            "description": "View a list of running PO’s with concise details"
+          },
+          "fr": {
+            "name": "Bons de commande en cours",
+            "description": "View a list of running PO’s with concise details"
+          },
+          "ar": {
+            "name": "أوامر الشراء الجارية",
+            "description": "View a list of running PO’s with concise details"
+          },
+          "zg": {
+            "name": "Tilad n usɣar yellan",
+            "description": "View a list of running PO’s with concise details"
+          },
+          "es": {
+            "name": "Órdenes de compra activas",
+            "description": "View a list of running PO’s with concise details"
+          },
+          "de": {
+            "name": "Laufende Bestellungen",
+            "description": "View a list of running PO’s with concise details"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 20,
+        "code": "feature_po_search",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Advanced search",
+            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+          },
+          "fr": {
+            "name": "Recherche avancée",
+            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+          },
+          "ar": {
+            "name": "بحث متقدم",
+            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+          },
+          "zg": {
+            "name": "Anadi afellay",
+            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+          },
+          "es": {
+            "name": "Búsqueda avanzada",
+            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+          },
+          "de": {
+            "name": "Erweiterte Suche",
+            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 30,
+        "code": "feature_po_filters",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Filters and sort",
+            "description": "Apply advanced filters and sort results by many fields"
+          },
+          "fr": {
+            "name": "Filtres et tri",
+            "description": "Apply advanced filters and sort results by many fields"
+          },
+          "ar": {
+            "name": "المرشحات والترتيب",
+            "description": "Apply advanced filters and sort results by many fields"
+          },
+          "zg": {
+            "name": "Imzizd d usmizzwer",
+            "description": "Apply advanced filters and sort results by many fields"
+          },
+          "es": {
+            "name": "Filtros y ordenación",
+            "description": "Apply advanced filters and sort results by many fields"
+          },
+          "de": {
+            "name": "Filter und Sortierung",
+            "description": "Apply advanced filters and sort results by many fields"
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 40,
+        "code": "feature_po_details",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "PO details",
+            "description": "View regular details about individual PO’s."
+          },
+          "fr": {
+            "name": "Détails des bons de commande",
+            "description": "View regular details about individual PO’s."
+          },
+          "ar": {
+            "name": "تفاصيل أوامر الشراء",
+            "description": "View regular details about individual PO’s."
+          },
+          "zg": {
+            "name": "Talqayt n tilad n usɣar",
+            "description": "View regular details about individual PO’s."
+          },
+          "es": {
+            "name": "Detalles de órdenes de compra",
+            "description": "View regular details about individual PO’s."
+          },
+          "de": {
+            "name": "Bestelldetails",
+            "description": "View regular details about individual PO’s."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 50,
+        "code": "feature_po_items_details",
+        "plan_free": 1,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "PO items details",
+            "description": "View details about individual PO items."
+          },
+          "fr": {
+            "name": "Détails des articles",
+            "description": "View details about individual PO items."
+          },
+          "ar": {
+            "name": "تفاصيل عناصر أمر الشراء",
+            "description": "View details about individual PO items."
+          },
+          "zg": {
+            "name": "Talqayt n iferdisen",
+            "description": "View details about individual PO items."
+          },
+          "es": {
+            "name": "Detalles de artículos",
+            "description": "View details about individual PO items."
+          },
+          "de": {
+            "name": "Details der Bestellpositionen",
+            "description": "View details about individual PO items."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 60,
+        "code": "feature_po_items_export_csv",
+        "plan_free": 0,
+        "plan_startup": 0,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Export items as csv",
+            "description": "Export and download detailed items data as a .csv file."
+          },
+          "fr": {
+            "name": "Exporter les articles en CSV",
+            "description": "Export and download detailed items data as a .csv file."
+          },
+          "ar": {
+            "name": "تصدير العناصر إلى CSV",
+            "description": "Export and download detailed items data as a .csv file."
+          },
+          "zg": {
+            "name": "Sifeḍ iferdisen s CSV",
+            "description": "Export and download detailed items data as a .csv file."
+          },
+          "es": {
+            "name": "Exportar artículos a CSV",
+            "description": "Export and download detailed items data as a .csv file."
+          },
+          "de": {
+            "name": "Positionen als CSV exportieren",
+            "description": "Export and download detailed items data as a .csv file."
+          }
+        },
+        "is_binary": true
+      },
+      {
+        "active": 1,
+        "rank": 70,
+        "code": "feature_po_favorites_max",
+        "plan_free": 10,
+        "plan_startup": 30,
+        "plan_pro": 500,
+        "translations": {
+          "en": {
+            "name": "Favorite PO's",
+            "description": "Maximum number of concurrent Favorite PO's per user"
+          },
+          "fr": {
+            "name": "Bons de commande favoris",
+            "description": "Maximum number of concurrent Favorite PO's per user"
+          },
+          "ar": {
+            "name": "أوامر الشراء المفضلة",
+            "description": "Maximum number of concurrent Favorite PO's per user"
+          },
+          "zg": {
+            "name": "Tilad n usɣar inurifen",
+            "description": "Maximum number of concurrent Favorite PO's per user"
+          },
+          "es": {
+            "name": "Órdenes de compra favoritas",
+            "description": "Maximum number of concurrent Favorite PO's per user"
+          },
+          "de": {
+            "name": "Favorisierte Bestellungen",
+            "description": "Maximum number of concurrent Favorite PO's per user"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 80,
+        "code": "feature_po_dce_monthly",
+        "plan_free": 25,
+        "plan_startup": 100,
+        "plan_pro": 500,
+        "translations": {
+          "en": {
+            "name": "Monthly DCE downloads",
+            "description": "Maximum number of PO files downloads per month"
+          },
+          "fr": {
+            "name": "Téléchargements mensuels des DCE",
+            "description": "Maximum number of PO files downloads per month"
+          },
+          "ar": {
+            "name": "تنزيلات ملفات أوامر الشراء الشهرية",
+            "description": "Maximum number of PO files downloads per month"
+          },
+          "zg": {
+            "name": "Isider s waggur",
+            "description": "Maximum number of PO files downloads per month"
+          },
+          "es": {
+            "name": "Descargas mensuales de DCE",
+            "description": "Maximum number of PO files downloads per month"
+          },
+          "de": {
+            "name": "Monatliche DCE-Downloads",
+            "description": "Maximum number of PO files downloads per month"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 90,
+        "code": "feature_po_dce_history",
+        "plan_free": 0,
+        "plan_startup": 5,
+        "plan_pro": 15,
+        "translations": {
+          "en": {
+            "name": "DCE history access",
+            "description": "Download PO's files past their bidding deadline"
+          },
+          "fr": {
+            "name": "Accès à l’historique des DCE",
+            "description": "Download PO's files past their bidding deadline"
+          },
+          "ar": {
+            "name": "الوصول إلى أرشيف الملفات",
+            "description": "Download PO's files past their bidding deadline"
+          },
+          "zg": {
+            "name": "Amazray n DCE",
+            "description": "Download PO's files past their bidding deadline"
+          },
+          "es": {
+            "name": "Acceso al historial de DCE",
+            "description": "Download PO's files past their bidding deadline"
+          },
+          "de": {
+            "name": "Zugriff auf das DCE-Archiv",
+            "description": "Download PO's files past their bidding deadline"
+          }
+        },
+        "is_binary": false
+      },
+      {
+        "active": 1,
+        "rank": 100,
+        "code": "feature_po_results_summary",
+        "plan_free": 0,
+        "plan_startup": 1,
+        "plan_pro": 1,
+        "translations": {
+          "en": {
+            "name": "Results summary",
+            "description": "View winners names and amounts of awarded PO’s."
+          },
+          "fr": {
+            "name": "Synthèse des résultats",
+            "description": "View winners names and amounts of awarded PO’s."
+          },
+          "ar": {
+            "name": "ملخص النتائج",
+            "description": "View winners names and amounts of awarded PO’s."
+          },
+          "zg": {
+            "name": "Agzul n igmaḍ",
+            "description": "View winners names and amounts of awarded PO’s."
+          },
+          "es": {
+            "name": "Resumen de resultados",
+            "description": "View winners names and amounts of awarded PO’s."
+          },
+          "de": {
+            "name": "Ergebnisübersicht",
+            "description": "View winners names and amounts of awarded PO’s."
+          }
+        },
+        "is_binary": true
+      }
+    ],
+    "translations": {
+      "en": {
+        "name": "Purchase orders"
+      },
+      "fr": {
+        "name": "Bons de commande"
+      },
+      "ar": {
+        "name": "أوامر الشراء"
+      },
+      "zg": {
+        "name": "Tilad n usɣar"
+      },
+      "es": {
+        "name": "Órdenes de compra"
+      },
+      "de": {
+        "name": "Bestellungen"
+      }
+    }
+  }
+]
