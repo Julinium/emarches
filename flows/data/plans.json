@@ -1,0 +1,108 @@
+
+{
+  "languages": ["en", "fr", "ar", "zg", "es", "de"],
+  "plans": [
+    {
+      "code": "plan_free",
+      "rank": 0,
+      "active": true,
+      "monthly_price": "0",
+      "year_months": 12,
+      "translations": {
+        "en": {
+          "name": "Free",
+          "description": "Explore the platform with essential features and get started at no cost."
+        },
+        "fr": {
+          "name": "Gratuit",
+          "description": "Découvrez la plateforme avec ses fonctionnalités essentielles, gratuitement."
+        },
+        "ar": {
+          "name": "مجاني",
+          "description": "اكتشف المنصة واستفد من ميزاتها الأساسية مجانًا."
+        },
+        "zg": {
+          "name": "Free",
+          "description": "Bdu tafulki n tmezla timezwura s war asellek."
+        },
+        "es": {
+          "name": "Gratis",
+          "description": "Descubre la plataforma con sus funciones esenciales sin coste."
+        },
+        "de": {
+          "name": "Kostenlos",
+          "description": "Entdecken Sie die Plattform mit den wichtigsten Funktionen kostenlos."
+        }
+      },
+      "allowances": []
+    },
+    {
+      "code": "plan_startup",
+      "rank": 10,
+      "active": true,
+      "monthly_price": "299",
+      "year_months": 10,
+      "translations": {
+        "en": {
+          "name": "Startup",
+          "description": "Unlock more capacity and capabilities to streamline your workflow as your business grows."
+        },
+        "fr": {
+          "name": "Startup",
+          "description": "Bénéficiez de capacités supplémentaires pour optimiser vos processus à mesure que votre activité se développe."
+        },
+        "ar": {
+          "name": "الشركات الناشئة",
+          "description": "استفد من إمكانيات أكبر لتحسين سير العمل مع نمو نشاطك التجاري."
+        },
+        "zg": {
+          "name": "Startup",
+          "description": "Rnu tazmert d tmeẓliwin akken ad tnerni tɣawsa n umahil-ik."
+        },
+        "es": {
+          "name": "Emprendimiento",
+          "description": "Obtén más capacidad y funcionalidades para optimizar tu trabajo a medida que crece tu negocio."
+        },
+        "de": {
+          "name": "Startup",
+          "description": "Nutzen Sie mehr Kapazität und Funktionen, um Ihre Arbeitsabläufe mit Ihrem Unternehmen zu skalieren."
+        }
+      },
+      "allowances": []
+    },
+    {
+      "code": "plan_pro",
+      "rank": 20,
+      "active": true,
+      "monthly_price": "599",
+      "year_months": 10,
+      "translations": {
+        "en": {
+          "name": "Pro",
+          "description": "Access advanced capabilities and higher limits to maximize productivity and handle demanding workflows."
+        },
+        "fr": {
+          "name": "Pro",
+          "description": "Accédez à des fonctionnalités avancées et à des limites plus élevées pour maximiser votre productivité."
+        },
+        "ar": {
+          "name": "احترافي",
+          "description": "استفد من ميزات متقدمة وحدود أعلى لتعزيز الإنتاجية والتعامل مع مهام العمل المكثفة."
+        },
+        "zg": {
+          "name": "Pro",
+          "description": "Sseqdec tmeẓliwin timẓlayin d tilisa timeqqranin i usnerni n tfuli."
+        },
+        "es": {
+          "name": "Pro",
+          "description": "Accede a funciones avanzadas y límites superiores para maximizar la productividad."
+        },
+        "de": {
+          "name": "Pro",
+          "description": "Nutzen Sie erweiterte Funktionen und höhere Limits für maximale Produktivität."
+        }
+      },
+      "allowances": []
+    }
+  ]
+}

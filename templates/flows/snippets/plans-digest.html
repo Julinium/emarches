@@ -1,0 +1,59 @@
+{% load i18n %}
+
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h1 class="display-6">{% translate "Start for free. Scale with confidence." %}</h1>
+            <p class="lead text-body-secondary">
+                <span>{% translate "Choose the plan that fits better your needs" %}.</span>
+                <span>
+                    <a class="m-1" type="button" data-bs-toggle="modal" data-bs-target="#plansCompareModal">
+                        <span>{% translate "Compare plans" %}</span>
+                    </a>
+                </span>
+            </p>
+        </div>
+        
+        <div class="row g-3">
+            {% for plan in plans %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header">
+                            <span class="fs-2 fw-bold">{{ plan.name }}</span>
+                        </div>
+                        <div class="card-body d-flex flex-column">                            
+
+                            {% if plan.description %}
+                                <p class="small text-body-secondary">
+                                    {{ plan.description }}
+                                </p>
+                            {% endif %}
+
+                            <div class="mt-auto">
+                                <a href="#"
+                                    class="btn btn-primary w-100">
+                                    {% translate "Choose plan" %}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-footer text-end p-2">
+                            {% if plan.monthly_price %}
+                            <span class="small text-secondary">
+                                <s>{{ plan.monthly_price|floatformat:0 }}</s>
+                            </span>
+                            {% endif %}
+                            <span class="h3">
+                                {{ plan.yearly_price|floatformat:0 }}
+                            </span>
+                            <span class="text-body-secondary">
+                                / {% translate "month" %}
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

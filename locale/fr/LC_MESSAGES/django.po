@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 23:31+0100\n"
+"POT-Creation-Date: 2026-10-16 18:26+0100\n"
 "PO-Revision-Date: 2026-09-27 23:31+0100\n"
 "Last-Translator: Amina Bouhou <a.bouhou@emarches.com>\n"
 "Language-Team: FR <a.bouhou@emarches.com>\n"
@@ -18,8 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: base/models.py:653 bdc/models.py:118 bidding/models.py:42 nas/models.py:77
-#: nas/models.py:259 nas/models.py:301 nas/models.py:446
+#: base/models.py:619 bdc/models.py:118 bidding/models.py:42 flows/admin.py:58
+#: flows/admin.py:179 flows/admin.py:204 flows/admin.py:251 nas/models.py:77
+#: nas/models.py:252 nas/models.py:294 nas/models.py:439
 #: templates/bidding/team-recap.html:114 templates/bidding/team-recap.html:291
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:60
 #: templates/nas/companies/company_confirm_delete.html:13
@@ -29,31 +30,31 @@ msgstr ""
 msgid "Name"
 msgstr "Nom"
 
-#: base/models.py:654
-msgid "Business Id - ICE"
+#: base/models.py:620
+msgid "Enterprise Id - ICE"
 msgstr "ICE"
 
-#: base/models.py:655
+#: base/models.py:621
 msgid "Commerce Registry Number"
 msgstr "Numéro de Registre du Commerce"
 
-#: base/models.py:656
+#: base/models.py:622
 msgid "Commerce Registry City"
 msgstr "Ville de Registre du Commerce"
 
-#: base/models.py:657
+#: base/models.py:623
 msgid "Capital"
 msgstr "Capital"
 
-#: base/models.py:658 nas/models.py:84
+#: base/models.py:624 nas/models.py:84
 msgid "Activity"
 msgstr "Activité"
 
-#: base/models.py:659
+#: base/models.py:625
 msgid "Legal Status"
 msgstr "Statut légal"
 
-#: base/models.py:660
+#: base/models.py:626
 msgid "Date Established"
 msgstr "Date de création"
 
@@ -309,7 +310,7 @@ msgstr "Votre téléphone"
 msgid "Enter your phone number"
 msgstr "Saisissez votre numéro de téléphone"
 
-#: base/templates/base/contact.html:34 nas/models.py:447
+#: base/templates/base/contact.html:34 nas/models.py:440
 #: templates/nas/companies/company_detail.html:78
 #: templates/nas/snippets/expirables/expirable-item.html:37
 msgid "Subject"
@@ -319,8 +320,8 @@ msgstr "Sujet"
 msgid "Enter the subject"
 msgstr "Saisissez le sujet"
 
-#: base/templates/base/contact.html:38 bidding/models.py:99 nas/models.py:354
-#: nas/models.py:376
+#: base/templates/base/contact.html:38 bidding/models.py:99 nas/models.py:347
+#: nas/models.py:369
 msgid "Message"
 msgstr "Message"
 
@@ -344,22 +345,22 @@ msgstr "Moyen de contact préféré"
 msgid "Any"
 msgstr "Tous"
 
-#: base/templates/base/contact.html:55 nas/models.py:82 nas/models.py:231
-#: nas/models.py:251 nas/models.py:292 templates/base/includes/footer.html:57
+#: base/templates/base/contact.html:55 nas/models.py:82 nas/models.py:224
+#: nas/models.py:244 nas/models.py:285 templates/base/includes/footer.html:57
 #: templates/bidding/snippets/members/member-item.html:39
 #: templates/bidding/team-recap.html:64
 #: templates/nas/companies/snippets/company-item.html:119
 #: templates/nas/companies/snippets/company_data.html:45
 #: templates/nas/profile/snippets/user-details.html:17
-#: templates/portal/tender-details.html:326
+#: templates/portal/tender-details.html:338
 msgid "Email"
 msgstr "E-mail"
 
 #: base/templates/base/contact.html:56 nas/forms.py:35 nas/models.py:45
-#: nas/models.py:232 nas/models.py:252 nas/models.py:293
+#: nas/models.py:225 nas/models.py:245 nas/models.py:286
 #: templates/base/includes/footer.html:46
 #: templates/nas/profile/snippets/user-details.html:29
-#: templates/portal/tender-details.html:321
+#: templates/portal/tender-details.html:333
 msgid "Phone"
 msgstr "Téléphone"
 
@@ -410,7 +411,7 @@ msgid "Go Home"
 msgstr "Retour à l'accueil"
 
 #: base/templates/base/contact_success.html:14 base/templates/base/faqs.html:5
-#: templates/base/includes/footer.html:18
+#: templates/base/includes/footer.html:19
 msgid "FAQs"
 msgstr "FAQ"
 
@@ -654,7 +655,7 @@ msgid "Question still unanswered ?"
 msgstr "Vous n'avez pas trouvé réponse à votre question ?"
 
 #: base/templates/base/faqs.html:175 base/templates/base/legal.html:77
-#: base/templates/base/legal.html:135 templates/portal/tender-details.html:585
+#: base/templates/base/legal.html:135
 msgid "Contact Us"
 msgstr "Contactez-nous"
 
@@ -663,7 +664,7 @@ msgid "Home of Public Procurement Market"
 msgstr "Le portail des marchés publics"
 
 #: base/templates/base/legal.html:5 base/templates/base/legal.html:9
-#: base/templates/base/legal.html:11 templates/portal/tender-details.html:539
+#: base/templates/base/legal.html:11 templates/portal/tender-details.html:564
 msgid "Legal Information"
 msgstr "Informations légales"
 
@@ -1100,9 +1101,29 @@ msgstr ""
 msgid "Clear current"
 msgstr "Effacer le fichier actuel"
 
-#: base/views.py:29 bdc/views.py:365 bdc/views.py:436 bdc/views.py:454
-#: bdc/views.py:472 bdc/views.py:477 bdc/views.py:495 bdc/views.py:641
-#: bdc/views.py:644 bdc/views.py:666 bdc/views.py:673 bidding/views.py:76
+#: base/templatetags/censorify.py:12
+#: templates/base/snippets/ico-key-val.html:18
+#: templates/portal/snippets/lots/lot-details.html:6
+#: templates/portal/snippets/lots/qu-ag.html:4
+#: templates/portal/snippets/lots/sa-me-vi.html:4
+#: templates/portal/snippets/tenders/qu-ag.html:4
+#: templates/portal/snippets/tenders/results-digest.html:5
+#: templates/portal/snippets/tenders/tender-summary.html:35
+#: templates/portal/snippets/tenders/tender-summary.html:50
+msgid "Sign in"
+msgstr "Se connecter"
+
+#: base/templatetags/guardify.py:48
+msgid "Hidden Content"
+msgstr "Contenu caché"
+
+#: base/templatetags/guardify.py:52
+msgid "Log in to view"
+msgstr "S'identifier pour voir"
+
+#: base/views.py:40 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
+#: bdc/views.py:468 bdc/views.py:473 bdc/views.py:491 bdc/views.py:637
+#: bdc/views.py:640 bdc/views.py:662 bdc/views.py:669 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
 #: bidding/views.py:2126 bidding/views.py:2147 bidding/views.py:2181
 #: nas/views.py:374 nas/views.py:378 nas/views.py:391 nas/views.py:463
@@ -1113,9 +1134,9 @@ msgstr "Effacer le fichier actuel"
 msgid "Not found"
 msgstr "Introuvable"
 
-#: base/views.py:34 base/views.py:38 bdc/views.py:69 bdc/views.py:287
-#: bdc/views.py:355 bdc/views.py:423 bdc/views.py:464 bdc/views.py:505
-#: bdc/views.py:638 bdc/views.py:670 bdc/views.py:694 bidding/views.py:68
+#: base/views.py:45 base/views.py:49 bdc/views.py:69 bdc/views.py:283
+#: bdc/views.py:351 bdc/views.py:419 bdc/views.py:460 bdc/views.py:501
+#: bdc/views.py:634 bdc/views.py:666 bdc/views.py:690 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
 #: bidding/views.py:173 bidding/views.py:255 bidding/views.py:350
 #: bidding/views.py:367 bidding/views.py:419 bidding/views.py:468
@@ -1136,7 +1157,7 @@ msgstr "Introuvable"
 msgid "Permission denied"
 msgstr "Permission refusée"
 
-#: base/views.py:43 bidding/views.py:2131 bidding/views.py:2186
+#: base/views.py:54 bidding/views.py:2131 bidding/views.py:2186
 #: nas/views.py:497 nas/views.py:541
 msgid "File not found"
 msgstr "Fichier introuvable"
@@ -1155,8 +1176,8 @@ msgid "Title"
 msgstr "Titre"
 
 #: bdc/models.py:18 bidding/models.py:429 bidding/models.py:538
-#: bidding/models.py:595 bidding/models.py:629 insights/weasy.py:94
-#: templates/bdc/bdc-details.html:72
+#: bidding/models.py:595 bidding/models.py:629 flows/models.py:163
+#: insights/weasy.py:172 templates/bdc/bdc-details.html:72
 #: templates/bdc/snippets/bdcs/search-form.html:39
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/search-form.html:40
@@ -1194,7 +1215,7 @@ msgstr "Infructueux"
 msgid "Official link"
 msgstr "Lien officiel"
 
-#: bdc/models.py:28 insights/weasy.py:93 templates/bdc/bdc-details.html:81
+#: bdc/models.py:28 insights/weasy.py:171 templates/bdc/bdc-details.html:81
 #: templates/bdc/snippets/bdcs/search-form.html:107
 #: templates/portal/snippets/lots/lot-details.html:62
 #: templates/portal/snippets/tenders/search-form.html:108
@@ -1225,16 +1246,16 @@ msgstr "Attributaire"
 msgid "Results published"
 msgstr "Résultats publiés"
 
-#: bdc/models.py:46 bdc/models.py:95 bdc/models.py:117 nas/models.py:392
+#: bdc/models.py:46 bdc/models.py:95 bdc/models.py:117 nas/models.py:385
 msgid "Purchase Order"
 msgstr "Bon de commande"
 
-#: bdc/models.py:96 nas/models.py:260 nas/models.py:300 nas/models.py:318
-#: nas/models.py:334
+#: bdc/models.py:96 nas/models.py:253 nas/models.py:293 nas/models.py:311
+#: nas/models.py:327
 msgid "Rank"
 msgstr "Rang"
 
-#: bdc/models.py:97
+#: bdc/models.py:97 flows/models.py:104 flows/models.py:197 flows/models.py:318
 msgid "Number"
 msgstr "Numéro"
 
@@ -1252,7 +1273,8 @@ msgstr "Garanties"
 msgid "Unit of Measure"
 msgstr "Unité de mesure"
 
-#: bdc/models.py:103 templates/bdc/bdc-articles-pdf.html:221
+#: bdc/models.py:103 flows/models.py:166
+#: templates/bdc/bdc-articles-pdf.html:221
 #: templates/bdc/snippets/articles/articles-details-list.html:12
 msgid "Quantity"
 msgstr "Quantité"
@@ -1273,8 +1295,8 @@ msgstr "Lien"
 msgid "Attachement"
 msgstr "Pièce jointe"
 
-#: bdc/views.py:427 bdc/views.py:431 bdc/views.py:468 bdc/views.py:640
-#: bdc/views.py:665 bdc/views.py:690 bidding/views.py:72 bidding/views.py:111
+#: bdc/views.py:423 bdc/views.py:427 bdc/views.py:464 bdc/views.py:636
+#: bdc/views.py:661 bdc/views.py:686 bidding/views.py:72 bidding/views.py:111
 #: bidding/views.py:127 bidding/views.py:177 bidding/views.py:181
 #: bidding/views.py:199 bidding/views.py:206 bidding/views.py:375
 #: bidding/views.py:1640 bidding/views.py:1831 bidding/views.py:1989
@@ -1304,6 +1326,7 @@ msgstr "Lot"
 #: templates/portal/snippets/lots/lot-details.html:86
 #: templates/portal/tender-details.html:175
 #: templates/portal/tender-details.html:185
+#: templates/portal/tender-details.html:196
 msgid "Yes"
 msgstr "Oui"
 
@@ -1311,6 +1334,7 @@ msgstr "Oui"
 #: templates/portal/snippets/lots/lot-details.html:86
 #: templates/portal/tender-details.html:177
 #: templates/portal/tender-details.html:187
+#: templates/portal/tender-details.html:198
 msgid "No"
 msgstr "Non"
 
@@ -1342,7 +1366,7 @@ msgstr "Avatar"
 msgid "Username"
 msgstr "Nom d'utilisateur"
 
-#: bidding/models.py:100 nas/models.py:450
+#: bidding/models.py:100 nas/models.py:443
 msgid "Expiry date"
 msgstr "Date d'expiration"
 
@@ -1350,7 +1374,8 @@ msgstr "Date d'expiration"
 msgid "Show my email"
 msgstr "Afficher mon e-mail"
 
-#: bidding/models.py:103 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
+#: bidding/models.py:103 flows/models.py:100 flows/models.py:184
+#: flows/models.py:314 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
 #: nas/choices.py:58 nas/choices.py:68 templates/bidding/bids-list.html:208
 #: templates/bidding/expenses-list.html:168
 #: templates/bidding/tasks-list.html:187
@@ -1370,7 +1395,7 @@ msgstr "Répondu le"
 msgid "Reply"
 msgstr "Réponse"
 
-#: bidding/models.py:129 nas/models.py:443
+#: bidding/models.py:129 nas/models.py:436
 #: templates/bidding/bid-details.html:48 templates/bidding/bid-details.html:475
 #: templates/bidding/snippets/bids/bid-item.html:20
 #: templates/bidding/snippets/bids/bid-item.html:101
@@ -1398,14 +1423,15 @@ msgstr "Statut de l'offre"
 
 #: bidding/models.py:134 bidding/models.py:433 bidding/models.py:478
 #: bidding/models.py:552 bidding/models.py:604 bidding/models.py:643
+#: flows/models.py:165
 #: templates/bidding/snippets/contracts/contract-item.html:40
 #: templates/bidding/snippets/expenses/expense-item.html:44
 #: templates/bidding/snippets/tasks/task-item.html:58
-#: templates/insights/snippets/bidders/bidder-item.html:44
+#: templates/insights/snippets/bidders/bidder-item.html:66
 msgid "Details"
 msgstr "Détails"
 
-#: bidding/models.py:136 insights/weasy.py:104
+#: bidding/models.py:136 insights/weasy.py:182
 #: templates/bidding/bid-details.html:84 templates/bidding/expense-form.html:48
 #: templates/bidding/snippets/bids/bid-menu-sort.html:40
 #: templates/bidding/snippets/bonds/bond-menu-sort.html:32
@@ -1520,7 +1546,7 @@ msgid "Bid"
 msgstr "Offre"
 
 #: bidding/models.py:431 bidding/models.py:599 bidding/models.py:639
-#: insights/weasy.py:96 templates/bdc/bdc-articles-pdf.html:156
+#: insights/weasy.py:174 templates/bdc/bdc-articles-pdf.html:156
 #: templates/bdc/snippets/bdcs/search-form.html:40
 #: templates/bidding/bid-details.html:226 templates/bidding/bid-form.html:44
 #: templates/bidding/expense-form.html:28 templates/bidding/task-form.html:28
@@ -1544,7 +1570,7 @@ msgid "Terms file"
 msgstr "Fichier des conditions"
 
 #: bidding/models.py:441 bidding/models.py:481 bidding/models.py:553
-#: bidding/models.py:605 bidding/models.py:644
+#: bidding/models.py:605 bidding/models.py:644 flows/models.py:108
 #: templates/bidding/snippets/contracts/contract-item.html:9
 #: templates/bidding/snippets/expenses/expense-item.html:11
 #: templates/bidding/snippets/tasks/task-item.html:15
@@ -1567,7 +1593,7 @@ msgid "Emergency"
 msgstr "Urgence"
 
 #: bidding/models.py:537 bidding/models.py:594 bidding/models.py:628
-#: nas/models.py:233 nas/models.py:353 nas/models.py:375
+#: nas/models.py:226 nas/models.py:346 nas/models.py:368
 #: templates/bdc/bdc-articles-pdf.html:140 templates/bdc/bdc-details.html:59
 #: templates/bdc/snippets/bdcs/search-form.html:38
 #: templates/bidding/bid-details.html:199
@@ -1592,7 +1618,7 @@ msgstr "Référence du paiement"
 msgid "Paid Amount, incl. Taxes"
 msgstr "Montant payé TTC"
 
-#: bidding/models.py:546 bidding/models.py:637 nas/models.py:453
+#: bidding/models.py:546 bidding/models.py:637 nas/models.py:446
 msgid "Taxes Amount"
 msgstr "Montant de la TVA"
 
@@ -1607,7 +1633,7 @@ msgid "Payee ICE"
 msgstr "ICE du bénéficiaire"
 
 #: bidding/models.py:555 bidding/models.py:607 bidding/models.py:646
-#: nas/models.py:89 nas/models.py:456
+#: nas/models.py:89 nas/models.py:449
 #: templates/nas/snippets/expirables/expirable-item.html:61
 msgid "File"
 msgstr "Fichier"
@@ -1873,36 +1899,210 @@ msgstr "Dépense supprimée avec succès"
 msgid "Expense creator is not an active team member"
 msgstr "Le créateur de la dépense n'est pas un membre actif de l'équipe"
 
-#: emarches/settings.py:177
+#: emarches/settings.py:186
 msgid "English"
 msgstr "Anglais"
 
-#: emarches/settings.py:178
+#: emarches/settings.py:187
 msgid "French"
 msgstr "Français"
 
-#: emarches/settings.py:179
+#: emarches/settings.py:188
 msgid "Arabic"
 msgstr "Arabe"
 
-#: emarches/settings.py:180
+#: emarches/settings.py:189
 msgid "Amazigh"
 msgstr "Amazighe"
 
-#: emarches/settings.py:181
+#: emarches/settings.py:190
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: emarches/settings.py:182
+#: emarches/settings.py:191
 msgid "German"
 msgstr "Allemand"
 
-#: insights/weasy.py:30
+#: flows/admin.py:74
+msgid "Owner"
+msgstr "Propriétaire"
+
+#: flows/admin.py:115
+msgid "Legal information"
+msgstr "Informations légales"
+
+#: flows/admin.py:118 templates/base/includes/footer.html:18
+msgid "Contact"
+msgstr "Contact"
+
+#: flows/admin.py:121
+msgid "Additional information"
+msgstr "Plus d'informations"
+
+#: flows/admin.py:124 flows/admin.py:380 flows/admin.py:452 flows/admin.py:542
+#: flows/admin.py:589
+msgid "Timestamps"
+msgstr "Tampon temps"
+
+#: flows/admin.py:240 templates/flows/snippets/plans-table.html:16
+msgid "Features"
+msgstr "Caractéristiques"
+
+#: flows/admin.py:367
+msgid "Billing"
+msgstr "Facturation"
+
+#: flows/admin.py:370
+msgid "Delivery"
+msgstr "Livraison"
+
+#: flows/admin.py:373
+msgid "Totals"
+msgstr "Totaux"
+
+#: flows/admin.py:446
+msgid "Subscription period"
+msgstr "Période d'Abonnement"
+
+#: flows/admin.py:536
+msgid "References"
+msgstr "Références"
+
+#: flows/admin.py:539
+msgid "Confirmation"
+msgstr "Confirmation"
+
+#: flows/admin.py:548 templates/bidding/team-member-disabled.html:27
+#: templates/bidding/team-recap.html:428
+msgid "Team"
+msgstr "Équipe"
+
+#: flows/admin.py:583
+msgid "Processing"
+msgstr "Traitement"
+
+#: flows/models.py:96 nas/choices.py:13 nas/choices.py:20 nas/choices.py:34
+msgid "Draft"
+msgstr "Brouillon"
+
+#: flows/models.py:97 flows/models.py:312 nas/choices.py:57
+#: templates/bidding/expenses-list.html:128
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#: flows/models.py:98
+msgid "Pending Payment"
+msgstr "Paiement en attente"
+
+#: flows/models.py:99
+msgid "Complete"
+msgstr "Terminé"
+
+#: flows/models.py:105 nas/models.py:208
+msgid "Date"
+msgstr "Date"
+
+#: flows/models.py:109
+msgid "Delivery address"
+msgstr "Adresse de livraison"
+
+#: flows/models.py:110
+msgid "Billing address"
+msgstr "Adresse de facturation"
+
+#: flows/models.py:164
+msgid "Item"
+msgstr "Element"
+
+#: flows/models.py:167
+msgid "Unit"
+msgstr "Unité"
+
+#: flows/models.py:168
+msgid "Unit price"
+msgstr "Prix unitaire"
+
+#: flows/models.py:169
+msgid "Line total"
+msgstr "Total ligne"
+
+#: flows/models.py:170
+msgid "Taxes %"
+msgstr "Taxes %"
+
+#: flows/models.py:171
+msgid "Taxes amount"
+msgstr "Montant des taxes"
+
+#: flows/models.py:172
+msgid "Unit price after taxes"
+msgstr "Prix unitaire après taxes"
+
+#: flows/models.py:173
+msgid "Line total after taxes"
+msgstr "Total ligne après taxes"
+
+#: flows/models.py:181
+msgid "Trial"
+msgstr "Essai"
+
+#: flows/models.py:182
+msgid "Active"
+msgstr "Activé"
+
+#: flows/models.py:183
+msgid "Suspended"
+msgstr "Suspendu"
+
+#: flows/models.py:185
+msgid "Paused"
+msgstr "En pause"
+
+#: flows/models.py:186 templates/bdc/snippets/bdcs/menu-clean.html:53
+#: templates/nas/snippets/expirables/expirable-item.html:16
+#: templates/portal/snippets/tenders/menu-fav-clean.html:23
+msgid "Expired"
+msgstr "Expiré"
+
+#: flows/models.py:291
+msgid "US Dollar"
+msgstr "Dollar US"
+
+#: flows/models.py:303
+msgid "Cash"
+msgstr "Cash"
+
+#: flows/models.py:304
+msgid "Bank Transfer"
+msgstr "Transfer bancaire"
+
+#: flows/models.py:305
+msgid "Wire Transfer"
+msgstr "Transfer en ligne"
+
+#: flows/models.py:306
+msgid "Check"
+msgstr "Chèque"
+
+#: flows/models.py:307
+msgid "Other"
+msgstr "Autre"
+
+#: flows/models.py:311 nas/choices.py:49 nas/choices.py:55 nas/choices.py:65
+#: templates/bidding/expenses-list.html:48 templates/bidding/tasks-list.html:82
+msgid "Pending"
+msgstr "En attente"
+
+#: flows/models.py:313
+msgid "Failed"
+msgstr "Echoué"
+
+#: insights/weasy.py:110
 msgid "Generated by "
 msgstr "Généré par"
 
-#: insights/weasy.py:92 nas/models.py:179 nas/models.py:196 nas/models.py:214
-#: templates/base/base.html:17 templates/base/base.html:18
+#: insights/weasy.py:170 nas/models.py:172 nas/models.py:189 nas/models.py:207
+#: templates/base/base.html:15 templates/base/base.html:16
 #: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
 #: templates/bidding/snippets/bids/bid-actions.html:13
 #: templates/bidding/snippets/bids/bid-item.html:160
@@ -1910,7 +2110,7 @@ msgstr "Généré par"
 msgid "Tender"
 msgstr "Appel d'offres"
 
-#: insights/weasy.py:95 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
+#: insights/weasy.py:173 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
 #: nas/choices.py:94 templates/bdc/bdc-details.html:76
 #: templates/bdc/snippets/bdcs/menu-sort.html:23
 #: templates/bidding/bid-form.html:64
@@ -1919,7 +2119,7 @@ msgstr "Appel d'offres"
 msgid "Published"
 msgstr "Publié"
 
-#: insights/weasy.py:97 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
+#: insights/weasy.py:175 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
 #: nas/choices.py:92 templates/bdc/bdc-details.html:63
 #: templates/bdc/snippets/bdcs/menu-sort.html:17
 #: templates/portal/snippets/tenders/menu-sort.html:17
@@ -1927,7 +2127,7 @@ msgstr "Publié"
 msgid "Deadline"
 msgstr "Date limite"
 
-#: insights/weasy.py:98 nas/choices.py:83 nas/choices.py:84
+#: insights/weasy.py:176 nas/choices.py:83 nas/choices.py:84
 #: templates/bidding/bid-details.html:101 templates/bidding/bid-form.html:94
 #: templates/portal/snippets/lots/lot-details.html:42
 #: templates/portal/snippets/tenders/menu-sort.html:23
@@ -1935,56 +2135,57 @@ msgstr "Date limite"
 msgid "Estimate"
 msgstr "Estimation"
 
-#: insights/weasy.py:99 templates/bidding/bid-form.html:74
+#: insights/weasy.py:177 templates/bidding/bid-form.html:74
 msgid "Bond"
 msgstr "Cautionnement"
 
-#: insights/weasy.py:100
+#: insights/weasy.py:178
 msgid "Opening date"
 msgstr "Date d'ouverture"
 
-#: insights/weasy.py:101
+#: insights/weasy.py:179
 msgid "Lot Number"
 msgstr "Lot Numéro"
 
-#: insights/weasy.py:102
+#: insights/weasy.py:180
 msgid "Admin Exam"
 msgstr "Examen administratif"
 
-#: insights/weasy.py:103
+#: insights/weasy.py:181
 msgid "Tech Exam"
 msgstr "Examen Technique"
 
-#: insights/weasy.py:105
+#: insights/weasy.py:183
 msgid "Corrected Amount"
 msgstr "Montant du cautionnement"
 
-#: insights/weasy.py:106
+#: insights/weasy.py:184
 msgid "Financial Race"
 msgstr "Compétitions financières"
 
-#: insights/weasy.py:107
+#: insights/weasy.py:185 templates/base/snippets/digests/last-30-days.html:25
+#: templates/base/snippets/digests/last-30-days.html:45
 msgid "Awarded Amount"
 msgstr "Montant attribué"
 
-#: insights/weasy.py:108
+#: insights/weasy.py:186
 msgid "Awarding justification"
 msgstr "Justification d'attribution'"
 
-#: insights/weasy.py:114 nas/choices.py:62 nas/choices.py:67
+#: insights/weasy.py:192 nas/choices.py:62 nas/choices.py:67
 #: templates/portal/snippets/tenders/search-form.html:166
 msgid "Accepted"
 msgstr "Accepté"
 
-#: insights/weasy.py:115 insights/weasy.py:117
+#: insights/weasy.py:193 insights/weasy.py:195
 msgid "Rejected"
 msgstr "Rejeté"
 
-#: insights/weasy.py:116
+#: insights/weasy.py:194
 msgid "Reserve"
 msgstr "Réservé"
 
-#: insights/weasy.py:118 nas/choices.py:28
+#: insights/weasy.py:196 nas/choices.py:28
 #: templates/bdc/snippets/bdcs/menu-clean.html:33
 #: templates/bdc/snippets/bdcs/search-form.html:124
 msgid "Awarded"
@@ -2009,10 +2210,6 @@ msgstr "Dr"
 #: nas/choices.py:10
 msgid "Pr."
 msgstr "Pr"
-
-#: nas/choices.py:13 nas/choices.py:20 nas/choices.py:34
-msgid "Draft"
-msgstr "Brouillon"
 
 #: nas/choices.py:14 templates/bidding/bids-list.html:88
 msgid "Ready"
@@ -2091,11 +2288,6 @@ msgstr "Urgente"
 msgid "Critical"
 msgstr "Critique"
 
-#: nas/choices.py:49 nas/choices.py:55 nas/choices.py:65
-#: templates/bidding/expenses-list.html:48 templates/bidding/tasks-list.html:82
-msgid "Pending"
-msgstr "En attente"
-
 #: nas/choices.py:50 templates/bidding/tasks-list.html:117
 msgid "Started"
 msgstr "Démarré"
@@ -2103,10 +2295,6 @@ msgstr "Démarré"
 #: nas/choices.py:56 templates/bidding/expenses-list.html:88
 msgid "Paid"
 msgstr "Payé"
-
-#: nas/choices.py:57 templates/bidding/expenses-list.html:128
-msgid "Confirmed"
-msgstr "Confirmé"
 
 #: nas/choices.py:61
 msgid "Denied"
@@ -2146,7 +2334,7 @@ msgstr "Prestations"
 msgid "Last Name"
 msgstr "Nom"
 
-#: nas/forms.py:36 nas/models.py:46 nas/models.py:254 nas/models.py:295
+#: nas/forms.py:36 nas/models.py:46 nas/models.py:247 nas/models.py:288
 #: templates/nas/profile/snippets/user-details.html:35
 msgid "Whatsapp"
 msgstr "WhatsApp"
@@ -2321,7 +2509,7 @@ msgstr "Adresse"
 msgid "Website"
 msgstr "Site web"
 
-#: nas/models.py:85 nas/models.py:455
+#: nas/models.py:85 nas/models.py:448
 msgid "Descritpion"
 msgstr "Description"
 
@@ -2333,8 +2521,9 @@ msgstr "Logo"
 msgid "Agrements"
 msgstr "Agréments"
 
-#: nas/models.py:88 templates/insights/bidder-pdf.html:103
-#: templates/insights/bidder-pdf.html:252
+#: nas/models.py:88 templates/insights/bidder-pdf.html:108
+#: templates/insights/bidder-pdf.html:299
+#: templates/insights/bidder-pdf.html:303
 #: templates/nas/companies/qualifs_form.html:20
 #: templates/nas/companies/snippets/company-item.html:33
 #: templates/nas/companies/snippets/qualif_list.html:12
@@ -2349,205 +2538,201 @@ msgstr "Qualifications"
 msgid "Companies"
 msgstr "Entreprises"
 
-#: nas/models.py:181 nas/models.py:394
+#: nas/models.py:174 nas/models.py:387
 msgid "Date Added"
 msgstr "Date d'ajout"
 
-#: nas/models.py:182 nas/models.py:237 nas/models.py:395
+#: nas/models.py:175 nas/models.py:230 nas/models.py:388
 msgid "Comment"
 msgstr "Commentaire"
 
-#: nas/models.py:197
+#: nas/models.py:190
 msgid "Date Started"
 msgstr "Date de début"
 
-#: nas/models.py:198
+#: nas/models.py:191
 msgid "Displayed Size"
 msgstr "Taille affichée"
 
-#: nas/models.py:199
+#: nas/models.py:192
 msgid "Size in Bytes"
 msgstr "Taille en octets"
 
-#: nas/models.py:215
-msgid "Date"
-msgstr "Date"
-
-#: nas/models.py:228 nas/models.py:350 nas/models.py:372
+#: nas/models.py:221 nas/models.py:343 nas/models.py:365
 msgid "Date sent"
 msgstr "Date d'envoi"
 
-#: nas/models.py:229
+#: nas/models.py:222
 msgid "User Agent"
 msgstr "Agent utilisateur"
 
-#: nas/models.py:230 templates/usersessions/usersession_list.html:27
+#: nas/models.py:223 templates/usersessions/usersession_list.html:27
 msgid "IP Address"
 msgstr "Adresse IP"
 
-#: nas/models.py:234
+#: nas/models.py:227
 msgid "Your Message"
 msgstr "Votre message"
 
-#: nas/models.py:235
+#: nas/models.py:228
 msgid "Contact Method"
 msgstr "Moyen de contact"
 
-#: nas/models.py:236
+#: nas/models.py:229
 msgid "Response"
 msgstr "Réponse"
 
-#: nas/models.py:238
+#: nas/models.py:231
 msgid "Actions"
 msgstr "Actions"
 
-#: nas/models.py:239
+#: nas/models.py:232
 msgid "Solved"
 msgstr "Résolu"
 
-#: nas/models.py:253 nas/models.py:294
+#: nas/models.py:246 nas/models.py:287
 msgid "SMS"
 msgstr "SMS"
 
-#: nas/models.py:261 nas/models.py:303
+#: nas/models.py:254 nas/models.py:296
 #: templates/portal/snippets/lots/lot-details.html:27
 msgid "Description"
 msgstr "Description"
 
-#: nas/models.py:262 nas/models.py:304
+#: nas/models.py:255 nas/models.py:297
 msgid "Channel"
 msgstr "Canal"
 
-#: nas/models.py:263
+#: nas/models.py:256
 msgid "Messages per month"
 msgstr "Messages par mois"
 
-#: nas/models.py:271
+#: nas/models.py:264
 msgid "Month"
 msgstr "Mois"
 
-#: nas/models.py:273
+#: nas/models.py:266
 msgid "Week"
 msgstr "Semaine"
 
-#: nas/models.py:276
+#: nas/models.py:269
 msgid "Day"
 msgstr "Jour"
 
-#: nas/models.py:302
+#: nas/models.py:295
 msgid "Event"
 msgstr "Événement"
 
-#: nas/models.py:320 nas/models.py:336
+#: nas/models.py:313 nas/models.py:329
 msgid "Last subscribed"
 msgstr "Dernier abonnement"
 
-#: nas/models.py:348 nas/models.py:369
+#: nas/models.py:341 nas/models.py:362
 msgid "User"
 msgstr "Utilisateur"
 
-#: nas/models.py:349
+#: nas/models.py:342
 msgid "Newsletter"
 msgstr "Infolettre"
 
-#: nas/models.py:351 nas/models.py:373
+#: nas/models.py:344 nas/models.py:366
 msgid "Sender"
 msgstr "Expéditeur"
 
-#: nas/models.py:352 nas/models.py:374
+#: nas/models.py:345 nas/models.py:367
 msgid "Destination"
 msgstr "Destinataire"
 
-#: nas/models.py:355 nas/models.py:377
+#: nas/models.py:348 nas/models.py:370
 msgid "Retries"
 msgstr "Tentatives"
 
-#: nas/models.py:356 nas/models.py:378
+#: nas/models.py:349 nas/models.py:371
 msgid "Max retries"
 msgstr "Nombre max de tentatives"
 
-#: nas/models.py:357 nas/models.py:379 templates/bidding/contracts-list.html:98
+#: nas/models.py:350 nas/models.py:372 templates/bidding/contracts-list.html:98
 msgid "Success"
 msgstr "Succès"
 
-#: nas/models.py:370
+#: nas/models.py:363
 msgid "Notification"
 msgstr "Notification"
 
-#: nas/models.py:371
+#: nas/models.py:364
 msgid "Change"
 msgstr "Modification"
 
-#: nas/models.py:411 nas/models.py:417
+#: nas/models.py:404 nas/models.py:410
 msgid "Default sort"
 msgstr "Tri par défaut"
 
-#: nas/models.py:412 nas/models.py:418 templates/nas/user-settings-edit.html:97
+#: nas/models.py:405 nas/models.py:411 templates/nas/user-settings-edit.html:97
 #: templates/nas/user-settings-edit.html:177
 msgid "Items per page"
 msgstr "Éléments par page"
 
-#: nas/models.py:413 nas/models.py:419
+#: nas/models.py:406 nas/models.py:412
 msgid "Full progress bar days"
 msgstr "Jours pour la barre de progression complète"
 
-#: nas/models.py:414 nas/models.py:420
+#: nas/models.py:407 nas/models.py:413
 msgid "Show today's expired items"
 msgstr "Afficher les éléments expirés aujourd'hui"
 
-#: nas/models.py:415
+#: nas/models.py:408
 msgid "Show cancelled tenders"
 msgstr "Afficher les appels d'offres annulés"
 
-#: nas/models.py:421
+#: nas/models.py:414
 msgid "First articles to show"
 msgstr "Premiers articles à afficher"
 
-#: nas/models.py:423
+#: nas/models.py:416
 msgid "Check Tender dealine when editing"
 msgstr "Vérifier la date limite de l'appel d'offres lors de la modification"
 
-#: nas/models.py:424
+#: nas/models.py:417
 msgid "Check submitted amount when editing"
 msgstr "Vérifier le montant soumis lors de la modification"
 
-#: nas/models.py:425
+#: nas/models.py:418
 msgid "Check submitted bond when editing"
 msgstr "Vérifier la caution soumise lors de la modification"
 
-#: nas/models.py:427
+#: nas/models.py:420
 msgid "Do not wrap long text"
 msgstr "Ne pas renvoyer le texte long à la ligne"
 
-#: nas/models.py:428 templates/nas/user-settings-edit.html:30
+#: nas/models.py:421 templates/nas/user-settings-edit.html:30
 msgid "List items per page"
 msgstr "Nombre d'éléments par page dans les listes"
 
-#: nas/models.py:429 templates/nas/user-settings-edit.html:61
+#: nas/models.py:422 templates/nas/user-settings-edit.html:61
 msgid "Show invitations from other teams"
 msgstr "Afficher les invitations d'autres équipes"
 
-#: nas/models.py:431
+#: nas/models.py:424
 msgid "Preferred interface language"
 msgstr "Langue préférée de l'interface"
 
-#: nas/models.py:445
+#: nas/models.py:438
 msgid "Group"
 msgstr "Groupe"
 
-#: nas/models.py:448 templates/nas/snippets/expirables/expirable-item.html:41
+#: nas/models.py:441 templates/nas/snippets/expirables/expirable-item.html:41
 msgid "Issuer"
 msgstr "Émetteur"
 
-#: nas/models.py:449
+#: nas/models.py:442
 msgid "Validity start"
 msgstr "Début de validité"
 
-#: nas/models.py:452
+#: nas/models.py:445
 msgid "Paid Amount (incl. all taxes)"
 msgstr "Montant payé TTC"
 
-#: nas/models.py:461
+#: nas/models.py:454
 msgid "Expirable"
 msgstr "Élément expirable"
 
@@ -3213,6 +3398,7 @@ msgid "Bad Token"
 msgstr "Jeton invalide"
 
 #: templates/account/password_reset_from_key.html:18
+#, python-format
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
@@ -3498,7 +3684,417 @@ msgstr "Sessions"
 msgid "OR continue with"
 msgstr "OU continuer avec"
 
-#: templates/base/base.html:17
+#: templates/base/about.html:5
+msgid "About eMarchés"
+msgstr "À propos d’eMarchés"
+
+#: templates/base/about.html:21
+msgid "Public Procurement Intelligence"
+msgstr "Intelligence économique des marchés publics"
+
+#: templates/base/about.html:25
+msgid "Turn Public Procurement Data Into Business Opportunities"
+msgstr ""
+"Transformez les données des marchés publics en opportunités commerciales"
+
+#: templates/base/about.html:29
+msgid "Know the Market. Find the Right Tenders. Win More Business."
+msgstr ""
+"Connaissez le marché. Trouvez les bons appels d’offres. Remportez davantage "
+"de marchés."
+
+#: templates/base/about.html:33
+msgid ""
+"eMarchés is a public procurement intelligence platform built for businesses "
+"operating in Morocco. We transform complex and dispersed procurement "
+"information into actionable business intelligence, helping companies "
+"discover relevant opportunities, understand the market, monitor competitors, "
+"and make better decisions."
+msgstr ""
+"eMarchés est une plateforme d’intelligence économique dédiée aux marchés "
+"publics, conçue pour les entreprises opérant au Maroc. Nous transformons des "
+"informations complexes et dispersées sur les marchés publics en données "
+"stratégiques exploitables, afin d’aider les entreprises à découvrir des "
+"opportunités pertinentes, à comprendre leur marché, à suivre leurs "
+"concurrents et à prendre de meilleures décisions."
+
+#: templates/base/about.html:47
+msgid "Because finding a tender is not enough."
+msgstr "Parce que trouver un appel d’offres ne suffit pas."
+
+#: templates/base/about.html:51
+msgid "You need to know which opportunities are worth pursuing."
+msgstr "Vous devez savoir quelles opportunités méritent d’être saisies."
+
+#: templates/base/about.html:66
+msgid "Your Competitive Advantage Starts With Better Information"
+msgstr "Votre avantage concurrentiel commence par une meilleure information"
+
+#: templates/base/about.html:70
+msgid ""
+"Every day, Moroccan public institutions publish procurement opportunities "
+"across construction, services, supplies, technology, consulting, "
+"infrastructure, and many other sectors. The challenge is finding the right "
+"opportunities, understanding them quickly, and knowing what happened before."
+msgstr ""
+"Chaque jour, les organismes publics marocains publient des opportunités de "
+"marchés dans les domaines du bâtiment, des services, des fournitures, des "
+"technologies, du conseil, des infrastructures et de nombreux autres "
+"secteurs. Le défi consiste à repérer les bonnes opportunités, à les "
+"comprendre rapidement et à connaître les résultats des marchés précédents."
+
+#: templates/base/about.html:81
+msgid "Find Opportunities That Matter"
+msgstr "Trouvez les opportunités qui comptent"
+
+#: templates/base/about.html:84
+msgid ""
+"Discover tenders based on your business activity, target locations, contract "
+"values, procurement categories, contracting authorities, and other criteria "
+"relevant to your company."
+msgstr ""
+"Découvrez des appels d’offres en fonction de votre activité, des zones "
+"géographiques ciblées, des montants des marchés, des catégories d’achats, "
+"des organismes adjudicateurs et d’autres critères pertinents pour votre "
+"entreprise."
+
+#: templates/base/about.html:94
+msgid "Understand Your Market"
+msgstr "Comprenez votre marché"
+
+#: templates/base/about.html:97
+msgid ""
+"Explore procurement activity by institution, sector, location, domain, and "
+"contract value to identify patterns and emerging opportunities."
+msgstr ""
+"Analysez l’activité des marchés publics par organisme, secteur, zone "
+"géographique, domaine et montant de marché afin d’identifier les tendances "
+"et les nouvelles opportunités."
+
+#: templates/base/about.html:107
+msgid "Know Your Competition"
+msgstr "Connaissez vos concurrents"
+
+#: templates/base/about.html:110
+msgid ""
+"Understand who is participating in your market and who is winning contracts. "
+"Explore competitors, previous awards, submitted offers, and historical "
+"procurement activity."
+msgstr ""
+"Identifiez les entreprises présentes sur votre marché et celles qui "
+"remportent les marchés. Explorez vos concurrents, les attributions "
+"précédentes, les offres soumises et l’historique des marchés publics."
+
+#: templates/base/about.html:120
+msgid "Make Decisions With Data"
+msgstr "Prenez des décisions fondées sur les données"
+
+#: templates/base/about.html:123
+msgid ""
+"Use historical procurement information to assess potential markets, "
+"benchmark contracts, identify active buyers, and prioritize opportunities."
+msgstr ""
+"Exploitez l’historique des marchés publics pour évaluer les marchés "
+"potentiels, comparer les contrats, identifier les acheteurs actifs et "
+"hiérarchiser les opportunités."
+
+#: templates/base/about.html:141
+msgid "From Tender Search to Procurement Intelligence"
+msgstr "De la recherche d’appels d’offres à l’intelligence des marchés publics"
+
+#: templates/base/about.html:145
+msgid ""
+"Traditional tender discovery is reactive. You find a notice, read the "
+"documents, and decide whether to bid."
+msgstr ""
+"La recherche traditionnelle d’appels d’offres est une démarche réactive. "
+"Vous trouvez un avis, consultez les documents et décidez si vous allez "
+"soumissionner."
+
+#: templates/base/about.html:149
+msgid ""
+"eMarchés helps you take a broader approach by giving you the tools to "
+"discover, analyze, compare, prioritize, and act on procurement opportunities."
+msgstr ""
+"eMarchés vous permet d’adopter une approche plus globale en mettant à votre "
+"disposition des outils pour découvrir, analyser, comparer et hiérarchiser "
+"les opportunités de marchés publics, puis agir en conséquence."
+
+#: templates/base/about.html:158 templates/base/about.html:405
+msgid "Discover"
+msgstr "Découvrir"
+
+#: templates/base/about.html:160
+msgid "Find relevant opportunities"
+msgstr "Trouvez des opportunités pertinentes"
+
+#: templates/base/about.html:167 templates/base/about.html:423
+msgid "Analyze"
+msgstr "Analyser"
+
+#: templates/base/about.html:169
+msgid "Understand the market"
+msgstr "Comprenez le marché"
+
+#: templates/base/about.html:176
+msgid "Compare"
+msgstr "Comparer"
+
+#: templates/base/about.html:178
+msgid "Benchmark opportunities"
+msgstr "Évaluez et comparez les opportunités"
+
+#: templates/base/about.html:185
+msgid "Prioritize"
+msgstr "Hiérarchiser"
+
+#: templates/base/about.html:187
+msgid "Focus your resources"
+msgstr "Concentrez vos ressources sur l’essentiel"
+
+#: templates/base/about.html:194
+msgid "Act"
+msgstr "Agir"
+
+#: templates/base/about.html:196
+msgid "Pursue the right opportunities"
+msgstr "Saisissez les bonnes opportunités"
+
+#: templates/base/about.html:216
+msgid "Built for Companies That Want to Grow"
+msgstr "Conçu pour les entreprises qui veulent se développer"
+
+#: templates/base/about.html:220
+msgid ""
+"Whether you are a small business looking for new customers or an established "
+"company managing a large public-sector sales pipeline, eMarchés helps you "
+"turn procurement data into a business-development resource."
+msgstr ""
+"Que vous soyez une petite entreprise à la recherche de nouveaux clients ou "
+"une entreprise établie gérant un important portefeuille commercial dans le "
+"secteur public, eMarchés vous aide à transformer les données des marchés "
+"publics en un véritable levier de développement commercial."
+
+#: templates/base/about.html:231
+msgid "Construction & Infrastructure"
+msgstr "Bâtiment et infrastructures"
+
+#: templates/base/about.html:234
+msgid ""
+"Identify projects, contracting authorities, competitors, and historical "
+"contract activity."
+msgstr ""
+"Identifiez les projets, les organismes adjudicateurs, les concurrents et "
+"l’historique des marchés."
+
+#: templates/base/about.html:244
+msgid "Technology & Digital Services"
+msgstr "Technologies et services numériques"
+
+#: templates/base/about.html:247
+msgid ""
+"Track public-sector demand for software, IT infrastructure, "
+"telecommunications, consulting, and digital transformation."
+msgstr ""
+"Suivez la demande du secteur public en matière de logiciels, "
+"d’infrastructures informatiques, de télécommunications, de conseil et de "
+"transformation numérique."
+
+#: templates/base/about.html:257
+msgid "Equipment & Supplies"
+msgstr "Équipements et fournitures"
+
+#: templates/base/about.html:260
+msgid ""
+"Discover purchasing activity across institutions and identify recurring "
+"procurement needs."
+msgstr ""
+"Découvrez les achats des différents organismes et identifiez les besoins "
+"récurrents en matière de marchés publics."
+
+#: templates/base/about.html:270
+msgid "Professional & Business Services"
+msgstr "Services professionnels et aux entreprises"
+
+#: templates/base/about.html:273
+msgid ""
+"Find opportunities across consulting, engineering, training, facility "
+"management, security, catering, logistics, and other services."
+msgstr ""
+"Trouvez des opportunités dans les domaines du conseil, de l’ingénierie, de "
+"la formation, de la gestion des installations, de la sécurité, de la "
+"restauration, de la logistique et d’autres services."
+
+#: templates/base/about.html:283
+msgid "If the public sector is part of your market, eMarchés is built for you."
+msgstr ""
+"Si le secteur public fait partie de votre marché, eMarchés est fait pour "
+"vous."
+
+#: templates/base/about.html:298
+msgid "Replace Hours of Research With One Platform"
+msgstr "Remplacez des heures de recherche par une seule plateforme"
+
+#: templates/base/about.html:302
+msgid ""
+"Public procurement research can consume valuable commercial resources. "
+"eMarchés gives your team a centralized environment for exploring procurement "
+"intelligence instead of repeatedly searching, collecting, comparing, and "
+"organizing information manually."
+msgstr ""
+"La recherche sur les marchés publics peut mobiliser une part importante de "
+"vos ressources commerciales. eMarchés offre à votre équipe un environnement "
+"centralisé pour analyser les informations sur les marchés publics, plutôt "
+"que de rechercher, collecter, comparer et organiser manuellement les "
+"informations à répétition."
+
+#: templates/base/about.html:315
+msgid "Less Searching"
+msgstr "Moins de recherches"
+
+#: templates/base/about.html:317
+msgid "Find relevant opportunities faster."
+msgstr "Trouvez plus rapidement les opportunités pertinentes."
+
+#: templates/base/about.html:329
+msgid "Less Uncertainty"
+msgstr "Moins d’incertitude"
+
+#: templates/base/about.html:331
+msgid "Understand the context behind an opportunity."
+msgstr "Comprenez le contexte de chaque opportunité."
+
+#: templates/base/about.html:343
+msgid "Better Prioritization"
+msgstr "Une meilleure hiérarchisation"
+
+#: templates/base/about.html:345
+msgid "Focus your resources on tenders that fit your business."
+msgstr ""
+"Concentrez vos ressources sur les appels d’offres adaptés à votre activité."
+
+#: templates/base/about.html:357
+msgid "Better Market Visibility"
+msgstr "Une meilleure visibilité sur le marché"
+
+#: templates/base/about.html:359
+msgid "Understand buyers, competitors, sectors, and procurement activity."
+msgstr ""
+"Comprenez les acheteurs, les concurrents, les secteurs et l’activité des "
+"marchés publics."
+
+#: templates/base/about.html:371
+msgid "Better Decisions"
+msgstr "De meilleures décisions"
+
+#: templates/base/about.html:373
+msgid ""
+"Base your business-development strategy on data rather than assumptions."
+msgstr ""
+"Fondez votre stratégie de développement commercial sur des données plutôt "
+"que sur des suppositions."
+
+#: templates/base/about.html:392
+msgid "Your Procurement Intelligence Platform"
+msgstr "Votre plateforme d’intelligence des marchés publics"
+
+#: templates/base/about.html:396
+msgid ""
+"eMarchés is more than a tender database. It is a business intelligence "
+"platform for the Moroccan public procurement market."
+msgstr ""
+"eMarchés est bien plus qu’une base de données d’appels d’offres. C’est une "
+"plateforme d’intelligence économique dédiée au marché marocain des marchés "
+"publics."
+
+#: templates/base/about.html:407
+msgid "Find procurement opportunities relevant to your business."
+msgstr "Trouvez des opportunités de marchés publics adaptées à votre activité."
+
+#: templates/base/about.html:414
+msgid "Monitor"
+msgstr "Surveiller"
+
+#: templates/base/about.html:416
+msgid "Keep track of markets, buyers, sectors, and competitors."
+msgstr "Suivez les marchés, les acheteurs, les secteurs et les concurrents."
+
+#: templates/base/about.html:425
+msgid "Explore historical procurement and contract information."
+msgstr "Consultez l’historique des marchés publics et des contrats."
+
+#: templates/base/about.html:432
+msgid "Benchmark"
+msgstr "Comparer les références"
+
+#: templates/base/about.html:434
+msgid "Compare contract values, participants, and previous results."
+msgstr ""
+"Comparez les montants des contrats, les participants et les résultats "
+"précédents."
+
+#: templates/base/about.html:441
+msgid "Plan"
+msgstr "Planifier"
+
+#: templates/base/about.html:443
+msgid "Identify markets and opportunities worth pursuing."
+msgstr "Identifiez les marchés et les opportunités qui méritent d’être ciblés."
+
+#: templates/base/about.html:450
+msgid "Grow"
+msgstr "Se développer"
+
+#: templates/base/about.html:452
+msgid "Build a more systematic public-sector sales strategy."
+msgstr ""
+"Élaborez une stratégie commerciale plus structurée pour le secteur public."
+
+#: templates/base/about.html:470
+msgid "The Public Procurement Market Is Too Valuable to Navigate Blind"
+msgstr "Le marché public est trop précieux pour être abordé à l’aveugle"
+
+#: templates/base/about.html:474
+msgid ""
+"Your competitors are already looking for opportunities. The difference is "
+"how quickly and intelligently you can identify them."
+msgstr ""
+"Vos concurrents recherchent déjà des opportunités. La différence réside dans "
+"votre capacité à les identifier plus rapidement et plus efficacement."
+
+#: templates/base/about.html:478
+msgid ""
+"With eMarchés, procurement information becomes a strategic asset for your "
+"business."
+msgstr ""
+"Avec eMarchés, les informations sur les marchés publics deviennent un atout "
+"stratégique pour votre entreprise."
+
+#: templates/base/about.html:482
+msgid "Start Turning Procurement Data Into Opportunities"
+msgstr ""
+"Commencez à transformer les données des marchés publics en opportunités"
+
+#: templates/base/about.html:486
+msgid "Explore the platform and see what is happening in your market."
+msgstr "Explorez la plateforme et découvrez ce qui se passe sur votre marché."
+
+#: templates/base/about.html:491
+msgid "Start Exploring"
+msgstr "Découvrir la plateforme"
+
+#: templates/base/about.html:495
+msgid "View Plans"
+msgstr "Voir les offres"
+
+#: templates/base/about.html:500
+msgid ""
+"Discover opportunities. Understand your competition. Make better decisions."
+msgstr ""
+"Découvrez des opportunités. Comprenez votre concurrence. Prenez de "
+"meilleures décisions."
+
+#: templates/base/base.html:15
 msgid ""
 "eMarches portal. Morocco Public Procurement Market. Access to public Tenders "
 "and Puchase orders. Paperless dematerialized procedure"
@@ -3506,7 +4102,7 @@ msgstr ""
 "Portail eMarches. Marché des commandes publiques au Maroc. Accès aux appels "
 "d'offres et bons de commande publics. Procédure dématérialisée"
 
-#: templates/base/base.html:17 templates/base/base.html:18
+#: templates/base/base.html:15 templates/base/base.html:16
 #: templates/bdc/snippets/bdcs/search-form.html:119
 #: templates/bdc/snippets/menu-bdc.html:21
 #: templates/portal/snippets/menu-tenders.html:21
@@ -3516,13 +4112,13 @@ msgstr ""
 msgid "Results"
 msgstr "Résultats"
 
-#: templates/base/base.html:17 templates/base/base.html:18
+#: templates/base/base.html:15 templates/base/base.html:16
 #: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
 msgid "Concurrent"
 msgstr "Concurrents"
 
-#: templates/base/base.html:18
+#: templates/base/base.html:16
 msgid ""
 "PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free "
 "Listing Files Download"
@@ -3643,11 +4239,11 @@ msgstr "Se connecter"
 msgid "Public Procurement Market in Morocco"
 msgstr "Marché des commandes publiques au Maroc"
 
-#: templates/base/home.html:13
+#: templates/base/home.html:14
 msgid "Your next great contract"
 msgstr "Votre prochain grand marché"
 
-#: templates/base/home.html:16
+#: templates/base/home.html:17
 msgid ""
 "eMarches is your trusted partner in navigating the Moroccan public "
 "procurement market. With expertise and dedication, we help businesses "
@@ -3657,179 +4253,18 @@ msgstr ""
 "public marocain. Grâce à notre expertise et notre engagement, nous aidons "
 "les entreprises à réussir."
 
-#: templates/base/home.html:19 templates/bidding/contract-details.html:102
-#: templates/insights/bidder-details.html:55
-#: templates/insights/bidder-pdf.html:58 templates/insights/bidder-pdf.html:123
+#: templates/base/home.html:20 templates/bidding/contract-details.html:102
+#: templates/insights/bidder-details.html:25
+#: templates/insights/bidder-pdf.html:63 templates/insights/bidder-pdf.html:128
+#: templates/insights/bidder-pdf.html:132
 #: templates/nas/user-settings-edit.html:76
 #: templates/portal/snippets/menu-tenders.html:8
 msgid "Tenders"
 msgstr "Appels d'offres"
 
-#: templates/base/home.html:20 templates/bidding/snippets/menu-bidding.html:15
+#: templates/base/home.html:21 templates/bidding/snippets/menu-bidding.html:15
 msgid "Concurrents"
 msgstr "Concurrents"
-
-#: templates/base/home.html:39
-msgid ""
-"We are making e-Marchés a better place for those who want to master the "
-"Public Procurement Market in Morocco"
-msgstr ""
-"Nous faisons d'e-Marchés le meilleur outil pour maîtriser la commande "
-"publique au Maroc"
-
-#: templates/base/home.html:43
-msgid "Great features we are working on"
-msgstr "Excellentes fonctionnalités sur lesquelles nous travaillons"
-
-#: templates/base/home.html:51
-msgid "Tenders browsing"
-msgstr "Consultation des appels d'offres"
-
-#: templates/base/home.html:52 templates/base/home.html:77
-#: templates/base/home.html:101 templates/base/home.html:125
-#: templates/base/home.html:149
-msgid "Completed"
-msgstr "Terminé"
-
-#: templates/base/home.html:58 templates/base/home.html:83
-#: templates/base/home.html:107 templates/base/home.html:131
-#: templates/base/home.html:155 templates/base/home.html:179
-#: templates/base/home.html:203 templates/base/home.html:227
-#: templates/base/home.html:251
-msgid "Progress"
-msgstr "Avancement"
-
-#: templates/base/home.html:67
-msgid "Find Tenders of your interest and see their details"
-msgstr ""
-"Trouvez les appels d'offres qui vous intéressent et consultez leurs détails"
-
-#: templates/base/home.html:68
-msgid "Fine-tune results or find by Category, Client, Location, ..."
-msgstr ""
-"Affinez les résultats par catégorie, acheteur public, localisation, ..."
-
-#: templates/base/home.html:76
-msgid "Advanced Results"
-msgstr "Résultats détaillés"
-
-#: templates/base/home.html:92
-msgid ""
-"See advanced awarding details: Bidders, administrative and technical checks "
-"results, financial offers, Awarded amounts and justifications,"
-msgstr ""
-"Consultez les détails d'attribution : soumissionnaires, résultats des "
-"contrôles administratifs et techniques, offres financières, montants "
-"attribués et justifications,"
-
-#: templates/base/home.html:100
-msgid "Concurrence analysis"
-msgstr "Analyse de la concurrence"
-
-#: templates/base/home.html:116
-msgid ""
-"Discover how others are doing on Public markets. Understand your concurrents "
-"and public clients so you can prepare the unbeaten bids every time"
-msgstr ""
-"Découvrez comment les autres performent sur les marchés publics. Comprenez "
-"vos concurrents et vos acheteurs publics pour préparer des offres "
-"imbattables à chaque fois"
-
-#: templates/base/home.html:124
-msgid "Downloads and Favorites"
-msgstr "Téléchargements et Favoris"
-
-#: templates/base/home.html:140
-msgid "Download DCE files or add Tenders to your favorites for easy access."
-msgstr ""
-"Téléchargez les dossiers de consultation (DCE) ou ajoutez des appels "
-"d'offres à vos favoris pour un accès rapide."
-
-#: templates/base/home.html:148
-msgid "Purchase orders and results"
-msgstr "Bons de commande et résultats"
-
-#: templates/base/home.html:164
-msgid ""
-"Browse Purchase orders, see listing details and items details and download "
-"files. See awarding results"
-msgstr ""
-"Parcourez les bons de commande, consultez le détail des éléments, "
-"téléchargez les fichiers et observez les résultats d'attribution"
-
-#: templates/base/home.html:172
-msgid "Bidding management"
-msgstr "Gestion des candidatures"
-
-#: templates/base/home.html:188
-msgid ""
-"Manage your bids including bonds/guarantees, expenses, tasks, deadlines,"
-msgstr ""
-"Gérez vos offres, y compris les cautionnements, dépenses, tâches et dates "
-"limites,"
-
-#: templates/base/home.html:196
-msgid "Team and companies"
-msgstr "Équipe et entreprises"
-
-#: templates/base/home.html:212
-msgid ""
-"Manage people you work with securely and efficiently. Manage companies "
-"including data and assets like signature pens lifecycle"
-msgstr ""
-"Gérez les personnes avec lesquelles vous travaillez en toute sécurité. Gérez "
-"vos entreprises, leurs données et le cycle de vie de vos clés de signature"
-
-#: templates/base/home.html:220
-msgid "Contracts management"
-msgstr "Gestion des marchés"
-
-#: templates/base/home.html:221 templates/base/home.html:245
-#: templates/base/snippets/wip-inline.html:6
-msgid "Coming soon"
-msgstr "Bientôt disponible"
-
-#: templates/base/home.html:236
-msgid ""
-"Keep track of your contracts and never hit a deadline surprise. See your "
-"spendings and keep track of your receptions and payments, "
-msgstr ""
-"Suivez vos marchés sans vous faire surprendre par les échéances. Contrôlez "
-"vos dépenses et gardez un œil sur les réceptions et règlements, "
-
-#: templates/base/home.html:244
-msgid "Translations"
-msgstr "Traductions"
-
-#: templates/base/home.html:260
-msgid ""
-"Insi speaks Tamazight but likes to think in English. We need to translate "
-"the user interface into French, Arabic, Tamazight, Spanish and German"
-msgstr ""
-"Insi parle amazighe mais aime penser en anglais. Nous devons traduire "
-"l'interface utilisateur en français, arabe, amazighe, espagnol et allemand"
-
-#: templates/base/home.html:273
-msgid "e-Marchés is"
-msgstr "e-Marchés est"
-
-#: templates/base/home.html:274
-msgid "OPEN-SOURCE"
-msgstr "OPEN SOURCE"
-
-#: templates/base/home.html:278
-msgid "Our code-source is available on github. We will provide the link soon"
-msgstr ""
-"Notre code source est disponible sur GitHub. Nous fournirons le lien très "
-"prochainement"
-
-#: templates/base/home.html:279
-msgid "Please contact us if you are interested"
-msgstr "N'hésitez pas à nous contacter si cela vous intéresse"
-
-#: templates/base/home.html:282
-msgid "SOURCE CODE"
-msgstr "CODE SOURCE"
 
 #: templates/base/includes/anonymous.html:13
 #, python-format
@@ -3867,13 +4302,9 @@ msgid "Our accounts are 100%% FREE. FREE like in FREE BEER"
 msgstr ""
 "Nos comptes sont 100%% GRATUITS. Totalement gratuits et sans engagement"
 
-#: templates/base/includes/footer.html:19
+#: templates/base/includes/footer.html:20
 msgid "Portfolio"
 msgstr "Portfolio"
-
-#: templates/base/includes/footer.html:20
-msgid "Contact"
-msgstr "Contact"
 
 #: templates/base/includes/footer.html:21
 msgid "Legal"
@@ -3891,25 +4322,44 @@ msgstr "X"
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
+#: templates/base/snippets/digests/last-30-days.html:9
+msgid "Things are moving"
+msgstr "Les choses sont en mouvement"
+
+#: templates/base/snippets/digests/last-30-days.html:14
+msgid "30 Days"
+msgstr "30 jours"
+
+#: templates/base/snippets/digests/last-30-days.html:19
+#: templates/base/snippets/digests/last-30-days.html:39
+msgid "New Tenders"
+msgstr "Nouvel appel d'offres"
+
+#: templates/base/snippets/digests/last-30-days.html:22
+#: templates/base/snippets/digests/last-30-days.html:42
+msgid "Opening minutes"
+msgstr "PV d'ouverture"
+
+#: templates/base/snippets/digests/last-30-days.html:28
+#: templates/base/snippets/digests/last-30-days.html:48
+#: templates/bidding/contract-details.html:30
+#: templates/bidding/contract-details.html:44
+#: templates/bidding/contracts-list.html:64
+#: templates/bidding/contracts-list.html:81
+#: templates/insights/bidders-list.html:71
+#: templates/insights/bidders-list.html:90
+#: templates/insights/snippets/bidders/bidder-menu-sort.html:46
+#: templates/insights/snippets/bidders/bidder-search-form.html:76
+msgid "Success rate"
+msgstr "Taux de réussite"
+
 #: templates/base/snippets/empty-list.html:10
 msgid "Nothing to show here !"
 msgstr "Rien à afficher ici !"
 
-#: templates/base/snippets/ico-key-val.html:18
-#: templates/portal/snippets/lots/lot-details.html:6
-#: templates/portal/snippets/lots/qu-ag.html:4
-#: templates/portal/snippets/lots/sa-me-vi.html:4
-#: templates/portal/snippets/tenders/qu-ag.html:4
-#: templates/portal/snippets/tenders/results-digest.html:5
-#: templates/portal/snippets/tenders/tender-summary.html:35
-#: templates/portal/snippets/tenders/tender-summary.html:50
-msgid "Sign in"
-msgstr "Se connecter"
-
 #: templates/base/snippets/menu-user.html:27
 #: templates/bdc/snippets/bdcs/menu-sort.html:45
 #: templates/nas/snippets/menu-account.html:20
-#: templates/portal/snippets/tenders/menu-sort.html:51
 msgid "Preferences"
 msgstr "Préférences"
 
@@ -3973,6 +4423,10 @@ msgstr "Page suivante"
 msgid "Last Page"
 msgstr "Dernière page"
 
+#: templates/base/snippets/wip-inline.html:6
+msgid "Coming soon"
+msgstr "Bientôt disponible"
+
 #: templates/base/snippets/wip-inline.html:11
 msgid ""
 "This feature is under development and will be availaible in future versions."
@@ -4024,7 +4478,7 @@ msgstr "EXPIRÉ"
 #: templates/bdc/bdc-details.html:64 templates/bdc/bdc-details.html:104
 #: templates/bdc/snippets/bdcs/bdc-summary.html:56
 #: templates/portal/tender-details.html:118
-#: templates/portal/tender-details.html:209
+#: templates/portal/tender-details.html:221
 msgid "Morocco time"
 msgstr "Heure du Maroc"
 
@@ -4036,7 +4490,7 @@ msgstr "Temps restant avant la date limite"
 #: templates/nas/user-settings-edit.html:117
 #: templates/nas/user-settings-edit.html:197
 #: templates/portal/tender-details.html:113
-#: templates/portal/tender-details.html:415
+#: templates/portal/tender-details.html:427
 msgid "days"
 msgstr "jours"
 
@@ -4045,8 +4499,8 @@ msgstr "jours"
 #: templates/bdc/snippets/bdcs/bdc-legend.html:9
 #: templates/portal/snippets/tenders/tender-legend.html:8
 #: templates/portal/snippets/tenders/tender-legend.html:12
-#: templates/portal/tender-details.html:404
-#: templates/portal/tender-details.html:409
+#: templates/portal/tender-details.html:416
+#: templates/portal/tender-details.html:421
 msgid "UTC"
 msgstr "UTC"
 
@@ -4104,11 +4558,12 @@ msgid "Export"
 msgstr "Exporter"
 
 #: templates/bdc/bdc-details.html:179
+#: templates/insights/bidder-details.html:272
 msgid "Print"
 msgstr "Imprimer"
 
 #: templates/bdc/bdc-details.html:191 templates/bidding/team-recap.html:127
-#: templates/portal/tender-details.html:403
+#: templates/portal/tender-details.html:415
 msgid "Created"
 msgstr "Créé"
 
@@ -4128,7 +4583,7 @@ msgstr "Durée d'affichage"
 msgid "Purchase Order files"
 msgstr "Fichiers du bon de commande"
 
-#: templates/bdc/bdc-details.html:226 templates/portal/tender-details.html:516
+#: templates/bdc/bdc-details.html:226 templates/portal/tender-details.html:528
 msgid ""
 "Once you click on an item, your browser or device should handle the download "
 "process."
@@ -4148,7 +4603,7 @@ msgstr ""
 msgid "Files for this PO are not ready, yet."
 msgstr "Les fichiers pour ce bon de commande ne sont pas encore prêts."
 
-#: templates/bdc/bdc-details.html:240 templates/portal/tender-details.html:531
+#: templates/bdc/bdc-details.html:240 templates/portal/tender-details.html:556
 msgid "Please try again later, or contact us if this problem persists."
 msgstr ""
 "Veuillez réessayer plus tard ou nous contacter si ce problème persiste."
@@ -4161,8 +4616,8 @@ msgstr ""
 #: templates/portal/snippets/lots/lots-details.html:22
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:28
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:170
-#: templates/portal/tender-details.html:545
-#: templates/portal/tender-details.html:589
+#: templates/portal/tender-details.html:570
+#: templates/portal/tender-details.html:600
 msgid "Close"
 msgstr "Fermer"
 
@@ -4176,15 +4631,15 @@ msgstr "Élément retiré des favoris avec succès"
 
 #: templates/bdc/bdc-details.html:284
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:638
-#: templates/portal/tender-details.html:682
+#: templates/portal/tender-details.html:650
+#: templates/portal/tender-details.html:694
 msgid "Operation failed"
 msgstr "Échec de l'opération"
 
 #: templates/bdc/bdc-details.html:284
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:638
-#: templates/portal/tender-details.html:682
+#: templates/portal/tender-details.html:650
+#: templates/portal/tender-details.html:694
 msgid "Please refresh the page or try again later"
 msgstr "Veuillez rafraîchir la page ou réessayer plus tard"
 
@@ -4267,7 +4722,7 @@ msgid "Unfavorite"
 msgstr "Retirer des favoris"
 
 #: templates/bdc/snippets/bdcs/bdc-actions.html:35
-#: templates/insights/bidder-details.html:290
+#: templates/insights/bidder-details.html:267
 #: templates/portal/snippets/tenders/tender-actions.html:36
 msgid "Share"
 msgstr "Partager"
@@ -4346,12 +4801,6 @@ msgstr "Nettoyer mes favoris"
 #: templates/portal/snippets/tenders/menu-fav-clean.html:12
 msgid "Clean Favorites"
 msgstr "Nettoyer les favoris"
-
-#: templates/bdc/snippets/bdcs/menu-clean.html:53
-#: templates/nas/snippets/expirables/expirable-item.html:16
-#: templates/portal/snippets/tenders/menu-fav-clean.html:23
-msgid "Expired"
-msgstr "Expiré"
 
 #: templates/bdc/snippets/bdcs/menu-clean.html:63
 #: templates/portal/snippets/tenders/menu-fav-clean.html:48
@@ -4581,6 +5030,7 @@ msgstr "En cours"
 
 #: templates/bdc/snippets/menu-bdc.html:30
 #: templates/portal/snippets/menu-tenders.html:37
+#: templates/portal/snippets/tenders/menu-sort.html:56
 msgid "Favourites"
 msgstr "Favoris"
 
@@ -4595,7 +5045,7 @@ msgid "Works"
 msgstr "Travaux"
 
 #: templates/bdc/snippets/menu-bdc.html:64
-#: templates/insights/bidder-details.html:207
+#: templates/insights/bidder-details.html:186
 #: templates/portal/snippets/menu-tenders.html:71
 msgid "Clients"
 msgstr "Acheteurs publics"
@@ -4764,7 +5214,7 @@ msgstr "Modifier la candidature"
 #: templates/bidding/tenders-list.html:101
 #: templates/portal/snippets/tenders/tender-summary.html:88
 #: templates/portal/tender-details.html:57
-#: templates/portal/tender-details.html:492
+#: templates/portal/tender-details.html:504
 msgid "CANCELLED"
 msgstr "ANNULÉ"
 
@@ -4847,24 +5297,13 @@ msgstr "Restitution à venir"
 #: templates/insights/bidder-details.html:7
 #: templates/insights/bidder-details.html:8
 #: templates/insights/bidder-details.html:13
-#: templates/insights/bidder-pdf.html:32
+#: templates/insights/bidder-pdf.html:9 templates/insights/bidder-pdf.html:35
 msgid "Concurrent details"
 msgstr "Détails du concurrent"
 
 #: templates/bidding/contract-details.html:25
 msgid "Won offers"
 msgstr "Offres remportées"
-
-#: templates/bidding/contract-details.html:30
-#: templates/bidding/contract-details.html:44
-#: templates/bidding/contracts-list.html:64
-#: templates/bidding/contracts-list.html:81
-#: templates/insights/bidders-list.html:74
-#: templates/insights/bidders-list.html:93
-#: templates/insights/snippets/bidders/bidder-menu-sort.html:46
-#: templates/insights/snippets/bidders/bidder-search-form.html:76
-msgid "Success rate"
-msgstr "Taux de réussite"
 
 #: templates/bidding/contract-details.html:60
 #: templates/bidding/contract-details.html:65
@@ -4912,7 +5351,7 @@ msgid "None"
 msgstr "Aucun"
 
 #: templates/bidding/contract-details.html:148
-#: templates/insights/bidder-details.html:72
+#: templates/insights/bidder-details.html:42
 #: templates/portal/snippets/tenders/results-digest.html:37
 msgid "Admin Rejects"
 msgstr "Éliminations administratives"
@@ -4940,36 +5379,36 @@ msgid "Lots"
 msgstr "Lots"
 
 #: templates/bidding/contract-details.html:204
-#: templates/insights/bidder-details.html:96
+#: templates/insights/bidder-details.html:66
 #: templates/portal/snippets/tenders/results-digest.html:68
 msgid "Admin Accepts"
 msgstr "Admissions administratives"
 
 #: templates/bidding/contract-details.html:256
-#: templates/insights/bidder-details.html:116
+#: templates/insights/bidder-details.html:86
 #: templates/portal/snippets/tenders/results-digest.html:99
 msgid "Admin Reserves"
 msgstr "Réserves administratives"
 
 #: templates/bidding/contract-details.html:308
-#: templates/insights/bidder-details.html:139
+#: templates/insights/bidder-details.html:109
 #: templates/portal/snippets/tenders/results-digest.html:131
 msgid "Tech Rejects"
 msgstr "Éliminations techniques"
 
 #: templates/bidding/contract-details.html:366
-#: templates/insights/bidder-details.html:165
+#: templates/insights/bidder-details.html:135
 msgid "Fin. Offers"
 msgstr "Offres financières"
 
 #: templates/bidding/contract-details.html:432
-#: templates/insights/bidder-details.html:187
-#: templates/insights/bidder-pdf.html:88 templates/insights/bidder-pdf.html:208
+#: templates/insights/bidder-details.html:160
+#: templates/insights/bidder-pdf.html:93 templates/insights/bidder-pdf.html:242
 msgid "Awardings"
 msgstr "Attributions"
 
 #: templates/bidding/contract-details.html:485
-#: templates/insights/bidder-details.html:225
+#: templates/insights/bidder-details.html:204
 #: templates/portal/snippets/menu-tenders.html:85
 msgid "Domains"
 msgstr "Domaines"
@@ -4990,7 +5429,7 @@ msgid "Bids"
 msgstr "Candidatures"
 
 #: templates/bidding/contract-details.html:520
-#: templates/insights/bidder-details.html:243
+#: templates/insights/bidder-details.html:222
 #: templates/portal/snippets/tenders/search-form.html:214
 msgid "Qualifs"
 msgstr "Qualifications"
@@ -5001,7 +5440,7 @@ msgid "Class"
 msgstr "Classe"
 
 #: templates/bidding/contract-details.html:558
-#: templates/insights/bidder-details.html:261
+#: templates/insights/bidder-details.html:240
 #: templates/nas/companies/snippets/company-item.html:41
 msgid "Licences"
 msgstr "Agréments"
@@ -5345,11 +5784,6 @@ msgstr "En retard"
 msgid "Member disabled"
 msgstr "Membre désactivé"
 
-#: templates/bidding/team-member-disabled.html:27
-#: templates/bidding/team-recap.html:428
-msgid "Team"
-msgstr "Équipe"
-
 #: templates/bidding/team-member-disabled.html:31
 msgid "Your membership is disabled"
 msgstr "Votre adhésion est désactivée"
@@ -5520,6 +5954,42 @@ msgstr "Appels d'offres soumissionnés"
 msgid "Tenders found"
 msgstr "Appels d'offres trouvés"
 
+#: templates/flows/snippets/plans-digest.html:23
+msgid "Choose plan"
+msgstr "Choisir"
+
+#: templates/flows/snippets/plans-digest.html:33
+msgid "month"
+msgstr "mois"
+
+#: templates/flows/snippets/plans-table.html:5
+msgid "Compare our plans"
+msgstr "Comaprer nos plans"
+
+#: templates/flows/snippets/plans-table.html:7
+msgid "Choose the plan that fits your needs."
+msgstr "Choisir le plan qui vous convient"
+
+#: templates/flows/snippets/plans-table.html:29
+msgid "per month"
+msgstr "par mois"
+
+#: templates/flows/snippets/plans-table.html:49
+msgid "Other features"
+msgstr "Autres caractéristiques"
+
+#: templates/flows/snippets/plans-table.html:76
+msgid "Included"
+msgstr "Inclus"
+
+#: templates/flows/snippets/plans-table.html:82
+msgid "Not included"
+msgstr "Non inclus"
+
+#: templates/flows/snippets/plans-table.html:98
+msgid "No features are currently available."
+msgstr "Pas de caractéristiques disponibles."
+
 #: templates/idp/oidc/authorization_form.html:5
 #: templates/idp/oidc/authorization_form.html:9
 #: templates/idp/oidc/authorization_form.html:23
@@ -5617,22 +6087,20 @@ msgstr "Attribution"
 msgid "Success Rate"
 msgstr "Taux de réussite"
 
-#: templates/insights/bidder-details.html:278
-#: templates/insights/snippets/bidders/bidder-item.html:49
-msgid "PDF Report"
-msgstr "Rapport PDF"
+#: templates/insights/bidder-details.html:257
+msgid "PDF"
+msgstr "PDF"
 
-#: templates/insights/bidder-details.html:284
-#: templates/insights/snippets/bidders/bidder-item.html:54
-msgid "CSV SpreadSheet"
-msgstr "Feuille CSV"
+#: templates/insights/bidder-details.html:262
+msgid "CSV"
+msgstr "CSV"
 
-#: templates/insights/bidder-details.html:304
-#: templates/portal/tender-details.html:649
+#: templates/insights/bidder-details.html:286
+#: templates/portal/tender-details.html:661
 msgid "URL was copied to clipboard"
 msgstr "L'URL a été copiée dans le presse-papiers"
 
-#: templates/insights/bidder-pdf.html:38
+#: templates/insights/bidder-pdf.html:41
 msgid ""
 "This document was generated using an automated system for information "
 "purposes only."
@@ -5640,55 +6108,62 @@ msgstr ""
 "Ce document a été généré par un système automatisé pour information "
 "seulement."
 
-#: templates/insights/bidder-pdf.html:53
+#: templates/insights/bidder-pdf.html:58
 msgid "Table of Contents"
 msgstr "Table des matières"
 
-#: templates/insights/bidder-pdf.html:63 templates/insights/bidder-pdf.html:137
+#: templates/insights/bidder-pdf.html:68 templates/insights/bidder-pdf.html:146
+#: templates/insights/bidder-pdf.html:150
 msgid "Administrative Rejects"
 msgstr "Éliminations administratives"
 
-#: templates/insights/bidder-pdf.html:68 templates/insights/bidder-pdf.html:151
+#: templates/insights/bidder-pdf.html:73 templates/insights/bidder-pdf.html:164
+#: templates/insights/bidder-pdf.html:168
 msgid "Administrative Passes"
 msgstr "Admissions administratives"
 
-#: templates/insights/bidder-pdf.html:73 templates/insights/bidder-pdf.html:165
+#: templates/insights/bidder-pdf.html:78 templates/insights/bidder-pdf.html:182
+#: templates/insights/bidder-pdf.html:186
 msgid "Administrative Reserves"
 msgstr "Réserves administratives"
 
-#: templates/insights/bidder-pdf.html:78 templates/insights/bidder-pdf.html:179
+#: templates/insights/bidder-pdf.html:83 templates/insights/bidder-pdf.html:200
+#: templates/insights/bidder-pdf.html:204
 msgid "Technical Rejects"
 msgstr "Éliminations techniques"
 
-#: templates/insights/bidder-pdf.html:83 templates/insights/bidder-pdf.html:193
+#: templates/insights/bidder-pdf.html:88 templates/insights/bidder-pdf.html:220
 msgid "Financial Races"
 msgstr "Compétitions financières"
 
-#: templates/insights/bidder-pdf.html:93 templates/insights/bidder-pdf.html:224
-#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
+#: templates/insights/bidder-pdf.html:98 templates/insights/bidder-pdf.html:263
+#: templates/insights/bidder-pdf.html:267 templates/portal/clients-list.html:6
+#: templates/portal/clients-list.html:7
 msgid "Public Clients"
 msgstr "Acheteurs publics"
 
-#: templates/insights/bidder-pdf.html:98
+#: templates/insights/bidder-pdf.html:103
 msgid "Domains of Activity"
 msgstr "Domaines d'activité"
 
-#: templates/insights/bidder-pdf.html:108
-#: templates/insights/bidder-pdf.html:266
+#: templates/insights/bidder-pdf.html:113
+#: templates/insights/bidder-pdf.html:316
+#: templates/insights/bidder-pdf.html:320
 #: templates/nas/companies/agrements_form.html:19
 #: templates/nas/companies/snippets/agrement_list.html:13
 #: templates/portal/snippets/tenders/search-form.html:203
 msgid "Licenses"
 msgstr "Agréments"
 
-#: templates/insights/bidder-pdf.html:238 templates/portal/domains-list.html:6
+#: templates/insights/bidder-pdf.html:281
+#: templates/insights/bidder-pdf.html:285 templates/portal/domains-list.html:6
 #: templates/portal/domains-list.html:12
 #: templates/portal/snippets/tenders/search-form.html:43
-#: templates/portal/tender-details.html:273
+#: templates/portal/tender-details.html:285
 msgid "Domains of activity"
 msgstr "Domaines d'activité"
 
-#: templates/insights/bidder-pdf.html:294
+#: templates/insights/bidder-pdf.html:348
 msgid "Error: Not found."
 msgstr "Erreur: Introuvable"
 
@@ -5697,12 +6172,12 @@ msgstr "Erreur: Introuvable"
 msgid "Bidders list"
 msgstr "Liste Candidats"
 
-#: templates/insights/bidders-list.html:67
+#: templates/insights/bidders-list.html:64
 msgid "Awards sum"
 msgstr "Somme Attributions"
 
-#: templates/insights/bidders-list.html:82
-#: templates/insights/snippets/bidders/digest-card.html:114
+#: templates/insights/bidders-list.html:79
+#: templates/insights/snippets/bidders/bidder-item.html:37
 msgid "Latest bid"
 msgstr "Dernière offre"
 
@@ -5716,6 +6191,10 @@ msgstr "Offres attribuées"
 #: templates/insights/snippets/bidders/digest-card.html:107
 msgid "Awarded amount"
 msgstr "Montant attribué"
+
+#: templates/insights/snippets/bidders/bidder-item.html:48
+msgid "Financial efficiency"
+msgstr "Efficacité financière"
 
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:18
 msgid "Latest Win"
@@ -5781,6 +6260,11 @@ msgstr "50%% ou plus"
 msgid "50%% or less"
 msgstr "50%% ou moins"
 
+#: templates/insights/snippets/bidders/digest-card.html:114
+#: templates/insights/snippets/bidders/pdf/digest-card.html:103
+msgid "Latest award"
+msgstr "Dernière Attribution"
+
 #: templates/insights/snippets/bidders/digest-card.html:119
 #: templates/insights/snippets/bidders/pdf/digest-card.html:108
 msgid "Highest award"
@@ -5800,10 +6284,6 @@ msgstr "Total des Attributions"
 #: templates/insights/snippets/bidders/pdf/digest-card.html:98
 msgid "Total Bids"
 msgstr "Total Soumissions"
-
-#: templates/insights/snippets/bidders/pdf/digest-card.html:103
-msgid "Latest award"
-msgstr "Dernière Attribution"
 
 #: templates/insights/snippets/bidders/table-financials.html:48
 msgid "Offers Sum"
@@ -6682,32 +7162,32 @@ msgid "Reserved"
 msgstr "Réservé"
 
 #: templates/portal/snippets/lots/lot-details.html:96
-#: templates/portal/tender-details.html:199
+#: templates/portal/tender-details.html:211
 msgid "Required Licences"
 msgstr "Agréments requis"
 
 #: templates/portal/snippets/lots/lot-details.html:101
-#: templates/portal/tender-details.html:204
+#: templates/portal/tender-details.html:216
 msgid "Required Qualifications"
 msgstr "Qualifications requises"
 
 #: templates/portal/snippets/lots/lot-details.html:106
-#: templates/portal/tender-details.html:211
+#: templates/portal/tender-details.html:223
 msgid "Required Samples"
 msgstr "Échantillons requis"
 
 #: templates/portal/snippets/lots/lot-details.html:111
-#: templates/portal/tender-details.html:216
+#: templates/portal/tender-details.html:228
 msgid "Scheduled Meetings"
 msgstr "Réunions programmées"
 
 #: templates/portal/snippets/lots/lot-details.html:116
-#: templates/portal/tender-details.html:221
+#: templates/portal/tender-details.html:233
 msgid "Site Survey"
 msgstr "Visite des lieux"
 
 #: templates/portal/snippets/lots/lots-details.html:9
-#: templates/portal/tender-details.html:234
+#: templates/portal/tender-details.html:246
 msgid "Lots details"
 msgstr "Détails des lots"
 
@@ -6723,9 +7203,21 @@ msgstr "Analyses"
 msgid "Favorites cleanup"
 msgstr "Nettoyage des favoris"
 
-#: templates/portal/snippets/tenders/menu-sort.html:41
+#: templates/portal/snippets/tenders/menu-sort.html:40
 msgid "Minutes finished"
 msgstr "Procès-verbal finalisé"
+
+#: templates/portal/snippets/tenders/menu-sort.html:46
+#: templates/portal/snippets/tenders/tender-summary.html:289
+#: templates/portal/tender-details.html:440
+msgid "Views"
+msgstr "Vues"
+
+#: templates/portal/snippets/tenders/menu-sort.html:51
+#: templates/portal/snippets/tenders/tender-summary.html:307
+#: templates/portal/tender-details.html:451
+msgid "Downloads"
+msgstr "Téléchargements"
 
 #: templates/portal/snippets/tenders/results-digest.html:9
 msgid "Participations"
@@ -6906,96 +7398,101 @@ msgid "Winner amount ratio to Estimate"
 msgstr "Ratio du montant attribué par rapport à l'estimation"
 
 #: templates/portal/snippets/tenders/tender-legend.html:168
+#: templates/portal/snippets/tenders/tender-summary.html:215
+msgid "Contains environment-related clauses"
+msgstr "Contients des caluses environnementales"
+
+#: templates/portal/snippets/tenders/tender-legend.html:179
 #: templates/portal/snippets/tenders/tender-summary.html:165
 msgid "Procedure may be restricted"
 msgstr "La procédure peut être restreinte"
 
-#: templates/portal/snippets/tenders/tender-legend.html:179
+#: templates/portal/snippets/tenders/tender-legend.html:190
 #: templates/portal/snippets/tenders/tender-summary.html:173
 msgid "Electronic bidding is required"
 msgstr "La soumission électronique est obligatoire"
 
-#: templates/portal/snippets/tenders/tender-legend.html:190
+#: templates/portal/snippets/tenders/tender-legend.html:201
 #: templates/portal/snippets/tenders/tender-summary.html:179
 msgid "Electronic bidding is optional"
 msgstr "La soumission électronique est optionnelle"
 
-#: templates/portal/snippets/tenders/tender-legend.html:201
+#: templates/portal/snippets/tenders/tender-legend.html:212
 #: templates/portal/snippets/tenders/tender-summary.html:185
 msgid "Electronic bidding is not applicable"
 msgstr "La soumission électronique est non applicable"
 
-#: templates/portal/snippets/tenders/tender-legend.html:212
+#: templates/portal/snippets/tenders/tender-legend.html:223
 #: templates/portal/snippets/tenders/tender-summary.html:194
 msgid "Electronic signature is required"
 msgstr "La signature électronique est obligatoire"
 
-#: templates/portal/snippets/tenders/tender-legend.html:223
+#: templates/portal/snippets/tenders/tender-legend.html:234
 #: templates/portal/snippets/tenders/tender-summary.html:200
 msgid "Electronic signature is optional"
 msgstr "La signature électronique est optionnelle"
 
-#: templates/portal/snippets/tenders/tender-legend.html:234
+#: templates/portal/snippets/tenders/tender-legend.html:245
 #: templates/portal/snippets/tenders/tender-summary.html:206
 msgid "Electronic signature is not applicable"
 msgstr "La signature électronique est non applicable"
 
-#: templates/portal/snippets/tenders/tender-legend.html:245
-#: templates/portal/snippets/tenders/tender-summary.html:215
+#: templates/portal/snippets/tenders/tender-legend.html:256
+#: templates/portal/snippets/tenders/tender-summary.html:223
 #: templates/portal/tender-details.html:172
 msgid "Reserved to SMBs, individuals, Unions, ..."
 msgstr "Réservé aux PME, coopératives, artisans, ..."
 
-#: templates/portal/snippets/tenders/tender-legend.html:256
-#: templates/portal/snippets/tenders/tender-summary.html:223
+#: templates/portal/snippets/tenders/tender-legend.html:267
+#: templates/portal/snippets/tenders/tender-summary.html:231
 msgid "Licenses required"
 msgstr "Agréments requis"
 
-#: templates/portal/snippets/tenders/tender-legend.html:267
-#: templates/portal/snippets/tenders/tender-summary.html:230
+#: templates/portal/snippets/tenders/tender-legend.html:278
+#: templates/portal/snippets/tenders/tender-summary.html:238
 msgid "Qualifications required"
 msgstr "Qualifications requises"
 
-#: templates/portal/snippets/tenders/tender-legend.html:278
-#: templates/portal/snippets/tenders/tender-summary.html:237
+#: templates/portal/snippets/tenders/tender-legend.html:289
+#: templates/portal/snippets/tenders/tender-summary.html:245
 msgid "Samples required"
 msgstr "Échantillons requis"
 
-#: templates/portal/snippets/tenders/tender-legend.html:289
-#: templates/portal/snippets/tenders/tender-summary.html:244
+#: templates/portal/snippets/tenders/tender-legend.html:300
+#: templates/portal/snippets/tenders/tender-summary.html:252
 msgid "Site survey scheduled"
 msgstr "Visites sur site programmées"
 
-#: templates/portal/snippets/tenders/tender-legend.html:300
-#: templates/portal/snippets/tenders/tender-summary.html:251
+#: templates/portal/snippets/tenders/tender-legend.html:311
+#: templates/portal/snippets/tenders/tender-summary.html:259
 msgid "Meetings scheduled"
 msgstr "Réunions programmées"
 
-#: templates/portal/snippets/tenders/tender-legend.html:311
-#: templates/portal/snippets/tenders/tender-summary.html:258
+#: templates/portal/snippets/tenders/tender-legend.html:322
+#: templates/portal/snippets/tenders/tender-summary.html:266
 #: templates/portal/tender-details.html:182
 msgid "Variants accepted"
 msgstr "Variantes acceptées"
 
-#: templates/portal/snippets/tenders/tender-legend.html:322
+#: templates/portal/snippets/tenders/tender-legend.html:333
 msgid "Tender Changes"
 msgstr "Modifications de l'appel d'offres"
 
-#: templates/portal/snippets/tenders/tender-legend.html:333
+#: templates/portal/snippets/tenders/tender-legend.html:344
 msgid "Tender Favorites"
 msgstr "Favoris de l'appel d'offres"
 
-#: templates/portal/snippets/tenders/tender-legend.html:344
+#: templates/portal/snippets/tenders/tender-legend.html:355
 msgid "Tender Downloads"
 msgstr "Téléchargements de l'appel d'offres"
 
-#: templates/portal/snippets/tenders/tender-legend.html:355
-#: templates/portal/snippets/tenders/tender-summary.html:315
+#: templates/portal/snippets/tenders/tender-legend.html:366
+#: templates/portal/snippets/tenders/tender-summary.html:323
 msgid "Available files size"
 msgstr "Taille des fichiers disponibles"
 
-#: templates/portal/snippets/tenders/tender-legend.html:366
-#: templates/portal/snippets/tenders/tender-summary.html:309
+#: templates/portal/snippets/tenders/tender-legend.html:377
+#: templates/portal/snippets/tenders/tender-summary.html:317
 msgid "Files may not be available"
 msgstr "Les fichiers peuvent ne pas être disponibles"
 
@@ -7065,23 +7562,13 @@ msgstr "Aucune attribution"
 msgid "No minutes found"
 msgstr "Aucun procès-verbal trouvé"
 
-#: templates/portal/snippets/tenders/tender-summary.html:266
+#: templates/portal/snippets/tenders/tender-summary.html:274
 msgid "Tender has Changes"
 msgstr "L'appel d'offres a fait l'objet de modifications"
 
-#: templates/portal/snippets/tenders/tender-summary.html:281
-#: templates/portal/tender-details.html:428
-msgid "Views"
-msgstr "Vues"
-
-#: templates/portal/snippets/tenders/tender-summary.html:290
+#: templates/portal/snippets/tenders/tender-summary.html:298
 msgid "Favorites"
 msgstr "Favoris"
-
-#: templates/portal/snippets/tenders/tender-summary.html:299
-#: templates/portal/tender-details.html:439
-msgid "Downloads"
-msgstr "Téléchargements"
 
 #: templates/portal/tender-details.html:9
 #: templates/portal/tender-details.html:20
@@ -7093,7 +7580,7 @@ msgid "My Bids"
 msgstr "Mes candidatures"
 
 #: templates/portal/tender-details.html:93
-#: templates/portal/tender-details.html:251
+#: templates/portal/tender-details.html:263
 msgid "Add Bid"
 msgstr "Ajouter une candidature"
 
@@ -7115,122 +7602,133 @@ msgid "Electronic signature"
 msgstr "Signature électronique"
 
 #: templates/portal/tender-details.html:193
+msgid "Environmental clauses"
+msgstr "Caluses environnementales"
+
+#: templates/portal/tender-details.html:205
 msgid "Price of Plans"
 msgstr "Prix d'acquisition des plans"
 
-#: templates/portal/tender-details.html:302
+#: templates/portal/tender-details.html:314
 msgid "Addresses and Contact"
 msgstr "Adresses et contacts"
 
-#: templates/portal/tender-details.html:308
+#: templates/portal/tender-details.html:320
 msgid "Withdrawal Address"
 msgstr "Adresse de retrait du dossier"
 
-#: templates/portal/tender-details.html:311
+#: templates/portal/tender-details.html:323
 msgid "Bidding Address"
 msgstr "Adresse de dépôt des offres"
 
-#: templates/portal/tender-details.html:314
+#: templates/portal/tender-details.html:326
 msgid "Opening Address"
 msgstr "Adresse d'ouverture des plis"
 
-#: templates/portal/tender-details.html:317
+#: templates/portal/tender-details.html:329
 msgid "Person"
 msgstr "Personne à contacter"
 
-#: templates/portal/tender-details.html:331
+#: templates/portal/tender-details.html:343
 msgid "Fax"
 msgstr "Fax"
 
-#: templates/portal/tender-details.html:348
+#: templates/portal/tender-details.html:360
 msgid "Changes"
 msgstr "Modifications"
 
-#: templates/portal/tender-details.html:349
+#: templates/portal/tender-details.html:361
 msgid "Experimental"
 msgstr "Expérimental"
 
-#: templates/portal/tender-details.html:355
+#: templates/portal/tender-details.html:367
 msgid "Empty"
 msgstr "Vide"
 
-#: templates/portal/tender-details.html:396
+#: templates/portal/tender-details.html:408
 msgid "Advanced data"
 msgstr "Données avancées"
 
-#: templates/portal/tender-details.html:410
+#: templates/portal/tender-details.html:422
 msgid "Last updated"
 msgstr "Dernière mise à jour"
 
-#: templates/portal/tender-details.html:414
+#: templates/portal/tender-details.html:426
 msgid "Time on display"
 msgstr "Temps d'affichage"
 
-#: templates/portal/tender-details.html:418
+#: templates/portal/tender-details.html:430
 msgid "Guarantee ratio"
 msgstr "Taux de cautionnement"
 
-#: templates/portal/tender-details.html:424
+#: templates/portal/tender-details.html:436
 msgid "Database ID"
 msgstr "Identifiant base de données"
 
-#: templates/portal/tender-details.html:433
+#: templates/portal/tender-details.html:445
 msgid "Latest view since"
 msgstr "Dernière vue depuis"
 
-#: templates/portal/tender-details.html:444
+#: templates/portal/tender-details.html:456
 msgid "Latest download since"
 msgstr "Dernier téléchargement depuis"
 
-#: templates/portal/tender-details.html:468
 #: templates/portal/tender-details.html:480
+#: templates/portal/tender-details.html:492
 msgid "Awarding Minutes"
 msgstr "Procès-verbal d'attribution"
 
-#: templates/portal/tender-details.html:481
+#: templates/portal/tender-details.html:493
 msgid "No Minutes found"
 msgstr "Aucun procès-verbal trouvé"
 
-#: templates/portal/tender-details.html:511
-msgid "Tender's files"
-msgstr "Fichiers de l'appel d'offres"
+#: templates/portal/tender-details.html:523
+msgid "Tender downloads"
+msgstr "Téléchargements DCE"
 
-#: templates/portal/tender-details.html:530
+#: templates/portal/tender-details.html:529
+msgid "DCE Files"
+msgstr "Fichiers DCE"
+
+#: templates/portal/tender-details.html:540
+msgid "Extra Files"
+msgstr "Autres fichiers"
+
+#: templates/portal/tender-details.html:555
 msgid "Files for this Tender are not ready, yet."
 msgstr "Les fichiers pour cet appel d'offres ne sont pas encore prêts."
 
-#: templates/portal/tender-details.html:556
+#: templates/portal/tender-details.html:581
 msgid "Request Tender files"
 msgstr "Demander les fichiers de l'appel d'offres"
 
-#: templates/portal/tender-details.html:563
+#: templates/portal/tender-details.html:585
 msgid "Files for this Tender are already queued"
 msgstr "Les fichiers pour cet appel d'offres sont déjà en file d'attente"
 
-#: templates/portal/tender-details.html:565
+#: templates/portal/tender-details.html:587
 msgid "We will make this Tender files available as soon as possible."
 msgstr ""
 "Nous rendrons les fichiers de cet appel d'offres disponibles dès que "
 "possible."
 
-#: templates/portal/tender-details.html:574
-#: templates/portal/tender-details.html:580
+#: templates/portal/tender-details.html:595
 msgid "Request"
 msgstr "Demander"
 
-#: templates/portal/tender-details.html:616
+#: templates/portal/tender-details.html:628
 msgid "Item added to Favourites"
 msgstr "Élément ajouté aux favoris"
 
-#: templates/portal/tender-details.html:627
+#: templates/portal/tender-details.html:639
 msgid "Item removed from Favourites"
 msgstr "Élément retiré des favoris"
 
-#: templates/portal/tender-details.html:660
+#: templates/portal/tender-details.html:672
 msgid "Files request submitted"
 msgstr "Demande de fichiers transmise"
 
-#: templates/portal/tender-details.html:671
+#: templates/portal/tender-details.html:683
 msgid "Files are already queued for download"
 msgstr "Les fichiers sont déjà en attente de téléchargement"
 
@@ -7397,18 +7895,3 @@ msgstr "Actuelle"
 #: templates/usersessions/usersession_list.html:72
 msgid "Sign Out Other Sessions"
 msgstr "Déconnecter les autres sessions"
-
-#~ msgid "Awarded Sum"
-#~ msgstr "Somme Attribuée"
-
-#~ msgid "Bids sum"
-#~ msgstr "Somme des soumissions"
-
-#~ msgid "Awards count"
-#~ msgstr "Nombre d'attributions"
-
-#~ msgid "eMarches.com"
-#~ msgstr "eMarches.com"
-
-#~ msgid "Request Files"
-#~ msgstr "Demander les fichiers"

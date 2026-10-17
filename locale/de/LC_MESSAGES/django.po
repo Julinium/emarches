@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-06 21:17+0100\n"
+"POT-Creation-Date: 2026-10-16 18:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,8 +18,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: base/models.py:627 bdc/models.py:118 bidding/models.py:42 nas/models.py:77
-#: nas/models.py:259 nas/models.py:301 nas/models.py:446
+#: base/models.py:619 bdc/models.py:118 bidding/models.py:42 flows/admin.py:58
+#: flows/admin.py:179 flows/admin.py:204 flows/admin.py:251 nas/models.py:77
+#: nas/models.py:252 nas/models.py:294 nas/models.py:439
 #: templates/bidding/team-recap.html:114 templates/bidding/team-recap.html:291
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:60
 #: templates/nas/companies/company_confirm_delete.html:13
@@ -27,6 +28,34 @@ msgstr ""
 #: templates/nas/companies/snippets/company_data.html:24
 #: templates/nas/companies/snippets/iced_modal.html:45
 msgid "Name"
+msgstr ""
+
+#: base/models.py:620
+msgid "Enterprise Id - ICE"
+msgstr ""
+
+#: base/models.py:621
+msgid "Commerce Registry Number"
+msgstr ""
+
+#: base/models.py:622
+msgid "Commerce Registry City"
+msgstr ""
+
+#: base/models.py:623
+msgid "Capital"
+msgstr ""
+
+#: base/models.py:624 nas/models.py:84
+msgid "Activity"
+msgstr ""
+
+#: base/models.py:625
+msgid "Legal Status"
+msgstr ""
+
+#: base/models.py:626
+msgid "Date Established"
 msgstr ""
 
 #: base/templates/base/about.html:5 base/templates/base/about.html:11
@@ -240,7 +269,7 @@ msgstr ""
 msgid "Enter your phone number"
 msgstr ""
 
-#: base/templates/base/contact.html:34 nas/models.py:447
+#: base/templates/base/contact.html:34 nas/models.py:440
 #: templates/nas/companies/company_detail.html:78
 #: templates/nas/snippets/expirables/expirable-item.html:37
 msgid "Subject"
@@ -250,8 +279,8 @@ msgstr ""
 msgid "Enter the subject"
 msgstr ""
 
-#: base/templates/base/contact.html:38 bidding/models.py:99 nas/models.py:354
-#: nas/models.py:376
+#: base/templates/base/contact.html:38 bidding/models.py:99 nas/models.py:347
+#: nas/models.py:369
 msgid "Message"
 msgstr ""
 
@@ -275,22 +304,22 @@ msgstr ""
 msgid "Any"
 msgstr ""
 
-#: base/templates/base/contact.html:55 nas/models.py:82 nas/models.py:231
-#: nas/models.py:251 nas/models.py:292 templates/base/includes/footer.html:57
+#: base/templates/base/contact.html:55 nas/models.py:82 nas/models.py:224
+#: nas/models.py:244 nas/models.py:285 templates/base/includes/footer.html:57
 #: templates/bidding/snippets/members/member-item.html:39
 #: templates/bidding/team-recap.html:64
 #: templates/nas/companies/snippets/company-item.html:119
 #: templates/nas/companies/snippets/company_data.html:45
 #: templates/nas/profile/snippets/user-details.html:17
-#: templates/portal/tender-details.html:325
+#: templates/portal/tender-details.html:338
 msgid "Email"
 msgstr ""
 
 #: base/templates/base/contact.html:56 nas/forms.py:35 nas/models.py:45
-#: nas/models.py:232 nas/models.py:252 nas/models.py:293
+#: nas/models.py:225 nas/models.py:245 nas/models.py:286
 #: templates/base/includes/footer.html:46
 #: templates/nas/profile/snippets/user-details.html:29
-#: templates/portal/tender-details.html:320
+#: templates/portal/tender-details.html:333
 msgid "Phone"
 msgstr ""
 
@@ -338,7 +367,7 @@ msgid "Go Home"
 msgstr ""
 
 #: base/templates/base/contact_success.html:14 base/templates/base/faqs.html:5
-#: templates/base/includes/footer.html:18
+#: templates/base/includes/footer.html:19
 msgid "FAQs"
 msgstr ""
 
@@ -525,8 +554,7 @@ msgid "Question still unanswered ?"
 msgstr ""
 
 #: base/templates/base/faqs.html:175 base/templates/base/legal.html:77
-#: base/templates/base/legal.html:135 templates/portal/tender-details.html:545
-#: templates/portal/tender-details.html:590
+#: base/templates/base/legal.html:135
 msgid "Contact Us"
 msgstr ""
 
@@ -535,7 +563,7 @@ msgid "Home of Public Procurement Market"
 msgstr ""
 
 #: base/templates/base/legal.html:5 base/templates/base/legal.html:9
-#: base/templates/base/legal.html:11 templates/portal/tender-details.html:540
+#: base/templates/base/legal.html:11 templates/portal/tender-details.html:564
 msgid "Legal Information"
 msgstr ""
 
@@ -556,7 +584,7 @@ msgstr ""
 #: base/templates/base/legal.html:23 base/templates/base/legal.html:143
 #: bidding/models.py:437 nas/choices.py:85 nas/choices.py:86
 #: templates/bidding/snippets/tenders/tender-menu-sort.html:39
-#: templates/portal/snippets/lots/lot-details.html:48
+#: templates/portal/snippets/lots/lot-details.html:52
 #: templates/portal/snippets/tenders/menu-sort.html:29
 msgid "Guarantee"
 msgstr ""
@@ -871,44 +899,64 @@ msgstr ""
 msgid "Clear current"
 msgstr ""
 
-#: base/views.py:27 base/views.py:61 bdc/views.py:365 bdc/views.py:436
-#: bdc/views.py:454 bdc/views.py:472 bdc/views.py:477 bdc/views.py:495
-#: bdc/views.py:641 bdc/views.py:644 bdc/views.py:666 bdc/views.py:673
-#: bidding/views.py:76 bidding/views.py:131 bidding/views.py:195
-#: bidding/views.py:2088 bidding/views.py:2126 bidding/views.py:2147
-#: bidding/views.py:2181 nas/views.py:374 nas/views.py:378 nas/views.py:391
-#: nas/views.py:463 nas/views.py:492 nas/views.py:518 nas/views.py:536
-#: templates/portal/snippets/lots/qu-ag.html:16
-#: templates/portal/snippets/lots/sa-me-vi.html:16
-#: templates/portal/snippets/tenders/qu-ag.html:38
+#: base/templatetags/censorify.py:12
+#: templates/base/snippets/ico-key-val.html:18
+#: templates/portal/snippets/lots/lot-details.html:6
+#: templates/portal/snippets/lots/qu-ag.html:4
+#: templates/portal/snippets/lots/sa-me-vi.html:4
+#: templates/portal/snippets/tenders/qu-ag.html:4
+#: templates/portal/snippets/tenders/results-digest.html:5
+#: templates/portal/snippets/tenders/tender-summary.html:35
+#: templates/portal/snippets/tenders/tender-summary.html:50
+msgid "Sign in"
+msgstr ""
+
+#: base/templatetags/guardify.py:48
+msgid "Hidden Content"
+msgstr ""
+
+#: base/templatetags/guardify.py:52
+msgid "Log in to view"
+msgstr ""
+
+#: base/views.py:40 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
+#: bdc/views.py:468 bdc/views.py:473 bdc/views.py:491 bdc/views.py:637
+#: bdc/views.py:640 bdc/views.py:662 bdc/views.py:669 bidding/views.py:76
+#: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
+#: bidding/views.py:2126 bidding/views.py:2147 bidding/views.py:2181
+#: nas/views.py:374 nas/views.py:378 nas/views.py:391 nas/views.py:463
+#: nas/views.py:492 nas/views.py:518 nas/views.py:536
+#: templates/portal/snippets/lots/qu-ag.html:22
+#: templates/portal/snippets/lots/sa-me-vi.html:22
+#: templates/portal/snippets/tenders/qu-ag.html:36
 msgid "Not found"
 msgstr ""
 
-#: base/views.py:32 base/views.py:36 base/views.py:66 base/views.py:70
-#: bdc/views.py:69 bdc/views.py:287 bdc/views.py:355 bdc/views.py:423
-#: bdc/views.py:464 bdc/views.py:505 bdc/views.py:638 bdc/views.py:670
-#: bdc/views.py:694 bidding/views.py:68 bidding/views.py:88
-#: bidding/views.py:123 bidding/views.py:143 bidding/views.py:173
-#: bidding/views.py:255 bidding/views.py:350 bidding/views.py:367
-#: bidding/views.py:419 bidding/views.py:468 bidding/views.py:517
-#: bidding/views.py:566 bidding/views.py:615 bidding/views.py:664
-#: bidding/views.py:812 bidding/views.py:1027 bidding/views.py:1199
-#: bidding/views.py:1371 bidding/views.py:1542 bidding/views.py:1583
-#: bidding/views.py:1637 bidding/views.py:1650 bidding/views.py:1775
-#: bidding/views.py:1828 bidding/views.py:1841 bidding/views.py:1933
-#: bidding/views.py:1986 bidding/views.py:1999 bidding/views.py:2093
-#: bidding/views.py:2100 bidding/views.py:2108 bidding/views.py:2112
-#: bidding/views.py:2116 bidding/views.py:2152 bidding/views.py:2159
-#: bidding/views.py:2167 bidding/views.py:2171 bidding/views.py:2175
-#: nas/views.py:68 nas/views.py:99 nas/views.py:241 nas/views.py:360
-#: nas/views.py:459 nas/views.py:470 nas/views.py:478 nas/views.py:482
-#: nas/views.py:486 nas/views.py:514 nas/views.py:525 nas/views.py:558
-#: nas/views.py:571 nas/views.py:696 nas/views.py:765 nas/views.py:813
+#: base/views.py:45 base/views.py:49 bdc/views.py:69 bdc/views.py:283
+#: bdc/views.py:351 bdc/views.py:419 bdc/views.py:460 bdc/views.py:501
+#: bdc/views.py:634 bdc/views.py:666 bdc/views.py:690 bidding/views.py:68
+#: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
+#: bidding/views.py:173 bidding/views.py:255 bidding/views.py:350
+#: bidding/views.py:367 bidding/views.py:419 bidding/views.py:468
+#: bidding/views.py:517 bidding/views.py:566 bidding/views.py:615
+#: bidding/views.py:664 bidding/views.py:812 bidding/views.py:1027
+#: bidding/views.py:1199 bidding/views.py:1371 bidding/views.py:1542
+#: bidding/views.py:1583 bidding/views.py:1637 bidding/views.py:1650
+#: bidding/views.py:1775 bidding/views.py:1828 bidding/views.py:1841
+#: bidding/views.py:1933 bidding/views.py:1986 bidding/views.py:1999
+#: bidding/views.py:2093 bidding/views.py:2100 bidding/views.py:2108
+#: bidding/views.py:2112 bidding/views.py:2116 bidding/views.py:2152
+#: bidding/views.py:2159 bidding/views.py:2167 bidding/views.py:2171
+#: bidding/views.py:2175 nas/views.py:68 nas/views.py:99 nas/views.py:241
+#: nas/views.py:360 nas/views.py:459 nas/views.py:470 nas/views.py:478
+#: nas/views.py:482 nas/views.py:486 nas/views.py:514 nas/views.py:525
+#: nas/views.py:558 nas/views.py:571 nas/views.py:696 nas/views.py:765
+#: nas/views.py:813
 msgid "Permission denied"
 msgstr ""
 
-#: base/views.py:41 base/views.py:75 bidding/views.py:2131
-#: bidding/views.py:2186 nas/views.py:497 nas/views.py:541
+#: base/views.py:54 bidding/views.py:2131 bidding/views.py:2186
+#: nas/views.py:497 nas/views.py:541
 msgid "File not found"
 msgstr ""
 
@@ -926,12 +974,12 @@ msgid "Title"
 msgstr ""
 
 #: bdc/models.py:18 bidding/models.py:429 bidding/models.py:538
-#: bidding/models.py:595 bidding/models.py:629
-#: templates/bdc/bdc-details.html:72
+#: bidding/models.py:595 bidding/models.py:629 flows/models.py:163
+#: insights/weasy.py:172 templates/bdc/bdc-details.html:72
 #: templates/bdc/snippets/bdcs/search-form.html:39
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/search-form.html:40
-#: templates/portal/tender-details.html:127
+#: templates/portal/tender-details.html:128
 msgid "Reference"
 msgstr ""
 
@@ -965,9 +1013,9 @@ msgstr ""
 msgid "Official link"
 msgstr ""
 
-#: bdc/models.py:28 templates/bdc/bdc-details.html:81
+#: bdc/models.py:28 insights/weasy.py:171 templates/bdc/bdc-details.html:81
 #: templates/bdc/snippets/bdcs/search-form.html:107
-#: templates/portal/snippets/lots/lot-details.html:58
+#: templates/portal/snippets/lots/lot-details.html:62
 #: templates/portal/snippets/tenders/search-form.html:108
 msgid "Category"
 msgstr ""
@@ -996,16 +1044,16 @@ msgstr ""
 msgid "Results published"
 msgstr ""
 
-#: bdc/models.py:46 bdc/models.py:95 bdc/models.py:117 nas/models.py:392
+#: bdc/models.py:46 bdc/models.py:95 bdc/models.py:117 nas/models.py:385
 msgid "Purchase Order"
 msgstr ""
 
-#: bdc/models.py:96 nas/models.py:260 nas/models.py:300 nas/models.py:318
-#: nas/models.py:334
+#: bdc/models.py:96 nas/models.py:253 nas/models.py:293 nas/models.py:311
+#: nas/models.py:327
 msgid "Rank"
 msgstr ""
 
-#: bdc/models.py:97
+#: bdc/models.py:97 flows/models.py:104 flows/models.py:197 flows/models.py:318
 msgid "Number"
 msgstr ""
 
@@ -1023,7 +1071,8 @@ msgstr ""
 msgid "Unit of Measure"
 msgstr ""
 
-#: bdc/models.py:103 templates/bdc/bdc-articles-pdf.html:221
+#: bdc/models.py:103 flows/models.py:166
+#: templates/bdc/bdc-articles-pdf.html:221
 #: templates/bdc/snippets/articles/articles-details-list.html:12
 msgid "Quantity"
 msgstr ""
@@ -1044,8 +1093,8 @@ msgstr ""
 msgid "Attachement"
 msgstr ""
 
-#: bdc/views.py:427 bdc/views.py:431 bdc/views.py:468 bdc/views.py:640
-#: bdc/views.py:665 bdc/views.py:690 bidding/views.py:72 bidding/views.py:111
+#: bdc/views.py:423 bdc/views.py:427 bdc/views.py:464 bdc/views.py:636
+#: bdc/views.py:661 bdc/views.py:686 bidding/views.py:72 bidding/views.py:111
 #: bidding/views.py:127 bidding/views.py:177 bidding/views.py:181
 #: bidding/views.py:199 bidding/views.py:206 bidding/views.py:375
 #: bidding/views.py:1640 bidding/views.py:1831 bidding/views.py:1989
@@ -1059,27 +1108,31 @@ msgstr ""
 #: templates/bidding/contract-details.html:460
 #: templates/bidding/snippets/bids/bid-item.html:166
 #: templates/bidding/snippets/bonds/bond-item.html:82
-#: templates/insights/bidder-details.html:434
-#: templates/insights/bidder-details.html:500
+#: templates/insights/snippets/bidders/pdf/financials.html:25
+#: templates/insights/snippets/bidders/pdf/wins.html:22
+#: templates/insights/snippets/bidders/table-financials.html:20
+#: templates/insights/snippets/bidders/table-wins.html:20
 #: templates/portal/snippets/tenders/bid-digest.html:27
-#: templates/portal/snippets/tenders/results-digest.html:150
-#: templates/portal/snippets/tenders/results-digest.html:268
-#: templates/portal/snippets/tenders/results-digest.html:292
+#: templates/portal/snippets/tenders/results-digest.html:171
+#: templates/portal/snippets/tenders/results-digest.html:284
+#: templates/portal/snippets/tenders/results-digest.html:309
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:18
 msgid "Lot"
 msgstr ""
 
-#: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:71
-#: templates/portal/snippets/lots/lot-details.html:81
-#: templates/portal/tender-details.html:174
-#: templates/portal/tender-details.html:184
+#: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:75
+#: templates/portal/snippets/lots/lot-details.html:86
+#: templates/portal/tender-details.html:175
+#: templates/portal/tender-details.html:185
+#: templates/portal/tender-details.html:196
 msgid "Yes"
 msgstr ""
 
-#: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:71
-#: templates/portal/snippets/lots/lot-details.html:81
-#: templates/portal/tender-details.html:176
-#: templates/portal/tender-details.html:186
+#: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:75
+#: templates/portal/snippets/lots/lot-details.html:86
+#: templates/portal/tender-details.html:177
+#: templates/portal/tender-details.html:187
+#: templates/portal/tender-details.html:198
 msgid "No"
 msgstr ""
 
@@ -1109,7 +1162,7 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: bidding/models.py:100 nas/models.py:450
+#: bidding/models.py:100 nas/models.py:443
 msgid "Expiry date"
 msgstr ""
 
@@ -1117,7 +1170,8 @@ msgstr ""
 msgid "Show my email"
 msgstr ""
 
-#: bidding/models.py:103 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
+#: bidding/models.py:103 flows/models.py:100 flows/models.py:184
+#: flows/models.py:314 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
 #: nas/choices.py:58 nas/choices.py:68 templates/bidding/bids-list.html:208
 #: templates/bidding/expenses-list.html:168
 #: templates/bidding/tasks-list.html:187
@@ -1137,7 +1191,7 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: bidding/models.py:129 nas/models.py:443
+#: bidding/models.py:129 nas/models.py:436
 #: templates/bidding/bid-details.html:48 templates/bidding/bid-details.html:475
 #: templates/bidding/snippets/bids/bid-item.html:20
 #: templates/bidding/snippets/bids/bid-item.html:101
@@ -1165,14 +1219,16 @@ msgstr ""
 
 #: bidding/models.py:134 bidding/models.py:433 bidding/models.py:478
 #: bidding/models.py:552 bidding/models.py:604 bidding/models.py:643
+#: flows/models.py:165
 #: templates/bidding/snippets/contracts/contract-item.html:40
 #: templates/bidding/snippets/expenses/expense-item.html:44
 #: templates/bidding/snippets/tasks/task-item.html:58
+#: templates/insights/snippets/bidders/bidder-item.html:66
 msgid "Details"
 msgstr ""
 
-#: bidding/models.py:136 templates/bidding/bid-details.html:84
-#: templates/bidding/expense-form.html:48
+#: bidding/models.py:136 insights/weasy.py:182
+#: templates/bidding/bid-details.html:84 templates/bidding/expense-form.html:48
 #: templates/bidding/snippets/bids/bid-menu-sort.html:40
 #: templates/bidding/snippets/bonds/bond-menu-sort.html:32
 #: templates/bidding/snippets/tasks/task-menu-sort.html:32
@@ -1220,8 +1276,8 @@ msgstr ""
 #: bidding/models.py:280 templates/bdc/bdc-details.html:30
 #: templates/bdc/snippets/bdcs/bdc-summary.html:56
 #: templates/bidding/bid-form.html:84 templates/bidding/tenders-list.html:60
-#: templates/portal/snippets/tenders/tender-summary.html:70
-#: templates/portal/tender-details.html:40
+#: templates/portal/snippets/tenders/tender-summary.html:71
+#: templates/portal/tender-details.html:41
 msgid "Bidding deadline"
 msgstr ""
 
@@ -1286,7 +1342,7 @@ msgid "Bid"
 msgstr ""
 
 #: bidding/models.py:431 bidding/models.py:599 bidding/models.py:639
-#: templates/bdc/bdc-articles-pdf.html:156
+#: insights/weasy.py:174 templates/bdc/bdc-articles-pdf.html:156
 #: templates/bdc/snippets/bdcs/search-form.html:40
 #: templates/bidding/bid-details.html:226 templates/bidding/bid-form.html:44
 #: templates/bidding/expense-form.html:28 templates/bidding/task-form.html:28
@@ -1310,7 +1366,7 @@ msgid "Terms file"
 msgstr ""
 
 #: bidding/models.py:441 bidding/models.py:481 bidding/models.py:553
-#: bidding/models.py:605 bidding/models.py:644
+#: bidding/models.py:605 bidding/models.py:644 flows/models.py:108
 #: templates/bidding/snippets/contracts/contract-item.html:9
 #: templates/bidding/snippets/expenses/expense-item.html:11
 #: templates/bidding/snippets/tasks/task-item.html:15
@@ -1333,12 +1389,12 @@ msgid "Emergency"
 msgstr ""
 
 #: bidding/models.py:537 bidding/models.py:594 bidding/models.py:628
-#: nas/models.py:233 nas/models.py:353 nas/models.py:375
+#: nas/models.py:226 nas/models.py:346 nas/models.py:368
 #: templates/bdc/bdc-articles-pdf.html:140 templates/bdc/bdc-details.html:59
 #: templates/bdc/snippets/bdcs/search-form.html:38
 #: templates/bidding/bid-details.html:199
 #: templates/portal/snippets/tenders/search-form.html:39
-#: templates/portal/tender-details.html:105
+#: templates/portal/tender-details.html:106
 msgid "Object"
 msgstr ""
 
@@ -1358,7 +1414,7 @@ msgstr ""
 msgid "Paid Amount, incl. Taxes"
 msgstr ""
 
-#: bidding/models.py:546 bidding/models.py:637 nas/models.py:453
+#: bidding/models.py:546 bidding/models.py:637 nas/models.py:446
 msgid "Taxes Amount"
 msgstr ""
 
@@ -1373,7 +1429,7 @@ msgid "Payee ICE"
 msgstr ""
 
 #: bidding/models.py:555 bidding/models.py:607 bidding/models.py:646
-#: nas/models.py:89 nas/models.py:456
+#: nas/models.py:89 nas/models.py:449
 #: templates/nas/snippets/expirables/expirable-item.html:61
 msgid "File"
 msgstr ""
@@ -1639,28 +1695,296 @@ msgstr ""
 msgid "Expense creator is not an active team member"
 msgstr ""
 
-#: emarches/settings.py:181
+#: emarches/settings.py:186
 msgid "English"
 msgstr ""
 
-#: emarches/settings.py:182
+#: emarches/settings.py:187
 msgid "French"
 msgstr ""
 
-#: emarches/settings.py:183
+#: emarches/settings.py:188
 msgid "Arabic"
 msgstr ""
 
-#: emarches/settings.py:184
+#: emarches/settings.py:189
 msgid "Amazigh"
 msgstr ""
 
-#: emarches/settings.py:185
+#: emarches/settings.py:190
 msgid "Spanish"
 msgstr ""
 
-#: emarches/settings.py:186
+#: emarches/settings.py:191
 msgid "German"
+msgstr ""
+
+#: flows/admin.py:74
+msgid "Owner"
+msgstr ""
+
+#: flows/admin.py:115
+msgid "Legal information"
+msgstr ""
+
+#: flows/admin.py:118 templates/base/includes/footer.html:18
+msgid "Contact"
+msgstr ""
+
+#: flows/admin.py:121
+msgid "Additional information"
+msgstr ""
+
+#: flows/admin.py:124 flows/admin.py:380 flows/admin.py:452 flows/admin.py:542
+#: flows/admin.py:589
+msgid "Timestamps"
+msgstr ""
+
+#: flows/admin.py:240 templates/flows/snippets/plans-table.html:16
+msgid "Features"
+msgstr ""
+
+#: flows/admin.py:367
+msgid "Billing"
+msgstr ""
+
+#: flows/admin.py:370
+msgid "Delivery"
+msgstr ""
+
+#: flows/admin.py:373
+msgid "Totals"
+msgstr ""
+
+#: flows/admin.py:446
+msgid "Subscription period"
+msgstr ""
+
+#: flows/admin.py:536
+msgid "References"
+msgstr ""
+
+#: flows/admin.py:539
+msgid "Confirmation"
+msgstr ""
+
+#: flows/admin.py:548 templates/bidding/team-member-disabled.html:27
+#: templates/bidding/team-recap.html:428
+msgid "Team"
+msgstr ""
+
+#: flows/admin.py:583
+msgid "Processing"
+msgstr ""
+
+#: flows/models.py:96 nas/choices.py:13 nas/choices.py:20 nas/choices.py:34
+msgid "Draft"
+msgstr ""
+
+#: flows/models.py:97 flows/models.py:312 nas/choices.py:57
+#: templates/bidding/expenses-list.html:128
+msgid "Confirmed"
+msgstr ""
+
+#: flows/models.py:98
+msgid "Pending Payment"
+msgstr ""
+
+#: flows/models.py:99
+msgid "Complete"
+msgstr ""
+
+#: flows/models.py:105 nas/models.py:208
+msgid "Date"
+msgstr ""
+
+#: flows/models.py:109
+msgid "Delivery address"
+msgstr ""
+
+#: flows/models.py:110
+msgid "Billing address"
+msgstr ""
+
+#: flows/models.py:164
+msgid "Item"
+msgstr ""
+
+#: flows/models.py:167
+msgid "Unit"
+msgstr ""
+
+#: flows/models.py:168
+msgid "Unit price"
+msgstr ""
+
+#: flows/models.py:169
+msgid "Line total"
+msgstr ""
+
+#: flows/models.py:170
+msgid "Taxes %"
+msgstr ""
+
+#: flows/models.py:171
+msgid "Taxes amount"
+msgstr ""
+
+#: flows/models.py:172
+msgid "Unit price after taxes"
+msgstr ""
+
+#: flows/models.py:173
+msgid "Line total after taxes"
+msgstr ""
+
+#: flows/models.py:181
+msgid "Trial"
+msgstr ""
+
+#: flows/models.py:182
+msgid "Active"
+msgstr ""
+
+#: flows/models.py:183
+msgid "Suspended"
+msgstr ""
+
+#: flows/models.py:185
+msgid "Paused"
+msgstr ""
+
+#: flows/models.py:186 templates/bdc/snippets/bdcs/menu-clean.html:53
+#: templates/nas/snippets/expirables/expirable-item.html:16
+#: templates/portal/snippets/tenders/menu-fav-clean.html:23
+msgid "Expired"
+msgstr ""
+
+#: flows/models.py:291
+msgid "US Dollar"
+msgstr ""
+
+#: flows/models.py:303
+msgid "Cash"
+msgstr ""
+
+#: flows/models.py:304
+msgid "Bank Transfer"
+msgstr ""
+
+#: flows/models.py:305
+msgid "Wire Transfer"
+msgstr ""
+
+#: flows/models.py:306
+msgid "Check"
+msgstr ""
+
+#: flows/models.py:307
+msgid "Other"
+msgstr ""
+
+#: flows/models.py:311 nas/choices.py:49 nas/choices.py:55 nas/choices.py:65
+#: templates/bidding/expenses-list.html:48 templates/bidding/tasks-list.html:82
+msgid "Pending"
+msgstr ""
+
+#: flows/models.py:313
+msgid "Failed"
+msgstr ""
+
+#: insights/weasy.py:110
+msgid "Generated by "
+msgstr ""
+
+#: insights/weasy.py:170 nas/models.py:172 nas/models.py:189 nas/models.py:207
+#: templates/base/base.html:15 templates/base/base.html:16
+#: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
+#: templates/bidding/snippets/bids/bid-actions.html:13
+#: templates/bidding/snippets/bids/bid-item.html:160
+#: templates/bidding/snippets/bonds/bond-item.html:76
+msgid "Tender"
+msgstr ""
+
+#: insights/weasy.py:173 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
+#: nas/choices.py:94 templates/bdc/bdc-details.html:76
+#: templates/bdc/snippets/bdcs/menu-sort.html:23
+#: templates/bidding/bid-form.html:64
+#: templates/portal/snippets/tenders/menu-sort.html:35
+#: templates/portal/tender-details.html:131
+msgid "Published"
+msgstr ""
+
+#: insights/weasy.py:175 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
+#: nas/choices.py:92 templates/bdc/bdc-details.html:63
+#: templates/bdc/snippets/bdcs/menu-sort.html:17
+#: templates/portal/snippets/tenders/menu-sort.html:17
+#: templates/portal/tender-details.html:117
+msgid "Deadline"
+msgstr ""
+
+#: insights/weasy.py:176 nas/choices.py:83 nas/choices.py:84
+#: templates/bidding/bid-details.html:101 templates/bidding/bid-form.html:94
+#: templates/portal/snippets/lots/lot-details.html:42
+#: templates/portal/snippets/tenders/menu-sort.html:23
+#: templates/portal/snippets/tenders/tender-simulator-modal.html:140
+msgid "Estimate"
+msgstr ""
+
+#: insights/weasy.py:177 templates/bidding/bid-form.html:74
+msgid "Bond"
+msgstr ""
+
+#: insights/weasy.py:178
+msgid "Opening date"
+msgstr ""
+
+#: insights/weasy.py:179
+msgid "Lot Number"
+msgstr ""
+
+#: insights/weasy.py:180
+msgid "Admin Exam"
+msgstr ""
+
+#: insights/weasy.py:181
+msgid "Tech Exam"
+msgstr ""
+
+#: insights/weasy.py:183
+msgid "Corrected Amount"
+msgstr ""
+
+#: insights/weasy.py:184
+msgid "Financial Race"
+msgstr ""
+
+#: insights/weasy.py:185 templates/base/snippets/digests/last-30-days.html:25
+#: templates/base/snippets/digests/last-30-days.html:45
+msgid "Awarded Amount"
+msgstr ""
+
+#: insights/weasy.py:186
+msgid "Awarding justification"
+msgstr ""
+
+#: insights/weasy.py:192 nas/choices.py:62 nas/choices.py:67
+#: templates/portal/snippets/tenders/search-form.html:166
+msgid "Accepted"
+msgstr ""
+
+#: insights/weasy.py:193 insights/weasy.py:195
+msgid "Rejected"
+msgstr ""
+
+#: insights/weasy.py:194
+msgid "Reserve"
+msgstr ""
+
+#: insights/weasy.py:196 nas/choices.py:28
+#: templates/bdc/snippets/bdcs/menu-clean.html:33
+#: templates/bdc/snippets/bdcs/search-form.html:124
+msgid "Awarded"
 msgstr ""
 
 #: nas/choices.py:6
@@ -1681,10 +2005,6 @@ msgstr ""
 
 #: nas/choices.py:10
 msgid "Pr."
-msgstr ""
-
-#: nas/choices.py:13 nas/choices.py:20 nas/choices.py:34
-msgid "Draft"
 msgstr ""
 
 #: nas/choices.py:14 templates/bidding/bids-list.html:88
@@ -1718,11 +2038,6 @@ msgstr ""
 
 #: nas/choices.py:27 templates/bdc/bdc-details.html:130
 msgid "Unknown"
-msgstr ""
-
-#: nas/choices.py:28 templates/bdc/snippets/bdcs/menu-clean.html:33
-#: templates/bdc/snippets/bdcs/search-form.html:124
-msgid "Awarded"
 msgstr ""
 
 #: nas/choices.py:29
@@ -1769,11 +2084,6 @@ msgstr ""
 msgid "Critical"
 msgstr ""
 
-#: nas/choices.py:49 nas/choices.py:55 nas/choices.py:65
-#: templates/bidding/expenses-list.html:48 templates/bidding/tasks-list.html:82
-msgid "Pending"
-msgstr ""
-
 #: nas/choices.py:50 templates/bidding/tasks-list.html:117
 msgid "Started"
 msgstr ""
@@ -1782,42 +2092,8 @@ msgstr ""
 msgid "Paid"
 msgstr ""
 
-#: nas/choices.py:57 templates/bidding/expenses-list.html:128
-msgid "Confirmed"
-msgstr ""
-
 #: nas/choices.py:61
 msgid "Denied"
-msgstr ""
-
-#: nas/choices.py:62 nas/choices.py:67
-#: templates/portal/snippets/tenders/search-form.html:166
-msgid "Accepted"
-msgstr ""
-
-#: nas/choices.py:81 nas/choices.py:82 nas/choices.py:91 nas/choices.py:92
-#: templates/bdc/bdc-details.html:63
-#: templates/bdc/snippets/bdcs/menu-sort.html:17
-#: templates/portal/snippets/tenders/menu-sort.html:17
-#: templates/portal/tender-details.html:116
-msgid "Deadline"
-msgstr ""
-
-#: nas/choices.py:83 nas/choices.py:84 templates/bidding/bid-details.html:101
-#: templates/bidding/bid-form.html:94
-#: templates/portal/snippets/lots/lot-details.html:38
-#: templates/portal/snippets/tenders/menu-sort.html:23
-#: templates/portal/snippets/tenders/tender-simulator-modal.html:140
-msgid "Estimate"
-msgstr ""
-
-#: nas/choices.py:87 nas/choices.py:88 nas/choices.py:93 nas/choices.py:94
-#: templates/bdc/bdc-details.html:76
-#: templates/bdc/snippets/bdcs/menu-sort.html:23
-#: templates/bidding/bid-form.html:64
-#: templates/portal/snippets/tenders/menu-sort.html:35
-#: templates/portal/tender-details.html:130
-msgid "Published"
 msgstr ""
 
 #: nas/choices.py:95 nas/choices.py:96
@@ -1854,7 +2130,7 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: nas/forms.py:36 nas/models.py:46 nas/models.py:254 nas/models.py:295
+#: nas/forms.py:36 nas/models.py:46 nas/models.py:247 nas/models.py:288
 #: templates/nas/profile/snippets/user-details.html:35
 msgid "Whatsapp"
 msgstr ""
@@ -2021,11 +2297,7 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: nas/models.py:84
-msgid "Activity"
-msgstr ""
-
-#: nas/models.py:85 nas/models.py:455
+#: nas/models.py:85 nas/models.py:448
 msgid "Descritpion"
 msgstr ""
 
@@ -2037,13 +2309,16 @@ msgstr ""
 msgid "Agrements"
 msgstr ""
 
-#: nas/models.py:88 templates/nas/companies/qualifs_form.html:20
+#: nas/models.py:88 templates/insights/bidder-pdf.html:108
+#: templates/insights/bidder-pdf.html:299
+#: templates/insights/bidder-pdf.html:303
+#: templates/nas/companies/qualifs_form.html:20
 #: templates/nas/companies/snippets/company-item.html:33
 #: templates/nas/companies/snippets/qualif_list.html:12
 msgid "Qualifications"
 msgstr ""
 
-#: nas/models.py:97 templates/base/snippets/menu-user.html:39
+#: nas/models.py:97 templates/base/snippets/menu-user.html:43
 #: templates/bidding/snippets/members/member-item.html:179
 #: templates/bidding/snippets/members/member-item.html:181
 #: templates/nas/profile/snippets/companies-list.html:7
@@ -2051,213 +2326,201 @@ msgstr ""
 msgid "Companies"
 msgstr ""
 
-#: nas/models.py:179 nas/models.py:196 nas/models.py:214
-#: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
-#: templates/bidding/snippets/bids/bid-actions.html:13
-#: templates/bidding/snippets/bids/bid-item.html:160
-#: templates/bidding/snippets/bonds/bond-item.html:76
-msgid "Tender"
-msgstr ""
-
-#: nas/models.py:181 nas/models.py:394
+#: nas/models.py:174 nas/models.py:387
 msgid "Date Added"
 msgstr ""
 
-#: nas/models.py:182 nas/models.py:237 nas/models.py:395
+#: nas/models.py:175 nas/models.py:230 nas/models.py:388
 msgid "Comment"
 msgstr ""
 
-#: nas/models.py:197
+#: nas/models.py:190
 msgid "Date Started"
 msgstr ""
 
-#: nas/models.py:198
+#: nas/models.py:191
 msgid "Displayed Size"
 msgstr ""
 
-#: nas/models.py:199
+#: nas/models.py:192
 msgid "Size in Bytes"
 msgstr ""
 
-#: nas/models.py:215
-msgid "Date"
-msgstr ""
-
-#: nas/models.py:228 nas/models.py:350 nas/models.py:372
+#: nas/models.py:221 nas/models.py:343 nas/models.py:365
 msgid "Date sent"
 msgstr ""
 
-#: nas/models.py:229
+#: nas/models.py:222
 msgid "User Agent"
 msgstr ""
 
-#: nas/models.py:230 templates/x-usersessions/usersession_list.html:27
+#: nas/models.py:223 templates/usersessions/usersession_list.html:27
 msgid "IP Address"
 msgstr ""
 
-#: nas/models.py:234
+#: nas/models.py:227
 msgid "Your Message"
 msgstr ""
 
-#: nas/models.py:235
+#: nas/models.py:228
 msgid "Contact Method"
 msgstr ""
 
-#: nas/models.py:236
+#: nas/models.py:229
 msgid "Response"
 msgstr ""
 
-#: nas/models.py:238
+#: nas/models.py:231
 msgid "Actions"
 msgstr ""
 
-#: nas/models.py:239
+#: nas/models.py:232
 msgid "Solved"
 msgstr ""
 
-#: nas/models.py:253 nas/models.py:294
+#: nas/models.py:246 nas/models.py:287
 msgid "SMS"
 msgstr ""
 
-#: nas/models.py:261 nas/models.py:303
-#: templates/portal/snippets/lots/lot-details.html:23
+#: nas/models.py:254 nas/models.py:296
+#: templates/portal/snippets/lots/lot-details.html:27
 msgid "Description"
 msgstr ""
 
-#: nas/models.py:262 nas/models.py:304
+#: nas/models.py:255 nas/models.py:297
 msgid "Channel"
 msgstr ""
 
-#: nas/models.py:263
+#: nas/models.py:256
 msgid "Messages per month"
 msgstr ""
 
-#: nas/models.py:271
+#: nas/models.py:264
 msgid "Month"
 msgstr ""
 
-#: nas/models.py:273
+#: nas/models.py:266
 msgid "Week"
 msgstr ""
 
-#: nas/models.py:276
+#: nas/models.py:269
 msgid "Day"
 msgstr ""
 
-#: nas/models.py:302
+#: nas/models.py:295
 msgid "Event"
 msgstr ""
 
-#: nas/models.py:320 nas/models.py:336
+#: nas/models.py:313 nas/models.py:329
 msgid "Last subscribed"
 msgstr ""
 
-#: nas/models.py:348 nas/models.py:369
+#: nas/models.py:341 nas/models.py:362
 msgid "User"
 msgstr ""
 
-#: nas/models.py:349
+#: nas/models.py:342
 msgid "Newsletter"
 msgstr ""
 
-#: nas/models.py:351 nas/models.py:373
+#: nas/models.py:344 nas/models.py:366
 msgid "Sender"
 msgstr ""
 
-#: nas/models.py:352 nas/models.py:374
+#: nas/models.py:345 nas/models.py:367
 msgid "Destination"
 msgstr ""
 
-#: nas/models.py:355 nas/models.py:377
+#: nas/models.py:348 nas/models.py:370
 msgid "Retries"
 msgstr ""
 
-#: nas/models.py:356 nas/models.py:378
+#: nas/models.py:349 nas/models.py:371
 msgid "Max retries"
 msgstr ""
 
-#: nas/models.py:357 nas/models.py:379 templates/bidding/contracts-list.html:98
+#: nas/models.py:350 nas/models.py:372 templates/bidding/contracts-list.html:98
 msgid "Success"
 msgstr ""
 
-#: nas/models.py:370
+#: nas/models.py:363
 msgid "Notification"
 msgstr ""
 
-#: nas/models.py:371
+#: nas/models.py:364
 msgid "Change"
 msgstr ""
 
-#: nas/models.py:411 nas/models.py:417
+#: nas/models.py:404 nas/models.py:410
 msgid "Default sort"
 msgstr ""
 
-#: nas/models.py:412 nas/models.py:418 templates/nas/user-settings-edit.html:97
+#: nas/models.py:405 nas/models.py:411 templates/nas/user-settings-edit.html:97
 #: templates/nas/user-settings-edit.html:177
 msgid "Items per page"
 msgstr ""
 
-#: nas/models.py:413 nas/models.py:419
+#: nas/models.py:406 nas/models.py:412
 msgid "Full progress bar days"
 msgstr ""
 
-#: nas/models.py:414 nas/models.py:420
+#: nas/models.py:407 nas/models.py:413
 msgid "Show today's expired items"
 msgstr ""
 
-#: nas/models.py:415
+#: nas/models.py:408
 msgid "Show cancelled tenders"
 msgstr ""
 
-#: nas/models.py:421
+#: nas/models.py:414
 msgid "First articles to show"
 msgstr ""
 
-#: nas/models.py:423
+#: nas/models.py:416
 msgid "Check Tender dealine when editing"
 msgstr ""
 
-#: nas/models.py:424
+#: nas/models.py:417
 msgid "Check submitted amount when editing"
 msgstr ""
 
-#: nas/models.py:425
+#: nas/models.py:418
 msgid "Check submitted bond when editing"
 msgstr ""
 
-#: nas/models.py:427
+#: nas/models.py:420
 msgid "Do not wrap long text"
 msgstr ""
 
-#: nas/models.py:428 templates/nas/user-settings-edit.html:30
+#: nas/models.py:421 templates/nas/user-settings-edit.html:30
 msgid "List items per page"
 msgstr ""
 
-#: nas/models.py:429 templates/nas/user-settings-edit.html:61
+#: nas/models.py:422 templates/nas/user-settings-edit.html:61
 msgid "Show invitations from other teams"
 msgstr ""
 
-#: nas/models.py:431
+#: nas/models.py:424
 msgid "Preferred interface language"
 msgstr ""
 
-#: nas/models.py:445
+#: nas/models.py:438
 msgid "Group"
 msgstr ""
 
-#: nas/models.py:448 templates/nas/snippets/expirables/expirable-item.html:41
+#: nas/models.py:441 templates/nas/snippets/expirables/expirable-item.html:41
 msgid "Issuer"
 msgstr ""
 
-#: nas/models.py:449
+#: nas/models.py:442
 msgid "Validity start"
 msgstr ""
 
-#: nas/models.py:452
+#: nas/models.py:445
 msgid "Paid Amount (incl. all taxes)"
 msgstr ""
 
-#: nas/models.py:461
+#: nas/models.py:454
 msgid "Expirable"
 msgstr ""
 
@@ -2321,6 +2584,690 @@ msgstr ""
 
 #: templates/403_csrf.html:35
 msgid "Please make sure your browser is not in Private/Incognito mode."
+msgstr ""
+
+#: templates/account/account_inactive.html:5
+#: templates/account/account_inactive.html:9
+msgid "Account Inactive"
+msgstr ""
+
+#: templates/account/account_inactive.html:12
+msgid "This account is inactive."
+msgstr ""
+
+#: templates/account/base_confirm_code.html:27
+#, python-format
+msgid ""
+"We've sent a code to %(recipient)s. The code expires shortly, so please "
+"enter it soon."
+msgstr ""
+
+#: templates/account/base_confirm_code.html:39
+#: templates/account/email_confirm.html:24
+#: templates/account/reauthenticate.html:18
+#: templates/bdc/snippets/bdcs/menu-clean.html:96
+#: templates/bidding/team-recap.html:308 templates/bidding/team-recap.html:506
+#: templates/bidding/team-recap.html:548 templates/bidding/team-recap.html:590
+#: templates/bidding/team-recap.html:637 templates/bidding/team-recap.html:679
+#: templates/idp/oidc/device_authorization_confirm_form.html:26
+#: templates/mfa/reauthenticate.html:18
+msgid "Confirm"
+msgstr ""
+
+#: templates/account/base_confirm_code.html:43
+msgid "Request new code"
+msgstr ""
+
+#: templates/account/base_confirm_code.html:48
+#: templates/account/base_confirm_code.html:52
+#: templates/account/password_reset_from_key.html:33
+#: templates/bdc/snippets/bdcs/menu-clean.html:90
+#: templates/bidding/bid-details.html:498
+#: templates/bidding/bid-details.html:547
+#: templates/bidding/bid-details.html:596 templates/bidding/bid-form.html:159
+#: templates/bidding/bids-list.html:278 templates/bidding/expense-form.html:96
+#: templates/bidding/expenses-list.html:238 templates/bidding/task-form.html:96
+#: templates/bidding/tasks-list.html:253 templates/bidding/team-recap.html:733
+#: templates/idp/oidc/authorization_form.html:26
+#: templates/mfa/authenticate.html:28 templates/mfa/authenticate.html:44
+#: templates/mfa/trust.html:29 templates/mfa/webauthn/signup_form.html:26
+#: templates/nas/companies/company_confirm_delete.html:29
+#: templates/nas/expirable-form.html:74 templates/nas/manageriat-form.html:74
+#: templates/nas/profile-edit.html:81 templates/nas/signature_key-form.html:74
+#: templates/nas/user-settings-edit.html:306
+msgid "Cancel"
+msgstr ""
+
+#: templates/account/base_reauthenticate.html:5
+#: templates/account/base_reauthenticate.html:9
+msgid "Confirm Access"
+msgstr ""
+
+#: templates/account/base_reauthenticate.html:12
+msgid "Please reauthenticate to safeguard your account."
+msgstr ""
+
+#: templates/account/base_reauthenticate.html:19
+#: templates/mfa/authenticate.html:37
+msgid "Alternative options"
+msgstr ""
+
+#: templates/account/confirm_email_verification_code.html:5
+msgid "Email Verification"
+msgstr ""
+
+#: templates/account/confirm_email_verification_code.html:8
+msgid "Enter Email Verification Code"
+msgstr ""
+
+#: templates/account/confirm_email_verification_code.html:16
+msgid "Use a different email address"
+msgstr ""
+
+#: templates/account/confirm_login_code.html:5 templates/account/login.html:5
+#: templates/account/login.html:9 templates/account/login.html:31
+#: templates/account/request_login_code.html:5
+#: templates/authy/snippets/menu-user.html:84
+#: templates/base/snippets/menu-user.html:119 templates/mfa/authenticate.html:6
+#: templates/mfa/authenticate.html:24 templates/openid/login.html:5
+#: templates/openid/login.html:9 templates/openid/login.html:20
+#: templates/socialaccount/login.html:6
+#: templates/socialaccount/login_redirect.html:5
+msgid "Sign In"
+msgstr ""
+
+#: templates/account/confirm_login_code.html:8
+msgid "Enter Sign-In Code"
+msgstr ""
+
+#: templates/account/confirm_password_reset_code.html:5
+#: templates/account/email/password_reset_subject.txt:3
+#: templates/account/password_reset.html:4
+#: templates/account/password_reset.html:8
+#: templates/account/password_reset_done.html:6
+#: templates/account/password_reset_done.html:10
+msgid "Password Reset"
+msgstr ""
+
+#: templates/account/confirm_password_reset_code.html:8
+msgid "Enter Password Reset Code"
+msgstr ""
+
+#: templates/account/confirm_phone_verification_code.html:5
+msgid "Phone Verification"
+msgstr ""
+
+#: templates/account/confirm_phone_verification_code.html:8
+msgid "Enter Phone Verification Code"
+msgstr ""
+
+#: templates/account/confirm_phone_verification_code.html:15
+msgid "Use a different phone number"
+msgstr ""
+
+#: templates/account/email.html:4 templates/account/email.html:8
+msgid "Email Addresses"
+msgstr ""
+
+#: templates/account/email.html:12
+msgid "The following email addresses are associated with your account:"
+msgstr ""
+
+#: templates/account/email.html:25
+msgid "Verified"
+msgstr ""
+
+#: templates/account/email.html:29
+msgid "Unverified"
+msgstr ""
+
+#: templates/account/email.html:34
+msgid "Primary"
+msgstr ""
+
+#: templates/account/email.html:44
+msgid "Make Primary"
+msgstr ""
+
+#: templates/account/email.html:47 templates/account/email_change.html:37
+#: templates/account/phone_change.html:24
+msgid "Re-send Verification"
+msgstr ""
+
+#: templates/account/email.html:50
+#: templates/mfa/webauthn/authenticator_confirm_delete.html:16
+#: templates/mfa/webauthn/authenticator_list.html:60
+#: templates/socialaccount/connections.html:40
+msgid "Remove"
+msgstr ""
+
+#: templates/account/email.html:59
+msgid "Add Email Address"
+msgstr ""
+
+#: templates/account/email.html:70
+msgid "Add Email"
+msgstr ""
+
+#: templates/account/email.html:80
+msgid "Do you really want to remove the selected email address?"
+msgstr ""
+
+#: templates/account/email/account_already_exists_message.txt:4
+#, python-format
+msgid ""
+"You are receiving this email because you or someone else tried to signup for "
+"an\n"
+"account using email address:\n"
+"\n"
+"%(email)s\n"
+"\n"
+"However, an account using that email address already exists.  In case you "
+"have\n"
+"forgotten about this, please use the password forgotten procedure to "
+"recover\n"
+"your account:\n"
+"\n"
+"%(password_reset_url)s"
+msgstr ""
+
+#: templates/account/email/account_already_exists_subject.txt:3
+msgid "Account Already Exists"
+msgstr ""
+
+#: templates/account/email/base_message.txt:1
+#, python-format
+msgid "Hello from %(site_name)s!"
+msgstr ""
+
+#: templates/account/email/base_message.txt:5
+#, python-format
+msgid ""
+"Thank you for using %(site_name)s!\n"
+"%(site_domain)s"
+msgstr ""
+
+#: templates/account/email/base_notification.txt:5
+msgid ""
+"You are receiving this mail because the following change was made to your "
+"account:"
+msgstr ""
+
+#: templates/account/email/base_notification.txt:10
+#, python-format
+msgid ""
+"If you do not recognize this change then please take proper security "
+"precautions immediately. The change to your account originates from:\n"
+"\n"
+"- IP address: %(ip)s\n"
+"- Browser: %(user_agent)s\n"
+"- Date: %(timestamp)s"
+msgstr ""
+
+#: templates/account/email/email_changed_message.txt:4
+#, python-format
+msgid "Your email has been changed from %(from_email)s to %(to_email)s."
+msgstr ""
+
+#: templates/account/email/email_changed_subject.txt:3
+msgid "Email Changed"
+msgstr ""
+
+#: templates/account/email/email_confirm_message.txt:4
+msgid "Your email has been confirmed."
+msgstr ""
+
+#: templates/account/email/email_confirm_subject.txt:3
+msgid "Email Confirmation"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.txt:5
+#, python-format
+msgid ""
+"You're receiving this email because user %(user_display)s has given your "
+"email address to register an account on %(site_domain)s."
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.txt:7
+msgid ""
+"Your email verification code is listed below. Please enter it in your open "
+"browser window."
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.txt:9
+#, python-format
+msgid "To confirm this is correct, go to %(activate_url)s"
+msgstr ""
+
+#: templates/account/email/email_confirmation_subject.txt:3
+msgid "Please Confirm Your Email Address"
+msgstr ""
+
+#: templates/account/email/email_deleted_message.txt:4
+#, python-format
+msgid "Email address %(deleted_email)s has been removed from your account."
+msgstr ""
+
+#: templates/account/email/email_deleted_subject.txt:3
+msgid "Email Removed"
+msgstr ""
+
+#: templates/account/email/login_code_message.txt:5
+msgid ""
+"Your sign-in code is listed below. Please enter it in your open browser "
+"window."
+msgstr ""
+
+#: templates/account/email/login_code_message.txt:9
+#: templates/account/email/password_reset_code_message.txt:9
+#: templates/account/email/unknown_account_message.txt:6
+msgid "This mail can be safely ignored if you did not initiate this action."
+msgstr ""
+
+#: templates/account/email/login_code_subject.txt:3
+msgid "Sign-In Code"
+msgstr ""
+
+#: templates/account/email/password_changed_message.txt:4
+msgid "Your password has been changed."
+msgstr ""
+
+#: templates/account/email/password_changed_subject.txt:3
+msgid "Password Changed"
+msgstr ""
+
+#: templates/account/email/password_reset_code_message.txt:5
+msgid ""
+"Your password reset code is listed below. Please enter it in your open "
+"browser window."
+msgstr ""
+
+#: templates/account/email/password_reset_code_subject.txt:3
+msgid "Password Reset Code"
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.txt:4
+msgid ""
+"You're receiving this email because you or someone else has requested a "
+"password reset for your user account.\n"
+"It can be safely ignored if you did not request a password reset. Click the "
+"link below to reset your password."
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.txt:9
+#, python-format
+msgid "In case you forgot, your username is %(username)s."
+msgstr ""
+
+#: templates/account/email/password_reset_key_subject.txt:3
+msgid "Password Reset Email"
+msgstr ""
+
+#: templates/account/email/password_reset_message.txt:4
+msgid "Your password has been reset."
+msgstr ""
+
+#: templates/account/email/password_set_message.txt:4
+msgid "Your password has been set."
+msgstr ""
+
+#: templates/account/email/password_set_subject.txt:3
+msgid "Password Set"
+msgstr ""
+
+#: templates/account/email/unknown_account_message.txt:4
+#, python-format
+msgid ""
+"You are receiving this email because you, or someone else, tried to access "
+"an account with email %(email)s. However, we do not have any record of such "
+"an account in our database."
+msgstr ""
+
+#: templates/account/email/unknown_account_message.txt:8
+msgid "If it was you, you can sign up for an account using the link below."
+msgstr ""
+
+#: templates/account/email/unknown_account_subject.txt:3
+msgid "Unknown Account"
+msgstr ""
+
+#: templates/account/email_change.html:5 templates/account/email_change.html:9
+msgid "Email Address"
+msgstr ""
+
+#: templates/account/email_change.html:21
+#: templates/account/email_change.html:29
+msgid "Current email"
+msgstr ""
+
+#: templates/account/email_change.html:31
+msgid "Changing to"
+msgstr ""
+
+#: templates/account/email_change.html:35
+msgid "Your email address is still pending verification."
+msgstr ""
+
+#: templates/account/email_change.html:41
+msgid "Cancel Change"
+msgstr ""
+
+#: templates/account/email_change.html:49
+#: templates/account/phone_change.html:32
+msgid "Change to"
+msgstr ""
+
+#: templates/account/email_change.html:55
+#: templates/authy/snippets/menu-user.html:29
+msgid "Change Email"
+msgstr ""
+
+#: templates/account/email_confirm.html:6
+#: templates/account/email_confirm.html:10
+msgid "Confirm Email Address"
+msgstr ""
+
+#: templates/account/email_confirm.html:16
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an email "
+"address for user %(user_display)s."
+msgstr ""
+
+#: templates/account/email_confirm.html:30
+#: templates/account/messages/email_confirmation_failed.txt:2
+#, python-format
+msgid ""
+"Unable to confirm %(email)s because it is already confirmed by a different "
+"account."
+msgstr ""
+
+#: templates/account/email_confirm.html:36
+#, python-format
+msgid ""
+"This email confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new email confirmation request</a>."
+msgstr ""
+
+#: templates/account/login.html:19
+#, python-format
+msgid ""
+"If you have not created an account yet, then please %(link)ssign "
+"up%(end_link)s first."
+msgstr ""
+
+#: templates/account/login.html:42
+msgid "Sign in with a passkey"
+msgstr ""
+
+#: templates/account/login.html:47 templates/account/request_login_code.html:9
+msgid "Send me a sign-in code"
+msgstr ""
+
+#: templates/account/logout.html:5 templates/account/logout.html:9
+#: templates/account/logout.html:22 templates/authy/snippets/menu-user.html:74
+#: templates/base/snippets/menu-user.html:109
+#: templates/nas/snippets/menu-account.html:74
+#: templates/usersessions/usersession_list.html:76
+msgid "Sign Out"
+msgstr ""
+
+#: templates/account/logout.html:12
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+#: templates/account/messages/cannot_delete_primary_email.txt:2
+#, python-format
+msgid "You cannot remove your primary email address (%(email)s)."
+msgstr ""
+
+#: templates/account/messages/email_confirmation_sent.txt:2
+#, python-format
+msgid "Confirmation email sent to %(email)s."
+msgstr ""
+
+#: templates/account/messages/email_confirmed.txt:2
+#, python-format
+msgid "You have confirmed %(email)s."
+msgstr ""
+
+#: templates/account/messages/email_deleted.txt:2
+#, python-format
+msgid "Removed email address %(email)s."
+msgstr ""
+
+#: templates/account/messages/logged_in.txt:4
+#, python-format
+msgid "Successfully signed in as %(name)s."
+msgstr ""
+
+#: templates/account/messages/logged_out.txt:2
+msgid "You have signed out."
+msgstr ""
+
+#: templates/account/messages/login_code_sent.txt:2
+#, python-format
+msgid "A sign-in code has been sent to %(recipient)s."
+msgstr ""
+
+#: templates/account/messages/password_changed.txt:2
+msgid "Password successfully changed."
+msgstr ""
+
+#: templates/account/messages/password_set.txt:2
+msgid "Password successfully set."
+msgstr ""
+
+#: templates/account/messages/phone_verification_sent.txt:2
+#, python-format
+msgid "A verification code has been sent to %(phone)s."
+msgstr ""
+
+#: templates/account/messages/phone_verified.txt:2
+#, python-format
+msgid "You have verified phone number %(phone)s."
+msgstr ""
+
+#: templates/account/messages/primary_email_set.txt:2
+msgid "Primary email address set."
+msgstr ""
+
+#: templates/account/messages/unverified_primary_email.txt:2
+msgid "Your primary email address must be verified."
+msgstr ""
+
+#: templates/account/password_change.html:4
+#: templates/account/password_change.html:8
+#: templates/account/password_change.html:20
+#: templates/account/password_reset_from_key.html:5
+#: templates/account/password_reset_from_key.html:12
+#: templates/account/password_reset_from_key.html:30
+#: templates/account/password_reset_from_key_done.html:5
+#: templates/account/password_reset_from_key_done.html:9
+#: templates/authy/snippets/menu-user.html:38
+#: templates/base/snippets/menu-user.html:129
+msgid "Change Password"
+msgstr ""
+
+#: templates/account/password_change.html:22
+msgid "Forgot Password?"
+msgstr ""
+
+#: templates/account/password_reset.html:14
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll send you "
+"an email allowing you to reset it."
+msgstr ""
+
+#: templates/account/password_reset.html:26
+msgid "Reset My Password"
+msgstr ""
+
+#: templates/account/password_reset.html:31
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr ""
+
+#: templates/account/password_reset_done.html:16
+msgid ""
+"We have sent you an email. If you have not received it please check your "
+"spam folder. Otherwise contact us if you do not receive it in a few minutes."
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:10
+msgid "Bad Token"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:18
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
+"a>."
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:12
+msgid "Your password is now changed."
+msgstr ""
+
+#: templates/account/password_set.html:5 templates/account/password_set.html:9
+#: templates/account/password_set.html:21
+msgid "Set Password"
+msgstr ""
+
+#: templates/account/phone_change.html:5 templates/account/phone_change.html:9
+msgid "Change Phone"
+msgstr ""
+
+#: templates/account/phone_change.html:18
+msgid "Current phone"
+msgstr ""
+
+#: templates/account/phone_change.html:22
+msgid "Your phone number is still pending verification."
+msgstr ""
+
+#: templates/account/phone_change.html:38
+msgctxt "action"
+msgid "Change Phone"
+msgstr ""
+
+#: templates/account/reauthenticate.html:6
+msgid "Enter your password:"
+msgstr ""
+
+#: templates/account/request_login_code.html:12
+msgid "You will receive a special code for a password-free sign-in."
+msgstr ""
+
+#: templates/account/request_login_code.html:24
+msgid "Request Code"
+msgstr ""
+
+#: templates/account/request_login_code.html:30
+msgid "Other sign-in options"
+msgstr ""
+
+#: templates/account/signup.html:4 templates/account/signup_by_passkey.html:4
+#: templates/socialaccount/signup.html:5
+msgid "Signup"
+msgstr ""
+
+#: templates/account/signup.html:8 templates/account/signup.html:34
+#: templates/account/signup_by_passkey.html:29
+#: templates/authy/snippets/menu-user.html:93
+#: templates/base/snippets/menu-user.html:139
+#: templates/socialaccount/signup.html:9 templates/socialaccount/signup.html:25
+msgid "Sign Up"
+msgstr ""
+
+#: templates/account/signup.html:17 templates/account/signup_by_passkey.html:17
+#, python-format
+msgid "Already have an account? Then please %(link)ssign in%(end_link)s."
+msgstr ""
+
+#: templates/account/signup.html:43
+msgid "Sign up using a passkey"
+msgstr ""
+
+#: templates/account/signup_by_passkey.html:8
+msgid "Passkey Sign Up"
+msgstr ""
+
+#: templates/account/signup_by_passkey.html:36
+msgid "Other options"
+msgstr ""
+
+#: templates/account/signup_closed.html:5
+#: templates/account/signup_closed.html:9
+msgid "Sign Up Closed"
+msgstr ""
+
+#: templates/account/signup_closed.html:12
+msgid "We are sorry, but the sign up is currently closed."
+msgstr ""
+
+#: templates/account/snippets/already_logged_in.html:7
+#: templates/nas/companies/snippets/company_data.html:76
+#: templates/nas/snippets/expirables/expirable-item.html:53
+msgid "Note"
+msgstr ""
+
+#: templates/account/snippets/already_logged_in.html:7
+#, python-format
+msgid "You are already logged in as %(user_display)s."
+msgstr ""
+
+#: templates/account/snippets/warn_no_email.html:3
+msgid "Warning:"
+msgstr ""
+
+#: templates/account/snippets/warn_no_email.html:3
+msgid ""
+"You currently do not have any email address set up. You should really add an "
+"email address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+#: templates/account/verification_sent.html:5
+#: templates/account/verification_sent.html:9
+#: templates/account/verified_email_required.html:5
+#: templates/account/verified_email_required.html:9
+msgid "Verify Your Email Address"
+msgstr ""
+
+#: templates/account/verification_sent.html:12
+msgid ""
+"We have sent an email to you for verification. Follow the link provided to "
+"finalize the signup process. If you do not see the verification email in "
+"your main inbox, check your spam folder. Please contact us if you do not "
+"receive the verification email within a few minutes."
+msgstr ""
+
+#: templates/account/verified_email_required.html:13
+msgid ""
+"This part of the site requires us to verify that\n"
+"you are who you claim to be. For this purpose, we require that you\n"
+"verify ownership of your email address. "
+msgstr ""
+
+#: templates/account/verified_email_required.html:18
+msgid ""
+"We have sent an email to you for\n"
+"verification. Please click on the link inside that email. If you do not see "
+"the verification email in your main inbox, check your spam folder. "
+"Otherwise\n"
+"contact us if you do not receive it within a few minutes."
+msgstr ""
+
+#: templates/account/verified_email_required.html:23
+#, python-format
+msgid ""
+"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your "
+"email address</a>."
+msgstr ""
+
+#: templates/allauth/layouts/base.html:43
+#: templates/authy/snippets/bottom-bar.html:21
+msgid "All rights reserved"
 msgstr ""
 
 #: templates/authy/includes/junky.html:8
@@ -2394,88 +3341,399 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-#: templates/authy/snippets/bottom-bar.html:21
-#: templates/x-allauth/layouts/base.html:43
-msgid "All rights reserved"
-msgstr ""
-
 #: templates/authy/snippets/menu-user.html:21
 #: templates/base/snippets/menu-user.html:21
 #: templates/nas/snippets/menu-account.html:14
 msgid "Profile"
 msgstr ""
 
-#: templates/authy/snippets/menu-user.html:29
-#: templates/x-account/email_change.html:55
-msgid "Change Email"
-msgstr ""
-
-#: templates/authy/snippets/menu-user.html:38
-#: templates/base/snippets/menu-user.html:132
-#: templates/x-account/password_change.html:4
-#: templates/x-account/password_change.html:8
-#: templates/x-account/password_change.html:20
-#: templates/x-account/password_reset_from_key.html:5
-#: templates/x-account/password_reset_from_key.html:12
-#: templates/x-account/password_reset_from_key.html:30
-#: templates/x-account/password_reset_from_key_done.html:5
-#: templates/x-account/password_reset_from_key_done.html:9
-msgid "Change Password"
-msgstr ""
-
 #: templates/authy/snippets/menu-user.html:47
-#: templates/x-socialaccount/connections.html:5
-#: templates/x-socialaccount/connections.html:9
+#: templates/socialaccount/connections.html:5
+#: templates/socialaccount/connections.html:9
 msgid "Account Connections"
 msgstr ""
 
 #: templates/authy/snippets/menu-user.html:56
-#: templates/base/snippets/menu-user.html:72
-#: templates/x-mfa/authenticate.html:10 templates/x-mfa/index.html:5
-#: templates/x-mfa/index.html:9
+#: templates/base/snippets/menu-user.html:70 templates/mfa/authenticate.html:10
+#: templates/mfa/index.html:5 templates/mfa/index.html:9
 msgid "Two-Factor Authentication"
 msgstr ""
 
 #: templates/authy/snippets/menu-user.html:65
-#: templates/base/snippets/menu-user.html:81
-#: templates/x-usersessions/usersession_list.html:6
-#: templates/x-usersessions/usersession_list.html:10
+#: templates/base/snippets/menu-user.html:79
+#: templates/usersessions/usersession_list.html:6
+#: templates/usersessions/usersession_list.html:10
 msgid "Sessions"
-msgstr ""
-
-#: templates/authy/snippets/menu-user.html:74
-#: templates/base/snippets/menu-user.html:112
-#: templates/nas/snippets/menu-account.html:74
-#: templates/x-account/logout.html:5 templates/x-account/logout.html:9
-#: templates/x-account/logout.html:22
-#: templates/x-usersessions/usersession_list.html:76
-msgid "Sign Out"
-msgstr ""
-
-#: templates/authy/snippets/menu-user.html:84
-#: templates/base/snippets/menu-user.html:122
-#: templates/x-account/confirm_login_code.html:5
-#: templates/x-account/login.html:5 templates/x-account/login.html:9
-#: templates/x-account/login.html:31
-#: templates/x-account/request_login_code.html:5
-#: templates/x-mfa/authenticate.html:6 templates/x-mfa/authenticate.html:24
-#: templates/x-openid/login.html:5 templates/x-openid/login.html:9
-#: templates/x-openid/login.html:20 templates/x-socialaccount/login.html:6
-#: templates/x-socialaccount/login_redirect.html:5
-msgid "Sign In"
-msgstr ""
-
-#: templates/authy/snippets/menu-user.html:93
-#: templates/base/snippets/menu-user.html:142 templates/x-account/signup.html:8
-#: templates/x-account/signup.html:34
-#: templates/x-account/signup_by_passkey.html:29
-#: templates/x-socialaccount/signup.html:9
-#: templates/x-socialaccount/signup.html:25
-msgid "Sign Up"
 msgstr ""
 
 #: templates/authy/snippets/socials.html:7
 msgid "OR continue with"
+msgstr ""
+
+#: templates/base/about.html:5
+msgid "About eMarchés"
+msgstr ""
+
+#: templates/base/about.html:21
+msgid "Public Procurement Intelligence"
+msgstr ""
+
+#: templates/base/about.html:25
+msgid "Turn Public Procurement Data Into Business Opportunities"
+msgstr ""
+
+#: templates/base/about.html:29
+msgid "Know the Market. Find the Right Tenders. Win More Business."
+msgstr ""
+
+#: templates/base/about.html:33
+msgid ""
+"eMarchés is a public procurement intelligence platform built for businesses "
+"operating in Morocco. We transform complex and dispersed procurement "
+"information into actionable business intelligence, helping companies "
+"discover relevant opportunities, understand the market, monitor competitors, "
+"and make better decisions."
+msgstr ""
+
+#: templates/base/about.html:47
+msgid "Because finding a tender is not enough."
+msgstr ""
+
+#: templates/base/about.html:51
+msgid "You need to know which opportunities are worth pursuing."
+msgstr ""
+
+#: templates/base/about.html:66
+msgid "Your Competitive Advantage Starts With Better Information"
+msgstr ""
+
+#: templates/base/about.html:70
+msgid ""
+"Every day, Moroccan public institutions publish procurement opportunities "
+"across construction, services, supplies, technology, consulting, "
+"infrastructure, and many other sectors. The challenge is finding the right "
+"opportunities, understanding them quickly, and knowing what happened before."
+msgstr ""
+
+#: templates/base/about.html:81
+msgid "Find Opportunities That Matter"
+msgstr ""
+
+#: templates/base/about.html:84
+msgid ""
+"Discover tenders based on your business activity, target locations, contract "
+"values, procurement categories, contracting authorities, and other criteria "
+"relevant to your company."
+msgstr ""
+
+#: templates/base/about.html:94
+msgid "Understand Your Market"
+msgstr ""
+
+#: templates/base/about.html:97
+msgid ""
+"Explore procurement activity by institution, sector, location, domain, and "
+"contract value to identify patterns and emerging opportunities."
+msgstr ""
+
+#: templates/base/about.html:107
+msgid "Know Your Competition"
+msgstr ""
+
+#: templates/base/about.html:110
+msgid ""
+"Understand who is participating in your market and who is winning contracts. "
+"Explore competitors, previous awards, submitted offers, and historical "
+"procurement activity."
+msgstr ""
+
+#: templates/base/about.html:120
+msgid "Make Decisions With Data"
+msgstr ""
+
+#: templates/base/about.html:123
+msgid ""
+"Use historical procurement information to assess potential markets, "
+"benchmark contracts, identify active buyers, and prioritize opportunities."
+msgstr ""
+
+#: templates/base/about.html:141
+msgid "From Tender Search to Procurement Intelligence"
+msgstr ""
+
+#: templates/base/about.html:145
+msgid ""
+"Traditional tender discovery is reactive. You find a notice, read the "
+"documents, and decide whether to bid."
+msgstr ""
+
+#: templates/base/about.html:149
+msgid ""
+"eMarchés helps you take a broader approach by giving you the tools to "
+"discover, analyze, compare, prioritize, and act on procurement opportunities."
+msgstr ""
+
+#: templates/base/about.html:158 templates/base/about.html:405
+msgid "Discover"
+msgstr ""
+
+#: templates/base/about.html:160
+msgid "Find relevant opportunities"
+msgstr ""
+
+#: templates/base/about.html:167 templates/base/about.html:423
+msgid "Analyze"
+msgstr ""
+
+#: templates/base/about.html:169
+msgid "Understand the market"
+msgstr ""
+
+#: templates/base/about.html:176
+msgid "Compare"
+msgstr ""
+
+#: templates/base/about.html:178
+msgid "Benchmark opportunities"
+msgstr ""
+
+#: templates/base/about.html:185
+msgid "Prioritize"
+msgstr ""
+
+#: templates/base/about.html:187
+msgid "Focus your resources"
+msgstr ""
+
+#: templates/base/about.html:194
+msgid "Act"
+msgstr ""
+
+#: templates/base/about.html:196
+msgid "Pursue the right opportunities"
+msgstr ""
+
+#: templates/base/about.html:216
+msgid "Built for Companies That Want to Grow"
+msgstr ""
+
+#: templates/base/about.html:220
+msgid ""
+"Whether you are a small business looking for new customers or an established "
+"company managing a large public-sector sales pipeline, eMarchés helps you "
+"turn procurement data into a business-development resource."
+msgstr ""
+
+#: templates/base/about.html:231
+msgid "Construction & Infrastructure"
+msgstr ""
+
+#: templates/base/about.html:234
+msgid ""
+"Identify projects, contracting authorities, competitors, and historical "
+"contract activity."
+msgstr ""
+
+#: templates/base/about.html:244
+msgid "Technology & Digital Services"
+msgstr ""
+
+#: templates/base/about.html:247
+msgid ""
+"Track public-sector demand for software, IT infrastructure, "
+"telecommunications, consulting, and digital transformation."
+msgstr ""
+
+#: templates/base/about.html:257
+msgid "Equipment & Supplies"
+msgstr ""
+
+#: templates/base/about.html:260
+msgid ""
+"Discover purchasing activity across institutions and identify recurring "
+"procurement needs."
+msgstr ""
+
+#: templates/base/about.html:270
+msgid "Professional & Business Services"
+msgstr ""
+
+#: templates/base/about.html:273
+msgid ""
+"Find opportunities across consulting, engineering, training, facility "
+"management, security, catering, logistics, and other services."
+msgstr ""
+
+#: templates/base/about.html:283
+msgid "If the public sector is part of your market, eMarchés is built for you."
+msgstr ""
+
+#: templates/base/about.html:298
+msgid "Replace Hours of Research With One Platform"
+msgstr ""
+
+#: templates/base/about.html:302
+msgid ""
+"Public procurement research can consume valuable commercial resources. "
+"eMarchés gives your team a centralized environment for exploring procurement "
+"intelligence instead of repeatedly searching, collecting, comparing, and "
+"organizing information manually."
+msgstr ""
+
+#: templates/base/about.html:315
+msgid "Less Searching"
+msgstr ""
+
+#: templates/base/about.html:317
+msgid "Find relevant opportunities faster."
+msgstr ""
+
+#: templates/base/about.html:329
+msgid "Less Uncertainty"
+msgstr ""
+
+#: templates/base/about.html:331
+msgid "Understand the context behind an opportunity."
+msgstr ""
+
+#: templates/base/about.html:343
+msgid "Better Prioritization"
+msgstr ""
+
+#: templates/base/about.html:345
+msgid "Focus your resources on tenders that fit your business."
+msgstr ""
+
+#: templates/base/about.html:357
+msgid "Better Market Visibility"
+msgstr ""
+
+#: templates/base/about.html:359
+msgid "Understand buyers, competitors, sectors, and procurement activity."
+msgstr ""
+
+#: templates/base/about.html:371
+msgid "Better Decisions"
+msgstr ""
+
+#: templates/base/about.html:373
+msgid ""
+"Base your business-development strategy on data rather than assumptions."
+msgstr ""
+
+#: templates/base/about.html:392
+msgid "Your Procurement Intelligence Platform"
+msgstr ""
+
+#: templates/base/about.html:396
+msgid ""
+"eMarchés is more than a tender database. It is a business intelligence "
+"platform for the Moroccan public procurement market."
+msgstr ""
+
+#: templates/base/about.html:407
+msgid "Find procurement opportunities relevant to your business."
+msgstr ""
+
+#: templates/base/about.html:414
+msgid "Monitor"
+msgstr ""
+
+#: templates/base/about.html:416
+msgid "Keep track of markets, buyers, sectors, and competitors."
+msgstr ""
+
+#: templates/base/about.html:425
+msgid "Explore historical procurement and contract information."
+msgstr ""
+
+#: templates/base/about.html:432
+msgid "Benchmark"
+msgstr ""
+
+#: templates/base/about.html:434
+msgid "Compare contract values, participants, and previous results."
+msgstr ""
+
+#: templates/base/about.html:441
+msgid "Plan"
+msgstr ""
+
+#: templates/base/about.html:443
+msgid "Identify markets and opportunities worth pursuing."
+msgstr ""
+
+#: templates/base/about.html:450
+msgid "Grow"
+msgstr ""
+
+#: templates/base/about.html:452
+msgid "Build a more systematic public-sector sales strategy."
+msgstr ""
+
+#: templates/base/about.html:470
+msgid "The Public Procurement Market Is Too Valuable to Navigate Blind"
+msgstr ""
+
+#: templates/base/about.html:474
+msgid ""
+"Your competitors are already looking for opportunities. The difference is "
+"how quickly and intelligently you can identify them."
+msgstr ""
+
+#: templates/base/about.html:478
+msgid ""
+"With eMarchés, procurement information becomes a strategic asset for your "
+"business."
+msgstr ""
+
+#: templates/base/about.html:482
+msgid "Start Turning Procurement Data Into Opportunities"
+msgstr ""
+
+#: templates/base/about.html:486
+msgid "Explore the platform and see what is happening in your market."
+msgstr ""
+
+#: templates/base/about.html:491
+msgid "Start Exploring"
+msgstr ""
+
+#: templates/base/about.html:495
+msgid "View Plans"
+msgstr ""
+
+#: templates/base/about.html:500
+msgid ""
+"Discover opportunities. Understand your competition. Make better decisions."
+msgstr ""
+
+#: templates/base/base.html:15
+msgid ""
+"eMarches portal. Morocco Public Procurement Market. Access to public Tenders "
+"and Puchase orders. Paperless dematerialized procedure"
+msgstr ""
+
+#: templates/base/base.html:15 templates/base/base.html:16
+#: templates/bdc/snippets/bdcs/search-form.html:119
+#: templates/bdc/snippets/menu-bdc.html:21
+#: templates/portal/snippets/menu-tenders.html:21
+#: templates/portal/snippets/tenders/search-form.html:225
+#: templates/portal/snippets/tenders/tender-actions.html:81
+#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+msgid "Results"
+msgstr ""
+
+#: templates/base/base.html:15 templates/base/base.html:16
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
+msgid "Concurrent"
+msgstr ""
+
+#: templates/base/base.html:16
+msgid ""
+"PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free "
+"Listing Files Download"
 msgstr ""
 
 #: templates/base/errors/400.html:4
@@ -2583,166 +3841,28 @@ msgstr ""
 msgid "Public Procurement Market in Morocco"
 msgstr ""
 
-#: templates/base/home.html:13
+#: templates/base/home.html:14
 msgid "Your next great contract"
 msgstr ""
 
-#: templates/base/home.html:16
+#: templates/base/home.html:17
 msgid ""
 "eMarches is your trusted partner in navigating the Moroccan public "
 "procurement market. With expertise and dedication, we help businesses "
 "succeed."
 msgstr ""
 
-#: templates/base/home.html:19 templates/bidding/contract-details.html:102
-#: templates/insights/bidder-details.html:142
+#: templates/base/home.html:20 templates/bidding/contract-details.html:102
+#: templates/insights/bidder-details.html:25
+#: templates/insights/bidder-pdf.html:63 templates/insights/bidder-pdf.html:128
+#: templates/insights/bidder-pdf.html:132
 #: templates/nas/user-settings-edit.html:76
 #: templates/portal/snippets/menu-tenders.html:8
 msgid "Tenders"
 msgstr ""
 
-#: templates/base/home.html:20 templates/bdc/snippets/menu-bdc.html:64
-#: templates/insights/bidder-details.html:525
-#: templates/portal/snippets/menu-tenders.html:71
-msgid "Clients"
-msgstr ""
-
-#: templates/base/home.html:39
-msgid ""
-"We are making e-Marchés a better place for those who want to master the "
-"Public Procurement Market in Morocco"
-msgstr ""
-
-#: templates/base/home.html:43
-msgid "Great features we are working on"
-msgstr ""
-
-#: templates/base/home.html:51
-msgid "Tenders browsing"
-msgstr ""
-
-#: templates/base/home.html:52 templates/base/home.html:77
-#: templates/base/home.html:101 templates/base/home.html:125
-#: templates/base/home.html:149
-msgid "Completed"
-msgstr ""
-
-#: templates/base/home.html:58 templates/base/home.html:83
-#: templates/base/home.html:107 templates/base/home.html:131
-#: templates/base/home.html:155 templates/base/home.html:179
-#: templates/base/home.html:203 templates/base/home.html:227
-#: templates/base/home.html:251
-msgid "Progress"
-msgstr ""
-
-#: templates/base/home.html:67
-msgid "Find Tenders of your interest and see their details"
-msgstr ""
-
-#: templates/base/home.html:68
-msgid "Fine-tune results or find by Category, Client, Location, ..."
-msgstr ""
-
-#: templates/base/home.html:76
-msgid "Advanced Results"
-msgstr ""
-
-#: templates/base/home.html:92
-msgid ""
-"See advanced awarding details: Bidders, administrative and technical checks "
-"results, financial offers, Awarded amounts and justifications,"
-msgstr ""
-
-#: templates/base/home.html:100
-msgid "Concurrence analysis"
-msgstr ""
-
-#: templates/base/home.html:116
-msgid ""
-"Discover how others are doing on Public markets. Understand your concurrents "
-"and public clients so you can prepare the unbeaten bids every time"
-msgstr ""
-
-#: templates/base/home.html:124
-msgid "Downloads and Favorites"
-msgstr ""
-
-#: templates/base/home.html:140
-msgid "Download DCE files or add Tenders to your favorites for easy access."
-msgstr ""
-
-#: templates/base/home.html:148
-msgid "Purchase orders and results"
-msgstr ""
-
-#: templates/base/home.html:164
-msgid ""
-"Browse Purchase orders, see listing details and items details and download "
-"files. See awarding results"
-msgstr ""
-
-#: templates/base/home.html:172
-msgid "Bidding management"
-msgstr ""
-
-#: templates/base/home.html:188
-msgid ""
-"Manage your bids including bonds/guarantees, expenses, tasks, deadlines,"
-msgstr ""
-
-#: templates/base/home.html:196
-msgid "Team and companies"
-msgstr ""
-
-#: templates/base/home.html:212
-msgid ""
-"Manage people you work with securely and efficiently. Manage companies "
-"including data and assets like signature pens lifecycle"
-msgstr ""
-
-#: templates/base/home.html:220
-msgid "Contracts management"
-msgstr ""
-
-#: templates/base/home.html:221 templates/base/home.html:245
-#: templates/base/snippets/wip-inline.html:6
-msgid "Coming soon"
-msgstr ""
-
-#: templates/base/home.html:236
-msgid ""
-"Keep track of your contracts and never hit a deadline surprise. See your "
-"spendings and keep track of your receptions and payments, "
-msgstr ""
-
-#: templates/base/home.html:244
-msgid "Translations"
-msgstr ""
-
-#: templates/base/home.html:260
-msgid ""
-"Insi speaks Tamazight but likes to think in English. We need to translate "
-"the user interface into French, Arabic, Tamazight, Spanish and German"
-msgstr ""
-
-#: templates/base/home.html:273
-msgid "e-Marchés is"
-msgstr ""
-
-#: templates/base/home.html:274
-msgid "OPEN-SOURCE"
-msgstr ""
-
-#: templates/base/home.html:278
-msgid "Our code-source is available on github. We will provide the link soon"
-msgstr ""
-
-#: templates/base/home.html:279
-msgid "Please contact us if you are interested"
-msgstr ""
-
-#: templates/base/home.html:282
-msgid "SOURCE CODE"
+#: templates/base/home.html:21 templates/bidding/snippets/menu-bidding.html:15
+msgid "Concurrents"
 msgstr ""
 
 #: templates/base/includes/anonymous.html:13
@@ -2780,12 +3900,8 @@ msgstr ""
 msgid "Our accounts are 100%% FREE. FREE like in FREE BEER"
 msgstr ""
 
-#: templates/base/includes/footer.html:19
-msgid "Portfolio"
-msgstr ""
-
 #: templates/base/includes/footer.html:20
-msgid "Contact"
+msgid "Portfolio"
 msgstr ""
 
 #: templates/base/includes/footer.html:21
@@ -2804,58 +3920,76 @@ msgstr ""
 msgid "All rights reserved."
 msgstr ""
 
-#: templates/base/includes/head.html:19 templates/base/includes/head.html:22
-msgid ""
-"eMarches portal. Morocco Public Procurement Market. Access to public Tenders "
-"and Puchase orders. Paperless dematerialized procedure"
+#: templates/base/snippets/digests/last-30-days.html:9
+msgid "Things are moving"
 msgstr ""
 
-#: templates/base/includes/head.html:20
-msgid ""
-"PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free "
-"Listing Files Download"
+#: templates/base/snippets/digests/last-30-days.html:14
+msgid "30 Days"
 msgstr ""
 
-#: templates/base/includes/head.html:21
-msgid "eMarches.com"
+#: templates/base/snippets/digests/last-30-days.html:19
+#: templates/base/snippets/digests/last-30-days.html:39
+msgid "New Tenders"
+msgstr ""
+
+#: templates/base/snippets/digests/last-30-days.html:22
+#: templates/base/snippets/digests/last-30-days.html:42
+msgid "Opening minutes"
+msgstr ""
+
+#: templates/base/snippets/digests/last-30-days.html:28
+#: templates/base/snippets/digests/last-30-days.html:48
+#: templates/bidding/contract-details.html:30
+#: templates/bidding/contract-details.html:44
+#: templates/bidding/contracts-list.html:64
+#: templates/bidding/contracts-list.html:81
+#: templates/insights/bidders-list.html:71
+#: templates/insights/bidders-list.html:90
+#: templates/insights/snippets/bidders/bidder-menu-sort.html:46
+#: templates/insights/snippets/bidders/bidder-search-form.html:76
+msgid "Success rate"
 msgstr ""
 
 #: templates/base/snippets/empty-list.html:10
 msgid "Nothing to show here !"
 msgstr ""
 
-#: templates/base/snippets/menu-user.html:32
+#: templates/base/snippets/menu-user.html:27
+#: templates/bdc/snippets/bdcs/menu-sort.html:45
+#: templates/nas/snippets/menu-account.html:20
+msgid "Preferences"
+msgstr ""
+
+#: templates/base/snippets/menu-user.html:36
 #: templates/nas/profile/snippets/team.html:7
 #: templates/nas/snippets/menu-account.html:35
 msgid "My Team"
 msgstr ""
 
-#: templates/base/snippets/menu-user.html:47
+#: templates/base/snippets/menu-user.html:51
 #: templates/nas/snippets/menu-account.html:50
 msgid "Subscription"
 msgstr ""
 
-#: templates/base/snippets/menu-user.html:56
-#: templates/bdc/snippets/bdcs/menu-sort.html:45
-#: templates/nas/snippets/menu-account.html:20
-#: templates/portal/snippets/tenders/menu-sort.html:51
-msgid "Preferences"
-msgstr ""
-
-#: templates/base/snippets/menu-user.html:64
+#: templates/base/snippets/menu-user.html:59
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
 #: templates/nas/snippets/menu-account.html:60
+#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
 msgid "Stats"
 msgstr ""
 
-#: templates/base/snippets/menu-user.html:92
+#: templates/base/snippets/menu-user.html:89
 msgid "Supervision"
 msgstr ""
 
-#: templates/base/snippets/menu-user.html:96
+#: templates/base/snippets/menu-user.html:93
+#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
 msgid "Administration"
 msgstr ""
 
-#: templates/base/snippets/menu-user.html:97
+#: templates/base/snippets/menu-user.html:94
 msgid "Database"
 msgstr ""
 
@@ -2885,6 +4019,10 @@ msgstr ""
 #: templates/base/snippets/paginator.html:46
 #: templates/base/snippets/paginator.html:48
 msgid "Last Page"
+msgstr ""
+
+#: templates/base/snippets/wip-inline.html:6
+msgid "Coming soon"
 msgstr ""
 
 #: templates/base/snippets/wip-inline.html:11
@@ -2929,26 +4067,26 @@ msgstr ""
 
 #: templates/bdc/bdc-details.html:47
 #: templates/bdc/snippets/bdcs/bdc-summary.html:76
-#: templates/portal/tender-details.html:29
+#: templates/portal/tender-details.html:30
 msgid "EXPIRED"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:64 templates/bdc/bdc-details.html:104
 #: templates/bdc/snippets/bdcs/bdc-summary.html:56
-#: templates/portal/tender-details.html:117
-#: templates/portal/tender-details.html:208
+#: templates/portal/tender-details.html:118
+#: templates/portal/tender-details.html:221
 msgid "Morocco time"
 msgstr ""
 
-#: templates/bdc/bdc-details.html:68 templates/portal/tender-details.html:111
+#: templates/bdc/bdc-details.html:68 templates/portal/tender-details.html:112
 msgid "Time to Deadline"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:69 templates/bdc/bdc-details.html:206
 #: templates/nas/user-settings-edit.html:117
 #: templates/nas/user-settings-edit.html:197
-#: templates/portal/tender-details.html:112
-#: templates/portal/tender-details.html:416
+#: templates/portal/tender-details.html:113
+#: templates/portal/tender-details.html:427
 msgid "days"
 msgstr ""
 
@@ -2957,8 +4095,8 @@ msgstr ""
 #: templates/bdc/snippets/bdcs/bdc-legend.html:9
 #: templates/portal/snippets/tenders/tender-legend.html:8
 #: templates/portal/snippets/tenders/tender-legend.html:12
-#: templates/portal/tender-details.html:405
-#: templates/portal/tender-details.html:410
+#: templates/portal/tender-details.html:416
+#: templates/portal/tender-details.html:421
 msgid "UTC"
 msgstr ""
 
@@ -2966,8 +4104,8 @@ msgstr ""
 #: templates/bdc/snippets/bdcs/bdc-legend.html:89
 #: templates/bdc/snippets/bdcs/bdc-summary.html:35
 #: templates/portal/snippets/tenders/tender-legend.html:91
-#: templates/portal/snippets/tenders/tender-summary.html:51
-#: templates/portal/tender-details.html:136
+#: templates/portal/snippets/tenders/tender-summary.html:50
+#: templates/portal/tender-details.html:137
 msgid "Execution Location"
 msgstr ""
 
@@ -2975,8 +4113,8 @@ msgstr ""
 #: templates/bdc/snippets/bdcs/bdc-legend.html:100
 #: templates/bdc/snippets/bdcs/bdc-summary.html:42
 #: templates/portal/snippets/tenders/tender-legend.html:102
-#: templates/portal/snippets/tenders/tender-summary.html:57
-#: templates/portal/tender-details.html:108
+#: templates/portal/snippets/tenders/tender-summary.html:58
+#: templates/portal/tender-details.html:109
 msgid "Public Client"
 msgstr ""
 
@@ -3016,11 +4154,12 @@ msgid "Export"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:179
+#: templates/insights/bidder-details.html:272
 msgid "Print"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:191 templates/bidding/team-recap.html:127
-#: templates/portal/tender-details.html:404
+#: templates/portal/tender-details.html:415
 msgid "Created"
 msgstr ""
 
@@ -3040,7 +4179,7 @@ msgstr ""
 msgid "Purchase Order files"
 msgstr ""
 
-#: templates/bdc/bdc-details.html:226 templates/portal/tender-details.html:517
+#: templates/bdc/bdc-details.html:226 templates/portal/tender-details.html:528
 msgid ""
 "Once you click on an item, your browser or device should handle the download "
 "process."
@@ -3056,7 +4195,7 @@ msgstr ""
 msgid "Files for this PO are not ready, yet."
 msgstr ""
 
-#: templates/bdc/bdc-details.html:240 templates/portal/tender-details.html:532
+#: templates/bdc/bdc-details.html:240 templates/portal/tender-details.html:556
 msgid "Please try again later, or contact us if this problem persists."
 msgstr ""
 
@@ -3068,8 +4207,8 @@ msgstr ""
 #: templates/portal/snippets/lots/lots-details.html:22
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:28
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:170
-#: templates/portal/tender-details.html:550
-#: templates/portal/tender-details.html:594
+#: templates/portal/tender-details.html:570
+#: templates/portal/tender-details.html:600
 msgid "Close"
 msgstr ""
 
@@ -3083,15 +4222,15 @@ msgstr ""
 
 #: templates/bdc/bdc-details.html:284
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:642
-#: templates/portal/tender-details.html:686
+#: templates/portal/tender-details.html:650
+#: templates/portal/tender-details.html:694
 msgid "Operation failed"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:284
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:642
-#: templates/portal/tender-details.html:686
+#: templates/portal/tender-details.html:650
+#: templates/portal/tender-details.html:694
 msgid "Please refresh the page or try again later"
 msgstr ""
 
@@ -3113,32 +4252,32 @@ msgstr ""
 #: templates/bidding/expenses-list.html:25
 #: templates/bidding/expenses-list.html:28 templates/bidding/tasks-list.html:25
 #: templates/bidding/tasks-list.html:28 templates/bidding/tenders-list.html:25
-#: templates/insights/bidders-list.html:32
-#: templates/portal/clients-list.html:24 templates/portal/domains-list.html:24
+#: templates/insights/bidders-list.html:34
+#: templates/portal/clients-list.html:26 templates/portal/domains-list.html:24
 #: templates/portal/snippets/tenders/tender-legend.html:55
 #: templates/portal/tender-favorite-list.html:22
-#: templates/portal/tender-list.html:22
+#: templates/portal/tender-list.html:24
 msgid "Results are filtered"
 msgstr ""
 
 #: templates/bdc/bdc-favorite-list.html:31 templates/bdc/bdc-list.html:30
 #: templates/bdc/clients-list.html:31 templates/bidding/contracts-list.html:31
-#: templates/insights/bidders-list.html:39
+#: templates/insights/bidders-list.html:41
 #: templates/nas/companies/companies-list.html:22
-#: templates/portal/clients-list.html:31 templates/portal/domains-list.html:31
+#: templates/portal/clients-list.html:33 templates/portal/domains-list.html:31
 #: templates/portal/tender-favorite-list.html:29
-#: templates/portal/tender-list.html:29
+#: templates/portal/tender-list.html:31
 msgid "Items found"
 msgstr ""
 
 #: templates/bdc/bdc-favorite-list.html:33 templates/bdc/bdc-list.html:32
 #: templates/bdc/clients-list.html:33 templates/bidding/contracts-list.html:33
 #: templates/bidding/tenders-list.html:35
-#: templates/insights/bidders-list.html:41
+#: templates/insights/bidders-list.html:43
 #: templates/nas/companies/companies-list.html:24
-#: templates/portal/clients-list.html:33 templates/portal/domains-list.html:33
+#: templates/portal/clients-list.html:35 templates/portal/domains-list.html:33
 #: templates/portal/tender-favorite-list.html:31
-#: templates/portal/tender-list.html:31
+#: templates/portal/tender-list.html:33
 msgid "Showing"
 msgstr ""
 
@@ -3164,25 +4303,25 @@ msgid "No Prefecture listed for this Region"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-actions.html:22
-#: templates/portal/snippets/tenders/tender-actions.html:21
+#: templates/portal/snippets/tenders/tender-actions.html:22
 msgid "Favorite"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-actions.html:29
-#: templates/portal/snippets/tenders/tender-actions.html:28
+#: templates/portal/snippets/tenders/tender-actions.html:30
 msgid "Unfavorite"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-actions.html:35
-#: templates/portal/snippets/tenders/tender-actions.html:34
+#: templates/insights/bidder-details.html:267
+#: templates/portal/snippets/tenders/tender-actions.html:36
 msgid "Share"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-actions.html:42
 #: templates/bidding/snippets/bids/bid-item.html:81
-#: templates/portal/snippets/tenders/tender-actions.html:58
-#: templates/portal/snippets/tenders/tender-actions.html:65
-#: templates/portal/snippets/tenders/tender-actions.html:78
+#: templates/portal/snippets/tenders/tender-actions.html:62
+#: templates/portal/snippets/tenders/tender-actions.html:71
 msgid "Files"
 msgstr ""
 
@@ -3233,7 +4372,7 @@ msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-summary.html:15
 #: templates/portal/snippets/tenders/tender-summary.html:16
-#: templates/portal/tender-details.html:133
+#: templates/portal/tender-details.html:134
 msgid "Main Category"
 msgstr ""
 
@@ -3254,12 +4393,6 @@ msgstr ""
 msgid "Clean Favorites"
 msgstr ""
 
-#: templates/bdc/snippets/bdcs/menu-clean.html:53
-#: templates/nas/snippets/expirables/expirable-item.html:16
-#: templates/portal/snippets/tenders/menu-fav-clean.html:23
-msgid "Expired"
-msgstr ""
-
 #: templates/bdc/snippets/bdcs/menu-clean.html:63
 #: templates/portal/snippets/tenders/menu-fav-clean.html:48
 msgid "All Favorites"
@@ -3275,38 +4408,6 @@ msgstr ""
 
 #: templates/bdc/snippets/bdcs/menu-clean.html:83
 msgid "This operation is not reversible"
-msgstr ""
-
-#: templates/bdc/snippets/bdcs/menu-clean.html:90
-#: templates/bidding/bid-details.html:498
-#: templates/bidding/bid-details.html:547
-#: templates/bidding/bid-details.html:596 templates/bidding/bid-form.html:159
-#: templates/bidding/bids-list.html:278 templates/bidding/expense-form.html:96
-#: templates/bidding/expenses-list.html:238 templates/bidding/task-form.html:96
-#: templates/bidding/tasks-list.html:253 templates/bidding/team-recap.html:733
-#: templates/nas/companies/company_confirm_delete.html:29
-#: templates/nas/expirable-form.html:74 templates/nas/manageriat-form.html:74
-#: templates/nas/profile-edit.html:81 templates/nas/signature_key-form.html:74
-#: templates/nas/user-settings-edit.html:306
-#: templates/x-account/base_confirm_code.html:48
-#: templates/x-account/base_confirm_code.html:52
-#: templates/x-account/password_reset_from_key.html:33
-#: templates/x-idp/oidc/authorization_form.html:26
-#: templates/x-mfa/authenticate.html:28 templates/x-mfa/authenticate.html:44
-#: templates/x-mfa/trust.html:29 templates/x-mfa/webauthn/signup_form.html:26
-msgid "Cancel"
-msgstr ""
-
-#: templates/bdc/snippets/bdcs/menu-clean.html:96
-#: templates/bidding/team-recap.html:308 templates/bidding/team-recap.html:506
-#: templates/bidding/team-recap.html:548 templates/bidding/team-recap.html:590
-#: templates/bidding/team-recap.html:637 templates/bidding/team-recap.html:679
-#: templates/x-account/base_confirm_code.html:39
-#: templates/x-account/email_confirm.html:24
-#: templates/x-account/reauthenticate.html:18
-#: templates/x-idp/oidc/device_authorization_confirm_form.html:26
-#: templates/x-mfa/reauthenticate.html:18
-msgid "Confirm"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/menu-clean.html:110
@@ -3440,16 +4541,8 @@ msgstr ""
 msgid "Winner amount Max"
 msgstr ""
 
-#: templates/bdc/snippets/bdcs/search-form.html:119
-#: templates/bdc/snippets/menu-bdc.html:21
-#: templates/portal/snippets/menu-tenders.html:21
-#: templates/portal/snippets/tenders/search-form.html:225
-#: templates/portal/snippets/tenders/tender-actions.html:87
-msgid "Results"
-msgstr ""
-
 #: templates/bdc/snippets/bdcs/search-form.html:122
-#: templates/portal/snippets/tenders/tender-summary.html:153
+#: templates/portal/snippets/tenders/tender-summary.html:154
 msgid "No results"
 msgstr ""
 
@@ -3488,7 +4581,7 @@ msgid "Submit"
 msgstr ""
 
 #: templates/bdc/snippets/clients/client-menu-sort.html:18
-#: templates/portal/snippets/clients/client-menu-sort.html:55
+#: templates/portal/snippets/clients/client-menu-sort.html:56
 msgid "Client Name"
 msgstr ""
 
@@ -3528,6 +4621,7 @@ msgstr ""
 
 #: templates/bdc/snippets/menu-bdc.html:30
 #: templates/portal/snippets/menu-tenders.html:37
+#: templates/portal/snippets/tenders/menu-sort.html:56
 msgid "Favourites"
 msgstr ""
 
@@ -3539,6 +4633,12 @@ msgstr ""
 #: templates/bdc/snippets/menu-bdc.html:48
 #: templates/portal/snippets/menu-tenders.html:55
 msgid "Works"
+msgstr ""
+
+#: templates/bdc/snippets/menu-bdc.html:64
+#: templates/insights/bidder-details.html:186
+#: templates/portal/snippets/menu-tenders.html:71
+msgid "Clients"
 msgstr ""
 
 #: templates/bdc/snippets/menu-bdc.html:71
@@ -3697,9 +4797,9 @@ msgstr ""
 #: templates/bidding/bid-form.html:19 templates/bidding/bid-form.html:147
 #: templates/bidding/snippets/bids/bid-item.html:31
 #: templates/bidding/tenders-list.html:101
-#: templates/portal/snippets/tenders/tender-summary.html:87
-#: templates/portal/tender-details.html:56
-#: templates/portal/tender-details.html:493
+#: templates/portal/snippets/tenders/tender-summary.html:88
+#: templates/portal/tender-details.html:57
+#: templates/portal/tender-details.html:504
 msgid "CANCELLED"
 msgstr ""
 
@@ -3707,12 +4807,9 @@ msgstr ""
 msgid "Execution location"
 msgstr ""
 
-#: templates/bidding/bid-form.html:74
-msgid "Bond"
-msgstr ""
-
 #: templates/bidding/bid-form.html:164 templates/bidding/expense-form.html:101
 #: templates/bidding/task-form.html:101 templates/bidding/team-recap.html:367
+#: templates/mfa/webauthn/edit_form.html:18
 #: templates/nas/companies/agrements_form.html:36
 #: templates/nas/companies/company_form.html:120
 #: templates/nas/companies/qualifs_form.html:37
@@ -3721,7 +4818,6 @@ msgstr ""
 #: templates/nas/profile/newsletters-form.html:52
 #: templates/nas/profile/notifications-form.html:56
 #: templates/nas/signature_key-form.html:79
-#: templates/x-mfa/webauthn/edit_form.html:18
 msgid "Save"
 msgstr ""
 
@@ -3780,24 +4876,16 @@ msgstr ""
 
 #: templates/bidding/contract-details.html:5
 #: templates/bidding/contract-details.html:11
-#: templates/insights/bidder-details.html:5
-#: templates/insights/bidder-details.html:11
+#: templates/insights/bidder-details.html:4
+#: templates/insights/bidder-details.html:7
+#: templates/insights/bidder-details.html:8
+#: templates/insights/bidder-details.html:13
+#: templates/insights/bidder-pdf.html:9 templates/insights/bidder-pdf.html:35
 msgid "Concurrent details"
 msgstr ""
 
 #: templates/bidding/contract-details.html:25
 msgid "Won offers"
-msgstr ""
-
-#: templates/bidding/contract-details.html:30
-#: templates/bidding/contract-details.html:44
-#: templates/bidding/contracts-list.html:64
-#: templates/bidding/contracts-list.html:81
-#: templates/insights/bidder-details.html:30
-#: templates/insights/bidders-list.html:79
-#: templates/insights/snippets/bidders/bidder-menu-sort.html:46
-#: templates/insights/snippets/bidders/bidder-search-form.html:76
-msgid "Success rate"
 msgstr ""
 
 #: templates/bidding/contract-details.html:60
@@ -3820,34 +4908,34 @@ msgstr ""
 #: templates/bidding/contract-details.html:505
 #: templates/bidding/contract-details.html:543
 #: templates/bidding/contract-details.html:581
-#: templates/insights/bidder-details.html:173
-#: templates/insights/bidder-details.html:228
-#: templates/insights/bidder-details.html:280
-#: templates/insights/bidder-details.html:332
-#: templates/insights/bidder-details.html:388
-#: templates/insights/bidder-details.html:454
-#: templates/insights/bidder-details.html:509
-#: templates/insights/bidder-details.html:545
-#: templates/insights/bidder-details.html:580
-#: templates/insights/bidder-details.html:618
-#: templates/insights/bidder-details.html:656
 #: templates/insights/snippets/bidders/bidder-search-form.html:53
 #: templates/insights/snippets/bidders/bidder-search-form.html:66
-#: templates/portal/snippets/tenders/results-digest.html:21
-#: templates/portal/snippets/tenders/results-digest.html:50
-#: templates/portal/snippets/tenders/results-digest.html:77
-#: templates/portal/snippets/tenders/results-digest.html:104
-#: templates/portal/snippets/tenders/results-digest.html:132
-#: templates/portal/snippets/tenders/results-digest.html:247
-#: templates/portal/snippets/tenders/results-digest.html:254
-#: templates/portal/snippets/tenders/results-digest.html:277
-#: templates/portal/snippets/tenders/results-digest.html:299
+#: templates/insights/snippets/bidders/table-admin-accepts.html:31
+#: templates/insights/snippets/bidders/table-admin-rejects.html:31
+#: templates/insights/snippets/bidders/table-admin-reserves.html:31
+#: templates/insights/snippets/bidders/table-clients.html:17
+#: templates/insights/snippets/bidders/table-domains.html:17
+#: templates/insights/snippets/bidders/table-financials.html:40
+#: templates/insights/snippets/bidders/table-licenses.html:20
+#: templates/insights/snippets/bidders/table-qualifs.html:20
+#: templates/insights/snippets/bidders/table-tech-rejects.html:31
+#: templates/insights/snippets/bidders/table-tenders.html:28
+#: templates/insights/snippets/bidders/table-wins.html:29
+#: templates/portal/snippets/tenders/results-digest.html:25
+#: templates/portal/snippets/tenders/results-digest.html:58
+#: templates/portal/snippets/tenders/results-digest.html:89
+#: templates/portal/snippets/tenders/results-digest.html:120
+#: templates/portal/snippets/tenders/results-digest.html:152
+#: templates/portal/snippets/tenders/results-digest.html:259
+#: templates/portal/snippets/tenders/results-digest.html:267
+#: templates/portal/snippets/tenders/results-digest.html:293
+#: templates/portal/snippets/tenders/results-digest.html:316
 msgid "None"
 msgstr ""
 
 #: templates/bidding/contract-details.html:148
-#: templates/insights/bidder-details.html:188
-#: templates/portal/snippets/tenders/results-digest.html:32
+#: templates/insights/bidder-details.html:42
+#: templates/portal/snippets/tenders/results-digest.html:37
 msgid "Admin Rejects"
 msgstr ""
 
@@ -3855,49 +4943,55 @@ msgstr ""
 #: templates/bidding/contract-details.html:228
 #: templates/bidding/contract-details.html:280
 #: templates/bidding/contract-details.html:336
-#: templates/insights/bidder-details.html:216
-#: templates/insights/bidder-details.html:268
-#: templates/insights/bidder-details.html:320
-#: templates/insights/bidder-details.html:376
-#: templates/portal/snippets/tenders/results-digest.html:40
-#: templates/portal/snippets/tenders/results-digest.html:67
-#: templates/portal/snippets/tenders/results-digest.html:94
-#: templates/portal/snippets/tenders/results-digest.html:122
+#: templates/insights/snippets/bidders/pdf/admin-accepts.html:21
+#: templates/insights/snippets/bidders/pdf/admin-rejects.html:21
+#: templates/insights/snippets/bidders/pdf/admin-reserves.html:21
+#: templates/insights/snippets/bidders/pdf/tech-rejects.html:19
+#: templates/insights/snippets/bidders/pdf/tenders.html:21
+#: templates/insights/snippets/bidders/table-admin-accepts.html:19
+#: templates/insights/snippets/bidders/table-admin-rejects.html:19
+#: templates/insights/snippets/bidders/table-admin-reserves.html:19
+#: templates/insights/snippets/bidders/table-tech-rejects.html:19
+#: templates/portal/snippets/tenders/results-digest.html:48
+#: templates/portal/snippets/tenders/results-digest.html:79
+#: templates/portal/snippets/tenders/results-digest.html:110
+#: templates/portal/snippets/tenders/results-digest.html:142
 #: templates/portal/snippets/tenders/search-form.html:143
 #: templates/portal/snippets/tenders/tender-summary.html:29
 msgid "Lots"
 msgstr ""
 
 #: templates/bidding/contract-details.html:204
-#: templates/insights/bidder-details.html:244
-#: templates/portal/snippets/tenders/results-digest.html:59
+#: templates/insights/bidder-details.html:66
+#: templates/portal/snippets/tenders/results-digest.html:68
 msgid "Admin Accepts"
 msgstr ""
 
 #: templates/bidding/contract-details.html:256
-#: templates/insights/bidder-details.html:296
-#: templates/portal/snippets/tenders/results-digest.html:86
+#: templates/insights/bidder-details.html:86
+#: templates/portal/snippets/tenders/results-digest.html:99
 msgid "Admin Reserves"
 msgstr ""
 
 #: templates/bidding/contract-details.html:308
-#: templates/insights/bidder-details.html:348
-#: templates/portal/snippets/tenders/results-digest.html:114
+#: templates/insights/bidder-details.html:109
+#: templates/portal/snippets/tenders/results-digest.html:131
 msgid "Tech Rejects"
 msgstr ""
 
 #: templates/bidding/contract-details.html:366
-#: templates/insights/bidder-details.html:406
+#: templates/insights/bidder-details.html:135
 msgid "Fin. Offers"
 msgstr ""
 
 #: templates/bidding/contract-details.html:432
-#: templates/insights/bidder-details.html:472
+#: templates/insights/bidder-details.html:160
+#: templates/insights/bidder-pdf.html:93 templates/insights/bidder-pdf.html:242
 msgid "Awardings"
 msgstr ""
 
 #: templates/bidding/contract-details.html:485
-#: templates/insights/bidder-details.html:560
+#: templates/insights/bidder-details.html:204
 #: templates/portal/snippets/menu-tenders.html:85
 msgid "Domains"
 msgstr ""
@@ -3909,36 +5003,39 @@ msgstr ""
 #: templates/bidding/snippets/members/member-item.html:165
 #: templates/bidding/snippets/members/member-item.html:167
 #: templates/bidding/snippets/menu-bidding.html:24
-#: templates/insights/bidder-details.html:538
-#: templates/insights/bidder-details.html:573
-#: templates/insights/bidder-details.html:611
-#: templates/insights/bidder-details.html:649
+#: templates/insights/snippets/bidders/table-clients.html:10
+#: templates/insights/snippets/bidders/table-domains.html:10
+#: templates/insights/snippets/bidders/table-licenses.html:13
+#: templates/insights/snippets/bidders/table-qualifs.html:13
 #: templates/nas/companies/snippets/company-item.html:174
 msgid "Bids"
 msgstr ""
 
 #: templates/bidding/contract-details.html:520
-#: templates/insights/bidder-details.html:595
+#: templates/insights/bidder-details.html:222
 #: templates/portal/snippets/tenders/search-form.html:214
 msgid "Qualifs"
 msgstr ""
 
 #: templates/bidding/contract-details.html:530
-#: templates/insights/bidder-details.html:605
-#: templates/portal/snippets/tenders/qu-ag.html:27
+#: templates/portal/snippets/tenders/qu-ag.html:25
 msgid "Class"
 msgstr ""
 
 #: templates/bidding/contract-details.html:558
-#: templates/insights/bidder-details.html:633
+#: templates/insights/bidder-details.html:240
 #: templates/nas/companies/snippets/company-item.html:41
 msgid "Licences"
 msgstr ""
 
 #: templates/bidding/contracts-list.html:6
 #: templates/bidding/contracts-list.html:12
+#: templates/insights/bidders-list.html:5
 #: templates/insights/bidders-list.html:6
-#: templates/insights/bidders-list.html:20
+#: templates/insights/bidders-list.html:7
+#: templates/insights/bidders-list.html:8
+#: templates/insights/bidders-list.html:9
+#: templates/insights/bidders-list.html:22
 msgid "Concurrents list"
 msgstr ""
 
@@ -3961,10 +5058,10 @@ msgstr ""
 
 #: templates/bidding/snippets/bids/bid-actions.html:7
 #: templates/bidding/snippets/contracts/contract-item.html:48
+#: templates/mfa/webauthn/authenticator_list.html:56
 #: templates/nas/companies/snippets/company_data.html:14
 #: templates/nas/profile/snippets/user-details.html:9
 #: templates/nas/snippets/expirables/expirable-item.html:76
-#: templates/x-mfa/webauthn/authenticator_list.html:56
 msgid "Edit"
 msgstr ""
 
@@ -4192,10 +5289,6 @@ msgstr ""
 msgid "Bidding"
 msgstr ""
 
-#: templates/bidding/snippets/menu-bidding.html:15
-msgid "Concurrents"
-msgstr ""
-
 #: templates/bidding/snippets/menu-bidding.html:31
 #: templates/nas/companies/snippets/company-item.html:179
 msgid "Bonds"
@@ -4270,11 +5363,6 @@ msgstr ""
 #: templates/bidding/team-member-disabled.html:6
 #: templates/bidding/team-member-disabled.html:17
 msgid "Member disabled"
-msgstr ""
-
-#: templates/bidding/team-member-disabled.html:27
-#: templates/bidding/team-recap.html:428
-msgid "Team"
 msgstr ""
 
 #: templates/bidding/team-member-disabled.html:31
@@ -4444,20 +5532,242 @@ msgstr ""
 msgid "Tenders found"
 msgstr ""
 
-#: templates/insights/bidder-details.html:103
-msgid "Awarded Bids"
+#: templates/flows/snippets/plans-digest.html:23
+msgid "Choose plan"
 msgstr ""
 
-#: templates/insights/bidder-details.html:110
-msgid "Awarded amount"
+#: templates/flows/snippets/plans-digest.html:33
+msgid "month"
 msgstr ""
 
-#: templates/insights/bidder-details.html:117
+#: templates/flows/snippets/plans-table.html:5
+msgid "Compare our plans"
+msgstr ""
+
+#: templates/flows/snippets/plans-table.html:7
+msgid "Choose the plan that fits your needs."
+msgstr ""
+
+#: templates/flows/snippets/plans-table.html:29
+msgid "per month"
+msgstr ""
+
+#: templates/flows/snippets/plans-table.html:49
+msgid "Other features"
+msgstr ""
+
+#: templates/flows/snippets/plans-table.html:76
+msgid "Included"
+msgstr ""
+
+#: templates/flows/snippets/plans-table.html:82
+msgid "Not included"
+msgstr ""
+
+#: templates/flows/snippets/plans-table.html:98
+msgid "No features are currently available."
+msgstr ""
+
+#: templates/idp/oidc/authorization_form.html:5
+#: templates/idp/oidc/authorization_form.html:9
+#: templates/idp/oidc/authorization_form.html:23
+#: templates/idp/oidc/device_authorization_code_form.html:5
+#: templates/idp/oidc/device_authorization_confirm_form.html:5
+#: templates/idp/oidc/device_authorization_confirmed.html:5
+#: templates/idp/oidc/device_authorization_denied.html:5
+msgid "Authorize"
+msgstr ""
+
+#: templates/idp/oidc/authorization_form.html:12
+#, python-format
+msgid "%(client_name)s wants to access your %(site_name)s account."
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_code_form.html:9
+msgid "Enter Device Code"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_code_form.html:12
+msgid "Enter the code displayed on your device."
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_code_form.html:21
+#: templates/socialaccount/login.html:29
+#: templates/socialaccount/login_redirect.html:10
+msgid "Continue"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_confirm_form.html:9
+msgid "Confirm Device"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_confirm_form.html:12
+#, python-format
+msgid ""
+"Please confirm the code shown on your %(client_name)s to authorize this "
+"device."
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_confirm_form.html:16
+msgid "Code"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_confirm_form.html:29
+msgid "Deny"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_confirmed.html:9
+msgid "Device Authorized"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_confirmed.html:12
+#, python-format
+msgid "You successfully authorized your %(client_name)s device."
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_denied.html:9
+msgid "Device Denied"
+msgstr ""
+
+#: templates/idp/oidc/device_authorization_denied.html:12
+#, python-format
+msgid "Authorization for your %(client_name)s device has been denied."
+msgstr ""
+
+#: templates/idp/oidc/error.html:5 templates/idp/oidc/error.html:9
+msgid "Error"
+msgstr ""
+
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
+msgid "Bidder"
+msgstr ""
+
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
+msgid "Revenue"
+msgstr ""
+
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
+msgid "Participation"
+msgstr ""
+
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
+msgid "Award"
+msgstr ""
+
+#: templates/insights/bidder-details.html:5
+#: templates/insights/bidder-details.html:6
+msgid "Success Rate"
+msgstr ""
+
+#: templates/insights/bidder-details.html:257
+msgid "PDF"
+msgstr ""
+
+#: templates/insights/bidder-details.html:262
+msgid "CSV"
+msgstr ""
+
+#: templates/insights/bidder-details.html:286
+#: templates/portal/tender-details.html:661
+msgid "URL was copied to clipboard"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:41
+msgid ""
+"This document was generated using an automated system for information "
+"purposes only."
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:58
+msgid "Table of Contents"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:68 templates/insights/bidder-pdf.html:146
+#: templates/insights/bidder-pdf.html:150
+msgid "Administrative Rejects"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:73 templates/insights/bidder-pdf.html:164
+#: templates/insights/bidder-pdf.html:168
+msgid "Administrative Passes"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:78 templates/insights/bidder-pdf.html:182
+#: templates/insights/bidder-pdf.html:186
+msgid "Administrative Reserves"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:83 templates/insights/bidder-pdf.html:200
+#: templates/insights/bidder-pdf.html:204
+msgid "Technical Rejects"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:88 templates/insights/bidder-pdf.html:220
+msgid "Financial Races"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:98 templates/insights/bidder-pdf.html:263
+#: templates/insights/bidder-pdf.html:267 templates/portal/clients-list.html:6
+#: templates/portal/clients-list.html:7
+msgid "Public Clients"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:103
+msgid "Domains of Activity"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:113
+#: templates/insights/bidder-pdf.html:316
+#: templates/insights/bidder-pdf.html:320
+#: templates/nas/companies/agrements_form.html:19
+#: templates/nas/companies/snippets/agrement_list.html:13
+#: templates/portal/snippets/tenders/search-form.html:203
+msgid "Licenses"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:281
+#: templates/insights/bidder-pdf.html:285 templates/portal/domains-list.html:6
+#: templates/portal/domains-list.html:12
+#: templates/portal/snippets/tenders/search-form.html:43
+#: templates/portal/tender-details.html:285
+msgid "Domains of activity"
+msgstr ""
+
+#: templates/insights/bidder-pdf.html:348
+msgid "Error: Not found."
+msgstr ""
+
+#: templates/insights/bidders-list.html:6
+#: templates/insights/bidders-list.html:7
+msgid "Bidders list"
+msgstr ""
+
+#: templates/insights/bidders-list.html:64
+msgid "Awards sum"
+msgstr ""
+
+#: templates/insights/bidders-list.html:79
+#: templates/insights/snippets/bidders/bidder-item.html:37
 msgid "Latest bid"
 msgstr ""
 
-#: templates/insights/bidder-details.html:122
-msgid "Highest award"
+#: templates/insights/snippets/bidders/bidder-item.html:19
+#: templates/insights/snippets/bidders/digest-card.html:100
+#: templates/insights/snippets/bidders/pdf/digest-card.html:80
+msgid "Awarded Bids"
+msgstr ""
+
+#: templates/insights/snippets/bidders/bidder-item.html:28
+#: templates/insights/snippets/bidders/digest-card.html:107
+msgid "Awarded amount"
+msgstr ""
+
+#: templates/insights/snippets/bidders/bidder-item.html:48
+msgid "Financial efficiency"
 msgstr ""
 
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:18
@@ -4524,14 +5834,340 @@ msgstr ""
 msgid "50%% or less"
 msgstr ""
 
-#: templates/nas/companies/agrements_form.html:5
-msgid "Licenses selection"
+#: templates/insights/snippets/bidders/digest-card.html:114
+#: templates/insights/snippets/bidders/pdf/digest-card.html:103
+msgid "Latest award"
 msgstr ""
 
-#: templates/nas/companies/agrements_form.html:19
-#: templates/nas/companies/snippets/agrement_list.html:13
-#: templates/portal/snippets/tenders/search-form.html:203
-msgid "Licenses"
+#: templates/insights/snippets/bidders/digest-card.html:119
+#: templates/insights/snippets/bidders/pdf/digest-card.html:108
+msgid "Highest award"
+msgstr ""
+
+#: templates/insights/snippets/bidders/pdf/clients.html:11
+#: templates/insights/snippets/bidders/pdf/domains.html:11
+#: templates/insights/snippets/bidders/pdf/licenses.html:12
+#: templates/insights/snippets/bidders/pdf/qualifs.html:12
+msgid "Biddings"
+msgstr ""
+
+#: templates/insights/snippets/bidders/pdf/digest-card.html:91
+msgid "Total Awardings"
+msgstr ""
+
+#: templates/insights/snippets/bidders/pdf/digest-card.html:98
+msgid "Total Bids"
+msgstr ""
+
+#: templates/insights/snippets/bidders/table-financials.html:48
+msgid "Offers Sum"
+msgstr ""
+
+#: templates/insights/snippets/bidders/table-wins.html:37
+msgid "Awards Sum"
+msgstr ""
+
+#: templates/mfa/authenticate.html:13
+msgid ""
+"Your account is protected by two-factor authentication. Please enter an "
+"authenticator code:"
+msgstr ""
+
+#: templates/mfa/authenticate.html:41
+#: templates/mfa/webauthn/reauthenticate.html:15
+msgid "Use a security key"
+msgstr ""
+
+#: templates/mfa/email/recovery_codes_generated_message.txt:4
+msgid ""
+"A new set of Two-Factor Authentication recovery codes has been generated."
+msgstr ""
+
+#: templates/mfa/email/recovery_codes_generated_subject.txt:3
+msgid "New Recovery Codes Generated"
+msgstr ""
+
+#: templates/mfa/email/totp_activated_message.txt:4
+#: templates/mfa/messages/totp_activated.txt:2
+msgid "Authenticator app activated."
+msgstr ""
+
+#: templates/mfa/email/totp_activated_subject.txt:3
+msgid "Authenticator App Activated"
+msgstr ""
+
+#: templates/mfa/email/totp_deactivated_message.txt:4
+#: templates/mfa/messages/totp_deactivated.txt:2
+msgid "Authenticator app deactivated."
+msgstr ""
+
+#: templates/mfa/email/totp_deactivated_subject.txt:3
+msgid "Authenticator App Deactivated"
+msgstr ""
+
+#: templates/mfa/email/webauthn_added_message.txt:4
+msgid "A new security key has been added."
+msgstr ""
+
+#: templates/mfa/email/webauthn_added_subject.txt:3
+msgid "Security Key Added"
+msgstr ""
+
+#: templates/mfa/email/webauthn_removed_message.txt:4
+msgid "A security key has been removed."
+msgstr ""
+
+#: templates/mfa/email/webauthn_removed_subject.txt:3
+msgid "Security Key Removed"
+msgstr ""
+
+#: templates/mfa/index.html:14 templates/mfa/totp/base.html:4
+msgid "Authenticator App"
+msgstr ""
+
+#: templates/mfa/index.html:19
+msgid "Authentication using an authenticator app is active."
+msgstr ""
+
+#: templates/mfa/index.html:23
+msgid "An authenticator app is not active."
+msgstr ""
+
+#: templates/mfa/index.html:32 templates/mfa/totp/deactivate_form.html:24
+msgid "Deactivate"
+msgstr ""
+
+#: templates/mfa/index.html:36 templates/mfa/totp/activate_form.html:32
+msgid "Activate"
+msgstr ""
+
+#: templates/mfa/index.html:45 templates/mfa/webauthn/authenticator_list.html:8
+#: templates/mfa/webauthn/base.html:4
+msgid "Security Keys"
+msgstr ""
+
+#: templates/mfa/index.html:50
+#, python-format
+msgid "You have added %(count)s security key."
+msgid_plural "You have added %(count)s security keys."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/mfa/index.html:54
+#: templates/mfa/webauthn/authenticator_list.html:12
+msgid "No security keys have been added."
+msgstr ""
+
+#: templates/mfa/index.html:62
+#: templates/nas/companies/snippets/agrement_list.html:47
+#: templates/nas/companies/snippets/qualif_list.html:48
+#: templates/nas/profile/snippets/companies-list.html:10
+#: templates/nas/profile/snippets/newsletters.html:10
+#: templates/nas/profile/snippets/notifications.html:10
+#: templates/nas/profile/snippets/team.html:10
+msgid "Manage"
+msgstr ""
+
+#: templates/mfa/index.html:67 templates/mfa/webauthn/add_form.html:18
+#: templates/mfa/webauthn/authenticator_list.html:70
+msgid "Add"
+msgstr ""
+
+#: templates/mfa/index.html:77 templates/mfa/recovery_codes/base.html:4
+#: templates/mfa/recovery_codes/generate.html:6
+#: templates/mfa/recovery_codes/index.html:6
+msgid "Recovery Codes"
+msgstr ""
+
+#: templates/mfa/index.html:82 templates/mfa/recovery_codes/index.html:9
+#, python-format
+msgid ""
+"There is %(unused_count)s out of %(total_count)s recovery codes available."
+msgid_plural ""
+"There are %(unused_count)s out of %(total_count)s recovery codes available."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/mfa/index.html:86
+msgid "No recovery codes set up."
+msgstr ""
+
+#: templates/mfa/index.html:96
+msgid "View"
+msgstr ""
+
+#: templates/mfa/index.html:102
+#: templates/portal/snippets/tenders/tender-actions.html:47
+msgid "Download"
+msgstr ""
+
+#: templates/mfa/index.html:110 templates/mfa/recovery_codes/generate.html:29
+msgid "Generate"
+msgstr ""
+
+#: templates/mfa/messages/recovery_codes_generated.txt:2
+msgid "A new set of recovery codes has been generated."
+msgstr ""
+
+#: templates/mfa/messages/webauthn_added.txt:2
+msgid "Security key added."
+msgstr ""
+
+#: templates/mfa/messages/webauthn_removed.txt:2
+msgid "Security key removed."
+msgstr ""
+
+#: templates/mfa/reauthenticate.html:6
+msgid "Enter an authenticator code:"
+msgstr ""
+
+#: templates/mfa/recovery_codes/generate.html:9
+msgid "You are about to generate a new set of recovery codes for your account."
+msgstr ""
+
+#: templates/mfa/recovery_codes/generate.html:11
+msgid "This action will invalidate your existing codes."
+msgstr ""
+
+#: templates/mfa/recovery_codes/generate.html:13
+msgid "Are you sure?"
+msgstr ""
+
+#: templates/mfa/recovery_codes/index.html:13
+msgid "Unused codes"
+msgstr ""
+
+#: templates/mfa/recovery_codes/index.html:25
+msgid "Download codes"
+msgstr ""
+
+#: templates/mfa/recovery_codes/index.html:30
+msgid "Generate new codes"
+msgstr ""
+
+#: templates/mfa/totp/activate_form.html:4
+#: templates/mfa/totp/activate_form.html:8
+msgid "Activate Authenticator App"
+msgstr ""
+
+#: templates/mfa/totp/activate_form.html:11
+msgid ""
+"To protect your account with two-factor authentication, scan the QR code "
+"below with your authenticator app. Then, input the verification code "
+"generated by the app below."
+msgstr ""
+
+#: templates/mfa/totp/activate_form.html:21
+msgid "Authenticator secret"
+msgstr ""
+
+#: templates/mfa/totp/activate_form.html:24
+msgid ""
+"You can store this secret and use it to reinstall your authenticator app at "
+"a later time."
+msgstr ""
+
+#: templates/mfa/totp/deactivate_form.html:5
+#: templates/mfa/totp/deactivate_form.html:9
+msgid "Deactivate Authenticator App"
+msgstr ""
+
+#: templates/mfa/totp/deactivate_form.html:12
+msgid ""
+"You are about to deactivate authenticator app based authentication. Are you "
+"sure?"
+msgstr ""
+
+#: templates/mfa/trust.html:4 templates/mfa/trust.html:8
+msgid "Trust this Browser?"
+msgstr ""
+
+#: templates/mfa/trust.html:11
+msgid ""
+"If you choose to trust this browser, you will not be asked for a "
+"verification code the next time you sign in."
+msgstr ""
+
+#: templates/mfa/trust.html:23
+#, python-format
+msgid "Trust for %(period)s"
+msgstr ""
+
+#: templates/mfa/trust.html:26
+msgid "Don't Trust"
+msgstr ""
+
+#: templates/mfa/webauthn/add_form.html:7
+msgid "Add Security Key"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_confirm_delete.html:6
+msgid "Remove Security Key"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_confirm_delete.html:9
+msgid "Are you sure you want to remove this security key?"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:18
+msgid "Key"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:21
+msgid "Usage"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:33
+msgid "Passkey"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:37
+msgid "Security key"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:40
+msgid "This key does not indicate whether it is a passkey."
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:41
+msgid "Unspecified"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:46
+#, python-format
+msgid "Added on %(created_at)s"
+msgstr ""
+
+#: templates/mfa/webauthn/authenticator_list.html:48
+#, python-format
+msgid "Last used %(last_used)s"
+msgstr ""
+
+#: templates/mfa/webauthn/edit_form.html:7
+msgid "Edit Security Key"
+msgstr ""
+
+#: templates/mfa/webauthn/signup_form.html:7
+msgid "Create Passkey"
+msgstr ""
+
+#: templates/mfa/webauthn/signup_form.html:10
+msgid ""
+"You are about to create a passkey for your account. As you can add "
+"additional keys later on, you can use a descriptive name to tell the keys "
+"apart."
+msgstr ""
+
+#: templates/mfa/webauthn/signup_form.html:21
+msgid "Create"
+msgstr ""
+
+#: templates/mfa/webauthn/snippets/scripts.html:2
+msgid "This functionality requires JavaScript."
+msgstr ""
+
+#: templates/nas/companies/agrements_form.html:5
+msgid "Licenses selection"
 msgstr ""
 
 #: templates/nas/companies/companies-list.html:6
@@ -4661,15 +6297,6 @@ msgstr ""
 msgid "Qualifications selection"
 msgstr ""
 
-#: templates/nas/companies/snippets/agrement_list.html:47
-#: templates/nas/companies/snippets/qualif_list.html:48
-#: templates/nas/profile/snippets/companies-list.html:10
-#: templates/nas/profile/snippets/newsletters.html:10
-#: templates/nas/profile/snippets/notifications.html:10
-#: templates/nas/profile/snippets/team.html:10 templates/x-mfa/index.html:62
-msgid "Manage"
-msgstr ""
-
 #: templates/nas/companies/snippets/company-item.html:55
 msgid "Total expenses"
 msgstr ""
@@ -4718,12 +6345,6 @@ msgstr ""
 
 #: templates/nas/companies/snippets/company_data.html:66
 msgid "Company file"
-msgstr ""
-
-#: templates/nas/companies/snippets/company_data.html:76
-#: templates/nas/snippets/expirables/expirable-item.html:53
-#: templates/x-account/snippets/already_logged_in.html:7
-msgid "Note"
 msgstr ""
 
 #: templates/nas/companies/snippets/expirables_list.html:39
@@ -4976,35 +6597,44 @@ msgstr ""
 msgid "Reset Settings"
 msgstr ""
 
-#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:12
+#: templates/portal/clients-list.html:5 templates/portal/clients-list.html:14
 msgid "Tenders' Clients"
 msgstr ""
 
-#: templates/portal/clients-list.html:55
+#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
+msgid "Ongoing Tenders"
+msgstr ""
+
+#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
+msgid "Tendances"
+msgstr ""
+
+#: templates/portal/clients-list.html:8 templates/portal/clients-list.html:9
+msgid "Clients list"
+msgstr ""
+
+#: templates/portal/clients-list.html:64 templates/portal/domains-list.html:64
 msgid "Active tenders estimate"
 msgstr ""
 
-#: templates/portal/clients-list.html:71
-#: templates/portal/snippets/clients/client-item.html:26
+#: templates/portal/clients-list.html:71 templates/portal/domains-list.html:72
+#: templates/portal/snippets/clients/client-item.html:23
 #: templates/portal/snippets/clients/client-item.html:53
+#: templates/portal/snippets/domains/domain-item.html:23
+#: templates/portal/snippets/domains/domain-item.html:53
 msgid "Active Tenders"
 msgstr ""
 
-#: templates/portal/clients-list.html:77
-#: templates/portal/snippets/clients/client-item.html:31
+#: templates/portal/clients-list.html:77 templates/portal/domains-list.html:78
+#: templates/portal/snippets/clients/client-item.html:39
+#: templates/portal/snippets/domains/domain-item.html:39
 msgid "Estimate average"
 msgstr ""
 
-#: templates/portal/clients-list.html:83
-#: templates/portal/snippets/clients/client-item.html:21
-#: templates/portal/snippets/clients/client-menu-sort.html:19
+#: templates/portal/clients-list.html:83 templates/portal/domains-list.html:84
+#: templates/portal/snippets/clients/client-menu-sort.html:20
+#: templates/portal/snippets/domains/domain-menu-sort.html:17
 msgid "Latest published"
-msgstr ""
-
-#: templates/portal/domains-list.html:6 templates/portal/domains-list.html:12
-#: templates/portal/snippets/tenders/search-form.html:43
-#: templates/portal/tender-details.html:272
-msgid "Domains of activity"
 msgstr ""
 
 #: templates/portal/locations-list.html:5
@@ -5012,41 +6642,52 @@ msgstr ""
 msgid "Tenders' Locations"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-item.html:36
+#: templates/portal/snippets/clients/client-item.html:27
+#: templates/portal/snippets/domains/domain-item.html:27
 msgid "Active Tenders estimate"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-item.html:41
-msgid "All Tenders estimate"
-msgstr ""
-
+#: templates/portal/snippets/clients/client-item.html:31
 #: templates/portal/snippets/clients/client-item.html:61
+#: templates/portal/snippets/domains/domain-item.html:31
+#: templates/portal/snippets/domains/domain-item.html:61
 msgid "All Tenders"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-menu-sort.html:26
-#: templates/portal/snippets/domains/domain-menu-sort.html:25
+#: templates/portal/snippets/clients/client-item.html:35
+#: templates/portal/snippets/domains/domain-item.html:35
+msgid "All Tenders estimate"
+msgstr ""
+
+#: templates/portal/snippets/clients/client-menu-sort.html:27
+#: templates/portal/snippets/domains/domain-menu-sort.html:36
 msgid "Active tenders count"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-menu-sort.html:31
+#: templates/portal/snippets/clients/client-menu-sort.html:32
+#: templates/portal/snippets/domains/domain-menu-sort.html:41
 msgid "All tenders count"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-menu-sort.html:38
-#: templates/portal/snippets/domains/domain-menu-sort.html:32
+#: templates/portal/snippets/clients/client-menu-sort.html:39
+#: templates/portal/snippets/domains/domain-menu-sort.html:48
 msgid "Active tenders amount"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-menu-sort.html:43
+#: templates/portal/snippets/clients/client-menu-sort.html:44
+#: templates/portal/snippets/domains/domain-menu-sort.html:53
 msgid "All tenders amount"
 msgstr ""
 
-#: templates/portal/snippets/clients/client-menu-sort.html:50
+#: templates/portal/snippets/clients/client-menu-sort.html:51
 msgid "Client Acronym"
 msgstr ""
 
-#: templates/portal/snippets/domains/domain-menu-sort.html:18
+#: templates/portal/snippets/domains/domain-menu-sort.html:24
+msgid "Domain short"
+msgstr ""
+
+#: templates/portal/snippets/domains/domain-menu-sort.html:29
 msgid "Domain Name"
 msgstr ""
 
@@ -5058,43 +6699,43 @@ msgstr ""
 msgid "Domains Search"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:68
+#: templates/portal/snippets/lots/lot-details.html:72
 msgid "Variant"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:78
+#: templates/portal/snippets/lots/lot-details.html:82
 #: templates/portal/snippets/tenders/search-form.html:153
 #: templates/portal/snippets/tenders/search-form.html:156
 msgid "Reserved"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:88
-#: templates/portal/tender-details.html:198
+#: templates/portal/snippets/lots/lot-details.html:96
+#: templates/portal/tender-details.html:211
 msgid "Required Licences"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:93
-#: templates/portal/tender-details.html:203
+#: templates/portal/snippets/lots/lot-details.html:101
+#: templates/portal/tender-details.html:216
 msgid "Required Qualifications"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:98
-#: templates/portal/tender-details.html:210
+#: templates/portal/snippets/lots/lot-details.html:106
+#: templates/portal/tender-details.html:223
 msgid "Required Samples"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:103
-#: templates/portal/tender-details.html:215
+#: templates/portal/snippets/lots/lot-details.html:111
+#: templates/portal/tender-details.html:228
 msgid "Scheduled Meetings"
 msgstr ""
 
-#: templates/portal/snippets/lots/lot-details.html:108
-#: templates/portal/tender-details.html:220
+#: templates/portal/snippets/lots/lot-details.html:116
+#: templates/portal/tender-details.html:233
 msgid "Site Survey"
 msgstr ""
 
 #: templates/portal/snippets/lots/lots-details.html:9
-#: templates/portal/tender-details.html:233
+#: templates/portal/tender-details.html:246
 msgid "Lots details"
 msgstr ""
 
@@ -5110,35 +6751,47 @@ msgstr ""
 msgid "Favorites cleanup"
 msgstr ""
 
-#: templates/portal/snippets/tenders/menu-sort.html:41
+#: templates/portal/snippets/tenders/menu-sort.html:40
 msgid "Minutes finished"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:8
+#: templates/portal/snippets/tenders/menu-sort.html:46
+#: templates/portal/snippets/tenders/tender-summary.html:289
+#: templates/portal/tender-details.html:440
+msgid "Views"
+msgstr ""
+
+#: templates/portal/snippets/tenders/menu-sort.html:51
+#: templates/portal/snippets/tenders/tender-summary.html:307
+#: templates/portal/tender-details.html:451
+msgid "Downloads"
+msgstr ""
+
+#: templates/portal/snippets/tenders/results-digest.html:9
 msgid "Participations"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:141
+#: templates/portal/snippets/tenders/results-digest.html:162
 msgid "Financial Offers"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:157
+#: templates/portal/snippets/tenders/results-digest.html:178
 msgid "Offers"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:262
+#: templates/portal/snippets/tenders/results-digest.html:275
 msgid "Awards"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:285
+#: templates/portal/snippets/tenders/results-digest.html:302
 msgid "Selection Justification"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:306
+#: templates/portal/snippets/tenders/results-digest.html:323
 msgid "Date Finished"
 msgstr ""
 
-#: templates/portal/snippets/tenders/results-digest.html:308
+#: templates/portal/snippets/tenders/results-digest.html:325
 msgid "Unsuccessful declaration"
 msgstr ""
 
@@ -5159,12 +6812,12 @@ msgid "Guarantee Max"
 msgstr ""
 
 #: templates/portal/snippets/tenders/search-form.html:119
-#: templates/portal/tender-details.html:141
+#: templates/portal/tender-details.html:142
 msgid "Procedure"
 msgstr ""
 
 #: templates/portal/snippets/tenders/search-form.html:131
-#: templates/portal/tender-details.html:147
+#: templates/portal/tender-details.html:148
 msgid "Electronic bidding"
 msgstr ""
 
@@ -5172,14 +6825,14 @@ msgstr ""
 #: templates/portal/snippets/tenders/search-form.html:176
 #: templates/portal/snippets/tenders/search-form.html:206
 #: templates/portal/snippets/tenders/search-form.html:217
-#: templates/portal/tender-details.html:150
-#: templates/portal/tender-details.html:162
+#: templates/portal/tender-details.html:151
+#: templates/portal/tender-details.html:163
 msgid "Required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/search-form.html:135
-#: templates/portal/tender-details.html:152
-#: templates/portal/tender-details.html:164
+#: templates/portal/tender-details.html:153
+#: templates/portal/tender-details.html:165
 msgid "Optional"
 msgstr ""
 
@@ -5255,21 +6908,12 @@ msgstr ""
 msgid "Successful or Partial"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-actions.html:44
-#: templates/x-mfa/index.html:102
-msgid "Download"
-msgstr ""
-
-#: templates/portal/snippets/tenders/tender-actions.html:71
-msgid "Request Files"
-msgstr ""
-
-#: templates/portal/snippets/tenders/tender-actions.html:100
-#: templates/portal/snippets/tenders/tender-actions.html:109
+#: templates/portal/snippets/tenders/tender-actions.html:95
+#: templates/portal/snippets/tenders/tender-actions.html:102
 msgid "Simulator"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-actions.html:119
+#: templates/portal/snippets/tenders/tender-actions.html:113
 msgid "Official Link"
 msgstr ""
 
@@ -5302,96 +6946,101 @@ msgid "Winner amount ratio to Estimate"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:168
-#: templates/portal/snippets/tenders/tender-summary.html:164
-msgid "Procedure may be restricted"
+#: templates/portal/snippets/tenders/tender-summary.html:215
+msgid "Contains environment-related clauses"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:179
-#: templates/portal/snippets/tenders/tender-summary.html:172
-msgid "Electronic bidding is required"
+#: templates/portal/snippets/tenders/tender-summary.html:165
+msgid "Procedure may be restricted"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:190
-#: templates/portal/snippets/tenders/tender-summary.html:178
-msgid "Electronic bidding is optional"
+#: templates/portal/snippets/tenders/tender-summary.html:173
+msgid "Electronic bidding is required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:201
-#: templates/portal/snippets/tenders/tender-summary.html:184
-msgid "Electronic bidding is not applicable"
+#: templates/portal/snippets/tenders/tender-summary.html:179
+msgid "Electronic bidding is optional"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:212
-#: templates/portal/snippets/tenders/tender-summary.html:193
-msgid "Electronic signature is required"
+#: templates/portal/snippets/tenders/tender-summary.html:185
+msgid "Electronic bidding is not applicable"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:223
-#: templates/portal/snippets/tenders/tender-summary.html:199
-msgid "Electronic signature is optional"
+#: templates/portal/snippets/tenders/tender-summary.html:194
+msgid "Electronic signature is required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:234
-#: templates/portal/snippets/tenders/tender-summary.html:205
-msgid "Electronic signature is not applicable"
+#: templates/portal/snippets/tenders/tender-summary.html:200
+msgid "Electronic signature is optional"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:245
-#: templates/portal/snippets/tenders/tender-summary.html:214
-#: templates/portal/tender-details.html:171
-msgid "Reserved to SMBs, individuals, Unions, ..."
+#: templates/portal/snippets/tenders/tender-summary.html:206
+msgid "Electronic signature is not applicable"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:256
-#: templates/portal/snippets/tenders/tender-summary.html:222
-msgid "Licenses required"
+#: templates/portal/snippets/tenders/tender-summary.html:223
+#: templates/portal/tender-details.html:172
+msgid "Reserved to SMBs, individuals, Unions, ..."
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:267
-#: templates/portal/snippets/tenders/tender-summary.html:229
-msgid "Qualifications required"
+#: templates/portal/snippets/tenders/tender-summary.html:231
+msgid "Licenses required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:278
-#: templates/portal/snippets/tenders/tender-summary.html:236
-msgid "Samples required"
+#: templates/portal/snippets/tenders/tender-summary.html:238
+msgid "Qualifications required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:289
-#: templates/portal/snippets/tenders/tender-summary.html:243
-msgid "Site survey scheduled"
+#: templates/portal/snippets/tenders/tender-summary.html:245
+msgid "Samples required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:300
-#: templates/portal/snippets/tenders/tender-summary.html:250
-msgid "Meetings scheduled"
+#: templates/portal/snippets/tenders/tender-summary.html:252
+msgid "Site survey scheduled"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:311
-#: templates/portal/snippets/tenders/tender-summary.html:257
-#: templates/portal/tender-details.html:181
-msgid "Variants accepted"
+#: templates/portal/snippets/tenders/tender-summary.html:259
+msgid "Meetings scheduled"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:322
-msgid "Tender Changes"
+#: templates/portal/snippets/tenders/tender-summary.html:266
+#: templates/portal/tender-details.html:182
+msgid "Variants accepted"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:333
-msgid "Tender Favorites"
+msgid "Tender Changes"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:344
-msgid "Tender Downloads"
+msgid "Tender Favorites"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:355
-#: templates/portal/snippets/tenders/tender-summary.html:314
-msgid "Available files size"
+msgid "Tender Downloads"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:366
-#: templates/portal/snippets/tenders/tender-summary.html:308
+#: templates/portal/snippets/tenders/tender-summary.html:323
+msgid "Available files size"
+msgstr ""
+
+#: templates/portal/snippets/tenders/tender-legend.html:377
+#: templates/portal/snippets/tenders/tender-summary.html:317
 msgid "Files may not be available"
 msgstr ""
 
@@ -5432,203 +7081,200 @@ msgid "Offers count"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-summary.html:21
-#: templates/portal/tender-details.html:121
+#: templates/portal/tender-details.html:122
 msgid "Total Estimate"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:36
+#: templates/portal/snippets/tenders/tender-summary.html:35
 msgid "Total Guaranty"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:44
-#: templates/portal/tender-details.html:23
+#: templates/portal/snippets/tenders/tender-summary.html:43
+#: templates/portal/tender-details.html:24
 msgid "FAVORITE"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:85
+#: templates/portal/snippets/tenders/tender-summary.html:86
 msgid "Tender object"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:120
+#: templates/portal/snippets/tenders/tender-summary.html:121
 msgid "Awarding minutes found"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:143
+#: templates/portal/snippets/tenders/tender-summary.html:144
 msgid "No Awarding"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:151
+#: templates/portal/snippets/tenders/tender-summary.html:152
 msgid "No minutes found"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:265
+#: templates/portal/snippets/tenders/tender-summary.html:274
 msgid "Tender has Changes"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:280
-#: templates/portal/tender-details.html:429
-msgid "Views"
-msgstr ""
-
-#: templates/portal/snippets/tenders/tender-summary.html:289
+#: templates/portal/snippets/tenders/tender-summary.html:298
 msgid "Favorites"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-summary.html:298
-#: templates/portal/tender-details.html:440
-msgid "Downloads"
-msgstr ""
-
-#: templates/portal/tender-details.html:10
-#: templates/portal/tender-details.html:19
+#: templates/portal/tender-details.html:9
+#: templates/portal/tender-details.html:20
 msgid "Tender Details"
 msgstr ""
 
-#: templates/portal/tender-details.html:70
+#: templates/portal/tender-details.html:71
 msgid "My Bids"
 msgstr ""
 
-#: templates/portal/tender-details.html:92
-#: templates/portal/tender-details.html:250
+#: templates/portal/tender-details.html:93
+#: templates/portal/tender-details.html:263
 msgid "Add Bid"
 msgstr ""
 
-#: templates/portal/tender-details.html:124
+#: templates/portal/tender-details.html:125
 msgid "Total Guarantee"
 msgstr ""
 
-#: templates/portal/tender-details.html:144
+#: templates/portal/tender-details.html:145
 msgid "Awarding Mode"
 msgstr ""
 
-#: templates/portal/tender-details.html:154
-#: templates/portal/tender-details.html:166
+#: templates/portal/tender-details.html:155
+#: templates/portal/tender-details.html:167
 msgid "Not Applicable"
 msgstr ""
 
-#: templates/portal/tender-details.html:159
+#: templates/portal/tender-details.html:160
 msgid "Electronic signature"
 msgstr ""
 
-#: templates/portal/tender-details.html:192
+#: templates/portal/tender-details.html:193
+msgid "Environmental clauses"
+msgstr ""
+
+#: templates/portal/tender-details.html:205
 msgid "Price of Plans"
 msgstr ""
 
-#: templates/portal/tender-details.html:301
+#: templates/portal/tender-details.html:314
 msgid "Addresses and Contact"
 msgstr ""
 
-#: templates/portal/tender-details.html:307
+#: templates/portal/tender-details.html:320
 msgid "Withdrawal Address"
 msgstr ""
 
-#: templates/portal/tender-details.html:310
+#: templates/portal/tender-details.html:323
 msgid "Bidding Address"
 msgstr ""
 
-#: templates/portal/tender-details.html:313
+#: templates/portal/tender-details.html:326
 msgid "Opening Address"
 msgstr ""
 
-#: templates/portal/tender-details.html:316
+#: templates/portal/tender-details.html:329
 msgid "Person"
 msgstr ""
 
-#: templates/portal/tender-details.html:330
+#: templates/portal/tender-details.html:343
 msgid "Fax"
 msgstr ""
 
-#: templates/portal/tender-details.html:348
+#: templates/portal/tender-details.html:360
 msgid "Changes"
 msgstr ""
 
-#: templates/portal/tender-details.html:349
+#: templates/portal/tender-details.html:361
 msgid "Experimental"
 msgstr ""
 
-#: templates/portal/tender-details.html:355
+#: templates/portal/tender-details.html:367
 msgid "Empty"
 msgstr ""
 
-#: templates/portal/tender-details.html:397
+#: templates/portal/tender-details.html:408
 msgid "Advanced data"
 msgstr ""
 
-#: templates/portal/tender-details.html:411
+#: templates/portal/tender-details.html:422
 msgid "Last updated"
 msgstr ""
 
-#: templates/portal/tender-details.html:415
+#: templates/portal/tender-details.html:426
 msgid "Time on display"
 msgstr ""
 
-#: templates/portal/tender-details.html:419
+#: templates/portal/tender-details.html:430
 msgid "Guarantee ratio"
 msgstr ""
 
-#: templates/portal/tender-details.html:425
+#: templates/portal/tender-details.html:436
 msgid "Database ID"
 msgstr ""
 
-#: templates/portal/tender-details.html:434
+#: templates/portal/tender-details.html:445
 msgid "Latest view since"
 msgstr ""
 
-#: templates/portal/tender-details.html:445
+#: templates/portal/tender-details.html:456
 msgid "Latest download since"
 msgstr ""
 
-#: templates/portal/tender-details.html:469
-#: templates/portal/tender-details.html:481
+#: templates/portal/tender-details.html:480
+#: templates/portal/tender-details.html:492
 msgid "Awarding Minutes"
 msgstr ""
 
-#: templates/portal/tender-details.html:482
+#: templates/portal/tender-details.html:493
 msgid "No Minutes found"
 msgstr ""
 
-#: templates/portal/tender-details.html:512
-msgid "Tender's files"
+#: templates/portal/tender-details.html:523
+msgid "Tender downloads"
 msgstr ""
 
-#: templates/portal/tender-details.html:531
+#: templates/portal/tender-details.html:529
+msgid "DCE Files"
+msgstr ""
+
+#: templates/portal/tender-details.html:540
+msgid "Extra Files"
+msgstr ""
+
+#: templates/portal/tender-details.html:555
 msgid "Files for this Tender are not ready, yet."
 msgstr ""
 
-#: templates/portal/tender-details.html:561
+#: templates/portal/tender-details.html:581
 msgid "Request Tender files"
 msgstr ""
 
-#: templates/portal/tender-details.html:568
+#: templates/portal/tender-details.html:585
 msgid "Files for this Tender are already queued"
 msgstr ""
 
-#: templates/portal/tender-details.html:570
+#: templates/portal/tender-details.html:587
 msgid "We will make this Tender files available as soon as possible."
 msgstr ""
 
-#: templates/portal/tender-details.html:579
-#: templates/portal/tender-details.html:585
+#: templates/portal/tender-details.html:595
 msgid "Request"
 msgstr ""
 
-#: templates/portal/tender-details.html:620
+#: templates/portal/tender-details.html:628
 msgid "Item added to Favourites"
 msgstr ""
 
-#: templates/portal/tender-details.html:631
+#: templates/portal/tender-details.html:639
 msgid "Item removed from Favourites"
 msgstr ""
 
-#: templates/portal/tender-details.html:653
-msgid "URL was copied to clipboard"
-msgstr ""
-
-#: templates/portal/tender-details.html:664
+#: templates/portal/tender-details.html:672
 msgid "Files request submitted"
 msgstr ""
 
-#: templates/portal/tender-details.html:675
+#: templates/portal/tender-details.html:683
 msgid "Files are already queued for download"
 msgstr ""
 
@@ -5640,1038 +7286,95 @@ msgstr ""
 msgid "Favorite Tenders"
 msgstr ""
 
-#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:11
+#: templates/portal/tender-list.html:4 templates/portal/tender-list.html:5
+#: templates/portal/tender-list.html:6 templates/portal/tender-list.html:7
+#: templates/portal/tender-list.html:8 templates/portal/tender-list.html:13
 msgid "Tenders list"
 msgstr ""
 
-#: templates/x-account/account_inactive.html:5
-#: templates/x-account/account_inactive.html:9
-msgid "Account Inactive"
+#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+msgid "Advanced Search"
 msgstr ""
 
-#: templates/x-account/account_inactive.html:12
-msgid "This account is inactive."
+#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+msgid "Filter"
 msgstr ""
 
-#: templates/x-account/base_confirm_code.html:27
-#, python-format
-msgid ""
-"We've sent a code to %(recipient)s. The code expires shortly, so please "
-"enter it soon."
+#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+msgid "Sort"
 msgstr ""
 
-#: templates/x-account/base_confirm_code.html:43
-msgid "Request new code"
-msgstr ""
-
-#: templates/x-account/base_reauthenticate.html:5
-#: templates/x-account/base_reauthenticate.html:9
-msgid "Confirm Access"
-msgstr ""
-
-#: templates/x-account/base_reauthenticate.html:12
-msgid "Please reauthenticate to safeguard your account."
-msgstr ""
-
-#: templates/x-account/base_reauthenticate.html:19
-#: templates/x-mfa/authenticate.html:37
-msgid "Alternative options"
-msgstr ""
-
-#: templates/x-account/confirm_email_verification_code.html:5
-msgid "Email Verification"
-msgstr ""
-
-#: templates/x-account/confirm_email_verification_code.html:8
-msgid "Enter Email Verification Code"
-msgstr ""
-
-#: templates/x-account/confirm_email_verification_code.html:16
-msgid "Use a different email address"
-msgstr ""
-
-#: templates/x-account/confirm_login_code.html:8
-msgid "Enter Sign-In Code"
-msgstr ""
-
-#: templates/x-account/confirm_password_reset_code.html:5
-#: templates/x-account/email/password_reset_subject.txt:3
-#: templates/x-account/password_reset.html:4
-#: templates/x-account/password_reset.html:8
-#: templates/x-account/password_reset_done.html:6
-#: templates/x-account/password_reset_done.html:10
-msgid "Password Reset"
-msgstr ""
-
-#: templates/x-account/confirm_password_reset_code.html:8
-msgid "Enter Password Reset Code"
-msgstr ""
-
-#: templates/x-account/confirm_phone_verification_code.html:5
-msgid "Phone Verification"
-msgstr ""
-
-#: templates/x-account/confirm_phone_verification_code.html:8
-msgid "Enter Phone Verification Code"
-msgstr ""
-
-#: templates/x-account/confirm_phone_verification_code.html:15
-msgid "Use a different phone number"
-msgstr ""
-
-#: templates/x-account/email.html:4 templates/x-account/email.html:8
-msgid "Email Addresses"
-msgstr ""
-
-#: templates/x-account/email.html:12
-msgid "The following email addresses are associated with your account:"
-msgstr ""
-
-#: templates/x-account/email.html:25
-msgid "Verified"
-msgstr ""
-
-#: templates/x-account/email.html:29
-msgid "Unverified"
-msgstr ""
-
-#: templates/x-account/email.html:34
-msgid "Primary"
-msgstr ""
-
-#: templates/x-account/email.html:44
-msgid "Make Primary"
-msgstr ""
-
-#: templates/x-account/email.html:47 templates/x-account/email_change.html:37
-#: templates/x-account/phone_change.html:24
-msgid "Re-send Verification"
-msgstr ""
-
-#: templates/x-account/email.html:50
-#: templates/x-mfa/webauthn/authenticator_confirm_delete.html:16
-#: templates/x-mfa/webauthn/authenticator_list.html:60
-#: templates/x-socialaccount/connections.html:40
-msgid "Remove"
-msgstr ""
-
-#: templates/x-account/email.html:59
-msgid "Add Email Address"
-msgstr ""
-
-#: templates/x-account/email.html:70
-msgid "Add Email"
-msgstr ""
-
-#: templates/x-account/email.html:80
-msgid "Do you really want to remove the selected email address?"
-msgstr ""
-
-#: templates/x-account/email/account_already_exists_message.txt:4
-#, python-format
-msgid ""
-"You are receiving this email because you or someone else tried to signup for "
-"an\n"
-"account using email address:\n"
-"\n"
-"%(email)s\n"
-"\n"
-"However, an account using that email address already exists.  In case you "
-"have\n"
-"forgotten about this, please use the password forgotten procedure to "
-"recover\n"
-"your account:\n"
-"\n"
-"%(password_reset_url)s"
-msgstr ""
-
-#: templates/x-account/email/account_already_exists_subject.txt:3
-msgid "Account Already Exists"
-msgstr ""
-
-#: templates/x-account/email/base_message.txt:1
-#, python-format
-msgid "Hello from %(site_name)s!"
-msgstr ""
-
-#: templates/x-account/email/base_message.txt:5
-#, python-format
-msgid ""
-"Thank you for using %(site_name)s!\n"
-"%(site_domain)s"
-msgstr ""
-
-#: templates/x-account/email/base_notification.txt:5
-msgid ""
-"You are receiving this mail because the following change was made to your "
-"account:"
-msgstr ""
-
-#: templates/x-account/email/base_notification.txt:10
-#, python-format
-msgid ""
-"If you do not recognize this change then please take proper security "
-"precautions immediately. The change to your account originates from:\n"
-"\n"
-"- IP address: %(ip)s\n"
-"- Browser: %(user_agent)s\n"
-"- Date: %(timestamp)s"
-msgstr ""
-
-#: templates/x-account/email/email_changed_message.txt:4
-#, python-format
-msgid "Your email has been changed from %(from_email)s to %(to_email)s."
-msgstr ""
-
-#: templates/x-account/email/email_changed_subject.txt:3
-msgid "Email Changed"
-msgstr ""
-
-#: templates/x-account/email/email_confirm_message.txt:4
-msgid "Your email has been confirmed."
-msgstr ""
-
-#: templates/x-account/email/email_confirm_subject.txt:3
-msgid "Email Confirmation"
-msgstr ""
-
-#: templates/x-account/email/email_confirmation_message.txt:5
-#, python-format
-msgid ""
-"You're receiving this email because user %(user_display)s has given your "
-"email address to register an account on %(site_domain)s."
-msgstr ""
-
-#: templates/x-account/email/email_confirmation_message.txt:7
-msgid ""
-"Your email verification code is listed below. Please enter it in your open "
-"browser window."
-msgstr ""
-
-#: templates/x-account/email/email_confirmation_message.txt:9
-#, python-format
-msgid "To confirm this is correct, go to %(activate_url)s"
-msgstr ""
-
-#: templates/x-account/email/email_confirmation_subject.txt:3
-msgid "Please Confirm Your Email Address"
-msgstr ""
-
-#: templates/x-account/email/email_deleted_message.txt:4
-#, python-format
-msgid "Email address %(deleted_email)s has been removed from your account."
-msgstr ""
-
-#: templates/x-account/email/email_deleted_subject.txt:3
-msgid "Email Removed"
-msgstr ""
-
-#: templates/x-account/email/login_code_message.txt:5
-msgid ""
-"Your sign-in code is listed below. Please enter it in your open browser "
-"window."
-msgstr ""
-
-#: templates/x-account/email/login_code_message.txt:9
-#: templates/x-account/email/password_reset_code_message.txt:9
-#: templates/x-account/email/unknown_account_message.txt:6
-msgid "This mail can be safely ignored if you did not initiate this action."
-msgstr ""
-
-#: templates/x-account/email/login_code_subject.txt:3
-msgid "Sign-In Code"
-msgstr ""
-
-#: templates/x-account/email/password_changed_message.txt:4
-msgid "Your password has been changed."
-msgstr ""
-
-#: templates/x-account/email/password_changed_subject.txt:3
-msgid "Password Changed"
-msgstr ""
-
-#: templates/x-account/email/password_reset_code_message.txt:5
-msgid ""
-"Your password reset code is listed below. Please enter it in your open "
-"browser window."
-msgstr ""
-
-#: templates/x-account/email/password_reset_code_subject.txt:3
-msgid "Password Reset Code"
-msgstr ""
-
-#: templates/x-account/email/password_reset_key_message.txt:4
-msgid ""
-"You're receiving this email because you or someone else has requested a "
-"password reset for your user account.\n"
-"It can be safely ignored if you did not request a password reset. Click the "
-"link below to reset your password."
-msgstr ""
-
-#: templates/x-account/email/password_reset_key_message.txt:9
-#, python-format
-msgid "In case you forgot, your username is %(username)s."
-msgstr ""
-
-#: templates/x-account/email/password_reset_key_subject.txt:3
-msgid "Password Reset Email"
-msgstr ""
-
-#: templates/x-account/email/password_reset_message.txt:4
-msgid "Your password has been reset."
-msgstr ""
-
-#: templates/x-account/email/password_set_message.txt:4
-msgid "Your password has been set."
-msgstr ""
-
-#: templates/x-account/email/password_set_subject.txt:3
-msgid "Password Set"
-msgstr ""
-
-#: templates/x-account/email/unknown_account_message.txt:4
-#, python-format
-msgid ""
-"You are receiving this email because you, or someone else, tried to access "
-"an account with email %(email)s. However, we do not have any record of such "
-"an account in our database."
-msgstr ""
-
-#: templates/x-account/email/unknown_account_message.txt:8
-msgid "If it was you, you can sign up for an account using the link below."
-msgstr ""
-
-#: templates/x-account/email/unknown_account_subject.txt:3
-msgid "Unknown Account"
-msgstr ""
-
-#: templates/x-account/email_change.html:5
-#: templates/x-account/email_change.html:9
-msgid "Email Address"
-msgstr ""
-
-#: templates/x-account/email_change.html:21
-#: templates/x-account/email_change.html:29
-msgid "Current email"
-msgstr ""
-
-#: templates/x-account/email_change.html:31
-msgid "Changing to"
-msgstr ""
-
-#: templates/x-account/email_change.html:35
-msgid "Your email address is still pending verification."
-msgstr ""
-
-#: templates/x-account/email_change.html:41
-msgid "Cancel Change"
-msgstr ""
-
-#: templates/x-account/email_change.html:49
-#: templates/x-account/phone_change.html:32
-msgid "Change to"
-msgstr ""
-
-#: templates/x-account/email_confirm.html:6
-#: templates/x-account/email_confirm.html:10
-msgid "Confirm Email Address"
-msgstr ""
-
-#: templates/x-account/email_confirm.html:16
-#, python-format
-msgid ""
-"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an email "
-"address for user %(user_display)s."
-msgstr ""
-
-#: templates/x-account/email_confirm.html:30
-#: templates/x-account/messages/email_confirmation_failed.txt:2
-#, python-format
-msgid ""
-"Unable to confirm %(email)s because it is already confirmed by a different "
-"account."
-msgstr ""
-
-#: templates/x-account/email_confirm.html:36
-#, python-format
-msgid ""
-"This email confirmation link expired or is invalid. Please <a "
-"href=\"%(email_url)s\">issue a new email confirmation request</a>."
-msgstr ""
-
-#: templates/x-account/login.html:19
-#, python-format
-msgid ""
-"If you have not created an account yet, then please %(link)ssign "
-"up%(end_link)s first."
-msgstr ""
-
-#: templates/x-account/login.html:42
-msgid "Sign in with a passkey"
-msgstr ""
-
-#: templates/x-account/login.html:47
-#: templates/x-account/request_login_code.html:9
-msgid "Send me a sign-in code"
-msgstr ""
-
-#: templates/x-account/logout.html:12
-msgid "Are you sure you want to sign out?"
-msgstr ""
-
-#: templates/x-account/messages/cannot_delete_primary_email.txt:2
-#, python-format
-msgid "You cannot remove your primary email address (%(email)s)."
-msgstr ""
-
-#: templates/x-account/messages/email_confirmation_sent.txt:2
-#, python-format
-msgid "Confirmation email sent to %(email)s."
-msgstr ""
-
-#: templates/x-account/messages/email_confirmed.txt:2
-#, python-format
-msgid "You have confirmed %(email)s."
-msgstr ""
-
-#: templates/x-account/messages/email_deleted.txt:2
-#, python-format
-msgid "Removed email address %(email)s."
-msgstr ""
-
-#: templates/x-account/messages/logged_in.txt:4
-#, python-format
-msgid "Successfully signed in as %(name)s."
-msgstr ""
-
-#: templates/x-account/messages/logged_out.txt:2
-msgid "You have signed out."
-msgstr ""
-
-#: templates/x-account/messages/login_code_sent.txt:2
-#, python-format
-msgid "A sign-in code has been sent to %(recipient)s."
-msgstr ""
-
-#: templates/x-account/messages/password_changed.txt:2
-msgid "Password successfully changed."
-msgstr ""
-
-#: templates/x-account/messages/password_set.txt:2
-msgid "Password successfully set."
-msgstr ""
-
-#: templates/x-account/messages/phone_verification_sent.txt:2
-#, python-format
-msgid "A verification code has been sent to %(phone)s."
-msgstr ""
-
-#: templates/x-account/messages/phone_verified.txt:2
-#, python-format
-msgid "You have verified phone number %(phone)s."
-msgstr ""
-
-#: templates/x-account/messages/primary_email_set.txt:2
-msgid "Primary email address set."
-msgstr ""
-
-#: templates/x-account/messages/unverified_primary_email.txt:2
-msgid "Your primary email address must be verified."
-msgstr ""
-
-#: templates/x-account/password_change.html:22
-msgid "Forgot Password?"
-msgstr ""
-
-#: templates/x-account/password_reset.html:14
-msgid ""
-"Forgotten your password? Enter your email address below, and we'll send you "
-"an email allowing you to reset it."
-msgstr ""
-
-#: templates/x-account/password_reset.html:26
-msgid "Reset My Password"
-msgstr ""
-
-#: templates/x-account/password_reset.html:31
-msgid "Please contact us if you have any trouble resetting your password."
-msgstr ""
-
-#: templates/x-account/password_reset_done.html:16
-msgid ""
-"We have sent you an email. If you have not received it please check your "
-"spam folder. Otherwise contact us if you do not receive it in a few minutes."
-msgstr ""
-
-#: templates/x-account/password_reset_from_key.html:10
-msgid "Bad Token"
-msgstr ""
-
-#: templates/x-account/password_reset_from_key.html:18
-#, python-format
-msgid ""
-"The password reset link was invalid, possibly because it has already been "
-"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
-"a>."
-msgstr ""
-
-#: templates/x-account/password_reset_from_key_done.html:12
-msgid "Your password is now changed."
-msgstr ""
-
-#: templates/x-account/password_set.html:5
-#: templates/x-account/password_set.html:9
-#: templates/x-account/password_set.html:21
-msgid "Set Password"
-msgstr ""
-
-#: templates/x-account/phone_change.html:5
-#: templates/x-account/phone_change.html:9
-msgid "Change Phone"
-msgstr ""
-
-#: templates/x-account/phone_change.html:18
-msgid "Current phone"
-msgstr ""
-
-#: templates/x-account/phone_change.html:22
-msgid "Your phone number is still pending verification."
-msgstr ""
-
-#: templates/x-account/phone_change.html:38
-msgctxt "action"
-msgid "Change Phone"
-msgstr ""
-
-#: templates/x-account/reauthenticate.html:6
-msgid "Enter your password:"
-msgstr ""
-
-#: templates/x-account/request_login_code.html:12
-msgid "You will receive a special code for a password-free sign-in."
-msgstr ""
-
-#: templates/x-account/request_login_code.html:24
-msgid "Request Code"
-msgstr ""
-
-#: templates/x-account/request_login_code.html:30
-msgid "Other sign-in options"
-msgstr ""
-
-#: templates/x-account/signup.html:4
-#: templates/x-account/signup_by_passkey.html:4
-#: templates/x-socialaccount/signup.html:5
-msgid "Signup"
-msgstr ""
-
-#: templates/x-account/signup.html:17
-#: templates/x-account/signup_by_passkey.html:17
-#, python-format
-msgid "Already have an account? Then please %(link)ssign in%(end_link)s."
-msgstr ""
-
-#: templates/x-account/signup.html:43
-msgid "Sign up using a passkey"
-msgstr ""
-
-#: templates/x-account/signup_by_passkey.html:8
-msgid "Passkey Sign Up"
-msgstr ""
-
-#: templates/x-account/signup_by_passkey.html:36
-msgid "Other options"
-msgstr ""
-
-#: templates/x-account/signup_closed.html:5
-#: templates/x-account/signup_closed.html:9
-msgid "Sign Up Closed"
-msgstr ""
-
-#: templates/x-account/signup_closed.html:12
-msgid "We are sorry, but the sign up is currently closed."
-msgstr ""
-
-#: templates/x-account/snippets/already_logged_in.html:7
-#, python-format
-msgid "You are already logged in as %(user_display)s."
-msgstr ""
-
-#: templates/x-account/snippets/warn_no_email.html:3
-msgid "Warning:"
-msgstr ""
-
-#: templates/x-account/snippets/warn_no_email.html:3
-msgid ""
-"You currently do not have any email address set up. You should really add an "
-"email address so you can receive notifications, reset your password, etc."
-msgstr ""
-
-#: templates/x-account/verification_sent.html:5
-#: templates/x-account/verification_sent.html:9
-#: templates/x-account/verified_email_required.html:5
-#: templates/x-account/verified_email_required.html:9
-msgid "Verify Your Email Address"
-msgstr ""
-
-#: templates/x-account/verification_sent.html:12
-msgid ""
-"We have sent an email to you for verification. Follow the link provided to "
-"finalize the signup process. If you do not see the verification email in "
-"your main inbox, check your spam folder. Please contact us if you do not "
-"receive the verification email within a few minutes."
-msgstr ""
-
-#: templates/x-account/verified_email_required.html:13
-msgid ""
-"This part of the site requires us to verify that\n"
-"you are who you claim to be. For this purpose, we require that you\n"
-"verify ownership of your email address. "
-msgstr ""
-
-#: templates/x-account/verified_email_required.html:18
-msgid ""
-"We have sent an email to you for\n"
-"verification. Please click on the link inside that email. If you do not see "
-"the verification email in your main inbox, check your spam folder. "
-"Otherwise\n"
-"contact us if you do not receive it within a few minutes."
-msgstr ""
-
-#: templates/x-account/verified_email_required.html:23
-#, python-format
-msgid ""
-"<strong>Note:</strong> you can still <a href=\"%(email_url)s\">change your "
-"email address</a>."
-msgstr ""
-
-#: templates/x-idp/oidc/authorization_form.html:5
-#: templates/x-idp/oidc/authorization_form.html:9
-#: templates/x-idp/oidc/authorization_form.html:23
-#: templates/x-idp/oidc/device_authorization_code_form.html:5
-#: templates/x-idp/oidc/device_authorization_confirm_form.html:5
-#: templates/x-idp/oidc/device_authorization_confirmed.html:5
-#: templates/x-idp/oidc/device_authorization_denied.html:5
-msgid "Authorize"
-msgstr ""
-
-#: templates/x-idp/oidc/authorization_form.html:12
-#, python-format
-msgid "%(client_name)s wants to access your %(site_name)s account."
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_code_form.html:9
-msgid "Enter Device Code"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_code_form.html:12
-msgid "Enter the code displayed on your device."
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_code_form.html:21
-#: templates/x-socialaccount/login.html:29
-#: templates/x-socialaccount/login_redirect.html:10
-msgid "Continue"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_confirm_form.html:9
-msgid "Confirm Device"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_confirm_form.html:12
-#, python-format
-msgid ""
-"Please confirm the code shown on your %(client_name)s to authorize this "
-"device."
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_confirm_form.html:16
-msgid "Code"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_confirm_form.html:29
-msgid "Deny"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_confirmed.html:9
-msgid "Device Authorized"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_confirmed.html:12
-#, python-format
-msgid "You successfully authorized your %(client_name)s device."
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_denied.html:9
-msgid "Device Denied"
-msgstr ""
-
-#: templates/x-idp/oidc/device_authorization_denied.html:12
-#, python-format
-msgid "Authorization for your %(client_name)s device has been denied."
-msgstr ""
-
-#: templates/x-idp/oidc/error.html:5 templates/x-idp/oidc/error.html:9
-msgid "Error"
-msgstr ""
-
-#: templates/x-mfa/authenticate.html:13
-msgid ""
-"Your account is protected by two-factor authentication. Please enter an "
-"authenticator code:"
-msgstr ""
-
-#: templates/x-mfa/authenticate.html:41
-#: templates/x-mfa/webauthn/reauthenticate.html:15
-msgid "Use a security key"
-msgstr ""
-
-#: templates/x-mfa/email/recovery_codes_generated_message.txt:4
-msgid ""
-"A new set of Two-Factor Authentication recovery codes has been generated."
-msgstr ""
-
-#: templates/x-mfa/email/recovery_codes_generated_subject.txt:3
-msgid "New Recovery Codes Generated"
-msgstr ""
-
-#: templates/x-mfa/email/totp_activated_message.txt:4
-#: templates/x-mfa/messages/totp_activated.txt:2
-msgid "Authenticator app activated."
-msgstr ""
-
-#: templates/x-mfa/email/totp_activated_subject.txt:3
-msgid "Authenticator App Activated"
-msgstr ""
-
-#: templates/x-mfa/email/totp_deactivated_message.txt:4
-#: templates/x-mfa/messages/totp_deactivated.txt:2
-msgid "Authenticator app deactivated."
-msgstr ""
-
-#: templates/x-mfa/email/totp_deactivated_subject.txt:3
-msgid "Authenticator App Deactivated"
-msgstr ""
-
-#: templates/x-mfa/email/webauthn_added_message.txt:4
-msgid "A new security key has been added."
-msgstr ""
-
-#: templates/x-mfa/email/webauthn_added_subject.txt:3
-msgid "Security Key Added"
-msgstr ""
-
-#: templates/x-mfa/email/webauthn_removed_message.txt:4
-msgid "A security key has been removed."
-msgstr ""
-
-#: templates/x-mfa/email/webauthn_removed_subject.txt:3
-msgid "Security Key Removed"
-msgstr ""
-
-#: templates/x-mfa/index.html:14 templates/x-mfa/totp/base.html:4
-msgid "Authenticator App"
-msgstr ""
-
-#: templates/x-mfa/index.html:19
-msgid "Authentication using an authenticator app is active."
-msgstr ""
-
-#: templates/x-mfa/index.html:23
-msgid "An authenticator app is not active."
-msgstr ""
-
-#: templates/x-mfa/index.html:32 templates/x-mfa/totp/deactivate_form.html:24
-msgid "Deactivate"
-msgstr ""
-
-#: templates/x-mfa/index.html:36 templates/x-mfa/totp/activate_form.html:32
-msgid "Activate"
-msgstr ""
-
-#: templates/x-mfa/index.html:45
-#: templates/x-mfa/webauthn/authenticator_list.html:8
-#: templates/x-mfa/webauthn/base.html:4
-msgid "Security Keys"
-msgstr ""
-
-#: templates/x-mfa/index.html:50
-#, python-format
-msgid "You have added %(count)s security key."
-msgid_plural "You have added %(count)s security keys."
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/x-mfa/index.html:54
-#: templates/x-mfa/webauthn/authenticator_list.html:12
-msgid "No security keys have been added."
-msgstr ""
-
-#: templates/x-mfa/index.html:67 templates/x-mfa/webauthn/add_form.html:18
-#: templates/x-mfa/webauthn/authenticator_list.html:70
-msgid "Add"
-msgstr ""
-
-#: templates/x-mfa/index.html:77 templates/x-mfa/recovery_codes/base.html:4
-#: templates/x-mfa/recovery_codes/generate.html:6
-#: templates/x-mfa/recovery_codes/index.html:6
-msgid "Recovery Codes"
-msgstr ""
-
-#: templates/x-mfa/index.html:82 templates/x-mfa/recovery_codes/index.html:9
-#, python-format
-msgid ""
-"There is %(unused_count)s out of %(total_count)s recovery codes available."
-msgid_plural ""
-"There are %(unused_count)s out of %(total_count)s recovery codes available."
-msgstr[0] ""
-msgstr[1] ""
-
-#: templates/x-mfa/index.html:86
-msgid "No recovery codes set up."
-msgstr ""
-
-#: templates/x-mfa/index.html:96
-msgid "View"
-msgstr ""
-
-#: templates/x-mfa/index.html:110
-#: templates/x-mfa/recovery_codes/generate.html:29
-msgid "Generate"
-msgstr ""
-
-#: templates/x-mfa/messages/recovery_codes_generated.txt:2
-msgid "A new set of recovery codes has been generated."
-msgstr ""
-
-#: templates/x-mfa/messages/webauthn_added.txt:2
-msgid "Security key added."
-msgstr ""
-
-#: templates/x-mfa/messages/webauthn_removed.txt:2
-msgid "Security key removed."
-msgstr ""
-
-#: templates/x-mfa/reauthenticate.html:6
-msgid "Enter an authenticator code:"
-msgstr ""
-
-#: templates/x-mfa/recovery_codes/generate.html:9
-msgid "You are about to generate a new set of recovery codes for your account."
-msgstr ""
-
-#: templates/x-mfa/recovery_codes/generate.html:11
-msgid "This action will invalidate your existing codes."
-msgstr ""
-
-#: templates/x-mfa/recovery_codes/generate.html:13
-msgid "Are you sure?"
-msgstr ""
-
-#: templates/x-mfa/recovery_codes/index.html:13
-msgid "Unused codes"
-msgstr ""
-
-#: templates/x-mfa/recovery_codes/index.html:25
-msgid "Download codes"
-msgstr ""
-
-#: templates/x-mfa/recovery_codes/index.html:30
-msgid "Generate new codes"
-msgstr ""
-
-#: templates/x-mfa/totp/activate_form.html:4
-#: templates/x-mfa/totp/activate_form.html:8
-msgid "Activate Authenticator App"
-msgstr ""
-
-#: templates/x-mfa/totp/activate_form.html:11
-msgid ""
-"To protect your account with two-factor authentication, scan the QR code "
-"below with your authenticator app. Then, input the verification code "
-"generated by the app below."
-msgstr ""
-
-#: templates/x-mfa/totp/activate_form.html:21
-msgid "Authenticator secret"
-msgstr ""
-
-#: templates/x-mfa/totp/activate_form.html:24
-msgid ""
-"You can store this secret and use it to reinstall your authenticator app at "
-"a later time."
-msgstr ""
-
-#: templates/x-mfa/totp/deactivate_form.html:5
-#: templates/x-mfa/totp/deactivate_form.html:9
-msgid "Deactivate Authenticator App"
-msgstr ""
-
-#: templates/x-mfa/totp/deactivate_form.html:12
-msgid ""
-"You are about to deactivate authenticator app based authentication. Are you "
-"sure?"
-msgstr ""
-
-#: templates/x-mfa/trust.html:4 templates/x-mfa/trust.html:8
-msgid "Trust this Browser?"
-msgstr ""
-
-#: templates/x-mfa/trust.html:11
-msgid ""
-"If you choose to trust this browser, you will not be asked for a "
-"verification code the next time you sign in."
-msgstr ""
-
-#: templates/x-mfa/trust.html:23
-#, python-format
-msgid "Trust for %(period)s"
-msgstr ""
-
-#: templates/x-mfa/trust.html:26
-msgid "Don't Trust"
-msgstr ""
-
-#: templates/x-mfa/webauthn/add_form.html:7
-msgid "Add Security Key"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_confirm_delete.html:6
-msgid "Remove Security Key"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_confirm_delete.html:9
-msgid "Are you sure you want to remove this security key?"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:18
-msgid "Key"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:21
-msgid "Usage"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:33
-msgid "Passkey"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:37
-msgid "Security key"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:40
-msgid "This key does not indicate whether it is a passkey."
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:41
-msgid "Unspecified"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:46
-#, python-format
-msgid "Added on %(created_at)s"
-msgstr ""
-
-#: templates/x-mfa/webauthn/authenticator_list.html:48
-#, python-format
-msgid "Last used %(last_used)s"
-msgstr ""
-
-#: templates/x-mfa/webauthn/edit_form.html:7
-msgid "Edit Security Key"
-msgstr ""
-
-#: templates/x-mfa/webauthn/signup_form.html:7
-msgid "Create Passkey"
-msgstr ""
-
-#: templates/x-mfa/webauthn/signup_form.html:10
-msgid ""
-"You are about to create a passkey for your account. As you can add "
-"additional keys later on, you can use a descriptive name to tell the keys "
-"apart."
-msgstr ""
-
-#: templates/x-mfa/webauthn/signup_form.html:21
-msgid "Create"
-msgstr ""
-
-#: templates/x-mfa/webauthn/snippets/scripts.html:2
-msgid "This functionality requires JavaScript."
-msgstr ""
-
-#: templates/x-socialaccount/authentication_error.html:5
-#: templates/x-socialaccount/authentication_error.html:9
+#: templates/socialaccount/authentication_error.html:5
+#: templates/socialaccount/authentication_error.html:9
 msgid "Third-Party Login Failure"
 msgstr ""
 
-#: templates/x-socialaccount/authentication_error.html:12
+#: templates/socialaccount/authentication_error.html:12
 msgid ""
 "An error occurred while attempting to login via your third-party account."
 msgstr ""
 
-#: templates/x-socialaccount/connections.html:13
+#: templates/socialaccount/connections.html:13
 msgid ""
 "You can sign in to your account using any of the following third-party "
 "accounts:"
 msgstr ""
 
-#: templates/x-socialaccount/connections.html:46
+#: templates/socialaccount/connections.html:46
 msgid "You currently have no third-party accounts connected to this account."
 msgstr ""
 
-#: templates/x-socialaccount/connections.html:50
+#: templates/socialaccount/connections.html:50
 msgid "Add a Third-Party Account"
 msgstr ""
 
-#: templates/x-socialaccount/email/account_connected_message.txt:4
+#: templates/socialaccount/email/account_connected_message.txt:4
 #, python-format
 msgid ""
 "A third-party account from %(provider)s has been connected to your account."
 msgstr ""
 
-#: templates/x-socialaccount/email/account_connected_subject.txt:3
+#: templates/socialaccount/email/account_connected_subject.txt:3
 msgid "Third-Party Account Connected"
 msgstr ""
 
-#: templates/x-socialaccount/email/account_disconnected_message.txt:4
+#: templates/socialaccount/email/account_disconnected_message.txt:4
 #, python-format
 msgid ""
 "A third-party account from %(provider)s has been disconnected from your "
 "account."
 msgstr ""
 
-#: templates/x-socialaccount/email/account_disconnected_subject.txt:3
+#: templates/socialaccount/email/account_disconnected_subject.txt:3
 msgid "Third-Party Account Disconnected"
 msgstr ""
 
-#: templates/x-socialaccount/login.html:12
+#: templates/socialaccount/login.html:12
 #, python-format
 msgid "Connect %(provider)s"
 msgstr ""
 
-#: templates/x-socialaccount/login.html:15
+#: templates/socialaccount/login.html:15
 #, python-format
 msgid "You are about to connect a new third-party account from %(provider)s."
 msgstr ""
 
-#: templates/x-socialaccount/login.html:19
+#: templates/socialaccount/login.html:19
 #, python-format
 msgid "Sign In Via %(provider)s"
 msgstr ""
 
-#: templates/x-socialaccount/login.html:22
+#: templates/socialaccount/login.html:22
 #, python-format
 msgid "You are about to sign in using a third-party account from %(provider)s."
 msgstr ""
 
-#: templates/x-socialaccount/login_cancelled.html:5
-#: templates/x-socialaccount/login_cancelled.html:9
+#: templates/socialaccount/login_cancelled.html:5
+#: templates/socialaccount/login_cancelled.html:9
 msgid "Login Cancelled"
 msgstr ""
 
-#: templates/x-socialaccount/login_cancelled.html:13
+#: templates/socialaccount/login_cancelled.html:13
 #, python-format
 msgid ""
 "You decided to cancel logging in to our site using one of your existing "
@@ -6679,49 +7382,49 @@ msgid ""
 "href=\"%(login_url)s\">sign in</a>."
 msgstr ""
 
-#: templates/x-socialaccount/messages/account_connected.txt:2
+#: templates/socialaccount/messages/account_connected.txt:2
 msgid "The third-party account has been connected."
 msgstr ""
 
-#: templates/x-socialaccount/messages/account_connected_other.txt:2
+#: templates/socialaccount/messages/account_connected_other.txt:2
 msgid "The third-party account is already connected to a different account."
 msgstr ""
 
-#: templates/x-socialaccount/messages/account_disconnected.txt:2
+#: templates/socialaccount/messages/account_disconnected.txt:2
 msgid "The third-party account has been disconnected."
 msgstr ""
 
-#: templates/x-socialaccount/signup.html:12
+#: templates/socialaccount/signup.html:12
 #, python-format
 msgid ""
 "You are about to use your %(provider_name)s account to login to\n"
 "%(site_name)s. As a final step, please complete the following form:"
 msgstr ""
 
-#: templates/x-socialaccount/snippets/login.html:13
+#: templates/socialaccount/snippets/login.html:13
 msgid "Or use a third-party"
 msgstr ""
 
-#: templates/x-usersessions/messages/sessions_logged_out.txt:2
+#: templates/usersessions/messages/sessions_logged_out.txt:2
 msgid "Signed out of all other sessions."
 msgstr ""
 
-#: templates/x-usersessions/usersession_list.html:24
+#: templates/usersessions/usersession_list.html:24
 msgid "Started At"
 msgstr ""
 
-#: templates/x-usersessions/usersession_list.html:30
+#: templates/usersessions/usersession_list.html:30
 msgid "Browser"
 msgstr ""
 
-#: templates/x-usersessions/usersession_list.html:34
+#: templates/usersessions/usersession_list.html:34
 msgid "Last seen at"
 msgstr ""
 
-#: templates/x-usersessions/usersession_list.html:59
+#: templates/usersessions/usersession_list.html:59
 msgid "Current"
 msgstr ""
 
-#: templates/x-usersessions/usersession_list.html:72
+#: templates/usersessions/usersession_list.html:72
 msgid "Sign Out Other Sessions"
 msgstr ""

@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+from django.conf import settings
+
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from parler.utils.context import switch_language
@@ -14,12 +16,17 @@ class Command(BaseCommand):
     help = "Create or update Categories and Features from a translated JSON catalog."
 
     def add_arguments(self, parser):
-        parser.add_argument("json_file", help="Path to catalog_translated.json")
+        parser.add_argument(
+            "--json_file", 
+            type=Path,
+            default=Path(settings.BASE_DIR) / "flows/data/catalog.json",
+            help="Path to catalog_translated.json",
+        )
         parser.add_argument("--deactivate-missing", action="store_true")
 
     @transaction.atomic
     def handle(self, *args, **options):
-        path = Path(options["json_file"])
+        path = options["json_file"]
         try:
             with path.open(encoding="utf-8") as stream:
                 catalog = json.load(stream)

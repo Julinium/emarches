@@ -11,16 +11,18 @@ from django.http import HttpResponse
 from django.contrib.sitemaps.views import index as sitemap_index_view
 from django.contrib.sitemaps.views import sitemap as sitemap_view
 
-from flows.helper import planify
+from flows.helper import comparify, planify
 
 logger_portal = logging.getLogger("portal")
 
 
 def home(request):
     logger_portal.info(f"Home page view", extra={"request": request})
-    plans, rows = planify()
+    plans = planify()
+    compared_plans, rows = comparify()
     
-    return render(request, 'base/home.html', {'plans': plans, 'rows': rows})
+    
+    return render(request, 'base/home.html', {'compared_plans': compared_plans, 'rows': rows, 'plans': plans})
     # return render(request, 'base/home.html')
 
 

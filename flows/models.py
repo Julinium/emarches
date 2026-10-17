@@ -59,12 +59,31 @@ class Plan(TranslatableModel):
     code = models.CharField(max_length=100, unique=True)
     rank = models.IntegerField(default=0)
     monthly_price = models.DecimalField(max_digits=8, decimal_places=0, default=0, verbose_name="Monthly price")
+    year_months = models.IntegerField(default=12, verbose_name="Year months")
     features = models.ManyToManyField(Feature, through='Allowance')
 
     translations = TranslatedFields(
         name = models.CharField(max_length=255),
         description = models.CharField(max_length=512, null=True)
     )
+
+    @property
+    def yearly_price(self):
+        y = self.year_months if self.year_months else 12
+        return round(y * self.monthly_price / 12, 2)
+
+    @property
+    def free_months(self):
+        return 12 - self.year_months
+
+    @property
+    def yearly_discount_amount(self):
+        return - self.free_months * self.yearly_price
+
+    @property
+    def yearly_discount_rate(self):
+        return - round(self.free_months / 12, 2)
+
     def __str__(self):
         return self.name
 
