@@ -14,11 +14,11 @@
         "translations": {
           "en": {
             "name": "Maximum number of users",
-            "description": "Maximum number of users"
+            "description": "Maximum number of users per team"
           },
           "fr": {
             "name": "Nombre maximal d’utilisateurs",
-            "description": "Maximum number of users"
+            "description": "Nombre maximal d’utilisateurs par équipe"
           },
           "ar": {
             "name": "العدد الأقصى للمستخدمين",
@@ -53,7 +53,7 @@
           },
           "fr": {
             "name": "Assistance standard",
-            "description": "Support by email, web contact form and FAQ"
+            "description": "Assistance par email, formulaire de contact web et FAQ"
           },
           "ar": {
             "name": "الدعم العادي",
@@ -88,7 +88,7 @@
           },
           "fr": {
             "name": "Assistance prioritaire",
-            "description": "Support by phone or Instant messaging"
+            "description": "Assistance par téléphone ou messagerie instantannée"
           },
           "ar": {
             "name": "الدعم ذو الأولوية",
@@ -123,7 +123,7 @@
           },
           "fr": {
             "name": "Formation des utilisateurs",
-            "description": "Hands-on training for all users"
+            "description": "Formation des utilisateurs sur l'utilisation de la plateforme"
           },
           "ar": {
             "name": "تدريب المستخدمين",
@@ -185,7 +185,7 @@
           },
           "fr": {
             "name": "Liste des appels d’offres en cours",
-            "description": "Detailed list of running Tenders"
+            "description": "Liste détaillée des appels d'offres publics en cours"
           },
           "ar": {
             "name": "قائمة طلبات العروض الجارية",
@@ -220,7 +220,7 @@
           },
           "fr": {
             "name": "Recherche avancée",
-            "description": "Tenders search by Object, Reference, Client, Location, Domains, ..."
+            "description": "Recherche d'appels d'offres par Object, Référence, Client, Lieu d'exécution, Domaines d'activité, ..."
           },
           "ar": {
             "name": "بحث متقدم",
@@ -255,7 +255,7 @@
           },
           "fr": {
             "name": "Filtres de base",
-            "description": "Tenders filtering by basic fields: deadline, published date, estimate, category"
+            "description": "Filtrage des appels d'offres par: date limite de soumission, date de publication, estimation ou catégorie"
           },
           "ar": {
             "name": "مرشحات أساسية",
@@ -290,7 +290,7 @@
           },
           "fr": {
             "name": "Filtres avancés",
-            "description": "Tenders filtering by advanced fields: guarantee, electronic bidding, Lots count, Samples, Visits, Meetings, Licences, Agrements, ..."
+            "description": "Filtrage avancé des appels d'offres par: Caution provisoire, Soumission éléctronique, Nombre de lots, Echantillons, Visites des lieux, Réunions, Qualifications, Agréments, ..."
           },
           "ar": {
             "name": "مرشحات متقدمة",
@@ -325,7 +325,7 @@
           },
           "fr": {
             "name": "Tri avancé",
-            "description": "Tenders ordering by deadline, publication, estimate, guarantee, ..."
+            "description": "Tri des appels d'offres par date limite, date de publication, estimattion, caution provisoire, ..."
           },
           "ar": {
             "name": "ترتيب متقدم",
@@ -360,7 +360,7 @@
           },
           "fr": {
             "name": "Répartition par catégorie",
-            "description": "Tenders breakdown by category"
+            "description": "Répartition des appels d'offres par catégorie principale"
           },
           "ar": {
             "name": "التوزيع حسب الفئة",
@@ -395,7 +395,7 @@
           },
           "fr": {
             "name": "Répartition avancée",
-            "description": "Tenders breakdown by Client, Execution location or Domains of activity"
+            "description": "Répartition des appels d'offres par Client, Lieu d'Execution ou Domaines d'activité"
           },
           "ar": {
             "name": "توزيع متقدم",
@@ -430,7 +430,7 @@
           },
           "fr": {
             "name": "Détails des appels d’offres",
-            "description": "Regular details about individual Tenders"
+            "description": "Détails essentiels des appels d’offres"
           },
           "ar": {
             "name": "تفاصيل طلبات العروض",
@@ -465,7 +465,7 @@
           },
           "fr": {
             "name": "Détails avancés",
-            "description": "Advanced data about individual Tenders like Samples requirements, Scheduled visits and meetings, Required licences and qualifications, official portal link, views, downloads, ..."
+            "description": "Détails avancés des appels d’offres comme les Echantillons, Viites des lieux, Qualifications, Agréments, Lien official, vues et téléchargements, ..."
           },
           "ar": {
             "name": "تفاصيل متقدمة",
@@ -500,7 +500,7 @@
           },
           "fr": {
             "name": "Historique des modifications",
-            "description": "Changes made to Tenders since publication"
+            "description": "Historique des modifications détectées sur les appels d'offres"
           },
           "ar": {
             "name": "سجل التغييرات",
@@ -530,12 +530,12 @@
         "plan_pro": 500,
         "translations": {
           "en": {
-            "name": "Favorite tenders",
+            "name": "Concurrent Favorites",
             "description": "Maximum number of concurrent Favorite tenders per user"
           },
           "fr": {
-            "name": "Appels d’offres favoris",
-            "description": "Maximum number of concurrent Favorite tenders per user"
+            "name": "Favoris simultanés",
+            "description": "Nombre maximal des appels d'offres favoris à la fois, par utilisateur"
           },
           "ar": {
             "name": "طلبات العروض المفضلة",
@@ -570,7 +570,7 @@
           },
           "fr": {
             "name": "Téléchargements mensuels des DCE",
-            "description": "Maximum number of Tenders Documents downloads per uer per month. (Same tender can be downloaded many times.)"
+            "description": "Nombre maximal des téléchargements DCE par mois"
           },
           "ar": {
             "name": "تنزيلات ملفات طلبات العروض شهريًا",
@@ -605,7 +605,7 @@
           },
           "fr": {
             "name": "Historique des DCE",
-            "description": "Tenders files dowload past bidding deadline"
+            "description": "Profondeur en jours de l'historique des téléchargements DCE"
           },
           "ar": {
             "name": "أرشيف ملفات طلبات العروض",
@@ -639,8 +639,8 @@
             "description": "Tenders files request for items beyond history limit"
           },
           "fr": {
-            "name": "Demandes de DCE",
-            "description": "Tenders files request for items beyond history limit"
+            "name": "Requêtes DCE",
+            "description": "Téléchargement sur demande des DCE au-dela de l'historique alloué"
           },
           "ar": {
             "name": "طلبات ملفات طلبات العروض",
@@ -702,7 +702,7 @@
           },
           "fr": {
             "name": "Synthèse des résultats",
-            "description": "View Tenders winners and awarded amounts"
+            "description": "Attributaires des appels d'offres avec les montants."
           },
           "ar": {
             "name": "ملخص النتائج",
@@ -737,7 +737,7 @@
           },
           "fr": {
             "name": "Procès-verbaux des résultats",
-            "description": "View awarding minutes, including administrative and eventually technical contests"
+            "description": "Procès-verbaux des ouvertures, avec examens des dossiers administratifs et techniques si lieu"
           },
           "ar": {
             "name": "محاضر النتائج",
@@ -772,7 +772,7 @@
           },
           "fr": {
             "name": "Analyse financière",
-            "description": "View financial contest details: Calculated offers Average and Reference price, submitted offers amounts with comparison to Average and Reference values, ..."
+            "description": "Analyse du concours financier: Offres des concurrents, classement des offres et positionnement par rapport au prix moyen et prix de référence calculés, ..."
           },
           "ar": {
             "name": "التحليل المالي",
@@ -807,7 +807,7 @@
           },
           "fr": {
             "name": "Export des listes",
-            "description": "Export results tables as Excel/csv files."
+            "description": "Exporter les résultats vers des tables Excel/csv."
           },
           "ar": {
             "name": "تصدير القوائم",
@@ -864,12 +864,12 @@
         "plan_pro": 1,
         "translations": {
           "en": {
-            "name": "Competitor data",
+            "name": "Concurrents data",
             "description": "View a list of all conccurrents, with brief performances summary"
           },
           "fr": {
             "name": "Données sur les concurrents",
-            "description": "View a list of all conccurrents, with brief performances summary"
+            "description": "Liste des concurrents, avec sommaire des performances"
           },
           "ar": {
             "name": "بيانات المنافسين",
@@ -904,7 +904,7 @@
           },
           "fr": {
             "name": "Recherche et filtres des concurrents",
-            "description": "Search Consurrents, filter and sort results"
+            "description": "Recherche, filtrage et classement des concurrents"
           },
           "ar": {
             "name": "البحث عن المنافسين وتصفيتهم",
@@ -939,7 +939,7 @@
           },
           "fr": {
             "name": "Synthèse des performances",
-            "description": "View Concurrents effeciency, number of awarded bids and amounts"
+            "description": "Soumissions et montants avec évaluation de l'éfficacité des concurrents"
           },
           "ar": {
             "name": "ملخص الأداء",
@@ -974,7 +974,7 @@
           },
           "fr": {
             "name": "Analyse administrative et technique",
-            "description": "View Concurrents bid Tenders, Administrative and Technical contests performance"
+            "description": "Performance des concurrents lors des concours administratifs et techniques si lieu"
           },
           "ar": {
             "name": "التحليل الإداري والتقني",
@@ -1005,11 +1005,11 @@
         "translations": {
           "en": {
             "name": "Financial analysis",
-            "description": "View Concurrents financial offers and get usefull patterns"
+            "description": "View Concurrents financial offers with usefull patterns"
           },
           "fr": {
             "name": "Analyse financière",
-            "description": "View Concurrents financial offers and get usefull patterns"
+            "description": "Analyse des performances financières des concurrents, avec visibilité sur les schémas financiers"
           },
           "ar": {
             "name": "التحليل المالي",
@@ -1044,7 +1044,7 @@
           },
           "fr": {
             "name": "Regroupements avancés",
-            "description": "View Concurrents advanced aggregations, like usual Clients, preferred Domains, Qualifications and Licenses"
+            "description": "Regroupemets avancés comme les Clients habituels, les domaines d'activités préférés, les Qualifications et les Agréments"
           },
           "ar": {
             "name": "تجميعات متقدمة",
@@ -1102,11 +1102,11 @@
         "translations": {
           "en": {
             "name": "Maximum number of companies",
-            "description": "How many companies can be managed"
+            "description": "Maximun number of managed companies"
           },
           "fr": {
-            "name": "Nombre maximal d’entreprises",
-            "description": "How many companies can be managed"
+            "name": "Nombre maximal de Companies",
+            "description": "Nombre maximal des Companies créées et gérées"
           },
           "ar": {
             "name": "العدد الأقصى للشركات",
@@ -1140,8 +1140,8 @@
             "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
           },
           "fr": {
-            "name": "Suivi des échéances des entreprises",
-            "description": "Keep track of companies expirable assets (like electronic signing pens, rentals, services, administrative and regular requirements, … )"
+            "name": "Suivi des échéances des companies",
+            "description": "Garder un oeil sur les actifs expirable des companies, comme les clés de signature éléctroniques, les contrats de location et de services renouvelables, les exigences administratives ou techniques, ..."
           },
           "ar": {
             "name": "إدارة صلاحية وثائق الشركة",
@@ -1176,7 +1176,7 @@
           },
           "fr": {
             "name": "Taille maximale de stockage des fichiers (MB)",
-            "description": "Max storage for files attached to individual items like Companies, Expenses, Bids, …"
+            "description": "Taille maximale (en MB) par fichier attaché aux objets comme les companies, dépenses, soumissions, …"
           },
           "ar": {
             "name": "الحد الأقصى لتخزين الملفات (MB)",
@@ -1210,8 +1210,8 @@
             "description": "Maximum number of bids to manage per year"
           },
           "fr": {
-            "name": "Offres annuelles",
-            "description": "Maximum number of bids to manage per year"
+            "name": "Soumissions gérées par an",
+            "description": "Nombre maximal des soumissions suivies sur notre plateforme par an. Rien à voir avec le nombre réel des soumissions officielles"
           },
           "ar": {
             "name": "العروض السنوية",
@@ -1246,7 +1246,7 @@
           },
           "fr": {
             "name": "Chronologie détaillée",
-            "description": "View bid timeline showing key Tender dates like deadline, published date, samples, visits, meetings and changes, expirable assets, expenses and tasks."
+            "description": "Chronologie détaillée des événements clés liés à l'appel d'offre et au suivi de la soumission, comme les date de publication, limite de soumission, échantillons, visites des lieux, réunions, modifications, actifs expirables, dépenses et tâches, ..."
           },
           "ar": {
             "name": "جدول زمني مفصل",
@@ -1280,8 +1280,8 @@
             "description": "Manage Tasks related to Bids."
           },
           "fr": {
-            "name": "Tâches des offres",
-            "description": "Manage Tasks related to Bids."
+            "name": "Tâches de soumission",
+            "description": "Module de gestion des tâches relatives à la soumission"
           },
           "ar": {
             "name": "مهام العروض",
@@ -1315,8 +1315,8 @@
             "description": "Manage Expenses related to Bids."
           },
           "fr": {
-            "name": "Dépenses des offres",
-            "description": "Manage Expenses related to Bids."
+            "name": "Dépenses des soumission",
+            "description": "Module de gestion des dépenses relatives à la soumission"
           },
           "ar": {
             "name": "مصاريف العروض",
@@ -1351,7 +1351,7 @@
           },
           "fr": {
             "name": "Gestion des cautions",
-            "description": "Keep track of your Bonds (draft, filed, claimed, returned, overdue, lost, … )"
+            "description": "Module de suivi et de gestion des cautions provisoires"
           },
           "ar": {
             "name": "إدارة الضمانات",
@@ -1385,8 +1385,8 @@
             "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
           },
           "fr": {
-            "name": "Appels d’offres attribués",
-            "description": "Manage bidding for allotted Tenders (with 2 lots or more)"
+            "name": "Appels d’offres allotis",
+            "description": "Gestion des soumissions à des appels d'offres allotis (2 lots ou plus)"
           },
           "ar": {
             "name": "طلبات العروض المسندة",
@@ -1421,7 +1421,7 @@
           },
           "fr": {
             "name": "Simulateur d’offres",
-            "description": "Simulate financial offers competition for a given Tender or Lot"
+            "description": "Simulateur du concours financier pour appels d'offres ou lots individuels"
           },
           "ar": {
             "name": "محاكي العروض",
@@ -1483,7 +1483,7 @@
           },
           "fr": {
             "name": "Bons de commande en cours",
-            "description": "View a list of running PO’s with concise details"
+            "description": "Liste des bons de commandes en cours avec détails concis"
           },
           "ar": {
             "name": "أوامر الشراء الجارية",
@@ -1518,7 +1518,7 @@
           },
           "fr": {
             "name": "Recherche avancée",
-            "description": "Search PO’s by Object, Reference, Client, Location, Items, Winners, ..."
+            "description": "Recherche avancée des Bons de commandes par Object, Référence, Client, Lieu d'exécution, articles, entreprises attributaires, ..."
           },
           "ar": {
             "name": "بحث متقدم",
@@ -1553,7 +1553,7 @@
           },
           "fr": {
             "name": "Filtres et tri",
-            "description": "Apply advanced filters and sort results by many fields"
+            "description": "Filtrage et classement des bons de commandes et des résultats"
           },
           "ar": {
             "name": "المرشحات والترتيب",
@@ -1588,7 +1588,7 @@
           },
           "fr": {
             "name": "Détails des bons de commande",
-            "description": "View regular details about individual PO’s."
+            "description": "Détails des bons de commande"
           },
           "ar": {
             "name": "تفاصيل أوامر الشراء",
@@ -1623,7 +1623,7 @@
           },
           "fr": {
             "name": "Détails des articles",
-            "description": "View details about individual PO items."
+            "description": "Détails des articles des bons de commande"
           },
           "ar": {
             "name": "تفاصيل عناصر أمر الشراء",
@@ -1658,7 +1658,7 @@
           },
           "fr": {
             "name": "Exporter les articles en CSV",
-            "description": "Export and download detailed items data as a .csv file."
+            "description": "Exporter les articles en fichier csv compatible excel"
           },
           "ar": {
             "name": "تصدير العناصر إلى CSV",
@@ -1692,8 +1692,8 @@
             "description": "Maximum number of concurrent Favorite PO's per user"
           },
           "fr": {
-            "name": "Bons de commande favoris",
-            "description": "Maximum number of concurrent Favorite PO's per user"
+            "name": "Favoris concurrents",
+            "description": "Nombre maximal des bons de commande favoris à la fois, par utilisateur"
           },
           "ar": {
             "name": "أوامر الشراء المفضلة",
@@ -1728,7 +1728,7 @@
           },
           "fr": {
             "name": "Téléchargements mensuels des DCE",
-            "description": "Maximum number of PO files downloads per month"
+            "description": "Nombre maximal des téléchargements des dossiers des bons de commande par mois"
           },
           "ar": {
             "name": "تنزيلات ملفات أوامر الشراء الشهرية",
@@ -1762,8 +1762,8 @@
             "description": "Download PO's files past their bidding deadline"
           },
           "fr": {
-            "name": "Accès à l’historique des DCE",
-            "description": "Download PO's files past their bidding deadline"
+            "name": "Historique des DCE",
+            "description": "Profondeur en jours de l'historique des téléchargements des dossiers des bons de commande"
           },
           "ar": {
             "name": "الوصول إلى أرشيف الملفات",
@@ -1798,7 +1798,7 @@
           },
           "fr": {
             "name": "Synthèse des résultats",
-            "description": "View winners names and amounts of awarded PO’s."
+            "description": "Synthèse des résultats des bons de commande"
           },
           "ar": {
             "name": "ملخص النتائج",

@@ -1030,6 +1030,19 @@ class Harvest(models.Model):
         return None
 
 
+class MarketDigest(models.Model):
+    key = models.CharField(max_length=50, unique=True, default="homepage")
+    payload = models.JSONField(default=dict)
+    generated_at = models.DateTimeField()
+    period_start = models.DateField()
+    period_end = models.DateField()
+
+    class Meta:
+        verbose_name = "Market digest"
+
+    def __str__(self):
+        return f"{self.key} — {self.generated_at:%Y-%m-%d %H:%M}"
+
 
 
 def make_acronym(s: str) -> str:
@@ -1070,3 +1083,7 @@ def make_acronym(s: str) -> str:
 
     return "".join(letters).upper()
     
+
+
+
+

@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 {% load i18n %}
 {% load static %}
+{% load humanize %}
 
 
 {% block title %}
@@ -14,7 +15,14 @@
         <h1 class="display-4 py-2">{% trans "Your next great contract" %}</h1>
         <div class="col mx-auto">
             <p class="lead fs-5 mb-4">
-                {% trans "eMarches is your trusted partner in navigating the Moroccan public procurement market. With expertise and dedication, we help businesses succeed." %}
+                <span>{% trans "eMarches is your trusted partner in navigating the Moroccan public procurement market. With expertise and dedication, we help businesses succeed." %}</span>
+                {% if art_count and art_amount %}
+                    <span class="fw-bold ">{{ art_count }}</span>
+                    <span class="">{% trans "running tenders" %}:</span>
+
+                    <span class="fw-bold text-success" data-bs-toggle="tooltip" title="{{ art_amount }} MAD">{{ art_amount|metrify:2 }}</span>
+                    <span class="">{% trans "on the game" %}.</span>
+                {% endif %}
             </p>
             <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
                 <a href="{% url 'portal_tender_list' %}?&sort=deadline" class="btn btn-primary btn-preload btn-lg px-4 gap-3">{% trans "Tenders" %}</a>

@@ -152,4 +152,6 @@ def planify():
     return plans
 
 
-
+def summarify():
+    
+    return {}

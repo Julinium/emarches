@@ -40,11 +40,11 @@
                         <div class="card-footer text-end p-2">
                             {% if plan.monthly_price %}
                             <span class="small text-secondary">
-                                <s>{{ plan.monthly_price|floatformat:0 }}</s>
+                                <s>{{ plan.monthly_price|floatformat:2 }}</s>
                             </span>
                             {% endif %}
                             <span class="h3">
-                                {{ plan.yearly_price|floatformat:0 }}
+                                {{ plan.yearly_price|floatformat:2 }}
                             </span>
                             <span class="text-body-secondary">
                                 / {% translate "month" %}

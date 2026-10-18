@@ -58,7 +58,7 @@ class Plan(TranslatableModel):
     active = models.BooleanField(default=True)
     code = models.CharField(max_length=100, unique=True)
     rank = models.IntegerField(default=0)
-    monthly_price = models.DecimalField(max_digits=8, decimal_places=0, default=0, verbose_name="Monthly price")
+    monthly_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Monthly price")
     year_months = models.IntegerField(default=12, verbose_name="Year months")
     features = models.ManyToManyField(Feature, through='Allowance')
 
@@ -78,11 +78,15 @@ class Plan(TranslatableModel):
 
     @property
     def yearly_discount_amount(self):
-        return - self.free_months * self.yearly_price
+        return - self.free_months * self.monthly_price
 
     @property
     def yearly_discount_rate(self):
         return - round(self.free_months / 12, 2)
+
+    @property
+    def year_total(self):
+        return self.year_months * self.monthly_price
 
     def __str__(self):
         return self.name
@@ -400,7 +404,6 @@ class SubscriptionChange(models.Model):
     date_ordered = models.DateTimeField(null=True)
     date_effective = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
 
 
 

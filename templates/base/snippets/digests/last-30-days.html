@@ -1,19 +1,14 @@
 {% load i18n %}
 
 <section id="latest-metrics" class="">
-  <div class="d-flex justify-content-center flex-wrap gap-4">
-
-      {% trans "New Tenders" as d_key %}
-      {% include "base/snippets/digests/carddito.html" with d_bicon='bar-chart-fill' d_metric='1,234' d_key=d_key %}
-
-      {% trans "Opening minutes" as d_key %}
-      {% include "base/snippets/digests/carddito.html" with d_bicon='people-fill' d_metric='567' d_key=d_key %}
-
-      {% trans "Awarded Amount" as d_key %}
-      {% include "base/snippets/digests/carddito.html" with d_bicon='currency-dollar' d_metric='$89M' d_key=d_key %}
-
-      {% trans "Success rate" as d_key %}
-      {% include "base/snippets/digests/carddito.html" with d_bicon='graph-up-arrow' d_metric='87.5%' d_key=d_key %}
-
-  </div>
+    <div class="d-flex justify-content-center flex-wrap gap-4">
+        {% trans "New Tenders" as d_key %}
+        {% include "base/snippets/digests/carddito.html" with d_bicon='bar-chart-fill' d_metric='1,234' d_key=d_key %}
+        {% trans "Opening minutes" as d_key %}
+        {% include "base/snippets/digests/carddito.html" with d_bicon='people-fill' d_metric='567' d_key=d_key %}
+        {% trans "Awarded Amount" as d_key %}
+        {% include "base/snippets/digests/carddito.html" with d_bicon='currency-dollar' d_metric='$89M' d_key=d_key %}
+        {% trans "Success rate" as d_key %}
+        {% include "base/snippets/digests/carddito.html" with d_bicon='graph-up-arrow' d_metric='87.5%' d_key=d_key %}
+    </div>
 </section>

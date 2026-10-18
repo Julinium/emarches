@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 18:26+0100\n"
+"POT-Creation-Date: 2026-10-18 14:26+0100\n"
 "PO-Revision-Date: 2026-09-27 23:31+0100\n"
 "Last-Translator: Amina Bouhou <a.bouhou@emarches.com>\n"
 "Language-Team: FR <a.bouhou@emarches.com>\n"
@@ -1121,7 +1121,7 @@ msgstr "Contenu caché"
 msgid "Log in to view"
 msgstr "S'identifier pour voir"
 
-#: base/views.py:40 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
+#: base/views.py:57 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
 #: bdc/views.py:468 bdc/views.py:473 bdc/views.py:491 bdc/views.py:637
 #: bdc/views.py:640 bdc/views.py:662 bdc/views.py:669 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
@@ -1134,7 +1134,7 @@ msgstr "S'identifier pour voir"
 msgid "Not found"
 msgstr "Introuvable"
 
-#: base/views.py:45 base/views.py:49 bdc/views.py:69 bdc/views.py:283
+#: base/views.py:62 base/views.py:66 bdc/views.py:69 bdc/views.py:283
 #: bdc/views.py:351 bdc/views.py:419 bdc/views.py:460 bdc/views.py:501
 #: bdc/views.py:634 bdc/views.py:666 bdc/views.py:690 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
@@ -1157,7 +1157,7 @@ msgstr "Introuvable"
 msgid "Permission denied"
 msgstr "Permission refusée"
 
-#: base/views.py:54 bidding/views.py:2131 bidding/views.py:2186
+#: base/views.py:71 bidding/views.py:2131 bidding/views.py:2186
 #: nas/views.py:497 nas/views.py:541
 msgid "File not found"
 msgstr "Fichier introuvable"
@@ -1176,7 +1176,7 @@ msgid "Title"
 msgstr "Titre"
 
 #: bdc/models.py:18 bidding/models.py:429 bidding/models.py:538
-#: bidding/models.py:595 bidding/models.py:629 flows/models.py:163
+#: bidding/models.py:595 bidding/models.py:629 flows/models.py:186
 #: insights/weasy.py:172 templates/bdc/bdc-details.html:72
 #: templates/bdc/snippets/bdcs/search-form.html:39
 #: templates/bidding/bid-form.html:64
@@ -1255,7 +1255,7 @@ msgstr "Bon de commande"
 msgid "Rank"
 msgstr "Rang"
 
-#: bdc/models.py:97 flows/models.py:104 flows/models.py:197 flows/models.py:318
+#: bdc/models.py:97 flows/models.py:127 flows/models.py:220 flows/models.py:341
 msgid "Number"
 msgstr "Numéro"
 
@@ -1273,7 +1273,7 @@ msgstr "Garanties"
 msgid "Unit of Measure"
 msgstr "Unité de mesure"
 
-#: bdc/models.py:103 flows/models.py:166
+#: bdc/models.py:103 flows/models.py:189
 #: templates/bdc/bdc-articles-pdf.html:221
 #: templates/bdc/snippets/articles/articles-details-list.html:12
 msgid "Quantity"
@@ -1374,8 +1374,8 @@ msgstr "Date d'expiration"
 msgid "Show my email"
 msgstr "Afficher mon e-mail"
 
-#: bidding/models.py:103 flows/models.py:100 flows/models.py:184
-#: flows/models.py:314 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
+#: bidding/models.py:103 flows/models.py:123 flows/models.py:207
+#: flows/models.py:337 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
 #: nas/choices.py:58 nas/choices.py:68 templates/bidding/bids-list.html:208
 #: templates/bidding/expenses-list.html:168
 #: templates/bidding/tasks-list.html:187
@@ -1423,7 +1423,7 @@ msgstr "Statut de l'offre"
 
 #: bidding/models.py:134 bidding/models.py:433 bidding/models.py:478
 #: bidding/models.py:552 bidding/models.py:604 bidding/models.py:643
-#: flows/models.py:165
+#: flows/models.py:188
 #: templates/bidding/snippets/contracts/contract-item.html:40
 #: templates/bidding/snippets/expenses/expense-item.html:44
 #: templates/bidding/snippets/tasks/task-item.html:58
@@ -1570,7 +1570,7 @@ msgid "Terms file"
 msgstr "Fichier des conditions"
 
 #: bidding/models.py:441 bidding/models.py:481 bidding/models.py:553
-#: bidding/models.py:605 bidding/models.py:644 flows/models.py:108
+#: bidding/models.py:605 bidding/models.py:644 flows/models.py:131
 #: templates/bidding/snippets/contracts/contract-item.html:9
 #: templates/bidding/snippets/expenses/expense-item.html:11
 #: templates/bidding/snippets/tasks/task-item.html:15
@@ -1944,7 +1944,7 @@ msgstr "Plus d'informations"
 msgid "Timestamps"
 msgstr "Tampon temps"
 
-#: flows/admin.py:240 templates/flows/snippets/plans-table.html:16
+#: flows/admin.py:240
 msgid "Features"
 msgstr "Caractéristiques"
 
@@ -1981,119 +1981,119 @@ msgstr "Équipe"
 msgid "Processing"
 msgstr "Traitement"
 
-#: flows/models.py:96 nas/choices.py:13 nas/choices.py:20 nas/choices.py:34
+#: flows/models.py:119 nas/choices.py:13 nas/choices.py:20 nas/choices.py:34
 msgid "Draft"
 msgstr "Brouillon"
 
-#: flows/models.py:97 flows/models.py:312 nas/choices.py:57
+#: flows/models.py:120 flows/models.py:335 nas/choices.py:57
 #: templates/bidding/expenses-list.html:128
 msgid "Confirmed"
 msgstr "Confirmé"
 
-#: flows/models.py:98
+#: flows/models.py:121
 msgid "Pending Payment"
 msgstr "Paiement en attente"
 
-#: flows/models.py:99
+#: flows/models.py:122
 msgid "Complete"
 msgstr "Terminé"
 
-#: flows/models.py:105 nas/models.py:208
+#: flows/models.py:128 nas/models.py:208
 msgid "Date"
 msgstr "Date"
 
-#: flows/models.py:109
+#: flows/models.py:132
 msgid "Delivery address"
 msgstr "Adresse de livraison"
 
-#: flows/models.py:110
+#: flows/models.py:133
 msgid "Billing address"
 msgstr "Adresse de facturation"
 
-#: flows/models.py:164
+#: flows/models.py:187
 msgid "Item"
 msgstr "Element"
 
-#: flows/models.py:167
+#: flows/models.py:190
 msgid "Unit"
 msgstr "Unité"
 
-#: flows/models.py:168
+#: flows/models.py:191
 msgid "Unit price"
 msgstr "Prix unitaire"
 
-#: flows/models.py:169
+#: flows/models.py:192
 msgid "Line total"
 msgstr "Total ligne"
 
-#: flows/models.py:170
+#: flows/models.py:193
 msgid "Taxes %"
 msgstr "Taxes %"
 
-#: flows/models.py:171
+#: flows/models.py:194
 msgid "Taxes amount"
 msgstr "Montant des taxes"
 
-#: flows/models.py:172
+#: flows/models.py:195
 msgid "Unit price after taxes"
 msgstr "Prix unitaire après taxes"
 
-#: flows/models.py:173
+#: flows/models.py:196
 msgid "Line total after taxes"
 msgstr "Total ligne après taxes"
 
-#: flows/models.py:181
+#: flows/models.py:204
 msgid "Trial"
 msgstr "Essai"
 
-#: flows/models.py:182
+#: flows/models.py:205
 msgid "Active"
 msgstr "Activé"
 
-#: flows/models.py:183
+#: flows/models.py:206
 msgid "Suspended"
 msgstr "Suspendu"
 
-#: flows/models.py:185
+#: flows/models.py:208
 msgid "Paused"
 msgstr "En pause"
 
-#: flows/models.py:186 templates/bdc/snippets/bdcs/menu-clean.html:53
+#: flows/models.py:209 templates/bdc/snippets/bdcs/menu-clean.html:53
 #: templates/nas/snippets/expirables/expirable-item.html:16
 #: templates/portal/snippets/tenders/menu-fav-clean.html:23
 msgid "Expired"
 msgstr "Expiré"
 
-#: flows/models.py:291
+#: flows/models.py:314
 msgid "US Dollar"
 msgstr "Dollar US"
 
-#: flows/models.py:303
+#: flows/models.py:326
 msgid "Cash"
 msgstr "Cash"
 
-#: flows/models.py:304
+#: flows/models.py:327
 msgid "Bank Transfer"
 msgstr "Transfer bancaire"
 
-#: flows/models.py:305
+#: flows/models.py:328
 msgid "Wire Transfer"
 msgstr "Transfer en ligne"
 
-#: flows/models.py:306
+#: flows/models.py:329
 msgid "Check"
 msgstr "Chèque"
 
-#: flows/models.py:307
+#: flows/models.py:330
 msgid "Other"
 msgstr "Autre"
 
-#: flows/models.py:311 nas/choices.py:49 nas/choices.py:55 nas/choices.py:65
+#: flows/models.py:334 nas/choices.py:49 nas/choices.py:55 nas/choices.py:65
 #: templates/bidding/expenses-list.html:48 templates/bidding/tasks-list.html:82
 msgid "Pending"
 msgstr "En attente"
 
-#: flows/models.py:313
+#: flows/models.py:336
 msgid "Failed"
 msgstr "Echoué"
 
@@ -2163,8 +2163,7 @@ msgstr "Montant du cautionnement"
 msgid "Financial Race"
 msgstr "Compétitions financières"
 
-#: insights/weasy.py:185 templates/base/snippets/digests/last-30-days.html:25
-#: templates/base/snippets/digests/last-30-days.html:45
+#: insights/weasy.py:185 templates/base/snippets/digests/last-30-days.html:9
 msgid "Awarded Amount"
 msgstr "Montant attribué"
 
@@ -4235,15 +4234,15 @@ msgstr "Retour à l'accueil"
 msgid "Login"
 msgstr "Se connecter"
 
-#: templates/base/home.html:7
+#: templates/base/home.html:8
 msgid "Public Procurement Market in Morocco"
 msgstr "Marché des commandes publiques au Maroc"
 
-#: templates/base/home.html:14
+#: templates/base/home.html:15
 msgid "Your next great contract"
 msgstr "Votre prochain grand marché"
 
-#: templates/base/home.html:17
+#: templates/base/home.html:18
 msgid ""
 "eMarches is your trusted partner in navigating the Moroccan public "
 "procurement market. With expertise and dedication, we help businesses "
@@ -4253,7 +4252,15 @@ msgstr ""
 "public marocain. Grâce à notre expertise et notre engagement, nous aidons "
 "les entreprises à réussir."
 
-#: templates/base/home.html:20 templates/bidding/contract-details.html:102
+#: templates/base/home.html:21
+msgid "running tenders"
+msgstr "appels d'offres en cours"
+
+#: templates/base/home.html:24
+msgid "on the game"
+msgstr "en jeu"
+
+#: templates/base/home.html:28 templates/bidding/contract-details.html:102
 #: templates/insights/bidder-details.html:25
 #: templates/insights/bidder-pdf.html:63 templates/insights/bidder-pdf.html:128
 #: templates/insights/bidder-pdf.html:132
@@ -4262,7 +4269,7 @@ msgstr ""
 msgid "Tenders"
 msgstr "Appels d'offres"
 
-#: templates/base/home.html:21 templates/bidding/snippets/menu-bidding.html:15
+#: templates/base/home.html:29 templates/bidding/snippets/menu-bidding.html:15
 msgid "Concurrents"
 msgstr "Concurrents"
 
@@ -4322,26 +4329,15 @@ msgstr "X"
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
-#: templates/base/snippets/digests/last-30-days.html:9
-msgid "Things are moving"
-msgstr "Les choses sont en mouvement"
-
-#: templates/base/snippets/digests/last-30-days.html:14
-msgid "30 Days"
-msgstr "30 jours"
-
-#: templates/base/snippets/digests/last-30-days.html:19
-#: templates/base/snippets/digests/last-30-days.html:39
+#: templates/base/snippets/digests/last-30-days.html:5
 msgid "New Tenders"
 msgstr "Nouvel appel d'offres"
 
-#: templates/base/snippets/digests/last-30-days.html:22
-#: templates/base/snippets/digests/last-30-days.html:42
+#: templates/base/snippets/digests/last-30-days.html:7
 msgid "Opening minutes"
 msgstr "PV d'ouverture"
 
-#: templates/base/snippets/digests/last-30-days.html:28
-#: templates/base/snippets/digests/last-30-days.html:48
+#: templates/base/snippets/digests/last-30-days.html:11
 #: templates/bidding/contract-details.html:30
 #: templates/bidding/contract-details.html:44
 #: templates/bidding/contracts-list.html:64
@@ -5954,41 +5950,80 @@ msgstr "Appels d'offres soumissionnés"
 msgid "Tenders found"
 msgstr "Appels d'offres trouvés"
 
-#: templates/flows/snippets/plans-digest.html:23
+#: templates/flows/snippets/plans-digest.html:6
+msgid "Start for free. Scale with confidence."
+msgstr "Commencer gratuitement. Monter avec confiance."
+
+#: templates/flows/snippets/plans-digest.html:8
+msgid "Choose the plan that fits better your needs"
+msgstr "Choisir le plan qui vous convient"
+
+#: templates/flows/snippets/plans-digest.html:11
+msgid "Compare plans"
+msgstr "Comaprer nos plans"
+
+#: templates/flows/snippets/plans-digest.html:35
+#: templates/flows/snippets/plans-table-modal.html:201
 msgid "Choose plan"
 msgstr "Choisir"
 
-#: templates/flows/snippets/plans-digest.html:33
+#: templates/flows/snippets/plans-digest.html:50
+#: templates/flows/snippets/plans-table-modal.html:37
+#: templates/flows/snippets/plans-table-modal.html:129
+#: templates/flows/snippets/plans-table-modal.html:171
 msgid "month"
 msgstr "mois"
 
-#: templates/flows/snippets/plans-table.html:5
+#: templates/flows/snippets/plans-table-modal.html:8
 msgid "Compare our plans"
 msgstr "Comaprer nos plans"
 
-#: templates/flows/snippets/plans-table.html:7
-msgid "Choose the plan that fits your needs."
-msgstr "Choisir le plan qui vous convient"
+#: templates/flows/snippets/plans-table-modal.html:37
+#: templates/flows/snippets/plans-table-modal.html:129
+#: templates/flows/snippets/plans-table-modal.html:148
+#: templates/flows/snippets/plans-table-modal.html:171
+msgid "MAD"
+msgstr "DH"
 
-#: templates/flows/snippets/plans-table.html:29
-msgid "per month"
-msgstr "par mois"
-
-#: templates/flows/snippets/plans-table.html:49
+#: templates/flows/snippets/plans-table-modal.html:57
 msgid "Other features"
 msgstr "Autres caractéristiques"
 
-#: templates/flows/snippets/plans-table.html:76
+#: templates/flows/snippets/plans-table-modal.html:84
 msgid "Included"
 msgstr "Inclus"
 
-#: templates/flows/snippets/plans-table.html:82
+#: templates/flows/snippets/plans-table-modal.html:90
 msgid "Not included"
 msgstr "Non inclus"
 
-#: templates/flows/snippets/plans-table.html:98
+#: templates/flows/snippets/plans-table-modal.html:106
 msgid "No features are currently available."
 msgstr "Pas de caractéristiques disponibles."
+
+#: templates/flows/snippets/plans-table-modal.html:114
+msgid "Pricing"
+msgstr "Tarifs"
+
+#: templates/flows/snippets/plans-table-modal.html:120
+msgid "Monthly price"
+msgstr "Tarif mensuel"
+
+#: templates/flows/snippets/plans-table-modal.html:137
+msgid "Yearly discount"
+msgstr "Rabais annuel"
+
+#: templates/flows/snippets/plans-table-modal.html:148
+msgid "year"
+msgstr "an"
+
+#: templates/flows/snippets/plans-table-modal.html:162
+msgid "Yearly rate"
+msgstr "Tarif annuel"
+
+#: templates/flows/snippets/plans-table-modal.html:180
+msgid "Year total"
+msgstr "Total annuel"
 
 #: templates/idp/oidc/authorization_form.html:5
 #: templates/idp/oidc/authorization_form.html:9
@@ -7895,3 +7930,12 @@ msgstr "Actuelle"
 #: templates/usersessions/usersession_list.html:72
 msgid "Sign Out Other Sessions"
 msgstr "Déconnecter les autres sessions"
+
+#~ msgid "Things are moving"
+#~ msgstr "Les choses sont en mouvement"
+
+#~ msgid "30 Days"
+#~ msgstr "30 jours"
+
+#~ msgid "per month"
+#~ msgstr "par mois"

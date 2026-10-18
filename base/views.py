@@ -4,12 +4,16 @@ import os
 from django.shortcuts import render
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponse
+from django.db.models import Sum
 
 from django.contrib.sitemaps.views import index as sitemap_index_view
 from django.contrib.sitemaps.views import sitemap as sitemap_view
+
+from .models import Tender
 
 from flows.helper import comparify, planify
 
@@ -20,9 +24,22 @@ def home(request):
     logger_portal.info(f"Home page view", extra={"request": request})
     plans = planify()
     compared_plans, rows = comparify()
+
+    wassa = timezone.now()
+    active_running_tenders = Tender.objects.filter(deadline__gte=wassa).exclude(cancelled=True)
+    art_count = active_running_tenders.count()
+    art_amount = active_running_tenders.aggregate(prize=Sum("estimate")).get("prize") or 0
+  
+    context = {
+            'art_count': art_count, 
+            'art_amount': art_amount, 
+            'plans': plans, 
+            'compared_plans': compared_plans, 
+            'rows': rows, 
+        }
     
     
-    return render(request, 'base/home.html', {'compared_plans': compared_plans, 'rows': rows, 'plans': plans})
+    return render(request, 'base/home.html', context)
     # return render(request, 'base/home.html')
 
 
