@@ -12,8 +12,10 @@ This application uses Chromium web browser and relies on Cron jobs to update dat
 # Scraping a different website ?
 This won't probably work out of the box. Because scraping depends on the target website structure and how it serves content ...
 
+# Required system packages
+The following system packages are needed (install process depends on the OS in use): python, python-pip, Chromium, ChromeDriver, rsync, git, libxml2, libxslt, postgresql, pillow
+
 # How to test ?
-0. Make sure to install Python, rsync, Chromium and ChromeDriver (system packages).
 1. Clone the repo, extract and cd...
 2. Make a python virtual environment and install dependencies from both 'requirements.txt'. 
 3. Setup your .env files by removing 'example' from 'exammple.env', 'scraper/example.env', 'scraper/example.env.creds.json' and 'scraper/example.env.ua.json'. Change the values in theses files according to your setup.
@@ -26,6 +28,7 @@ This won't probably work out of the box. Because scraping depends on the target 
 2. For backend application, use runserver as a standard Django application.
 
 # .env files
+Do not forget to manually create directories defined in .env files.
 1. .env:
     SITE_ROOT = "https://www.xxx.tld/" # Target website constants
     SITE_INDEX = "https://www.xxx.tld/index.php"
