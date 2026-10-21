@@ -29,10 +29,13 @@
                                 </p>
                             {% endif %}
 
-                            <div class="mt-auto">
+                            <div class="mt-auto d-flex flex-row gap-2">
                                 <a href="#"
-                                    class="btn btn-primary w-100">
-                                    {% translate "Choose plan" %}
+                                    class="btn btn-primary flex-grow-1">
+                                    {% translate "Choose" %}
+                                </a>
+                                <a class="btn btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#plansCompareModal">
+                                    <span><i class="bi bi-bar-chart-line-fill"></i></span>
                                 </a>
                             </div>
                         </div>

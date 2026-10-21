@@ -40,7 +40,28 @@ def home(request):
     
     
     return render(request, 'base/home.html', context)
-    # return render(request, 'base/home.html')
+
+
+def dashboard(request):
+    logger_portal.info(f"Dashboard view", extra={"request": request})
+    plans = planify()
+    compared_plans, rows = comparify()
+
+    wassa = timezone.now()
+    active_running_tenders = Tender.objects.filter(deadline__gte=wassa).exclude(cancelled=True)
+    art_count = active_running_tenders.count()
+    art_amount = active_running_tenders.aggregate(prize=Sum("estimate")).get("prize") or 0
+  
+    context = {
+            'art_count': art_count, 
+            'art_amount': art_amount, 
+            'plans': plans, 
+            'compared_plans': compared_plans, 
+            'rows': rows, 
+        }
+    
+    
+    return render(request, 'base/home.html', context)
 
 
 def about(request):

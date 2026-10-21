@@ -4240,7 +4240,7 @@ msgstr "Marché des commandes publiques au Maroc"
 
 #: templates/base/home.html:15
 msgid "Your next great contract"
-msgstr "Votre prochain grand marché"
+msgstr "Votre prochain gros contrat"
 
 #: templates/base/home.html:18
 msgid ""
@@ -4463,7 +4463,7 @@ msgstr "Détails du bon de commande"
 #: templates/bdc/bdc-details.html:18
 #: templates/bdc/snippets/bdcs/bdc-summary.html:27
 msgid "FAVORITED"
-msgstr "EN FAVORIS"
+msgstr "FAVORIS"
 
 #: templates/bdc/bdc-details.html:47
 #: templates/bdc/snippets/bdcs/bdc-summary.html:76

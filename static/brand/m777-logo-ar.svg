@@ -24,8 +24,8 @@
      inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="2.0266332"
-     inkscape:cx="318.01513"
-     inkscape:cy="44.161915"
+     inkscape:cx="205.26655"
+     inkscape:cy="44.161913"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
@@ -80,12 +80,12 @@
   </defs>
   <path
      id="path1"
-     style="fill:#000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.28653;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
+     style="fill:#666666;fill-rule:evenodd;stroke:#666666;stroke-width:1.28653;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
      d="M 64.528543,22.845386 H 4.624822 c -2.205782,0 -3.98155699,-1.677588 -3.98155699,-3.761408 V 4.404673 c 0,-2.08382 1.77577499,-3.76140799 3.98155699,-3.76140799 h 55.717233"
      sodipodi:nodetypes="cssssc" />
   <path
      id="rect4"
-     style="fill:#ff6600;fill-rule:evenodd;stroke:#ff6600;stroke-width:1.28653;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
+     style="fill:#d45500;fill-rule:evenodd;stroke:#d45500;stroke-width:1.28653;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
      d="m 64.528543,22.845386 h 18.020752 c 2.205782,0 3.981557,-1.677588 3.981557,-3.761408 V 4.404673 c 0,-2.08382 -1.775775,-3.76140799 -3.981557,-3.76140799 h -22.20724"
      sodipodi:nodetypes="cssssc" />
   <g

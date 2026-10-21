@@ -1,0 +1,98 @@
+{
+  "generated_at": "2026-10-19T10:03:56.553030+00:00",
+  "running_tenders": {
+    "count": 4488,
+    "amount_sum": "34219058521.31"
+  },
+  "top_categories": [
+    {
+      "id": "d769842e-6f40-48af-97aa-84b1f03ba426",
+      "name": "Travaux",
+      "tender_count": 1793,
+      "amount_sum": "26671042200.69"
+    },
+    {
+      "id": "8db5ab89-a9fe-40f9-ad21-3eb8dad06996",
+      "name": "Services",
+      "tender_count": 1578,
+      "amount_sum": "3902800821.57"
+    },
+    {
+      "id": "4516d926-7248-40ce-a49a-ddc54efbab07",
+      "name": "Fournitures",
+      "tender_count": 1117,
+      "amount_sum": "3645215499.05"
+    }
+  ],
+  "top_clients": [
+    {
+      "id": "d26de700-37a2-45a8-b484-d862fe8e7982",
+      "name": "M6 / SRMMS - SOCIETE REGIONALE MULTISERVICES MARRAKECH - SAFI S.A",
+      "tender_count": 101,
+      "amount_sum": "449308123.98"
+    },
+    {
+      "id": "ac9bf1c6-857e-4a4b-9808-7622317f8bfa",
+      "name": "MEMEE / ONEEBE - OFFICE NATIONAL DE L'ELECTRICITE ET DE L'EAU POTABLE - BRANCHE EAU",
+      "tender_count": 95,
+      "amount_sum": "473858452.83"
+    },
+    {
+      "id": "3bdf483c-1924-453b-8f09-8af8366fb96f",
+      "name": "M6 / SRMO - SOCIETE REGIONALE MULTISERVICES DE L'ORIENTAL S.A",
+      "tender_count": 64,
+      "amount_sum": "265525298.06"
+    }
+  ],
+  "top_locations": [
+    {
+      "name": "MAROC",
+      "tender_count": 373,
+      "amount_sum": "1634220674.53"
+    },
+    {
+      "name": "RABAT",
+      "tender_count": 367,
+      "amount_sum": "3403123202.43"
+    },
+    {
+      "name": "CASABLANCA",
+      "tender_count": 299,
+      "amount_sum": "5268332735.36"
+    }
+  ],
+  "top_domains": [
+    {
+      "id": "98c63c57-e702-46c1-be0a-c919a40db075",
+      "name": "Travaux / Travaux de construction et d’aménagement / Travaux en béton armé ou maçonnerie",
+      "tender_count": 415,
+      "amount_sum": "9662839780.66"
+    },
+    {
+      "id": "1e2aa1d7-1c92-4e13-aeea-09f299afe0af",
+      "name": "Travaux / Travaux de construction et d’aménagement / Travaux d’aménagement, d’entretien et réhabilitation  des bâtiments",
+      "tender_count": 326,
+      "amount_sum": "989100993.67"
+    },
+    {
+      "id": "2766981d-e419-4267-85b2-d875b2722f7d",
+      "name": "Services / Etudes d’ingénierie  / Etudes techniques (choix de terrains, géologique, géophysique, hydrologique,…)",
+      "tender_count": 158,
+      "amount_sum": "251945473.84"
+    }
+  ],
+  "top_amounts": [
+    {
+      "id": "918ecc42-38e3-4f0e-8489-fabe7fd0d7a1",
+      "amount": "5400000000.00"
+    },
+    {
+      "id": "50225668-a9ea-4392-aae0-0538551fc15f",
+      "amount": "1291232409.48"
+    },
+    {
+      "id": "ff3afda7-5d78-4905-a0ff-dc230da865ed",
+      "amount": "864000000.00"
+    }
+  ]
+}

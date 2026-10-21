@@ -24,8 +24,8 @@
      inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="1.7917326"
-     inkscape:cx="154.87802"
-     inkscape:cy="44.370461"
+     inkscape:cx="132.2742"
+     inkscape:cy="44.37046"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
@@ -79,11 +79,11 @@
        gradientTransform="matrix(1.1666899,0,0,1.1666899,92.858629,-146.79118)" /></defs><g
      id="g11"><path
        id="path1"
-       style="fill:#000000;fill-rule:evenodd;stroke:#000000;stroke-width:1.28653;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
+       style="fill:#4d4d4d;fill-rule:evenodd;stroke:#4d4d4d;stroke-width:1.28653;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
        d="m 24.233074,22.845386 h 53.024554 c 2.205782,0 3.981557,-1.677588 3.981557,-3.761408 V 4.404673 c 0,-2.08382 -1.775775,-3.76140799 -3.981557,-3.76140799 H 28.419562"
        sodipodi:nodetypes="cssssc" /><path
        id="rect4"
-       style="fill:#ff6600;fill-rule:evenodd;stroke:#ff6600;stroke-width:1.28653;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
+       style="fill:#d45500;fill-rule:evenodd;stroke:#d45500;stroke-width:1.28653;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;paint-order:fill markers stroke"
        d="m 24.233074,22.845386 -19.6082516,0 c -2.2057819,0 -3.98155739,-1.677588 -3.98155739,-3.761408 V 4.404673 c 0,-2.08382 1.77577549,-3.76140799 3.98155739,-3.76140799 l 23.7947396,0"
        sodipodi:nodetypes="cssssc" /><g
        id="g7"
