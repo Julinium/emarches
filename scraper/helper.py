@@ -6,6 +6,7 @@ import time
 import traceback
 import unicodedata
 import shutil
+import sys
 import subprocess
 import pytz
 import socket
@@ -15,6 +16,7 @@ from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 
 from scraper import constants as C
 
@@ -141,12 +143,30 @@ def getDriver(url=''):
     printMessage('DEBUG', 'h.getDriver', 'Setting up options for Chromium browser ...\n')
     options = webdriver.ChromeOptions()
     printMessage('DEBUG', 'h.getDriver', f'\tSetting headless mode to {C.HEADLESS_MODE}')
+
+    # Dynamically handle platforms unsupported by Selenium Manager (like FreeBSD)
+    service = None
+    if sys.platform.startswith("freebsd"):
+        chrome_bin = shutil.which("chrome")
+        chromedriver_bin = shutil.which("chromedriver")
+
+        if chrome_bin:
+            options.binary_location = chrome_bin
+        if chromedriver_bin:
+            service = Service(executable_path=chromedriver_bin)
+        
     if C.HEADLESS_MODE:
         options.add_argument('--headless')
     options.timeouts = {'pageLoad': C.LOADING_TIMEOUT, 'implicit': 60000}
     options.add_argument("--window-size=1920,1080")
     printMessage('DEBUG', 'h.getDriver', 'Launching instance of Chromium browser ...\n')
-    driver = webdriver.Chrome(options=options)
+
+    # Initialize driver, using the custom service only if defined
+    if service:
+        driver = webdriver.Chrome(service=service, options=options)
+    else:
+        driver = webdriver.Chrome(options=options)
+        
     if url == '' or url == None:
         printMessage('DEBUG', 'h.getDriver', 'Returning a driver with an empty url.\n')
         return driver
