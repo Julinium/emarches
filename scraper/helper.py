@@ -114,7 +114,7 @@ def getDateTime(datetime_str):
 
     # Params:
         # datetime_str: The string containing the datetime.
-        Accepted formats: '19/09/2031 13:55' or '19/09/2031'
+        Accepted formats: '19/09/2031 13:55' or '19/09/2031' or 'Mar 19 Sep 2031 13:55'
 
     # Return: None or a datetime object. Time may be set to 00:00 if not present.
 
@@ -127,6 +127,27 @@ def getDateTime(datetime_str):
         return rabat_tz.localize(naive_dt)
     if len(datetime_str) == 10:
         return datetime.strptime(datetime_str, '%d/%m/%Y').date()
+    if len(datetime_str) >= 19:
+        months_map = {
+                # 'Jan': 'Jan', 
+                # 'Mar': 'Mar', 
+                # 'Sep': 'Sep', 
+                # 'Oct': 'Oct', 
+                # 'Nov': 'Nov', 
+                # 'Dec': 'Dec'
+                'Fév': 'Feb', 
+                'Avr': 'Apr',
+                'Mai': 'May', 
+                'Juin': 'Jun', 
+                'Juil': 'Jul', 
+                'Aoû': 'Aug',
+            }
+        parts = datetime_str[4:].split()
+        if len(parts) > 1:
+            parts[1] = months_map.get(parts[1], parts[1])
+            cons_deadline = " ".join(parts)            
+        return datetime.strptime(cons_deadline, '%d %b %Y %H:%M')
+
     return None
 
 

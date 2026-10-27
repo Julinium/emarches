@@ -19,7 +19,6 @@
                 {% if art_count and art_amount %}
                     <span class="fw-bold ">{{ art_count }}</span>
                     <span class="">{% trans "running tenders" %}:</span>
-
                     <span class="fw-bold text-success" data-bs-toggle="tooltip" title="{{ art_amount }} MAD">{{ art_amount|metrify:2 }}</span>
                     <span class="">{% trans "on the game" %}.</span>
                 {% endif %}
@@ -32,17 +31,16 @@
     </div>
 
 
-    <div class="pb-6">
+    <div class="d-none pb-6">
         {% include "base/snippets/digests/last-30-days.html" %}
     </div>
 
 
-
-    <div class="pb-6">  
+    <div class="d-none pb-6">  
         {% include "flows/snippets/plans-digest.html" %}      
     </div>
 
-    <div class="">  
+    <div class="d-none ">  
         {% include "flows/snippets/plans-table-modal.html" %}    
     </div>
     

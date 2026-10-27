@@ -21,4 +21,5 @@ scraper/exports
 scraper/logs
 scraper/crony/.lock
 
-# flows/
+# bos/
+# templates/bos/

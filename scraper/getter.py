@@ -86,7 +86,7 @@ def getJson(link, skipExisting=False):
         return None
 
     bowl = BeautifulSoup(request_cons.text, 'html.parser')
-    soup = bowl.find(class_='recap-bloc')
+    soup = bowl.find(class_='card-body')
 
     try:
         deadl_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateHeureLimiteRemisePlis')
@@ -94,7 +94,7 @@ def getJson(link, skipExisting=False):
 
         picto_img  = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictCertificat')
         picto_src  = picto_img['src'].strip() if picto_img else NA_PLH
-        cons_repec = picto_src.strip().replace('themes/images/', '').replace('.gif', '')
+        cons_repec = picto_src.strip().replace('themes/images/', '').replace('.svg', '')
 
         cance_span = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictConsultationAnnulee')
         cons_cance = "Oui" if cance_span else NA_PLH
@@ -818,5 +818,311 @@ def getMinutes(chro='', acro=''):
     }
 
     return digest
+
+
+def x_getJson(link, skipExisting=False):
+
+    """
+    # Synapsis:
+        From a link, gets a structured object (JSON) representing data of the Consultation and all its related objects
+    # Params:
+        link: a line of the generated links file, containing pudlication date, portal id and organization acronym.
+    # Return:
+        JSON object representing data.
+    """
+    
+
+    if not link:
+        helper.printMessage('ERROR', 'g.getJson', 'Got an invalid link.')
+        return None
+    
+    link_chrono = link.chrono
+    link_acronym = link.acronym
+    helper.printMessage('DEBUG', 'g.getJson', f'Getting objects for item id = {link_chrono}')
+    if skipExisting:
+        e = Tender.objects.filter(chrono=link_chrono)
+        if e.first():
+            helper.printMessage('DEBUG', 'g.getJson', f'Tender {link_chrono} exists and Skipping ON.', 0, 1)
+            return None
+    
+
+    cons_uri = f"{link_chrono}{C.LINK_STITCH}{link_acronym}"
+    cons_link = f'{C.LINK_PREFIX}{cons_uri}'
+    dce_link = f'{C.SITE_INDEX}?page=entreprise.EntrepriseDownloadCompleteDce&reference={link_chrono}&orgAcronym={link_acronym}'
+
+    rua = helper.getUa()
+    rua_label = "Random"
+    try:
+        start_delimiter = "Mozilla/5.0 ("
+        end_delimiter = "; "
+        start_index = rua.index(start_delimiter) + len(start_delimiter)
+        end_index = rua.index(end_delimiter, start_index)
+        rua_label = rua[start_index:end_index]
+    except ValueError as ve:
+        helper.printMessage('ERROR', 'g.getJson', f'Error trimming UA: {str(ve)}')
+    
+    helper.printMessage('DEBUG', 'g.getJson', f'Using UA: {rua_label}.')
+    headino = {"User-Agent": rua }
+    sessiono = requests.Session()
+
+    cons_bytes = None
+    try:
+        dce_head = sessiono.head(dce_link, headers=headino, timeout=C.REQ_TIMEOUT, allow_redirects=True)
+        if dce_head.status_code == 200 :
+            if 'Content-Length' in dce_head.headers:
+                cons_bytes = int(dce_head.headers['Content-Length'])
+            # return None
+        else:
+            helper.printMessage('WARN', 'g.getJson', f'Request to DCE Header page returned a {dce_head.status_code} status code.')
+            if dce_head.status_code == 429:
+                helper.printMessage('WARN', 'g.getJson', f'Too many Requests, said the server: {dce_head.status_code} !')
+                helper.sleepRandom(300, 600)
+    except Exception as x:
+        helper.printMessage('WARN', 'g.getJson', f'Exception getting file size at {str(dce_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
+        # return None
+
+    try: 
+        request_cons = sessiono.get(cons_link, headers=headino, timeout=C.REQ_TIMEOUT)  # driver.get(lots_link)
+    except Exception as x:
+        helper.printMessage('ERROR', 'g.getJson', f'Exception getting Tender at {str(cons_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
+        return None
+    helper.printMessage('TRACE', 'g.getJson', f'Getting Tender page : {request_cons}')
+    if request_cons.status_code != 200 :
+        helper.printMessage('ERROR', 'g.getJson', f'Request to Tender page returned a {request_cons.status_code} status code.')
+        if request_cons.status_code == 429:
+            helper.printMessage('ERROR', 'g.getJson', f'Too many Requests, said the server: {request_cons.status_code} !')
+            helper.sleepRandom(300, 600)
+        return None
+
+    bowl = BeautifulSoup(request_cons.text, 'html.parser')
+    soup = bowl.find(class_='recap-bloc')
+
+    try:
+        deadl_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateHeureLimiteRemisePlis')
+        cons_deadl = deadl_span.get_text().strip() if deadl_span else NA_PLH
+
+        picto_img  = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictCertificat')
+        picto_src  = picto_img['src'].strip() if picto_img else NA_PLH
+        cons_repec = picto_src.strip().replace('themes/images/', '').replace('.gif', '')
+
+        cance_span = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictConsultationAnnulee')
+        cons_cance = "Oui" if cance_span else NA_PLH
+
+        category = None
+        categ_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_categoriePrincipale')
+        cons_categ = categ_span.get_text().strip() if categ_span else NA_PLH
+        if cons_categ != NA_PLH:
+            category = {"label": cons_categ}
+
+        refce_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_reference')
+        cons_refce = refce_span.get_text().strip() if refce_span else NA_PLH
+
+        objet_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_objet')
+        cons_objet = objet_span.get_text().strip() if objet_span else NA_PLH
+
+        helper.printMessage('DEBUG', 'g.getJson', f'Found item {link_chrono}')
+
+        client = None
+        achet_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_entiteAchat')
+        cons_achet = achet_span.get_text().strip() if achet_span else NA_PLH
+        if cons_achet and len(cons_achet) > 3:
+            if cons_achet != NA_PLH:
+                client = {"name": cons_achet}
+
+        kind = None
+        kind_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_annonce')
+        cons_kind = kind_span.get_text().strip() if kind_span else NA_PLH
+        if cons_kind and len(cons_kind) > 3:
+            if cons_kind != NA_PLH:
+                kind = {"name": cons_kind}
+
+        procedure = None
+        proce_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_typeProcedure')
+        cons_proce = proce_span.get_text().strip() if proce_span else NA_PLH
+        if cons_proce and len(cons_proce) > 3:
+            if cons_proce != NA_PLH:
+                procedure = {"name": cons_proce}
+
+        mode = None
+        passa_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_modePassation')
+        cons_passa = passa_span.get_text().replace('|', '').strip() if passa_span else NA_PLH
+        if cons_passa and len(cons_passa) > 3:
+            if cons_passa != NA_PLH:
+                mode = {"name": cons_passa}
+
+        lexec_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_lieuxExecutions')
+        cons_lexec = lexec_span.get_text().strip() if lexec_span else NA_PLH
+
+        domai_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_domainesActivite')
+        domains = []
+        domai_lis  = domai_span.find_all('li')
+        for domai_li in domai_lis:
+            domain = domai_li.get_text().strip() if domai_li else NA_PLH
+            if domain and len(domain) > 3:
+                if domain != NA_PLH : domains.append({"name": domain})
+
+        add_r_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_adresseRetraitDossiers')
+        cons_add_r = add_r_span.get_text().strip() if add_r_span else NA_PLH
+
+        add_d_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_adresseDepotOffres')
+        cons_add_d = add_d_span.get_text().strip() if add_d_span else NA_PLH
+
+        add_o_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_lieuOuverturePlis')
+        cons_add_o = add_o_span.get_text().strip() if add_o_span else NA_PLH
+
+        plans_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_prixAcquisitionPlan')
+        cons_plans = plans_span.get_text().strip() if plans_span else NA_PLH
+
+        adm_n_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_contactAdministratif')
+        cons_adm_n = adm_n_span.get_text().strip() if adm_n_span else NA_PLH
+
+        adm_m_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_email')
+        cons_adm_m = adm_m_span.get_text().strip() if adm_m_span else NA_PLH
+
+        adm_t_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_telephone')
+        cons_adm_t = adm_t_span.get_text().strip() if adm_t_span else NA_PLH
+
+        adm_f_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_telecopieur')
+        cons_adm_f = adm_f_span.get_text().strip() if adm_f_span else NA_PLH
+
+        reser_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_idRefRadio_RepeaterReferentielRadio_ctl0_labelReferentielRadio')
+        cons_reser = reser_span.get_text().strip() if reser_span else NA_PLH
+
+        qualifs = []
+        quali_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_qualification')
+        quali_lis  = quali_span.find_all('li')
+        for quali_li in quali_lis:
+            qualif = quali_li.get_text().strip() if quali_li else NA_PLH
+            if qualif != NA_PLH : 
+                qualifs.append({"name": qualif})
+
+        agrements = []
+        agrem_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_agrements')
+        agrem_lis  = agrem_span.find_all('li')
+        for agrem_li in agrem_lis:
+            agrement = agrem_li.get_text().strip() if agrem_li else NA_PLH
+            if agrement != NA_PLH : agrements.append({"name": agrement})
+
+        samples = []
+        ech_d_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateEchantillons')
+        cons_ech_d = ech_d_span.get_text().strip() if ech_d_span else NA_PLH
+        ech_a_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_adresseEchantillons')
+        cons_ech_a = ech_a_span.get_text().strip() if ech_a_span else NA_PLH
+        if cons_ech_d and len(cons_ech_d) > 3 :
+            if cons_ech_d != NA_PLH or cons_ech_a != NA_PLH:
+                samples.append({"when": cons_ech_d, "description": cons_ech_a})
+
+        meetings = []
+        reu_d_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateReunion')
+        cons_reu_d = reu_d_span.get_text().strip() if reu_d_span else NA_PLH
+        reu_a_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_adresseReunion')
+        cons_reu_a = reu_a_span.get_text().strip() if reu_a_span else NA_PLH
+        if (cons_reu_d and len(cons_reu_d) > 3) or (cons_reu_a and len(cons_reu_a) > 3) :
+            if cons_reu_d != NA_PLH or cons_reu_a != NA_PLH:
+                meetings.append({"when": cons_reu_d, "description": cons_reu_a})
+
+        visits = []
+        vis_d_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_repeaterVisitesLieux_ctl1_dateVisites')
+        cons_vis_d = vis_d_span.get_text().strip() if vis_d_span else NA_PLH
+        vis_a_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_repeaterVisitesLieux_ctl1_adresseVisites')
+        cons_vis_a = vis_a_span.get_text().strip() if vis_a_span else NA_PLH
+        if cons_vis_d != NA_PLH or cons_vis_a != NA_PLH:
+            visits.append({"when": cons_vis_d, "description": cons_vis_a})
+
+        varia_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_varianteValeur')
+        cons_varia = varia_span.get_text().strip() if varia_span else NA_PLH
+
+        estim_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_idReferentielZoneText_RepeaterReferentielZoneText_ctl0_labelReferentielZoneText')
+        cons_estim = estim_span.get_text().strip() if estim_span else NA_PLH
+
+        cauti_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_cautionProvisoire')
+        cons_cauti = cauti_span.get_text().strip() if cauti_span else NA_PLH
+
+        sized_anch = bowl.find('a', id='ctl0_CONTENU_PAGE_linkDownloadDce')
+        cons_sized = sized_anch.get_text().strip() if sized_anch else NA_PLH
+        cons_sized = sized_anch.get_text().strip('Dossier de consultation -').strip() if sized_anch else NA_PLH
+
+        nbrlo_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_nbrLots')
+        cons_nbrlo = nbrlo_span.get_text().replace('Lots', '').strip() if nbrlo_span else "1"
+        if cons_nbrlo == "": cons_nbrlo = "1"
+
+        lots_span = soup.find('a', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_linkDetailLots')
+        lots_href = ""
+        if lots_span and lots_span.has_attr('href'): 
+            lots_href = lots_span['href']
+
+        has_minutes = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_chrono}&orgAcronyme={link_acronym}') is not None
+
+        extra_files = []
+        results_link = soup.find('a', href=f'?page=entreprise.ExtraitPV&refConsultation={link_chrono}&orgAcronyme={link_acronym}')
+        extra_btn = soup.find("a", href=re.compile(r"index\.php\?page=entreprise\.EntrepriseDownloadAvisJAL.*&idAvis=\d+"))
+
+        if extra_btn: extra_files.append({'link': extra_btn["href"], 'name': extra_btn.get_text(strip=True),})
+
+        if len(lots_href) > 2:
+            cons_lots = getLots(lots_href)
+        else:
+            cons_lots = [
+                {
+                    "number": 1,
+                    "title": cons_objet,
+                    "category": category,
+                    "description": "",
+                    "estimate": cons_estim,
+                    "bond": cons_cauti,
+                    "reserved": cons_reser,
+                    "qualifs": qualifs,
+                    "agrements": agrements,
+                    "samples": samples,
+                    "meetings": meetings,
+                    "visits": visits,
+                    "variant": cons_varia,
+                    }
+                ]
+
+
+        cons_dict = {
+            "published"         : link.published,
+            "deadline"          : cons_deadl,
+            "cancelled"         : cons_cance,
+            "reference"         : cons_refce,
+            "category"          : category,
+            "title"             : cons_objet,
+            "lots_count"        : cons_nbrlo,
+            "location"          : cons_lexec,
+            "client"            : client,
+            "kind"              : kind,
+            "procedure"         : procedure,
+            "mode"              : mode,
+            "ebid_esign"        : cons_repec,
+            "lots"              : cons_lots,
+            "plans_price"       : cons_plans,
+            "domains"           : domains,
+            "address_withdrawal": cons_add_r,
+            "address_bidding"   : cons_add_d,
+            "address_opening"   : cons_add_o,
+            "contact_name"      : cons_adm_n,
+            "contact_email"     : cons_adm_m,
+            "contact_phone"     : cons_adm_t,
+            "contact_fax"       : cons_adm_f,
+            "chrono"            : link.chrono,
+            "link"              : cons_uri,
+            "size_read"         : cons_sized,
+            "size_bytes"        : cons_bytes,
+            "results_link"      : results_link,
+            "extra_files"       : extra_files,
+            "has_minutes"       : has_minutes,
+            "has_enviro"        : link.has_enviro,
+            }
+
+
+        helper.printMessage('DEBUG', 'g.getJson', f'Finished getting objects for item {link_chrono}')
+        return cons_dict
+
+    except:
+        helper.printMessage('ERROR', 'g.getJson', f'Exception getting objects for item {link_chrono}')
+        traceback.print_exc()
+        return None
+
 
 

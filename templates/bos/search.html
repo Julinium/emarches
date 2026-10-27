@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche Bulletins Officiels</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container py-5" style="max-width: 800px;">
+    <div class="col-12 mb-4 gy-3">
+        <h2 class="">Recherche dans les Bulletins Officiels</h2>
+    </div>
+    
+    <form method="GET" action="" class="card p-3 mb-4 bg-light shadow-sm" id="search-form">
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label for="q" class="form-label">Mot-clé (texte ou numéro)</label>
+                <input type="text" id="q" name="q" class="form-control" placeholder="Mot-clé ou numéro du BO..." value="{{ query }}">
+            </div>
+            <div class="col-md-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="exact" name="exact" {% if exact_checked %}checked{% endif %}>
+                    <label class="form-check-label" for="exact">
+                        Recherche stricte
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="start_date" class="form-label">Date de début</label>
+                <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+            </div>
+            <div class="col-md-6">
+                <label for="end_date" class="form-label">Date de fin</label>
+                <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+            </div>
+            <div class="col-12 d-flex align-items-center justify-content-end">
+                <button class="btn btn-primary ms-2" type="submit" id="submit-btn">Rechercher</button>
+                <a class="btn btn-outline-primary ms-2" href="{% url 'bos_search' %}">Réinitialiser</a>
+            </div>            
+        </div>
+    </form>
+
+    {% if query or start_date or end_date %}
+        <div id="results-container">
+            <h4 class="mb-3">Résultats ({% if truncated %}tronqués à {% endif %}{{ results|length }})</h4>
+            <ul class="list-group">
+                {% for item in results %}
+                    <li class="list-group-item list-group-item-action mx-0 p-0">
+                        <div class="row mx-0 w-100 align-items-center">
+                            <div class="col-12 col-md-6 my-2">
+                                <div>
+                                    <!-- <small>{{ item.rank|floatformat:2 }}. </small> -->
+                                    <span>BO n°</span>
+                                    <strong>{{ item.bo_num }}</strong>
+                                </div>
+                                <div>
+                                    <span class="text-muted small">{{ item.date }}</span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 my-2 py-0 text-end">
+                                <a href="{% url 'bos_log_pdf_download' item.bo_pk %}" target="_blank" class="btn btn-outline-success btn-sm">Télécharger PDF</a>
+                            </div>
+                            <!-- <div class="col-12 col-md-6 my-2 py-0 text-end">
+                                <a href="{{ item.url }}" target="_blank" class="pdf-link btn btn-outline-success btn-sm">Télécharger PDF</a>
+                            </div>                             -->
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-muted">Aucun bulletin trouvé pour ces critères.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <hr class="my-5">
+    <div class="my-4">
+        <h5 class="mb-3">NB:</h5>
+        <ul class="small">
+            <li>La recherche est <strong>insensible</strong> aux accents et à la casse (majuscules/minuscules).</li>
+            <li>Saisir des plages de dates aussi <strong>rapprochées</strong> que possible.</li>
+            <li>Les résultats sont classés par <strong>pertinence</strong> puis par date et peuvent être <strong>tronqués</strong>.</li>
+            <li>Ce site est pour <strong>test</strong> seulement.</li>
+        </ul>
+    </div>
+
+    <script>
+        document.getElementById('search-form').addEventListener('submit', function() {
+            const container = document.getElementById('results-container');
+            const submitBtn = document.getElementById('submit-btn');            
+            container.innerHTML = '<div class="text-center text-muted py-5"><div class="spinner-border text-primary mb-2" role="status"></div><p>Recherche en cours...</p></div>';            
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Recherche...';
+        });
+    </script>
+    <!-- <script>
+        document.querySelectorAll('.pdf-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                const targetUrl = this.href;
+                
+                // keepalive: true ensures the request survives page navigation
+                fetch('/api/log-click/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken') // If Django CSRF is enabled
+                    },
+                    body: JSON.stringify({ url: targetUrl }),
+                    keepalive: true
+                });
+            });
+        });
+    </script> -->
+
+
+</body>
+</html>

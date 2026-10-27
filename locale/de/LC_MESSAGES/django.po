@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 14:26+0100\n"
+"POT-Creation-Date: 2026-10-27 18:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -919,7 +919,7 @@ msgstr ""
 msgid "Log in to view"
 msgstr ""
 
-#: base/views.py:57 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
+#: base/views.py:78 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
 #: bdc/views.py:468 bdc/views.py:473 bdc/views.py:491 bdc/views.py:637
 #: bdc/views.py:640 bdc/views.py:662 bdc/views.py:669 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
@@ -932,7 +932,7 @@ msgstr ""
 msgid "Not found"
 msgstr ""
 
-#: base/views.py:62 base/views.py:66 bdc/views.py:69 bdc/views.py:283
+#: base/views.py:83 base/views.py:87 bdc/views.py:69 bdc/views.py:283
 #: bdc/views.py:351 bdc/views.py:419 bdc/views.py:460 bdc/views.py:501
 #: bdc/views.py:634 bdc/views.py:666 bdc/views.py:690 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
@@ -955,7 +955,7 @@ msgstr ""
 msgid "Permission denied"
 msgstr ""
 
-#: base/views.py:71 bidding/views.py:2131 bidding/views.py:2186
+#: base/views.py:92 bidding/views.py:2131 bidding/views.py:2186
 #: nas/views.py:497 nas/views.py:541
 msgid "File not found"
 msgstr ""
@@ -1695,27 +1695,27 @@ msgstr ""
 msgid "Expense creator is not an active team member"
 msgstr ""
 
-#: emarches/settings.py:186
+#: emarches/settings.py:191
 msgid "English"
 msgstr ""
 
-#: emarches/settings.py:187
+#: emarches/settings.py:192
 msgid "French"
 msgstr ""
 
-#: emarches/settings.py:188
+#: emarches/settings.py:193
 msgid "Arabic"
 msgstr ""
 
-#: emarches/settings.py:189
+#: emarches/settings.py:194
 msgid "Amazigh"
 msgstr ""
 
-#: emarches/settings.py:190
+#: emarches/settings.py:195
 msgid "Spanish"
 msgstr ""
 
-#: emarches/settings.py:191
+#: emarches/settings.py:196
 msgid "German"
 msgstr ""
 
@@ -4017,6 +4017,40 @@ msgstr ""
 msgid "Last Page"
 msgstr ""
 
+#: templates/base/snippets/user-notice.html:6
+#: templates/base/snippets/user-notice.html:14
+msgid "Same credentials"
+msgstr ""
+
+#: templates/base/snippets/user-notice.html:16
+msgid "If you had an account on the old website, use it to login"
+msgstr ""
+
+#: templates/base/snippets/user-notice.html:17
+msgid "Feel free to contact us if you have any issues"
+msgstr ""
+
+#: templates/base/snippets/user-notice.html:24
+#: templates/base/snippets/wip-banner.html:24
+msgid "Dismiss notice"
+msgstr ""
+
+#: templates/base/snippets/wip-banner.html:6
+msgid "Website testing notice"
+msgstr ""
+
+#: templates/base/snippets/wip-banner.html:14
+msgid "Website under test"
+msgstr ""
+
+#: templates/base/snippets/wip-banner.html:16
+msgid "Some information may be incomplete, inaccurate, or unavailable"
+msgstr ""
+
+#: templates/base/snippets/wip-banner.html:17
+msgid "Thank you for your patience and feedback"
+msgstr ""
+
 #: templates/base/snippets/wip-inline.html:6
 msgid "Coming soon"
 msgstr ""
@@ -5541,11 +5575,10 @@ msgid "Compare plans"
 msgstr ""
 
 #: templates/flows/snippets/plans-digest.html:35
-#: templates/flows/snippets/plans-table-modal.html:201
-msgid "Choose plan"
+msgid "Choose"
 msgstr ""
 
-#: templates/flows/snippets/plans-digest.html:50
+#: templates/flows/snippets/plans-digest.html:53
 #: templates/flows/snippets/plans-table-modal.html:37
 #: templates/flows/snippets/plans-table-modal.html:129
 #: templates/flows/snippets/plans-table-modal.html:171
@@ -5601,6 +5634,10 @@ msgstr ""
 
 #: templates/flows/snippets/plans-table-modal.html:180
 msgid "Year total"
+msgstr ""
+
+#: templates/flows/snippets/plans-table-modal.html:201
+msgid "Choose plan"
 msgstr ""
 
 #: templates/idp/oidc/authorization_form.html:5

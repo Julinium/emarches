@@ -439,7 +439,7 @@ def save_bdcs(published_since_days=1):
             "search_consultation_entreprise[pageSize]": "50"
         }
 
-        printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...")
+        printMessage('INFO', 'b.save_bdcs', f"Fetching POs page { page } ...", 2)
 
         html = fetch_page(url, params=params)
         if not html:
@@ -469,7 +469,7 @@ def save_bdcs(published_since_days=1):
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'b.save_bdcs', f"Fetching item: { i } from page { page } ...")
+            printMessage('INFO', 'b.save_bdcs', f"Fetching item: { i } from page { page } ...", 1)
             try:
                 item = get_bdc(card)
                 if item != {} :

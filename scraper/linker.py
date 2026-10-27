@@ -1,10 +1,12 @@
 import csv
 import json
 import os
+import re
 import random
 import traceback
 from datetime import timedelta
 from django.utils import timezone
+from datetime import datetime
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -12,6 +14,7 @@ from selenium.webdriver.support.ui import Select
 
 from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse, parse_qs
 
 from base.models import Tender, Link, Parkour, Machine, Harvest
 from scraper import constants as C
@@ -46,13 +49,74 @@ def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
         el_ddl_start = driver.find_element("id", "ctl0_CONTENU_PAGE_AdvancedSearch_dateMiseEnLigneStart")
         el_ddl_start.clear()
         el_ddl_start.send_keys(date_ddl_start)
-        
+
     except Exception:
         helper.printMessage('ERROR', 'l.fillForm', 'Could not fill in search form.')
         traceback.print_exc()
 
 
 def pg2Links(driver, page_number, pages):
+    helper.printMessage('DEBUG', 'l.pg2Links', f'### Looking at page {page_number:02}/{pages:02}...')
+    links = []
+    try:
+        i = 0
+        list_body_xpath = "/html/body/form/div[3]/div[1]/div[1]/div[6]/div[1]"
+        list_body = driver.find_element(By.XPATH, list_body_xpath)
+
+        list_body_html = list_body.get_attribute("innerHTML")
+        soup = BeautifulSoup(list_body_html, "html.parser")
+
+        rows = [
+            div for div in soup.find_all('div', class_='contentColumn') 
+            if len(div.get('class', [])) == 1
+        ]
+        rows_count = len(rows)
+        helper.printMessage('DEBUG', 'l.pg2Links', f'Found {rows_count} items on page {page_number:02}.')
+
+        for row in rows:
+            i += 1
+            helper.printMessage('TRACE', 'l.pg2Links', f'\tLooking at row #{i:03}/{rows_count:03} in page {page_number:02}...')
+            try:
+                chrono = None
+                acronym = None
+                published = datetime.now().date()
+                has_enviro = None
+                onclick_value = row.get('onclick', '')
+                match = re.search(r'location\.href\s*=\s*["\']([^"\']+)["\']', onclick_value)
+                if match:
+                    url = match.group(1)
+                    parsed_url = urlparse(url)
+                    params = parse_qs(parsed_url.query)
+                    chrono = params.get('refConsultation', [None])[0]
+                    acronym = params.get('orgAcronyme', [None])[0]
+                    
+                has_enviro = bool(row.find('img', src='ressources/eco.png'))
+
+                link = {
+                    "chrono": chrono,
+                    "acronym": acronym,
+                    "published": published,
+                    "has_enviro": has_enviro,
+                }
+                links.append(link)
+                helper.printMessage('DEBUG', 'l.pg2Links', f'\tGot link {page_number:02}.{i:02} = {chrono}.')
+                helper.printMessage('TRACE', 'l.pg2Links', f'\tLink data: {link}.')
+
+            except Exception as xc:
+                helper.printMessage('ERROR', 'l.pg2Links', f'Could not get link for {page_number:02}.{i:02}', 1, 2)
+                traceback.print_exc()
+
+    except Exception:
+        helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:02}', 1, 2)
+        traceback.print_exc()
+
+    helper.printMessage('INFO', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:02}')
+    
+    return links
+
+
+
+def x_pg2Links(driver, page_number, pages):
     helper.printMessage('DEBUG', 'l.pg2Links', f'### Looking at page {page_number:02}/{pages:02}...')
     links = []
     try:

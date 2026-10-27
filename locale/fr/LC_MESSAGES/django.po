@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-18 14:26+0100\n"
+"POT-Creation-Date: 2026-10-27 18:48+0100\n"
 "PO-Revision-Date: 2026-09-27 23:31+0100\n"
 "Last-Translator: Amina Bouhou <a.bouhou@emarches.com>\n"
 "Language-Team: FR <a.bouhou@emarches.com>\n"
@@ -1121,7 +1121,7 @@ msgstr "Contenu caché"
 msgid "Log in to view"
 msgstr "S'identifier pour voir"
 
-#: base/views.py:57 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
+#: base/views.py:78 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
 #: bdc/views.py:468 bdc/views.py:473 bdc/views.py:491 bdc/views.py:637
 #: bdc/views.py:640 bdc/views.py:662 bdc/views.py:669 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
@@ -1134,7 +1134,7 @@ msgstr "S'identifier pour voir"
 msgid "Not found"
 msgstr "Introuvable"
 
-#: base/views.py:62 base/views.py:66 bdc/views.py:69 bdc/views.py:283
+#: base/views.py:83 base/views.py:87 bdc/views.py:69 bdc/views.py:283
 #: bdc/views.py:351 bdc/views.py:419 bdc/views.py:460 bdc/views.py:501
 #: bdc/views.py:634 bdc/views.py:666 bdc/views.py:690 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
@@ -1157,7 +1157,7 @@ msgstr "Introuvable"
 msgid "Permission denied"
 msgstr "Permission refusée"
 
-#: base/views.py:71 bidding/views.py:2131 bidding/views.py:2186
+#: base/views.py:92 bidding/views.py:2131 bidding/views.py:2186
 #: nas/views.py:497 nas/views.py:541
 msgid "File not found"
 msgstr "Fichier introuvable"
@@ -1899,27 +1899,27 @@ msgstr "Dépense supprimée avec succès"
 msgid "Expense creator is not an active team member"
 msgstr "Le créateur de la dépense n'est pas un membre actif de l'équipe"
 
-#: emarches/settings.py:186
+#: emarches/settings.py:191
 msgid "English"
 msgstr "Anglais"
 
-#: emarches/settings.py:187
+#: emarches/settings.py:192
 msgid "French"
 msgstr "Français"
 
-#: emarches/settings.py:188
+#: emarches/settings.py:193
 msgid "Arabic"
 msgstr "Arabe"
 
-#: emarches/settings.py:189
+#: emarches/settings.py:194
 msgid "Amazigh"
 msgstr "Amazighe"
 
-#: emarches/settings.py:190
+#: emarches/settings.py:195
 msgid "Spanish"
 msgstr "Espagnol"
 
-#: emarches/settings.py:191
+#: emarches/settings.py:196
 msgid "German"
 msgstr "Allemand"
 
@@ -4419,6 +4419,41 @@ msgstr "Page suivante"
 msgid "Last Page"
 msgstr "Dernière page"
 
+#: templates/base/snippets/user-notice.html:6
+#: templates/base/snippets/user-notice.html:14
+msgid "Same credentials"
+msgstr "Mêmes identifiants"
+
+#: templates/base/snippets/user-notice.html:16
+msgid "If you had an account on the old website, use it to login"
+msgstr "Si vous aviez un compte sur l'ancien site, ça devrait marcher ici"
+
+#: templates/base/snippets/user-notice.html:17
+msgid "Feel free to contact us if you have any issues"
+msgstr ""
+"N'hésitez pas à nous contacter si vous rencontrez des difficultés"
+
+#: templates/base/snippets/user-notice.html:24
+#: templates/base/snippets/wip-banner.html:24
+msgid "Dismiss notice"
+msgstr "Ignorer"
+
+#: templates/base/snippets/wip-banner.html:6
+msgid "Website testing notice"
+msgstr "Notice de test du site"
+
+#: templates/base/snippets/wip-banner.html:14
+msgid "Website under test"
+msgstr "Site web sous test"
+
+#: templates/base/snippets/wip-banner.html:16
+msgid "Some information may be incomplete, inaccurate, or unavailable"
+msgstr "Certaines informations peuvent être incomplètes, inexactes ou indisponibles"
+
+#: templates/base/snippets/wip-banner.html:17
+msgid "Thank you for your patience and feedback"
+msgstr "Merci de votre patience et de votre feedback"
+
 #: templates/base/snippets/wip-inline.html:6
 msgid "Coming soon"
 msgstr "Bientôt disponible"
@@ -5963,11 +5998,10 @@ msgid "Compare plans"
 msgstr "Comaprer nos plans"
 
 #: templates/flows/snippets/plans-digest.html:35
-#: templates/flows/snippets/plans-table-modal.html:201
-msgid "Choose plan"
+msgid "Choose"
 msgstr "Choisir"
 
-#: templates/flows/snippets/plans-digest.html:50
+#: templates/flows/snippets/plans-digest.html:53
 #: templates/flows/snippets/plans-table-modal.html:37
 #: templates/flows/snippets/plans-table-modal.html:129
 #: templates/flows/snippets/plans-table-modal.html:171
@@ -6024,6 +6058,10 @@ msgstr "Tarif annuel"
 #: templates/flows/snippets/plans-table-modal.html:180
 msgid "Year total"
 msgstr "Total annuel"
+
+#: templates/flows/snippets/plans-table-modal.html:201
+msgid "Choose plan"
+msgstr "Choisir"
 
 #: templates/idp/oidc/authorization_form.html:5
 #: templates/idp/oidc/authorization_form.html:9

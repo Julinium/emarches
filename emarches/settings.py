@@ -13,14 +13,26 @@ load_dotenv(dotenv_path=env_path)
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'production')
 SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY_FALLBACKS = [
+        os.getenv("SECRET_KEY_FALLBACKS")
+    ]
+
 DEBUG = ENVIRONMENT != 'production'
 SITE_HOST = os.getenv("SITE_HOST")
 
 # DEBUG = True
-ALLOWED_HOSTS = [
-        os.getenv("DOMAIN_NAME"),
-        os.getenv("IP_ADDRESS")
-    ]
+ALLOWED_HOSTS = os.getenv("DOMAIN_NAMES").split(',')
+    
+
+# ALLOWED_HOSTS = [
+#     host.strip()
+#     for host in os.getenv("DOMAINE_NAMES", "").split(",")
+#     if host.strip()
+# ]
+
+ALLOWED_HOSTS += [
+    os.getenv("IP_ADDRESS")
+]
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
@@ -49,6 +61,7 @@ INSTALLED_APPS = [
     'insights',
     'bidding',
     'flows',
+    'bos',
 
     'django_cleanup',
     'user_agents',
@@ -131,7 +144,7 @@ if ENVIRONMENT == 'production':
             'USER':     os.getenv("DB_USER"),
             'PASSWORD': os.getenv("DB_PASS"),
             'CONN_HEALTH_CHECKS': True,
-        }
+        },
     }
 
     EMAIL_BACKEND       = "django.core.mail.backends.smtp.EmailBackend"
