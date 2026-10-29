@@ -95,23 +95,29 @@ def format(tender_json: dict) -> dict:
 
         ebs = j["ebid_esign"] # 1: Required, 0: Not required, Else: NA
         match ebs:  # Look at the image ...
-            case "reponse-elec-oblig": # cons_repec = 'RO'
-                j["ebid"] = 1
-                j["esign"] = 0
-            case "reponse-elec": #cons_repec = 'OO'
-                j["ebid"] = 0
-                j["esign"] = 0
-            case "reponse-elec-oblig-avec-signature": #cons_repec = 'RR'
-                j["ebid"] = 1
-                j["esign"] = 1
-            case "reponse-elec-avec-signature": # cons_repec = 'OR'
-                j["ebid"] = 0
-                j["esign"] = 1
-            case _: # cons_repec = 'OR'
-                j["ebid"] = 9
-                j["esign"] = 9
+            case "reponse-elec-oblig-avec-signature" | "electroSigObl" | "electroSigOblDocs":
+                j["ebid"], j["esign"] = 1, 1
+            case "reponse-elec-oblig" | "EectroSanSignOblg": 
+                j["ebid"], j["esign"] = 1, 0
+            case "reponse-elec-avec-signature" | "signOblg":
+                j["ebid"], j["esign"] = 0, 1
+            case "reponse-elec" | "electrononobligsanssign":
+                j["ebid"], j["esign"] = 0, 0
+            case _:
+                j["ebid"], j["esign"] = 9, 9
 
         ll = j["lots"]
+
+        ######################
+        # Brute mapping:
+        # EectroSanSignOblg       = "Réponse électronique obligatoire pour cette consultation, sans signature électronique"
+        # electrononobligsanssign = "Réponse électronique non obligatoire pour cette consultation, sans signature électronique"
+        # electroSigObl           = "Réponse électronique obligatoire pour cette consultation, avec signature électronique requise"
+        # signOblg                = "Réponse électronique non obligatoire pour cette consultation, avec signature électronique requise"
+        # nonElectro              = "Pas de réponse électronique pour cette consultation"
+        # electroSigOblDocs       = "Réponse électronique obligatoire pour cette consultation, avec signature électronique requise pour tous les documents"
+        ######################
+
 
         reserved_t, variant_t = False, False
         estimate_t, bond_t = 0, 0
@@ -503,7 +509,8 @@ def timeRabat(snap: Union[datetime, date, None], default_time: time = time(0, 0)
     if not snap: return None
     if not isinstance(snap, datetime):
         naive_dt = datetime.combine(snap, default_time)
-        return rabat_tz.localize(naive_dt)
+        # return rabat_tz.localize(naive_dt)
+        return naive_dt
     return snap
 
 
@@ -840,8 +847,11 @@ def updateTender(
             "cancelled", "deadline", "estimate", "bond", "size_read", "size_bytes",
             "contact_name", "contact_phone", "contact_email", "contact_fax",
             "address_withdrawal", "address_bidding", "address_opening",
-            "title", "reference", "published", "ebid", "esign",
-            "plans_price", "reserved", "variant", "location", "acronym", "link"
+            "title", "reference", "ebid", "esign",
+            "plans_price", "reserved", "variant", "location", 
+            # "link",
+            # "acronym", 
+            # "published", 
         )
 
         for field in CHECK_FIELDS:
@@ -1097,7 +1107,7 @@ def lotsChanged(lots_data, tender):
     i = 0
     for lot in lots:
         i += 1
-        helper.printMessage('TRACE', 'm.lotsChanged', f"#### Checking Lot {i}/{ll} ...")
+        helper.printMessage('DEBUG', 'm.lotsChanged', f"#### Checking Lot {i}/{ll} ...")
         lot_number = lot.number
         lot_data = data_by_number.get(lot_number)
 

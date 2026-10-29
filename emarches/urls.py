@@ -27,12 +27,8 @@ urlpatterns = i18n_patterns(
     path('bidding/',        include('bidding.urls')),
     path('bos/',            include('bos.urls')),
     
-    path('__debug__/', include('debug_toolbar.urls')),
+    # path('__debug__/', include('debug_toolbar.urls')),
 )
-
-urlpatterns += [
-    path("robots.txt", robots_txt, name="robots_txt"),
-]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -50,16 +46,21 @@ sitemaps = {
 
 urlpatterns += [
     path(
-        'sitemap.xml',
+        'sitemap.xml/',
         cache_page(86400)(clean_sitemap_index),
         {'sitemaps': sitemaps}, 
         name='django.contrib.sitemaps.views.index'
     ),
 
     path(
-        'sitemap-<section>.xml', 
+        'sitemap-<section>.xml/', 
         cache_page(86400)(clean_sitemap),
         {'sitemaps': sitemaps}, 
         name='django.contrib.sitemaps.views.sitemap'
     ),
 ]
+
+urlpatterns += [
+    path("robots.txt/", robots_txt, name="robots_txt"),
+]
+

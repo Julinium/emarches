@@ -65,7 +65,7 @@ INSTALLED_APPS = [
 
     'django_cleanup',
     'user_agents',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'parler',
 
     # TODO: "ics custom format"     -> "https://chatgpt.com/c/69b5e44d-6ca0-8331-aeb4-aec09baf9285",
@@ -105,7 +105,7 @@ MIDDLEWARE = [
 
     'django.middleware.locale.LocaleMiddleware',
     'allauth.account.middleware.AccountMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     # 'emarches.middleware.CustomLoggingMiddleware',
 
 ]

@@ -15,32 +15,23 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db import models
-from django.db.models import Count, Q, Sum
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
 from django.db.models.functions import Lower
-from django.http import FileResponse, HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.decorators import method_decorator
-from django.utils.translation import gettext_lazy as trans
+from django.utils.translation import get_language_from_request, gettext_lazy as _
 from django.views.decorators.cache import cache_control
-from weasyprint import HTML
+
+from .weasy import generate_items_csv
+from insights.weasy import recent_file_exists
 
 from base.context_processors import portal_context
 from base.models import Category, Client, Harvest
 from base.texter import normalize_text
 from bdc.models import PurchaseOrder
 from nas.models import Sticky
-
-# import tempfile
-
-
-
-# from easy_pdf.views import PDFTemplateView
-
-
 
 BDC_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 BDC_ITEMS_PER_PAGE = 10
@@ -282,14 +273,12 @@ def bdc_favorite_list(request):
         logger_portal.warning("E403: User not authenticated", extra={"request": request})
         return HttpResponse(_("Permission denied"), status=403)
 
-    # us = get_user_settings(request)
     pro_context = portal_context(request)
     us = pro_context['user_settings']
     if us: 
         BDC_FULL_PROGRESS_DAYS = int(us.p_orders_full_bar_days)
         BDC_ORDERING_FIELD = us.p_orders_ordering_field
         BDC_ITEMS_PER_PAGE = int(us.p_orders_items_per_page)
-        # SHOW_TODAYS_EXPIRED = us.p_orders_show_expired
 
     sort = request.GET.get('sort', BDC_ORDERING_FIELD)
     page = request.GET.get('page', None)
@@ -365,7 +354,6 @@ def bdc_details(request, pk=None):
     full_bar_days = int(us.p_orders_full_bar_days) if us.p_orders_full_bar_days else BDC_FULL_PROGRESS_DAYS
     first_articles = int(us.p_orders_first_articles) if us.p_orders_first_articles else BDC_FIRST_ARTICLES
 
-    # all_articles = bdc.articles
     featured = bdc.articles.all()[:first_articles] #if 
     extra = bdc.articles.count() - first_articles
     ddl_classes = 'fw-bold'
@@ -376,20 +364,6 @@ def bdc_details(request, pk=None):
 
     pinned = bdc.stickies.filter(user=user).first()
 
-    show_export = 'yes'
-    show_print = 'yes'
-
-    pdf_file_name = f'eMarches.com-{ bdc.chrono }-items.pdf'
-    pdf_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "pdf" / f"{ bdc.id }"
-    pdf_file_path = pdf_file_dir / f"{ pdf_file_name }"
-
-    csv_file_name = f'eMarches.com-{ bdc.chrono }-items.csv'
-    csv_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
-    csv_file_path = csv_file_dir / f"{ csv_file_name }"
-
-    show_print = "yes" if pdf_file_path.exists() else "no"
-    show_export = "yes" if csv_file_path.exists() else "no"
-
     context = {
         'bdc'           : bdc,
         'full_bar_days' : full_bar_days,        
@@ -397,11 +371,7 @@ def bdc_details(request, pk=None):
         'featured'      : featured,
         'extra'         : extra,
         'ddl_classes'   : ddl_classes,
-        'show_export'   : show_export,
-        'show_print'    : show_print,
         'empty_items'   : empty_items,
-        'pdf_file_name' : pdf_file_name,
-        'csv_file_name' : csv_file_name,
         }
 
     logger_portal.info("PurchaseOrder details view", extra={"request": request})
@@ -451,8 +421,7 @@ def bdc_items_pdf(request, pk=None, fn=None):
 
 
 @login_required(login_url="account_login")
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def bdc_items_csv(request, pk=None, fn=None):
+def bdc_items_csv(request, pk=None):
 
     user = request.user
     if not user or not user.is_authenticated : 
@@ -463,32 +432,44 @@ def bdc_items_csv(request, pk=None, fn=None):
         logger_portal.warning("E405: Bad request method", extra={"request": request})
         return HttpResponse(_("Bad request"), status=405)
 
-    if pk == None or fn == None: 
+    if pk == None:
         logger_portal.warning("E405: Bad request parameters", extra={"request": request})
-        return HttpResponse(_("Not found"), status=404)
-
+        return HttpResponse(_("Bad request"), status=405)
+    
     bdc = get_object_or_404(PurchaseOrder, id=pk)
     if not bdc : 
         logger_portal.warning("E404: PO not found", extra={"request": request})
         return HttpResponse(_("Not found"), status=404)
+
+    logger_portal.info("PO items CSV view", extra={"request": request})
+
+    lang_code = get_language_from_request(request, check_path=True)
+    if lang_code is None or lang_code == '': lang_code = 'en'
+
+    file_name = f'eMarches.com-PO-{ bdc.chrono }-{lang_code}.csv'
+    dir_name = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
+    file_path = os.path.join(dir_name, file_name)
+    recent_file_found = recent_file_exists(file_path, 0)
+    csv_file_path = file_path if recent_file_found else generate_items_csv(request, bdc, dir_name, file_name)
+
+    if csv_file_path:
+        if os.path.exists(csv_file_path):
+            csv_file_name = os.path.basename(csv_file_path)
+            file_size = os.path.getsize(csv_file_path)
+            response = HttpResponse()
+            response['Content-Type'] = 'application/csv'
+            response['X-Accel-Redirect'] = f'/items/csv/{ bdc.id }/{ csv_file_name }'
+            response['Content-Disposition'] = f'attachment; filename="{ csv_file_name }"'
+            response['Content-Length'] = file_size
+
+            logger_portal.info("PO items CSV File Download allowed", extra={"request": request, "file_bytes": file_size})
+            return response        
+
+        logger_portal.warning("E404: Files not found", extra={"request": request})
+        return HttpResponse(_("Not found") + f": File does not exist", status=404)
     
-    csv_file_name = fn
-    csv_file_dir  = Path(settings.FILES_MEDIA_ROOT) / "bdc" / "items" / "csv" / f"{ bdc.id }"
-    csv_file_path = csv_file_dir / f"{ csv_file_name }"
-
-    if os.path.exists(csv_file_path):
-        file_size = os.path.getsize(csv_file_path)
-        response = HttpResponse()
-        response['Content-Type'] = 'application/octet-stream'
-        response['X-Accel-Redirect'] = f'/items/csv/{ bdc.id }/{ csv_file_name }'
-        response['Content-Disposition'] = f'attachment; filename="{ csv_file_name }"'
-        response['Content-Length'] = file_size
-
-        logger_portal.info("PO items csv File Download allowed", extra={"request": request, "file_bytes": file_size})
-        return response
-
     logger_portal.warning("E404: Files not found", extra={"request": request})
-    return HttpResponse(_("Not found"), status=404)
+    return HttpResponse(_("Not found") + f": File generating failed", status=404)
 
 
 @login_required(login_url="account_login")
@@ -554,7 +535,6 @@ def client_list(request):
             bdcs_count=Count('purchase_orders', filter=Q(purchase_orders__deadline__gte=assa)),
             all_bdcs_count=Count('purchase_orders')
         ).filter(
-            # bdcs_count__gt=0,
             all_bdcs_count__gt=0
         )
 
@@ -567,8 +547,6 @@ def client_list(request):
         if sort == 'bdcs_count': ordering = ['-bdcs_count']
         if sort == '-bdcs_count': ordering = ['bdcs_count']
     else: ordering = []
-
-    # ordering.append('-created')
 
     query_dict['filters'] = filters
 
@@ -598,8 +576,6 @@ def client_list(request):
     return render(request, 'bdc/clients-list.html', context)
 
 
-# @login_required(login_url="account_login")
-# @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def locations_list(request):
 
     json_path = os.path.join(settings.BASE_DIR, 'scraper', 'data', 'regions-cities.json')
@@ -610,12 +586,10 @@ def locations_list(request):
         states = []
         logger_portal.error("E404: Regions-cities file not found", extra={"request": request})
         return HttpResponse('File Not Found Error', code=404)
-        # Or raise a 404 / show error page
     except json.JSONDecodeError:
         states = []
         logger_portal.error("E500: JSON Decode Error", extra={"request": request})
         return HttpResponse('Server error', code=500)
-        # Handle corrupted JSON
 
     context = {
         'states': states
@@ -647,7 +621,6 @@ def bdc_stickies_add(request, pk=None):
             purchase_order=purchase_order,
         )
         logger_portal.info(f"Purchase Order Favorited successfully: { purchase_order.id }")
-        # messages.success(request, trans('Item successfully added to your Favorites'))
 
         return HttpResponse(purchase_order.id, status=200)
     logger_portal.warning("Failed to favorite Purchase Order", extra={"request": request})
@@ -689,11 +662,9 @@ def bdc_stickies_remove_all(request):
     if not user or not user.is_authenticated :
         return HttpResponse(_("Permission denied"), status=403)
     
-    # perimeter = request.POST.get('perimeter', '') 
     data = json.loads(request.body)
     perimeter   = data.get('perimeter', 'all')
 
-    # perimeters = ['expired', 'deliberated', 'awarded', 'unsuccessful', 'all']
     sticked = Sticky.objects.filter(user=user)
     if perimeter == 'expired':
         sticked = sticked.filter(purchase_order__deadline__lt=datetime.now(RABAT_TZ))

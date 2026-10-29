@@ -102,7 +102,7 @@ def robots_txt(request):
         # "Disallow: /porders/",
         # "Disallow: /bidders/",
         "Disallow: /bidding/",
-        "Sitemap: https://new.emarches.com/sitemap.xml",
+        "Sitemap: https://www.emarches.com/sitemap.xml",
     ]
     return HttpResponse("\n".join(lines), content_type="text/plain")
 

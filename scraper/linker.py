@@ -99,7 +99,7 @@ def pg2Links(driver, page_number, pages):
                     "has_enviro": has_enviro,
                 }
                 links.append(link)
-                helper.printMessage('DEBUG', 'l.pg2Links', f'\tGot link {page_number:02}.{i:02} = {chrono}.')
+                helper.printMessage('DEBUG', 'l.pg2Links', f'\tGot link {i:02}@{page_number:02}/{pages} = {chrono}.')
                 helper.printMessage('TRACE', 'l.pg2Links', f'\tLink data: {link}.')
 
             except Exception as xc:
@@ -113,90 +113,6 @@ def pg2Links(driver, page_number, pages):
     helper.printMessage('INFO', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:02}')
     
     return links
-
-
-
-def x_pg2Links(driver, page_number, pages):
-    helper.printMessage('DEBUG', 'l.pg2Links', f'### Looking at page {page_number:02}/{pages:02}...')
-    links = []
-    try:
-        i = 1
-        table_body = driver.find_element(By.XPATH, '/html/body/form/div[3]/div[2]/div/div[5]/div[1]/div[2]/div[2]/table/tbody')
-        table_body_html = table_body.get_attribute("innerHTML")
-        soup = BeautifulSoup(table_body_html, "html.parser")
-
-        rows = soup.find_all("tr")
-
-        for row in rows:
-            tds = row.find_all("td")
-            if len(tds) < 6:
-                continue
-            second_td = tds[1]
-            divs = second_td.find_all("div", recursive=False)
-            published_text = divs[3].get_text(strip=True) if len(divs) > 3 else ""
-            has_enviro = second_td.find("img") is not None
-
-            sixth_td = tds[5]
-            anchor = sixth_td.find("a")
-            href = anchor.get("href").strip() if anchor and anchor.has_attr("href") else None
-            if href:
-                HREF_PREFIX = C.LINK_PREFIX.replace(C.SITE_INDEX, '')
-                drat = href.replace(HREF_PREFIX, '')
-                portal_id_text = drat.split(C.LINK_STITCH)[0]
-                organism_text = drat.split(C.LINK_STITCH)[1]
-
-                link = {
-                    "chrono": portal_id_text,
-                    "acronym": organism_text,
-                    "published": helper.getDateTime(published_text),
-                    "has_enviro": has_enviro,
-                }
-                links.append(link)
-
-                helper.printMessage('TRACE', 'l.pg2Links', f'+++ Got the link {page_number:02}.{i:02} = {portal_id_text}')
-            else:
-                helper.printMessage('ERROR', 'l.pg2Links', f'Could not get link for {page_number:02}.{i:02}', 1, 2)
-            i += 1
-
-    except Exception:
-        helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:02}', 1, 2)
-        traceback.print_exc()
-
-    helper.printMessage('DEBUG', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:02}')
-    
-    return links
-
-
-def exportLinks(links, csv_name="links.csv"):
-    """
-    # Synopsis:
-        Exports links to a csv file. File is placed under {SELENO_DIR/exports} and named {csv_name}.
-    # Params:
-        links: List of links to export.
-        csv_name: Name of the csv file to create.
-    # Return:
-        full path to the exported csv file.
-    """
-    helper.printMessage('INFO', 'l.exportLinks', f'Exporting links to {csv_name} ...\n')
-    file = ''
-    if len(links) > 0 :
-        try:
-            expo_dir = f'{C.SELENO_DIR}/exports'
-            if not os.path.exists(expo_dir) : os.mkdir(expo_dir)
-            file = f'{expo_dir}/{csv_name}'
-            with open(file, 'w', newline='') as linkscsv:
-                linkwriter = csv.writer(linkscsv)
-                for l in links:
-                    linkwriter.writerow(l)
-        except Exception as e :
-            helper.printMessage('FATAL', 'l.exportLinks', f'Something went wrong while exporting links')
-            traceback.print_exc()
-            return None
-        helper.printMessage('INFO', 'l.exportLinks', 'Exported links to file. No complains.\n')
-    else:
-        helper.printMessage('WARN', 'l.exportLinks', 'File was empty and was not exported.\n')
-
-    return file
 
 
 def mergeLinks(links=[], parkour=None):
@@ -213,32 +129,6 @@ def mergeLinks(links=[], parkour=None):
         )
     helper.printMessage('TRACE', 'l.mergeLinks', f'+++ Created/updated Links: { len(clinked) }.')
     return clinked
-
-
-def xergeLinks(links=[], parkour=None):
-    ll = len(links)
-    helper.printMessage('DEBUG', 'l.mergeLinks', f'Started merging { ll } link ...')
-    i = 0
-    creations = 0
-    for l in links:
-        i += 1
-        helper.printMessage('DEBUG', 'l.mergeLinks', f'>>> Started merging link { i }/{ ll }...')
-        published = helper.getDateTime(l.get('published'))
-        link, created = Link.objects.update_or_create(
-                chrono=l.get('chrono'),
-                acronym=l.get('acronym'),
-                defaults={
-                    "published": published,
-                    "has_enviro": l.get('has_enviro'),
-                    "parkour": parkour,
-                }
-            )
-        if created == True:
-            creations += 1
-            helper.printMessage('TRACE', 'l.mergeLinks', f'+++ Creted Link item { link.chrono }')
-        else:
-            helper.printMessage('TRACE', 'l.mergeLinks', f'~~~ Updated Link item { link.chrono }')
-    return creations
 
 
 def db2Links(back_days=30):
@@ -273,15 +163,19 @@ def getLinks(back_days=30):
     if driver == None: return links
     
     try:
-        helper.printMessage('DEBUG', 'l.getLinks', 'Submitting search form with empty terms ...', 1)
+        helper.printMessage('TRACE', 'l.getLinks', 'Filling in search form ...', 1)
         fillForm(driver, back_days)
+    except Exception as e :
+        helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while filling in search form.', 1, 1)
+        traceback.print_exc()
+    
+    try:
+        helper.printMessage('TRACE', 'l.getLinks', 'Submitting search form ...', 1)
         org_search_field = driver.find_element("id", "ctl0_CONTENU_PAGE_AdvancedSearch_orgName")
         org_search_field.send_keys(Keys.ENTER)
     except Exception as e :
-        helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while submitting search form: {str(e)}', 1, 1)
-        if driver: driver.quit()
+        helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while submitting search form.', 1, 1)
         traceback.print_exc()
-        return links
 
     try:
         helper.printMessage('DEBUG', 'l.getLinks', 'Finding page size element ...')
@@ -309,7 +203,6 @@ def getLinks(back_days=30):
         return links
 
     i = 1
-    # helper.printMessage('INFO', 'l.getLinks', f'Reading links from page {i:02}/{pages:02} ...')
     try:
         links = pg2Links(driver, i, pages)
     except:
@@ -367,10 +260,6 @@ def getLinks(back_days=30):
                 started       = started,
                 finished      = timezone.now(),
                 machine       = machine,
-                # deadline_min  = models.DateField()
-                # deadline_max  = models.DateField()
-                # published_min = models.DateField()
-                # published_max = models.DateField()
                 page_length   = C.LINES_PER_PAGE,
             )
 

@@ -159,12 +159,11 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
    
         csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-{ lang_code }.csv'
         output_dir = dir_name if dir_name else Path(settings.FILES_MEDIA_ROOT) / "bidders" / "csv"        
-        # csv_file_name = file_name if file_name else f'eMarches.com-{ bidder.id }-analysis.csv'
 
         output_dir.mkdir(parents=True, exist_ok=True)
         output_path = output_dir / f"{ csv_file_name }"
 
-        with open(output_path, "w", newline="", encoding="utf-8") as f:
+        with open(output_path, "w", newline="", encoding="utf-8-sig") as f:
             writer = csv.writer(f)
             writer.writerow([
                 _('Tender'),
@@ -219,7 +218,7 @@ def generate_csv(request, bidder, dir_name=None, file_name=None):
         traceback.print_exc()
 
     return None
-    
+
 
 def recent_file_exists(file_path: str | Path, hours_ago: int) -> bool:
     path = Path(file_path)

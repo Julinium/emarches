@@ -127,26 +127,27 @@ def getDateTime(datetime_str):
         return rabat_tz.localize(naive_dt)
     if len(datetime_str) == 10:
         return datetime.strptime(datetime_str, '%d/%m/%Y').date()
-    if len(datetime_str) >= 19:
+    if len(datetime_str) >= 17:
         months_map = {
-                # 'Jan': 'Jan', 
-                # 'Mar': 'Mar', 
-                # 'Sep': 'Sep', 
-                # 'Oct': 'Oct', 
-                # 'Nov': 'Nov', 
-                # 'Dec': 'Dec'
+                'Jan': 'Jan', 
                 'Fév': 'Feb', 
+                'Mar': 'Mar',
                 'Avr': 'Apr',
                 'Mai': 'May', 
                 'Juin': 'Jun', 
                 'Juil': 'Jul', 
-                'Aoû': 'Aug',
+                'Aoû': 'Aug', 
+                'Sep': 'Sep', 
+                'Oct': 'Oct', 
+                'Nov': 'Nov', 
+                'Dec': 'Dec',
             }
         parts = datetime_str[4:].split()
         if len(parts) > 1:
             parts[1] = months_map.get(parts[1], parts[1])
-            cons_deadline = " ".join(parts)            
-        return datetime.strptime(cons_deadline, '%d %b %Y %H:%M')
+            cons_deadline = " ".join(parts)
+            naive_dt = datetime.strptime(cons_deadline, '%d %b %Y %H:%M')
+        return rabat_tz.localize(naive_dt)
 
     return None
 

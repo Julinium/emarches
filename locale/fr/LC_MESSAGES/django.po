@@ -60,7 +60,7 @@ msgstr "Date de création"
 
 #: base/templates/base/about.html:5 base/templates/base/about.html:11
 msgid "About Us"
-msgstr "À propos de nous"
+msgstr "À propos"
 
 #: base/templates/base/about.html:12
 msgid "Learn more about who we are, what we do, and our journey."
@@ -80,7 +80,7 @@ msgstr ""
 "eMarches est un cabinet de conseil en pleine croissance spécialisé dans les "
 "marchés publics au Maroc. Depuis notre création en 2024, nous nous engageons "
 "à aider les entreprises et les organisations à saisir les opportunités du "
-"marché des commandes publiques marocaines."
+"marché de la commande publique marocaine."
 
 #: base/templates/base/about.html:28
 msgid "The Hedgehog"
@@ -343,7 +343,7 @@ msgstr "Moyen de contact préféré"
 #: templates/portal/snippets/tenders/search-form.html:206
 #: templates/portal/snippets/tenders/search-form.html:217
 msgid "Any"
-msgstr "Tous"
+msgstr "Peu importe"
 
 #: base/templates/base/contact.html:55 nas/models.py:82 nas/models.py:224
 #: nas/models.py:244 nas/models.py:285 templates/base/includes/footer.html:57
@@ -1195,7 +1195,7 @@ msgstr "Date limite de dépôt"
 
 #: bdc/models.py:21
 msgid "Works execution location"
-msgstr "Lieu d'exécution des travaux"
+msgstr "Lieu d'exécution des prestations"
 
 #: bdc/models.py:23
 msgid "Date created"
@@ -1464,7 +1464,7 @@ msgstr "Fichier de soumission"
 #: bidding/models.py:144 templates/bidding/bid-details.html:281
 #: templates/bidding/snippets/bids/bid-item.html:180
 msgid "Receipt file"
-msgstr "Récépissé"
+msgstr "Récépissé de soumission"
 
 #: bidding/models.py:146 templates/bdc/bdc-details.html:115
 #: templates/bdc/bdc-details.html:129 templates/bidding/bid-details.html:143
@@ -1510,7 +1510,7 @@ msgstr "Dernière modification de l'appel d'offres"
 
 #: bidding/models.py:328
 msgid "Samples deadline"
-msgstr "Date limite pour les échantillons"
+msgstr "Date limite des échantillons"
 
 #: bidding/models.py:337
 msgid "Meeting deadline"
@@ -2535,7 +2535,7 @@ msgstr "Qualifications"
 #: templates/nas/profile/snippets/companies-list.html:7
 #: templates/nas/snippets/menu-account.html:42
 msgid "Companies"
-msgstr "Entreprises"
+msgstr "Sociétés"
 
 #: nas/models.py:174 nas/models.py:387
 msgid "Date Added"
@@ -4257,7 +4257,7 @@ msgid "running tenders"
 msgstr "appels d'offres en cours"
 
 #: templates/base/home.html:24
-msgid "on the game"
+msgid "at stake"
 msgstr "en jeu"
 
 #: templates/base/home.html:28 templates/bidding/contract-details.html:102

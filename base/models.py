@@ -291,53 +291,53 @@ class Qualif(models.Model):
 class Tender(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     chrono = models.CharField(max_length=16, blank=True, null=True)
-    title = models.TextField(blank=True, null=True, verbose_name="Title")
-    reference = models.CharField(max_length=512, blank=True, null=True, verbose_name="Reference")
-    published = models.DateField(blank=True, null=True, db_index=True, verbose_name="Date published")
-    deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name="Bidding deadline")
+    title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
+    reference = models.CharField(max_length=512, blank=True, null=True, verbose_name=_("Reference"))
+    published = models.DateField(blank=True, null=True, db_index=True, verbose_name=_("Date published"))
+    deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name=_("Bidding deadline"))
 
-    lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name="Lots count")
-    estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total estimate")
-    bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Total bond")
-    plans_price = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name="Plans price")
+    lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name=_("Lots count"))
+    estimate = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Total estimate"))
+    bond = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Total bond"))
+    plans_price = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True, default=0, verbose_name=_("Plans price"))
 
-    reserved = models.BooleanField(blank=True, null=True, verbose_name="Reserved to SMB+")
-    variant = models.BooleanField(blank=True, null=True, verbose_name="Variants accepted")
-    has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name="Licenses required")
-    has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name="Qualifications required")
-    has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name="Samples required")
-    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name="Site survey scheduled")
-    has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name="Meetings scheduled")
-    has_minutes = models.BooleanField(blank=True, null=True, default=False, verbose_name="Minutes taken")
-    has_enviro = models.BooleanField(blank=True, null=True, default=False, verbose_name="Environment clauses")
+    reserved = models.BooleanField(blank=True, null=True, verbose_name=_("Reserved to SMB+"))
+    variant = models.BooleanField(blank=True, null=True, verbose_name=_("Variants accepted"))
+    has_agrements = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Licenses required"))
+    has_qualifs = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Qualifications required"))
+    has_samples = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Samples required"))
+    has_meetings = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Site survey scheduled"))
+    has_visits = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Meetings scheduled"))
+    has_minutes = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Minutes taken"))
+    has_enviro = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Environment clauses"))
 
-    location = models.CharField(max_length=1024, blank=True, null=True, verbose_name="Execution location")
-    ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic bidding")  # 1: Required, 0: Not required, Else: NA'
-    esign = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name="Electronic signature") # 1: Required, 0: Not required, Else: NA'
-    size_read = models.CharField(max_length=128, blank=True, null=True, verbose_name="Files read size")
-    size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name="Files bytes")
-    address_withdrawal = models.TextField(blank=True, null=True, verbose_name="Withdrawal address")
-    address_bidding = models.TextField(blank=True, null=True, verbose_name="Bidding address")
-    address_opening = models.TextField(blank=True, null=True, verbose_name="Awarding address")
-    contact_name = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact name")
-    contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact phone")
-    contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact email")
-    contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name="Contact fax")
-    cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name="Cancelled")
+    location = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Execution location"))
+    ebid = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name=_("Electronic bidding"))  # 1: Required, 0: Not required, Else: NA'
+    esign = models.SmallIntegerField(blank=True, null=True, default=9, verbose_name=_("Electronic signature")) # 1: Required, 0: Not required, Else: NA'
+    size_read = models.CharField(max_length=128, blank=True, null=True, verbose_name=_("Files read size"))
+    size_bytes = models.BigIntegerField(blank=True, null=True, verbose_name=_("Files bytes"))
+    address_withdrawal = models.TextField(blank=True, null=True, verbose_name=_("Withdrawal address"))
+    address_bidding = models.TextField(blank=True, null=True, verbose_name=_("Bidding address"))
+    address_opening = models.TextField(blank=True, null=True, verbose_name=_("Awarding address"))
+    contact_name = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact name"))
+    contact_phone = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact phone"))
+    contact_email = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact email"))
+    contact_fax = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Contact fax"))
+    cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Cancelled"))
     deleted = models.BooleanField(blank=True, null=True, default=False)
-    link = models.CharField(max_length=256, blank=True, null=True, verbose_name="Official link")
+    link = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Official link"))
     acronym = models.CharField(max_length=8, blank=True, null=True)
 
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="tenders", db_column='category', blank=True, null=True, verbose_name="Category")
-    mode = models.ForeignKey(Mode, on_delete=models.DO_NOTHING, related_name='tenders', db_column='mode', blank=True, null=True, verbose_name="Awarding mode")
-    procedure = models.ForeignKey(Procedure, on_delete=models.DO_NOTHING, related_name='tenders', db_column='procedure', blank=True, null=True, verbose_name="Procedure")
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, related_name='tenders', db_column='client', blank=True, null=True, verbose_name="Public client")
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name="tenders", db_column='category', blank=True, null=True, verbose_name=_("Category"))
+    mode = models.ForeignKey(Mode, on_delete=models.DO_NOTHING, related_name='tenders', db_column='mode', blank=True, null=True, verbose_name=_("Awarding mode"))
+    procedure = models.ForeignKey(Procedure, on_delete=models.DO_NOTHING, related_name='tenders', db_column='procedure', blank=True, null=True, verbose_name=_("Procedure"))
+    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING, related_name='tenders', db_column='client', blank=True, null=True, verbose_name=_("Public client"))
     kind = models.ForeignKey(Kind, on_delete=models.DO_NOTHING, related_name='tenders', db_column='kind', blank=True, null=True)
     ###### /!\ If you get the following error when migrating for the first time:
     # django.core.exceptions.FieldDoesNotExist: RelDomainTender has no field named 'tender'
     # Comment out the 'domains' field in 'Tender' class and the whole 'RelDomainTender' class definition.
     # Uncomment them after first migration succeeds and then make migrations and migrate. It should work.
-    domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name="Domains of activity")
+    domains = models.ManyToManyField(Domain, through='RelDomainTender', related_name='tenders', verbose_name=_("Domains of activity"))
 
     keywords = models.TextField(blank=True, null=True, editable=False)
     cliwords = models.TextField(blank=True, null=True, editable=False)
@@ -345,8 +345,8 @@ class Tender(models.Model):
     locwords = models.TextField(blank=True, null=True, editable=False)
     domwords = models.TextField(blank=True, null=True, editable=False)
 
-    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name="Date created")
-    updated  = models.DateTimeField(blank=True, null=True, verbose_name="Date updated")
+    created  = models.DateTimeField(blank=True, null=True, auto_now_add=True, db_index=True, verbose_name=_("Date created"))
+    updated  = models.DateTimeField(blank=True, null=True, verbose_name=_("Date updated"))
 
 
     class Meta:

@@ -89,7 +89,7 @@ def tender_list(request):
             if k in allowed_keys and v != "" and k not in ("page", "sort")
         }
 
-        if "ddlnn" not in query_dict:            
+        if "ddlnn" not in query_dict:
             if "results" in query_dict:
                 rd = datetime.now(RABAT_TZ).date() - timedelta(days=TENDERS_DEFAULT_RESULTS_PAST)
                 query_dict["ddlnn"] = rd.strftime("%Y-%m-%d")
@@ -346,7 +346,7 @@ def tender_list(request):
         "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
         "minutes_end", "-minutes_end", "published", "-published", 
         "views_count", "-views_count", "downloads_count", "-downloads_count", 
-        "favorites_count", "-favorites_count"
+        # "favorites_count", "-favorites_count"
         ]
 
     if sort not in allowed_keys: sort = None
@@ -354,7 +354,8 @@ def tender_list(request):
     if sort and sort != "":
         reversed_keys = [
             "published", "-published", "views_count", "-views_count", 
-            "downloads_count", "-downloads_count", "favorites_count", "-favorites_count"
+            "downloads_count", "-downloads_count", 
+            # "favorites_count", "-favorites_count"
             ]
         if sort in reversed_keys:
             if sort.startswith("-"): sort = sort.lstrip("-")
@@ -371,7 +372,7 @@ def tender_list(request):
     if "minutes_end" in ordering or "-minutes_end" in ordering: tenders = tenders.annotate(minutes_end=Max("openings__date"))
     if "views_count" in ordering or "-views_count" in ordering: tenders = tenders.annotate(views_count=Count("views", distinct=True))
     if "downloads_count" in ordering or "-downloads_count" in ordering: tenders = tenders.annotate(downloads_count=Count("downloads", distinct=True))
-    if "favorites_count" in ordering or "-favorites_count" in ordering: tenders = tenders.annotate(favorites_count=Count("favorites", distinct=True))
+    # if "favorites_count" in ordering or "-favorites_count" in ordering: tenders = tenders.annotate(favorites_count=Count("favorites", distinct=True))
 
     colleagues = get_colleagues(user)
 
@@ -752,7 +753,7 @@ def tender_favorite_list(request):
         "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
         "minutes_end", "-minutes_end", "published", "-published", 
         "views_count", "-views_count", "downloads_count", "-downloads_count", 
-        "favorites_count", "-favorites_count"
+        # "favorites_count", "-favorites_count"
         ]
 
 
@@ -769,7 +770,8 @@ def tender_favorite_list(request):
     if sort and sort != "":
         reversed_keys = [
             "published", "-published", "views_count", "-views_count", 
-            "downloads_count", "-downloads_count", "favorites_count", "-favorites_count"
+            "downloads_count", "-downloads_count", 
+            # "favorites_count", "-favorites_count"
             ]
         if sort in reversed_keys:
             if sort.startswith("-"): sort = sort.lstrip("-")
@@ -792,7 +794,7 @@ def tender_favorite_list(request):
     if "minutes_end" in ordering or "-minutes_end" in ordering: tenders = tenders.annotate(minutes_end=Max("openings__date"))
     if "views_count" in ordering or "-views_count" in ordering: tenders = tenders.annotate(views_count=Count("views", distinct=True))
     if "downloads_count" in ordering or "-downloads_count" in ordering: tenders = tenders.annotate(downloads_count=Count("downloads", distinct=True))
-    if "favorites_count" in ordering or "-favorites_count" in ordering: tenders = tenders.annotate(favorites_count=Count("favorites", distinct=True))
+    # if "favorites_count" in ordering or "-favorites_count" in ordering: tenders = tenders.annotate(favorites_count=Count("favorites", distinct=True))
 
     colleagues = get_colleagues(user)
 

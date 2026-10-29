@@ -8,10 +8,10 @@
     ## If no files, get the files.
     ## If item in a special list, remove it.
 
-
 # 03. Periodically, check for and delete:
     ## Orphan files.
     ## Files for items over certain age old.
+
 
 import os
 import random
@@ -57,7 +57,7 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
     # Return: Tender model QuerySet.
     """
     
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline older than {past_days} days ...")
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline up to {past_days} days back ...")
     today_date = timezone.now()
     target_date = today_date - timedelta(days=past_days)
     current_tenders = Tender.objects.filter(deadline__gte=target_date)
@@ -182,8 +182,8 @@ def getDCE(tender):
     soup = BeautifulSoup(request_query.content, 'html.parser')
     
     if request_query.status_code != 200 : 
-        helper.printMessage('ERROR', 'd.getDCE', f'Download query: Response Status Code: {request_query.status_code} !')
-        # helper.printMessage('TRACE', 'd.getDCE', f'\n\n\n===========\n{soup}\n===========\n\n')
+        helper.printMessage('ERROR', 'd.getDCE', f'Download query returned Status Code: {request_query.status_code} !')
+        helper.printMessage('TRACE', 'd.getDCE', f'Backing off for a longer while: {C.SLEEP_4XX_MIN}s to {C.SLEEP_4XX_MAX}s')
         
         helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
         return None
@@ -419,3 +419,5 @@ def getExtraFiles(tender=None, extra_files=[]):
             continue
 
     return {'path': extra_path, 'files': added_files}
+
+

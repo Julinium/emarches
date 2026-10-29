@@ -3856,7 +3856,7 @@ msgid "running tenders"
 msgstr ""
 
 #: templates/base/home.html:24
-msgid "on the game"
+msgid "at stake"
 msgstr ""
 
 #: templates/base/home.html:28 templates/bidding/contract-details.html:102

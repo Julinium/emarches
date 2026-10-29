@@ -8,11 +8,10 @@ from django.utils.translation import gettext_lazy as _
 from base.models import Category, Client
 from base.texter import normalize_text as nt
 
-CREATE_ITEMS_PDF = False
-
 
 class PurchaseOrder(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    cancelled = models.BooleanField(blank=True, null=True, default=False, verbose_name=_("Cancelled"))
     chrono = models.CharField(max_length=256, blank=True, null=True, verbose_name=_("Portal Id"))
     title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
     reference = models.CharField(max_length=1024, blank=True, null=True, verbose_name=_("Reference"))
@@ -82,12 +81,6 @@ class PurchaseOrder(models.Model):
     
         super().save(*args, **kwargs)
 
-        from .weasy import bdc_generate_items_csv
-        bdc_generate_items_csv(self)
-        
-        if CREATE_ITEMS_PDF == True:
-            from .weasy import create_bdc_items_pdf
-            create_bdc_items_pdf(self)
 
 
 class Article(models.Model):
