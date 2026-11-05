@@ -4,14 +4,15 @@ import logging
 from pathlib import Path
 from decimal import Decimal
 from urllib.parse import urlencode
+from django.utils import timezone
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Count, DecimalField, ExpressionWrapper, F, Max, Min, Q, Sum
-from django.db.models.functions import NullIf, Round
+from django.db.models import Count, DecimalField, ExpressionWrapper, F, Max, Min, Q, Sum, Case, When, Value, DateField
+from django.db.models.functions import NullIf, Round, Least
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template.loader import render_to_string
@@ -49,7 +50,7 @@ def bidders_list(request):
     us = pro_context['user_settings']
     if us: 
         BIDDERS_ITEMS_PER_PAGE = int(us.general_items_per_page)
-    BIDDERS_ORDERING_FIELD = 'last_part' #'bidders_count'
+    BIDDERS_ORDERING_FIELD = 'last_win'
 
 
     def get_req_params(req):
@@ -62,7 +63,7 @@ def bidders_list(request):
         }
         if not 'sort' in query_dict:
             query_dict['sort'] = BIDDERS_ORDERING_FIELD
-            
+        
         query_string = {
             k: v for k, v in req.GET.items() if k in allowed_keys and v != '' and k != 'page'
         }
@@ -146,13 +147,32 @@ def bidders_list(request):
             wins_count = Count('deposits', filter=Q(deposits__winner=True), distinct=True), 
             bids_sum   = Sum('deposits__amount_a', filter=Q(deposits__amount_b__isnull=False)), 
             wins_sum   = Sum('deposits__amount_w', filter=Q(deposits__winner=True)), 
-            # last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
-            # last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)),
-            last_win   = Max('deposits__opening__tender__deadline', filter=Q(deposits__winner=True)), 
-            last_part  = Max('deposits__opening__tender__deadline', filter=Q(deposits__amount_b__isnull=False)),
+            _last_win   = Max('deposits__date', filter=Q(deposits__winner=True)), 
+            # last_win   = Max('deposits__opening__tender__deadline', filter=Q(deposits__winner=True)), 
+            _last_part  = Max('deposits__date', filter=Q(deposits__amount_b__isnull=False)), 
+            # last_part  = Max('deposits__opening__tender__deadline', filter=Q(deposits__amount_b__isnull=False)), 
             succ_rate = ExpressionWrapper(
                 Round(F("wins_sum") * Decimal('100') / NullIf(F("bids_sum"), Decimal('0')), 0),
                 output_field=DecimalField(max_digits=8, decimal_places=3),
+            )
+        )
+
+    all_bidders = all_bidders.annotate(
+            last_win=Case(
+                When(_last_win__isnull=True, then=Value(None)),
+                default=Least(
+                    F('_last_win'),
+                    Value(timezone.localdate()),
+                ),
+                output_field=DateField(),
+            ),
+            last_part=Case(
+                When(_last_part__isnull=True, then=Value(None)),
+                default=Least(
+                    F('_last_part'),
+                    Value(timezone.localdate()),
+                ),
+                output_field=DateField(),
             )
         )
 
@@ -161,16 +181,6 @@ def bidders_list(request):
     query_dict['filters'] = filters
 
     RABAT_TZ = ZoneInfo("Africa/Casablanca")
-
-    assa = datetime.now(RABAT_TZ)
-    for b in bidders:
-        if b.last_win:
-            if b.last_win > assa:
-                b.last_win = assa
-        if b.last_part:
-            if b.last_part > assa:
-                b.last_part = assa
-
 
     sort = query_dict['sort']
 
@@ -273,17 +283,6 @@ def bidder_pdf(request, pk=None):
     
     
     logger_portal.warning("E404: Files not found", extra={"request": request})
-
-    ########################
-    # print(f"============= file_path (existed={ recent_file_exists }):\n", file_path, "=============")
-    # s = {
-    #     "file_path": file_path,
-    #     "recent_file_exists": recent_file_exists,
-    #     "pdf_file_path": pdf_file_path,
-    #     }
-    # return HttpResponse(trans("Not found") + f": File generating failed\n\n\n{s}", status=404)
-    ########################
-
 
     return HttpResponse(trans("Not found") + f": File generating failed", status=404)
 

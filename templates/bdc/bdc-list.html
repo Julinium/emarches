@@ -7,7 +7,7 @@
 
 {% block content %}
         
-    <div class="d-flex justify-content-between px-2">
+    <div class="d-flex justify-content-between">
         <div class="">
             <span class="h3 me-1">{% trans "Purchase Orders" %}</span>
         </div>
@@ -36,6 +36,9 @@
         {% endif %}
     </div>
     <div class="mt-4">
+
+        {% include 'base/snippets/wip-pmmp-down.html' %}
+        
         {% for bdc in page_obj %}
             {% include 'bdc/snippets/bdcs/bdc-summary.html' %}
         {% endfor %}

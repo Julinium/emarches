@@ -265,6 +265,16 @@
                                                     </div>
                                                 </td>
                                             </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td class="p-3">
+                                                    <div>
+                                                        <span><i class="bi bi-exclamation-diamond text-danger"></i></span>
+                                                        <span class="text-danger me-2">{% trans "Not found" %}.</span>
+                                                        <span class="small fw-light">{% trans "Please try again later, or contact us if this problem persists." %}</span>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -358,7 +368,7 @@
                                 <span><i class="{{ bicons.changes }}"></i></span>
                                 <span class="fw-bold ms-1">{{ tender.changes.count }}</span>
                                 <span class="ms-2 fw-light">{% trans "Changes" %}</span>
-                                <!-- <span><i class="bi bi-exclamation-diamond px-1 ms-2 small fw-light text-warning"> {% trans "Experimental" %}</i></span> -->
+                                <span><i class="bi bi-exclamation-diamond px-1 ms-2 small fw-light text-secondary"> {% trans "Experimental" %}</i></span>
                             </button>
                         </h2>
                         <div id="changesCollapse" class="accordion-collapse collapse" data-bs-parent="#accordionChanges">

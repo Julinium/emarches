@@ -10,15 +10,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
 def main():
-    # from base.models import Tender
-    # t = Tender.objects.filter(chrono=1033775).first()
-    # if t:
-    #     print(f"Found Tender. Value: {t.has_samples}")
-    #     t.save()
-    #     print(f"Saved Tender. Value: {t.has_samples}")
-
-    from bonner import save_bdcs
-    save_bdcs(5)
+    from bonner import save_bdcs, save_results
+    save_bdcs(15)
+    save_results(15)
     pass
 
 

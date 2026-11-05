@@ -53,30 +53,6 @@ def do_the_work():
     
         return unhandled_links
 
-    def xinkify():
-        # unhandled_links = list(Link.objects.filter(handled=False) | Link.objects.filter(tender__isnull=True))
-        unhandled_links = []
-
-        if not C.IMPORT_LINKS:
-            back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
-            links_crawled = linker.getLinks(back_days)
-            helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_crawled) } Crawled links ...")
-            merged_links_crawled = linker.mergeLinks(links_crawled)
-            # unhandled_links += merged_links_crawled
-            # unhandled_links = set(unhandled_links) | set(merged_links_crawled)
-            unhandled_links = set(merged_links_crawled)
-
-        if C.REFRESH_EXISTING:
-            links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
-            helper.printMessage('INFO', 'w.linkify', f"Merging { len(links_saved) } found links ...")
-            merged_links_saved = linker.mergeLinks(links_saved)
-            # unhandled_links += merged_links_saved
-            unhandled_links = set(unhandled_links) | set(merged_links_saved)
-
-        helper.printMessage('DEBUG', 'w.linkify', f"Count of links to handle: {len(unhandled_links)} ...", 1)
-    
-        return unhandled_links
-
     def tenderify(links=[]):
         started = timezone.now()        
         saving_errors = False
@@ -239,6 +215,7 @@ def do_the_work():
     links_source  = 'Import' if C.IMPORT_LINKS else 'Crawl'
     files_action  = 'Skip' if C.SKIP_DCE else 'Download'
     results_action = 'Get' if C.GET_RESULTS else 'Skip'
+    crawl_bdcs = 'Get' if C.GET_BDCS else 'Skip'
     helper.printMessage('INFO', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 0)
 
     ##### Collect the list of links to handle
@@ -250,7 +227,7 @@ def do_the_work():
     helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving tenders data.", 0)
 
     ##### Handle Purchase Orders
-    if links_source == 'Crawl':
+    if crawl_bdcs == 'Get':
         bdcify()
         helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving PO's data.", 0)
 

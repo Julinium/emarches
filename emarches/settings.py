@@ -22,20 +22,21 @@ SITE_HOST = os.getenv("SITE_HOST")
 
 # DEBUG = True
 ALLOWED_HOSTS = os.getenv("DOMAIN_NAMES").split(',')
-    
-
-# ALLOWED_HOSTS = [
-#     host.strip()
-#     for host in os.getenv("DOMAINE_NAMES", "").split(",")
-#     if host.strip()
-# ]
 
 ALLOWED_HOSTS += [
     os.getenv("IP_ADDRESS")
 ]
 
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_DOMAIN = ".emarches.com"
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
+
+CSRF_COOKIE_DOMAIN = ".emarches.com"
+CSRF_TRUSTED_ORIGINS = {"https://emarches.com", "https://www.emarches.com"}
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = "Lax"
+
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -61,6 +62,7 @@ INSTALLED_APPS = [
     'insights',
     'bidding',
     'flows',
+    'crm',
     'bos',
 
     'django_cleanup',

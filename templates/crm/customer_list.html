@@ -1,0 +1,104 @@
+{% extends 'base/base.html' %}
+{% load i18n static humanize %}
+
+{% block title %}
+    {% trans "User Management" %}
+{% endblock title %}
+
+
+
+{% block content %}
+
+    <div class="d-flex align-items-center justify-content-between px-0">
+        <div class="">
+            <span class="h3 me-1">{% trans "User Management" %}</span>
+        </div>
+        <div class="d-flex align-items-top">
+            {% include 'crm/snippets/customers/customer-search-form.html' %}
+            {% include 'crm/snippets/customers/customer-menu-sort.html' %}
+        </div>
+    </div>
+
+
+    <div class="fw-light mt-1">
+        {% if query_dict.filters > 0 %}
+            <span class="" data-bs-toggle="tooltip" 
+                  title="{% trans 'Results are filtered' %}">
+                <i class="{{ bicons.filters }}"></i>
+            </span>
+        {% endif %}
+        <span class="fw-bold">
+            {{ page_obj.paginator.count }} 
+        </span>
+        <span class="small text-muted">{% trans "Items found" %}.</span>
+        {% if page_obj.has_other_pages %}
+            <span class="small text-muted">{% trans "Showing" %}:</span>
+            <span class="small">
+                {{ page_obj.start_index }}<i class="bi bi-dash-lg"></i>{{ page_obj.end_index }}
+            </span>
+        {% endif %}
+    </div>
+
+    {% if page_obj %}
+        <div class="container py-4 px-0">
+            {% for customer in page_obj %}
+                <div class="card shadow mb-3">
+                    <div class="card-header px-2 pt-1 pb-1 d-none">
+                        <div class="oneline">
+                            <span><i class="bi bi-person me-1"></i></span>
+                            <span class="fw-bold me-1">{{ customer.username|default:'?' }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body p-0">
+                        {% include 'crm/snippets/customers/customer-item.html' with customer=customer %}
+                    </div>
+
+                    <div class="card-footer text-secondary small px-2 py-1">
+
+                        <div class="d-flex justify-content-between">
+                            <div class="me-2">
+                                {% if customer.has_active_subscription %}
+                                    <span class="badge bg-success-subtle text-dark fw-normal ms-1">{% if customer.sub_plan %}{{ customer.sub_plan }}{% endif %}</span>
+                                {% else %}
+                                    <span class="badge bg-warning-subtle text-dark fw-normal ms-1">Free</span>
+                                {% endif %}
+                                {% if customer.memberships.first.team %}
+                                    <span class="samll me-2">@{{ customer.memberships.first.team.name }}</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="twolines text-end">
+                                {% if customer.origin %}
+                                    <span class="text-dark fw-normal ms-1"
+                                          title="{% trans 'Origin' %}: {{ customer.origin|title }}">                                        
+                                        <i class="bi bi-{{ customer.origin }}"></i>
+                                    </span>
+                                {% endif %}
+
+                                {% if not customer.is_verified %}
+                                    <span class="badge bg-warning-subtle text-dark fw-normal ms-1">Pending</span>
+                                {% endif %}
+                                {% if customer.is_superuser %}
+                                    <span class="badge bg-danger-subtle text-dark fw-normal ms-1">Superuser</span>
+                                {% elif customer.is_staff %}
+                                    <span class="badge bg-warning-subtle text-dark fw-normal ms-1">Staff</span>
+                                {% endif %}
+                                {% if not customer.is_active %}
+                                    <span class="badge bg-warning-subtle text-danger fw-normal ms-1">Disabled</span>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% include 'base/snippets/paginator.html' %}
+
+    {% else %}
+        {% include 'base/snippets/empty-list.html' %}
+    {% endif %}
+
+{% endblock content %}

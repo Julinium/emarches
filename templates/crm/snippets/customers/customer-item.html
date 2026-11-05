@@ -1,0 +1,135 @@
+{% load i18n %}
+
+<div id="customer-{{ customer.id }}-line" class="p-0">
+
+    <a data-bs-toggle="collapse" href="#customer-{{ customer.id }}-collapse"
+       role="button" aria-expanded="false" aria-controls="customer-{{ customer.id }}-collapse"
+       class="text-decoration-none text-reset">
+
+        <div id="customer-{{ customer.id }}-digest" class="p-2">
+            <div class="oneline d-none">
+                {% if customer.profile.avatar %}
+                    <img class="rounded-circle me-1" height="24" width="24" src="{{ customer.profile.avatar }}" alt="Avatar">
+                {% else %}
+                    <i class="bi bi-person me-1" height="24" width="24"></i>
+                {% endif %}
+                <span class="fw-bold me-1">{{ customer.username|default:'?' }}</span>
+            </div>
+            <div class="d-flex align-items-center">
+                
+                    <img
+                        src="{% if customer.profile.avatar %}{{ customer.profile.avatar }}{% else %}/static/avatars/default.png{% endif %}"
+                        alt="U"
+                        class="img-fluid rounded rounded-circle"
+                        style="width:3rem; height:3rem"/> 
+
+                <div class="ms-2">
+                    <div class="oneline">
+                        <span class="fw-bold">@{{ customer.username|default:'?' }}</span>
+                    </div>
+                    <div class="oneline">
+                        <span class="small text-secondary">{{ customer.first_name|default:'-' }} {{ customer.last_name|default:'-' }}</span>
+                    </div>
+                </div>                                     
+            </div>
+        </div>
+
+    </a>
+
+    <div id="customer-{{ customer.id }}-collapse" class="collapse px-2 ms-2">  
+
+        <div id="customer-{{ customer.id }}-extended" class="mx-0 mb-2">
+
+            <div class="">
+                <div class="">
+                    <div class="small fw-light me-1">{% trans 'Email addresses' %}:</div>
+                    <ul>
+                        {% for ea in customer.emailaddress_set.all %}
+                            <li>
+                                <span>{{ ea.email }}</span>
+                                {% if ea.verified %}<span class="badge bg-success-subtle small fw-light text-dark">{% trans 'Verified' %}</span>
+                                {% else %}<span class="badge bg-warning-subtle small fw-light text-dark">{% trans 'Unverified' %}</span>{% endif %}
+                                {% if ea.primary %}<span class="badge bg-primary-subtle small fw-light text-dark">{% trans 'Primary' %}</span>{% endif %}
+                            </li>
+                        {% empty %}
+                            <li><span class="text-danger fw-light small">{% trans 'None found' %}</span></li>
+                        {% endfor %}
+                    </ul>
+                    
+                </div>
+
+                <div class="">
+                    <span class="small fw-light me-1">{% trans 'First name' %}:</span>
+                    <span>{{ customer.first_name|default:'-' }}</span>
+                </div>
+                <div class="">
+                    <span class="small fw-light me-1">{% trans 'Last name' %}:</span>
+                    <span>{{ customer.last_name|default:'-' }}</span>
+                </div>
+                {% if customer.profile %}
+                    <div class="">
+                        <span class="small fw-light me-1">{% trans 'Phone' %}:</span>
+                        <span>{{ customer.profile.phone|default:'-' }}</span>
+                    </div>
+                    <div class="">
+                        <span class="small fw-light me-1">{% trans 'Whatsapp' %}:</span>
+                        <span>{{ customer.profile.whatsapp|default:'-' }}</span>
+                    </div>
+                    <div class="">
+                        <span class="small fw-light me-1">{% trans 'About' %}:</span>
+                        <span>{{ customer.profile.about|default:'-' }}</span>
+                    </div>
+                {% endif %}
+                <div class="">
+                    <span class="small fw-light me-1">{% trans 'Team' %}:</span>
+                    <span>{{ customer.memberships.first.team.name }}</span>
+                </div>
+                <div class="">
+                    <span class="small fw-light me-1">{% trans 'Date Joined' %}:</span>
+                    <span>{{ customer.date_joined|date:"M d, Y" }}</span>
+                </div>
+                <div class="">
+                    <span class="small fw-light me-1">{% trans 'Last login' %}:</span>
+                    <span>{{ customer.last_login }}</span>
+                </div>
+
+                {% for membership in customer.memberships.all %}
+                    {% for sub in membership.team.active_subscriptions_list %}
+                        <div class="">
+                            {% trans 'Plan' %}: {{ sub.plan.name }} ({% trans 'Status' %}: {{ sub.get_status_display }})
+                            
+                            {% for cycle in sub.active_cycles_list %}
+                                <small>{% trans 'Active Cycle' %}: {{ cycle.date_start|date:"M d" }} to {{ cycle.date_end|date:"M d" }}</small>
+                            {% endfor %}
+                        </div>
+                    {% empty %}
+                        <p>{% trans 'No active subscription for this team' %}.</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+
+        </div>
+        
+        <div id="customer-{{ customer.id }}-actions" class="text-end mx-0 mb-3 d-none">
+
+            {% if customer.tenders_count != 0 %}
+                <a class="ms-2 mt-2 btn btn-sm btn-outline-success" 
+                href="{% url 'portal_tender_list' %}?&q={{ customer.name }}&f=customers&exact=yes">
+                    <span><i class="{{ bicons.details }}"></i></span>
+                    <span class="ms-1">{% trans 'Active Tenders' %}</span>
+                </a>
+            {% endif %}
+
+            {% if customer.tenders_count != customer.all_tenders_count %}
+                <a class="ms-2 mt-2 btn btn-sm btn-outline-secondary" 
+                href="{% url 'portal_tender_list' %}?&q={{ customer.name }}&f=customers&exact=yes&ddlnn=1970-01-01">
+                    <span><i class="{{ bicons.details }}"></i></span>
+                    <span class="ms-1">{% trans 'All Tenders' %}</span>
+                </a>
+            {% endif %}
+            
+        </div>
+
+    </div>
+
+</div>

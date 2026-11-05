@@ -27,13 +27,15 @@ IMPORT_LINKS = False
 REFRESH_EXISTING = True
 SKIP_DCE = False
 GET_RESULTS = True
+GET_BDCS = True
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--level', type=str, required=False, help='debug or trace for more verbose output.')
 parser.add_argument('--links', type=str, required=False, help='import to use already saved links.')
 parser.add_argument('--found', type=str, required=False, help='refresh to refresh existing items.')
 parser.add_argument('--dce',   type=str, required=False, help='DCE files download.')
-parser.add_argument('--results', type=str, required=False, help='Get Rewarding results. Skipped set to `ignore`, scraped otherwise')
+parser.add_argument('--results', type=str, required=False, help='Get Awarding results. Skipped if set to `ignore`, scraped otherwise.')
+parser.add_argument('--bdcs',   type=str, required=False, help='Crawl Purchase orders. Set to `get` to crawl.')
 
 args = parser.parse_args()
 if args.level: 
@@ -45,6 +47,7 @@ if args.links: IMPORT_LINKS = args.links.lower() == "import"
 if args.found: REFRESH_EXISTING = args.found.lower() == "refresh"
 if args.dce: SKIP_DCE = args.dce.lower() != "download"
 if args.results: GET_RESULTS = args.results.lower() != "ignore"
+if args.dce: GET_BDCS = args.dce.lower() != "get"
 
 
 HEADLESS_MODE = True # Set true if operating on a system without GUI.

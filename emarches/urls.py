@@ -14,7 +14,6 @@ from .sitemaps import ConcurrentSitemap, TenderSitemap
 from nas import views as nas_views
 from base.views import robots_txt
 
-
 urlpatterns = i18n_patterns(
     path('',                include('base.urls')),
     path('admin/',          admin.site.urls),
@@ -25,9 +24,8 @@ urlpatterns = i18n_patterns(
     path('porders/',        include('bdc.urls')),
     path('bidders/',        include('insights.urls')),
     path('bidding/',        include('bidding.urls')),
-    path('bos/',            include('bos.urls')),
-    
-    # path('__debug__/', include('debug_toolbar.urls')),
+    path('crm/',            include('crm.urls')),    
+    path('bos/',            include('bos.urls')),    
 )
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

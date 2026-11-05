@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-27 18:48+0100\n"
+"POT-Creation-Date: 2026-11-04 12:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,232 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: base/models.py:619 bdc/models.py:118 bidding/models.py:42 flows/admin.py:58
+#: base/models.py:294 bdc/models.py:16 bdc/models.py:91 bdc/weasy.py:73
+#: bidding/models.py:432 bidding/models.py:474
+#: templates/bidding/bid-details.html:33 templates/bidding/bid-details.html:528
+#: templates/bidding/bid-details.html:577 templates/bidding/bids-list.html:259
+#: templates/bidding/expenses-list.html:219
+#: templates/bidding/tasks-list.html:234
+msgid "Title"
+msgstr "العنوان"
+
+#: base/models.py:295 bdc/models.py:17 bidding/models.py:429
+#: bidding/models.py:538 bidding/models.py:595 bidding/models.py:629
+#: flows/models.py:186 insights/weasy.py:171 templates/bdc/bdc-details.html:82
+#: templates/bdc/snippets/bdcs/search-form.html:39
+#: templates/bidding/bid-form.html:64
+#: templates/portal/snippets/tenders/search-form.html:40
+#: templates/portal/tender-details.html:128
+msgid "Reference"
+msgstr "المرجع"
+
+#: base/models.py:296 bdc/models.py:18
+msgid "Date published"
+msgstr "تاريخ النشر"
+
+#: base/models.py:297 bidding/models.py:280 templates/bdc/bdc-details.html:30
+#: templates/bdc/snippets/bdcs/bdc-summary.html:66
+#: templates/bidding/bid-form.html:84 templates/bidding/tenders-list.html:60
+#: templates/portal/snippets/tenders/tender-summary.html:71
+#: templates/portal/tender-details.html:41
+msgid "Bidding deadline"
+msgstr "آخر أجل لتقديم العروض"
+
+#: base/models.py:299
+#, fuzzy
+#| msgid "Bids count"
+msgid "Lots count"
+msgstr "عدد العروض"
+
+#: base/models.py:300
+#, fuzzy
+#| msgid "Total Estimate"
+msgid "Total estimate"
+msgstr "إجمالي القيمة التقديرية"
+
+#: base/models.py:301
+#, fuzzy
+#| msgid "Total Bids"
+msgid "Total bond"
+msgstr "إجمالي العروض"
+
+#: base/models.py:302
+#, fuzzy
+#| msgid "Unit price"
+msgid "Plans price"
+msgstr "سعر الوحدة"
+
+#: base/models.py:304
+#, fuzzy
+#| msgid "Reserved"
+msgid "Reserved to SMB+"
+msgstr "محجوز"
+
+#: base/models.py:305 templates/portal/snippets/tenders/tender-legend.html:325
+#: templates/portal/snippets/tenders/tender-summary.html:266
+#: templates/portal/tender-details.html:182
+msgid "Variants accepted"
+msgstr "البدائل مقبولة"
+
+#: base/models.py:306 templates/portal/snippets/tenders/tender-legend.html:270
+#: templates/portal/snippets/tenders/tender-summary.html:231
+msgid "Licenses required"
+msgstr "التراخيص مطلوبة"
+
+#: base/models.py:307 templates/portal/snippets/tenders/tender-legend.html:281
+#: templates/portal/snippets/tenders/tender-summary.html:238
+msgid "Qualifications required"
+msgstr "المؤهلات مطلوبة"
+
+#: base/models.py:308 templates/portal/snippets/tenders/tender-legend.html:292
+#: templates/portal/snippets/tenders/tender-summary.html:245
+msgid "Samples required"
+msgstr "العينات مطلوبة"
+
+#: base/models.py:309 templates/portal/snippets/tenders/tender-legend.html:303
+#: templates/portal/snippets/tenders/tender-summary.html:252
+msgid "Site survey scheduled"
+msgstr "تمت برمجة زيارة للموقع"
+
+#: base/models.py:310 templates/portal/snippets/tenders/tender-legend.html:314
+#: templates/portal/snippets/tenders/tender-summary.html:259
+msgid "Meetings scheduled"
+msgstr "تمت برمجة اجتماعات"
+
+#: base/models.py:311
+#, fuzzy
+#| msgid "Minutes finished"
+msgid "Minutes taken"
+msgstr "محاضر الفتح والانتهاء"
+
+#: base/models.py:312
+#, fuzzy
+#| msgid "Environmental clauses"
+msgid "Environment clauses"
+msgstr "البنود البيئية"
+
+#: base/models.py:314 templates/bidding/bid-form.html:54
+msgid "Execution location"
+msgstr "مكان التنفيذ"
+
+#: base/models.py:315 templates/portal/snippets/tenders/search-form.html:131
+#: templates/portal/tender-details.html:148
+msgid "Electronic bidding"
+msgstr "تقديم العروض إلكترونيًا"
+
+#: base/models.py:316 templates/portal/tender-details.html:160
+msgid "Electronic signature"
+msgstr "التوقيع الإلكتروني"
+
+#: base/models.py:317
+#, fuzzy
+#| msgid "Files size"
+msgid "Files read size"
+msgstr "حجم الملفات"
+
+#: base/models.py:318
+#, fuzzy
+#| msgid "Files size"
+msgid "Files bytes"
+msgstr "حجم الملفات"
+
+#: base/models.py:319
+#, fuzzy
+#| msgid "Withdrawal Address"
+msgid "Withdrawal address"
+msgstr "عنوان سحب ملف طلب العروض"
+
+#: base/models.py:320
+#, fuzzy
+#| msgid "Bidding Address"
+msgid "Bidding address"
+msgstr "عنوان إيداع العروض"
+
+#: base/models.py:321
+#, fuzzy
+#| msgid "Awarding Mode"
+msgid "Awarding address"
+msgstr "طريقة إسناد الصفقة"
+
+#: base/models.py:322
+#, fuzzy
+#| msgid "Contract signed"
+msgid "Contact name"
+msgstr "تاريخ توقيع العقد"
+
+#: base/models.py:323
+#, fuzzy
+#| msgid "Contact Method"
+msgid "Contact phone"
+msgstr "طريقة التواصل"
+
+#: base/models.py:324
+#, fuzzy
+#| msgid "Contact"
+msgid "Contact email"
+msgstr "جهة الاتصال"
+
+#: base/models.py:325
+#, fuzzy
+#| msgid "Contact"
+msgid "Contact fax"
+msgstr "جهة الاتصال"
+
+#: base/models.py:326 bdc/models.py:14 bidding/models.py:103
+#: flows/models.py:123 flows/models.py:207 flows/models.py:337
+#: nas/choices.py:17 nas/choices.py:39 nas/choices.py:52 nas/choices.py:58
+#: nas/choices.py:68 templates/bidding/bids-list.html:208
+#: templates/bidding/expenses-list.html:168
+#: templates/bidding/tasks-list.html:187
+#: templates/portal/snippets/tenders/menu-fav-clean.html:36
+msgid "Cancelled"
+msgstr "ملغى"
+
+#: base/models.py:328 bdc/models.py:25
+#: templates/bdc/snippets/bdcs/bdc-actions.html:49
+msgid "Official link"
+msgstr "الرابط الرسمي"
+
+#: base/models.py:331 bdc/models.py:27 insights/weasy.py:170
+#: templates/bdc/bdc-details.html:91
+#: templates/bdc/snippets/bdcs/search-form.html:107
+#: templates/portal/snippets/lots/lot-details.html:62
+#: templates/portal/snippets/tenders/search-form.html:108
+msgid "Category"
+msgstr "الفئة"
+
+#: base/models.py:332
+#, fuzzy
+#| msgid "Awarding Mode"
+msgid "Awarding mode"
+msgstr "طريقة إسناد الصفقة"
+
+#: base/models.py:333 templates/portal/snippets/tenders/search-form.html:119
+#: templates/portal/tender-details.html:142
+msgid "Procedure"
+msgstr "المسطرة"
+
+#: base/models.py:334 bdc/models.py:28
+msgid "Public client"
+msgstr "صاحب المشروع العمومي"
+
+#: base/models.py:340 templates/insights/bidder-pdf.html:281
+#: templates/insights/bidder-pdf.html:285 templates/portal/domains-list.html:6
+#: templates/portal/domains-list.html:12
+#: templates/portal/snippets/tenders/search-form.html:43
+#: templates/portal/tender-details.html:295
+msgid "Domains of activity"
+msgstr "مجالات النشاط"
+
+#: base/models.py:348 bdc/models.py:22
+msgid "Date created"
+msgstr "تاريخ الإنشاء"
+
+#: base/models.py:349 bdc/models.py:23
+msgid "Date updated"
+msgstr "تاريخ التحديث"
+
+#: base/models.py:619 bdc/models.py:111 bidding/models.py:42 flows/admin.py:58
 #: flows/admin.py:179 flows/admin.py:204 flows/admin.py:251 nas/models.py:77
 #: nas/models.py:252 nas/models.py:294 nas/models.py:439
 #: templates/bidding/team-recap.html:114 templates/bidding/team-recap.html:291
@@ -78,9 +303,9 @@ msgid ""
 "to helping businesses and organizations unlock opportunities in the Moroccan "
 "public procurement market."
 msgstr ""
-"eMarchés شركة استشارية متنامية متخصصة في خدمات الصفقات العمومية بالمغرب. "
-"منذ تأسيسنا سنة 2024، ونحن نعمل على مساعدة الشركات والمؤسسات على اغتنام "
-"الفرص المتاحة في سوق الصفقات العمومية المغربي."
+"eMarchés شركة استشارية متنامية متخصصة في خدمات الصفقات العمومية بالمغرب. منذ "
+"تأسيسنا سنة 2024، ونحن نعمل على مساعدة الشركات والمؤسسات على اغتنام الفرص "
+"المتاحة في سوق الصفقات العمومية المغربي."
 
 #: base/templates/base/about.html:28
 msgid "The Hedgehog"
@@ -93,8 +318,8 @@ msgid ""
 "hedgehog, we achieve success through clever solutions and resilience."
 msgstr ""
 "يرمز القنفذ إلى الذكاء والقدرة على التكيف والتفكير الاستراتيجي. وهو يجسد "
-"نهجنا القائم على إيجاد حلول مبتكرة لتجاوز التحديات. ومثل القنفذ، نحقق "
-"النجاح بفضل الحلول الذكية والقدرة على الصمود."
+"نهجنا القائم على إيجاد حلول مبتكرة لتجاوز التحديات. ومثل القنفذ، نحقق النجاح "
+"بفضل الحلول الذكية والقدرة على الصمود."
 
 #: base/templates/base/about.html:36
 msgid "Our Mission"
@@ -107,10 +332,10 @@ msgid ""
 "success. We aim to foster transparency, compliance, and efficiency, enabling "
 "our clients to thrive in this competitive sector."
 msgstr ""
-"تتمثل مهمتنا في تبسيط إجراءات الصفقات العمومية وتيسيرها أمام الشركات، "
-"من خلال توفير الخبرة والأدوات اللازمة لتحقيق النجاح. ونسعى إلى تعزيز "
-"الشفافية والامتثال للقوانين والنجاعة، بما يمكّن عملاءنا من النجاح "
-"في هذا القطاع التنافسي."
+"تتمثل مهمتنا في تبسيط إجراءات الصفقات العمومية وتيسيرها أمام الشركات، من "
+"خلال توفير الخبرة والأدوات اللازمة لتحقيق النجاح. ونسعى إلى تعزيز الشفافية "
+"والامتثال للقوانين والنجاعة، بما يمكّن عملاءنا من النجاح في هذا القطاع "
+"التنافسي."
 
 #: base/templates/base/about.html:42
 msgid "Our Journey"
@@ -123,10 +348,10 @@ msgid ""
 "procurement landscape. What started as a small consultancy has evolved into "
 "a aspiring firm, serving clients across diverse industries."
 msgstr ""
-"تأسست eMarchés سنة 2024 على يد فريق من رواد الأعمال الشباب الموهوبين، "
-"الذين أدركوا الحاجة المتزايدة إلى مواكبة متخصصة في مجال الصفقات العمومية "
-"بالمغرب. وما بدأ كشركة استشارية صغيرة يتطور اليوم إلى مؤسسة طموحة "
-"تقدم خدماتها لعملاء من قطاعات متنوعة."
+"تأسست eMarchés سنة 2024 على يد فريق من رواد الأعمال الشباب الموهوبين، الذين "
+"أدركوا الحاجة المتزايدة إلى مواكبة متخصصة في مجال الصفقات العمومية بالمغرب. "
+"وما بدأ كشركة استشارية صغيرة يتطور اليوم إلى مؤسسة طموحة تقدم خدماتها لعملاء "
+"من قطاعات متنوعة."
 
 #: base/templates/base/about.html:50
 msgid "Our Team"
@@ -244,8 +469,7 @@ msgstr "تعذّر العثور على حالة الترجمات!"
 msgid ""
 "You can help us improve translations or add your language if it's not "
 "already supported."
-msgstr ""
-"يمكنك مساعدتنا على تحسين الترجمات أو إضافة لغتك إذا لم تكن مدعومة بعد."
+msgstr "يمكنك مساعدتنا على تحسين الترجمات أو إضافة لغتك إذا لم تكن مدعومة بعد."
 
 #: base/templates/base/about.html:140
 msgid ""
@@ -321,6 +545,11 @@ msgstr "طريقة التواصل المفضلة"
 
 #: base/templates/base/contact.html:54
 #: templates/bdc/snippets/bdcs/search-form.html:37
+#: templates/crm/snippets/customers/customer-search-form.html:38
+#: templates/crm/snippets/customers/customer-search-form.html:50
+#: templates/crm/snippets/customers/customer-search-form.html:62
+#: templates/crm/snippets/customers/customer-search-form.html:74
+#: templates/crm/snippets/customers/customer-search-form.html:91
 #: templates/portal/snippets/tenders/search-form.html:38
 #: templates/portal/snippets/tenders/search-form.html:206
 #: templates/portal/snippets/tenders/search-form.html:217
@@ -334,7 +563,7 @@ msgstr "أيّ وسيلة"
 #: templates/nas/companies/snippets/company-item.html:119
 #: templates/nas/companies/snippets/company_data.html:45
 #: templates/nas/profile/snippets/user-details.html:17
-#: templates/portal/tender-details.html:338
+#: templates/portal/tender-details.html:348
 msgid "Email"
 msgstr "البريد الإلكتروني"
 
@@ -342,7 +571,7 @@ msgstr "البريد الإلكتروني"
 #: nas/models.py:225 nas/models.py:245 nas/models.py:286
 #: templates/base/includes/footer.html:46
 #: templates/nas/profile/snippets/user-details.html:29
-#: templates/portal/tender-details.html:333
+#: templates/portal/tender-details.html:343
 msgid "Phone"
 msgstr "الهاتف"
 
@@ -382,8 +611,7 @@ msgstr "شكراً لك!"
 msgid ""
 "Your message has been successfully submitted. We will get back to you "
 "shortly."
-msgstr ""
-"تم إرسال رسالتك بنجاح. سنتواصل معك في أقرب وقت ممكن."
+msgstr "تم إرسال رسالتك بنجاح. سنتواصل معك في أقرب وقت ممكن."
 
 #: base/templates/base/contact_success.html:13
 #: base/templates/base/faqs.html:176 templates/base/errors/404.html:16
@@ -400,7 +628,8 @@ msgid "Frequently Asked Questions"
 msgstr "الأسئلة المتكررة"
 
 #: base/templates/base/faqs.html:9
-msgid "Have a question? Chances are someone already asked it and we answered it."
+msgid ""
+"Have a question? Chances are someone already asked it and we answered it."
 msgstr "هل لديك سؤال؟ ربما سبق أن طرحه أحدهم وأجبنا عنه."
 
 #: base/templates/base/faqs.html:19
@@ -415,9 +644,9 @@ msgid ""
 "ensure transparency, fairness, and value for taxpayers."
 msgstr ""
 "تشير الصفقات العمومية إلى الإجراءات التي تقوم من خلالها الجهات الحكومية "
-"والمؤسسات العمومية باقتناء السلع أو الخدمات أو الأشغال من شركات القطاع "
-"الخاص أو الأفراد أو المؤسسات. وتخضع هذه الإجراءات لضوابط تهدف إلى ضمان "
-"الشفافية والإنصاف وحسن استخدام المال العام."
+"والمؤسسات العمومية باقتناء السلع أو الخدمات أو الأشغال من شركات القطاع الخاص "
+"أو الأفراد أو المؤسسات. وتخضع هذه الإجراءات لضوابط تهدف إلى ضمان الشفافية "
+"والإنصاف وحسن استخدام المال العام."
 
 #: base/templates/base/faqs.html:34
 msgid "Are you afficliated to governmental entity?"
@@ -426,8 +655,7 @@ msgstr "هل أنتم تابعون لأي جهة حكومية؟"
 #: base/templates/base/faqs.html:39
 msgid ""
 "No. We are not affiliated in any way to any public or governmental entity."
-msgstr ""
-"لا. ليست لدينا أي تبعية أو علاقة مؤسساتية بأي جهة عمومية أو حكومية."
+msgstr "لا. ليست لدينا أي تبعية أو علاقة مؤسساتية بأي جهة عمومية أو حكومية."
 
 #: base/templates/base/faqs.html:49
 msgid "Where do you get your data from?"
@@ -466,16 +694,16 @@ msgid ""
 "We are trying to be as up-to-date as we can. Our teams work hard to bring "
 "any available data update as soon as it is published."
 msgstr ""
-"نسعى إلى إبقاء بياناتنا محدّثة قدر الإمكان. ويعمل فريقنا بجد لإتاحة "
-"أي تحديث للبيانات بمجرد نشره."
+"نسعى إلى إبقاء بياناتنا محدّثة قدر الإمكان. ويعمل فريقنا بجد لإتاحة أي تحديث "
+"للبيانات بمجرد نشره."
 
 #: base/templates/base/faqs.html:72
 msgid ""
 "For now, we update the list of available Tenders every 3 hours. If the need "
 "araises in the future, we may narrow down the gap to 1 hour or less."
 msgstr ""
-"حاليًا، نحدّث قائمة الصفقات المتاحة كل 3 ساعات. وإذا دعت الحاجة مستقبلًا، "
-"فقد نقلّص هذه المدة إلى ساعة واحدة أو أقل."
+"حاليًا، نحدّث قائمة الصفقات المتاحة كل 3 ساعات. وإذا دعت الحاجة مستقبلًا، فقد "
+"نقلّص هذه المدة إلى ساعة واحدة أو أقل."
 
 #: base/templates/base/faqs.html:82
 msgid "How accurate is the information on your website about Tenders?"
@@ -486,16 +714,16 @@ msgid ""
 "We get information on Tenders from the official public website as fidelly as "
 "possible."
 msgstr ""
-"نحرص على نقل المعلومات المتعلقة بالصفقات من البوابة العمومية الرسمية "
-"بأعلى درجة ممكنة من الدقة والأمانة."
+"نحرص على نقل المعلومات المتعلقة بالصفقات من البوابة العمومية الرسمية بأعلى "
+"درجة ممكنة من الدقة والأمانة."
 
 #: base/templates/base/faqs.html:88
 msgid ""
 "If information on our website is wrong or inaccurate, it most probably comes "
 "from the public portal."
 msgstr ""
-"إذا كانت هناك معلومات خاطئة أو غير دقيقة على موقعنا، فمن المرجح أن يكون "
-"مصدر الخطأ هو البوابة العمومية الرسمية."
+"إذا كانت هناك معلومات خاطئة أو غير دقيقة على موقعنا، فمن المرجح أن يكون مصدر "
+"الخطأ هو البوابة العمومية الرسمية."
 
 #: base/templates/base/faqs.html:98
 msgid "How can your consultancy help my business?"
@@ -510,8 +738,8 @@ msgid ""
 msgstr ""
 "نتخصص في توجيه الشركات ومواكبتها لفهم تعقيدات الصفقات العمومية في المغرب. "
 "ونقدم خدمات تشمل أبحاث السوق، وإعداد عروض المناقصات، والمواكبة لضمان "
-"الامتثال للمتطلبات التنظيمية، والتدريب، بهدف تعزيز فرص نجاحكم في هذا "
-"القطاع التنافسي."
+"الامتثال للمتطلبات التنظيمية، والتدريب، بهدف تعزيز فرص نجاحكم في هذا القطاع "
+"التنافسي."
 
 #: base/templates/base/faqs.html:113
 msgid "What industries do you work with?"
@@ -524,8 +752,8 @@ msgid ""
 "services meet the unique needs of each industry."
 msgstr ""
 "نعمل مع مجموعة واسعة من القطاعات، بما في ذلك البناء والتكنولوجيا والرعاية "
-"الصحية والصناعة وغيرها. ونحرص على تكييف خدماتنا لتلبية الاحتياجات الخاصة "
-"بكل قطاع."
+"الصحية والصناعة وغيرها. ونحرص على تكييف خدماتنا لتلبية الاحتياجات الخاصة بكل "
+"قطاع."
 
 #: base/templates/base/faqs.html:128
 msgid "Do you provide training for public procurement?"
@@ -538,8 +766,8 @@ msgid ""
 "chances of success in bidding."
 msgstr ""
 "نعم، نقدم دورات تدريبية وورش عمل تهدف إلى تطوير خبرات فريقكم في إجراءات "
-"الصفقات العمومية، وتعزيز الامتثال للمتطلبات التنظيمية وزيادة فرص نجاحكم "
-"في المناقصات."
+"الصفقات العمومية، وتعزيز الامتثال للمتطلبات التنظيمية وزيادة فرص نجاحكم في "
+"المناقصات."
 
 #: base/templates/base/faqs.html:143
 msgid "How much does your services cost?"
@@ -557,7 +785,8 @@ msgstr "عمومي"
 msgid ""
 "Access to search and limited tenders information without even an account."
 msgstr ""
-"إمكانية البحث والاطلاع على معلومات محدودة حول الصفقات دون الحاجة إلى إنشاء حساب."
+"إمكانية البحث والاطلاع على معلومات محدودة حول الصفقات دون الحاجة إلى إنشاء "
+"حساب."
 
 #: base/templates/base/faqs.html:150
 msgid "Startup"
@@ -569,7 +798,8 @@ msgid ""
 "downloads, favourites, ... with a free account."
 msgstr ""
 "إمكانية الوصول إلى البحث المتقدم، والاطلاع غير المحدود على معلومات الصفقات، "
-"وتنزيل عدد محدود من الملفات، وحفظ الصفقات في المفضلة، وغيرها، من خلال حساب مجاني."
+"وتنزيل عدد محدود من الملفات، وحفظ الصفقات في المفضلة، وغيرها، من خلال حساب "
+"مجاني."
 
 #: base/templates/base/faqs.html:151
 msgid "Pro"
@@ -581,7 +811,8 @@ msgid ""
 "notifications, ... with a paid account."
 msgstr ""
 "تتضمن هذه الباقة جميع مزايا باقة الشركات الناشئة، بالإضافة إلى تنزيل الملفات "
-"دون قيود، وحفظ الصفقات في المفضلة، والإشعارات المخصصة، وغيرها، من خلال حساب مدفوع."
+"دون قيود، وحفظ الصفقات في المفضلة، والإشعارات المخصصة، وغيرها، من خلال حساب "
+"مدفوع."
 
 #: base/templates/base/faqs.html:152
 msgid ""
@@ -596,8 +827,8 @@ msgid ""
 "As every business is unique, we calculate the price to charge for our "
 "services based on your business needs and goals."
 msgstr ""
-"نظرًا لاختلاف احتياجات كل شركة وأهدافها، نحدد أسعار خدماتنا بناءً على "
-"متطلبات أعمالكم والأهداف التي تسعون إلى تحقيقها."
+"نظرًا لاختلاف احتياجات كل شركة وأهدافها، نحدد أسعار خدماتنا بناءً على متطلبات "
+"أعمالكم والأهداف التي تسعون إلى تحقيقها."
 
 #: base/templates/base/faqs.html:163
 msgid "How do I get started with your services?"
@@ -609,9 +840,9 @@ msgid ""
 "We’ll schedule an initial consultation to understand your needs and discuss "
 "how our services can help you achieve your goals."
 msgstr ""
-"البدء سهل! تواصلوا معنا عبر موقعنا الإلكتروني أو اتصلوا بنا هاتفيًا. "
-"سنحدد موعدًا لاستشارة أولية لفهم احتياجاتكم ومناقشة كيفية مساعدتكم على "
-"تحقيق أهدافكم من خلال خدماتنا."
+"البدء سهل! تواصلوا معنا عبر موقعنا الإلكتروني أو اتصلوا بنا هاتفيًا. سنحدد "
+"موعدًا لاستشارة أولية لفهم احتياجاتكم ومناقشة كيفية مساعدتكم على تحقيق "
+"أهدافكم من خلال خدماتنا."
 
 #: base/templates/base/faqs.html:174
 msgid "Question still unanswered ?"
@@ -627,7 +858,7 @@ msgid "Home of Public Procurement Market"
 msgstr "وجهتك إلى سوق الصفقات العمومية"
 
 #: base/templates/base/legal.html:5 base/templates/base/legal.html:9
-#: base/templates/base/legal.html:11 templates/portal/tender-details.html:564
+#: base/templates/base/legal.html:11 templates/portal/tender-details.html:574
 msgid "Legal Information"
 msgstr "معلومات قانونية"
 
@@ -636,8 +867,8 @@ msgid ""
 "This page provides our essential legal information. Please review it to "
 "understand your rights and our commitments."
 msgstr ""
-"تتضمن هذه الصفحة المعلومات القانونية الأساسية الخاصة بنا. يُرجى الاطلاع "
-"عليها لفهم حقوقكم والتزاماتنا تجاهكم."
+"تتضمن هذه الصفحة المعلومات القانونية الأساسية الخاصة بنا. يُرجى الاطلاع عليها "
+"لفهم حقوقكم والتزاماتنا تجاهكم."
 
 #: base/templates/base/legal.html:17 base/templates/base/legal.html:28
 msgid "Privacy Policy"
@@ -706,8 +937,8 @@ msgid ""
 "submitted, such as responding to inquiries or providing requested services. "
 "In addition:"
 msgstr ""
-"تُستخدم المعلومات التي تقدمونها حصريًا للأغراض التي جُمعت من أجلها، مثل "
-"الرد على استفساراتكم أو تقديم الخدمات المطلوبة. بالإضافة إلى ذلك:"
+"تُستخدم المعلومات التي تقدمونها حصريًا للأغراض التي جُمعت من أجلها، مثل الرد "
+"على استفساراتكم أو تقديم الخدمات المطلوبة. بالإضافة إلى ذلك:"
 
 #: base/templates/base/legal.html:47
 msgid ""
@@ -736,8 +967,8 @@ msgid ""
 "unauthorized access, loss, or misuse of data."
 msgstr ""
 "نتخذ جميع التدابير المعقولة لحماية معلوماتكم الشخصية، بما في ذلك تطبيق "
-"إجراءات حماية تقنية وتنظيمية لمنع الوصول غير المصرح به إلى البيانات "
-"أو فقدانها أو إساءة استخدامها."
+"إجراءات حماية تقنية وتنظيمية لمنع الوصول غير المصرح به إلى البيانات أو "
+"فقدانها أو إساءة استخدامها."
 
 #: base/templates/base/legal.html:58
 msgid "User Rights"
@@ -746,8 +977,7 @@ msgstr "حقوق المستخدم"
 #: base/templates/base/legal.html:59
 msgid ""
 "You have the right to control how your data is used. Specifically, you may:"
-msgstr ""
-"يحق لكم التحكم في كيفية استخدام بياناتكم. وعلى وجه الخصوص، يمكنكم:"
+msgstr "يحق لكم التحكم في كيفية استخدام بياناتكم. وعلى وجه الخصوص، يمكنكم:"
 
 #: base/templates/base/legal.html:61
 msgid "Opt out of receiving promotional communications at any time."
@@ -770,7 +1000,8 @@ msgid ""
 "We handle all user data in accordance with applicable laws and regulations "
 "in Morocco."
 msgstr ""
-"نتعامل مع جميع بيانات المستخدمين وفقًا للقوانين واللوائح المعمول بها في المغرب."
+"نتعامل مع جميع بيانات المستخدمين وفقًا للقوانين واللوائح المعمول بها في "
+"المغرب."
 
 #: base/templates/base/legal.html:72
 msgid "Changes to this Policy"
@@ -783,16 +1014,16 @@ msgid ""
 "will take effect immediately upon publication."
 msgstr ""
 "نحتفظ بحق تحديث سياسة الخصوصية هذه بما يعكس التغييرات في ممارساتنا أو "
-"المتطلبات القانونية. وسيتم الإعلان عن التحديثات بوضوح، وتدخل حيز التنفيذ "
-"فور نشرها."
+"المتطلبات القانونية. وسيتم الإعلان عن التحديثات بوضوح، وتدخل حيز التنفيذ فور "
+"نشرها."
 
 #: base/templates/base/legal.html:78
 msgid ""
 "If you have any questions or concerns about this Privacy Policy or how we "
 "handle your data, please contact us at"
 msgstr ""
-"إذا كانت لديكم أي أسئلة أو مخاوف بشأن سياسة الخصوصية هذه أو كيفية تعاملنا "
-"مع بياناتكم، يُرجى التواصل معنا عبر:"
+"إذا كانت لديكم أي أسئلة أو مخاوف بشأن سياسة الخصوصية هذه أو كيفية تعاملنا مع "
+"بياناتكم، يُرجى التواصل معنا عبر:"
 
 #: base/templates/base/legal.html:81 base/templates/base/legal.html:139
 #: base/templates/base/legal.html:176
@@ -806,8 +1037,8 @@ msgid ""
 "Please read them carefully."
 msgstr ""
 "تنظم شروط الاستخدام هذه («الشروط») استخدامكم لموقعنا الإلكتروني وخدماتنا. "
-"وبمجرد دخولكم إلى الموقع أو استخدامه، فإنكم توافقون على هذه الشروط. "
-"يُرجى قراءتها بعناية."
+"وبمجرد دخولكم إلى الموقع أو استخدامه، فإنكم توافقون على هذه الشروط. يُرجى "
+"قراءتها بعناية."
 
 #: base/templates/base/legal.html:90
 msgid "Use of the Website"
@@ -848,8 +1079,8 @@ msgid ""
 "strictly prohibited."
 msgstr ""
 "جميع محتويات هذا الموقع، بما في ذلك النصوص والصور والرسومات والشعارات "
-"والشيفرات البرمجية، مملوكة لنا أو مرخصة لصالحنا. ويُحظر منعًا باتًا "
-"استخدام هذه المحتويات دون تصريح."
+"والشيفرات البرمجية، مملوكة لنا أو مرخصة لصالحنا. ويُحظر منعًا باتًا استخدام هذه "
+"المحتويات دون تصريح."
 
 #: base/templates/base/legal.html:105
 msgid "Third-Party Links"
@@ -877,10 +1108,9 @@ msgid ""
 "the fullest extent permitted by law, we disclaim all warranties, express or "
 "implied."
 msgstr ""
-"نقدم هذا الموقع «كما هو» و«حسب توفره»، ولا نضمن خلوه من الأخطاء أو ضمان "
-"أمنه أو استمرارية عمله دون انقطاع. وإلى أقصى حد يسمح به القانون، نخلي "
-"مسؤوليتنا عن جميع الضمانات، الصريحة منها والضمنية."
-
+"نقدم هذا الموقع «كما هو» و«حسب توفره»، ولا نضمن خلوه من الأخطاء أو ضمان أمنه "
+"أو استمرارية عمله دون انقطاع. وإلى أقصى حد يسمح به القانون، نخلي مسؤوليتنا "
+"عن جميع الضمانات، الصريحة منها والضمنية."
 
 #: base/templates/base/legal.html:115
 msgid "Limitation of Liability"
@@ -892,9 +1122,9 @@ msgid ""
 "damages arising from your use of our website or services, even if we have "
 "been advised of the possibility of such damages."
 msgstr ""
-"لا نتحمل المسؤولية عن أي أضرار مباشرة أو غير مباشرة أو عرضية أو تبعية "
-"ناجمة عن استخدامكم لموقعنا الإلكتروني أو خدماتنا، حتى لو أُبلغنا "
-"باحتمال وقوع مثل هذه الأضرار."
+"لا نتحمل المسؤولية عن أي أضرار مباشرة أو غير مباشرة أو عرضية أو تبعية ناجمة "
+"عن استخدامكم لموقعنا الإلكتروني أو خدماتنا، حتى لو أُبلغنا باحتمال وقوع مثل "
+"هذه الأضرار."
 
 #: base/templates/base/legal.html:120
 msgid "Termination"
@@ -905,8 +1135,8 @@ msgid ""
 "We reserve the right to terminate your access to our website at any time, "
 "without notice, for any reason, including breach of these Terms."
 msgstr ""
-"نحتفظ بالحق في إنهاء إمكانية وصولكم إلى موقعنا الإلكتروني في أي وقت "
-"ودون إشعار مسبق، لأي سبب كان، بما في ذلك مخالفة هذه الشروط."
+"نحتفظ بالحق في إنهاء إمكانية وصولكم إلى موقعنا الإلكتروني في أي وقت ودون "
+"إشعار مسبق، لأي سبب كان، بما في ذلك مخالفة هذه الشروط."
 
 #: base/templates/base/legal.html:125
 msgid "Governing Law"
@@ -917,8 +1147,8 @@ msgid ""
 "These Terms are governed by the laws of Morocco. Any disputes related to "
 "these Terms will be resolved exclusively in the courts of Morocco."
 msgstr ""
-"تخضع هذه الشروط للقوانين المعمول بها في المغرب. وتُحال أي نزاعات متعلقة "
-"بهذه الشروط حصريًا إلى المحاكم المغربية للفصل فيها."
+"تخضع هذه الشروط للقوانين المعمول بها في المغرب. وتُحال أي نزاعات متعلقة بهذه "
+"الشروط حصريًا إلى المحاكم المغربية للفصل فيها."
 
 #: base/templates/base/legal.html:130
 msgid "Changes to the Terms"
@@ -931,10 +1161,9 @@ msgid ""
 "of the website after changes constitutes your acceptance of the revised "
 "Terms."
 msgstr ""
-"قد نقوم بتحديث هذه الشروط من حين لآخر. وفي حال إجراء تعديلات جوهرية، "
-"سنُعلمكم بذلك من خلال نشر النسخة المحدّثة من الشروط على هذه الصفحة. "
-"ويُعد استمراركم في استخدام الموقع بعد نشر التعديلات موافقةً منكم على "
-"الشروط المعدّلة."
+"قد نقوم بتحديث هذه الشروط من حين لآخر. وفي حال إجراء تعديلات جوهرية، سنُعلمكم "
+"بذلك من خلال نشر النسخة المحدّثة من الشروط على هذه الصفحة. ويُعد استمراركم في "
+"استخدام الموقع بعد نشر التعديلات موافقةً منكم على الشروط المعدّلة."
 
 #: base/templates/base/legal.html:136
 msgid ""
@@ -948,8 +1177,8 @@ msgid ""
 "satisfaction. Our guarantee policy outlines the terms under which we stand "
 "by our commitments."
 msgstr ""
-"نلتزم بتقديم خدمات عالية الجودة وضمان رضا العملاء. وتوضح سياسة الضمان "
-"لدينا الشروط التي نلتزم بموجبها بتعهداتنا."
+"نلتزم بتقديم خدمات عالية الجودة وضمان رضا العملاء. وتوضح سياسة الضمان لدينا "
+"الشروط التي نلتزم بموجبها بتعهداتنا."
 
 #: base/templates/base/legal.html:147
 msgid "Service Quality"
@@ -1023,8 +1252,8 @@ msgid ""
 "resulting from the use or unavailability of our services."
 msgstr ""
 "يقتصر ضماننا على معالجة المشكلات التي تدخل ضمن نطاق خدماتنا. ولا نتحمل "
-"المسؤولية عن أي أضرار غير مباشرة أو تبعية ناجمة عن استخدام خدماتنا "
-"أو عدم توفرها."
+"المسؤولية عن أي أضرار غير مباشرة أو تبعية ناجمة عن استخدام خدماتنا أو عدم "
+"توفرها."
 
 #: base/templates/base/widgets/fnoc_file_input.html:13
 msgid "Clear current"
@@ -1050,9 +1279,9 @@ msgstr "محتوى مخفي"
 msgid "Log in to view"
 msgstr "سجّل الدخول للاطلاع على المحتوى"
 
-#: base/views.py:78 bdc/views.py:361 bdc/views.py:432 bdc/views.py:450
-#: bdc/views.py:468 bdc/views.py:473 bdc/views.py:491 bdc/views.py:637
-#: bdc/views.py:640 bdc/views.py:662 bdc/views.py:669 bidding/views.py:76
+#: base/views.py:78 bdc/views.py:350 bdc/views.py:402 bdc/views.py:420
+#: bdc/views.py:442 bdc/views.py:469 bdc/views.py:472 bdc/views.py:611
+#: bdc/views.py:614 bdc/views.py:635 bdc/views.py:642 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
 #: bidding/views.py:2126 bidding/views.py:2147 bidding/views.py:2181
 #: nas/views.py:374 nas/views.py:378 nas/views.py:391 nas/views.py:463
@@ -1060,12 +1289,13 @@ msgstr "سجّل الدخول للاطلاع على المحتوى"
 #: templates/portal/snippets/lots/qu-ag.html:22
 #: templates/portal/snippets/lots/sa-me-vi.html:22
 #: templates/portal/snippets/tenders/qu-ag.html:36
+#: templates/portal/tender-details.html:273
 msgid "Not found"
 msgstr "غير موجود"
 
-#: base/views.py:83 base/views.py:87 bdc/views.py:69 bdc/views.py:283
-#: bdc/views.py:351 bdc/views.py:419 bdc/views.py:460 bdc/views.py:501
-#: bdc/views.py:634 bdc/views.py:666 bdc/views.py:690 bidding/views.py:68
+#: base/views.py:83 base/views.py:87 bdc/views.py:60 bdc/views.py:274
+#: bdc/views.py:340 bdc/views.py:389 bdc/views.py:429 bdc/views.py:482
+#: bdc/views.py:608 bdc/views.py:639 bdc/views.py:663 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
 #: bidding/views.py:173 bidding/views.py:255 bidding/views.py:350
 #: bidding/views.py:367 bidding/views.py:419 bidding/views.py:468
@@ -1081,8 +1311,8 @@ msgstr "غير موجود"
 #: bidding/views.py:2175 nas/views.py:68 nas/views.py:99 nas/views.py:241
 #: nas/views.py:360 nas/views.py:459 nas/views.py:470 nas/views.py:478
 #: nas/views.py:482 nas/views.py:486 nas/views.py:514 nas/views.py:525
-#: nas/views.py:558 nas/views.py:571 nas/views.py:696 nas/views.py:765
-#: nas/views.py:813
+#: nas/views.py:558 nas/views.py:571 nas/views.py:686 nas/views.py:755
+#: nas/views.py:803
 msgid "Permission denied"
 msgstr "تم رفض الإذن"
 
@@ -1091,148 +1321,115 @@ msgstr "تم رفض الإذن"
 msgid "File not found"
 msgstr "الملف غير موجود"
 
-#: bdc/models.py:16
+#: bdc/models.py:15
 msgid "Portal Id"
 msgstr "معرّف البوابة"
 
-#: bdc/models.py:17 bdc/models.py:98 bidding/models.py:432
-#: bidding/models.py:474 templates/bidding/bid-details.html:33
-#: templates/bidding/bid-details.html:528
-#: templates/bidding/bid-details.html:577 templates/bidding/bids-list.html:259
-#: templates/bidding/expenses-list.html:219
-#: templates/bidding/tasks-list.html:234
-msgid "Title"
-msgstr "العنوان"
-
-#: bdc/models.py:18 bidding/models.py:429 bidding/models.py:538
-#: bidding/models.py:595 bidding/models.py:629 flows/models.py:186
-#: insights/weasy.py:172 templates/bdc/bdc-details.html:72
-#: templates/bdc/snippets/bdcs/search-form.html:39
-#: templates/bidding/bid-form.html:64
-#: templates/portal/snippets/tenders/search-form.html:40
-#: templates/portal/tender-details.html:128
-msgid "Reference"
-msgstr "المرجع"
-
 #: bdc/models.py:19
-msgid "Date published"
-msgstr "تاريخ النشر"
-
-#: bdc/models.py:20
 msgid "Bid deadline"
 msgstr "آخر أجل لتقديم العروض"
 
-
-#: bdc/models.py:21
+#: bdc/models.py:20
 msgid "Works execution location"
 msgstr "مكان تنفيذ الأشغال"
 
-#: bdc/models.py:23
-msgid "Date created"
-msgstr "تاريخ الإنشاء"
-
-#: bdc/models.py:24
-msgid "Date updated"
-msgstr "تاريخ التحديث"
-
-#: bdc/models.py:25 templates/bdc/snippets/bdcs/menu-clean.html:23
+#: bdc/models.py:24 templates/bdc/snippets/bdcs/menu-clean.html:23
 #: templates/bdc/snippets/bdcs/search-form.html:125
 #: templates/portal/snippets/tenders/search-form.html:231
 msgid "Unsuccessful"
 msgstr "غير ناجح"
 
-#: bdc/models.py:26 templates/bdc/snippets/bdcs/bdc-actions.html:49
-msgid "Official link"
-msgstr "الرابط الرسمي"
-
-#: bdc/models.py:28 insights/weasy.py:171 templates/bdc/bdc-details.html:81
-#: templates/bdc/snippets/bdcs/search-form.html:107
-#: templates/portal/snippets/lots/lot-details.html:62
-#: templates/portal/snippets/tenders/search-form.html:108
-msgid "Category"
-msgstr "الفئة"
-
 #: bdc/models.py:29
-msgid "Public client"
-msgstr "صاحب المشروع العمومي"
-
-#: bdc/models.py:30
 msgid "Nature of prestations"
 msgstr "طبيعة الخدمات"
 
-#: bdc/models.py:32
+#: bdc/models.py:31
 msgid "Bids count"
 msgstr "عدد العروض"
 
-#: bdc/models.py:33
+#: bdc/models.py:32
 msgid "Winner Amount Inc. taxes"
 msgstr "مبلغ العرض الفائز شاملًا الضرائب"
 
-#: bdc/models.py:34 templates/bdc/bdc-details.html:124
+#: bdc/models.py:33 templates/bdc/bdc-details.html:134
 msgid "Winner entity"
 msgstr "الجهة الفائزة"
 
-#: bdc/models.py:35 templates/bdc/bdc-details.html:103
+#: bdc/models.py:34 templates/bdc/bdc-details.html:113
 msgid "Results published"
 msgstr "تم نشر النتائج"
 
-#: bdc/models.py:46 bdc/models.py:95 bdc/models.py:117 nas/models.py:385
+#: bdc/models.py:45 bdc/models.py:88 bdc/models.py:110 nas/models.py:385
 msgid "Purchase Order"
 msgstr "أمر الشراء"
 
-#: bdc/models.py:96 nas/models.py:253 nas/models.py:293 nas/models.py:311
+#: bdc/models.py:89 nas/models.py:253 nas/models.py:293 nas/models.py:311
 #: nas/models.py:327
 msgid "Rank"
 msgstr "الترتيب"
 
-#: bdc/models.py:97 flows/models.py:127 flows/models.py:220 flows/models.py:341
+#: bdc/models.py:90 bdc/weasy.py:72 flows/models.py:127 flows/models.py:220
+#: flows/models.py:341
 msgid "Number"
 msgstr "الرقم"
 
-#: bdc/models.py:99 templates/bdc/bdc-articles-pdf.html:247
+#: bdc/models.py:92 bdc/weasy.py:77 templates/bdc/bdc-articles-pdf.html:247
 #: templates/bdc/snippets/articles/articles-details-list.html:37
 msgid "Specifications"
 msgstr "المواصفات"
 
-#: bdc/models.py:100 templates/bdc/bdc-articles-pdf.html:264
+#: bdc/models.py:93 bdc/weasy.py:78 templates/bdc/bdc-articles-pdf.html:264
 #: templates/bdc/snippets/articles/articles-details-list.html:54
 msgid "Warranties"
 msgstr "الضمانات"
 
-#: bdc/models.py:102
+#: bdc/models.py:95
 msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
-#: bdc/models.py:103 flows/models.py:189
+#: bdc/models.py:96 bdc/weasy.py:75 flows/models.py:189
 #: templates/bdc/bdc-articles-pdf.html:221
 #: templates/bdc/snippets/articles/articles-details-list.html:12
 msgid "Quantity"
 msgstr "الكمية"
 
-#: bdc/models.py:104
+#: bdc/models.py:97
 msgid "VAT %"
 msgstr "نسبة الضريبة على القيمة المضافة"
 
-#: bdc/models.py:109
+#: bdc/models.py:102
 msgid "Article"
 msgstr "البند"
 
-#: bdc/models.py:119
+#: bdc/models.py:112
 msgid "Link"
 msgstr "الرابط"
 
-#: bdc/models.py:124
+#: bdc/models.py:117
 msgid "Attachement"
 msgstr "المرفق"
 
-#: bdc/views.py:423 bdc/views.py:427 bdc/views.py:464 bdc/views.py:636
-#: bdc/views.py:661 bdc/views.py:686 bidding/views.py:72 bidding/views.py:111
-#: bidding/views.py:127 bidding/views.py:177 bidding/views.py:181
-#: bidding/views.py:199 bidding/views.py:206 bidding/views.py:375
-#: bidding/views.py:1640 bidding/views.py:1831 bidding/views.py:1989
-#: nas/views.py:594
+#: bdc/views.py:393 bdc/views.py:397 bdc/views.py:433 bdc/views.py:437
+#: bdc/views.py:610 bdc/views.py:634 bdc/views.py:659 bidding/views.py:72
+#: bidding/views.py:111 bidding/views.py:127 bidding/views.py:177
+#: bidding/views.py:181 bidding/views.py:199 bidding/views.py:206
+#: bidding/views.py:375 bidding/views.py:1640 bidding/views.py:1831
+#: bidding/views.py:1989 nas/views.py:594
 msgid "Bad request"
 msgstr "طلب غير صالح"
+
+#: bdc/weasy.py:20 insights/weasy.py:110
+msgid "Generated by "
+msgstr "تم الإنشاء بواسطة "
+
+#: bdc/weasy.py:74
+msgid "UOM"
+msgstr ""
+
+#: bdc/weasy.py:76 templates/bdc/bdc-articles-pdf.html:230
+#: templates/bdc/snippets/articles/articles-details-list.html:20
+msgid "VAT"
+msgstr "الضريبة على القيمة المضافة"
 
 #: bidding/forms.py:30 templates/bidding/bid-details.html:204
 #: templates/bidding/bid-form.html:30 templates/bidding/bid-form.html:34
@@ -1291,6 +1488,7 @@ msgstr "الصورة الرمزية"
 #: bidding/models.py:97 nas/forms.py:22 templates/bidding/team-recap.html:492
 #: templates/bidding/team-recap.html:534 templates/bidding/team-recap.html:576
 #: templates/bidding/team-recap.html:623 templates/bidding/team-recap.html:665
+#: templates/crm/snippets/customers/customer-menu-sort.html:17
 msgid "Username"
 msgstr "اسم المستخدم"
 
@@ -1301,15 +1499,6 @@ msgstr "تاريخ انتهاء الصلاحية"
 #: bidding/models.py:101
 msgid "Show my email"
 msgstr "إظهار بريدي الإلكتروني"
-
-#: bidding/models.py:103 flows/models.py:123 flows/models.py:207
-#: flows/models.py:337 nas/choices.py:17 nas/choices.py:39 nas/choices.py:52
-#: nas/choices.py:58 nas/choices.py:68 templates/bidding/bids-list.html:208
-#: templates/bidding/expenses-list.html:168
-#: templates/bidding/tasks-list.html:187
-#: templates/portal/snippets/tenders/menu-fav-clean.html:36
-msgid "Cancelled"
-msgstr "ملغى"
 
 #: bidding/models.py:104
 msgid "Sent on"
@@ -1359,7 +1548,7 @@ msgstr "حالة العرض"
 msgid "Details"
 msgstr "التفاصيل"
 
-#: bidding/models.py:136 insights/weasy.py:182
+#: bidding/models.py:136 insights/weasy.py:181
 #: templates/bidding/bid-details.html:84 templates/bidding/expense-form.html:48
 #: templates/bidding/snippets/bids/bid-menu-sort.html:40
 #: templates/bidding/snippets/bonds/bond-menu-sort.html:32
@@ -1394,8 +1583,8 @@ msgstr "ملف العرض"
 msgid "Receipt file"
 msgstr "ملف الإيصال"
 
-#: bidding/models.py:146 templates/bdc/bdc-details.html:115
-#: templates/bdc/bdc-details.html:129 templates/bidding/bid-details.html:143
+#: bidding/models.py:146 templates/bdc/bdc-details.html:125
+#: templates/bdc/bdc-details.html:139 templates/bidding/bid-details.html:143
 #: templates/bidding/bid-details.html:479 templates/bidding/team-recap.html:714
 msgid "Result"
 msgstr "النتيجة"
@@ -1404,14 +1593,6 @@ msgstr "النتيجة"
 #: templates/bidding/snippets/tenders/tender-menu-sort.html:25
 msgid "Tender published"
 msgstr "تاريخ نشر طلب العروض"
-
-#: bidding/models.py:280 templates/bdc/bdc-details.html:30
-#: templates/bdc/snippets/bdcs/bdc-summary.html:56
-#: templates/bidding/bid-form.html:84 templates/bidding/tenders-list.html:60
-#: templates/portal/snippets/tenders/tender-summary.html:71
-#: templates/portal/tender-details.html:41
-msgid "Bidding deadline"
-msgstr "آخر أجل لتقديم العروض"
 
 #: bidding/models.py:287 templates/bidding/bid-details.html:129
 #: templates/bidding/snippets/bids/bid-menu-sort.html:33
@@ -1423,7 +1604,6 @@ msgstr "تاريخ تقديم العرض"
 #: bidding/models.py:294
 msgid "Latest Bid update"
 msgstr "تاريخ آخر تحديث للعرض"
-
 
 #: bidding/models.py:301 templates/bidding/bid-details.html:185
 msgid "Bond return date"
@@ -1475,7 +1655,7 @@ msgid "Bid"
 msgstr "العرض"
 
 #: bidding/models.py:431 bidding/models.py:599 bidding/models.py:639
-#: insights/weasy.py:174 templates/bdc/bdc-articles-pdf.html:156
+#: insights/weasy.py:173 templates/bdc/bdc-articles-pdf.html:156
 #: templates/bdc/snippets/bdcs/search-form.html:40
 #: templates/bidding/bid-details.html:226 templates/bidding/bid-form.html:44
 #: templates/bidding/expense-form.html:28 templates/bidding/task-form.html:28
@@ -1504,6 +1684,7 @@ msgstr "ملف الشروط"
 #: templates/bidding/snippets/expenses/expense-item.html:11
 #: templates/bidding/snippets/tasks/task-item.html:15
 #: templates/bidding/snippets/tasks/task-item.html:36
+#: templates/crm/snippets/customers/customer-search-form.html:48
 msgid "Status"
 msgstr "الحالة"
 
@@ -1523,7 +1704,7 @@ msgstr "عاجل"
 
 #: bidding/models.py:537 bidding/models.py:594 bidding/models.py:628
 #: nas/models.py:226 nas/models.py:346 nas/models.py:368
-#: templates/bdc/bdc-articles-pdf.html:140 templates/bdc/bdc-details.html:59
+#: templates/bdc/bdc-articles-pdf.html:140 templates/bdc/bdc-details.html:69
 #: templates/bdc/snippets/bdcs/search-form.html:38
 #: templates/bidding/bid-details.html:199
 #: templates/portal/snippets/tenders/search-form.html:39
@@ -1699,7 +1880,6 @@ msgstr "تم تعطيل العضو بنجاح"
 msgid "Failed disabling member"
 msgstr "تعذّر تعطيل العضو"
 
-
 #: bidding/views.py:477
 msgid "You can not enable yourself"
 msgstr "لا يمكنك تفعيل عضويتك بنفسك"
@@ -1829,27 +2009,27 @@ msgstr "تم حذف المصروف بنجاح"
 msgid "Expense creator is not an active team member"
 msgstr "منشئ المصروف ليس عضوًا نشطًا في الفريق"
 
-#: emarches/settings.py:191
+#: emarches/settings.py:201
 msgid "English"
 msgstr "الإنجليزية"
 
-#: emarches/settings.py:192
+#: emarches/settings.py:202
 msgid "French"
 msgstr "الفرنسية"
 
-#: emarches/settings.py:193
+#: emarches/settings.py:203
 msgid "Arabic"
 msgstr "العربية"
 
-#: emarches/settings.py:194
+#: emarches/settings.py:204
 msgid "Amazigh"
 msgstr "الأمازيغية"
 
-#: emarches/settings.py:195
+#: emarches/settings.py:205
 msgid "Spanish"
 msgstr "الإسبانية"
 
-#: emarches/settings.py:196
+#: emarches/settings.py:206
 msgid "German"
 msgstr "الألمانية"
 
@@ -1977,6 +2157,7 @@ msgid "Trial"
 msgstr "فترة تجريبية"
 
 #: flows/models.py:205
+#: templates/crm/snippets/customers/customer-search-form.html:51
 msgid "Active"
 msgstr "نشط"
 
@@ -2001,7 +2182,6 @@ msgstr "الدولار الأمريكي"
 #: flows/models.py:326
 msgid "Cash"
 msgstr "نقدًا"
-
 
 #: flows/models.py:327
 msgid "Bank Transfer"
@@ -2028,11 +2208,7 @@ msgstr "قيد الانتظار"
 msgid "Failed"
 msgstr "فشل"
 
-#: insights/weasy.py:110
-msgid "Generated by "
-msgstr "تم الإنشاء بواسطة "
-
-#: insights/weasy.py:170 nas/models.py:172 nas/models.py:189 nas/models.py:207
+#: insights/weasy.py:169 nas/models.py:172 nas/models.py:189 nas/models.py:207
 #: templates/base/base.html:15 templates/base/base.html:16
 #: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
 #: templates/bidding/snippets/bids/bid-actions.html:13
@@ -2041,8 +2217,8 @@ msgstr "تم الإنشاء بواسطة "
 msgid "Tender"
 msgstr "طلب العروض"
 
-#: insights/weasy.py:173 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
-#: nas/choices.py:94 templates/bdc/bdc-details.html:76
+#: insights/weasy.py:172 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
+#: nas/choices.py:94 templates/bdc/bdc-details.html:86
 #: templates/bdc/snippets/bdcs/menu-sort.html:23
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/menu-sort.html:35
@@ -2050,15 +2226,15 @@ msgstr "طلب العروض"
 msgid "Published"
 msgstr "تاريخ النشر"
 
-#: insights/weasy.py:175 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
-#: nas/choices.py:92 templates/bdc/bdc-details.html:63
+#: insights/weasy.py:174 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
+#: nas/choices.py:92 templates/bdc/bdc-details.html:73
 #: templates/bdc/snippets/bdcs/menu-sort.html:17
 #: templates/portal/snippets/tenders/menu-sort.html:17
 #: templates/portal/tender-details.html:117
 msgid "Deadline"
 msgstr "آخر أجل"
 
-#: insights/weasy.py:176 nas/choices.py:83 nas/choices.py:84
+#: insights/weasy.py:175 nas/choices.py:83 nas/choices.py:84
 #: templates/bidding/bid-details.html:101 templates/bidding/bid-form.html:94
 #: templates/portal/snippets/lots/lot-details.html:42
 #: templates/portal/snippets/tenders/menu-sort.html:23
@@ -2066,56 +2242,56 @@ msgstr "آخر أجل"
 msgid "Estimate"
 msgstr "التقدير المالي"
 
-#: insights/weasy.py:177 templates/bidding/bid-form.html:74
+#: insights/weasy.py:176 templates/bidding/bid-form.html:74
 msgid "Bond"
 msgstr "الضمان"
 
-#: insights/weasy.py:178
+#: insights/weasy.py:177
 msgid "Opening date"
 msgstr "تاريخ فتح الأظرفة"
 
-#: insights/weasy.py:179
+#: insights/weasy.py:178
 msgid "Lot Number"
 msgstr "رقم الحصة"
 
-#: insights/weasy.py:180
+#: insights/weasy.py:179
 msgid "Admin Exam"
 msgstr "التقييم الإداري"
 
-#: insights/weasy.py:181
+#: insights/weasy.py:180
 msgid "Tech Exam"
 msgstr "التقييم التقني"
 
-#: insights/weasy.py:183
+#: insights/weasy.py:182
 msgid "Corrected Amount"
 msgstr "المبلغ المصحح"
 
-#: insights/weasy.py:184
+#: insights/weasy.py:183
 msgid "Financial Race"
 msgstr "المنافسة المالية"
 
-#: insights/weasy.py:185 templates/base/snippets/digests/last-30-days.html:9
+#: insights/weasy.py:184 templates/base/snippets/digests/last-30-days.html:9
 msgid "Awarded Amount"
 msgstr "المبلغ الذي تمت الترسية عليه"
 
-#: insights/weasy.py:186
+#: insights/weasy.py:185
 msgid "Awarding justification"
 msgstr "مبررات الترسية"
 
-#: insights/weasy.py:192 nas/choices.py:62 nas/choices.py:67
+#: insights/weasy.py:191 nas/choices.py:62 nas/choices.py:67
 #: templates/portal/snippets/tenders/search-form.html:166
 msgid "Accepted"
 msgstr "مقبول"
 
-#: insights/weasy.py:193 insights/weasy.py:195
+#: insights/weasy.py:192 insights/weasy.py:194
 msgid "Rejected"
 msgstr "مرفوض"
 
-#: insights/weasy.py:194
+#: insights/weasy.py:193
 msgid "Reserve"
 msgstr "احتياطي"
 
-#: insights/weasy.py:196 nas/choices.py:28
+#: insights/weasy.py:195 nas/choices.py:28
 #: templates/bdc/snippets/bdcs/menu-clean.html:33
 #: templates/bdc/snippets/bdcs/search-form.html:124
 msgid "Awarded"
@@ -2170,7 +2346,7 @@ msgstr "مُستردّ"
 msgid "Lost"
 msgstr "مفقود"
 
-#: nas/choices.py:27 templates/bdc/bdc-details.html:130
+#: nas/choices.py:27 templates/bdc/bdc-details.html:140
 msgid "Unknown"
 msgstr "غير معروف"
 
@@ -2237,7 +2413,7 @@ msgstr "مرفوض"
 msgid "Deliberated"
 msgstr "تم البت فيه"
 
-#: nas/choices.py:97 nas/choices.py:98 templates/bdc/bdc-details.html:121
+#: nas/choices.py:97 nas/choices.py:98 templates/bdc/bdc-details.html:131
 #: templates/bdc/snippets/bdcs/bdc-legend.html:155
 #: templates/bdc/snippets/bdcs/menu-sort.html:35
 msgid "Winner amount"
@@ -2250,7 +2426,6 @@ msgstr "مفتاح التوقيع الإلكتروني"
 #: nas/choices.py:132
 msgid "Manageriat"
 msgstr "الإدارة"
-
 
 #: nas/choices.py:133
 msgid "Rental"
@@ -2603,7 +2778,6 @@ msgstr "العناصر في كل صفحة"
 msgid "Full progress bar days"
 msgstr "عدد الأيام لعرض شريط التقدم كاملًا"
 
-
 #: nas/models.py:407 nas/models.py:413
 msgid "Show today's expired items"
 msgstr "إظهار العناصر التي انتهت صلاحيتها اليوم"
@@ -2684,27 +2858,27 @@ msgstr "تم حذف الوثيقة محددة الصلاحية بنجاح"
 msgid "Expirable delete unsuccessful"
 msgstr "تعذر حذف الوثيقة محددة الصلاحية"
 
-#: nas/views.py:667
+#: nas/views.py:657
 msgid "Qualifs updated successfully."
 msgstr "تم تحديث المؤهلات بنجاح."
 
-#: nas/views.py:682
+#: nas/views.py:672
 msgid "Agreements updated successfully."
 msgstr "تم تحديث الاعتمادات بنجاح."
 
-#: nas/views.py:739
+#: nas/views.py:729
 msgid "Data saved successfully"
 msgstr "تم حفظ البيانات بنجاح"
 
-#: nas/views.py:742
+#: nas/views.py:732
 msgid "Errors occurred while saving company data"
 msgstr "حدثت أخطاء أثناء حفظ بيانات المقاولة"
 
-#: nas/views.py:745 nas/views.py:751
+#: nas/views.py:735 nas/views.py:741
 msgid "Verification process failed"
 msgstr "فشلت عملية التحقق"
 
-#: nas/views.py:848
+#: nas/views.py:838
 msgid ""
 "Please select an image file less than 5MB, of type PNG, JPG/JPEG, WEBP, "
 "AVIF, or GIF."
@@ -2812,7 +2986,7 @@ msgstr "استخدام عنوان بريد إلكتروني آخر"
 #: templates/account/login.html:9 templates/account/login.html:31
 #: templates/account/request_login_code.html:5
 #: templates/authy/snippets/menu-user.html:84
-#: templates/base/snippets/menu-user.html:119 templates/mfa/authenticate.html:6
+#: templates/base/snippets/menu-user.html:100 templates/mfa/authenticate.html:6
 #: templates/mfa/authenticate.html:24 templates/openid/login.html:5
 #: templates/openid/login.html:9 templates/openid/login.html:20
 #: templates/socialaccount/login.html:6
@@ -3026,7 +3200,6 @@ msgstr ""
 "رمز تسجيل الدخول الخاص بك موضح أدناه. يرجى إدخاله في نافذة المتصفح المفتوحة "
 "لديك."
 
-
 #: templates/account/email/login_code_message.txt:9
 #: templates/account/email/password_reset_code_message.txt:9
 #: templates/account/email/unknown_account_message.txt:6
@@ -3050,8 +3223,8 @@ msgid ""
 "Your password reset code is listed below. Please enter it in your open "
 "browser window."
 msgstr ""
-"رمز إعادة تعيين كلمة المرور الخاص بك موضح أدناه. يرجى إدخاله في نافذة المتصفح "
-"المفتوحة لديك."
+"رمز إعادة تعيين كلمة المرور الخاص بك موضح أدناه. يرجى إدخاله في نافذة "
+"المتصفح المفتوحة لديك."
 
 #: templates/account/email/password_reset_code_subject.txt:3
 msgid "Password Reset Code"
@@ -3160,8 +3333,7 @@ msgstr ""
 msgid ""
 "Unable to confirm %(email)s because it is already confirmed by a different "
 "account."
-msgstr ""
-"تعذر تأكيد %(email)s لأنه سبق تأكيده باستخدام حساب آخر."
+msgstr "تعذر تأكيد %(email)s لأنه سبق تأكيده باستخدام حساب آخر."
 
 #: templates/account/email_confirm.html:36
 #, python-format
@@ -3190,7 +3362,7 @@ msgstr "أرسل إليّ رمز تسجيل الدخول"
 
 #: templates/account/logout.html:5 templates/account/logout.html:9
 #: templates/account/logout.html:22 templates/authy/snippets/menu-user.html:74
-#: templates/base/snippets/menu-user.html:109
+#: templates/base/snippets/menu-user.html:90
 #: templates/nas/snippets/menu-account.html:74
 #: templates/usersessions/usersession_list.html:76
 msgid "Sign Out"
@@ -3269,7 +3441,7 @@ msgstr "يجب التحقق من عنوان بريدك الإلكتروني ال
 #: templates/account/password_reset_from_key_done.html:5
 #: templates/account/password_reset_from_key_done.html:9
 #: templates/authy/snippets/menu-user.html:38
-#: templates/base/snippets/menu-user.html:129
+#: templates/base/snippets/menu-user.html:110
 msgid "Change Password"
 msgstr "تغيير كلمة المرور"
 
@@ -3299,7 +3471,8 @@ msgid ""
 "spam folder. Otherwise contact us if you do not receive it in a few minutes."
 msgstr ""
 "لقد أرسلنا إليك رسالة عبر البريد الإلكتروني. إذا لم تصلك، يرجى التحقق من "
-"مجلد الرسائل غير المرغوب فيها. وإذا لم تصلك خلال بضع دقائق، يرجى التواصل معنا."
+"مجلد الرسائل غير المرغوب فيها. وإذا لم تصلك خلال بضع دقائق، يرجى التواصل "
+"معنا."
 
 #: templates/account/password_reset_from_key.html:10
 msgid "Bad Token"
@@ -3312,8 +3485,8 @@ msgid ""
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
 "a>."
 msgstr ""
-"رابط إعادة تعيين كلمة المرور غير صالح، وربما لأنه استُخدم بالفعل. يرجى طلب "
-"<a href=\"%(passwd_reset_url)s\">رابط جديد لإعادة تعيين كلمة المرور</a>."
+"رابط إعادة تعيين كلمة المرور غير صالح، وربما لأنه استُخدم بالفعل. يرجى طلب <a "
+"href=\"%(passwd_reset_url)s\">رابط جديد لإعادة تعيين كلمة المرور</a>."
 
 #: templates/account/password_reset_from_key_done.html:12
 msgid "Your password is now changed."
@@ -3365,7 +3538,7 @@ msgstr "إنشاء حساب"
 #: templates/account/signup.html:8 templates/account/signup.html:34
 #: templates/account/signup_by_passkey.html:29
 #: templates/authy/snippets/menu-user.html:93
-#: templates/base/snippets/menu-user.html:139
+#: templates/base/snippets/menu-user.html:120
 #: templates/socialaccount/signup.html:9 templates/socialaccount/signup.html:25
 msgid "Sign Up"
 msgstr "إنشاء حساب"
@@ -3434,9 +3607,9 @@ msgid ""
 "receive the verification email within a few minutes."
 msgstr ""
 "لقد أرسلنا إليك رسالة عبر البريد الإلكتروني للتحقق من عنوانك. اتبع الرابط "
-"المرفق لإكمال عملية التسجيل. إذا لم تجد رسالة التحقق في صندوق الوارد الرئيسي، "
-"فتحقق من مجلد الرسائل غير المرغوب فيها. يرجى التواصل معنا إذا لم تصلك رسالة "
-"التحقق خلال بضع دقائق."
+"المرفق لإكمال عملية التسجيل. إذا لم تجد رسالة التحقق في صندوق الوارد "
+"الرئيسي، فتحقق من مجلد الرسائل غير المرغوب فيها. يرجى التواصل معنا إذا لم "
+"تصلك رسالة التحقق خلال بضع دقائق."
 
 #: templates/account/verified_email_required.html:13
 msgid ""
@@ -3606,10 +3779,10 @@ msgid ""
 "discover relevant opportunities, understand the market, monitor competitors, "
 "and make better decisions."
 msgstr ""
-"eMarchés هي منصة لذكاء سوق الصفقات العمومية، صُمّمت لفائدة الشركات العاملة "
-"في المغرب. نحوّل معلومات الصفقات العمومية المعقدة والموزعة على مصادر متعددة "
-"إلى معطيات تجارية قابلة للاستثمار، مما يساعد الشركات على اكتشاف الفرص "
-"المناسبة، وفهم السوق، ومتابعة المنافسين، واتخاذ قرارات أفضل."
+"eMarchés هي منصة لذكاء سوق الصفقات العمومية، صُمّمت لفائدة الشركات العاملة في "
+"المغرب. نحوّل معلومات الصفقات العمومية المعقدة والموزعة على مصادر متعددة إلى "
+"معطيات تجارية قابلة للاستثمار، مما يساعد الشركات على اكتشاف الفرص المناسبة، "
+"وفهم السوق، ومتابعة المنافسين، واتخاذ قرارات أفضل."
 
 #: templates/base/about.html:47
 msgid "Because finding a tender is not enough."
@@ -3631,9 +3804,9 @@ msgid ""
 "opportunities, understanding them quickly, and knowing what happened before."
 msgstr ""
 "تنشر المؤسسات العمومية المغربية يوميًا إعلانات عن الصفقات في مجالات البناء، "
-"والخدمات، والتوريدات، والتكنولوجيا، والاستشارات، والبنية التحتية، وغيرها "
-"من القطاعات. ويتمثل التحدي في العثور على الفرص المناسبة، وفهمها بسرعة، "
-"ومعرفة ما حدث في الصفقات السابقة."
+"والخدمات، والتوريدات، والتكنولوجيا، والاستشارات، والبنية التحتية، وغيرها من "
+"القطاعات. ويتمثل التحدي في العثور على الفرص المناسبة، وفهمها بسرعة، ومعرفة "
+"ما حدث في الصفقات السابقة."
 
 #: templates/base/about.html:81
 msgid "Find Opportunities That Matter"
@@ -3645,8 +3818,8 @@ msgid ""
 "values, procurement categories, contracting authorities, and other criteria "
 "relevant to your company."
 msgstr ""
-"اكتشف الصفقات بناءً على نشاط شركتك، والمناطق المستهدفة، وقيم العقود، "
-"وفئات المشتريات، والجهات صاحبة المشاريع، وغيرها من المعايير التي تهم شركتك."
+"اكتشف الصفقات بناءً على نشاط شركتك، والمناطق المستهدفة، وقيم العقود، وفئات "
+"المشتريات، والجهات صاحبة المشاريع، وغيرها من المعايير التي تهم شركتك."
 
 #: templates/base/about.html:94
 msgid "Understand Your Market"
@@ -3670,9 +3843,8 @@ msgid ""
 "Explore competitors, previous awards, submitted offers, and historical "
 "procurement activity."
 msgstr ""
-"تعرّف على الشركات التي تنشط في سوقك وتلك التي تفوز بالعقود. استكشف "
-"المنافسين، ونتائج إسناد الصفقات السابقة، والعروض المقدمة، وسجل نشاط "
-"الصفقات العمومية."
+"تعرّف على الشركات التي تنشط في سوقك وتلك التي تفوز بالعقود. استكشف المنافسين، "
+"ونتائج إسناد الصفقات السابقة، والعروض المقدمة، وسجل نشاط الصفقات العمومية."
 
 #: templates/base/about.html:120
 msgid "Make Decisions With Data"
@@ -3695,8 +3867,8 @@ msgid ""
 "Traditional tender discovery is reactive. You find a notice, read the "
 "documents, and decide whether to bid."
 msgstr ""
-"يعتمد البحث التقليدي عن الصفقات على التفاعل مع الإعلانات المنشورة: تعثر "
-"على إعلان، وتقرأ الوثائق، ثم تقرر ما إذا كنت ستشارك في طلب العروض."
+"يعتمد البحث التقليدي عن الصفقات على التفاعل مع الإعلانات المنشورة: تعثر على "
+"إعلان، وتقرأ الوثائق، ثم تقرر ما إذا كنت ستشارك في طلب العروض."
 
 #: templates/base/about.html:149
 msgid ""
@@ -3769,8 +3941,7 @@ msgstr "البناء والبنية التحتية"
 msgid ""
 "Identify projects, contracting authorities, competitors, and historical "
 "contract activity."
-msgstr ""
-"حدّد المشاريع، والجهات صاحبة المشاريع، والمنافسين، وسجل العقود السابقة."
+msgstr "حدّد المشاريع، والجهات صاحبة المشاريع، والمنافسين، وسجل العقود السابقة."
 
 #: templates/base/about.html:244
 msgid "Technology & Digital Services"
@@ -3793,8 +3964,7 @@ msgid ""
 "Discover purchasing activity across institutions and identify recurring "
 "procurement needs."
 msgstr ""
-"اكتشف أنشطة الشراء لدى مختلف المؤسسات، وحدّد احتياجاتها المتكررة من "
-"المشتريات."
+"اكتشف أنشطة الشراء لدى مختلف المؤسسات، وحدّد احتياجاتها المتكررة من المشتريات."
 
 #: templates/base/about.html:270
 msgid "Professional & Business Services"
@@ -3824,8 +3994,8 @@ msgid ""
 "organizing information manually."
 msgstr ""
 "قد يستنزف البحث عن الصفقات العمومية وقتًا وموارد تجارية ثمينة. توفر eMarchés "
-"لفريقك بيئة موحدة لاستكشاف معلومات السوق، بدلًا من تكرار عمليات البحث "
-"وجمع المعلومات ومقارنتها وتنظيمها يدويًا."
+"لفريقك بيئة موحدة لاستكشاف معلومات السوق، بدلًا من تكرار عمليات البحث وجمع "
+"المعلومات ومقارنتها وتنظيمها يدويًا."
 
 #: templates/base/about.html:315
 msgid "Less Searching"
@@ -3877,8 +4047,8 @@ msgid ""
 "eMarchés is more than a tender database. It is a business intelligence "
 "platform for the Moroccan public procurement market."
 msgstr ""
-"eMarchés أكثر من مجرد قاعدة بيانات للصفقات؛ إنها منصة لذكاء الأعمال "
-"مخصصة لسوق الصفقات العمومية المغربي."
+"eMarchés أكثر من مجرد قاعدة بيانات للصفقات؛ إنها منصة لذكاء الأعمال مخصصة "
+"لسوق الصفقات العمومية المغربي."
 
 #: templates/base/about.html:407
 msgid "Find procurement opportunities relevant to your business."
@@ -3988,8 +4158,8 @@ msgid ""
 "PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free "
 "Listing Files Download"
 msgstr ""
-"الصفقات العمومية بالمغرب، وسوق المشتريات العمومية، وطلبات العروض، "
-"والطلبيات العمومية، والعروض، والإعلانات المجانية، وتنزيل الملفات."
+"الصفقات العمومية بالمغرب، وسوق المشتريات العمومية، وطلبات العروض، والطلبيات "
+"العمومية، والعروض، والإعلانات المجانية، وتنزيل الملفات."
 
 #: templates/base/errors/400.html:4
 msgid "Bad Request"
@@ -4110,18 +4280,18 @@ msgid ""
 "procurement market. With expertise and dedication, we help businesses "
 "succeed."
 msgstr ""
-"eMarchés شريكك الموثوق لفهم سوق الصفقات العمومية المغربي واستكشاف فرصه. "
-"بفضل خبرتنا والتزامنا، نساعد الشركات على تحقيق النجاح."
+"eMarchés شريكك الموثوق لفهم سوق الصفقات العمومية المغربي واستكشاف فرصه. بفضل "
+"خبرتنا والتزامنا، نساعد الشركات على تحقيق النجاح."
 
 #: templates/base/home.html:21
 msgid "running tenders"
 msgstr "طلبات العروض الجارية"
 
-#: templates/base/home.html:24
+#: templates/base/home.html:23
 msgid "at stake"
 msgstr "في المنافسة"
 
-#: templates/base/home.html:28 templates/bidding/contract-details.html:102
+#: templates/base/home.html:27 templates/bidding/contract-details.html:102
 #: templates/insights/bidder-details.html:25
 #: templates/insights/bidder-pdf.html:63 templates/insights/bidder-pdf.html:128
 #: templates/insights/bidder-pdf.html:132
@@ -4130,7 +4300,7 @@ msgstr "في المنافسة"
 msgid "Tenders"
 msgstr "طلبات العروض"
 
-#: templates/base/home.html:29 templates/bidding/snippets/menu-bidding.html:15
+#: templates/base/home.html:28 templates/bidding/snippets/menu-bidding.html:15
 msgid "Concurrents"
 msgstr "المنافسون"
 
@@ -4213,6 +4383,19 @@ msgstr "نسبة النجاح"
 msgid "Nothing to show here !"
 msgstr "لا توجد بيانات لعرضها هنا!"
 
+#: templates/base/snippets/menu-admin.html:9
+msgid "System"
+msgstr ""
+
+#: templates/base/snippets/menu-admin.html:13
+msgid "Supervision"
+msgstr "الإشراف"
+
+#: templates/base/snippets/menu-admin.html:14
+#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
+msgid "Administration"
+msgstr "الإدارة"
+
 #: templates/base/snippets/menu-user.html:27
 #: templates/bdc/snippets/bdcs/menu-sort.html:45
 #: templates/nas/snippets/menu-account.html:20
@@ -4237,19 +4420,6 @@ msgstr "الاشتراك"
 #: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
 msgid "Stats"
 msgstr "الإحصائيات"
-
-#: templates/base/snippets/menu-user.html:89
-msgid "Supervision"
-msgstr "الإشراف"
-
-#: templates/base/snippets/menu-user.html:93
-#: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
-msgid "Administration"
-msgstr "الإدارة"
-
-#: templates/base/snippets/menu-user.html:94
-msgid "Database"
-msgstr "قاعدة البيانات"
 
 #: templates/base/snippets/paginator.html:3
 msgid "Page navigation"
@@ -4293,23 +4463,23 @@ msgid "Feel free to contact us if you have any issues"
 msgstr "لا تتردد في التواصل معنا إذا واجهت أي مشكلة."
 
 #: templates/base/snippets/user-notice.html:24
-#: templates/base/snippets/wip-banner.html:24
+#: templates/base/snippets/wip-banner.html:21
 msgid "Dismiss notice"
 msgstr "إخفاء الإشعار"
 
-#: templates/base/snippets/wip-banner.html:6
+#: templates/base/snippets/wip-banner.html:5
 msgid "Website testing notice"
 msgstr "إشعار بشأن اختبار الموقع"
 
-#: templates/base/snippets/wip-banner.html:14
+#: templates/base/snippets/wip-banner.html:13
 msgid "Website under test"
 msgstr "الموقع قيد الاختبار"
 
-#: templates/base/snippets/wip-banner.html:16
+#: templates/base/snippets/wip-banner.html:14
 msgid "Some information may be incomplete, inaccurate, or unavailable"
 msgstr "قد تكون بعض المعلومات غير مكتملة أو غير دقيقة أو غير متاحة."
 
-#: templates/base/snippets/wip-banner.html:17
+#: templates/base/snippets/wip-banner.html:15
 msgid "Thank you for your patience and feedback"
 msgstr "شكرًا على صبركم وملاحظاتكم."
 
@@ -4322,6 +4492,21 @@ msgid ""
 "This feature is under development and will be availaible in future versions."
 msgstr "هذه الميزة قيد التطوير وستتوفر في الإصدارات القادمة."
 
+#: templates/base/snippets/wip-pmmp-down.html:4
+#: templates/base/snippets/wip-pmmp-down.html:12
+#, fuzzy
+#| msgid "Official link"
+msgid "Official portal down"
+msgstr "الرابط الرسمي"
+
+#: templates/base/snippets/wip-pmmp-down.html:13
+msgid "is experiencing down times these days"
+msgstr ""
+
+#: templates/base/snippets/wip-pmmp-down.html:14
+msgid "Data on our website may not be updated as soon as usual"
+msgstr ""
+
 #: templates/bdc/bdc-articles-pdf.html:116
 msgid "Purchase Order Items"
 msgstr "بنود سند الطلب"
@@ -4329,11 +4514,6 @@ msgstr "بنود سند الطلب"
 #: templates/bdc/bdc-articles-pdf.html:204
 msgid "Items details"
 msgstr "تفاصيل البنود"
-
-#: templates/bdc/bdc-articles-pdf.html:230
-#: templates/bdc/snippets/articles/articles-details-list.html:20
-msgid "VAT"
-msgstr "الضريبة على القيمة المضافة"
 
 #: templates/bdc/bdc-articles-pdf.html:277
 #: templates/bdc/snippets/articles/articles-details-list.html:65
@@ -4358,142 +4538,149 @@ msgid "FAVORITED"
 msgstr "ضمن المفضلة"
 
 #: templates/bdc/bdc-details.html:47
-#: templates/bdc/snippets/bdcs/bdc-summary.html:76
+#: templates/bdc/snippets/bdcs/bdc-summary.html:86
 #: templates/portal/tender-details.html:30
 msgid "EXPIRED"
 msgstr "منتهية الصلاحية"
 
-#: templates/bdc/bdc-details.html:64 templates/bdc/bdc-details.html:104
-#: templates/bdc/snippets/bdcs/bdc-summary.html:56
+#: templates/bdc/bdc-details.html:57
+#: templates/bdc/snippets/bdcs/bdc-summary.html:37
+#: templates/bidding/bid-form.html:19 templates/bidding/bid-form.html:147
+#: templates/bidding/snippets/bids/bid-item.html:31
+#: templates/bidding/tenders-list.html:101
+#: templates/portal/snippets/tenders/tender-summary.html:88
+#: templates/portal/tender-details.html:57
+#: templates/portal/tender-details.html:514
+msgid "CANCELLED"
+msgstr "ملغى"
+
+#: templates/bdc/bdc-details.html:74 templates/bdc/bdc-details.html:114
+#: templates/bdc/snippets/bdcs/bdc-summary.html:66
 #: templates/portal/tender-details.html:118
 #: templates/portal/tender-details.html:221
 msgid "Morocco time"
 msgstr "توقيت المغرب"
 
-#: templates/bdc/bdc-details.html:68 templates/portal/tender-details.html:112
+#: templates/bdc/bdc-details.html:78 templates/portal/tender-details.html:112
 msgid "Time to Deadline"
 msgstr "الوقت المتبقي حتى آخر أجل"
 
-#: templates/bdc/bdc-details.html:69 templates/bdc/bdc-details.html:206
+#: templates/bdc/bdc-details.html:79 templates/bdc/bdc-details.html:204
 #: templates/nas/user-settings-edit.html:117
 #: templates/nas/user-settings-edit.html:197
 #: templates/portal/tender-details.html:113
-#: templates/portal/tender-details.html:427
+#: templates/portal/tender-details.html:437
 msgid "days"
 msgstr "أيام"
 
-#: templates/bdc/bdc-details.html:77 templates/bdc/bdc-details.html:192
-#: templates/bdc/bdc-details.html:198
+#: templates/bdc/bdc-details.html:87 templates/bdc/bdc-details.html:190
+#: templates/bdc/bdc-details.html:196
 #: templates/bdc/snippets/bdcs/bdc-legend.html:9
-#: templates/portal/snippets/tenders/tender-legend.html:8
-#: templates/portal/snippets/tenders/tender-legend.html:12
-#: templates/portal/tender-details.html:416
-#: templates/portal/tender-details.html:421
+#: templates/portal/snippets/tenders/tender-legend.html:10
+#: templates/portal/snippets/tenders/tender-legend.html:14
+#: templates/portal/tender-details.html:426
+#: templates/portal/tender-details.html:431
 msgid "UTC"
 msgstr "التوقيت العالمي المنسق (UTC)"
 
-#: templates/bdc/bdc-details.html:84
+#: templates/bdc/bdc-details.html:94
 #: templates/bdc/snippets/bdcs/bdc-legend.html:89
-#: templates/bdc/snippets/bdcs/bdc-summary.html:35
-#: templates/portal/snippets/tenders/tender-legend.html:91
+#: templates/bdc/snippets/bdcs/bdc-summary.html:45
+#: templates/portal/snippets/tenders/tender-legend.html:94
 #: templates/portal/snippets/tenders/tender-summary.html:50
 #: templates/portal/tender-details.html:137
 msgid "Execution Location"
 msgstr "مكان تنفيذ الصفقة"
 
-#: templates/bdc/bdc-details.html:87
+#: templates/bdc/bdc-details.html:97
 #: templates/bdc/snippets/bdcs/bdc-legend.html:100
-#: templates/bdc/snippets/bdcs/bdc-summary.html:42
-#: templates/portal/snippets/tenders/tender-legend.html:102
+#: templates/bdc/snippets/bdcs/bdc-summary.html:52
+#: templates/portal/snippets/tenders/tender-legend.html:105
 #: templates/portal/snippets/tenders/tender-summary.html:58
 #: templates/portal/tender-details.html:109
 msgid "Public Client"
 msgstr "الجهة صاحبة المشروع"
 
-#: templates/bdc/bdc-details.html:91
+#: templates/bdc/bdc-details.html:101
 msgid "Nature of service"
 msgstr "طبيعة الخدمة"
 
-#: templates/bdc/bdc-details.html:108
+#: templates/bdc/bdc-details.html:118
 msgid "Candidates"
 msgstr "المترشحون"
 
-#: templates/bdc/bdc-details.html:109
+#: templates/bdc/bdc-details.html:119
 msgid "Bids received"
 msgstr "العروض المتوصل بها"
 
-#: templates/bdc/bdc-details.html:116
-#: templates/bdc/snippets/bdcs/bdc-summary.html:108
+#: templates/bdc/bdc-details.html:126
+#: templates/bdc/snippets/bdcs/bdc-summary.html:118
 msgid "UNSUCCESSFUL"
 msgstr "غير مثمرة"
 
-#: templates/bdc/bdc-details.html:136
+#: templates/bdc/bdc-details.html:146
 msgid "Awarding"
 msgstr "إسناد الصفقة"
 
-#: templates/bdc/bdc-details.html:137
+#: templates/bdc/bdc-details.html:147
 msgid "No results found"
 msgstr "لم يتم العثور على أي نتائج"
 
-#: templates/bdc/bdc-details.html:153
+#: templates/bdc/bdc-details.html:163
 msgid "Items Details"
 msgstr "تفاصيل البنود"
 
-#: templates/bdc/bdc-details.html:171
+#: templates/bdc/bdc-details.html:179
 #: templates/insights/snippets/bidders/bidder-actions.html:7
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:163
 msgid "Export"
 msgstr "تصدير"
 
-#: templates/bdc/bdc-details.html:179
-#: templates/insights/bidder-details.html:272
-msgid "Print"
-msgstr "طباعة"
-
-#: templates/bdc/bdc-details.html:191 templates/bidding/team-recap.html:127
-#: templates/portal/tender-details.html:415
+#: templates/bdc/bdc-details.html:189 templates/bidding/team-recap.html:127
+#: templates/portal/tender-details.html:425
 msgid "Created"
 msgstr "تاريخ الإنشاء"
 
-#: templates/bdc/bdc-details.html:197
+#: templates/bdc/bdc-details.html:195
 msgid "Updated"
 msgstr "آخر تحديث"
 
-#: templates/bdc/bdc-details.html:202
+#: templates/bdc/bdc-details.html:200
 msgid "ID"
 msgstr "المعرّف"
 
-#: templates/bdc/bdc-details.html:205
+#: templates/bdc/bdc-details.html:203
 msgid "Display time"
 msgstr "وقت العرض"
 
-#: templates/bdc/bdc-details.html:222
+#: templates/bdc/bdc-details.html:220
 msgid "Purchase Order files"
 msgstr "ملفات سند الطلب"
 
-#: templates/bdc/bdc-details.html:226 templates/portal/tender-details.html:528
+#: templates/bdc/bdc-details.html:224 templates/portal/tender-details.html:538
 msgid ""
 "Once you click on an item, your browser or device should handle the download "
 "process."
 msgstr ""
 "عند النقر على أحد العناصر، سيتولى المتصفح أو الجهاز معالجة عملية التنزيل."
 
-#: templates/bdc/bdc-details.html:227
+#: templates/bdc/bdc-details.html:225
 msgid ""
 "We do not host these files. We only provide a link to their original "
 "locations."
 msgstr ""
 "لا نستضيف هذه الملفات على منصتنا، بل نوفر روابط تؤدي إلى مواقعها الأصلية فقط."
 
-#: templates/bdc/bdc-details.html:239
+#: templates/bdc/bdc-details.html:237
 msgid "Files for this PO are not ready, yet."
 msgstr "ملفات سند الطلب هذا غير جاهزة بعد."
 
-#: templates/bdc/bdc-details.html:240 templates/portal/tender-details.html:556
+#: templates/bdc/bdc-details.html:238 templates/portal/tender-details.html:274
+#: templates/portal/tender-details.html:566
 msgid "Please try again later, or contact us if this problem persists."
 msgstr "يرجى المحاولة مرة أخرى لاحقًا، أو التواصل معنا إذا استمرت المشكلة."
 
-#: templates/bdc/bdc-details.html:247 templates/bidding/team-recap.html:304
+#: templates/bdc/bdc-details.html:245 templates/bidding/team-recap.html:304
 #: templates/bidding/team-recap.html:363 templates/bidding/team-recap.html:400
 #: templates/bidding/team-recap.html:455 templates/bidding/team-recap.html:502
 #: templates/bidding/team-recap.html:544 templates/bidding/team-recap.html:586
@@ -4501,34 +4688,34 @@ msgstr "يرجى المحاولة مرة أخرى لاحقًا، أو التوا
 #: templates/portal/snippets/lots/lots-details.html:22
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:28
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:170
-#: templates/portal/tender-details.html:570
-#: templates/portal/tender-details.html:600
+#: templates/portal/tender-details.html:580
+#: templates/portal/tender-details.html:610
 msgid "Close"
 msgstr "إغلاق"
 
-#: templates/bdc/bdc-details.html:262
+#: templates/bdc/bdc-details.html:260
 msgid "Item Favorited successfully"
 msgstr "تمت إضافة العنصر إلى المفضلة بنجاح"
 
-#: templates/bdc/bdc-details.html:273
+#: templates/bdc/bdc-details.html:271
 msgid "Item Unfavorited successfully"
 msgstr "تمت إزالة العنصر من المفضلة بنجاح"
 
-#: templates/bdc/bdc-details.html:284
+#: templates/bdc/bdc-details.html:282
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:650
-#: templates/portal/tender-details.html:694
+#: templates/portal/tender-details.html:660
+#: templates/portal/tender-details.html:704
 msgid "Operation failed"
 msgstr "فشلت العملية"
 
-#: templates/bdc/bdc-details.html:284
+#: templates/bdc/bdc-details.html:282
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:650
-#: templates/portal/tender-details.html:694
+#: templates/portal/tender-details.html:660
+#: templates/portal/tender-details.html:704
 msgid "Please refresh the page or try again later"
 msgstr "يرجى تحديث الصفحة أو المحاولة مرة أخرى لاحقًا"
 
-#: templates/bdc/bdc-details.html:295
+#: templates/bdc/bdc-details.html:293
 msgid "URL copied to clipboard"
 msgstr "تم نسخ الرابط إلى الحافظة"
 
@@ -4546,9 +4733,9 @@ msgstr "سندات الطلب المفضلة"
 #: templates/bidding/expenses-list.html:25
 #: templates/bidding/expenses-list.html:28 templates/bidding/tasks-list.html:25
 #: templates/bidding/tasks-list.html:28 templates/bidding/tenders-list.html:25
-#: templates/insights/bidders-list.html:34
+#: templates/crm/customer_list.html:26 templates/insights/bidders-list.html:34
 #: templates/portal/clients-list.html:26 templates/portal/domains-list.html:24
-#: templates/portal/snippets/tenders/tender-legend.html:55
+#: templates/portal/snippets/tenders/tender-legend.html:58
 #: templates/portal/tender-favorite-list.html:22
 #: templates/portal/tender-list.html:24
 msgid "Results are filtered"
@@ -4556,7 +4743,7 @@ msgstr "النتائج معروضة وفق عوامل التصفية"
 
 #: templates/bdc/bdc-favorite-list.html:31 templates/bdc/bdc-list.html:30
 #: templates/bdc/clients-list.html:31 templates/bidding/contracts-list.html:31
-#: templates/insights/bidders-list.html:41
+#: templates/crm/customer_list.html:33 templates/insights/bidders-list.html:41
 #: templates/nas/companies/companies-list.html:22
 #: templates/portal/clients-list.html:33 templates/portal/domains-list.html:31
 #: templates/portal/tender-favorite-list.html:29
@@ -4566,7 +4753,7 @@ msgstr "العناصر التي تم العثور عليها"
 
 #: templates/bdc/bdc-favorite-list.html:33 templates/bdc/bdc-list.html:32
 #: templates/bdc/clients-list.html:33 templates/bidding/contracts-list.html:33
-#: templates/bidding/tenders-list.html:35
+#: templates/bidding/tenders-list.html:35 templates/crm/customer_list.html:35
 #: templates/insights/bidders-list.html:43
 #: templates/nas/companies/companies-list.html:24
 #: templates/portal/clients-list.html:35 templates/portal/domains-list.html:33
@@ -4620,7 +4807,7 @@ msgid "Files"
 msgstr "الملفات"
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:7
-#: templates/portal/snippets/tenders/tender-legend.html:10
+#: templates/portal/snippets/tenders/tender-legend.html:12
 msgid "Updated since"
 msgstr "تم التحديث منذ"
 
@@ -4629,13 +4816,13 @@ msgid "Legend"
 msgstr "مفتاح الرموز"
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:29
-#: templates/portal/snippets/tenders/tender-legend.html:32
+#: templates/portal/snippets/tenders/tender-legend.html:35
 #, python-format
 msgid "Days to Deadline (%%)"
 msgstr "الأيام المتبقية حتى آخر أجل (%%)"
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:65
-#: templates/portal/snippets/tenders/tender-legend.html:68
+#: templates/portal/snippets/tenders/tender-legend.html:71
 msgid "Main category"
 msgstr "الفئة الرئيسية"
 
@@ -4670,11 +4857,11 @@ msgstr "النتيجة غير مثمرة"
 msgid "Main Category"
 msgstr "الفئة الرئيسية"
 
-#: templates/bdc/snippets/bdcs/bdc-summary.html:72
+#: templates/bdc/snippets/bdcs/bdc-summary.html:82
 msgid "Purchase Order object"
 msgstr "موضوع سند الطلب"
 
-#: templates/bdc/snippets/bdcs/bdc-summary.html:127
+#: templates/bdc/snippets/bdcs/bdc-summary.html:137
 msgid "DELIBIRATED"
 msgstr "تم البت فيه"
 
@@ -4715,6 +4902,7 @@ msgstr "تم تنظيف قائمة المفضلة بنجاح."
 #: templates/bidding/snippets/expenses/expense-menu-sort.html:7
 #: templates/bidding/snippets/tasks/task-menu-sort.html:7
 #: templates/bidding/snippets/tenders/tender-menu-sort.html:7
+#: templates/crm/snippets/customers/customer-menu-sort.html:7
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:7
 #: templates/portal/snippets/clients/client-menu-sort.html:9
 #: templates/portal/snippets/domains/domain-menu-sort.html:7
@@ -4729,6 +4917,7 @@ msgstr "ترتيب العناصر حسب"
 #: templates/bidding/snippets/expenses/expense-menu-sort.html:12
 #: templates/bidding/snippets/tasks/task-menu-sort.html:12
 #: templates/bidding/snippets/tenders/tender-menu-sort.html:12
+#: templates/crm/snippets/customers/customer-menu-sort.html:12
 #: templates/insights/snippets/bidders/bidder-menu-sort.html:12
 #: templates/portal/snippets/clients/client-menu-sort.html:15
 #: templates/portal/snippets/domains/domain-menu-sort.html:12
@@ -4752,6 +4941,7 @@ msgstr "البحث عن سندات الطلب"
 #: templates/bidding/snippets/expenses/expense-search-form.html:30
 #: templates/bidding/snippets/tasks/task-search-form.html:30
 #: templates/bidding/snippets/tenders/tender-search-form.html:30
+#: templates/crm/snippets/customers/customer-search-form.html:29
 #: templates/insights/snippets/bidders/bidder-search-form.html:30
 #: templates/portal/snippets/clients/client-search-form.html:29
 #: templates/portal/snippets/domains/domain-search-form.html:29
@@ -4760,6 +4950,7 @@ msgid "Keywords"
 msgstr "الكلمات المفتاحية"
 
 #: templates/bdc/snippets/bdcs/search-form.html:29
+#: templates/crm/snippets/customers/customer-search-form.html:30
 #: templates/portal/snippets/tenders/search-form.html:30
 msgid "keywords"
 msgstr "الكلمات المفتاحية"
@@ -4847,6 +5038,7 @@ msgstr "لا توجد نتائج"
 #: templates/bidding/snippets/expenses/expense-search-form.html:82
 #: templates/bidding/snippets/tasks/task-search-form.html:87
 #: templates/bidding/snippets/tenders/tender-search-form.html:41
+#: templates/crm/snippets/customers/customer-search-form.html:111
 #: templates/insights/snippets/bidders/bidder-search-form.html:92
 #: templates/portal/snippets/clients/client-search-form.html:45
 #: templates/portal/snippets/domains/domain-search-form.html:45
@@ -4866,6 +5058,7 @@ msgstr "متقدم"
 #: templates/bidding/snippets/expenses/expense-search-form.html:87
 #: templates/bidding/snippets/tasks/task-search-form.html:92
 #: templates/bidding/snippets/tenders/tender-search-form.html:46
+#: templates/crm/snippets/customers/customer-search-form.html:116
 #: templates/insights/snippets/bidders/bidder-search-form.html:97
 #: templates/nas/user-settings-edit.html:287
 #: templates/portal/snippets/clients/client-search-form.html:50
@@ -4915,7 +5108,6 @@ msgstr "الجارية"
 
 #: templates/bdc/snippets/menu-bdc.html:30
 #: templates/portal/snippets/menu-tenders.html:37
-#: templates/portal/snippets/tenders/menu-sort.html:56
 msgid "Favourites"
 msgstr "المفضلة"
 
@@ -5071,8 +5263,7 @@ msgstr "حذف"
 #: templates/bidding/expenses-list.html:225
 msgid ""
 "This expense, its associated data and files will be permanently deleted."
-msgstr ""
-"سيتم حذف هذا المصروف والبيانات والملفات المرتبطة به نهائيًا."
+msgstr "سيتم حذف هذا المصروف والبيانات والملفات المرتبطة به نهائيًا."
 
 #: templates/bidding/bid-details.html:573
 #: templates/bidding/snippets/tasks/task-item.html:23
@@ -5088,19 +5279,6 @@ msgstr "سيتم حذف هذه المهمة والبيانات والملفات 
 #: templates/bidding/bid-form.html:5 templates/bidding/bid-form.html:9
 msgid "Edit Bid"
 msgstr "تعديل العرض"
-
-#: templates/bidding/bid-form.html:19 templates/bidding/bid-form.html:147
-#: templates/bidding/snippets/bids/bid-item.html:31
-#: templates/bidding/tenders-list.html:101
-#: templates/portal/snippets/tenders/tender-summary.html:88
-#: templates/portal/tender-details.html:57
-#: templates/portal/tender-details.html:504
-msgid "CANCELLED"
-msgstr "ملغى"
-
-#: templates/bidding/bid-form.html:54
-msgid "Execution location"
-msgstr "مكان التنفيذ"
 
 #: templates/bidding/bid-form.html:164 templates/bidding/expense-form.html:101
 #: templates/bidding/task-form.html:101 templates/bidding/team-recap.html:367
@@ -5152,8 +5330,8 @@ msgid ""
 "This bid, its associated data and files (bonds, tasks, expenses, "
 "contracts, ...) will be permanently deleted"
 msgstr ""
-"سيتم حذف هذا العرض والبيانات والملفات المرتبطة به (الضمانات والمهام والمصاريف "
-"والعقود، ...) نهائيًا"
+"سيتم حذف هذا العرض والبيانات والملفات المرتبطة به (الضمانات والمهام "
+"والمصاريف والعقود، ...) نهائيًا"
 
 #: templates/bidding/bonds-list.html:6 templates/bidding/bonds-list.html:14
 msgid "Bonds list"
@@ -5368,7 +5546,8 @@ msgstr "تم إلغاء طلب العروض"
 
 #: templates/bidding/snippets/bids/bid-item.html:36
 msgid "Found other bids on the same Tender/lot using the same company"
-msgstr "تم العثور على عروض أخرى لطلب العروض أو الحصة نفسها باستخدام الشركة نفسها"
+msgstr ""
+"تم العثور على عروض أخرى لطلب العروض أو الحصة نفسها باستخدام الشركة نفسها"
 
 #: templates/bidding/snippets/bids/bid-item.html:38
 #: templates/bidding/snippets/tenders/tender-item.html:28
@@ -5537,10 +5716,13 @@ msgid "Amount Max"
 msgstr "الحد الأقصى للمبلغ"
 
 #: templates/bidding/snippets/members/member-item.html:43
+#: templates/crm/snippets/customers/customer-menu-sort.html:29
 msgid "Joined"
 msgstr "تاريخ الانضمام"
 
 #: templates/bidding/snippets/members/member-item.html:47
+#: templates/crm/snippets/customers/customer-menu-sort.html:24
+#: templates/crm/snippets/customers/customer-search-form.html:89
 msgid "Last login"
 msgstr "آخر تسجيل دخول"
 
@@ -5569,6 +5751,7 @@ msgid "Member is disabled"
 msgstr "العضو معطّل"
 
 #: templates/bidding/snippets/members/member-item.html:130
+#: templates/crm/snippets/customers/customer-search-form.html:52
 msgid "Disabled"
 msgstr "معطّل"
 
@@ -5803,7 +5986,8 @@ msgstr "تأكيد تعيينه مديرًا"
 msgid ""
 "Team managers can edit other team members, including other team managers"
 msgstr ""
-"يمكن لمديري الفريق تعديل بيانات أعضاء الفريق الآخرين، بما في ذلك مديري الفريق الآخرين"
+"يمكن لمديري الفريق تعديل بيانات أعضاء الفريق الآخرين، بما في ذلك مديري "
+"الفريق الآخرين"
 
 #: templates/bidding/team-recap.html:615
 msgid "Are you sure you want to make this member Manager"
@@ -5829,6 +6013,80 @@ msgstr "طلبات العروض التي تم تقديم عروض بشأنها"
 #: templates/bidding/tenders-list.html:32
 msgid "Tenders found"
 msgstr "طلبات العروض التي تم العثور عليها"
+
+#: templates/crm/customer_list.html:5 templates/crm/customer_list.html:14
+#, fuzzy
+#| msgid "User Agent"
+msgid "User Management"
+msgstr "وكيل المستخدم"
+
+#: templates/crm/customer_list.html:74
+#: templates/crm/snippets/customers/customer-search-form.html:60
+msgid "Origin"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:107
+#: templates/portal/clients-list.html:71 templates/portal/domains-list.html:72
+#: templates/portal/snippets/clients/client-item.html:23
+#: templates/portal/snippets/clients/client-item.html:53
+#: templates/portal/snippets/domains/domain-item.html:23
+#: templates/portal/snippets/domains/domain-item.html:53
+msgid "Active Tenders"
+msgstr "طلبات العروض النشطة"
+
+#: templates/crm/snippets/customers/customer-item.html:115
+#: templates/portal/snippets/clients/client-item.html:31
+#: templates/portal/snippets/clients/client-item.html:61
+#: templates/portal/snippets/domains/domain-item.html:31
+#: templates/portal/snippets/domains/domain-item.html:61
+msgid "All Tenders"
+msgstr "جميع طلبات العروض"
+
+#: templates/crm/snippets/customers/customer-menu-sort.html:36
+#: templates/portal/snippets/clients/client-menu-sort.html:27
+#: templates/portal/snippets/domains/domain-menu-sort.html:36
+msgid "Active tenders count"
+msgstr "عدد طلبات العروض النشطة"
+
+#: templates/crm/snippets/customers/customer-menu-sort.html:41
+#: templates/portal/snippets/clients/client-menu-sort.html:32
+#: templates/portal/snippets/domains/domain-menu-sort.html:41
+msgid "All tenders count"
+msgstr "عدد طلبات العروض الإجمالي"
+
+#: templates/crm/snippets/customers/customer-menu-sort.html:48
+#: templates/portal/snippets/clients/client-menu-sort.html:39
+#: templates/portal/snippets/domains/domain-menu-sort.html:48
+msgid "Active tenders amount"
+msgstr "قيمة طلبات العروض النشطة"
+
+#: templates/crm/snippets/customers/customer-menu-sort.html:53
+#: templates/portal/snippets/clients/client-menu-sort.html:44
+#: templates/portal/snippets/domains/domain-menu-sort.html:53
+msgid "All tenders amount"
+msgstr "قيمة جميع طلبات العروض"
+
+#: templates/crm/snippets/customers/customer-search-form.html:7
+#, fuzzy
+#| msgid "Serach Clients"
+msgid "Serach Customers"
+msgstr "البحث عن الجهات"
+
+#: templates/crm/snippets/customers/customer-search-form.html:19
+#, fuzzy
+#| msgid "Clients Search"
+msgid "Customer Search"
+msgstr "البحث عن الجهات"
+
+#: templates/crm/snippets/customers/customer-search-form.html:36
+msgid "Staff Role"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-search-form.html:72
+#, fuzzy
+#| msgid "Date Finished"
+msgid "Date Joined"
+msgstr "تاريخ الانتهاء"
 
 #: templates/flows/snippets/plans-digest.html:6
 msgid "Start for free. Scale with confidence."
@@ -5947,8 +6205,7 @@ msgid ""
 "Please confirm the code shown on your %(client_name)s to authorize this "
 "device."
 msgstr ""
-"يرجى تأكيد الرمز الظاهر على %(client_name)s الخاص بك لتفويض هذا "
-"الجهاز."
+"يرجى تأكيد الرمز الظاهر على %(client_name)s الخاص بك لتفويض هذا الجهاز."
 
 #: templates/idp/oidc/device_authorization_confirm_form.html:16
 msgid "Code"
@@ -6013,8 +6270,12 @@ msgstr "PDF"
 msgid "CSV"
 msgstr "CSV"
 
+#: templates/insights/bidder-details.html:272
+msgid "Print"
+msgstr "طباعة"
+
 #: templates/insights/bidder-details.html:286
-#: templates/portal/tender-details.html:661
+#: templates/portal/tender-details.html:671
 msgid "URL was copied to clipboard"
 msgstr "تم نسخ الرابط إلى الحافظة"
 
@@ -6022,8 +6283,7 @@ msgstr "تم نسخ الرابط إلى الحافظة"
 msgid ""
 "This document was generated using an automated system for information "
 "purposes only."
-msgstr ""
-"تم إنشاء هذه الوثيقة باستخدام نظام آلي، وهي مخصصة لأغراض إعلامية فقط."
+msgstr "تم إنشاء هذه الوثيقة باستخدام نظام آلي، وهي مخصصة لأغراض إعلامية فقط."
 
 #: templates/insights/bidder-pdf.html:58
 msgid "Table of Contents"
@@ -6071,14 +6331,6 @@ msgstr "مجالات النشاط"
 #: templates/portal/snippets/tenders/search-form.html:203
 msgid "Licenses"
 msgstr "التراخيص"
-
-#: templates/insights/bidder-pdf.html:281
-#: templates/insights/bidder-pdf.html:285 templates/portal/domains-list.html:6
-#: templates/portal/domains-list.html:12
-#: templates/portal/snippets/tenders/search-form.html:43
-#: templates/portal/tender-details.html:285
-msgid "Domains of activity"
-msgstr "مجالات النشاط"
 
 #: templates/insights/bidder-pdf.html:348
 msgid "Error: Not found."
@@ -6214,8 +6466,7 @@ msgstr "مجموع مبالغ الصفقات المسندة"
 msgid ""
 "Your account is protected by two-factor authentication. Please enter an "
 "authenticator code:"
-msgstr ""
-"حسابك محمي بالمصادقة الثنائية. يرجى إدخال رمز المصادقة:"
+msgstr "حسابك محمي بالمصادقة الثنائية. يرجى إدخال رمز المصادقة:"
 
 #: templates/mfa/authenticate.html:41
 #: templates/mfa/webauthn/reauthenticate.html:15
@@ -6225,8 +6476,7 @@ msgstr "استخدام مفتاح أمان"
 #: templates/mfa/email/recovery_codes_generated_message.txt:4
 msgid ""
 "A new set of Two-Factor Authentication recovery codes has been generated."
-msgstr ""
-"تم إنشاء مجموعة جديدة من رموز استرداد المصادقة الثنائية."
+msgstr "تم إنشاء مجموعة جديدة من رموز استرداد المصادقة الثنائية."
 
 #: templates/mfa/email/recovery_codes_generated_subject.txt:3
 msgid "New Recovery Codes Generated"
@@ -6432,8 +6682,7 @@ msgstr "إلغاء تفعيل تطبيق المصادقة"
 msgid ""
 "You are about to deactivate authenticator app based authentication. Are you "
 "sure?"
-msgstr ""
-"أنت على وشك إلغاء المصادقة باستخدام تطبيق المصادقة. هل أنت متأكد؟"
+msgstr "أنت على وشك إلغاء المصادقة باستخدام تطبيق المصادقة. هل أنت متأكد؟"
 
 #: templates/mfa/trust.html:4 templates/mfa/trust.html:8
 msgid "Trust this Browser?"
@@ -6625,8 +6874,8 @@ msgid ""
 "Major image files up to 5MB are supported (PNG, JPG, JPEG, GIF, WEBP, "
 "AVIF, ...)"
 msgstr ""
-"تُدعم ملفات الصور الشائعة التي يصل حجمها إلى 5 ميغابايت (PNG، JPG، JPEG، GIF، WEBP، "
-"AVIF، ...)"
+"تُدعم ملفات الصور الشائعة التي يصل حجمها إلى 5 ميغابايت (PNG، JPG، JPEG، GIF، "
+"WEBP، AVIF، ...)"
 
 #: templates/nas/companies/company_form.html:36
 msgid "SVG files are not allowed"
@@ -6981,14 +7230,6 @@ msgstr "قائمة الجهات صاحبة المشاريع"
 msgid "Active tenders estimate"
 msgstr "القيمة التقديرية لطلبات العروض النشطة"
 
-#: templates/portal/clients-list.html:71 templates/portal/domains-list.html:72
-#: templates/portal/snippets/clients/client-item.html:23
-#: templates/portal/snippets/clients/client-item.html:53
-#: templates/portal/snippets/domains/domain-item.html:23
-#: templates/portal/snippets/domains/domain-item.html:53
-msgid "Active Tenders"
-msgstr "طلبات العروض النشطة"
-
 #: templates/portal/clients-list.html:77 templates/portal/domains-list.html:78
 #: templates/portal/snippets/clients/client-item.html:39
 #: templates/portal/snippets/domains/domain-item.html:39
@@ -7011,37 +7252,10 @@ msgstr "مواقع طلبات العروض"
 msgid "Active Tenders estimate"
 msgstr "القيمة التقديرية لطلبات العروض النشطة"
 
-#: templates/portal/snippets/clients/client-item.html:31
-#: templates/portal/snippets/clients/client-item.html:61
-#: templates/portal/snippets/domains/domain-item.html:31
-#: templates/portal/snippets/domains/domain-item.html:61
-msgid "All Tenders"
-msgstr "جميع طلبات العروض"
-
 #: templates/portal/snippets/clients/client-item.html:35
 #: templates/portal/snippets/domains/domain-item.html:35
 msgid "All Tenders estimate"
 msgstr "القيمة التقديرية لجميع طلبات العروض"
-
-#: templates/portal/snippets/clients/client-menu-sort.html:27
-#: templates/portal/snippets/domains/domain-menu-sort.html:36
-msgid "Active tenders count"
-msgstr "عدد طلبات العروض النشطة"
-
-#: templates/portal/snippets/clients/client-menu-sort.html:32
-#: templates/portal/snippets/domains/domain-menu-sort.html:41
-msgid "All tenders count"
-msgstr "عدد طلبات العروض الإجمالي"
-
-#: templates/portal/snippets/clients/client-menu-sort.html:39
-#: templates/portal/snippets/domains/domain-menu-sort.html:48
-msgid "Active tenders amount"
-msgstr "قيمة طلبات العروض النشطة"
-
-#: templates/portal/snippets/clients/client-menu-sort.html:44
-#: templates/portal/snippets/domains/domain-menu-sort.html:53
-msgid "All tenders amount"
-msgstr "قيمة جميع طلبات العروض"
 
 #: templates/portal/snippets/clients/client-menu-sort.html:51
 msgid "Client Acronym"
@@ -7121,13 +7335,13 @@ msgstr "محاضر الفتح والانتهاء"
 
 #: templates/portal/snippets/tenders/menu-sort.html:46
 #: templates/portal/snippets/tenders/tender-summary.html:289
-#: templates/portal/tender-details.html:440
+#: templates/portal/tender-details.html:450
 msgid "Views"
 msgstr "المشاهدات"
 
 #: templates/portal/snippets/tenders/menu-sort.html:51
 #: templates/portal/snippets/tenders/tender-summary.html:307
-#: templates/portal/tender-details.html:451
+#: templates/portal/tender-details.html:461
 msgid "Downloads"
 msgstr "التنزيلات"
 
@@ -7174,16 +7388,6 @@ msgstr "الحد الأدنى للضمان"
 #: templates/portal/snippets/tenders/search-form.html:88
 msgid "Guarantee Max"
 msgstr "الحد الأقصى للضمان"
-
-#: templates/portal/snippets/tenders/search-form.html:119
-#: templates/portal/tender-details.html:142
-msgid "Procedure"
-msgstr "المسطرة"
-
-#: templates/portal/snippets/tenders/search-form.html:131
-#: templates/portal/tender-details.html:148
-msgid "Electronic bidding"
-msgstr "تقديم العروض إلكترونيًا"
 
 #: templates/portal/snippets/tenders/search-form.html:134
 #: templates/portal/snippets/tenders/search-form.html:176
@@ -7281,129 +7485,98 @@ msgstr "المحاكي"
 msgid "Official Link"
 msgstr "الرابط الرسمي"
 
-#: templates/portal/snippets/tenders/tender-legend.html:24
+#: templates/portal/snippets/tenders/tender-legend.html:27
 msgid "Symbols legend"
 msgstr "دليل الرموز"
 
-#: templates/portal/snippets/tenders/tender-legend.html:80
+#: templates/portal/snippets/tenders/tender-legend.html:83
 msgid "Tender is allotted"
 msgstr "تم إسناد الصفقة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:113
+#: templates/portal/snippets/tenders/tender-legend.html:116
 msgid "Bid on by my team"
 msgstr "قدّم فريقي عرضًا بشأنها"
 
-#: templates/portal/snippets/tenders/tender-legend.html:124
+#: templates/portal/snippets/tenders/tender-legend.html:127
 msgid "Tender results have Awarding"
 msgstr "تتضمن نتائج طلب العروض إسنادًا للصفقة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:135
+#: templates/portal/snippets/tenders/tender-legend.html:138
 msgid "Tender results have no Awarding"
 msgstr "لا تتضمن نتائج طلب العروض إسنادًا للصفقة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:146
+#: templates/portal/snippets/tenders/tender-legend.html:149
 msgid "Awarded lots from lots count"
 msgstr "عدد الحصص المسندة مقارنة بإجمالي الحصص"
 
-#: templates/portal/snippets/tenders/tender-legend.html:157
+#: templates/portal/snippets/tenders/tender-legend.html:160
 msgid "Winner amount ratio to Estimate"
 msgstr "نسبة مبلغ العرض الفائز إلى القيمة التقديرية"
 
-#: templates/portal/snippets/tenders/tender-legend.html:168
+#: templates/portal/snippets/tenders/tender-legend.html:171
 #: templates/portal/snippets/tenders/tender-summary.html:215
 msgid "Contains environment-related clauses"
 msgstr "يتضمن بنودًا متعلقة بالبيئة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:179
+#: templates/portal/snippets/tenders/tender-legend.html:182
 #: templates/portal/snippets/tenders/tender-summary.html:165
 msgid "Procedure may be restricted"
 msgstr "قد تكون المسطرة محدودة المشاركة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:190
+#: templates/portal/snippets/tenders/tender-legend.html:193
 #: templates/portal/snippets/tenders/tender-summary.html:173
 msgid "Electronic bidding is required"
 msgstr "تقديم العروض إلكترونيًا إلزامي"
 
-#: templates/portal/snippets/tenders/tender-legend.html:201
+#: templates/portal/snippets/tenders/tender-legend.html:204
 #: templates/portal/snippets/tenders/tender-summary.html:179
 msgid "Electronic bidding is optional"
 msgstr "تقديم العروض إلكترونيًا اختياري"
 
-#: templates/portal/snippets/tenders/tender-legend.html:212
+#: templates/portal/snippets/tenders/tender-legend.html:215
 #: templates/portal/snippets/tenders/tender-summary.html:185
 msgid "Electronic bidding is not applicable"
 msgstr "تقديم العروض إلكترونيًا غير قابل للتطبيق"
 
-#: templates/portal/snippets/tenders/tender-legend.html:223
+#: templates/portal/snippets/tenders/tender-legend.html:226
 #: templates/portal/snippets/tenders/tender-summary.html:194
 msgid "Electronic signature is required"
 msgstr "التوقيع الإلكتروني إلزامي"
 
-#: templates/portal/snippets/tenders/tender-legend.html:234
+#: templates/portal/snippets/tenders/tender-legend.html:237
 #: templates/portal/snippets/tenders/tender-summary.html:200
 msgid "Electronic signature is optional"
 msgstr "التوقيع الإلكتروني اختياري"
 
-#: templates/portal/snippets/tenders/tender-legend.html:245
+#: templates/portal/snippets/tenders/tender-legend.html:248
 #: templates/portal/snippets/tenders/tender-summary.html:206
 msgid "Electronic signature is not applicable"
 msgstr "التوقيع الإلكتروني غير قابل للتطبيق"
 
-#: templates/portal/snippets/tenders/tender-legend.html:256
+#: templates/portal/snippets/tenders/tender-legend.html:259
 #: templates/portal/snippets/tenders/tender-summary.html:223
 #: templates/portal/tender-details.html:172
 msgid "Reserved to SMBs, individuals, Unions, ..."
 msgstr "مخصص للمقاولات الصغيرة والمتوسطة، والأفراد، والتعاونيات، ..."
 
-#: templates/portal/snippets/tenders/tender-legend.html:267
-#: templates/portal/snippets/tenders/tender-summary.html:231
-msgid "Licenses required"
-msgstr "التراخيص مطلوبة"
-
-#: templates/portal/snippets/tenders/tender-legend.html:278
-#: templates/portal/snippets/tenders/tender-summary.html:238
-msgid "Qualifications required"
-msgstr "المؤهلات مطلوبة"
-
-#: templates/portal/snippets/tenders/tender-legend.html:289
-#: templates/portal/snippets/tenders/tender-summary.html:245
-msgid "Samples required"
-msgstr "العينات مطلوبة"
-
-#: templates/portal/snippets/tenders/tender-legend.html:300
-#: templates/portal/snippets/tenders/tender-summary.html:252
-msgid "Site survey scheduled"
-msgstr "تمت برمجة زيارة للموقع"
-
-#: templates/portal/snippets/tenders/tender-legend.html:311
-#: templates/portal/snippets/tenders/tender-summary.html:259
-msgid "Meetings scheduled"
-msgstr "تمت برمجة اجتماعات"
-
-#: templates/portal/snippets/tenders/tender-legend.html:322
-#: templates/portal/snippets/tenders/tender-summary.html:266
-#: templates/portal/tender-details.html:182
-msgid "Variants accepted"
-msgstr "البدائل مقبولة"
-
-#: templates/portal/snippets/tenders/tender-legend.html:333
+#: templates/portal/snippets/tenders/tender-legend.html:336
 msgid "Tender Changes"
 msgstr "تغييرات طلبات العروض"
 
-#: templates/portal/snippets/tenders/tender-legend.html:344
+#: templates/portal/snippets/tenders/tender-legend.html:347
 msgid "Tender Favorites"
 msgstr "طلبات العروض المفضلة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:355
+#: templates/portal/snippets/tenders/tender-legend.html:358
 msgid "Tender Downloads"
 msgstr "تنزيلات طلبات العروض"
 
-#: templates/portal/snippets/tenders/tender-legend.html:366
+#: templates/portal/snippets/tenders/tender-legend.html:369
 #: templates/portal/snippets/tenders/tender-summary.html:323
 msgid "Available files size"
 msgstr "حجم الملفات المتاحة"
 
-#: templates/portal/snippets/tenders/tender-legend.html:377
+#: templates/portal/snippets/tenders/tender-legend.html:380
 #: templates/portal/snippets/tenders/tender-summary.html:317
 msgid "Files may not be available"
 msgstr "قد لا تكون الملفات متاحة"
@@ -7509,10 +7682,6 @@ msgstr "طريقة إسناد الصفقة"
 msgid "Not Applicable"
 msgstr "لا ينطبق"
 
-#: templates/portal/tender-details.html:160
-msgid "Electronic signature"
-msgstr "التوقيع الإلكتروني"
-
 #: templates/portal/tender-details.html:193
 msgid "Environmental clauses"
 msgstr "البنود البيئية"
@@ -7521,124 +7690,124 @@ msgstr "البنود البيئية"
 msgid "Price of Plans"
 msgstr "ثمن ملفات طلب العروض"
 
-#: templates/portal/tender-details.html:314
+#: templates/portal/tender-details.html:324
 msgid "Addresses and Contact"
 msgstr "العناوين ومعلومات الاتصال"
 
-#: templates/portal/tender-details.html:320
+#: templates/portal/tender-details.html:330
 msgid "Withdrawal Address"
 msgstr "عنوان سحب ملف طلب العروض"
 
-#: templates/portal/tender-details.html:323
+#: templates/portal/tender-details.html:333
 msgid "Bidding Address"
 msgstr "عنوان إيداع العروض"
 
-#: templates/portal/tender-details.html:326
+#: templates/portal/tender-details.html:336
 msgid "Opening Address"
 msgstr "عنوان فتح الأظرفة"
 
-#: templates/portal/tender-details.html:329
+#: templates/portal/tender-details.html:339
 msgid "Person"
 msgstr "الشخص المسؤول"
 
-#: templates/portal/tender-details.html:343
+#: templates/portal/tender-details.html:353
 msgid "Fax"
 msgstr "الفاكس"
 
-#: templates/portal/tender-details.html:360
+#: templates/portal/tender-details.html:370
 msgid "Changes"
 msgstr "التغييرات"
 
-#: templates/portal/tender-details.html:361
+#: templates/portal/tender-details.html:371
 msgid "Experimental"
 msgstr "تجريبي"
 
-#: templates/portal/tender-details.html:367
+#: templates/portal/tender-details.html:377
 msgid "Empty"
 msgstr "فارغ"
 
-#: templates/portal/tender-details.html:408
+#: templates/portal/tender-details.html:418
 msgid "Advanced data"
 msgstr "البيانات المتقدمة"
 
-#: templates/portal/tender-details.html:422
+#: templates/portal/tender-details.html:432
 msgid "Last updated"
 msgstr "آخر تحديث"
 
-#: templates/portal/tender-details.html:426
+#: templates/portal/tender-details.html:436
 msgid "Time on display"
 msgstr "مدة العرض"
 
-#: templates/portal/tender-details.html:430
+#: templates/portal/tender-details.html:440
 msgid "Guarantee ratio"
 msgstr "نسبة الضمان"
 
-#: templates/portal/tender-details.html:436
+#: templates/portal/tender-details.html:446
 msgid "Database ID"
 msgstr "معرّف قاعدة البيانات"
 
-#: templates/portal/tender-details.html:445
+#: templates/portal/tender-details.html:455
 msgid "Latest view since"
 msgstr "تاريخ آخر مشاهدة"
 
-#: templates/portal/tender-details.html:456
+#: templates/portal/tender-details.html:466
 msgid "Latest download since"
 msgstr "تاريخ آخر تنزيل"
 
-#: templates/portal/tender-details.html:480
-#: templates/portal/tender-details.html:492
+#: templates/portal/tender-details.html:490
+#: templates/portal/tender-details.html:502
 msgid "Awarding Minutes"
 msgstr "محاضر إسناد الصفقة"
 
-#: templates/portal/tender-details.html:493
+#: templates/portal/tender-details.html:503
 msgid "No Minutes found"
 msgstr "لم يتم العثور على أي محاضر"
 
-#: templates/portal/tender-details.html:523
+#: templates/portal/tender-details.html:533
 msgid "Tender downloads"
 msgstr "تنزيلات طلب العروض"
 
-#: templates/portal/tender-details.html:529
+#: templates/portal/tender-details.html:539
 msgid "DCE Files"
 msgstr "ملفات ملف الاستشارة"
 
-#: templates/portal/tender-details.html:540
+#: templates/portal/tender-details.html:550
 msgid "Extra Files"
 msgstr "ملفات إضافية"
 
-#: templates/portal/tender-details.html:555
+#: templates/portal/tender-details.html:565
 msgid "Files for this Tender are not ready, yet."
 msgstr "ملفات طلب العروض هذا غير جاهزة بعد."
 
-#: templates/portal/tender-details.html:581
+#: templates/portal/tender-details.html:591
 msgid "Request Tender files"
 msgstr "طلب ملفات طلب العروض"
 
-#: templates/portal/tender-details.html:585
+#: templates/portal/tender-details.html:595
 msgid "Files for this Tender are already queued"
 msgstr "ملفات طلب العروض هذا مدرجة بالفعل في قائمة الانتظار"
 
-#: templates/portal/tender-details.html:587
+#: templates/portal/tender-details.html:597
 msgid "We will make this Tender files available as soon as possible."
 msgstr "سنجعل ملفات طلب العروض هذا متاحة في أقرب وقت ممكن."
 
-#: templates/portal/tender-details.html:595
+#: templates/portal/tender-details.html:605
 msgid "Request"
 msgstr "طلب"
 
-#: templates/portal/tender-details.html:628
+#: templates/portal/tender-details.html:638
 msgid "Item added to Favourites"
 msgstr "تمت إضافة العنصر إلى المفضلة"
 
-#: templates/portal/tender-details.html:639
+#: templates/portal/tender-details.html:649
 msgid "Item removed from Favourites"
 msgstr "تمت إزالة العنصر من المفضلة"
 
-#: templates/portal/tender-details.html:672
+#: templates/portal/tender-details.html:682
 msgid "Files request submitted"
 msgstr "تم إرسال طلب الملفات"
 
-#: templates/portal/tender-details.html:683
+#: templates/portal/tender-details.html:693
 msgid "Files are already queued for download"
 msgstr "الملفات مدرجة بالفعل في قائمة انتظار التنزيل"
 
@@ -7676,8 +7845,7 @@ msgstr "فشل تسجيل الدخول عبر جهة خارجية"
 #: templates/socialaccount/authentication_error.html:12
 msgid ""
 "An error occurred while attempting to login via your third-party account."
-msgstr ""
-"حدث خطأ أثناء محاولة تسجيل الدخول باستخدام حسابك لدى جهة خارجية."
+msgstr "حدث خطأ أثناء محاولة تسجيل الدخول باستخدام حسابك لدى جهة خارجية."
 
 #: templates/socialaccount/connections.html:13
 msgid ""
@@ -7698,8 +7866,7 @@ msgstr "إضافة حساب لدى جهة خارجية"
 #, python-format
 msgid ""
 "A third-party account from %(provider)s has been connected to your account."
-msgstr ""
-"تم ربط حساب لدى %(provider)s بحسابك."
+msgstr "تم ربط حساب لدى %(provider)s بحسابك."
 
 #: templates/socialaccount/email/account_connected_subject.txt:3
 msgid "Third-Party Account Connected"
@@ -7710,8 +7877,7 @@ msgstr "تم ربط حساب لدى جهة خارجية"
 msgid ""
 "A third-party account from %(provider)s has been disconnected from your "
 "account."
-msgstr ""
-"تم إلغاء ربط حساب لدى %(provider)s بحسابك."
+msgstr "تم إلغاء ربط حساب لدى %(provider)s بحسابك."
 
 #: templates/socialaccount/email/account_disconnected_subject.txt:3
 msgid "Third-Party Account Disconnected"
@@ -7749,8 +7915,9 @@ msgid ""
 "accounts. If this was a mistake, please proceed to <a "
 "href=\"%(login_url)s\">sign in</a>."
 msgstr ""
-"لقد قررت إلغاء تسجيل الدخول إلى موقعنا باستخدام أحد حساباتك الحالية. إذا كان ذلك عن طريق الخطأ، فيُرجى المتابعة إلى <a "
-"href=\"%(login_url)s\">تسجيل الدخول</a>."
+"لقد قررت إلغاء تسجيل الدخول إلى موقعنا باستخدام أحد حساباتك الحالية. إذا كان "
+"ذلك عن طريق الخطأ، فيُرجى المتابعة إلى <a href=\"%(login_url)s\">تسجيل "
+"الدخول</a>."
 
 #: templates/socialaccount/messages/account_connected.txt:2
 msgid "The third-party account has been connected."
@@ -7801,3 +7968,5 @@ msgstr "الحالية"
 msgid "Sign Out Other Sessions"
 msgstr "تسجيل الخروج من الجلسات الأخرى"
 
+#~ msgid "Database"
+#~ msgstr "قاعدة البيانات"

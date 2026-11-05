@@ -82,25 +82,6 @@
             {% endif %}
 
 
-            {% if request.user.is_superuser %}
-                <div id="supersuser-section">
-                    <li>
-                        <a class="dropdown-item p-2" href="https://emarches.com/crm/supervision">
-                            <i class="bi bi-eye-fill me-2"></i> {% translate 'Supervision' %}
-                            {% if new_contactings %}<span class="badge bg-danger text-white mx-1">{{ new_contactings.count }}</span>{% endif %}
-                        </a>
-                    </li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-tools me-2"></i> {% translate 'Administration' %}</a></li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database-fill-gear me-2"></i> {% translate 'Database' %}</a></li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="https://emarches.com/slogs"><i class="bi bi-robot me-2"></i> Scraper Logs</a></li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="{% url 'base_view_log_file' 'portal' %}"><i class="bi bi-robot me-2"></i> Portal log</a></li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="{% url 'base_view_log_file' 'requests' %}"><i class="bi bi-robot me-2"></i> Requests log</a></li>
-                    <li><a class="dropdown-item p-2" target="_blank" href="https://emarches.com/certs.txt"><i class="bi bi-lock me-2"></i> Certificates</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                </div>
-            {% endif %}
-
-
             {% url 'account_logout' as logout_url_ %}
             {% if logout_url_ %}
                 <li>

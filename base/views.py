@@ -90,7 +90,7 @@ def view_log_file(request, logger='portal'):
     if not os.path.exists(log_file):
         logger_portal.warning("E404: Logger not found", extra={"request": request})
         return HttpResponse(_("File not found"), status=404)
-    
+
 
 def robots_txt(request):
     lines = [

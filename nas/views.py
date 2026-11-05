@@ -594,16 +594,6 @@ def expirable_delete(request, pk=None):
     return HttpResponse(_("Bad request"), status=405)
 
 
-
-
-
-
-
-
-
-
-
-
 @method_decorator(login_required, name='dispatch')
 class CompanyCreateView(CreateView):
     model = Company

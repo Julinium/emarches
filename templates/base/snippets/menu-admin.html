@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% if request.user and request.user.is_authenticated %}
+    {% if request.user.is_superuser %}
+        <li class="nav-item dropdown">
+            <a class="nav-link py-2 dropdown-toggle"
+            href="#" id="systemDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+                <span>{% trans 'System' %}</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="systemDropdown">
+                <li><a class="dropdown-item p-2" target="_blank" href="{% url 'crm_customer_list' %}"><i class="bi bi-people me-2"></i> Users</a></li>
+                <li><a class="dropdown-item p-2" href="https://emarches.com/crm/supervision"><i class="bi bi-tools me-2"></i> {% translate 'Supervision' %}{% if new_contactings %}<span class="badge bg-danger text-white mx-1">{{ new_contactings.count }}</span>{% endif %}</a></li>
+                <li><a class="dropdown-item p-2" target="_blank" href="/admin"><i class="bi bi-house-gear me-2"></i> {% translate 'Administration' %}</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item p-2" target="_blank" href="/slogs/"><i class="bi bi-list-columns-reverse me-2"></i> Scraper Logs</a></li>
+                <li><a class="dropdown-item p-2" target="_blank" href="/logs/"><i class="bi bi-list-columns me-2"></i> Access Logs</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item p-2" target="_blank" href="/certs.txt"><i class="bi bi-shield-check me-2"></i> Certificates</a></li>
+                <li><a class="dropdown-item p-2" target="_blank" href="https://pgadmin.emarches.com/"><i class="bi bi-database me-2"></i> pgAdmin4</a></li>
+            </ul>
+        </li>
+    {% endif %}
+{% endif %}

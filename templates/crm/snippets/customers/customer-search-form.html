@@ -1,0 +1,130 @@
+{% load i18n %}
+{% load paraminos %}
+
+<button class="btn btn-light py-1 mx-1" type="button" 
+        data-bs-toggle="modal" data-bs-target="#searchModal"
+        data-bs-toggle="tooltip"
+        title="{% trans 'Serach Customers' %}">
+    <i class="{{ bicons.search }}"></i>
+</button>
+
+
+<form action="{% url 'crm_customer_list' %}">
+    <div class="modal fade" id="searchModal" tabindex="-1" 
+        aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="searchModalLabel">{% trans 'Customer Search' %}</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body pb-0">
+
+                    <div class="row gx-3">
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Keywords" %}</span></span>
+                                <input type="text" class="form-control" id="search_input" name="q" value="{{ query_dict.q }}" placeholder="{% trans 'keywords' %}" aria-label="search_query">
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Staff Role" %}</span></span>
+                                <select class="form-select" name="staff" aria-label="staff">
+                                    <option value="">-- {% trans 'Any' %} --</option>
+                                    <option value="superuser" {% if query_dict.staff == 'superuser' %}selected{% endif %}>Superuser</option>
+                                    <option value="staff" {% if query_dict.staff == 'staff' %}selected{% endif %}>Staff</option>
+                                    <option value="regular" {% if query_dict.staff == 'regular' %}selected{% endif %}>Regular User</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Status" %}</span></span>
+                                <select class="form-select" name="is_active" aria-label="is_active">
+                                    <option value="">-- {% trans 'Any' %} --</option>
+                                    <option value="true" {% if query_dict.is_active == 'true' %}selected{% endif %}>{% trans "Active" %}</option>
+                                    <option value="false" {% if query_dict.is_active == 'false' %}selected{% endif %}>{% trans "Disabled" %}</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Origin" %}</span></span>
+                                <select class="form-select" name="origin" aria-label="origin">
+                                    <option value="">-- {% trans 'Any' %} --</option>
+                                    {% for option in origin_options %}
+                                        <option value="{{ option.value }}" {% if query_dict.origin == option.value %}selected{% endif %}>{{ option.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Date Joined" %}</span></span>
+                                <select class="form-select" name="joined" aria-label="joined">
+                                    <option value="">-- {% trans 'Any' %} --</option>
+                                    <option value="tday" {% if query_dict.joined == 'tday' %}selected{% endif %}>Today</option>
+                                    <option value="yday" {% if query_dict.joined == 'yday' %}selected{% endif %}>Yesterday</option>
+                                    <option value="week" {% if query_dict.joined == 'week' %}selected{% endif %}>This Week</option>
+                                    <option value="lswk" {% if query_dict.joined == 'lswk' %}selected{% endif %}>Last Week</option>
+                                    <option value="mnth" {% if query_dict.joined == 'mnth' %}selected{% endif %}>This Month</option>
+                                    <option value="lmth" {% if query_dict.joined == 'lmth' %}selected{% endif %}>Last Month</option>
+                                    <option value="year" {% if query_dict.joined == 'year' %}selected{% endif %}>This Year</option>
+                                    <option value="d365" {% if query_dict.joined == 'd365' %}selected{% endif %}>1 Year Ago</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text"><span class="small text-muted"><i class="bi bi-"></i>{% trans "Last login" %}</span></span>
+                                <select class="form-select" name="logged" aria-label="logged">
+                                    <option value="">-- {% trans 'Any' %} --</option>
+                                    <option value="tday" {% if query_dict.logged == 'tday' %}selected{% endif %}>Today</option>
+                                    <option value="yday" {% if query_dict.logged == 'yday' %}selected{% endif %}>Yesterday</option>
+                                    <option value="week" {% if query_dict.logged == 'week' %}selected{% endif %}>This Week</option>
+                                    <option value="lswk" {% if query_dict.logged == 'lswk' %}selected{% endif %}>Last Week</option>
+                                    <option value="mnth" {% if query_dict.logged == 'mnth' %}selected{% endif %}>This Month</option>
+                                    <option value="lmth" {% if query_dict.logged == 'lmth' %}selected{% endif %}>Last Month</option>
+                                    <option value="year" {% if query_dict.logged == 'year' %}selected{% endif %}>This Year</option>
+                                    <option value="d365" {% if query_dict.logged == 'd365' %}selected{% endif %}>1 Year Ago</option>
+                                </select>
+                            </div>
+                        </div>
+                            
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    
+                    <a href="{% url 'crm_customer_list' %}" type="button" class="btn btn-outline-secondary">
+                        <i class="{{ bicons.backspace }} me-1"></i>
+                        {% trans 'Reset' %}
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="{{ bicons.search }} me-1"></i>
+                        {% trans 'Submit' %}
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    const myModal = document.getElementById('searchModal');
+    myModal.addEventListener('shown.bs.modal', function () {
+        document.getElementById('search_input').focus();
+    });
+</script>

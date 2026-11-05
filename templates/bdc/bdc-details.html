@@ -49,6 +49,16 @@
             </div>
         </div>
     {% endif %}
+    
+    {% if bdc.cancelled %}
+        <div class="my-3" id="tender-cancelled-top" >
+            <div class="text-bg-danger rounded text-center my-2">
+                <div class="fw-bold p-1 blink">
+                    {% trans 'CANCELLED' %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
 
     {% include 'bdc/snippets/bdcs/bdc-actions.html' %}
 

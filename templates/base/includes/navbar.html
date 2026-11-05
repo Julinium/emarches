@@ -37,16 +37,15 @@
     <div class="collapse navbar-collapse" id="mainNavigationBar">
       
           <ul class="navbar-nav me-auto navbar-nav-scroll">
+            {% include 'base/snippets/menu-admin.html' %}
             {% include 'portal/snippets/menu-tenders.html' %}
             {% include 'bdc/snippets/menu-bdc.html' %}
             {% include 'bidding/snippets/menu-bidding.html' %}
           </ul>
-
             <ul class="navbar-nav ms-auto navbar-nav-scroll text-end">
               {% include 'base/snippets/menu-languages.html' %}
               {% include 'base/snippets/menu-user.html' %}
             </ul>
-      
     </div>
   </div>
 </nav>

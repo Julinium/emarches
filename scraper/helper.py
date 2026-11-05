@@ -274,7 +274,7 @@ def syncDir(
     try:
         local_dir = os.path.abspath(local_dir)
         source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
-        printMessage('DEBUG', 'h.syncDir', f'Started syncing local {source_path.split("/")[-1]} to remote {remote_dir.split("/")[-1]} ...')
+        printMessage('DEBUG', 'h.syncDir', f'Started syncing local [{source_path.split("/")[-1]}] to remote [{remote_dir.split("/")[-1]}] ...')
 
         target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
