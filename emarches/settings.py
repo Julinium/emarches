@@ -20,7 +20,7 @@ SECRET_KEY_FALLBACKS = [
 DEBUG = ENVIRONMENT != 'production'
 SITE_HOST = os.getenv("SITE_HOST")
 
-DEBUG = True
+# DEBUG = True
 ALLOWED_HOSTS = os.getenv("DOMAIN_NAMES").split(',')
 
 ALLOWED_HOSTS += [
