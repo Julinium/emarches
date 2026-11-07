@@ -277,28 +277,28 @@ class Cycle(models.Model):
     class Meta:
         ordering = ['-date_end']
 
-    # @property
-    # def is_running(self, milmi=None):
-    #     if self.date_end is None: 
-    #         return False
-    #     if milmi is None:
-    #         milmi = datetime.now()
-    #     if self.date_end < milmi:
-    #         return False
-    #     if self.date_start is None:
-    #         return False
-    #     if self.date_start > milmi:
-    #         return False
+    @property
+    def is_running(self, milmi=None):
+        if self.date_end is None: 
+            return False
+        if milmi is None:
+            milmi = datetime.now()
+        if self.date_end < milmi:
+            return False
+        if self.date_start is None:
+            return False
+        if self.date_start > milmi:
+            return False
 
-    #     return True
+        return True
 
-    # @property
-    # def remaining_days(self, milmi=None):
-    #     if milmi is None:
-    #         milmi = datetime.now()
+    @property
+    def remaining_days(self, milmi=None):
+        if milmi is None:
+            milmi = datetime.now()
 
-    #     rd = self.date_end - milmi
-    #     return rd.days
+        rd = self.date_end - milmi
+        return rd.days
 
 
 class Currency(TranslatableModel):

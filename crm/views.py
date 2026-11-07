@@ -7,7 +7,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.cache import cache_control
 from django.core.paginator import Paginator
-from django.db.models import Case, CharField, Exists, OuterRef, Prefetch, Q, Subquery, Value, When
+from django.db.models import Case, CharField, Exists, F, OuterRef, Prefetch, Q, Subquery, Value, When
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from datetime import timedelta
@@ -24,7 +25,6 @@ User = get_user_model()
 
 ORDERING_FIELD = '-date_joined'
 ITEMS_PER_PAGE = 25
-# RABAT_TZ = ZoneInfo('Africa/Casablanca')
 logger_portal = logging.getLogger('portal')
 
 @user_passes_test(lambda u: u.is_staff)
@@ -229,23 +229,15 @@ def customer_list_view(request):
     #     queryset=TeamMember.objects.select_related('team').prefetch_related(active_subscriptions_prefetch)
     # )
 
-    # all_customers = User.objects.all()
-
-
-    #############################
-        # Check email verification status via allauth EmailAddress
     verified_subquery = EmailAddress.objects.filter(user=OuterRef('pk'), verified=True, primary=True)
     social_subquery = SocialAccount.objects.filter(user=OuterRef('pk')).values('provider')[:1]
-    # verified_addresses_subquery = EmailAddress.objects.filter(user=OuterRef('pk'), verified=True, primary=True)
 
-    # Check if user belongs to a team with an active cycle right now
     active_cycles = Cycle.objects.filter(
         subscription__team__members=OuterRef('pk'),
         date_start__lte=now,
         date_end__gte=now
     )
 
-    # Get active subscription status and plan name for the user's team
     active_sub = Subscription.objects.filter(
         team__members=OuterRef('pk'),
         cycles__date_start__lte=now,
@@ -263,37 +255,52 @@ def customer_list_view(request):
             default=Value('organic'),
             output_field=CharField(),
         ),
-        # email_addresses = Subquery(verified_addresses_subquery),
         is_verified=Exists(verified_subquery),
-        # active_cycles = Subquery(active_cycles),
         has_active_subscription=Exists(active_cycles),
         sub_status=Subquery(status_subquery),
         sub_plan=Subquery(plan_subquery),
     ).prefetch_related(
-        # team_memberships_prefetch,
-        'emailaddress_set',
+        # 'emailaddress_set',
         'memberships__team',
     ).select_related(
         'profile',
-    ).order_by('-date_joined')
+    )
+    #############################
+    fields = [
+        'username', 'primary_email', 'first_name', 'last_name', 
+        'origin', 'date_joined', 'last_login',
+        'phone', 'whatsapp', 'about', 'avatar',
+        'active_subscription', 'active_cycle', 
+    ]
     #############################
 
    
     customers, filters = filter_customers(all_customers, query_dict)
-
-    sort = query_dict['sort']
-
-    # if sort and sort != '':
-    #     ordering = [sort]
-    #     if sort == 'published': ordering = ['-published']
-    #     if sort == '-published': ordering = ['published']
-    # else: ordering = []
-
-    # ordering.append('-created')
-
     query_dict['filters'] = filters
 
-    customers = customers.order_by(sort)
+    skey = query_dict.get('sort', '-j')
+
+    ordering_map = {
+        'u': 'username',
+        '-u': '-username',
+        '-j': 'date_joined',
+        'j': '-date_joined',
+        '-l': 'last_login',
+        'l': '-last_login',
+        # '-t': 'plan_tier',
+        # 't': '-plan_tier',
+        # '-r': 'cycle_end',
+        # 'r': '-cycle_end',
+    }
+    case_insensitive_fields = ['username']
+
+    sort = ordering_map.get(skey, ORDERING_FIELD)
+
+    reverse = sort.startswith('-')
+    field_name =sort.lstrip('-')
+    ordering = Lower(field_name) if field_name in case_insensitive_fields else F(field_name)
+    ordering = ordering.desc(nulls_last=True) if reverse else ordering.asc(nulls_last=True)
+    customers = customers.order_by(ordering)
 
     context = define_context(request)
 

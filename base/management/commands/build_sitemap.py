@@ -18,7 +18,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--domain',
             type=str,
-            default=getattr(settings, 'SITE_HOST', 'https://new.emarches.com'),
+            default=getattr(settings, 'SITE_HOST', 'https://www.emarches.com'),
             help='Base domain (with protocol) used to generate sitemap index URLs.'
         )
 

@@ -15,43 +15,31 @@
 
             <li>
                 {% trans 'Username' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='username' icon='bi bi-person' %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='u' icon='bi bi-person' %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
                 {% trans 'Last login' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='last_login' icon='bi bi-clock' %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='l' icon='bi bi-clock' %}
             </li>
             
             <li>
                 {% trans 'Joined' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='date_joined' icon='bi bi-cake2' %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='j' icon='bi bi-cake2' %}
             </li>
             
             <hr class="dropdown-divider">
             
             <li>
-                {% trans 'Active tenders count' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='tenders_count' icon=bicons.count %}
+                {% trans 'Plan tier' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='t' icon=bicons.count %}
             </li>
             
             <li>
-                {% trans 'All tenders count' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='all_tenders_count' icon=bicons.count %}
-            </li>
-            
-            <hr class="dropdown-divider">
-            
-            <li>
-                {% trans 'Active tenders amount' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='total_estimate' icon=bicons.estimate %}
-            </li>
-            
-            <li>
-                {% trans 'All tenders amount' as caption %}
-                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='all_total_estimate' icon=bicons.estimate %}
+                {% trans 'Renewal deadline' as caption %}
+                {% include 'base/snippets/menu-sort-item.html' with caption=caption field='r' icon=bicons.count %}
             </li>
         </ul>
     </div>

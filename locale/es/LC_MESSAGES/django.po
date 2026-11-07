@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-04 12:48+0100\n"
+"POT-Creation-Date: 2026-11-06 13:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,33 +70,33 @@ msgstr ""
 msgid "Reserved to SMB+"
 msgstr ""
 
-#: base/models.py:305 templates/portal/snippets/tenders/tender-legend.html:325
+#: base/models.py:305 templates/portal/snippets/tenders/tender-legend.html:323
 #: templates/portal/snippets/tenders/tender-summary.html:266
 #: templates/portal/tender-details.html:182
 msgid "Variants accepted"
 msgstr ""
 
-#: base/models.py:306 templates/portal/snippets/tenders/tender-legend.html:270
+#: base/models.py:306 templates/portal/snippets/tenders/tender-legend.html:268
 #: templates/portal/snippets/tenders/tender-summary.html:231
 msgid "Licenses required"
 msgstr ""
 
-#: base/models.py:307 templates/portal/snippets/tenders/tender-legend.html:281
+#: base/models.py:307 templates/portal/snippets/tenders/tender-legend.html:279
 #: templates/portal/snippets/tenders/tender-summary.html:238
 msgid "Qualifications required"
 msgstr ""
 
-#: base/models.py:308 templates/portal/snippets/tenders/tender-legend.html:292
+#: base/models.py:308 templates/portal/snippets/tenders/tender-legend.html:290
 #: templates/portal/snippets/tenders/tender-summary.html:245
 msgid "Samples required"
 msgstr ""
 
-#: base/models.py:309 templates/portal/snippets/tenders/tender-legend.html:303
+#: base/models.py:309 templates/portal/snippets/tenders/tender-legend.html:301
 #: templates/portal/snippets/tenders/tender-summary.html:252
 msgid "Site survey scheduled"
 msgstr ""
 
-#: base/models.py:310 templates/portal/snippets/tenders/tender-legend.html:314
+#: base/models.py:310 templates/portal/snippets/tenders/tender-legend.html:312
 #: templates/portal/snippets/tenders/tender-summary.html:259
 msgid "Meetings scheduled"
 msgstr ""
@@ -515,6 +515,7 @@ msgstr ""
 #: base/templates/base/contact.html:56 nas/forms.py:35 nas/models.py:45
 #: nas/models.py:225 nas/models.py:245 nas/models.py:286
 #: templates/base/includes/footer.html:46
+#: templates/crm/snippets/customers/customer-item.html:71
 #: templates/nas/profile/snippets/user-details.html:29
 #: templates/portal/tender-details.html:343
 msgid "Phone"
@@ -1206,7 +1207,7 @@ msgid "Rank"
 msgstr ""
 
 #: bdc/models.py:90 bdc/weasy.py:72 flows/models.py:127 flows/models.py:220
-#: flows/models.py:341
+#: flows/models.py:341 templates/crm/snippets/customers/customer-item.html:105
 msgid "Number"
 msgstr ""
 
@@ -1521,6 +1522,7 @@ msgstr ""
 #: templates/bidding/snippets/expenses/expense-item.html:11
 #: templates/bidding/snippets/tasks/task-item.html:15
 #: templates/bidding/snippets/tasks/task-item.html:36
+#: templates/crm/snippets/customers/customer-item.html:104
 #: templates/crm/snippets/customers/customer-search-form.html:48
 msgid "Status"
 msgstr ""
@@ -1846,6 +1848,10 @@ msgstr ""
 msgid "Expense creator is not an active team member"
 msgstr ""
 
+#: crm/views.py:312
+msgid "Organic"
+msgstr ""
+
 #: emarches/settings.py:201
 msgid "English"
 msgstr ""
@@ -1921,6 +1927,8 @@ msgstr ""
 
 #: flows/admin.py:548 templates/bidding/team-member-disabled.html:27
 #: templates/bidding/team-recap.html:428
+#: templates/crm/snippets/customers/customer-item.html:84
+#: templates/crm/snippets/customers/customer-item.html:99
 msgid "Team"
 msgstr ""
 
@@ -2278,11 +2286,13 @@ msgid "Last Name"
 msgstr ""
 
 #: nas/forms.py:36 nas/models.py:46 nas/models.py:247 nas/models.py:288
+#: templates/crm/snippets/customers/customer-item.html:75
 #: templates/nas/profile/snippets/user-details.html:35
 msgid "Whatsapp"
 msgstr ""
 
 #: nas/forms.py:37 nas/models.py:47 templates/base/includes/footer.html:17
+#: templates/crm/snippets/customers/customer-item.html:79
 #: templates/nas/profile/snippets/user-details.html:41
 msgid "About"
 msgstr ""
@@ -2861,14 +2871,17 @@ msgid "The following email addresses are associated with your account:"
 msgstr ""
 
 #: templates/account/email.html:25
+#: templates/crm/snippets/customers/customer-item.html:50
 msgid "Verified"
 msgstr ""
 
 #: templates/account/email.html:29
+#: templates/crm/snippets/customers/customer-item.html:51
 msgid "Unverified"
 msgstr ""
 
 #: templates/account/email.html:34
+#: templates/crm/snippets/customers/customer-item.html:52
 msgid "Primary"
 msgstr ""
 
@@ -3803,6 +3816,7 @@ msgid "Compare contract values, participants, and previous results."
 msgstr ""
 
 #: templates/base/about.html:441
+#: templates/crm/snippets/customers/customer-item.html:106
 msgid "Plan"
 msgstr ""
 
@@ -4213,11 +4227,14 @@ msgstr ""
 msgid "Official portal down"
 msgstr ""
 
-#: templates/base/snippets/wip-pmmp-down.html:13
-msgid "is experiencing down times these days"
+#: templates/base/snippets/wip-pmmp-down.html:15
+#, python-format
+msgid ""
+"The <a href=\"%(url)s\">Marchés Publics</a> portal is experiencing down "
+"times these days"
 msgstr ""
 
-#: templates/base/snippets/wip-pmmp-down.html:14
+#: templates/base/snippets/wip-pmmp-down.html:18
 msgid "Data on our website may not be updated as soon as usual"
 msgstr ""
 
@@ -4290,8 +4307,8 @@ msgstr ""
 #: templates/bdc/bdc-details.html:87 templates/bdc/bdc-details.html:190
 #: templates/bdc/bdc-details.html:196
 #: templates/bdc/snippets/bdcs/bdc-legend.html:9
-#: templates/portal/snippets/tenders/tender-legend.html:10
-#: templates/portal/snippets/tenders/tender-legend.html:14
+#: templates/portal/snippets/tenders/tender-legend.html:8
+#: templates/portal/snippets/tenders/tender-legend.html:12
 #: templates/portal/tender-details.html:426
 #: templates/portal/tender-details.html:431
 msgid "UTC"
@@ -4300,7 +4317,7 @@ msgstr ""
 #: templates/bdc/bdc-details.html:94
 #: templates/bdc/snippets/bdcs/bdc-legend.html:89
 #: templates/bdc/snippets/bdcs/bdc-summary.html:45
-#: templates/portal/snippets/tenders/tender-legend.html:94
+#: templates/portal/snippets/tenders/tender-legend.html:92
 #: templates/portal/snippets/tenders/tender-summary.html:50
 #: templates/portal/tender-details.html:137
 msgid "Execution Location"
@@ -4309,7 +4326,7 @@ msgstr ""
 #: templates/bdc/bdc-details.html:97
 #: templates/bdc/snippets/bdcs/bdc-legend.html:100
 #: templates/bdc/snippets/bdcs/bdc-summary.html:52
-#: templates/portal/snippets/tenders/tender-legend.html:105
+#: templates/portal/snippets/tenders/tender-legend.html:103
 #: templates/portal/snippets/tenders/tender-summary.html:58
 #: templates/portal/tender-details.html:109
 msgid "Public Client"
@@ -4447,7 +4464,7 @@ msgstr ""
 #: templates/bidding/tasks-list.html:28 templates/bidding/tenders-list.html:25
 #: templates/crm/customer_list.html:26 templates/insights/bidders-list.html:34
 #: templates/portal/clients-list.html:26 templates/portal/domains-list.html:24
-#: templates/portal/snippets/tenders/tender-legend.html:58
+#: templates/portal/snippets/tenders/tender-legend.html:56
 #: templates/portal/tender-favorite-list.html:22
 #: templates/portal/tender-list.html:24
 msgid "Results are filtered"
@@ -4519,7 +4536,7 @@ msgid "Files"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:7
-#: templates/portal/snippets/tenders/tender-legend.html:12
+#: templates/portal/snippets/tenders/tender-legend.html:10
 msgid "Updated since"
 msgstr ""
 
@@ -4528,13 +4545,13 @@ msgid "Legend"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:29
-#: templates/portal/snippets/tenders/tender-legend.html:35
+#: templates/portal/snippets/tenders/tender-legend.html:33
 #, python-format
 msgid "Days to Deadline (%%)"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:65
-#: templates/portal/snippets/tenders/tender-legend.html:71
+#: templates/portal/snippets/tenders/tender-legend.html:69
 msgid "Main category"
 msgstr ""
 
@@ -4543,7 +4560,6 @@ msgid "Number of items"
 msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-legend.html:111
-#: templates/bdc/snippets/bdcs/bdc-legend.html:177
 msgid "Item deadline expired"
 msgstr ""
 
@@ -5031,6 +5047,7 @@ msgstr ""
 #: templates/bidding/tasks-list.html:62 templates/bidding/tasks-list.html:97
 #: templates/bidding/tasks-list.html:132 templates/bidding/tasks-list.html:167
 #: templates/bidding/tasks-list.html:202
+#: templates/crm/snippets/customers/customer-item.html:55
 #: templates/nas/companies/snippets/agrement_list.html:37
 #: templates/nas/companies/snippets/expirables_list.html:28
 #: templates/nas/companies/snippets/qualif_list.html:38
@@ -5430,6 +5447,7 @@ msgid "Joined"
 msgstr ""
 
 #: templates/bidding/snippets/members/member-item.html:47
+#: templates/crm/snippets/customers/customer-item.html:92
 #: templates/crm/snippets/customers/customer-menu-sort.html:24
 #: templates/crm/snippets/customers/customer-search-form.html:89
 msgid "Last login"
@@ -5730,7 +5748,52 @@ msgstr ""
 msgid "Origin"
 msgstr ""
 
+#: templates/crm/snippets/customers/customer-item.html:45
+msgid "Email addresses"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:62
+msgid "First name"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:66
+msgid "Last name"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:88
+#: templates/crm/snippets/customers/customer-search-form.html:72
+msgid "Date Joined"
+msgstr ""
+
 #: templates/crm/snippets/customers/customer-item.html:107
+msgid "Contracted"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:108
+msgid "Commitment"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:111
+msgid "From"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:113
+msgid "To"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:118
+msgid "No active cycle"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:121
+msgid "No active subscription"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:125
+msgid "No active membership"
+msgstr ""
+
+#: templates/crm/snippets/customers/customer-item.html:137
 #: templates/portal/clients-list.html:71 templates/portal/domains-list.html:72
 #: templates/portal/snippets/clients/client-item.html:23
 #: templates/portal/snippets/clients/client-item.html:53
@@ -5739,7 +5802,7 @@ msgstr ""
 msgid "Active Tenders"
 msgstr ""
 
-#: templates/crm/snippets/customers/customer-item.html:115
+#: templates/crm/snippets/customers/customer-item.html:145
 #: templates/portal/snippets/clients/client-item.html:31
 #: templates/portal/snippets/clients/client-item.html:61
 #: templates/portal/snippets/domains/domain-item.html:31
@@ -5748,27 +5811,11 @@ msgid "All Tenders"
 msgstr ""
 
 #: templates/crm/snippets/customers/customer-menu-sort.html:36
-#: templates/portal/snippets/clients/client-menu-sort.html:27
-#: templates/portal/snippets/domains/domain-menu-sort.html:36
-msgid "Active tenders count"
+msgid "Plan tier"
 msgstr ""
 
 #: templates/crm/snippets/customers/customer-menu-sort.html:41
-#: templates/portal/snippets/clients/client-menu-sort.html:32
-#: templates/portal/snippets/domains/domain-menu-sort.html:41
-msgid "All tenders count"
-msgstr ""
-
-#: templates/crm/snippets/customers/customer-menu-sort.html:48
-#: templates/portal/snippets/clients/client-menu-sort.html:39
-#: templates/portal/snippets/domains/domain-menu-sort.html:48
-msgid "Active tenders amount"
-msgstr ""
-
-#: templates/crm/snippets/customers/customer-menu-sort.html:53
-#: templates/portal/snippets/clients/client-menu-sort.html:44
-#: templates/portal/snippets/domains/domain-menu-sort.html:53
-msgid "All tenders amount"
+msgid "Renewal deadline"
 msgstr ""
 
 #: templates/crm/snippets/customers/customer-search-form.html:7
@@ -5781,10 +5828,6 @@ msgstr ""
 
 #: templates/crm/snippets/customers/customer-search-form.html:36
 msgid "Staff Role"
-msgstr ""
-
-#: templates/crm/snippets/customers/customer-search-form.html:72
-msgid "Date Joined"
 msgstr ""
 
 #: templates/flows/snippets/plans-digest.html:6
@@ -6939,6 +6982,26 @@ msgstr ""
 msgid "All Tenders estimate"
 msgstr ""
 
+#: templates/portal/snippets/clients/client-menu-sort.html:27
+#: templates/portal/snippets/domains/domain-menu-sort.html:36
+msgid "Active tenders count"
+msgstr ""
+
+#: templates/portal/snippets/clients/client-menu-sort.html:32
+#: templates/portal/snippets/domains/domain-menu-sort.html:41
+msgid "All tenders count"
+msgstr ""
+
+#: templates/portal/snippets/clients/client-menu-sort.html:39
+#: templates/portal/snippets/domains/domain-menu-sort.html:48
+msgid "Active tenders amount"
+msgstr ""
+
+#: templates/portal/snippets/clients/client-menu-sort.html:44
+#: templates/portal/snippets/domains/domain-menu-sort.html:53
+msgid "All tenders amount"
+msgstr ""
+
 #: templates/portal/snippets/clients/client-menu-sort.html:51
 msgid "Client Acronym"
 msgstr ""
@@ -7167,98 +7230,98 @@ msgstr ""
 msgid "Official Link"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:27
+#: templates/portal/snippets/tenders/tender-legend.html:25
 msgid "Symbols legend"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:83
+#: templates/portal/snippets/tenders/tender-legend.html:81
 msgid "Tender is allotted"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:116
+#: templates/portal/snippets/tenders/tender-legend.html:114
 msgid "Bid on by my team"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:127
+#: templates/portal/snippets/tenders/tender-legend.html:125
 msgid "Tender results have Awarding"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:138
+#: templates/portal/snippets/tenders/tender-legend.html:136
 msgid "Tender results have no Awarding"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:149
+#: templates/portal/snippets/tenders/tender-legend.html:147
 msgid "Awarded lots from lots count"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:160
+#: templates/portal/snippets/tenders/tender-legend.html:158
 msgid "Winner amount ratio to Estimate"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:171
+#: templates/portal/snippets/tenders/tender-legend.html:169
 #: templates/portal/snippets/tenders/tender-summary.html:215
 msgid "Contains environment-related clauses"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:182
+#: templates/portal/snippets/tenders/tender-legend.html:180
 #: templates/portal/snippets/tenders/tender-summary.html:165
 msgid "Procedure may be restricted"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:193
+#: templates/portal/snippets/tenders/tender-legend.html:191
 #: templates/portal/snippets/tenders/tender-summary.html:173
 msgid "Electronic bidding is required"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:204
+#: templates/portal/snippets/tenders/tender-legend.html:202
 #: templates/portal/snippets/tenders/tender-summary.html:179
 msgid "Electronic bidding is optional"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:215
+#: templates/portal/snippets/tenders/tender-legend.html:213
 #: templates/portal/snippets/tenders/tender-summary.html:185
 msgid "Electronic bidding is not applicable"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:226
+#: templates/portal/snippets/tenders/tender-legend.html:224
 #: templates/portal/snippets/tenders/tender-summary.html:194
 msgid "Electronic signature is required"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:237
+#: templates/portal/snippets/tenders/tender-legend.html:235
 #: templates/portal/snippets/tenders/tender-summary.html:200
 msgid "Electronic signature is optional"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:248
+#: templates/portal/snippets/tenders/tender-legend.html:246
 #: templates/portal/snippets/tenders/tender-summary.html:206
 msgid "Electronic signature is not applicable"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:259
+#: templates/portal/snippets/tenders/tender-legend.html:257
 #: templates/portal/snippets/tenders/tender-summary.html:223
 #: templates/portal/tender-details.html:172
 msgid "Reserved to SMBs, individuals, Unions, ..."
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:336
+#: templates/portal/snippets/tenders/tender-legend.html:334
 msgid "Tender Changes"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:347
+#: templates/portal/snippets/tenders/tender-legend.html:345
 msgid "Tender Favorites"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:358
+#: templates/portal/snippets/tenders/tender-legend.html:356
 msgid "Tender Downloads"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:369
+#: templates/portal/snippets/tenders/tender-legend.html:367
 #: templates/portal/snippets/tenders/tender-summary.html:323
 msgid "Available files size"
 msgstr ""
 
-#: templates/portal/snippets/tenders/tender-legend.html:380
+#: templates/portal/snippets/tenders/tender-legend.html:378
 #: templates/portal/snippets/tenders/tender-summary.html:317
 msgid "Files may not be available"
 msgstr ""

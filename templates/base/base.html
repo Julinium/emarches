@@ -8,17 +8,20 @@
 
 <html dir="{% if LB %}rtl{% else %}ltr{% endif %}" lang="{{ LANGUAGE_CODE }}">
 	<head>
-		<title>eMarchés | {% block title %}{% endblock title %}</title>	
+		<title>{% translate 'eMarchés' %}: {% block title %}{% endblock title %}</title>	
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="icon" type="image/png" href="{% static 'brand/insi-square.svg' %}">
-		<meta name="description" content="eMarches.com: {% translate 'eMarches portal. Morocco Public Procurement Market. Access to public Tenders and Puchase orders. Paperless dematerialized procedure' %}, {% trans 'Tender' %}, {% trans 'Results' %}, {% trans 'Concurrent' %} {% block extra_description %}{% endblock %}">
-		<meta name="keywords" content="e-Marchés eMarchés eMarches.com {% translate 'PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free Listing Files Download' %}, {% trans 'Tender' %}, {% trans 'Results' %}, {% trans 'Concurrent' %} {% block extra_keywords %}{% endblock %}">
-		<meta property="og:title" content="eMarches.com{% block og_title_extra %}{% endblock %}">
-		<meta property="og:description" content="eMarches.com{% block og_description_extra %}{% endblock %}">
-		<meta property="og:image" content="https://www.emarches.com/static/img/success.webp">
+		{% autoescape off %}
+		<meta name="description" content="{% block page_description %}{% translate 'Morocco public procurement intelligence platform' %}{% endblock %}">
+		<meta name="keywords" content="{% block page_keywords %}{% translate 'PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free Listing Files Download e-Marchés eMarchés eMarches.com' %}{% endblock %}">
+		<meta property="og:title" content="{% translate 'eMarchés' %}: {% block page_og_title %}{% translate 'Morocco public procurement intelligence platform' %}{% endblock %}">
+		<meta property="og:description" content="{% block page_og_description %}{% translate 'Morocco public procurement intelligence platform' %}{% endblock %}">
+		{% endautoescape %}
+		<meta property="og:image" content="https://www.emarches.com/static/brand/og.webp">
 		<meta property="og:type" content="website">
 		<meta name="author" content="eMarches.com">
+
 		<link href="{% static 'styles/bootstrap-icons.min.css' %}" rel="stylesheet">
 		<link href="{% static 'styles/custom.css' %}" rel="stylesheet">
 		{% if LB %}

@@ -59,6 +59,11 @@
                 </div>
 
                 <div class="">
+                    <span class="small fw-light me-1">{% trans 'Email' %}:</span>
+                    <span>{{ customer.email|default:'?' }}</span>
+                </div>
+
+                <div class="">
                     <span class="small fw-light me-1">{% trans 'First name' %}:</span>
                     <span>{{ customer.first_name|default:'-' }}</span>
                 </div>
@@ -93,18 +98,36 @@
                     <span>{{ customer.last_login }}</span>
                 </div>
 
-                {% for membership in customer.memberships.all %}
-                    {% for sub in membership.team.active_subscriptions_list %}
+                {% for mem in customer.memberships.all %}
+                    <div id="membership-{{ mem.id }}" class="mt-2 ms-2">
                         <div class="">
-                            {% trans 'Plan' %}: {{ sub.plan.name }} ({% trans 'Status' %}: {{ sub.get_status_display }})
-                            
-                            {% for cycle in sub.active_cycles_list %}
-                                <small>{% trans 'Active Cycle' %}: {{ cycle.date_start|date:"M d" }} to {{ cycle.date_end|date:"M d" }}</small>
-                            {% endfor %}
+                            <span class="small fw-light me-1">{% trans 'Team' %}:</span>
+                            <span>{{ mem.team.name }}</span>
                         </div>
-                    {% empty %}
-                        <p>{% trans 'No active subscription for this team' %}.</p>
-                    {% endfor %}
+                        {% for sub in mem.team.subscriptions.all %}
+                            <div id="subscription-{{ sub.id }}" class="mt-1 ms-2">
+                                <div><span class="small text-secondary">{% trans 'Status' %}:</span><span>{{ sub.status }}</span></div>
+                                <div><span class="small text-secondary">{% trans 'Number' %}:</span><span>{{ sub.numero }}</span></div>
+                                <div><span class="small text-secondary">{% trans 'Plan' %}:</span><span>{{ sub.plan.name }}</span></div>
+                                <div><span class="small text-secondary">{% trans 'Contracted' %}:</span><span>{{ sub.subscribed_date }}</span></div>
+                                <div><span class="small text-secondary">{% trans 'Commitment' %}:</span><span>{{ sub.get_commitment_display }}</span></div>
+                                {% for cyc in sub.cycles.all %}
+                                    <div class="ms-2">
+                                        <span class="small text-secondary">{% trans 'From' %}:</span>
+                                        <span>{{ cyc.date_start|date }}</span>
+                                        <span class="small text-secondary ms-2">{% trans 'To' %}:</span>
+                                        <span>{{ cyc.date_end|date }}</span>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="fw-light small text-danger ms-2 mt-2">{% trans 'No active cycle' %}.</p>
+                            {% endfor %}
+                        {% empty %}
+                            <p class="fw-light small text-danger ms-2 mt-2">{% trans 'No active subscription' %}.</p>
+                        {% endfor %}
+                    </div>
+                {% empty %}
+                    <p class="fw-light small text-danger ms-2 mt-2">{% trans 'No active membership' %}.</p>
                 {% endfor %}
             </div>
 

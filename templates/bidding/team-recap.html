@@ -279,7 +279,7 @@
                     <form id="team-edit-form" method="post" action="{% url 'bidding_team_edit' team.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="teamEditModalLabel">{% trans "Team edit" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="teamEditModalLabel">{% trans "Team edit" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -325,7 +325,7 @@
                     <form id="new-invitation-form" method="post" action="{% url 'bidding_invitation_create' team.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="newInvitationModalLabel">{% trans "New member invitation" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="newInvitationModalLabel">{% trans "New member invitation" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -380,7 +380,7 @@
                     <form id="cancel-invitation-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="cancelInvitationModalLabel">{% trans "Confirm cancellation" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="cancelInvitationModalLabel">{% trans "Confirm cancellation" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -417,7 +417,7 @@
                     <form id="accept-invitation-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="acceptInvitationModalLabel">{% trans "Confirm acceptation" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="acceptInvitationModalLabel">{% trans "Confirm acceptation" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -477,7 +477,7 @@
                     <form id="member-disable-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="memberDisableModalLabel">{% trans "Confirm disabling" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="memberDisableModalLabel">{% trans "Confirm disabling" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -519,7 +519,7 @@
                     <form id="member-enable-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="memberEnableModalLabel">{% trans "Confirm enabling" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="memberEnableModalLabel">{% trans "Confirm enabling" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -561,7 +561,7 @@
                     <form id="member-debossify-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="memberDebossifyModalLabel">{% trans "Confirm making not Manager" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="memberDebossifyModalLabel">{% trans "Confirm making not Manager" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -603,7 +603,7 @@
                     <form id="member-bossify-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="memberBossifyModalLabel">{% trans "Confirm making Manager" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="memberBossifyModalLabel">{% trans "Confirm making Manager" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -650,7 +650,7 @@
                     <form id="member-fire-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 fw-bold" id="memberFireModalLabel">{% trans "Confirm firing" %}</h1>
+                            <div class="modal-title h1 fs-5 fw-bold" id="memberFireModalLabel">{% trans "Confirm firing" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -697,7 +697,7 @@
                     <form id="bid-delete-form" method="post">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</h1>
+                            <div class="modal-title h1 fs-5 text-danger fw-bold" id="bidDeleteModalLabel">{% trans "Permanent Delete" %}</div>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">

@@ -2,16 +2,16 @@
 {% load i18n static %}
 
 {% block title %}{% trans "Tenders list" %}{% endblock title %}
-{% block extra_keywords %}, {% trans "Tenders list" %}, {% trans "Results" %}, {% trans "Advanced Search" %}, {% trans "Filter" %}, {% trans "Sort" %}, {% endblock extra_keywords %}
-{% block extra_description %}, {% trans "Tenders list" %}, {% trans "Results" %}, {% trans "Advanced Search" %}, {% trans "Filter" %}, {% trans "Sort" %}, {% endblock extra_description %}
-{% block og_title_extra %} | {% trans "Tenders list" %}{% endblock og_title_extra %}
-{% block og_description_extra %} | {% trans "Tenders list" %}{% endblock og_description_extra %}
+{% block page_description %}{% trans "Tenders list" %}, {% trans "Results" %} {% endblock page_description %}
+{% block page_keywords %}{% trans "Tenders list" %}, {% trans "Results" %}, {% trans "Advanced Search" %}, {% trans "Filter" %}, {% trans "Sort" %}{% endblock page_keywords %}
+{% block page_og_title %}{% trans "Tenders list" %}{% endblock page_og_title %}
+{% block page_og_description %}{% trans "Tenders list" %}, {% trans "Results" %}{% endblock page_og_description %}
 
 {% block content %}
     <div class="d-flex justify-content-between">
-        <div class="">
+        <h1>
             <span class="h3 me-1">{% trans "Tenders list" %}</span>
-        </div>
+        </h1>
         <div class="d-flex align-items-top">            
             {% include 'portal/snippets/tenders/search-form.html' %}
             {% include 'portal/snippets/tenders/menu-sort.html' %}

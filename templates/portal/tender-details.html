@@ -7,29 +7,31 @@
 
 
 {% block title %}{% trans "Tender Details" %}{% endblock title %}
-{% block extra_keywords %}, {{ tender.keywords }}, {{ tender.reference }}{% endblock extra_keywords %}
-{% block extra_description %}, {{ tender.keywords }}, {{ tender.reference }}{% endblock extra_description %}
-{% block og_title_extra %} | {{ tender.estimate }} - {{ tender.title }}{% endblock og_title_extra %}
-{% block og_description_extra %} | {{ tender.title }} - {{ tender.reference }}{% endblock og_description_extra %}
+{% block page_description %}{% trans "Tender Details" %}: {{ tender.title|truncatewords:12 }}, {{ tender.reference }}{% endblock page_description %}
+{% block page_keywords %}{{ tender.reference }}, {{ tender.keywords }}{% endblock page_keywords %}
+{% block page_og_title %}{% trans "Tender Details" %}{% endblock page_og_title %}
+{% block page_og_description %}{{ tender.title|truncatewords:12 }} - {{ tender.reference }}{% endblock page_og_description %}
 
 {% block content %}
     <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
 
     <div class="d-flex justify-content-between align-items-center">
         <div class="my-3">
-            <span class="h3">{% trans "Tender Details" %}</span>
-            <span id="faved" class="me-2 p-2 badge text-bg-success {% if not favorited %}d-none{% endif %}">
-                <span class="">
-                    <i class="{{ bicons.favorited }}"></i>
-                    <span class="d-none d-md-inline">{% trans "FAVORITE" %}</span>
+            <h1>
+                <span class="h3">{% trans "Tender Details" %}</span>
+                <span id="faved" class="me-2 p-2 badge text-bg-success {% if not favorited %}d-none{% endif %}">
+                    <span class="">
+                        <i class="{{ bicons.favorited }}"></i>
+                        <span class="d-none d-md-inline">{% trans "FAVORITE" %}</span>
+                    </span>
                 </span>
-            </span>
-            {% if tender.expired %}
-                <span class="text-bg-secondary rounded fw-bold p-1 ms-2">
-                    <span><i class="{{ bicons.expired }} me-1"></i></span>
-                    <span>{% trans 'EXPIRED' %}</span>
-                </span>
-            {% endif %}
+                {% if tender.expired %}
+                    <span class="text-bg-secondary rounded fw-bold p-1 ms-2">
+                        <span><i class="{{ bicons.expired }} me-1"></i></span>
+                        <span>{% trans 'EXPIRED' %}</span>
+                    </span>
+                {% endif %}
+            </h1>
         </div>
     </div>
 
@@ -530,7 +532,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="dceModalLabel">{% translate "Tender downloads" %}</h1>
+                        <div class="modal-title h1 fs-5" id="dceModalLabel">{% translate "Tender downloads" %}</div>
                     </div>
                     <div class="modal-body">
 
@@ -588,7 +590,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="dceRequestModalLabel">{% translate "Request Tender files" %}</h1>
+                        <div class="modal-title h1 fs-5" id="dceRequestModalLabel">{% translate "Request Tender files" %}</div>
                     </div>
                     <div class="modal-body">
                         {% if tender.files_to_get.first %}
