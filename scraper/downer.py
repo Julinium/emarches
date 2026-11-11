@@ -21,6 +21,7 @@ import subprocess
 import traceback
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.conf import settings as S
 
 import requests
 from bs4 import BeautifulSoup
@@ -334,7 +335,7 @@ def getExtraFiles(tender=None, extra_files=[]):
         if len(fname) == 0: return None
         return fname[0]
 
-    extra_path = os.path.join(C.TENDERS_FILES_ROOT, f'extra/{C.EXTRA_PATH_PREFIX}{tender.chrono}')
+    extra_path = os.path.join(C.TENDERS_FILES_ROOT, f'extra/{S.EXTRA_PATH_PREFIX}{tender.chrono}')
     if not os.path.exists(extra_path): os.makedirs(extra_path)
     if not os.path.exists(extra_path):
         helper.printMessage('ERROR', 'd.getExtraFile', f'Could not find Extra directory.')

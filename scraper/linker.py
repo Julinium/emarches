@@ -16,12 +16,10 @@ from selenium.common.exceptions import NoSuchElementException
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, parse_qs
 
-from base.models import Tender, Link, Parkour, Machine, Harvest
+from base.models import Tender, Link, Parkour, Machine
 from scraper import constants as C
 from scraper import helper
 
-
-REFRESH_SAVED = True
 
 
 def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
@@ -56,7 +54,7 @@ def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
 
 
 def pg2Links(driver, page_number, pages):
-    helper.printMessage('DEBUG', 'l.pg2Links', f'### Looking at page {page_number:02}/{pages:02}...')
+    helper.printMessage('DEBUG', 'l.pg2Links', f'### Looking at page {page_number:02}/{pages}...')
     links = []
     try:
         i = 0
@@ -79,7 +77,7 @@ def pg2Links(driver, page_number, pages):
             try:
                 chrono = None
                 acronym = None
-                published = datetime.now().date()
+                published = None
                 has_enviro = None
                 onclick_value = row.get('onclick', '')
                 match = re.search(r'location\.href\s*=\s*["\']([^"\']+)["\']', onclick_value)
@@ -107,10 +105,10 @@ def pg2Links(driver, page_number, pages):
                 traceback.print_exc()
 
     except Exception:
-        helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:02}', 1, 2)
+        helper.printMessage('ERROR', 'l.pg2Links', f'Exception while getting links from page {page_number:02}/{pages}', 1, 2)
         traceback.print_exc()
 
-    helper.printMessage('INFO', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:02}')
+    helper.printMessage('INFO', 'l.pg2Links', f'=== Got {len(links)} links from page {page_number:02}/{pages}')
     
     return links
 
@@ -161,7 +159,7 @@ def getLinks(back_days=30):
     pages = 0
     count = 0
     if driver == None: return links
-    
+
     try:
         helper.printMessage('TRACE', 'l.getLinks', 'Filling in search form ...', 1)
         fillForm(driver, back_days)
@@ -185,9 +183,9 @@ def getLinks(back_days=30):
         helper.printMessage('DEBUG', 'l.getLinks', f'Page size set to { C.LINES_PER_PAGE }.')
     except Exception as e :
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while changing page size: {str(e)}', 1, 1)
-        if driver: driver.quit()
+        # if driver: driver.quit()
         traceback.print_exc()
-        return links
+        # return links
     
     try:
         helper.printMessage('DEBUG', 'l.getLinks', 'Reading page count and number of results ...', 0, 1)
@@ -195,7 +193,7 @@ def getLinks(back_days=30):
         pages = int(pages_field.get_attribute("innerText").strip())
         count_field = driver.find_element("id", "ctl0_CONTENU_PAGE_resultSearch_nombreElement")
         count = count_field.get_attribute("innerText").strip()
-        helper.printMessage('INFO', 'l.getLinks', f'Number of items: {count:04}. Number of pages: {pages:02}', 0, 1)
+        helper.printMessage('INFO', 'l.getLinks', f'Number of items: {count:04}. Number of pages: {pages}', 0, 1)
     except :
         helper.printMessage('ERROR', 'l.getLinks', f'Something went wrong while getting links and pages counts', 1, 1)
         traceback.print_exc()
@@ -206,7 +204,7 @@ def getLinks(back_days=30):
     try:
         links = pg2Links(driver, i, pages)
     except:
-        helper.printMessage('ERROR', 'l.getLinks', f'Exception raised while getting links from page {i:02}/{pages:02}')
+        helper.printMessage('ERROR', 'l.getLinks', f'Exception raised while getting links from page {i:02}/{pages}')
         traceback.print_exc()
         
     try:
@@ -219,18 +217,24 @@ def getLinks(back_days=30):
         next_page_button.click()
         i += 1
         links += pg2Links(driver, i, pages)
-        helper.printMessage('TRACE', 'l.getLinks', f'### Looking for next page {i+1:02} ... ')
+        helper.printMessage('TRACE', 'l.getLinks', f'### Looking for next page {i+1:02}/{pages} ... ')
 
         try :
             next_page_button = driver.find_element(By.ID, "ctl0_CONTENU_PAGE_resultSearch_PagerTop_ctl2")
-            helper.printMessage('TRACE', 'l.getLinks', f'+++ Next page found {i+1:02}')
+            helper.printMessage('TRACE', 'l.getLinks', f'+++ Next page found {i+1:02}/{pages}')
         except NoSuchElementException: 
             next_page_button = None
-            helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:02} not found', 0, 2)
+            helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:02}/{pages} not found', 0, 2)
+        except TimeoutError: 
+            traceback.print_exc()
+            helper.sleepRandom(60, 90)
         except: 
             next_page_button = None
-            helper.printMessage('ERROR', 'l.pg2Links', f'Exception while looking for page {i+1:02}', 1, 2)
+            helper.printMessage('ERROR', 'l.pg2Links', f'Exception while looking for page {i+1:02}/{pages}', 1, 2)
             traceback.print_exc()
+
+        # if i % 8 == 0:
+        #     helper.sleepRandom(10, 15)
 
     if driver: driver.quit()
     

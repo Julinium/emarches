@@ -80,27 +80,32 @@ def getJson(link, skipExisting=False):
         return None
     helper.printMessage('TRACE', 'g.getJson', f'Getting Tender page : {request_cons}')
     if request_cons.status_code != 200 :
+        helper.sleepRandom(30, 90)
         helper.printMessage('ERROR', 'g.getJson', f'Request to Tender page returned a {request_cons.status_code} status code.')
         if request_cons.status_code == 429:
             helper.printMessage('ERROR', 'g.getJson', f'Too many Requests, said the server: {request_cons.status_code} !')
-            helper.sleepRandom(300, 600)
+            helper.sleepRandom(180, 300)
         return None
 
     bowl = BeautifulSoup(request_cons.text, 'html.parser')
     soup = bowl.find(class_='card-body')
 
+    # lp = "\n\t============================================\n"
+    # helper.printMessage('TRACE', 'g.getJson', f'soup = bowl.find(class_="card-body"): {lp}{soup}{lp}', 5, 5)
+
     try:
+        published_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateMiseEnLigne')
+        cons_published = published_span.get_text().strip() if published_span else NA_PLH
+
         deadl_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateHeureLimiteRemisePlis')
         cons_deadl = deadl_span.get_text().strip() if deadl_span else NA_PLH
 
-        # @ERROR
-        # deadl_span = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_dateHeureLimiteRemisePlis')
-        #          ^^^^^^^^^
-        # AttributeError: 'NoneType' object has no attribute 'find'
+        repel_element  = soup.find('span', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_modalitesReponse')
+        cons_repec = repel_element.get_text(strip=True) if repel_element else NA_PLH
 
-        picto_img  = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictCertificat')
-        picto_src  = picto_img['src'].strip() if picto_img else NA_PLH
-        cons_repec = picto_src.strip().replace('themes/images/', '').replace('.svg', '')
+        # picto_img  = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictCertificat')
+        # picto_src  = picto_img['src'].strip() if picto_img else NA_PLH
+        # cons_repec = picto_src.strip().replace('themes/images/', '').replace('.svg', '')
 
         cance_span = soup.find('img', id='ctl0_CONTENU_PAGE_idEntrepriseConsultationSummary_pictConsultationAnnulee')
         cons_cance = "Oui" if cance_span else NA_PLH
@@ -289,7 +294,7 @@ def getJson(link, skipExisting=False):
 
 
         cons_dict = {
-            "published"         : link.published,
+            "published"         : cons_published,
             "deadline"          : cons_deadl,
             "cancelled"         : cons_cance,
             "reference"         : cons_refce,
@@ -843,34 +848,3 @@ def getMinutes(chro='', acro=''):
     return digest
 
 
-
-# {
-#     'chrono': '1054489', 
-#     'title': 'Achat de matériel didactique, pédagogique et audio-visuel pour le compte de la direction régionale de l’ONSSA de Souss Massa- Lot unique.', 
-#     'reference': '24/2026/ONSSA/DRSM', 
-#     'published': datetime.date(2026, 10, 29), 
-#     'deadline': datetime.datetime(2026, 11, 9, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='Africa/Casablanca')), 
-#     'lots_count': 1, 
-#     'estimate': Decimal('79200.00'), 
-#     'bond': Decimal('1584.00'), 
-#     'plans_price': Decimal('0.00'), 
-#     'reserved': True, 
-#     'variant': False, 
-#     'location': 'MAROC, AGADIR IDA OU TANANE', 
-#     'ebid': 1, 
-#     'esign': 1, 
-#     'size_read': '16,24 M', 
-#     'size_bytes': 17028767, 
-#     'address_withdrawal': 'Le dossier d’appel d’offres doit être téléchargé à partir du portail des marchés publics accessible à l’adresse (www.marchespublics.gov.ma).', 
-#     'address_bidding': 'Les concurrents doivent déposer leurs dossiers par voie électronique au portail des marchés publics accessible à l’adresse : (www.marchespublics.gov.ma).', 
-#     'address_opening': 'la salle de réunion de la Direction Régionale de Sécurité Sanitaire des Produits Alimentaires de Souss-Massa', 
-#     'contact_name': 'FATIMA EL BAHLOUL', 
-#     'contact_phone': '00212528238975', 
-#     'contact_email': 'Fatima.Elbahloul.SRSDRSM@onssa.gov.ma', 
-#     'contact_fax': '00212528238974', 
-#     'cancelled': False, 
-#     'link': '1054489&orgAcronyme=q1s', 
-#     'acronym': 'q1s', 
-#     'has_minutes': False, 
-#     'has_enviro': False
-# }

@@ -87,36 +87,48 @@ def format(tender_json: dict) -> dict:
     helper.printMessage('DEBUG', 'm.format', "### Started formatting Tender data ...")
     j = tender_json
     try:
-        j["published"] = j["published"]
+        j["published"] = helper.getDateTime(j["published"])
         j["deadline"] = helper.getDateTime(j["deadline"])
         j["cancelled"] = j["cancelled"] == "Oui"
         j["plans_price"] = helper.getAmount(j["plans_price"])
         j["acronym"] = j["link"].split("=")[1]
 
         ebs = j["ebid_esign"] # 1: Required, 0: Not required, Else: NA
-        match ebs:  # Look at the image ...
-            case "reponse-elec-oblig-avec-signature" | "electroSigObl" | "electroSigOblDocs":
+        # match ebs:  # Look at the image ...
+        #     case "reponse-elec-oblig-avec-signature" | "electroSigObl" | "electroSigOblDocs":
+        #         j["ebid"], j["esign"] = 1, 1
+        #     case "reponse-elec-oblig" | "EectroSanSignOblg": 
+        #         j["ebid"], j["esign"] = 1, 0
+        #     case "reponse-elec-avec-signature" | "signOblg":
+        #         j["ebid"], j["esign"] = 0, 1
+        #     case "reponse-elec" | "electrononobligsanssign":
+        #         j["ebid"], j["esign"] = 0, 0
+        #     case _:
+        #         j["ebid"], j["esign"] = 9, 9
+
+        ######################
+        # Brute mapping:
+        electroSigObl           = "Réponse électronique obligatoire pour cette consultation, avec signature électronique requise"
+        electroSigOblDocs       = "Réponse électronique obligatoire pour cette consultation, avec signature électronique requise pour tous les documents"
+        EectroSanSignOblg       = "Réponse électronique obligatoire pour cette consultation, sans signature électronique"
+        signOblg                = "Réponse électronique non obligatoire pour cette consultation, avec signature électronique requise"
+        electrononobligsanssign = "Réponse électronique non obligatoire pour cette consultation, sans signature électronique"
+        # nonElectro              = "Pas de réponse électronique pour cette consultation"
+        ######################
+
+        match ebs:
+            case el if el in (electroSigObl, electroSigOblDocs):
                 j["ebid"], j["esign"] = 1, 1
-            case "reponse-elec-oblig" | "EectroSanSignOblg": 
+            case el if el == EectroSanSignOblg: 
                 j["ebid"], j["esign"] = 1, 0
-            case "reponse-elec-avec-signature" | "signOblg":
+            case el if el == signOblg:
                 j["ebid"], j["esign"] = 0, 1
-            case "reponse-elec" | "electrononobligsanssign":
+            case el if el == electrononobligsanssign:
                 j["ebid"], j["esign"] = 0, 0
             case _:
                 j["ebid"], j["esign"] = 9, 9
 
         ll = j["lots"]
-
-        ######################
-        # Brute mapping:
-        # EectroSanSignOblg       = "Réponse électronique obligatoire pour cette consultation, sans signature électronique"
-        # electrononobligsanssign = "Réponse électronique non obligatoire pour cette consultation, sans signature électronique"
-        # electroSigObl           = "Réponse électronique obligatoire pour cette consultation, avec signature électronique requise"
-        # signOblg                = "Réponse électronique non obligatoire pour cette consultation, avec signature électronique requise"
-        # nonElectro              = "Pas de réponse électronique pour cette consultation"
-        # electroSigOblDocs       = "Réponse électronique obligatoire pour cette consultation, avec signature électronique requise pour tous les documents"
-        ######################
 
 
         reserved_t, variant_t = False, False
@@ -623,7 +635,8 @@ def handleDCE(tender: Optional[Tender]) -> Optional[str]:
                 if C.MACHINE == 'remote':
                     helper.printMessage('TRACE', 'm.handleDCE', f"#### Syncing DCE to remote server ... ")
                     media_dce = os.path.join(dce_dir, '..')
-                    synced = helper.syncDir(media_dce)
+                    # synced = helper.syncDir(media_dce)
+                    synced = helper.syncDir(dce_dir, C.REMOTE_MEDIA_ROOT + f"/tenders/dce/{C.DL_PATH_PREFIX}{tender.chrono}")
                 else:
                     synced = True
             else:

@@ -50,7 +50,8 @@ if args.results: GET_RESULTS = args.results.lower() != "ignore"
 if args.dce: GET_BDCS = args.dce.lower() != "get"
 
 
-HEADLESS_MODE = True # Set true if operating on a system without GUI.
+# HEADLESS_MODE = True # Set true if operating on a system without GUI.
+HEADLESS_MODE = False
 
 SITE_ROOT = os.getenv("SITE_ROOT")
 SITE_INDEX = os.getenv("SITE_INDEX")
@@ -88,7 +89,7 @@ with open(creds_json) as g:
     DCE_CREDS = json.load(g)
 
 # Items per page on browser. Higher means less pages to handle by Chromium, and then less time
-LINES_PER_PAGE = "500" 
+LINES_PER_PAGE = "50" 
 
 # Look for Tenders with Deadline up to PORTAL_DDL_PAST_DAYS days in the past.
 PORTAL_DDL_PAST_DAYS = 30
@@ -109,7 +110,7 @@ PORTAL_PUB_PAST_DAYS = 365 * 1
 PORTAL_PUB_FUTURE_DAYS = 0
 
 # If a page does not load in LOADING_TIMEOUT, look at something else
-LOADING_TIMEOUT = 1000 * 91
+LOADING_TIMEOUT = 1000 * 180
 REQ_TIMEOUT = 60
 DLD_TIMEOUT = 60
 

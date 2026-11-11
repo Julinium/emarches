@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-06 13:16+0100\n"
+"POT-Creation-Date: 2026-11-09 11:45+0100\n"
 "PO-Revision-Date: 2026-09-27 23:31+0100\n"
 "Last-Translator: Amina Bouhou <a.bouhou@emarches.com>\n"
 "Language-Team: FR <a.bouhou@emarches.com>\n"
@@ -33,7 +33,7 @@ msgstr "Titre"
 #: templates/bdc/snippets/bdcs/search-form.html:39
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/search-form.html:40
-#: templates/portal/tender-details.html:128
+#: templates/portal/tender-details.html:130
 msgid "Reference"
 msgstr "Référence"
 
@@ -45,7 +45,7 @@ msgstr "Date de publication"
 #: templates/bdc/snippets/bdcs/bdc-summary.html:66
 #: templates/bidding/bid-form.html:84 templates/bidding/tenders-list.html:60
 #: templates/portal/snippets/tenders/tender-summary.html:71
-#: templates/portal/tender-details.html:41
+#: templates/portal/tender-details.html:43
 msgid "Bidding deadline"
 msgstr "Date limite de remise des offres"
 
@@ -71,7 +71,7 @@ msgstr "Réservé aux PME+"
 
 #: base/models.py:305 templates/portal/snippets/tenders/tender-legend.html:323
 #: templates/portal/snippets/tenders/tender-summary.html:266
-#: templates/portal/tender-details.html:182
+#: templates/portal/tender-details.html:184
 msgid "Variants accepted"
 msgstr "Variantes acceptées"
 
@@ -113,11 +113,11 @@ msgid "Execution location"
 msgstr "Lieu d'exécution"
 
 #: base/models.py:315 templates/portal/snippets/tenders/search-form.html:131
-#: templates/portal/tender-details.html:148
+#: templates/portal/tender-details.html:150
 msgid "Electronic bidding"
 msgstr "Soumission électronique"
 
-#: base/models.py:316 templates/portal/tender-details.html:160
+#: base/models.py:316 templates/portal/tender-details.html:162
 msgid "Electronic signature"
 msgstr "Signature électronique"
 
@@ -185,7 +185,7 @@ msgid "Awarding mode"
 msgstr "Mode d'attribution"
 
 #: base/models.py:333 templates/portal/snippets/tenders/search-form.html:119
-#: templates/portal/tender-details.html:142
+#: templates/portal/tender-details.html:144
 msgid "Procedure"
 msgstr "Procédure"
 
@@ -197,7 +197,7 @@ msgstr "Acheteur public"
 #: templates/insights/bidder-pdf.html:285 templates/portal/domains-list.html:6
 #: templates/portal/domains-list.html:12
 #: templates/portal/snippets/tenders/search-form.html:43
-#: templates/portal/tender-details.html:295
+#: templates/portal/tender-details.html:297
 msgid "Domains of activity"
 msgstr "Domaines d'activité"
 
@@ -249,1055 +249,6 @@ msgstr "Statut légal"
 msgid "Date Established"
 msgstr "Date de création"
 
-#: base/templates/base/about.html:5 base/templates/base/about.html:11
-msgid "About Us"
-msgstr "À propos"
-
-#: base/templates/base/about.html:12
-msgid "Learn more about who we are, what we do, and our journey."
-msgstr "Découvrez qui nous sommes, ce que nous faisons et notre parcours."
-
-#: base/templates/base/about.html:20
-msgid "Who We Are"
-msgstr "Qui sommes-nous"
-
-#: base/templates/base/about.html:22
-msgid ""
-"eMarches is a growing consultancy specializing in public procurement "
-"services in Morocco. Since our establishment in 2024, we have been dedicated "
-"to helping businesses and organizations unlock opportunities in the Moroccan "
-"public procurement market."
-msgstr ""
-"eMarches est un cabinet de conseil en pleine croissance spécialisé dans les "
-"marchés publics au Maroc. Depuis notre création en 2024, nous nous engageons "
-"à aider les entreprises et les organisations à saisir les opportunités du "
-"marché de la commande publique marocaine."
-
-#: base/templates/base/about.html:28
-msgid "The Hedgehog"
-msgstr "Le Hérisson"
-
-#: base/templates/base/about.html:30
-msgid ""
-"The hedgehog symbolizes intelligence, adaptability, and strategic thinking. "
-"It reflects our resourceful approach to overcoming challenges. Like the "
-"hedgehog, we achieve success through clever solutions and resilience."
-msgstr ""
-"Le hérisson symbolise l'intelligence, l'adaptabilité et la réflexion "
-"stratégique. Il reflète notre approche ingénieuse face aux défis. À l'image "
-"du hérisson, nous réussissons grâce à des solutions judicieuses et à la "
-"résilience."
-
-#: base/templates/base/about.html:36
-msgid "Our Mission"
-msgstr "Notre Mission"
-
-#: base/templates/base/about.html:37
-msgid ""
-"Our mission is to simplify and streamline the public procurement process for "
-"businesses, providing them with the expertise and tools needed to achieve "
-"success. We aim to foster transparency, compliance, and efficiency, enabling "
-"our clients to thrive in this competitive sector."
-msgstr ""
-"Notre mission est de simplifier et de rationaliser le processus des marchés "
-"publics pour les entreprises, en leur fournissant l'expertise et les outils "
-"nécessaires à leur réussite. Nous visons à promouvoir la transparence, la "
-"conformité et l'efficacité, permettant ainsi à nos clients de prospérer dans "
-"ce secteur concurrentiel."
-
-#: base/templates/base/about.html:42
-msgid "Our Journey"
-msgstr "Notre Parcours"
-
-#: base/templates/base/about.html:44
-msgid ""
-"eMarches was founded in 2024 by a team of young talented entrepreneurs , who "
-"recognized the growing need for expert guidance in Morocco’s public "
-"procurement landscape. What started as a small consultancy has evolved into "
-"a aspiring firm, serving clients across diverse industries."
-msgstr ""
-"eMarches a été fondée en 2024 par une équipe de jeunes entrepreneurs "
-"talentueux, qui ont identifié le besoin croissant d'un accompagnement expert "
-"dans le domaine des marchés publics au Maroc. Ce qui a commencé comme un "
-"petit cabinet de conseil s'est développé pour devenir une entreprise "
-"ambitieuse, au service de clients dans divers secteurs d'activité."
-
-#: base/templates/base/about.html:50
-msgid "Our Team"
-msgstr "Notre Équipe"
-
-#: base/templates/base/about.html:55
-msgid "Taheri"
-msgstr "Taheri"
-
-#: base/templates/base/about.html:57
-msgid "W. Taheri"
-msgstr "W. Taheri"
-
-#: base/templates/base/about.html:58
-msgid "CEO"
-msgstr "PDG"
-
-#: base/templates/base/about.html:59
-msgid ""
-"Strategic approach to leadership and integrate of cutting-edge technologies."
-msgstr ""
-"Approche stratégique du leadership et intégration des technologies de pointe."
-
-#: base/templates/base/about.html:66
-msgid "Bouhou"
-msgstr "Bouhou"
-
-#: base/templates/base/about.html:68
-msgid "A. Bouhou"
-msgstr "A. Bouhou"
-
-#: base/templates/base/about.html:69
-msgid "CRM"
-msgstr "Responsable Relation Client"
-
-#: base/templates/base/about.html:70
-msgid "Identifying new opportunities, developing strategic partnerships."
-msgstr ""
-"Identification de nouvelles opportunités, développement de partenariats "
-"stratégiques."
-
-#: base/templates/base/about.html:77
-msgid "Sebaai"
-msgstr "Sebaai"
-
-#: base/templates/base/about.html:79
-msgid "R. Sebaai"
-msgstr "R. Sebaai"
-
-#: base/templates/base/about.html:80
-msgid "CTO"
-msgstr "Directeur Technique"
-
-#: base/templates/base/about.html:81
-msgid "Ability to efficiently build scalable, secure, and innovative systems."
-msgstr ""
-"Capacité à concevoir efficacement des systèmes évolutifs, sécurisés et "
-"innovants."
-
-#: base/templates/base/about.html:86
-msgid ""
-"And a large number of skilled people in several key roles that complement "
-"the leadership team and support the business's growth."
-msgstr ""
-"Ainsi qu'un grand nombre de talents occupant des rôles clés qui complètent "
-"l'équipe dirigeante et soutiennent la croissance de l'entreprise."
-
-#: base/templates/base/about.html:91
-msgid "Our Values"
-msgstr "Nos Valeurs"
-
-#: base/templates/base/about.html:92
-msgid "Integrity"
-msgstr "Intégrité"
-
-#: base/templates/base/about.html:92
-msgid "Transparency and ethical practices form the foundation of our work."
-msgstr ""
-"La transparence et les pratiques éthiques constituent le socle de notre "
-"travail."
-
-#: base/templates/base/about.html:93
-msgid "Excellence"
-msgstr "Excellence"
-
-#: base/templates/base/about.html:93
-msgid "We strive for the highest standards in every project we undertake."
-msgstr ""
-"Nous visons les normes les plus élevées dans chaque projet que nous "
-"entreprenons."
-
-#: base/templates/base/about.html:94
-msgid "Collaboration"
-msgstr "Collaboration"
-
-#: base/templates/base/about.html:94
-msgid "We build long-term partnerships based on trust and shared goals."
-msgstr ""
-"Nous bâtissons des partenariats à long terme fondés sur la confiance et des "
-"objectifs partagés."
-
-#: base/templates/base/about.html:99
-msgid "Looking Ahead"
-msgstr "Perspectives d'Avenir"
-
-#: base/templates/base/about.html:101
-msgid ""
-"As Morocco’s public procurement sector continues to grow, eMarches is "
-"committed to staying at the forefront of this dynamic market. We aim to "
-"expand our services, embrace new technologies, and support even more "
-"businesses in achieving their goals."
-msgstr ""
-"Alors que le secteur des marchés publics au Maroc continue de croître, "
-"eMarches s'engage à rester à la pointe de ce marché dynamique. Nous "
-"ambitionnons d'élargir nos services, d'adopter de nouvelles technologies et "
-"d'accompagner encore plus d'entreprises vers la réussite."
-
-#: base/templates/base/about.html:107
-msgid "Translations status"
-msgstr "État des traductions"
-
-#: base/templates/base/about.html:136
-msgid "Translations status not found !"
-msgstr "État des traductions introuvable !"
-
-#: base/templates/base/about.html:139
-msgid ""
-"You can help us improve translations or add your language if it's not "
-"already supported."
-msgstr ""
-"Vous pouvez nous aider à améliorer les traductions ou à ajouter votre langue "
-"si elle n'est pas encore prise en charge."
-
-#: base/templates/base/about.html:140
-msgid ""
-"Feel free to contact us using contact details on our website. Thank you."
-msgstr ""
-"N'hésitez pas à nous contacter en utilisant les coordonnées figurant sur "
-"notre site web. Merci."
-
-#: base/templates/base/contact.html:5 base/templates/base/contact.html:9
-msgid "Send Us a Message"
-msgstr "Envoyez-nous un message"
-
-#: base/templates/base/contact.html:10
-msgid ""
-"Feel free to reach out to us for any inquiries or assistance. Our team is "
-"here to help you!"
-msgstr ""
-"N'hésitez pas à nous contacter pour toute question ou demande d'assistance. "
-"Notre équipe est là pour vous aider !"
-
-#: base/templates/base/contact.html:18 nas/forms.py:23
-msgid "First Name"
-msgstr "Prénom"
-
-#: base/templates/base/contact.html:22
-msgid "Your Name"
-msgstr "Votre nom"
-
-#: base/templates/base/contact.html:23
-msgid "Enter your name"
-msgstr "Saisissez votre nom"
-
-#: base/templates/base/contact.html:26
-msgid "Your Email"
-msgstr "Votre e-mail"
-
-#: base/templates/base/contact.html:27
-msgid "Enter your email"
-msgstr "Saisissez votre e-mail"
-
-#: base/templates/base/contact.html:30
-msgid "Your Phone"
-msgstr "Votre téléphone"
-
-#: base/templates/base/contact.html:31
-msgid "Enter your phone number"
-msgstr "Saisissez votre numéro de téléphone"
-
-#: base/templates/base/contact.html:34 nas/models.py:440
-#: templates/nas/companies/company_detail.html:78
-#: templates/nas/snippets/expirables/expirable-item.html:37
-msgid "Subject"
-msgstr "Sujet"
-
-#: base/templates/base/contact.html:35
-msgid "Enter the subject"
-msgstr "Saisissez le sujet"
-
-#: base/templates/base/contact.html:38 bidding/models.py:99 nas/models.py:347
-#: nas/models.py:369
-msgid "Message"
-msgstr "Message"
-
-#: base/templates/base/contact.html:39
-msgid "Write your message"
-msgstr "Rédigez votre message"
-
-#: base/templates/base/contact.html:40
-msgid "Remaining charcters"
-msgstr "Caractères restants"
-
-#: base/templates/base/contact.html:52
-msgid "Preferred Contact Method"
-msgstr "Moyen de contact préféré"
-
-#: base/templates/base/contact.html:54
-#: templates/bdc/snippets/bdcs/search-form.html:37
-#: templates/crm/snippets/customers/customer-search-form.html:38
-#: templates/crm/snippets/customers/customer-search-form.html:50
-#: templates/crm/snippets/customers/customer-search-form.html:62
-#: templates/crm/snippets/customers/customer-search-form.html:74
-#: templates/crm/snippets/customers/customer-search-form.html:91
-#: templates/portal/snippets/tenders/search-form.html:38
-#: templates/portal/snippets/tenders/search-form.html:206
-#: templates/portal/snippets/tenders/search-form.html:217
-msgid "Any"
-msgstr "Peu importe"
-
-#: base/templates/base/contact.html:55 nas/models.py:82 nas/models.py:224
-#: nas/models.py:244 nas/models.py:285 templates/base/includes/footer.html:57
-#: templates/bidding/snippets/members/member-item.html:39
-#: templates/bidding/team-recap.html:64
-#: templates/nas/companies/snippets/company-item.html:119
-#: templates/nas/companies/snippets/company_data.html:45
-#: templates/nas/profile/snippets/user-details.html:17
-#: templates/portal/tender-details.html:348
-msgid "Email"
-msgstr "E-mail"
-
-#: base/templates/base/contact.html:56 nas/forms.py:35 nas/models.py:45
-#: nas/models.py:225 nas/models.py:245 nas/models.py:286
-#: templates/base/includes/footer.html:46
-#: templates/crm/snippets/customers/customer-item.html:71
-#: templates/nas/profile/snippets/user-details.html:29
-#: templates/portal/tender-details.html:343
-msgid "Phone"
-msgstr "Téléphone"
-
-#: base/templates/base/contact.html:57 templates/base/includes/footer.html:68
-msgid "WhatsApp"
-msgstr "WhatsApp"
-
-#: base/templates/base/contact.html:58
-msgid "Telegram"
-msgstr "Telegram"
-
-#: base/templates/base/contact.html:64
-msgid "Subscribe to our newsletter"
-msgstr "S'abonner à notre newsletter"
-
-#: base/templates/base/contact.html:70
-msgid "Receive promotional offers from us or our partners"
-msgstr ""
-"Recevoir des offres promotionnelles de notre part ou de nos partenaires"
-
-#: base/templates/base/contact.html:73
-msgid "Send Message"
-msgstr "Envoyer le message"
-
-#: base/templates/base/contact_success.html:5
-msgid "Message submitted"
-msgstr "Message transmis"
-
-#: base/templates/base/contact_success.html:8
-msgid "Message sent"
-msgstr "Message envoyé"
-
-#: base/templates/base/contact_success.html:9
-msgid "Thank You !"
-msgstr "Merci !"
-
-#: base/templates/base/contact_success.html:10
-msgid ""
-"Your message has been successfully submitted. We will get back to you "
-"shortly."
-msgstr ""
-"Votre message a été transmis avec succès. Nous vous recontacterons très "
-"prochainement."
-
-#: base/templates/base/contact_success.html:13
-#: base/templates/base/faqs.html:176 templates/base/errors/404.html:16
-msgid "Go Home"
-msgstr "Retour à l'accueil"
-
-#: base/templates/base/contact_success.html:14 base/templates/base/faqs.html:5
-#: templates/base/includes/footer.html:19
-msgid "FAQs"
-msgstr "FAQ"
-
-#: base/templates/base/faqs.html:8
-msgid "Frequently Asked Questions"
-msgstr "Foire Aux Questions"
-
-#: base/templates/base/faqs.html:9
-msgid ""
-"Have a question? Chances are someone already asked it and we answered it."
-msgstr ""
-"Vous avez une question ? Il y a de fortes chances que quelqu'un l'ait déjà "
-"posée et que nous y ayons répondu."
-
-#: base/templates/base/faqs.html:19
-msgid "What is public procurement?"
-msgstr "Qu'est-ce que la commande publique ?"
-
-#: base/templates/base/faqs.html:24
-msgid ""
-"Public procurement refers to the process by which government entities and "
-"public organizations acquire goods, services, or works from private sector "
-"businesses, individuals or organizations. This process is regulated to "
-"ensure transparency, fairness, and value for taxpayers."
-msgstr ""
-"La commande publique désigne le processus par lequel les entités "
-"gouvernementales et les organismes publics acquièrent des biens, des "
-"services ou des travaux auprès d'entreprises du secteur privé, de "
-"particuliers ou d'organisations. Ce processus est réglementé afin de "
-"garantir la transparence, l'équité et la bonne utilisation des deniers "
-"publics."
-
-#: base/templates/base/faqs.html:34
-msgid "Are you afficliated to governmental entity?"
-msgstr "Êtes-vous affilié à une entité gouvernementale ?"
-
-#: base/templates/base/faqs.html:39
-msgid ""
-"No. We are not affiliated in any way to any public or governmental entity."
-msgstr ""
-"Non. Nous ne sommes affiliés d'aucune manière à une entité publique ou "
-"gouvernementale."
-
-#: base/templates/base/faqs.html:49
-msgid "Where do you get your data from?"
-msgstr "D'où proviennent vos données ?"
-
-#: base/templates/base/faqs.html:54
-msgid ""
-"We collect data from the portal dedicated to public tenders. We debloat, "
-"aggregate and reorganize data and store it in our database."
-msgstr ""
-"Nous collectons les données à partir du portail dédié aux appels d'offres "
-"publics. Nous épurons, agrégeons, réorganisons ces données et les stockons "
-"dans notre base de données."
-
-#: base/templates/base/faqs.html:55
-msgid ""
-"Then we use tdata from our database to provide our services in a better, "
-"more ergonomic, and more meaningful way. "
-msgstr ""
-"Ensuite, nous utilisons ces données pour fournir nos services de manière "
-"plus performante, ergonomique et pertinente."
-
-#: base/templates/base/faqs.html:56
-msgid ""
-"To measure a bit of the difference that it makes, you can visit the official "
-"portal preferably using a mobile. Here is the link, good luck:"
-msgstr ""
-"Pour vous rendre compte de la différence, vous pouvez visiter le portail "
-"officiel, de préférence depuis un mobile. Voici le lien, bon courage :"
-
-#: base/templates/base/faqs.html:66
-msgid "How often do you update the data ?"
-msgstr "À quelle fréquence mettez-vous à jour les données ?"
-
-#: base/templates/base/faqs.html:71
-msgid ""
-"We are trying to be as up-to-date as we can. Our teams work hard to bring "
-"any available data update as soon as it is published."
-msgstr ""
-"Nous nous efforçons d'être aussi à jour que possible. Nos équipes "
-"travaillent dur pour intégrer toute mise à jour des données dès sa "
-"publication."
-
-#: base/templates/base/faqs.html:72
-msgid ""
-"For now, we update the list of available Tenders every 3 hours. If the need "
-"araises in the future, we may narrow down the gap to 1 hour or less."
-msgstr ""
-"Pour l'instant, nous mettons à jour la liste des appels d'offres disponibles "
-"toutes les 3 heures. Si le besoin s'en fait sentir, nous pourrons réduire "
-"cet intervalle à 1 heure ou moins."
-
-#: base/templates/base/faqs.html:82
-msgid "How accurate is the information on your website about Tenders?"
-msgstr ""
-"Quelle est la fiabilités des informations sur les appels d'offres présentes "
-"sur votre site ?"
-
-#: base/templates/base/faqs.html:87
-msgid ""
-"We get information on Tenders from the official public website as fidelly as "
-"possible."
-msgstr ""
-"Nous récupérons les informations relatives aux appels d'offres depuis le "
-"site public officiel avec la plus grande fidélité possible."
-
-#: base/templates/base/faqs.html:88
-msgid ""
-"If information on our website is wrong or inaccurate, it most probably comes "
-"from the public portal."
-msgstr ""
-"Si une information sur notre site est erronée ou inexacte, cela provient "
-"très probablement du portail public lui-même."
-
-#: base/templates/base/faqs.html:98
-msgid "How can your consultancy help my business?"
-msgstr "Comment votre cabinet de conseil peut-il aider mon entreprise ?"
-
-#: base/templates/base/faqs.html:103
-msgid ""
-"Our consultancy specializes in guiding businesses through the complexities "
-"of public procurement in Morocco. We provide services such as market "
-"research, bid preparation, compliance support, and training to ensure your "
-"success in this competitive sector."
-msgstr ""
-"Notre cabinet est spécialisé dans l'accompagnement des entreprises à travers "
-"les complexités des marchés publics au Maroc. Nous proposons des services "
-"tels que l'étude de marché, la préparation des offres, le support de "
-"conformité et des formations pour garantir votre réussite dans ce secteur "
-"concurrentiel."
-
-#: base/templates/base/faqs.html:113
-msgid "What industries do you work with?"
-msgstr "Avec quels secteurs d'activité travaillez-vous ?"
-
-#: base/templates/base/faqs.html:118
-msgid ""
-"We work with a wide range of industries, including construction, technology, "
-"healthcare, manufacturing, and more. Our tailored approach ensures that our "
-"services meet the unique needs of each industry."
-msgstr ""
-"Nous travaillons avec un large éventail de secteurs, notamment le BTP, la "
-"technologie, la santé, l'industrie et bien d'autres. Notre approche sur "
-"mesure garantit que nos services répondent aux besoins uniques de chaque "
-"secteur."
-
-#: base/templates/base/faqs.html:128
-msgid "Do you provide training for public procurement?"
-msgstr "Proposez-vous des formations sur les marchés publics ?"
-
-#: base/templates/base/faqs.html:133
-msgid ""
-"Yes, we offer training and workshops designed to build your team’s expertise "
-"in public procurement processes, ensuring compliance and increasing your "
-"chances of success in bidding."
-msgstr ""
-"Oui, nous proposons des formations et des ateliers conçus pour renforcer "
-"l'expertise de votre équipe dans les procédures de marchés publics, "
-"garantissant la conformité et augmentant vos chances de succès lors des "
-"candidatures."
-
-#: base/templates/base/faqs.html:143
-msgid "How much does your services cost?"
-msgstr "Combien coûtent vos services ?"
-
-#: base/templates/base/faqs.html:148
-msgid "Our pricing model has three tiers."
-msgstr "Notre grille tarifaire se compose de trois formules."
-
-#: base/templates/base/faqs.html:149
-msgid "Public"
-msgstr "Public"
-
-#: base/templates/base/faqs.html:149
-msgid ""
-"Access to search and limited tenders information without even an account."
-msgstr ""
-"Accès à la recherche et à des informations limitées sur les appels d'offres, "
-"sans même avoir besoin d'un compte."
-
-#: base/templates/base/faqs.html:150
-msgid "Startup"
-msgstr "Startup"
-
-#: base/templates/base/faqs.html:150
-msgid ""
-"Access to advanced search, unlimited tenders information, limited files "
-"downloads, favourites, ... with a free account."
-msgstr ""
-"Accès à la recherche avancée, aux informations illimitées sur les appels "
-"d'offres, à un nombre limité de téléchargements de fichiers, aux "
-"favoris, ... avec un compte gratuit."
-
-#: base/templates/base/faqs.html:151
-msgid "Pro"
-msgstr "Pro"
-
-#: base/templates/base/faqs.html:151
-msgid ""
-"Like Startup, with free unlimited files downloads, favourites, customized "
-"notifications, ... with a paid account."
-msgstr ""
-"Comme la formule Startup, avec le téléchargement gratuit et illimité de "
-"fichiers, les favoris, les notifications personnalisées, ... avec un compte "
-"payant."
-
-#: base/templates/base/faqs.html:152
-msgid ""
-"You can also purchase extra services like Technical and Regulatory support, "
-"Bidding preparation, ..."
-msgstr ""
-"Vous pouvez également souscrire des services complémentaires tels que "
-"l'assistance technique et réglementaire, la préparation des candidatures, ..."
-
-#: base/templates/base/faqs.html:153
-msgid ""
-"As every business is unique, we calculate the price to charge for our "
-"services based on your business needs and goals."
-msgstr ""
-"Chaque entreprise étant unique, nous calculons le tarif de nos services sur "
-"mesure, en fonction de vos besoins et de vos objectifs."
-
-#: base/templates/base/faqs.html:163
-msgid "How do I get started with your services?"
-msgstr "Comment commencer à utiliser vos services ?"
-
-#: base/templates/base/faqs.html:168
-msgid ""
-"Getting started is simple! Contact us through our website or give us a call. "
-"We’ll schedule an initial consultation to understand your needs and discuss "
-"how our services can help you achieve your goals."
-msgstr ""
-"C'est très simple ! Contactez-nous via notre site web ou par téléphone. Nous "
-"organiserons une première consultation pour comprendre vos besoins et "
-"déterminer comment nos services peuvent vous aider à atteindre vos objectifs."
-
-#: base/templates/base/faqs.html:174
-msgid "Question still unanswered ?"
-msgstr "Vous n'avez pas trouvé réponse à votre question ?"
-
-#: base/templates/base/faqs.html:175 base/templates/base/legal.html:77
-#: base/templates/base/legal.html:135
-msgid "Contact Us"
-msgstr "Contactez-nous"
-
-#: base/templates/base/home.html:5
-msgid "Home of Public Procurement Market"
-msgstr "Le portail des marchés publics"
-
-#: base/templates/base/legal.html:5 base/templates/base/legal.html:9
-#: base/templates/base/legal.html:11 templates/portal/tender-details.html:574
-msgid "Legal Information"
-msgstr "Informations légales"
-
-#: base/templates/base/legal.html:12
-msgid ""
-"This page provides our essential legal information. Please review it to "
-"understand your rights and our commitments."
-msgstr ""
-"Cette page regroupe nos informations légales essentielles. Veuillez la "
-"consulter pour prendre connaissance de vos droits et de nos engagements."
-
-#: base/templates/base/legal.html:17 base/templates/base/legal.html:28
-msgid "Privacy Policy"
-msgstr "Politique de confidentialité"
-
-#: base/templates/base/legal.html:20 base/templates/base/legal.html:86
-msgid "Terms of Service"
-msgstr "Conditions générales d'utilisation"
-
-#: base/templates/base/legal.html:23 base/templates/base/legal.html:143
-#: bidding/models.py:437 nas/choices.py:85 nas/choices.py:86
-#: templates/bidding/snippets/tenders/tender-menu-sort.html:39
-#: templates/portal/snippets/lots/lot-details.html:52
-#: templates/portal/snippets/tenders/menu-sort.html:29
-msgid "Guarantee"
-msgstr "Garantie"
-
-#: base/templates/base/legal.html:30
-msgid ""
-"At eMarches.com, we value your privacy and are committed to safeguarding "
-"your personal information. This Privacy Policy outlines the types of "
-"information we collect, how we use it, and the measures we take to ensure "
-"your data is handled securely and responsibly."
-msgstr ""
-"Chez eMarches.com, nous accordons une grande importance à la confidentialité "
-"de vos données et nous nous engageons à protéger vos informations "
-"personnelles. Cette politique de confidentialité détaille les types "
-"d'informations que nous collectons, la manière dont nous les utilisons ainsi "
-"que les mesures prises pour garantir un traitement sécurisé et responsable "
-"de vos données."
-
-#: base/templates/base/legal.html:34
-msgid "Information We Collect"
-msgstr "Données collectées"
-
-#: base/templates/base/legal.html:35
-msgid ""
-"We only collect personal information explicitly provided by you. Examples "
-"include your name, email address, phone number, and any other details you "
-"submit through our contact forms or other interactions."
-msgstr ""
-"Nous ne collectons que les informations personnelles que vous nous "
-"fournissez explicitement. Cela inclut par exemple votre nom, votre adresse e-"
-"mail, votre numéro de téléphone et toute autre donnée transmise via nos "
-"formulaires de contact ou lors de vos échanges avec nous."
-
-#: base/templates/base/legal.html:36
-msgid "For security purposes, we may also collect:"
-msgstr ""
-"À des fins de sécurité, nous sommes également susceptibles de collecter :"
-
-#: base/templates/base/legal.html:38
-msgid "IP Address: Used to ensure safe access and prevent fraudulent activity."
-msgstr ""
-"Adresse IP : utilisée pour sécuriser l'accès et prévenir les activités "
-"frauduleuses."
-
-#: base/templates/base/legal.html:39
-msgid ""
-"User-Agent Information: A string sent by your browser or device that helps "
-"identify the type of device, operating system, and browser being used."
-msgstr ""
-"Informations User-Agent : une chaîne de caractères envoyée par votre "
-"navigateur ou votre appareil qui permet d'identifier le type d'équipement, "
-"le système d'exploitation et le navigateur utilisés."
-
-#: base/templates/base/legal.html:44
-msgid "Use of Collected Data"
-msgstr "Utilisation des données collectées"
-
-#: base/templates/base/legal.html:45
-msgid ""
-"The information you provide is used solely for the purposes for which it was "
-"submitted, such as responding to inquiries or providing requested services. "
-"In addition:"
-msgstr ""
-"Les informations que vous nous fournissez sont utilisées exclusivement aux "
-"fins pour lesquelles elles ont été transmises, telles que la réponse à vos "
-"demandes ou la fourniture des services sollicités. De plus :"
-
-#: base/templates/base/legal.html:47
-msgid ""
-"We may send you commercial offers if, and only if, you have explicitly "
-"consented by checking the relevant box on our forms (this box is unchecked "
-"by default)."
-msgstr ""
-"Nous ne vous enverrons des offres commerciales que si vous y avez "
-"expressément consenti en cochant la case dédiée sur nos formulaires (case "
-"décochée par défaut)."
-
-#: base/templates/base/legal.html:48
-msgid ""
-"We do not sell, trade, or share your data with third parties for marketing "
-"purposes."
-msgstr ""
-"Nous ne vendons, ne louons ni ne partageons vos données avec des tiers à des "
-"fins marketing."
-
-#: base/templates/base/legal.html:53
-msgid "Data Security"
-msgstr "Sécurité des données"
-
-#: base/templates/base/legal.html:54
-msgid ""
-"We take every reasonable measure to protect your personal information. This "
-"includes implementing technical and organizational safeguards to prevent "
-"unauthorized access, loss, or misuse of data."
-msgstr ""
-"Nous prenons toutes les mesures raisonnables pour protéger vos informations "
-"personnelles. Cela comprend la mise en place de garanties techniques et "
-"organisationnelles visant à empêcher tout accès non autorisé, perte ou "
-"utilisation abusive de vos données."
-
-#: base/templates/base/legal.html:58
-msgid "User Rights"
-msgstr "Droits des utilisateurs"
-
-#: base/templates/base/legal.html:59
-msgid ""
-"You have the right to control how your data is used. Specifically, you may:"
-msgstr ""
-"Vous disposez d'un droit de contrôle sur l'utilisation de vos données. Plus "
-"précisément, vous pouvez :"
-
-#: base/templates/base/legal.html:61
-msgid "Opt out of receiving promotional communications at any time."
-msgstr ""
-"Vous désabonner de la réception de communications promotionnelles à tout "
-"moment."
-
-#: base/templates/base/legal.html:62
-msgid ""
-"Request access to, correction of, or deletion of your personal data, subject "
-"to applicable legal obligations."
-msgstr ""
-"Demander l'accès, la rectification ou la suppression de vos données "
-"personnelles, sous réserve des obligations légales applicables."
-
-#: base/templates/base/legal.html:67
-msgid "Compliance with Laws"
-msgstr "Conformité aux lois"
-
-#: base/templates/base/legal.html:68
-msgid ""
-"We handle all user data in accordance with applicable laws and regulations "
-"in Morocco."
-msgstr ""
-"Nous traitons toutes les données des utilisateurs conformément aux lois et "
-"réglementations en vigueur au Maroc."
-
-#: base/templates/base/legal.html:72
-msgid "Changes to this Policy"
-msgstr "Modifications de la présente politique"
-
-#: base/templates/base/legal.html:73
-msgid ""
-"We reserve the right to update this Privacy Policy to reflect changes in our "
-"practices or legal requirements. Updates will be communicated clearly and "
-"will take effect immediately upon publication."
-msgstr ""
-"Nous nous réservons le droit de mettre à jour cette politique de "
-"confidentialité afin de refléter tout changement dans nos pratiques ou nos "
-"obligations légales. Les mises à jour seront communiquées clairement et "
-"prendront effet dès leur publication."
-
-#: base/templates/base/legal.html:78
-msgid ""
-"If you have any questions or concerns about this Privacy Policy or how we "
-"handle your data, please contact us at"
-msgstr ""
-"Si vous avez des questions ou des inquiétudes concernant cette politique de "
-"confidentialité ou la gestion de vos données, veuillez nous contacter à"
-
-#: base/templates/base/legal.html:81 base/templates/base/legal.html:139
-#: base/templates/base/legal.html:176
-msgid "Effective Date:"
-msgstr "Date d'entrée en vigueur :"
-
-#: base/templates/base/legal.html:87
-msgid ""
-"These Terms of Service ('Terms') govern your use of our website and "
-"services. By accessing or using our website, you agree to these Terms. "
-"Please read them carefully."
-msgstr ""
-"Les présentes conditions générales d'utilisation (« Conditions ») régissent "
-"votre utilisation de notre site web et de nos services. En accédant à notre "
-"site ou en l'utilisant, vous acceptez ces Conditions. Veuillez les lire "
-"attentivement."
-
-#: base/templates/base/legal.html:90
-msgid "Use of the Website"
-msgstr "Utilisation du site web"
-
-#: base/templates/base/legal.html:91
-msgid ""
-"Our website and its content are provided for informational and personal use "
-"only. You agree to use the website in compliance with all applicable laws "
-"and regulations. You must not:"
-msgstr ""
-"Notre site web et son contenu sont fournis à titre informatif et personnel "
-"uniquement. Vous acceptez d'utiliser le site dans le respect de l'ensemble "
-"des lois et réglementations applicables. Vous ne devez pas :"
-
-#: base/templates/base/legal.html:93
-msgid "Engage in any unlawful or fraudulent activity."
-msgstr "Engager des activités illégales ou frauduleuses."
-
-#: base/templates/base/legal.html:94
-msgid ""
-"Disrupt or attempt to interfere with the website’s functionality or security."
-msgstr ""
-"Perturber ou tenter de porter atteinte au fonctionnement ou à la sécurité du "
-"site web."
-
-#: base/templates/base/legal.html:95
-msgid ""
-"Copy, reproduce, or distribute any content without our explicit consent."
-msgstr ""
-"Copier, reproduire ou distribuer tout contenu sans notre consentement "
-"explicite."
-
-#: base/templates/base/legal.html:100
-msgid "Intellectual Property"
-msgstr "Propriété intellectuelle"
-
-#: base/templates/base/legal.html:101
-msgid ""
-"All content on this website, including text, images, graphics, logos, and "
-"code, is our property or licensed to us. Unauthorized use of this content is "
-"strictly prohibited."
-msgstr ""
-"L'ensemble du contenu de ce site web, y compris les textes, images, "
-"graphiques, logos et codes, est notre propriété ou fait l'objet d'une "
-"licence accordée à notre nom. Toute utilisation non autorisée de ce contenu "
-"est strictement interdite."
-
-#: base/templates/base/legal.html:105
-msgid "Third-Party Links"
-msgstr "Liens vers des tiers"
-
-#: base/templates/base/legal.html:106
-msgid ""
-"Our website may contain links to third-party websites. These links are "
-"provided for convenience only. We are not responsible for the content, "
-"policies, or practices of third-party websites, and your use of those "
-"websites is at your own risk."
-msgstr ""
-"Notre site web peut contenir des liens vers des sites tiers. Ces liens sont "
-"fournis uniquement à titre de commodité. Nous ne sommes pas responsables du "
-"contenu, des politiques ou des pratiques des sites tiers, et votre "
-"utilisation de ces sites se fait à vos propres risques."
-
-#: base/templates/base/legal.html:110
-msgid "Disclaimer of Warranties"
-msgstr "Exclusion de garanties"
-
-#: base/templates/base/legal.html:111
-msgid ""
-"We provide this website on an 'as is' and 'as available' basis. We do not "
-"guarantee that the website will be error-free, secure, or uninterrupted. To "
-"the fullest extent permitted by law, we disclaim all warranties, express or "
-"implied."
-msgstr ""
-"Nous fournissons ce site web « en l'état » et « selon la disponibilité ». "
-"Nous ne garantissons pas que le site sera exempt d'erreurs, sécurisé ou "
-"ininterrompu. Dans toute la mesure permise par la loi, nous déclinons toute "
-"garantie, expresse ou implicite."
-
-#: base/templates/base/legal.html:115
-msgid "Limitation of Liability"
-msgstr "Limitation de responsabilité"
-
-#: base/templates/base/legal.html:116
-msgid ""
-"We are not liable for any direct, indirect, incidental, or consequential "
-"damages arising from your use of our website or services, even if we have "
-"been advised of the possibility of such damages."
-msgstr ""
-"Nous ne saurions être tenus responsables de tout dommage direct, indirect, "
-"accessoire ou consécutif découlant de votre utilisation de notre site web ou "
-"de nos services, même si nous avons été informés de la possibilité de tels "
-"dommages."
-
-#: base/templates/base/legal.html:120
-msgid "Termination"
-msgstr "Résiliation"
-
-#: base/templates/base/legal.html:121
-msgid ""
-"We reserve the right to terminate your access to our website at any time, "
-"without notice, for any reason, including breach of these Terms."
-msgstr ""
-"Nous nous réservons le droit de suspendre votre accès à notre site web à "
-"tout moment, sans préavis, pour tout motif, y compris en cas de violation "
-"des présentes Conditions."
-
-#: base/templates/base/legal.html:125
-msgid "Governing Law"
-msgstr "Droit applicable"
-
-#: base/templates/base/legal.html:126
-msgid ""
-"These Terms are governed by the laws of Morocco. Any disputes related to "
-"these Terms will be resolved exclusively in the courts of Morocco."
-msgstr ""
-"Les présentes Conditions sont régies par le droit marocain. Tout litige "
-"relatif aux présentes Conditions sera tranché exclusivement par les "
-"tribunaux du Maroc."
-
-#: base/templates/base/legal.html:130
-msgid "Changes to the Terms"
-msgstr "Modifications des conditions"
-
-#: base/templates/base/legal.html:131
-msgid ""
-"We may update these Terms from time to time. If we make significant changes, "
-"we will notify you by posting the updated Terms on this page. Continued use "
-"of the website after changes constitutes your acceptance of the revised "
-"Terms."
-msgstr ""
-"Nous pouvons mettre à jour ces Conditions de temps à autre. En cas de "
-"modification importante, nous vous en informerons en publiant les Conditions "
-"mises à jour sur cette page. L'utilisation continue du site web après "
-"publication des modifications vaut acceptation des Conditions révisées."
-
-#: base/templates/base/legal.html:136
-msgid ""
-"If you have any questions or concerns about these Terms, please contact us at"
-msgstr ""
-"Si vous avez des questions ou des inquiétudes concernant ces Conditions, "
-"veuillez nous contacter à"
-
-#: base/templates/base/legal.html:144
-msgid ""
-"We are committed to providing high-quality services and ensuring customer "
-"satisfaction. Our guarantee policy outlines the terms under which we stand "
-"by our commitments."
-msgstr ""
-"Nous nous engageons à fournir des services de haute qualité et à garantir la "
-"satisfaction de nos clients. Notre politique de garantie définit les "
-"conditions dans lesquelles nous honorons nos engagements."
-
-#: base/templates/base/legal.html:147
-msgid "Service Quality"
-msgstr "Qualité de service"
-
-#: base/templates/base/legal.html:148
-msgid ""
-"We guarantee that all services provided are delivered with professionalism, "
-"care, and accuracy to the best of our ability."
-msgstr ""
-"Nous garantissons que tous les services fournis sont exécutés avec "
-"professionnalisme, soin et rigueur, au mieux de nos capacités."
-
-#: base/templates/base/legal.html:152
-msgid "User Satisfaction"
-msgstr "Satisfaction des utilisateurs"
-
-#: base/templates/base/legal.html:153
-msgid ""
-"If you are dissatisfied with any aspect of our services, please contact us "
-"promptly. We will make every reasonable effort to address your concerns and "
-"rectify any issues."
-msgstr ""
-"Si vous êtes satisfait de tout aspect de nos services, veuillez nous "
-"contacter rapidement. Nous ferons tous les efforts raisonnables pour "
-"répondre à vos préoccupations et corriger tout problème."
-
-#: base/templates/base/legal.html:157
-msgid "Limitations of Guarantee"
-msgstr "Limitations de garantie"
-
-#: base/templates/base/legal.html:158
-msgid "This guarantee does not cover issues arising from:"
-msgstr "Cette garantie ne couvre pas les problèmes découlant de :"
-
-#: base/templates/base/legal.html:160
-msgid "User-provided errors or misinformation."
-msgstr "Erreurs ou fausses informations fournies par l'utilisateur."
-
-#: base/templates/base/legal.html:161
-msgid ""
-"Technical issues beyond our control, such as internet outages or third-party "
-"service failures."
-msgstr ""
-"Problèmes techniques hors de notre contrôle, tels que des coupures "
-"d'Internet ou des défaillances de services tiers."
-
-#: base/templates/base/legal.html:162
-msgid "Unauthorized use or modification of our services."
-msgstr "Utilisation ou modification non autorisée de nos services."
-
-#: base/templates/base/legal.html:167
-msgid "Requesting Support"
-msgstr "Demande d'assistance"
-
-#: base/templates/base/legal.html:168
-msgid ""
-"To report a problem or request support, please contact us through the "
-"provided channels. Include detailed information about the issue to help us "
-"resolve it efficiently."
-msgstr ""
-"Pour signaler un problème ou demander de l'assistance, veuillez nous "
-"contacter via les canaux mis à disposition. Veuillez inclure des "
-"informations détaillées sur le problème afin de nous aider à le résoudre "
-"efficacement."
-
-#: base/templates/base/legal.html:172
-msgid "No Financial Liability"
-msgstr "Absence de responsabilité financière"
-
-#: base/templates/base/legal.html:173
-msgid ""
-"Our guarantee is limited to addressing issues within the scope of our "
-"services. We are not liable for any indirect or consequential damages "
-"resulting from the use or unavailability of our services."
-msgstr ""
-"Notre garantie se limite au traitement des problèmes entrant dans le cadre "
-"de nos services. Nous ne sommes pas responsables des dommages indirects ou "
-"consécutifs résultant de l'utilisation ou de l'indisponibilité de nos "
-"services."
-
-#: base/templates/base/widgets/fnoc_file_input.html:13
-msgid "Clear current"
-msgstr "Effacer le fichier actuel"
-
 #: base/templatetags/censorify.py:12
 #: templates/base/snippets/ico-key-val.html:18
 #: templates/portal/snippets/lots/lot-details.html:6
@@ -1328,7 +279,7 @@ msgstr "S'identifier pour voir"
 #: templates/portal/snippets/lots/qu-ag.html:22
 #: templates/portal/snippets/lots/sa-me-vi.html:22
 #: templates/portal/snippets/tenders/qu-ag.html:36
-#: templates/portal/tender-details.html:273
+#: templates/portal/tender-details.html:275
 msgid "Not found"
 msgstr "Introuvable"
 
@@ -1408,7 +359,7 @@ msgid "Rank"
 msgstr "Rang"
 
 #: bdc/models.py:90 bdc/weasy.py:72 flows/models.py:127 flows/models.py:220
-#: flows/models.py:341 templates/crm/snippets/customers/customer-item.html:105
+#: flows/models.py:341 templates/crm/snippets/customers/customer-item.html:110
 msgid "Number"
 msgstr "Numéro"
 
@@ -1490,17 +441,17 @@ msgstr "Lot"
 
 #: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:75
 #: templates/portal/snippets/lots/lot-details.html:86
-#: templates/portal/tender-details.html:175
-#: templates/portal/tender-details.html:185
-#: templates/portal/tender-details.html:196
+#: templates/portal/tender-details.html:177
+#: templates/portal/tender-details.html:187
+#: templates/portal/tender-details.html:198
 msgid "Yes"
 msgstr "Oui"
 
 #: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:75
 #: templates/portal/snippets/lots/lot-details.html:86
-#: templates/portal/tender-details.html:177
-#: templates/portal/tender-details.html:187
-#: templates/portal/tender-details.html:198
+#: templates/portal/tender-details.html:179
+#: templates/portal/tender-details.html:189
+#: templates/portal/tender-details.html:200
 msgid "No"
 msgstr "Non"
 
@@ -1532,6 +483,10 @@ msgstr "Avatar"
 #: templates/crm/snippets/customers/customer-menu-sort.html:17
 msgid "Username"
 msgstr "Nom d'utilisateur"
+
+#: bidding/models.py:99 nas/models.py:347 nas/models.py:369
+msgid "Message"
+msgstr "Message"
 
 #: bidding/models.py:100 nas/models.py:443
 msgid "Expiry date"
@@ -1711,6 +666,13 @@ msgstr "Client"
 msgid "Amount"
 msgstr "Montant"
 
+#: bidding/models.py:437 nas/choices.py:85 nas/choices.py:86
+#: templates/bidding/snippets/tenders/tender-menu-sort.html:39
+#: templates/portal/snippets/lots/lot-details.html:52
+#: templates/portal/snippets/tenders/menu-sort.html:29
+msgid "Guarantee"
+msgstr "Garantie"
+
 #: bidding/models.py:439
 msgid "Guarantee file"
 msgstr "Fichier de garantie"
@@ -1725,7 +687,7 @@ msgstr "Fichier des conditions"
 #: templates/bidding/snippets/expenses/expense-item.html:11
 #: templates/bidding/snippets/tasks/task-item.html:15
 #: templates/bidding/snippets/tasks/task-item.html:36
-#: templates/crm/snippets/customers/customer-item.html:104
+#: templates/crm/snippets/customers/customer-item.html:109
 #: templates/crm/snippets/customers/customer-search-form.html:48
 msgid "Status"
 msgstr "Statut"
@@ -1750,7 +712,7 @@ msgstr "Urgence"
 #: templates/bdc/snippets/bdcs/search-form.html:38
 #: templates/bidding/bid-details.html:199
 #: templates/portal/snippets/tenders/search-form.html:39
-#: templates/portal/tender-details.html:106
+#: templates/portal/tender-details.html:108
 msgid "Object"
 msgstr "Objet"
 
@@ -2051,7 +1013,7 @@ msgstr "Dépense supprimée avec succès"
 msgid "Expense creator is not an active team member"
 msgstr "Le créateur de la dépense n'est pas un membre actif de l'équipe"
 
-#: crm/views.py:312
+#: crm/views.py:318
 msgid "Organic"
 msgstr "Organique"
 
@@ -2087,7 +1049,7 @@ msgstr "Propriétaire"
 msgid "Legal information"
 msgstr "Informations légales"
 
-#: flows/admin.py:118 templates/base/includes/footer.html:18
+#: flows/admin.py:118 templates/base/includes/footer.html:28
 msgid "Contact"
 msgstr "Contact"
 
@@ -2130,8 +1092,8 @@ msgstr "Confirmation"
 
 #: flows/admin.py:548 templates/bidding/team-member-disabled.html:27
 #: templates/bidding/team-recap.html:428
-#: templates/crm/snippets/customers/customer-item.html:84
-#: templates/crm/snippets/customers/customer-item.html:99
+#: templates/crm/snippets/customers/customer-item.html:89
+#: templates/crm/snippets/customers/customer-item.html:104
 msgid "Team"
 msgstr "Équipe"
 
@@ -2257,7 +1219,6 @@ msgid "Failed"
 msgstr "Echoué"
 
 #: insights/weasy.py:169 nas/models.py:172 nas/models.py:189 nas/models.py:207
-#: templates/base/base.html:15 templates/base/base.html:16
 #: templates/bidding/bid-details.html:208 templates/bidding/bid-form.html:13
 #: templates/bidding/snippets/bids/bid-actions.html:13
 #: templates/bidding/snippets/bids/bid-item.html:160
@@ -2270,7 +1231,7 @@ msgstr "Appel d'offres"
 #: templates/bdc/snippets/bdcs/menu-sort.html:23
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/menu-sort.html:35
-#: templates/portal/tender-details.html:131
+#: templates/portal/tender-details.html:133
 msgid "Published"
 msgstr "Publié"
 
@@ -2278,7 +1239,7 @@ msgstr "Publié"
 #: nas/choices.py:92 templates/bdc/bdc-details.html:73
 #: templates/bdc/snippets/bdcs/menu-sort.html:17
 #: templates/portal/snippets/tenders/menu-sort.html:17
-#: templates/portal/tender-details.html:117
+#: templates/portal/tender-details.html:119
 msgid "Deadline"
 msgstr "Date limite"
 
@@ -2484,18 +1445,30 @@ msgstr "Location"
 msgid "Services"
 msgstr "Prestations"
 
+#: nas/forms.py:23
+msgid "First Name"
+msgstr "Prénom"
+
 #: nas/forms.py:24
 msgid "Last Name"
 msgstr "Nom"
 
+#: nas/forms.py:35 nas/models.py:45 nas/models.py:225 nas/models.py:245
+#: nas/models.py:286 templates/base/includes/footer.html:56
+#: templates/crm/snippets/customers/customer-item.html:76
+#: templates/nas/profile/snippets/user-details.html:29
+#: templates/portal/tender-details.html:345
+msgid "Phone"
+msgstr "Téléphone"
+
 #: nas/forms.py:36 nas/models.py:46 nas/models.py:247 nas/models.py:288
-#: templates/crm/snippets/customers/customer-item.html:75
+#: templates/crm/snippets/customers/customer-item.html:80
 #: templates/nas/profile/snippets/user-details.html:35
 msgid "Whatsapp"
 msgstr "WhatsApp"
 
-#: nas/forms.py:37 nas/models.py:47 templates/base/includes/footer.html:17
-#: templates/crm/snippets/customers/customer-item.html:79
+#: nas/forms.py:37 nas/models.py:47 templates/base/includes/footer.html:27
+#: templates/crm/snippets/customers/customer-item.html:84
 #: templates/nas/profile/snippets/user-details.html:41
 msgid "About"
 msgstr "À propos"
@@ -2657,9 +1630,21 @@ msgstr "Forme juridique"
 msgid "Num. RC"
 msgstr "N° RC"
 
-#: nas/models.py:81 templates/base/includes/footer.html:34
+#: nas/models.py:81 templates/base/includes/footer.html:44
 msgid "Address"
 msgstr "Adresse"
+
+#: nas/models.py:82 nas/models.py:224 nas/models.py:244 nas/models.py:285
+#: templates/base/includes/footer.html:67
+#: templates/bidding/snippets/members/member-item.html:39
+#: templates/bidding/team-recap.html:64
+#: templates/crm/snippets/customers/customer-item.html:62
+#: templates/nas/companies/snippets/company-item.html:119
+#: templates/nas/companies/snippets/company_data.html:45
+#: templates/nas/profile/snippets/user-details.html:17
+#: templates/portal/tender-details.html:350
+msgid "Email"
+msgstr "E-mail"
 
 #: nas/models.py:83 templates/nas/companies/snippets/company_data.html:51
 msgid "Website"
@@ -2875,6 +1860,11 @@ msgstr "Langue préférée de l'interface"
 #: nas/models.py:438
 msgid "Group"
 msgstr "Groupe"
+
+#: nas/models.py:440 templates/nas/companies/company_detail.html:78
+#: templates/nas/snippets/expirables/expirable-item.html:37
+msgid "Subject"
+msgstr "Sujet"
 
 #: nas/models.py:441 templates/nas/snippets/expirables/expirable-item.html:41
 msgid "Issuer"
@@ -3725,11 +2715,6 @@ msgstr ""
 "<strong>Remarque :</strong> vous pouvez toujours <a "
 "href=\"%(email_url)s\">modifier votre adresse e-mail</a>."
 
-#: templates/allauth/layouts/base.html:43
-#: templates/authy/snippets/bottom-bar.html:21
-msgid "All rights reserved"
-msgstr "Tous droits réservés"
-
 #: templates/authy/includes/junky.html:8
 msgid "Confirmation message"
 msgstr "Message de confirmation"
@@ -3813,6 +2798,10 @@ msgstr "Les conditions générales s'appliquent"
 #: templates/authy/includes/taca.html:4
 msgid "Read more"
 msgstr "En savoir plus"
+
+#: templates/authy/snippets/bottom-bar.html:21
+msgid "All rights reserved"
+msgstr "Tous droits réservés"
 
 #: templates/authy/snippets/menu-user.html:21
 #: templates/base/snippets/menu-user.html:21
@@ -4193,7 +3182,7 @@ msgstr ""
 "précédents."
 
 #: templates/base/about.html:441
-#: templates/crm/snippets/customers/customer-item.html:106
+#: templates/crm/snippets/customers/customer-item.html:111
 msgid "Plan"
 msgstr "Planifier"
 
@@ -4254,34 +3243,27 @@ msgstr ""
 "Découvrez des opportunités. Comprenez votre concurrence. Prenez de "
 "meilleures décisions."
 
-#: templates/base/base.html:15
-msgid ""
-"eMarches portal. Morocco Public Procurement Market. Access to public Tenders "
-"and Puchase orders. Paperless dematerialized procedure"
-msgstr ""
-"Portail eMarches. Marché des commandes publiques au Maroc. Accès aux appels "
-"d'offres et bons de commande publics. Procédure dématérialisée"
+#: templates/base/base.html:11 templates/base/base.html:18
+#, fuzzy
+#| msgid "About eMarchés"
+msgid "eMarchés"
+msgstr "À propos d’eMarchés"
 
-#: templates/base/base.html:15 templates/base/base.html:16
-#: templates/bdc/snippets/bdcs/search-form.html:119
-#: templates/bdc/snippets/menu-bdc.html:21
-#: templates/portal/snippets/menu-tenders.html:21
-#: templates/portal/snippets/tenders/search-form.html:225
-#: templates/portal/snippets/tenders/tender-actions.html:81
-#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
-msgid "Results"
-msgstr "Résultats"
+#: templates/base/base.html:16 templates/base/base.html:18
+#: templates/base/base.html:19
+#, fuzzy
+#| msgid "Your Procurement Intelligence Platform"
+msgid "Morocco public procurement intelligence platform"
+msgstr "Votre plateforme d’intelligence des marchés publics"
 
-#: templates/base/base.html:15 templates/base/base.html:16
-#: templates/insights/bidder-details.html:5
-#: templates/insights/bidder-details.html:6
-msgid "Concurrent"
-msgstr "Concurrents"
-
-#: templates/base/base.html:16
+#: templates/base/base.html:17
+#, fuzzy
+#| msgid ""
+#| "PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free "
+#| "Listing Files Download"
 msgid ""
 "PMMP Morocco Public Procurement Market Purchase Order Tenders Offers Free "
-"Listing Files Download"
+"Listing Files Download e-Marchés eMarchés eMarches.com"
 msgstr ""
 "PMMP Maroc Marché public Bon de commande Appels d'offres Offres Liste "
 "gratuite Téléchargement de fichiers"
@@ -4330,6 +3312,10 @@ msgstr "Nous ne l'avons pas !"
 #: templates/base/errors/404.html:11
 msgid "Our server could not find the requested page or resource."
 msgstr "Notre serveur n'a pas pu trouver la page ou la ressource demandée."
+
+#: templates/base/errors/404.html:16
+msgid "Go Home"
+msgstr "Retour à l'accueil"
 
 #: templates/base/errors/404.html:17 templates/base/errors/unallowed.html:19
 msgid "Read FAQs"
@@ -4470,23 +3456,31 @@ msgid "Our accounts are 100%% FREE. FREE like in FREE BEER"
 msgstr ""
 "Nos comptes sont 100%% GRATUITS. Totalement gratuits et sans engagement"
 
-#: templates/base/includes/footer.html:20
+#: templates/base/includes/footer.html:29
+msgid "FAQs"
+msgstr "FAQ"
+
+#: templates/base/includes/footer.html:30
 msgid "Portfolio"
 msgstr "Portfolio"
 
-#: templates/base/includes/footer.html:21
+#: templates/base/includes/footer.html:31
 msgid "Legal"
 msgstr "Mentions légales"
 
-#: templates/base/includes/footer.html:34
+#: templates/base/includes/footer.html:44
 msgid "N 59, Appt, 11 Av. Ibn Sina, Rabat, Morocco"
 msgstr "N° 59, Appt 11, Av. Ibn Sina, Rabat, Maroc"
 
-#: templates/base/includes/footer.html:80
+#: templates/base/includes/footer.html:78
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: templates/base/includes/footer.html:90
 msgid "X"
 msgstr "X"
 
-#: templates/base/includes/footer.html:99
+#: templates/base/includes/footer.html:109
 msgid "All rights reserved."
 msgstr "Tous droits réservés."
 
@@ -4545,8 +3539,8 @@ msgid "Subscription"
 msgstr "Abonnement"
 
 #: templates/base/snippets/menu-user.html:59
-#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
 #: templates/nas/snippets/menu-account.html:60
 #: templates/portal/clients-list.html:6 templates/portal/clients-list.html:7
 msgid "Stats"
@@ -4628,18 +3622,14 @@ msgstr ""
 
 #: templates/base/snippets/wip-pmmp-down.html:4
 #: templates/base/snippets/wip-pmmp-down.html:12
-msgid "Official portal down"
-msgstr "Portail officiel indisponible"
+msgid "Portal troubles"
+msgstr "Portail en troubles"
 
 #: templates/base/snippets/wip-pmmp-down.html:15
-#, python-format
-msgid ""
-"The <a href=\"%(url)s\">Marchés Publics</a> portal is experiencing down "
-"times these days"
-msgstr ""
-"Le portail des <a href=\"%(url)s\">Marchés Publics</a> connait des perturbations ces derniers jours"
+msgid "The official portal has recently experienced down times"
+msgstr "Le portail officiel a récemment connu des perturbations"
 
-#: templates/base/snippets/wip-pmmp-down.html:18
+#: templates/base/snippets/wip-pmmp-down.html:16
 msgid "Data on our website may not be updated as soon as usual"
 msgstr "La mise à jour des informations sur notre site peut être affectée"
 
@@ -4675,7 +3665,7 @@ msgstr "FAVORIS"
 
 #: templates/bdc/bdc-details.html:47
 #: templates/bdc/snippets/bdcs/bdc-summary.html:86
-#: templates/portal/tender-details.html:30
+#: templates/portal/tender-details.html:31
 msgid "EXPIRED"
 msgstr "EXPIRÉ"
 
@@ -4685,27 +3675,27 @@ msgstr "EXPIRÉ"
 #: templates/bidding/snippets/bids/bid-item.html:31
 #: templates/bidding/tenders-list.html:101
 #: templates/portal/snippets/tenders/tender-summary.html:88
-#: templates/portal/tender-details.html:57
-#: templates/portal/tender-details.html:514
+#: templates/portal/tender-details.html:59
+#: templates/portal/tender-details.html:516
 msgid "CANCELLED"
 msgstr "ANNULÉ"
 
 #: templates/bdc/bdc-details.html:74 templates/bdc/bdc-details.html:114
 #: templates/bdc/snippets/bdcs/bdc-summary.html:66
-#: templates/portal/tender-details.html:118
-#: templates/portal/tender-details.html:221
+#: templates/portal/tender-details.html:120
+#: templates/portal/tender-details.html:223
 msgid "Morocco time"
 msgstr "Heure du Maroc"
 
-#: templates/bdc/bdc-details.html:78 templates/portal/tender-details.html:112
+#: templates/bdc/bdc-details.html:78 templates/portal/tender-details.html:114
 msgid "Time to Deadline"
 msgstr "Temps restant avant la date limite"
 
 #: templates/bdc/bdc-details.html:79 templates/bdc/bdc-details.html:204
 #: templates/nas/user-settings-edit.html:117
 #: templates/nas/user-settings-edit.html:197
-#: templates/portal/tender-details.html:113
-#: templates/portal/tender-details.html:437
+#: templates/portal/tender-details.html:115
+#: templates/portal/tender-details.html:439
 msgid "days"
 msgstr "jours"
 
@@ -4714,8 +3704,8 @@ msgstr "jours"
 #: templates/bdc/snippets/bdcs/bdc-legend.html:9
 #: templates/portal/snippets/tenders/tender-legend.html:8
 #: templates/portal/snippets/tenders/tender-legend.html:12
-#: templates/portal/tender-details.html:426
-#: templates/portal/tender-details.html:431
+#: templates/portal/tender-details.html:428
+#: templates/portal/tender-details.html:433
 msgid "UTC"
 msgstr "UTC"
 
@@ -4724,7 +3714,7 @@ msgstr "UTC"
 #: templates/bdc/snippets/bdcs/bdc-summary.html:45
 #: templates/portal/snippets/tenders/tender-legend.html:92
 #: templates/portal/snippets/tenders/tender-summary.html:50
-#: templates/portal/tender-details.html:137
+#: templates/portal/tender-details.html:139
 msgid "Execution Location"
 msgstr "Lieu d'exécution"
 
@@ -4733,7 +3723,7 @@ msgstr "Lieu d'exécution"
 #: templates/bdc/snippets/bdcs/bdc-summary.html:52
 #: templates/portal/snippets/tenders/tender-legend.html:103
 #: templates/portal/snippets/tenders/tender-summary.html:58
-#: templates/portal/tender-details.html:109
+#: templates/portal/tender-details.html:111
 msgid "Public Client"
 msgstr "Acheteur public"
 
@@ -4773,7 +3763,7 @@ msgid "Export"
 msgstr "Exporter"
 
 #: templates/bdc/bdc-details.html:189 templates/bidding/team-recap.html:127
-#: templates/portal/tender-details.html:425
+#: templates/portal/tender-details.html:427
 msgid "Created"
 msgstr "Créé"
 
@@ -4793,7 +3783,7 @@ msgstr "Durée d'affichage"
 msgid "Purchase Order files"
 msgstr "Fichiers du bon de commande"
 
-#: templates/bdc/bdc-details.html:224 templates/portal/tender-details.html:538
+#: templates/bdc/bdc-details.html:224 templates/portal/tender-details.html:540
 msgid ""
 "Once you click on an item, your browser or device should handle the download "
 "process."
@@ -4813,8 +3803,8 @@ msgstr ""
 msgid "Files for this PO are not ready, yet."
 msgstr "Les fichiers pour ce bon de commande ne sont pas encore prêts."
 
-#: templates/bdc/bdc-details.html:238 templates/portal/tender-details.html:274
-#: templates/portal/tender-details.html:566
+#: templates/bdc/bdc-details.html:238 templates/portal/tender-details.html:276
+#: templates/portal/tender-details.html:568
 msgid "Please try again later, or contact us if this problem persists."
 msgstr ""
 "Veuillez réessayer plus tard ou nous contacter si ce problème persiste."
@@ -4827,8 +3817,8 @@ msgstr ""
 #: templates/portal/snippets/lots/lots-details.html:22
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:28
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:170
-#: templates/portal/tender-details.html:580
-#: templates/portal/tender-details.html:610
+#: templates/portal/tender-details.html:582
+#: templates/portal/tender-details.html:612
 msgid "Close"
 msgstr "Fermer"
 
@@ -4842,15 +3832,15 @@ msgstr "Élément retiré des favoris avec succès"
 
 #: templates/bdc/bdc-details.html:282
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:660
-#: templates/portal/tender-details.html:704
+#: templates/portal/tender-details.html:662
+#: templates/portal/tender-details.html:706
 msgid "Operation failed"
 msgstr "Échec de l'opération"
 
 #: templates/bdc/bdc-details.html:282
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:660
-#: templates/portal/tender-details.html:704
+#: templates/portal/tender-details.html:662
+#: templates/portal/tender-details.html:706
 msgid "Please refresh the page or try again later"
 msgstr "Veuillez rafraîchir la page ou réessayer plus tard"
 
@@ -4991,7 +3981,7 @@ msgstr "Résultat infructueux"
 
 #: templates/bdc/snippets/bdcs/bdc-summary.html:15
 #: templates/portal/snippets/tenders/tender-summary.html:16
-#: templates/portal/tender-details.html:134
+#: templates/portal/tender-details.html:136
 msgid "Main Category"
 msgstr "Catégorie principale"
 
@@ -5098,6 +4088,18 @@ msgstr "mots-clés"
 msgid "Search field"
 msgstr "Champ de recherche"
 
+#: templates/bdc/snippets/bdcs/search-form.html:37
+#: templates/crm/snippets/customers/customer-search-form.html:38
+#: templates/crm/snippets/customers/customer-search-form.html:50
+#: templates/crm/snippets/customers/customer-search-form.html:62
+#: templates/crm/snippets/customers/customer-search-form.html:74
+#: templates/crm/snippets/customers/customer-search-form.html:91
+#: templates/portal/snippets/tenders/search-form.html:38
+#: templates/portal/snippets/tenders/search-form.html:206
+#: templates/portal/snippets/tenders/search-form.html:217
+msgid "Any"
+msgstr "Peu importe"
+
 #: templates/bdc/snippets/bdcs/search-form.html:42
 msgid "Articles"
 msgstr "Articles"
@@ -5163,6 +4165,16 @@ msgstr "Montant attribué min"
 #: templates/bdc/snippets/bdcs/search-form.html:100
 msgid "Winner amount Max"
 msgstr "Montant attribué max"
+
+#: templates/bdc/snippets/bdcs/search-form.html:119
+#: templates/bdc/snippets/menu-bdc.html:21
+#: templates/portal/snippets/menu-tenders.html:21
+#: templates/portal/snippets/tenders/search-form.html:225
+#: templates/portal/snippets/tenders/tender-actions.html:81
+#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+#: templates/portal/tender-list.html:8
+msgid "Results"
+msgstr "Résultats"
 
 #: templates/bdc/snippets/bdcs/search-form.html:122
 #: templates/portal/snippets/tenders/tender-summary.html:154
@@ -5497,8 +4509,8 @@ msgstr "Restitution à venir"
 #: templates/bidding/contract-details.html:5
 #: templates/bidding/contract-details.html:11
 #: templates/insights/bidder-details.html:4
+#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:7
-#: templates/insights/bidder-details.html:8
 #: templates/insights/bidder-details.html:13
 #: templates/insights/bidder-pdf.html:9 templates/insights/bidder-pdf.html:35
 msgid "Concurrent details"
@@ -5867,7 +4879,7 @@ msgid "Joined"
 msgstr "Rejoint le"
 
 #: templates/bidding/snippets/members/member-item.html:47
-#: templates/crm/snippets/customers/customer-item.html:92
+#: templates/crm/snippets/customers/customer-item.html:97
 #: templates/crm/snippets/customers/customer-menu-sort.html:24
 #: templates/crm/snippets/customers/customer-search-form.html:89
 msgid "Last login"
@@ -6177,56 +5189,56 @@ msgstr "Origine"
 msgid "Email addresses"
 msgstr "Adresses e-mail"
 
-#: templates/crm/snippets/customers/customer-item.html:62
+#: templates/crm/snippets/customers/customer-item.html:67
 #, fuzzy
 #| msgid "First Name"
 msgid "First name"
 msgstr "Prénom"
 
-#: templates/crm/snippets/customers/customer-item.html:66
+#: templates/crm/snippets/customers/customer-item.html:71
 #, fuzzy
 #| msgid "Last Name"
 msgid "Last name"
 msgstr "Nom"
 
-#: templates/crm/snippets/customers/customer-item.html:88
+#: templates/crm/snippets/customers/customer-item.html:93
 #: templates/crm/snippets/customers/customer-search-form.html:72
 msgid "Date Joined"
 msgstr "Date d'enreg."
 
-#: templates/crm/snippets/customers/customer-item.html:107
+#: templates/crm/snippets/customers/customer-item.html:112
 #, fuzzy
 #| msgid "Contract"
 msgid "Contracted"
 msgstr "Contrat"
 
-#: templates/crm/snippets/customers/customer-item.html:108
+#: templates/crm/snippets/customers/customer-item.html:113
 #, fuzzy
 #| msgid "Comment"
 msgid "Commitment"
 msgstr "Commentaire"
 
-#: templates/crm/snippets/customers/customer-item.html:111
+#: templates/crm/snippets/customers/customer-item.html:116
 msgid "From"
 msgstr "De"
 
-#: templates/crm/snippets/customers/customer-item.html:113
+#: templates/crm/snippets/customers/customer-item.html:118
 msgid "To"
 msgstr "À"
 
-#: templates/crm/snippets/customers/customer-item.html:118
+#: templates/crm/snippets/customers/customer-item.html:123
 msgid "No active cycle"
 msgstr "Pas de cycle actif"
 
-#: templates/crm/snippets/customers/customer-item.html:121
+#: templates/crm/snippets/customers/customer-item.html:126
 msgid "No active subscription"
 msgstr "Pas d'Abonnement en cours"
 
-#: templates/crm/snippets/customers/customer-item.html:125
+#: templates/crm/snippets/customers/customer-item.html:130
 msgid "No active membership"
 msgstr "Pas d'Adhésion active"
 
-#: templates/crm/snippets/customers/customer-item.html:137
+#: templates/crm/snippets/customers/customer-item.html:142
 #: templates/portal/clients-list.html:71 templates/portal/domains-list.html:72
 #: templates/portal/snippets/clients/client-item.html:23
 #: templates/portal/snippets/clients/client-item.html:53
@@ -6235,7 +5247,7 @@ msgstr "Pas d'Adhésion active"
 msgid "Active Tenders"
 msgstr "Appels d'offres actifs"
 
-#: templates/crm/snippets/customers/customer-item.html:145
+#: templates/crm/snippets/customers/customer-item.html:150
 #: templates/portal/snippets/clients/client-item.html:31
 #: templates/portal/snippets/clients/client-item.html:61
 #: templates/portal/snippets/domains/domain-item.html:31
@@ -6417,28 +5429,33 @@ msgstr "L'autorisation pour votre appareil %(client_name)s a été refusée."
 msgid "Error"
 msgstr "Erreur"
 
-#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
 msgid "Bidder"
 msgstr "Concurrent"
 
-#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
+msgid "Concurrent"
+msgstr "Concurrents"
+
+#: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
 msgid "Revenue"
 msgstr "Chiffre d'affaires"
 
-#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
 msgid "Participation"
 msgstr "Participation"
 
-#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
 msgid "Award"
 msgstr "Attribution"
 
-#: templates/insights/bidder-details.html:5
 #: templates/insights/bidder-details.html:6
+#: templates/insights/bidder-details.html:8
 msgid "Success Rate"
 msgstr "Taux de réussite"
 
@@ -6455,7 +5472,7 @@ msgid "Print"
 msgstr "Imprimer"
 
 #: templates/insights/bidder-details.html:286
-#: templates/portal/tender-details.html:671
+#: templates/portal/tender-details.html:673
 msgid "URL was copied to clipboard"
 msgstr "L'URL a été copiée dans le presse-papiers"
 
@@ -7498,32 +6515,32 @@ msgid "Reserved"
 msgstr "Réservé"
 
 #: templates/portal/snippets/lots/lot-details.html:96
-#: templates/portal/tender-details.html:211
+#: templates/portal/tender-details.html:213
 msgid "Required Licences"
 msgstr "Agréments requis"
 
 #: templates/portal/snippets/lots/lot-details.html:101
-#: templates/portal/tender-details.html:216
+#: templates/portal/tender-details.html:218
 msgid "Required Qualifications"
 msgstr "Qualifications requises"
 
 #: templates/portal/snippets/lots/lot-details.html:106
-#: templates/portal/tender-details.html:223
+#: templates/portal/tender-details.html:225
 msgid "Required Samples"
 msgstr "Échantillons requis"
 
 #: templates/portal/snippets/lots/lot-details.html:111
-#: templates/portal/tender-details.html:228
+#: templates/portal/tender-details.html:230
 msgid "Scheduled Meetings"
 msgstr "Réunions programmées"
 
 #: templates/portal/snippets/lots/lot-details.html:116
-#: templates/portal/tender-details.html:233
+#: templates/portal/tender-details.html:235
 msgid "Site Survey"
 msgstr "Visite des lieux"
 
 #: templates/portal/snippets/lots/lots-details.html:9
-#: templates/portal/tender-details.html:246
+#: templates/portal/tender-details.html:248
 msgid "Lots details"
 msgstr "Détails des lots"
 
@@ -7545,13 +6562,13 @@ msgstr "Procès-verbal finalisé"
 
 #: templates/portal/snippets/tenders/menu-sort.html:46
 #: templates/portal/snippets/tenders/tender-summary.html:289
-#: templates/portal/tender-details.html:450
+#: templates/portal/tender-details.html:452
 msgid "Views"
 msgstr "Vues"
 
 #: templates/portal/snippets/tenders/menu-sort.html:51
 #: templates/portal/snippets/tenders/tender-summary.html:307
-#: templates/portal/tender-details.html:461
+#: templates/portal/tender-details.html:463
 msgid "Downloads"
 msgstr "Téléchargements"
 
@@ -7603,14 +6620,14 @@ msgstr "Caution max."
 #: templates/portal/snippets/tenders/search-form.html:176
 #: templates/portal/snippets/tenders/search-form.html:206
 #: templates/portal/snippets/tenders/search-form.html:217
-#: templates/portal/tender-details.html:151
-#: templates/portal/tender-details.html:163
+#: templates/portal/tender-details.html:153
+#: templates/portal/tender-details.html:165
 msgid "Required"
 msgstr "Exigée"
 
 #: templates/portal/snippets/tenders/search-form.html:135
-#: templates/portal/tender-details.html:153
-#: templates/portal/tender-details.html:165
+#: templates/portal/tender-details.html:155
+#: templates/portal/tender-details.html:167
 msgid "Optional"
 msgstr "Facultative"
 
@@ -7765,7 +6782,7 @@ msgstr "La signature électronique est non applicable"
 
 #: templates/portal/snippets/tenders/tender-legend.html:257
 #: templates/portal/snippets/tenders/tender-summary.html:223
-#: templates/portal/tender-details.html:172
+#: templates/portal/tender-details.html:174
 msgid "Reserved to SMBs, individuals, Unions, ..."
 msgstr "Réservé aux PME, coopératives, artisans, ..."
 
@@ -7828,7 +6845,7 @@ msgid "Offers count"
 msgstr "Nombre d'offres"
 
 #: templates/portal/snippets/tenders/tender-summary.html:21
-#: templates/portal/tender-details.html:122
+#: templates/portal/tender-details.html:124
 msgid "Total Estimate"
 msgstr "Estimation totale"
 
@@ -7837,7 +6854,7 @@ msgid "Total Guaranty"
 msgstr "Caution totale"
 
 #: templates/portal/snippets/tenders/tender-summary.html:43
-#: templates/portal/tender-details.html:24
+#: templates/portal/tender-details.html:25
 msgid "FAVORITE"
 msgstr "FAVORI"
 
@@ -7866,160 +6883,166 @@ msgid "Favorites"
 msgstr "Favoris"
 
 #: templates/portal/tender-details.html:9
-#: templates/portal/tender-details.html:20
+#: templates/portal/tender-details.html:10
+#: templates/portal/tender-details.html:12
+#: templates/portal/tender-details.html:21
 msgid "Tender Details"
 msgstr "Détails de l'appel d'offres"
 
-#: templates/portal/tender-details.html:71
+#: templates/portal/tender-details.html:73
 msgid "My Bids"
 msgstr "Mes candidatures"
 
-#: templates/portal/tender-details.html:93
-#: templates/portal/tender-details.html:263
+#: templates/portal/tender-details.html:95
+#: templates/portal/tender-details.html:265
 msgid "Add Bid"
 msgstr "Ajouter une candidature"
 
-#: templates/portal/tender-details.html:125
+#: templates/portal/tender-details.html:127
 msgid "Total Guarantee"
 msgstr "Caution totale"
 
-#: templates/portal/tender-details.html:145
+#: templates/portal/tender-details.html:147
 msgid "Awarding Mode"
 msgstr "Mode d'attribution"
 
-#: templates/portal/tender-details.html:155
-#: templates/portal/tender-details.html:167
+#: templates/portal/tender-details.html:157
+#: templates/portal/tender-details.html:169
 msgid "Not Applicable"
 msgstr "Non applicable"
 
-#: templates/portal/tender-details.html:193
+#: templates/portal/tender-details.html:195
 msgid "Environmental clauses"
 msgstr "Caluses environnementales"
 
-#: templates/portal/tender-details.html:205
+#: templates/portal/tender-details.html:207
 msgid "Price of Plans"
 msgstr "Prix d'acquisition des plans"
 
-#: templates/portal/tender-details.html:324
+#: templates/portal/tender-details.html:326
 msgid "Addresses and Contact"
 msgstr "Adresses et contacts"
 
-#: templates/portal/tender-details.html:330
+#: templates/portal/tender-details.html:332
 msgid "Withdrawal Address"
 msgstr "Adresse de retrait du dossier"
 
-#: templates/portal/tender-details.html:333
+#: templates/portal/tender-details.html:335
 msgid "Bidding Address"
 msgstr "Adresse de dépôt des offres"
 
-#: templates/portal/tender-details.html:336
+#: templates/portal/tender-details.html:338
 msgid "Opening Address"
 msgstr "Adresse d'ouverture des plis"
 
-#: templates/portal/tender-details.html:339
+#: templates/portal/tender-details.html:341
 msgid "Person"
 msgstr "Personne à contacter"
 
-#: templates/portal/tender-details.html:353
+#: templates/portal/tender-details.html:355
 msgid "Fax"
 msgstr "Fax"
 
-#: templates/portal/tender-details.html:370
+#: templates/portal/tender-details.html:372
 msgid "Changes"
 msgstr "Modifications"
 
-#: templates/portal/tender-details.html:371
+#: templates/portal/tender-details.html:373
 msgid "Experimental"
 msgstr "Expérimental"
 
-#: templates/portal/tender-details.html:377
+#: templates/portal/tender-details.html:379
 msgid "Empty"
 msgstr "Vide"
 
-#: templates/portal/tender-details.html:418
+#: templates/portal/tender-details.html:420
 msgid "Advanced data"
 msgstr "Données avancées"
 
-#: templates/portal/tender-details.html:432
+#: templates/portal/tender-details.html:434
 msgid "Last updated"
 msgstr "Dernière mise à jour"
 
-#: templates/portal/tender-details.html:436
+#: templates/portal/tender-details.html:438
 msgid "Time on display"
 msgstr "Temps d'affichage"
 
-#: templates/portal/tender-details.html:440
+#: templates/portal/tender-details.html:442
 msgid "Guarantee ratio"
 msgstr "Taux de cautionnement"
 
-#: templates/portal/tender-details.html:446
+#: templates/portal/tender-details.html:448
 msgid "Database ID"
 msgstr "Identifiant base de données"
 
-#: templates/portal/tender-details.html:455
+#: templates/portal/tender-details.html:457
 msgid "Latest view since"
 msgstr "Dernière vue depuis"
 
-#: templates/portal/tender-details.html:466
+#: templates/portal/tender-details.html:468
 msgid "Latest download since"
 msgstr "Dernier téléchargement depuis"
 
-#: templates/portal/tender-details.html:490
-#: templates/portal/tender-details.html:502
+#: templates/portal/tender-details.html:492
+#: templates/portal/tender-details.html:504
 msgid "Awarding Minutes"
 msgstr "Procès-verbal d'attribution"
 
-#: templates/portal/tender-details.html:503
+#: templates/portal/tender-details.html:505
 msgid "No Minutes found"
 msgstr "Aucun procès-verbal trouvé"
 
-#: templates/portal/tender-details.html:533
+#: templates/portal/tender-details.html:535
 msgid "Tender downloads"
 msgstr "Téléchargements DCE"
 
-#: templates/portal/tender-details.html:539
+#: templates/portal/tender-details.html:541
 msgid "DCE Files"
 msgstr "Fichiers DCE"
 
-#: templates/portal/tender-details.html:550
+#: templates/portal/tender-details.html:552
 msgid "Extra Files"
 msgstr "Autres fichiers"
 
-#: templates/portal/tender-details.html:565
+#: templates/portal/tender-details.html:567
 msgid "Files for this Tender are not ready, yet."
 msgstr "Les fichiers pour cet appel d'offres ne sont pas encore prêts."
 
-#: templates/portal/tender-details.html:591
+#: templates/portal/tender-details.html:576
+msgid "Legal Information"
+msgstr "Informations légales"
+
+#: templates/portal/tender-details.html:593
 msgid "Request Tender files"
 msgstr "Demander les fichiers de l'appel d'offres"
 
-#: templates/portal/tender-details.html:595
+#: templates/portal/tender-details.html:597
 msgid "Files for this Tender are already queued"
 msgstr "Les fichiers pour cet appel d'offres sont déjà en file d'attente"
 
-#: templates/portal/tender-details.html:597
+#: templates/portal/tender-details.html:599
 msgid "We will make this Tender files available as soon as possible."
 msgstr ""
 "Nous rendrons les fichiers de cet appel d'offres disponibles dès que "
 "possible."
 
-#: templates/portal/tender-details.html:605
+#: templates/portal/tender-details.html:607
 msgid "Request"
 msgstr "Demander"
 
-#: templates/portal/tender-details.html:638
+#: templates/portal/tender-details.html:640
 msgid "Item added to Favourites"
 msgstr "Élément ajouté aux favoris"
 
-#: templates/portal/tender-details.html:649
+#: templates/portal/tender-details.html:651
 msgid "Item removed from Favourites"
 msgstr "Élément retiré des favoris"
 
-#: templates/portal/tender-details.html:682
+#: templates/portal/tender-details.html:684
 msgid "Files request submitted"
 msgstr "Demande de fichiers transmise"
 
-#: templates/portal/tender-details.html:693
+#: templates/portal/tender-details.html:695
 msgid "Files are already queued for download"
 msgstr "Les fichiers sont déjà en attente de téléchargement"
 
@@ -8037,15 +7060,15 @@ msgstr "Appels d'offres favoris"
 msgid "Tenders list"
 msgstr "Liste des appels d'offres"
 
-#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+#: templates/portal/tender-list.html:6
 msgid "Advanced Search"
 msgstr "Recherche avancée"
 
-#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+#: templates/portal/tender-list.html:6
 msgid "Filter"
 msgstr "Filtrage"
 
-#: templates/portal/tender-list.html:5 templates/portal/tender-list.html:6
+#: templates/portal/tender-list.html:6
 msgid "Sort"
 msgstr "Classement"
 
@@ -8187,3 +7210,851 @@ msgstr "Actuelle"
 msgid "Sign Out Other Sessions"
 msgstr "Déconnecter les autres sessions"
 
+#~ msgid "About Us"
+#~ msgstr "À propos"
+
+#~ msgid "Learn more about who we are, what we do, and our journey."
+#~ msgstr "Découvrez qui nous sommes, ce que nous faisons et notre parcours."
+
+#~ msgid "Who We Are"
+#~ msgstr "Qui sommes-nous"
+
+#~ msgid ""
+#~ "eMarches is a growing consultancy specializing in public procurement "
+#~ "services in Morocco. Since our establishment in 2024, we have been "
+#~ "dedicated to helping businesses and organizations unlock opportunities in "
+#~ "the Moroccan public procurement market."
+#~ msgstr ""
+#~ "eMarches est un cabinet de conseil en pleine croissance spécialisé dans "
+#~ "les marchés publics au Maroc. Depuis notre création en 2024, nous nous "
+#~ "engageons à aider les entreprises et les organisations à saisir les "
+#~ "opportunités du marché de la commande publique marocaine."
+
+#~ msgid "The Hedgehog"
+#~ msgstr "Le Hérisson"
+
+#~ msgid ""
+#~ "The hedgehog symbolizes intelligence, adaptability, and strategic "
+#~ "thinking. It reflects our resourceful approach to overcoming challenges. "
+#~ "Like the hedgehog, we achieve success through clever solutions and "
+#~ "resilience."
+#~ msgstr ""
+#~ "Le hérisson symbolise l'intelligence, l'adaptabilité et la réflexion "
+#~ "stratégique. Il reflète notre approche ingénieuse face aux défis. À "
+#~ "l'image du hérisson, nous réussissons grâce à des solutions judicieuses "
+#~ "et à la résilience."
+
+#~ msgid "Our Mission"
+#~ msgstr "Notre Mission"
+
+#~ msgid ""
+#~ "Our mission is to simplify and streamline the public procurement process "
+#~ "for businesses, providing them with the expertise and tools needed to "
+#~ "achieve success. We aim to foster transparency, compliance, and "
+#~ "efficiency, enabling our clients to thrive in this competitive sector."
+#~ msgstr ""
+#~ "Notre mission est de simplifier et de rationaliser le processus des "
+#~ "marchés publics pour les entreprises, en leur fournissant l'expertise et "
+#~ "les outils nécessaires à leur réussite. Nous visons à promouvoir la "
+#~ "transparence, la conformité et l'efficacité, permettant ainsi à nos "
+#~ "clients de prospérer dans ce secteur concurrentiel."
+
+#~ msgid "Our Journey"
+#~ msgstr "Notre Parcours"
+
+#~ msgid ""
+#~ "eMarches was founded in 2024 by a team of young talented entrepreneurs , "
+#~ "who recognized the growing need for expert guidance in Morocco’s public "
+#~ "procurement landscape. What started as a small consultancy has evolved "
+#~ "into a aspiring firm, serving clients across diverse industries."
+#~ msgstr ""
+#~ "eMarches a été fondée en 2024 par une équipe de jeunes entrepreneurs "
+#~ "talentueux, qui ont identifié le besoin croissant d'un accompagnement "
+#~ "expert dans le domaine des marchés publics au Maroc. Ce qui a commencé "
+#~ "comme un petit cabinet de conseil s'est développé pour devenir une "
+#~ "entreprise ambitieuse, au service de clients dans divers secteurs "
+#~ "d'activité."
+
+#~ msgid "Our Team"
+#~ msgstr "Notre Équipe"
+
+#~ msgid "Taheri"
+#~ msgstr "Taheri"
+
+#~ msgid "W. Taheri"
+#~ msgstr "W. Taheri"
+
+#~ msgid "CEO"
+#~ msgstr "PDG"
+
+#~ msgid ""
+#~ "Strategic approach to leadership and integrate of cutting-edge "
+#~ "technologies."
+#~ msgstr ""
+#~ "Approche stratégique du leadership et intégration des technologies de "
+#~ "pointe."
+
+#~ msgid "Bouhou"
+#~ msgstr "Bouhou"
+
+#~ msgid "A. Bouhou"
+#~ msgstr "A. Bouhou"
+
+#~ msgid "CRM"
+#~ msgstr "Responsable Relation Client"
+
+#~ msgid "Identifying new opportunities, developing strategic partnerships."
+#~ msgstr ""
+#~ "Identification de nouvelles opportunités, développement de partenariats "
+#~ "stratégiques."
+
+#~ msgid "Sebaai"
+#~ msgstr "Sebaai"
+
+#~ msgid "R. Sebaai"
+#~ msgstr "R. Sebaai"
+
+#~ msgid "CTO"
+#~ msgstr "Directeur Technique"
+
+#~ msgid ""
+#~ "Ability to efficiently build scalable, secure, and innovative systems."
+#~ msgstr ""
+#~ "Capacité à concevoir efficacement des systèmes évolutifs, sécurisés et "
+#~ "innovants."
+
+#~ msgid ""
+#~ "And a large number of skilled people in several key roles that complement "
+#~ "the leadership team and support the business's growth."
+#~ msgstr ""
+#~ "Ainsi qu'un grand nombre de talents occupant des rôles clés qui "
+#~ "complètent l'équipe dirigeante et soutiennent la croissance de "
+#~ "l'entreprise."
+
+#~ msgid "Our Values"
+#~ msgstr "Nos Valeurs"
+
+#~ msgid "Integrity"
+#~ msgstr "Intégrité"
+
+#~ msgid "Transparency and ethical practices form the foundation of our work."
+#~ msgstr ""
+#~ "La transparence et les pratiques éthiques constituent le socle de notre "
+#~ "travail."
+
+#~ msgid "Excellence"
+#~ msgstr "Excellence"
+
+#~ msgid "We strive for the highest standards in every project we undertake."
+#~ msgstr ""
+#~ "Nous visons les normes les plus élevées dans chaque projet que nous "
+#~ "entreprenons."
+
+#~ msgid "Collaboration"
+#~ msgstr "Collaboration"
+
+#~ msgid "We build long-term partnerships based on trust and shared goals."
+#~ msgstr ""
+#~ "Nous bâtissons des partenariats à long terme fondés sur la confiance et "
+#~ "des objectifs partagés."
+
+#~ msgid "Looking Ahead"
+#~ msgstr "Perspectives d'Avenir"
+
+#~ msgid ""
+#~ "As Morocco’s public procurement sector continues to grow, eMarches is "
+#~ "committed to staying at the forefront of this dynamic market. We aim to "
+#~ "expand our services, embrace new technologies, and support even more "
+#~ "businesses in achieving their goals."
+#~ msgstr ""
+#~ "Alors que le secteur des marchés publics au Maroc continue de croître, "
+#~ "eMarches s'engage à rester à la pointe de ce marché dynamique. Nous "
+#~ "ambitionnons d'élargir nos services, d'adopter de nouvelles technologies "
+#~ "et d'accompagner encore plus d'entreprises vers la réussite."
+
+#~ msgid "Translations status"
+#~ msgstr "État des traductions"
+
+#~ msgid "Translations status not found !"
+#~ msgstr "État des traductions introuvable !"
+
+#~ msgid ""
+#~ "You can help us improve translations or add your language if it's not "
+#~ "already supported."
+#~ msgstr ""
+#~ "Vous pouvez nous aider à améliorer les traductions ou à ajouter votre "
+#~ "langue si elle n'est pas encore prise en charge."
+
+#~ msgid ""
+#~ "Feel free to contact us using contact details on our website. Thank you."
+#~ msgstr ""
+#~ "N'hésitez pas à nous contacter en utilisant les coordonnées figurant sur "
+#~ "notre site web. Merci."
+
+#~ msgid "Send Us a Message"
+#~ msgstr "Envoyez-nous un message"
+
+#~ msgid ""
+#~ "Feel free to reach out to us for any inquiries or assistance. Our team is "
+#~ "here to help you!"
+#~ msgstr ""
+#~ "N'hésitez pas à nous contacter pour toute question ou demande "
+#~ "d'assistance. Notre équipe est là pour vous aider !"
+
+#~ msgid "Your Name"
+#~ msgstr "Votre nom"
+
+#~ msgid "Enter your name"
+#~ msgstr "Saisissez votre nom"
+
+#~ msgid "Your Email"
+#~ msgstr "Votre e-mail"
+
+#~ msgid "Enter your email"
+#~ msgstr "Saisissez votre e-mail"
+
+#~ msgid "Your Phone"
+#~ msgstr "Votre téléphone"
+
+#~ msgid "Enter your phone number"
+#~ msgstr "Saisissez votre numéro de téléphone"
+
+#~ msgid "Enter the subject"
+#~ msgstr "Saisissez le sujet"
+
+#~ msgid "Write your message"
+#~ msgstr "Rédigez votre message"
+
+#~ msgid "Remaining charcters"
+#~ msgstr "Caractères restants"
+
+#~ msgid "Preferred Contact Method"
+#~ msgstr "Moyen de contact préféré"
+
+#~ msgid "Telegram"
+#~ msgstr "Telegram"
+
+#~ msgid "Subscribe to our newsletter"
+#~ msgstr "S'abonner à notre newsletter"
+
+#~ msgid "Receive promotional offers from us or our partners"
+#~ msgstr ""
+#~ "Recevoir des offres promotionnelles de notre part ou de nos partenaires"
+
+#~ msgid "Send Message"
+#~ msgstr "Envoyer le message"
+
+#~ msgid "Message submitted"
+#~ msgstr "Message transmis"
+
+#~ msgid "Message sent"
+#~ msgstr "Message envoyé"
+
+#~ msgid "Thank You !"
+#~ msgstr "Merci !"
+
+#~ msgid ""
+#~ "Your message has been successfully submitted. We will get back to you "
+#~ "shortly."
+#~ msgstr ""
+#~ "Votre message a été transmis avec succès. Nous vous recontacterons très "
+#~ "prochainement."
+
+#~ msgid "Frequently Asked Questions"
+#~ msgstr "Foire Aux Questions"
+
+#~ msgid ""
+#~ "Have a question? Chances are someone already asked it and we answered it."
+#~ msgstr ""
+#~ "Vous avez une question ? Il y a de fortes chances que quelqu'un l'ait "
+#~ "déjà posée et que nous y ayons répondu."
+
+#~ msgid "What is public procurement?"
+#~ msgstr "Qu'est-ce que la commande publique ?"
+
+#~ msgid ""
+#~ "Public procurement refers to the process by which government entities and "
+#~ "public organizations acquire goods, services, or works from private "
+#~ "sector businesses, individuals or organizations. This process is "
+#~ "regulated to ensure transparency, fairness, and value for taxpayers."
+#~ msgstr ""
+#~ "La commande publique désigne le processus par lequel les entités "
+#~ "gouvernementales et les organismes publics acquièrent des biens, des "
+#~ "services ou des travaux auprès d'entreprises du secteur privé, de "
+#~ "particuliers ou d'organisations. Ce processus est réglementé afin de "
+#~ "garantir la transparence, l'équité et la bonne utilisation des deniers "
+#~ "publics."
+
+#~ msgid "Are you afficliated to governmental entity?"
+#~ msgstr "Êtes-vous affilié à une entité gouvernementale ?"
+
+#~ msgid ""
+#~ "No. We are not affiliated in any way to any public or governmental entity."
+#~ msgstr ""
+#~ "Non. Nous ne sommes affiliés d'aucune manière à une entité publique ou "
+#~ "gouvernementale."
+
+#~ msgid "Where do you get your data from?"
+#~ msgstr "D'où proviennent vos données ?"
+
+#~ msgid ""
+#~ "We collect data from the portal dedicated to public tenders. We debloat, "
+#~ "aggregate and reorganize data and store it in our database."
+#~ msgstr ""
+#~ "Nous collectons les données à partir du portail dédié aux appels d'offres "
+#~ "publics. Nous épurons, agrégeons, réorganisons ces données et les "
+#~ "stockons dans notre base de données."
+
+#~ msgid ""
+#~ "Then we use tdata from our database to provide our services in a better, "
+#~ "more ergonomic, and more meaningful way. "
+#~ msgstr ""
+#~ "Ensuite, nous utilisons ces données pour fournir nos services de manière "
+#~ "plus performante, ergonomique et pertinente."
+
+#~ msgid ""
+#~ "To measure a bit of the difference that it makes, you can visit the "
+#~ "official portal preferably using a mobile. Here is the link, good luck:"
+#~ msgstr ""
+#~ "Pour vous rendre compte de la différence, vous pouvez visiter le portail "
+#~ "officiel, de préférence depuis un mobile. Voici le lien, bon courage :"
+
+#~ msgid "How often do you update the data ?"
+#~ msgstr "À quelle fréquence mettez-vous à jour les données ?"
+
+#~ msgid ""
+#~ "We are trying to be as up-to-date as we can. Our teams work hard to bring "
+#~ "any available data update as soon as it is published."
+#~ msgstr ""
+#~ "Nous nous efforçons d'être aussi à jour que possible. Nos équipes "
+#~ "travaillent dur pour intégrer toute mise à jour des données dès sa "
+#~ "publication."
+
+#~ msgid ""
+#~ "For now, we update the list of available Tenders every 3 hours. If the "
+#~ "need araises in the future, we may narrow down the gap to 1 hour or less."
+#~ msgstr ""
+#~ "Pour l'instant, nous mettons à jour la liste des appels d'offres "
+#~ "disponibles toutes les 3 heures. Si le besoin s'en fait sentir, nous "
+#~ "pourrons réduire cet intervalle à 1 heure ou moins."
+
+#~ msgid "How accurate is the information on your website about Tenders?"
+#~ msgstr ""
+#~ "Quelle est la fiabilités des informations sur les appels d'offres "
+#~ "présentes sur votre site ?"
+
+#~ msgid ""
+#~ "We get information on Tenders from the official public website as fidelly "
+#~ "as possible."
+#~ msgstr ""
+#~ "Nous récupérons les informations relatives aux appels d'offres depuis le "
+#~ "site public officiel avec la plus grande fidélité possible."
+
+#~ msgid ""
+#~ "If information on our website is wrong or inaccurate, it most probably "
+#~ "comes from the public portal."
+#~ msgstr ""
+#~ "Si une information sur notre site est erronée ou inexacte, cela provient "
+#~ "très probablement du portail public lui-même."
+
+#~ msgid "How can your consultancy help my business?"
+#~ msgstr "Comment votre cabinet de conseil peut-il aider mon entreprise ?"
+
+#~ msgid ""
+#~ "Our consultancy specializes in guiding businesses through the "
+#~ "complexities of public procurement in Morocco. We provide services such "
+#~ "as market research, bid preparation, compliance support, and training to "
+#~ "ensure your success in this competitive sector."
+#~ msgstr ""
+#~ "Notre cabinet est spécialisé dans l'accompagnement des entreprises à "
+#~ "travers les complexités des marchés publics au Maroc. Nous proposons des "
+#~ "services tels que l'étude de marché, la préparation des offres, le "
+#~ "support de conformité et des formations pour garantir votre réussite dans "
+#~ "ce secteur concurrentiel."
+
+#~ msgid "What industries do you work with?"
+#~ msgstr "Avec quels secteurs d'activité travaillez-vous ?"
+
+#~ msgid ""
+#~ "We work with a wide range of industries, including construction, "
+#~ "technology, healthcare, manufacturing, and more. Our tailored approach "
+#~ "ensures that our services meet the unique needs of each industry."
+#~ msgstr ""
+#~ "Nous travaillons avec un large éventail de secteurs, notamment le BTP, la "
+#~ "technologie, la santé, l'industrie et bien d'autres. Notre approche sur "
+#~ "mesure garantit que nos services répondent aux besoins uniques de chaque "
+#~ "secteur."
+
+#~ msgid "Do you provide training for public procurement?"
+#~ msgstr "Proposez-vous des formations sur les marchés publics ?"
+
+#~ msgid ""
+#~ "Yes, we offer training and workshops designed to build your team’s "
+#~ "expertise in public procurement processes, ensuring compliance and "
+#~ "increasing your chances of success in bidding."
+#~ msgstr ""
+#~ "Oui, nous proposons des formations et des ateliers conçus pour renforcer "
+#~ "l'expertise de votre équipe dans les procédures de marchés publics, "
+#~ "garantissant la conformité et augmentant vos chances de succès lors des "
+#~ "candidatures."
+
+#~ msgid "How much does your services cost?"
+#~ msgstr "Combien coûtent vos services ?"
+
+#~ msgid "Our pricing model has three tiers."
+#~ msgstr "Notre grille tarifaire se compose de trois formules."
+
+#~ msgid "Public"
+#~ msgstr "Public"
+
+#~ msgid ""
+#~ "Access to search and limited tenders information without even an account."
+#~ msgstr ""
+#~ "Accès à la recherche et à des informations limitées sur les appels "
+#~ "d'offres, sans même avoir besoin d'un compte."
+
+#~ msgid "Startup"
+#~ msgstr "Startup"
+
+#~ msgid ""
+#~ "Access to advanced search, unlimited tenders information, limited files "
+#~ "downloads, favourites, ... with a free account."
+#~ msgstr ""
+#~ "Accès à la recherche avancée, aux informations illimitées sur les appels "
+#~ "d'offres, à un nombre limité de téléchargements de fichiers, aux "
+#~ "favoris, ... avec un compte gratuit."
+
+#~ msgid "Pro"
+#~ msgstr "Pro"
+
+#~ msgid ""
+#~ "Like Startup, with free unlimited files downloads, favourites, customized "
+#~ "notifications, ... with a paid account."
+#~ msgstr ""
+#~ "Comme la formule Startup, avec le téléchargement gratuit et illimité de "
+#~ "fichiers, les favoris, les notifications personnalisées, ... avec un "
+#~ "compte payant."
+
+#~ msgid ""
+#~ "You can also purchase extra services like Technical and Regulatory "
+#~ "support, Bidding preparation, ..."
+#~ msgstr ""
+#~ "Vous pouvez également souscrire des services complémentaires tels que "
+#~ "l'assistance technique et réglementaire, la préparation des "
+#~ "candidatures, ..."
+
+#~ msgid ""
+#~ "As every business is unique, we calculate the price to charge for our "
+#~ "services based on your business needs and goals."
+#~ msgstr ""
+#~ "Chaque entreprise étant unique, nous calculons le tarif de nos services "
+#~ "sur mesure, en fonction de vos besoins et de vos objectifs."
+
+#~ msgid "How do I get started with your services?"
+#~ msgstr "Comment commencer à utiliser vos services ?"
+
+#~ msgid ""
+#~ "Getting started is simple! Contact us through our website or give us a "
+#~ "call. We’ll schedule an initial consultation to understand your needs and "
+#~ "discuss how our services can help you achieve your goals."
+#~ msgstr ""
+#~ "C'est très simple ! Contactez-nous via notre site web ou par téléphone. "
+#~ "Nous organiserons une première consultation pour comprendre vos besoins "
+#~ "et déterminer comment nos services peuvent vous aider à atteindre vos "
+#~ "objectifs."
+
+#~ msgid "Question still unanswered ?"
+#~ msgstr "Vous n'avez pas trouvé réponse à votre question ?"
+
+#~ msgid "Contact Us"
+#~ msgstr "Contactez-nous"
+
+#~ msgid "Home of Public Procurement Market"
+#~ msgstr "Le portail des marchés publics"
+
+#~ msgid ""
+#~ "This page provides our essential legal information. Please review it to "
+#~ "understand your rights and our commitments."
+#~ msgstr ""
+#~ "Cette page regroupe nos informations légales essentielles. Veuillez la "
+#~ "consulter pour prendre connaissance de vos droits et de nos engagements."
+
+#~ msgid "Privacy Policy"
+#~ msgstr "Politique de confidentialité"
+
+#~ msgid "Terms of Service"
+#~ msgstr "Conditions générales d'utilisation"
+
+#~ msgid ""
+#~ "At eMarches.com, we value your privacy and are committed to safeguarding "
+#~ "your personal information. This Privacy Policy outlines the types of "
+#~ "information we collect, how we use it, and the measures we take to ensure "
+#~ "your data is handled securely and responsibly."
+#~ msgstr ""
+#~ "Chez eMarches.com, nous accordons une grande importance à la "
+#~ "confidentialité de vos données et nous nous engageons à protéger vos "
+#~ "informations personnelles. Cette politique de confidentialité détaille "
+#~ "les types d'informations que nous collectons, la manière dont nous les "
+#~ "utilisons ainsi que les mesures prises pour garantir un traitement "
+#~ "sécurisé et responsable de vos données."
+
+#~ msgid "Information We Collect"
+#~ msgstr "Données collectées"
+
+#~ msgid ""
+#~ "We only collect personal information explicitly provided by you. Examples "
+#~ "include your name, email address, phone number, and any other details you "
+#~ "submit through our contact forms or other interactions."
+#~ msgstr ""
+#~ "Nous ne collectons que les informations personnelles que vous nous "
+#~ "fournissez explicitement. Cela inclut par exemple votre nom, votre "
+#~ "adresse e-mail, votre numéro de téléphone et toute autre donnée transmise "
+#~ "via nos formulaires de contact ou lors de vos échanges avec nous."
+
+#~ msgid "For security purposes, we may also collect:"
+#~ msgstr ""
+#~ "À des fins de sécurité, nous sommes également susceptibles de collecter :"
+
+#~ msgid ""
+#~ "IP Address: Used to ensure safe access and prevent fraudulent activity."
+#~ msgstr ""
+#~ "Adresse IP : utilisée pour sécuriser l'accès et prévenir les activités "
+#~ "frauduleuses."
+
+#~ msgid ""
+#~ "User-Agent Information: A string sent by your browser or device that "
+#~ "helps identify the type of device, operating system, and browser being "
+#~ "used."
+#~ msgstr ""
+#~ "Informations User-Agent : une chaîne de caractères envoyée par votre "
+#~ "navigateur ou votre appareil qui permet d'identifier le type "
+#~ "d'équipement, le système d'exploitation et le navigateur utilisés."
+
+#~ msgid "Use of Collected Data"
+#~ msgstr "Utilisation des données collectées"
+
+#~ msgid ""
+#~ "The information you provide is used solely for the purposes for which it "
+#~ "was submitted, such as responding to inquiries or providing requested "
+#~ "services. In addition:"
+#~ msgstr ""
+#~ "Les informations que vous nous fournissez sont utilisées exclusivement "
+#~ "aux fins pour lesquelles elles ont été transmises, telles que la réponse "
+#~ "à vos demandes ou la fourniture des services sollicités. De plus :"
+
+#~ msgid ""
+#~ "We may send you commercial offers if, and only if, you have explicitly "
+#~ "consented by checking the relevant box on our forms (this box is "
+#~ "unchecked by default)."
+#~ msgstr ""
+#~ "Nous ne vous enverrons des offres commerciales que si vous y avez "
+#~ "expressément consenti en cochant la case dédiée sur nos formulaires (case "
+#~ "décochée par défaut)."
+
+#~ msgid ""
+#~ "We do not sell, trade, or share your data with third parties for "
+#~ "marketing purposes."
+#~ msgstr ""
+#~ "Nous ne vendons, ne louons ni ne partageons vos données avec des tiers à "
+#~ "des fins marketing."
+
+#~ msgid "Data Security"
+#~ msgstr "Sécurité des données"
+
+#~ msgid ""
+#~ "We take every reasonable measure to protect your personal information. "
+#~ "This includes implementing technical and organizational safeguards to "
+#~ "prevent unauthorized access, loss, or misuse of data."
+#~ msgstr ""
+#~ "Nous prenons toutes les mesures raisonnables pour protéger vos "
+#~ "informations personnelles. Cela comprend la mise en place de garanties "
+#~ "techniques et organisationnelles visant à empêcher tout accès non "
+#~ "autorisé, perte ou utilisation abusive de vos données."
+
+#~ msgid "User Rights"
+#~ msgstr "Droits des utilisateurs"
+
+#~ msgid ""
+#~ "You have the right to control how your data is used. Specifically, you "
+#~ "may:"
+#~ msgstr ""
+#~ "Vous disposez d'un droit de contrôle sur l'utilisation de vos données. "
+#~ "Plus précisément, vous pouvez :"
+
+#~ msgid "Opt out of receiving promotional communications at any time."
+#~ msgstr ""
+#~ "Vous désabonner de la réception de communications promotionnelles à tout "
+#~ "moment."
+
+#~ msgid ""
+#~ "Request access to, correction of, or deletion of your personal data, "
+#~ "subject to applicable legal obligations."
+#~ msgstr ""
+#~ "Demander l'accès, la rectification ou la suppression de vos données "
+#~ "personnelles, sous réserve des obligations légales applicables."
+
+#~ msgid "Compliance with Laws"
+#~ msgstr "Conformité aux lois"
+
+#~ msgid ""
+#~ "We handle all user data in accordance with applicable laws and "
+#~ "regulations in Morocco."
+#~ msgstr ""
+#~ "Nous traitons toutes les données des utilisateurs conformément aux lois "
+#~ "et réglementations en vigueur au Maroc."
+
+#~ msgid "Changes to this Policy"
+#~ msgstr "Modifications de la présente politique"
+
+#~ msgid ""
+#~ "We reserve the right to update this Privacy Policy to reflect changes in "
+#~ "our practices or legal requirements. Updates will be communicated clearly "
+#~ "and will take effect immediately upon publication."
+#~ msgstr ""
+#~ "Nous nous réservons le droit de mettre à jour cette politique de "
+#~ "confidentialité afin de refléter tout changement dans nos pratiques ou "
+#~ "nos obligations légales. Les mises à jour seront communiquées clairement "
+#~ "et prendront effet dès leur publication."
+
+#~ msgid ""
+#~ "If you have any questions or concerns about this Privacy Policy or how we "
+#~ "handle your data, please contact us at"
+#~ msgstr ""
+#~ "Si vous avez des questions ou des inquiétudes concernant cette politique "
+#~ "de confidentialité ou la gestion de vos données, veuillez nous contacter à"
+
+#~ msgid "Effective Date:"
+#~ msgstr "Date d'entrée en vigueur :"
+
+#~ msgid ""
+#~ "These Terms of Service ('Terms') govern your use of our website and "
+#~ "services. By accessing or using our website, you agree to these Terms. "
+#~ "Please read them carefully."
+#~ msgstr ""
+#~ "Les présentes conditions générales d'utilisation (« Conditions ») "
+#~ "régissent votre utilisation de notre site web et de nos services. En "
+#~ "accédant à notre site ou en l'utilisant, vous acceptez ces Conditions. "
+#~ "Veuillez les lire attentivement."
+
+#~ msgid "Use of the Website"
+#~ msgstr "Utilisation du site web"
+
+#~ msgid ""
+#~ "Our website and its content are provided for informational and personal "
+#~ "use only. You agree to use the website in compliance with all applicable "
+#~ "laws and regulations. You must not:"
+#~ msgstr ""
+#~ "Notre site web et son contenu sont fournis à titre informatif et "
+#~ "personnel uniquement. Vous acceptez d'utiliser le site dans le respect de "
+#~ "l'ensemble des lois et réglementations applicables. Vous ne devez pas :"
+
+#~ msgid "Engage in any unlawful or fraudulent activity."
+#~ msgstr "Engager des activités illégales ou frauduleuses."
+
+#~ msgid ""
+#~ "Disrupt or attempt to interfere with the website’s functionality or "
+#~ "security."
+#~ msgstr ""
+#~ "Perturber ou tenter de porter atteinte au fonctionnement ou à la sécurité "
+#~ "du site web."
+
+#~ msgid ""
+#~ "Copy, reproduce, or distribute any content without our explicit consent."
+#~ msgstr ""
+#~ "Copier, reproduire ou distribuer tout contenu sans notre consentement "
+#~ "explicite."
+
+#~ msgid "Intellectual Property"
+#~ msgstr "Propriété intellectuelle"
+
+#~ msgid ""
+#~ "All content on this website, including text, images, graphics, logos, and "
+#~ "code, is our property or licensed to us. Unauthorized use of this content "
+#~ "is strictly prohibited."
+#~ msgstr ""
+#~ "L'ensemble du contenu de ce site web, y compris les textes, images, "
+#~ "graphiques, logos et codes, est notre propriété ou fait l'objet d'une "
+#~ "licence accordée à notre nom. Toute utilisation non autorisée de ce "
+#~ "contenu est strictement interdite."
+
+#~ msgid "Third-Party Links"
+#~ msgstr "Liens vers des tiers"
+
+#~ msgid ""
+#~ "Our website may contain links to third-party websites. These links are "
+#~ "provided for convenience only. We are not responsible for the content, "
+#~ "policies, or practices of third-party websites, and your use of those "
+#~ "websites is at your own risk."
+#~ msgstr ""
+#~ "Notre site web peut contenir des liens vers des sites tiers. Ces liens "
+#~ "sont fournis uniquement à titre de commodité. Nous ne sommes pas "
+#~ "responsables du contenu, des politiques ou des pratiques des sites tiers, "
+#~ "et votre utilisation de ces sites se fait à vos propres risques."
+
+#~ msgid "Disclaimer of Warranties"
+#~ msgstr "Exclusion de garanties"
+
+#~ msgid ""
+#~ "We provide this website on an 'as is' and 'as available' basis. We do not "
+#~ "guarantee that the website will be error-free, secure, or uninterrupted. "
+#~ "To the fullest extent permitted by law, we disclaim all warranties, "
+#~ "express or implied."
+#~ msgstr ""
+#~ "Nous fournissons ce site web « en l'état » et « selon la disponibilité ». "
+#~ "Nous ne garantissons pas que le site sera exempt d'erreurs, sécurisé ou "
+#~ "ininterrompu. Dans toute la mesure permise par la loi, nous déclinons "
+#~ "toute garantie, expresse ou implicite."
+
+#~ msgid "Limitation of Liability"
+#~ msgstr "Limitation de responsabilité"
+
+#~ msgid ""
+#~ "We are not liable for any direct, indirect, incidental, or consequential "
+#~ "damages arising from your use of our website or services, even if we have "
+#~ "been advised of the possibility of such damages."
+#~ msgstr ""
+#~ "Nous ne saurions être tenus responsables de tout dommage direct, "
+#~ "indirect, accessoire ou consécutif découlant de votre utilisation de "
+#~ "notre site web ou de nos services, même si nous avons été informés de la "
+#~ "possibilité de tels dommages."
+
+#~ msgid "Termination"
+#~ msgstr "Résiliation"
+
+#~ msgid ""
+#~ "We reserve the right to terminate your access to our website at any time, "
+#~ "without notice, for any reason, including breach of these Terms."
+#~ msgstr ""
+#~ "Nous nous réservons le droit de suspendre votre accès à notre site web à "
+#~ "tout moment, sans préavis, pour tout motif, y compris en cas de violation "
+#~ "des présentes Conditions."
+
+#~ msgid "Governing Law"
+#~ msgstr "Droit applicable"
+
+#~ msgid ""
+#~ "These Terms are governed by the laws of Morocco. Any disputes related to "
+#~ "these Terms will be resolved exclusively in the courts of Morocco."
+#~ msgstr ""
+#~ "Les présentes Conditions sont régies par le droit marocain. Tout litige "
+#~ "relatif aux présentes Conditions sera tranché exclusivement par les "
+#~ "tribunaux du Maroc."
+
+#~ msgid "Changes to the Terms"
+#~ msgstr "Modifications des conditions"
+
+#~ msgid ""
+#~ "We may update these Terms from time to time. If we make significant "
+#~ "changes, we will notify you by posting the updated Terms on this page. "
+#~ "Continued use of the website after changes constitutes your acceptance of "
+#~ "the revised Terms."
+#~ msgstr ""
+#~ "Nous pouvons mettre à jour ces Conditions de temps à autre. En cas de "
+#~ "modification importante, nous vous en informerons en publiant les "
+#~ "Conditions mises à jour sur cette page. L'utilisation continue du site "
+#~ "web après publication des modifications vaut acceptation des Conditions "
+#~ "révisées."
+
+#~ msgid ""
+#~ "If you have any questions or concerns about these Terms, please contact "
+#~ "us at"
+#~ msgstr ""
+#~ "Si vous avez des questions ou des inquiétudes concernant ces Conditions, "
+#~ "veuillez nous contacter à"
+
+#~ msgid ""
+#~ "We are committed to providing high-quality services and ensuring customer "
+#~ "satisfaction. Our guarantee policy outlines the terms under which we "
+#~ "stand by our commitments."
+#~ msgstr ""
+#~ "Nous nous engageons à fournir des services de haute qualité et à garantir "
+#~ "la satisfaction de nos clients. Notre politique de garantie définit les "
+#~ "conditions dans lesquelles nous honorons nos engagements."
+
+#~ msgid "Service Quality"
+#~ msgstr "Qualité de service"
+
+#~ msgid ""
+#~ "We guarantee that all services provided are delivered with "
+#~ "professionalism, care, and accuracy to the best of our ability."
+#~ msgstr ""
+#~ "Nous garantissons que tous les services fournis sont exécutés avec "
+#~ "professionnalisme, soin et rigueur, au mieux de nos capacités."
+
+#~ msgid "User Satisfaction"
+#~ msgstr "Satisfaction des utilisateurs"
+
+#~ msgid ""
+#~ "If you are dissatisfied with any aspect of our services, please contact "
+#~ "us promptly. We will make every reasonable effort to address your "
+#~ "concerns and rectify any issues."
+#~ msgstr ""
+#~ "Si vous êtes satisfait de tout aspect de nos services, veuillez nous "
+#~ "contacter rapidement. Nous ferons tous les efforts raisonnables pour "
+#~ "répondre à vos préoccupations et corriger tout problème."
+
+#~ msgid "Limitations of Guarantee"
+#~ msgstr "Limitations de garantie"
+
+#~ msgid "This guarantee does not cover issues arising from:"
+#~ msgstr "Cette garantie ne couvre pas les problèmes découlant de :"
+
+#~ msgid "User-provided errors or misinformation."
+#~ msgstr "Erreurs ou fausses informations fournies par l'utilisateur."
+
+#~ msgid ""
+#~ "Technical issues beyond our control, such as internet outages or third-"
+#~ "party service failures."
+#~ msgstr ""
+#~ "Problèmes techniques hors de notre contrôle, tels que des coupures "
+#~ "d'Internet ou des défaillances de services tiers."
+
+#~ msgid "Unauthorized use or modification of our services."
+#~ msgstr "Utilisation ou modification non autorisée de nos services."
+
+#~ msgid "Requesting Support"
+#~ msgstr "Demande d'assistance"
+
+#~ msgid ""
+#~ "To report a problem or request support, please contact us through the "
+#~ "provided channels. Include detailed information about the issue to help "
+#~ "us resolve it efficiently."
+#~ msgstr ""
+#~ "Pour signaler un problème ou demander de l'assistance, veuillez nous "
+#~ "contacter via les canaux mis à disposition. Veuillez inclure des "
+#~ "informations détaillées sur le problème afin de nous aider à le résoudre "
+#~ "efficacement."
+
+#~ msgid "No Financial Liability"
+#~ msgstr "Absence de responsabilité financière"
+
+#~ msgid ""
+#~ "Our guarantee is limited to addressing issues within the scope of our "
+#~ "services. We are not liable for any indirect or consequential damages "
+#~ "resulting from the use or unavailability of our services."
+#~ msgstr ""
+#~ "Notre garantie se limite au traitement des problèmes entrant dans le "
+#~ "cadre de nos services. Nous ne sommes pas responsables des dommages "
+#~ "indirects ou consécutifs résultant de l'utilisation ou de "
+#~ "l'indisponibilité de nos services."
+
+#~ msgid "Clear current"
+#~ msgstr "Effacer le fichier actuel"
+
+#~ msgid ""
+#~ "eMarches portal. Morocco Public Procurement Market. Access to public "
+#~ "Tenders and Puchase orders. Paperless dematerialized procedure"
+#~ msgstr ""
+#~ "Portail eMarches. Marché des commandes publiques au Maroc. Accès aux "
+#~ "appels d'offres et bons de commande publics. Procédure dématérialisée"
+
+#~ msgid "Official portal down"
+#~ msgstr "Portail officiel indisponible"
+
+#, python-format
+#~ msgid ""
+#~ "The <a href=\"%(url)s\">Marchés Publics</a> portal is experiencing down "
+#~ "times these days"
+#~ msgstr ""
+#~ "Le portail des <a href=\"%(url)s\">Marchés Publics</a> connait des "
+#~ "perturbations ces derniers jours"

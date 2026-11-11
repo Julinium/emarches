@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="card shadow shadow-1 bg-warning-subtle mb-4"
-     aria-label="{% trans 'Official portal down' %}">
+     aria-label="{% trans 'Portal troubles' %}">
     <div class="container-fluid p-2">
         <div class="d-flex align-items-top gap-3">
             <div class="flex-shrink-0 pt-1 pt-md-0">
@@ -9,14 +9,10 @@
             </div>
             <div class="flex-grow-1">
                 <div>
-                    <strong class="">{% trans "Official portal down" %}.</strong>
+                    <strong class="">{% trans "Portal troubles" %}.</strong>
                 </div>
                 <div> 
-                    <span class="small">
-                        {% autoescape off %}
-                            {% blocktrans with url='https://www.marchespublics.gov.ma/' %}The <a href="{{ url }}" target="_blank">Marchés Publics</a> portal is experiencing down times these days{% endblocktrans %}.
-                        {% endautoescape %}
-                    </span>
+                    <span class="small">{% trans "The official portal has recently experienced down times" %}.</span>
                     <span class="small">{% trans "Data on our website may not be updated as soon as usual" %}.</span>                   
                 </div>
             </div>

@@ -293,7 +293,7 @@ class Tender(models.Model):
     chrono = models.CharField(max_length=16, blank=True, null=True)
     title = models.TextField(blank=True, null=True, verbose_name=_("Title"))
     reference = models.CharField(max_length=512, blank=True, null=True, verbose_name=_("Reference"))
-    published = models.DateField(blank=True, null=True, db_index=True, verbose_name=_("Date published"))
+    published = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name=_("Date published"))
     deadline = models.DateTimeField(blank=True, null=True, db_index=True, verbose_name=_("Bidding deadline"))
 
     lots_count = models.SmallIntegerField(blank=True, null=True, default=0, verbose_name=_("Lots count"))

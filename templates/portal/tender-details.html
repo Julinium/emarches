@@ -26,7 +26,7 @@
                     </span>
                 </span>
                 {% if tender.expired %}
-                    <span class="text-bg-secondary rounded fw-bold p-1 ms-2">
+                    <span class="text-bg-secondary rounded p-1 ms-2 fs-6">
                         <span><i class="{{ bicons.expired }} me-1"></i></span>
                         <span>{% trans 'EXPIRED' %}</span>
                     </span>
@@ -115,12 +115,9 @@
             {% trans 'days' as unit %}
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-days_to_go' val_value=tender.days_to_go key_value=key_value uni_value=unit ico_class=bicons.days_to_go val_class='' border='bottom' liner='oneline' mask='no' %}
             
-            {% timezone "Africa/Casablanca" %}
-                {% trans 'Deadline' as key_value %}
-                {% trans 'Morocco time' as unit %}
-                {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-deadline' val_value=tender.deadline key_value=key_value uni_value=unit ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' mask='no' %}
-            {% endtimezone %}
-
+            {% trans 'Deadline' as key_value %}
+            {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-deadline' val_value=tender.deadline key_value=key_value ico_class=bicons.deadline val_class='fw-bold' border='bottom' liner='oneline' mask='no' %}
+            
             {% trans 'Total Estimate' as key_value %}
             {% include 'base/snippets/ico-key-val.html' with id_value=tender.chrono|add:'-estimate' val_value=tender.estimate key_value=key_value uni_value='' ico_class=bicons.estimate val_class='fw-bold' border='bottom' liner='oneline' mask='no' %}
             
@@ -219,23 +216,20 @@
                     {% include 'portal/snippets/tenders/qu-ag.html' with caption=qualifs_caption objects=tender.lots.first.qualifs.all kind='qualif' ico_class=bicons.qualifs_ico val_class='small' border='bottom' liner='' %}
                 {% endif %}
 
-                {% timezone "Africa/Casablanca" %}
-                    {% trans 'Morocco time' as unit %}
-                    {% if tender.lots.first.samples.all %}
-                        {% trans 'Required Samples' as samples_caption %}
-                        {% include 'portal/snippets/tenders/qu-ag.html' with caption=samples_caption|add:' - '|add:unit objects=tender.lots.first.samples.all kind='sample' ico_class=bicons.samples_ico val_class='small' border='bottom' liner='' %}
-                    {% endif %}
+                {% if tender.lots.first.samples.all %}
+                    {% trans 'Required Samples' as samples_caption %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=samples_caption objects=tender.lots.first.samples.all kind='sample' ico_class=bicons.samples_ico val_class='small' border='bottom' liner='' %}
+                {% endif %}
 
-                    {% if tender.lots.first.meetings.all %}
-                        {% trans 'Scheduled Meetings' as meetings_caption %}
-                        {% include 'portal/snippets/tenders/qu-ag.html' with caption=meetings_caption|add:' - '|add:unit objects=tender.lots.first.meetings.all kind='meeting' ico_class=bicons.meetings_ico val_class='small' border='bottom' liner='' %}
-                    {% endif %}
+                {% if tender.lots.first.meetings.all %}
+                    {% trans 'Scheduled Meetings' as meetings_caption %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=meetings_caption objects=tender.lots.first.meetings.all kind='meeting' ico_class=bicons.meetings_ico val_class='small' border='bottom' liner='' %}
+                {% endif %}
 
-                    {% if tender.lots.first.visits.all %}                    
-                        {% trans 'Site Survey' as visits_caption %}
-                        {% include 'portal/snippets/tenders/qu-ag.html' with caption=visits_caption|add:' - '|add:unit objects=tender.lots.first.visits.all kind='visit' ico_class=bicons.visits_ico val_class='small' border='bottom' liner='' %}
-                    {% endif %}
-                {% endtimezone %}
+                {% if tender.lots.first.visits.all %}                    
+                    {% trans 'Site Survey' as visits_caption %}
+                    {% include 'portal/snippets/tenders/qu-ag.html' with caption=visits_caption objects=tender.lots.first.visits.all kind='visit' ico_class=bicons.visits_ico val_class='small' border='bottom' liner='' %}
+                {% endif %}
             {% endif %}
 
             {% if tender.lots_count > 1 %}

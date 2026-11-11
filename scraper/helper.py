@@ -176,9 +176,10 @@ def getDriver(url=''):
             options.binary_location = chrome_bin
         if chromedriver_bin:
             service = Service(executable_path=chromedriver_bin)
-        
-    if C.HEADLESS_MODE:
+    
+    if C.HEADLESS_MODE or not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
         options.add_argument('--headless')
+
     options.timeouts = {'pageLoad': C.LOADING_TIMEOUT, 'implicit': 60000}
     options.add_argument("--window-size=1920,1080")
     printMessage('DEBUG', 'h.getDriver', 'Launching instance of Chromium browser ...\n')
@@ -243,7 +244,7 @@ def printBanner():
 
 
 def getUa():
-    rua = 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'
+    rua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
     if len(C.USER_AGENTS) > 0 : rua = C.USER_AGENTS[random.randint(0, len(C.USER_AGENTS)-1)]
     return rua
 
@@ -274,22 +275,32 @@ def syncDir(
     try:
         local_dir = os.path.abspath(local_dir)
         source_path = local_dir if local_dir.endswith("/") else local_dir + "/"
-        printMessage('DEBUG', 'h.syncDir', f'Started syncing local [{source_path.split("/")[-1]}] to remote [{remote_dir.split("/")[-1]}] ...')
+        printMessage('DEBUG', 'h.syncDir', f'Started syncing local [{source_path.split("/")[-2]}] to remote [{remote_dir.split("/")[-1]}] ...')
 
         target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
         rsync_cmd = ["rsync", "-avuhP"]
-        if remove_source: rsync_cmd.extend(["--remove-source-files"])
+        # if remove_source: rsync_cmd.extend(["--remove-source-files"])
         rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
 
         printMessage('DEBUG', 'h.syncDir', f'Executing rsync command ...')
-        result = subprocess.run(rsync_cmd, check=True, capture_output=True, text=True)
+        lp = f"\n{20*'='}\n"
+        printMessage('TRACE', 'h.syncDir', f'{lp}Command to execute:\n{rsync_cmd}{lp}', 2, 2)
+        result = subprocess.run(
+            rsync_cmd, 
+            check=True,
+            stdout=subprocess.DEVNULL, 
+            stderr=subprocess.DEVNULL, 
+            timeout=120
+            )
+        # result = subprocess.run(rsync_cmd, check=True, text=True)
         printMessage('INFO', 'h.syncDir', f'Successfully saved DCE files to server.')
 
         if result.stderr: 
-            printMessage('WARN', 'h.syncDir', f'Command error output: \n{result.stderr}\n', 3, 3)
-            printMessage('TRACE', 'h.syncDir', f'Command output: \n{result.stdout}\n', 3, 3)
-        return result.stdout
+            printMessage('WARN', 'h.syncDir', f'{lp}Command error output: \n{result.stderr}{lp}', 3, 3)
+            printMessage('TRACE', 'h.syncDir', f'{lp}Command output: \n{result.stdout}{lp}', 3, 3)
+            return None
+        return 1 #result.stdout
 
     except subprocess.CalledProcessError as e:
         printMessage('ERROR', 'h.syncDir', f'Error during rsync: {e}')

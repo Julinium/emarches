@@ -5,6 +5,7 @@ import time
 import traceback
 from datetime import datetime, timedelta
 from decimal import Decimal
+from urllib.parse import urljoin
 
 import pytz
 import requests
@@ -17,18 +18,21 @@ from scraper import constants as C
 from scraper.helper import getUa, printMessage, getDateTime, getAmount
 
 LISTING_BASE_URL = C.BDC_LISTING_BASE_URL
-LISTING_PAGE_PARAM = "page"
+LISTING_PAGE_PARAM = "?page"
 BDC_DETAILS_HOST = C.BDC_DETAILS_HOST
 
 RESULTS_BASE_URL = C.BDC_RESULTS_BASE_URL
-RESULTS_PAGE_PARAM = "page"
+RESULTS_PAGE_PARAM = "?page"
+LINE_PAD = f"\n{20*'='}\n"
 
 rabat_tz = pytz.timezone("Africa/Casablanca")
 
 
 def get_headers():
+    rua = getUa()
+    printMessage('TRACE', 'b.get_headers', f"Using UA: {LINE_PAD}{rua}{LINE_PAD} ...", 2)
     return {
-        "User-Agent": getUa(),
+        "User-Agent": rua,
         "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8"
     }
 
@@ -37,11 +41,14 @@ def safe_text(element=None, fallback=None):
     return element.get_text(strip=True) if element else fallback
 
 
-def fetch_page(url, params={}, retries=3):
+def fetch_page(url, params={}, retries=3, timeout=60):
     for attempt in range(retries):
         try:
-            r = requests.get(url, headers=get_headers(), params=params, timeout=15)
+            printMessage('TRACE', 'b.fetch_page', f"Getting page at: {url}", 2)
+            printMessage('TRACE', 'b.fetch_page', f"... Using params: \n{params} ...", 2)
+            r = requests.get(url, headers=get_headers(), params=params, timeout=timeout)
             s = r.status_code
+            printMessage('TRACE', 'b.fetch_page', f"Request header: {LINE_PAD}{r.headers}{LINE_PAD} ...", 2)
             if s == 200:
                 return r.text
             else:
@@ -222,14 +229,13 @@ def get_results_bdc(card):
     return bdc_result
 
 
-def has_next_page(soup):
-    next_link = soup.find("a", string=lambda x: x and ("Suivant" in x))
-    return next_link is not None
+def next_page_link(soup):
+    return soup.find("a", string=lambda x: x and ("Suivant" in x))
 
 
 def save_bdcs(published_since_days=1):
     
-    printMessage('INFO', 'b.save_bdcs', "Started browsing Ongoing POs ...")
+    printMessage('INFO', 'b.save_bdcs', "Started browsing running POs ...", 4)
 
     truncater = 32
     errors_happened = False
@@ -242,9 +248,11 @@ def save_bdcs(published_since_days=1):
 
     page = 1
     while True:
-        url = f"{LISTING_BASE_URL}&{LISTING_PAGE_PARAM}={page}"
+        url = f"{LISTING_BASE_URL}{LISTING_PAGE_PARAM}={page}"
         assnna = datetime.now().date() - timedelta(days=published_since_days)
         assnna_str = assnna.strftime('%Y-%m-%d')
+        
+        printMessage('TRACE', 'b.save_bdcs', f"Fetching URL {LINE_PAD}{url}{LINE_PAD} ...", 2)
 
         params = {
             "search_consultation_entreprise[keyword]": "",
@@ -408,7 +416,7 @@ def save_bdcs(published_since_days=1):
 
             handled_items += 1
 
-        if not has_next_page(soup):
+        if not next_page_link(soup):
             printMessage('INFO', 'b.save_bdcs', "[✔✔✔✔✔] Reached last POs page.")
             printMessage('INFO', 'b.save_bdcs', f"Handled items: { handled_items }: \n\t+ P. Orders: { bdc_created } \n\t+ Clients: { clients_created } \n\t+ Categories: { categorys_created } \n\t+ Articles: { articles_created }")
 
@@ -420,42 +428,40 @@ def save_bdcs(published_since_days=1):
 
 
 def save_results(published_since_days=1):
-    print('\n\n')
-    printMessage('INFO', 'b.save_results', "Started Results browsing ...")
-
+    printMessage('INFO', 'b.save_results', "Started browsing POs results ...", 4)    
+    assnna = datetime.now().date() - timedelta(days=published_since_days)
+    assnna_str = assnna.strftime('%Y-%m-%d')
+    printMessage('INFO', 'b.save_results', f"Browsing items published since: { published_since_days } days on ...")
+    
     errors_happened = False
     handled_items = 0
     clients_created = 0
     bdc_created = 0
 
     page = 1
+    url_res = f"{RESULTS_BASE_URL}"
     while True:
-        url = f"{RESULTS_BASE_URL}&{RESULTS_PAGE_PARAM}={page}"
-        assnna = datetime.now().date() - timedelta(days=published_since_days)
-        assnna_str = assnna.strftime('%Y-%m-%d')
-        params = {
-            "search_consultation_resultats[keyword]" : '',
-            "search_consultation_resultats[reference]" : '',
-            "search_consultation_resultats[objet]" : '',
-            "search_consultation_resultats[dateLimitePublicationStart]" : assnna_str,
-            "search_consultation_resultats[dateLimitePublicationEnd]" : '',
-            "search_consultation_resultats[dateMiseEnLigneStart]" : '',
-            "search_consultation_resultats[dateMiseEnLigneEnd]" : '',
-            "search_consultation_resultats[categorie]" : '',
-            "search_consultation_resultats[naturePrestation]" : '',
-            "search_consultation_resultats[acheteur]" : '',
-            "search_consultation_resultats[service]" : '',
-            "search_consultation_resultats[lieuExecution]" : '',
-            "search_consultation_resultats[pageSize]" : '50'
+        printMessage('DEBUG', 'b.save_results', f"Fetching URL for page {page} ...", 2)
+        params_res = {
+            "search_consultation_resultats[keyword]": "",
+            "search_consultation_resultats[reference]": "",
+            "search_consultation_resultats[objet]": "",
+            "search_consultation_resultats[dateLimitePublicationStart]": assnna_str,
+            "search_consultation_resultats[dateLimitePublicationEnd]": "",
+            "search_consultation_resultats[dateMiseEnLigneStart]": "",
+            "search_consultation_resultats[dateMiseEnLigneEnd]": "",
+            "search_consultation_resultats[categorie]": "",
+            "search_consultation_resultats[naturePrestation]": "",
+            "search_consultation_resultats[acheteur]": "",
+            "search_consultation_resultats[service]": "",
+            "search_consultation_resultats[lieuExecution]": "",
+            "search_consultation_resultats[pageSize]": "50",
+            "page": str(page)
         }
-
-        # print('\n\n====================')
-        # print('Searching Results with [dateLimitePublicationStart] = ', assnna_str)
-        # print('====================\n\n')
         
         printMessage('INFO', 'b.save_results', f"Fetching Results page: { page }")
 
-        html = fetch_page(url, params=params)
+        html = fetch_page(url_res, params=params_res)
         if not html:
             errors_happened = True
             break
@@ -481,11 +487,13 @@ def save_results(published_since_days=1):
 
         cards = container.select("article.bdc-card")
 
-        if len(cards) < 1: printMessage('WARN', 'b.save_results', f"No items were found in page { page }")
+        cl = len(cards)
+        if cl < 1: 
+            printMessage('WARN', 'b.save_results', f"No items were found in page { page }")
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'b.save_results', f"Fetching item { i }/{len(cards)} from page { page }")
+            printMessage('INFO', 'b.save_results', f"Fetching item { i }/{cl} from page { page }", 1)
             try:
                 item = get_results_bdc(card)
 
@@ -516,8 +524,7 @@ def save_results(published_since_days=1):
                 errors_happened = True
 
             handled_items += 1
-
-        if not has_next_page(soup):
+        if not next_page_link(soup):
             printMessage('INFO', 'b.save_results', "[✔✔✔✔✔] Reached last Results page.")
             printMessage('INFO', 'b.save_results', f"Handled items: { handled_items }. +P.Orders: { bdc_created }. +Clients: { clients_created }")
             break

@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load paraminos %}
 
-<button class="btn btn-light py-1 mx-1" type="button" 
+<button class="btn btn-outline-secondary py-1 mx-1" type="button" 
         data-bs-toggle="modal" data-bs-target="#searchModal"
         data-bs-toggle="tooltip"
         title="{% trans 'Serach Customers' %}">
@@ -9,7 +9,7 @@
 </button>
 
 
-<form action="{% url 'crm_customer_list' %}">
+<form action="{% url 'crm_customer_list' %}" onsubmit="stripEmptyFields(this)">
     <div class="modal fade" id="searchModal" tabindex="-1" 
         aria-labelledby="searchModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable">
@@ -123,8 +123,18 @@
 </form>
 
 <script>
-    const myModal = document.getElementById('searchModal');
-    myModal.addEventListener('shown.bs.modal', function () {
+    const modalino = document.getElementById('searchModal');
+    modalino.addEventListener('shown.bs.modal', function () {
         document.getElementById('search_input').focus();
     });
+
+    function stripEmptyFields(form) {
+        for (const el of form.elements) {
+            if (!el.name) continue;
+
+            if (el.value.trim() === ""){
+                el.disabled = true;
+            }
+        }
+    }
 </script>
