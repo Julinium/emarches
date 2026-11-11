@@ -11,7 +11,7 @@ django.setup()
 
 def main():
     from bonner import save_bdcs, save_results
-    # save_bdcs(15)
+    save_bdcs(15)
     save_results(15)
     pass
 

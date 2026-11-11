@@ -22,15 +22,15 @@ LISTING_PAGE_PARAM = "?page"
 BDC_DETAILS_HOST = C.BDC_DETAILS_HOST
 
 RESULTS_BASE_URL = C.BDC_RESULTS_BASE_URL
-RESULTS_PAGE_PARAM = "?page"
-LINE_PAD = f"\n{20*'='}\n"
+# RESULTS_PAGE_PARAM = "?page"
+# LINE_PAD = f"\n{20*'='}\n"
 
 rabat_tz = pytz.timezone("Africa/Casablanca")
 
 
 def get_headers():
     rua = getUa()
-    printMessage('TRACE', 'b.get_headers', f"Using UA: {LINE_PAD}{rua}{LINE_PAD} ...", 2)
+    printMessage('TRACE', 'b.get_headers', f"Using UA: {rua}", 2)
     return {
         "User-Agent": rua,
         "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8"
@@ -48,7 +48,7 @@ def fetch_page(url, params={}, retries=3, timeout=60):
             printMessage('TRACE', 'b.fetch_page', f"... Using params: \n{params} ...", 2)
             r = requests.get(url, headers=get_headers(), params=params, timeout=timeout)
             s = r.status_code
-            printMessage('TRACE', 'b.fetch_page', f"Request header: {LINE_PAD}{r.headers}{LINE_PAD} ...", 2)
+            printMessage('TRACE', 'b.fetch_page', f"Request header: {r.headers}", 2)
             if s == 200:
                 return r.text
             else:
@@ -252,7 +252,7 @@ def save_bdcs(published_since_days=1):
         assnna = datetime.now().date() - timedelta(days=published_since_days)
         assnna_str = assnna.strftime('%Y-%m-%d')
         
-        printMessage('TRACE', 'b.save_bdcs', f"Fetching URL {LINE_PAD}{url}{LINE_PAD} ...", 2)
+        printMessage('TRACE', 'b.save_bdcs', f"Fetching URL {url} ...", 2)
 
         params = {
             "search_consultation_entreprise[keyword]": "",

@@ -36,7 +36,7 @@ TENDER_FULL_PROGRESS_DAYS = settings.TENDER_FULL_PROGRESS_DAYS
 TENDERS_ITEMS_PER_PAGE = settings.TENDERS_ITEMS_PER_PAGE
 TENDERS_DEFAULT_RESULTS_PAST = settings.TENDERS_DEFAULT_RESULTS_PAST
 CLIENTS_ITEMS_PER_PAGE = 20
-TENDERS_ORDERING_FIELD = "deadline"
+TENDERS_ORDERING_FIELD = "ddl"
 SHOW_TODAYS_EXPIRED = True
 SHOW_CANCELLED = True
 DCE_SHOW_MODAL = True
@@ -340,32 +340,69 @@ def tender_list(request):
     all_tenders = Tender.objects.all()
     tenders, filters = filter_tenders(all_tenders, query_dict, request.user)
 
-    sort = query_dict["sort"]
+    # sort = query_dict["sort"]
 
-    allowed_keys = [
-        "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
-        "minutes_end", "-minutes_end", "published", "-published", 
-        "views_count", "-views_count", "downloads_count", "-downloads_count", 
-        # "favorites_count", "-favorites_count"
-        ]
+    # allowed_keys = [
+    #     "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
+    #     "minutes_end", "-minutes_end", "published", "-published", 
+    #     "views_count", "-views_count", "downloads_count", "-downloads_count", 
+    #     # "favorites_count", "-favorites_count",
+    #     "ddl", "-ddl", "est", "-est", "gua", "-gua",        
+    #     "res", "-res", "pub", "-pub", "vws", "-vws", "dnl","-dnl",        
+    # ]
 
-    if sort not in allowed_keys: sort = None
+    key_map = {
+        "ddl": "-deadline", 
+        "-ddl": "deadline", 
+        "est": "-estimate", 
+        "-est": "estimate", 
+        "gua": "-bond", 
+        "-gua": "bond",         
+        "res": "-minutes_end", 
+        "-res": "minutes_end", 
+        "pub": "-published", 
+        "-pub": "published", 
+        "vws": "-views_count", 
+        "-vws": "views_count", 
+        "dnl": "-downloads_count", 
+        "-dnl": "downloads_count", 
+        # "fav": "-favorites_count", 
+        # "-fav": "favorites_count",
+        # "deadline": "deadline", 
+        # "-deadline": "-deadline", 
+        # "estimate": "-estimate", 
+        # "-estimate": "estimate", 
+        # "bond": "-bond", 
+        # "-bond": "bond",         
+        # "minutes_end": "minutes_end", 
+        # "-minutes_end": "-minutes_end", 
+        # "published": "published", 
+        # "-published": "-published", 
+        # "views_count": "-views_count", 
+        # "-views_count": "views_count", 
+        # "downloads_count": "downloads_count", 
+        # "-downloads_count": "-downloads_count", 
+    }
 
-    if sort and sort != "":
-        reversed_keys = [
-            "published", "-published", "views_count", "-views_count", 
-            "downloads_count", "-downloads_count", 
-            # "favorites_count", "-favorites_count"
-            ]
-        if sort in reversed_keys:
-            if sort.startswith("-"): sort = sort.lstrip("-")
-            else: sort = f"-{sort}"
-        ordering = [sort]
-    else:
-        ordering = []
+    ordering = [key_map.get(query_dict["sort"], TENDERS_ORDERING_FIELD), "-created", 'id']
 
-    ordering.append("-created")
-    ordering.append("id")
+    # if sort not in allowed_keys: sort = None
+
+    # if sort and sort != "":
+    #     reversed_keys = [
+    #         "published", "-published", "views_count", "-views_count", 
+    #         "downloads_count", "-downloads_count", 
+    #         # "favorites_count", "-favorites_count"
+    #         ]
+    #     if sort in reversed_keys:
+    #         if sort.startswith("-"): sort = sort.lstrip("-")
+    #         else: sort = f"-{sort}"
+    #     ordering = [sort]
+    # else:
+    #     ordering = []
+
+    # ordering.append("-created")
+    # ordering.append("id")
 
     query_dict["filters"] = filters
 
@@ -377,7 +414,11 @@ def tender_list(request):
     colleagues = get_colleagues(user)
 
     tenders = tenders.prefetch_related(
-            "favorites", "views", "openings", "downloads", "changes",
+            "favorites", 
+            "views", 
+            "openings", 
+            "downloads", 
+            "changes",
         ).select_related(
             "client", "category", "mode", "procedure"
         ).order_by(
