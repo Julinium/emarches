@@ -6,6 +6,7 @@ import traceback
 from datetime import datetime, timedelta
 from decimal import Decimal
 from urllib.parse import urljoin
+from django.db import transaction
 
 import pytz
 import requests
@@ -17,13 +18,12 @@ from bdc.models import Article, Attachement, PurchaseOrder
 from scraper import constants as C
 from scraper.helper import getUa, printMessage, getDateTime, getAmount
 
+BDC_DETAILS_HOST = C.BDC_DETAILS_HOST
 LISTING_BASE_URL = C.BDC_LISTING_BASE_URL
 LISTING_PAGE_PARAM = "?page"
-BDC_DETAILS_HOST = C.BDC_DETAILS_HOST
-
 RESULTS_BASE_URL = C.BDC_RESULTS_BASE_URL
-# RESULTS_PAGE_PARAM = "?page"
-# LINE_PAD = f"\n{20*'='}\n"
+
+BDC_UPDATE_MODE = True
 
 rabat_tz = pytz.timezone("Africa/Casablanca")
 
@@ -67,7 +67,7 @@ def get_bdc(card):
     Extracts data from a single item card
     """
     
-    printMessage("DEBUG", "b.get_bdc", "Getting BDC digest ...", 1)
+    printMessage("DEBUG", "b.get_bdc", "Getting BDC digest ...")
 
     reference = safe_text(card.select_one(".bdc-card__ref"))
         
@@ -233,9 +233,10 @@ def next_page_link(soup):
     return soup.find("a", string=lambda x: x and ("Suivant" in x))
 
 
-def save_bdcs(published_since_days=1):
+def save_bdcs(since_days=1, update_mode=BDC_UPDATE_MODE):
     
-    printMessage('INFO', 'b.save_bdcs', "Started browsing running POs ...", 4)
+    printMessage('INFO', 'b.save_bdcs', "Started browsing running POs ...", 2)
+    printMessage('INFO', 'b.save_bdcs', f"Since days: {since_days}. Update mode: {update_mode}.")
 
     truncater = 32
     errors_happened = False
@@ -249,7 +250,7 @@ def save_bdcs(published_since_days=1):
     page = 1
     while True:
         url = f"{LISTING_BASE_URL}{LISTING_PAGE_PARAM}={page}"
-        assnna = datetime.now().date() - timedelta(days=published_since_days)
+        assnna = datetime.now().date() - timedelta(days=since_days)
         assnna_str = assnna.strftime('%Y-%m-%d')
         
         printMessage('TRACE', 'b.save_bdcs', f"Fetching URL {url} ...", 2)
@@ -307,105 +308,114 @@ def save_bdcs(published_since_days=1):
                 if item != {} :
                     chrono = item['chrono']
 
-                    client_name = item['client']
-                    if client_name and client_name != '':
-                        client, created = Client.objects.get_or_create(name=client_name)
-                        if created :
-                            printMessage('DEBUG', 'b.save_bdcs', f"Created Client: { client_name[:truncater] }")
-                            clients_created += 1
-                        else:
-                            printMessage('DEBUG', 'b.save_bdcs', f"Found Client: { client_name[:truncater] }")
+                    if update_mode == False and PurchaseOrder.objects.filter(chrono=chrono).exists():
+                        printMessage('DEBUG', 'b.save_bdcs', f"Item exists. Skipping { chrono }.")
+                        continue
 
-                    category_label = item['category']
-                    if category_label and category_label != '':
-                        category, created = Category.objects.get_or_create(label=category_label)
-                        if created :
-                            printMessage('DEBUG', 'b.save_bdcs', f"Created Category: { category_label[:truncater] }")
-                            categorys_created += 1
-                        else:
-                            printMessage('DEBUG', 'b.save_bdcs', f"Found Category: { category_label[:truncater] }")
-
-                    bdc, created = PurchaseOrder.objects.update_or_create(
-                        reference = item['reference'],
-                        title = item['title'],
-                        client = client,
-                        defaults = {
-                            'category'  : category,
-                            'chrono'    : item['chrono'],
-                            'published' : item['published'],
-                            'cancelled' : item['cancelled'],
-                            'deadline'  : item['deadline'],
-                            'location'  : item['location'],
-                            'link'      : item['link'],
-                            'nature'    : item['nature'],
-                        }
-                    )
-                    if created : 
-                        printMessage('DEBUG', 'b.save_bdcs', f"Created P. Order: { chrono }: { item['title'][:truncater] }")
-                        bdc_created += 1
-                    else:
-                        printMessage('DEBUG', 'b.save_bdcs', f"Updated P. Order: { chrono }: { item['title'][:truncater] }")
-
-                    articles_items = item['articles']
-                    if articles_items and articles_items != {}:
-                        rank = 0
-                        for articles_item in articles_items:
-                            rank += 1
-                            
-                            try: 
-                                number = articles_item['number']
-                            except Exception as xc:
-                                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting article number: { xc }")
-                                traceback.print_exc()
-
-                            try:
-                                qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
-                                quantity = Decimal(qts)
-                            except Exception as xc:
-                                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting article quantity: { xc }")
-                                traceback.print_exc()
-                                quantity = 0
-                            try:
-                                vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
-                                vat_percent = Decimal(vat)
-                            except Exception as xc:
-                                printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting VAT: { xc }")
-                                traceback.print_exc()
-                                vat_percent = 0
-
-                            article, created = Article.objects.update_or_create(
-                                purchase_order=bdc, 
-                                number=number, 
-                                defaults = {
-                                    'rank'           : rank,
-                                    'title'          : articles_item['title'],
-                                    'specifications' : articles_item['specifications'],
-                                    'warranties'     : articles_item['warranties'],
-                                    'uom'            : articles_item['uom'],
-                                    'quantity'       : quantity,
-                                    'vat_percent'    : vat_percent,
-                                }
-                            )
-                            if created:
-                                printMessage('DEBUG', 'b.save_bdcs', f"Created Article: { number }: { articles_item['title'][:truncater] }")
-                                articles_created += 1
+                    with transaction.atomic():
+                        client_name = item['client']
+                        if client_name and client_name != '':
+                            client, created = Client.objects.get_or_create(name=client_name)
+                            if created :
+                                printMessage('DEBUG', 'b.save_bdcs', f"Created Client: { client_name[:truncater] }")
+                                clients_created += 1
                             else:
-                                printMessage('DEBUG', 'b.save_bdcs', f"Updated Article: { number }: { articles_item['title'][:truncater] }")
+                                printMessage('DEBUG', 'b.save_bdcs', f"Found Client: { client_name[:truncater] }")
 
-                    attachements_items = item['attachements']
-                    if attachements_items and attachements_items != {}:
-                        for attachements_item in attachements_items:
-                            link = attachements_item['link']
-                            if link and link != '': 
-                                attachement, created = Attachement.objects.update_or_create(
-                                    purchase_order=bdc, link=link,
-                                    defaults = {'name': attachements_item['name']}
+                        category_label = item['category']
+                        if category_label and category_label != '':
+                            category, created = Category.objects.get_or_create(label=category_label)
+                            if created :
+                                printMessage('DEBUG', 'b.save_bdcs', f"Created Category: { category_label[:truncater] }")
+                                categorys_created += 1
+                            else:
+                                printMessage('DEBUG', 'b.save_bdcs', f"Found Category: { category_label[:truncater] }")
+
+                        bdc, created = PurchaseOrder.objects.update_or_create(
+                            chrono = item['chrono'],
+                            # title = item['title'],
+                            # client = client,
+                            defaults = {
+                                'category'  : category,
+                                'client'    : client,
+                                'title'     : item['title'],
+                                'reference' : item['reference'],
+                                # 'chrono'    : item['chrono'],
+                                'published' : item['published'],
+                                'cancelled' : item['cancelled'],
+                                'deadline'  : item['deadline'],
+                                'location'  : item['location'],
+                                'link'      : item['link'],
+                                'nature'    : item['nature'],
+                            }
+                        )
+
+                        if created : 
+                            printMessage('DEBUG', 'b.save_bdcs', f"Created P. Order: { chrono }: { item['title'][:truncater] }")
+                            bdc_created += 1
+                        else:
+                            printMessage('DEBUG', 'b.save_bdcs', f"Updated P. Order: { chrono }: { item['title'][:truncater] }")
+
+                        articles_items = item['articles']
+                        if articles_items and articles_items != {}:
+                            rank = 0
+                            for articles_item in articles_items:
+                                rank += 1
+                                
+                                try: 
+                                    number = articles_item['number']
+                                except Exception as xc:
+                                    printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting article number: { xc }")
+                                    traceback.print_exc()
+
+                                try:
+                                    qts = articles_item['quantity'].strip().replace(' ', '').replace(',', '.')
+                                    quantity = Decimal(qts)
+                                except Exception as xc:
+                                    printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting article quantity: { xc }")
+                                    traceback.print_exc()
+                                    quantity = 0
+                                try:
+                                    vat = articles_item['vat_percent'].strip().replace(' ', '').replace(',', '.')
+                                    vat_percent = Decimal(vat)
+                                except Exception as xc:
+                                    printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Exception raised while getting VAT: { xc }")
+                                    traceback.print_exc()
+                                    vat_percent = 0
+
+                                article, created = Article.objects.update_or_create(
+                                    purchase_order=bdc, 
+                                    number=number, 
+                                    defaults = {
+                                        'rank'           : rank,
+                                        'title'          : articles_item['title'],
+                                        'specifications' : articles_item['specifications'],
+                                        'warranties'     : articles_item['warranties'],
+                                        'uom'            : articles_item['uom'],
+                                        'quantity'       : quantity,
+                                        'vat_percent'    : vat_percent,
+                                    }
                                 )
-                                if created :
-                                    printMessage('DEBUG', 'b.save_bdcs', f"Created Attachement: { attachements_item['name'][:truncater] }")
-                                    attachements_created += 1
+                                if created:
+                                    printMessage('DEBUG', 'b.save_bdcs', f"Created Article: { number }: { articles_item['title'][:truncater] }")
+                                    articles_created += 1
                                 else:
-                                    printMessage('DEBUG', 'b.save_bdcs', f"Updated Attachement: { attachements_item['name'][:truncater] }")
+                                    printMessage('DEBUG', 'b.save_bdcs', f"Updated Article: { number }: { articles_item['title'][:truncater] }")
+
+                        attachements_items = item['attachements']
+                        if attachements_items and attachements_items != {}:
+                            for attachements_item in attachements_items:
+                                link = attachements_item['link']
+                                if link and link != '': 
+                                    attachement, created = Attachement.objects.update_or_create(
+                                        purchase_order=bdc, link=link,
+                                        defaults = {'name': attachements_item['name']}
+                                    )
+                                    if created :
+                                        printMessage('DEBUG', 'b.save_bdcs', f"Created Attachement: { attachements_item['name'][:truncater] }")
+                                        attachements_created += 1
+                                    else:
+                                        printMessage('DEBUG', 'b.save_bdcs', f"Updated Attachement: { attachements_item['name'][:truncater] }")
 
                 else:
                     printMessage('ERROR', 'b.save_bdcs', f"[xxxxx] Got an empty PO !")
@@ -427,11 +437,11 @@ def save_bdcs(published_since_days=1):
     return 0 if errors_happened == False else 1
 
 
-def save_results(published_since_days=1):
+def save_results(since_days=1):
     printMessage('INFO', 'b.save_results', "Started browsing POs results ...", 4)    
-    assnna = datetime.now().date() - timedelta(days=published_since_days)
+    assnna = datetime.now().date() - timedelta(days=since_days)
     assnna_str = assnna.strftime('%Y-%m-%d')
-    printMessage('INFO', 'b.save_results', f"Browsing items published since: { published_since_days } days on ...")
+    printMessage('INFO', 'b.save_results', f"Browsing items published since: { since_days } days on ...")
     
     errors_happened = False
     handled_items = 0
@@ -493,7 +503,7 @@ def save_results(published_since_days=1):
         i = 0
         for card in cards:
             i += 1
-            printMessage('INFO', 'b.save_results', f"Fetching item { i }/{cl} from page { page }", 1)
+            printMessage('INFO', 'b.save_results', f"Fetching item { i }/{cl} from page { page }")
             try:
                 item = get_results_bdc(card)
 
@@ -503,13 +513,14 @@ def save_results(published_since_days=1):
                 itex, created_bdc = PurchaseOrder.objects.update_or_create(
                     reference = item['reference'],
                     client = client,
-                    title = item['title'],
+                    # title = item['title'],
                     defaults = {
-                        'unsuccessful': item['unsuccessful'],
-                        'bids_count': item['bids_count'],
-                        'winner_entity': item['winner_entity'],
+                        'title'         : item['title'],
+                        'unsuccessful'  : item['unsuccessful'],
+                        'bids_count'    : item['bids_count'],
+                        'winner_entity' : item['winner_entity'],
                         "winner_amount" : item['winner_amount'],
-                        "deliberated" : item['deliberated'],
+                        "deliberated"   : item['deliberated'],
                     }
                 )
                 if created_bdc:

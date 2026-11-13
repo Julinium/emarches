@@ -10,10 +10,10 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
 def main():
-    from bonner import save_bdcs, save_results
-    save_bdcs(15)
-    save_results(15)
-    pass
+    from worker import linkify, dceify, bdcify
+    # linkify()
+    dceify()
+    # bdcify()
 
 
 if __name__ == '__main__':

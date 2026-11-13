@@ -1,212 +1,208 @@
-import os
-import sys
-import traceback
-
-import django
+import os, sys, traceback, django
+from datetime import datetime, timedelta
 
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'emarches.settings')
 django.setup()
 
+from base.models import Tender, Link, Machine, Parkour, Harvest
+from scraper import bonner
+from scraper import constants as C
+from scraper import downer, getter, helper, linker, merger
 
-def do_the_work():
-    from django.utils import timezone
-    from datetime import datetime, timedelta
 
-    from base.models import Tender, Link, Machine, Parkour, Harvest
-    from scraper import bonner
-    from scraper import constants as C
-    from scraper import downer, getter, helper, linker, merger
+def linkify():
+    unhandled_links = list(Link.objects.filter(handled=False) | Link.objects.filter(tender__isnull=True))
+    helper.printMessage('INFO', 'w.linkify', f"Found { len(unhandled_links) } leftover links.")
+    # unhandled_links = []
 
-    started_time = timezone.now()
+    if not C.IMPORT_LINKS:
+        back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
+        links_crawled = linker.getLinks(back_days)
+        helper.printMessage('INFO', 'w.linkify', f"Crawled { len(links_crawled) } live links.")
+        merged_links_crawled = linker.mergeLinks(links_crawled)
+        # unhandled_links += merged_links_crawled
+        unhandled_links += merged_links_crawled
+        # unhandled_links = set(merged_links_crawled)
 
-    def linkify():
-        unhandled_links = list(Link.objects.filter(handled=False) | Link.objects.filter(tender__isnull=True))
-        helper.printMessage('INFO', 'w.linkify', f"Found { len(unhandled_links) } leftover links.")
-        # unhandled_links = []
+    if C.REFRESH_EXISTING:
+        links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
+        helper.printMessage('INFO', 'w.linkify', f"Found { len(links_saved) } saved links.")
+        if links_saved != []:
+            # unique_saved_links = links_saved.difference(unhandled_links)
+            unhandled_chronos = [l.chrono for l in unhandled_links]
+            unique_saved_links = [l for l in links_saved if l.get("chrono") not in unhandled_chronos]
+            # unique_saved_links = [l for l in links_saved if not l.chrono in unhandled_links.values("chrono") ]
 
-        if not C.IMPORT_LINKS:
-            back_days = C.PORTAL_DDL_PAST_DAYS if C.REFRESH_EXISTING else 1
-            links_crawled = linker.getLinks(back_days)
-            helper.printMessage('INFO', 'w.linkify', f"Crawled { len(links_crawled) } live links.")
-            merged_links_crawled = linker.mergeLinks(links_crawled)
-            # unhandled_links += merged_links_crawled
-            unhandled_links += merged_links_crawled
-            # unhandled_links = set(merged_links_crawled)
+            helper.printMessage('INFO', 'w.linkify', f"Merging { len(unique_saved_links) } unique saved links ...")
+            merged_links_saved = linker.mergeLinks(unique_saved_links)
+            # unhandled_links += merged_links_saved
+            unhandled_links += merged_links_saved
 
-        if C.REFRESH_EXISTING:
-            links_saved = linker.db2Links(C.PORTAL_DDL_PAST_DAYS) if C.REFRESH_EXISTING else []
-            helper.printMessage('INFO', 'w.linkify', f"Found { len(links_saved) } saved links.")
-            if links_saved != []:
-                # unique_saved_links = links_saved.difference(unhandled_links)
-                unhandled_chronos = [l.chrono for l in unhandled_links]
-                unique_saved_links = [l for l in links_saved if l.get("chrono") not in unhandled_chronos]
-                # unique_saved_links = [l for l in links_saved if not l.chrono in unhandled_links.values("chrono") ]
+    helper.printMessage('DEBUG', 'w.linkify', f"Count of links to handle: {len(unhandled_links)} ...", 1)
 
-                helper.printMessage('INFO', 'w.linkify', f"Merging { len(unique_saved_links) } unique saved links ...")
-                merged_links_saved = linker.mergeLinks(unique_saved_links)
-                # unhandled_links += merged_links_saved
-                unhandled_links += merged_links_saved
+    return unhandled_links
 
-        helper.printMessage('DEBUG', 'w.linkify', f"Count of links to handle: {len(unhandled_links)} ...", 1)
-    
-        return unhandled_links
+def tenderify(links=[]):
+    started = datetime.now()        
+    saving_errors = False
+    tenders_created, tenders_updated = 0 , 0
+    links_length = len(links)
+    if links_length > 0:
+        i = 0
+        handled = 0
+        helper.printMessage('INFO', 'w.tenderify', f"▶▶▶ Getting Data for {links_length} links ... ", 2, 0)
+        for l in links:
+            i += 1
+            helper.printMessage('INFO', 'w.tenderify', f"▷▷ Getting Data for link {i:03}/{links_length:03}", 1)
+            jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
+            if jsono:
+                handled += 1
+                tender, creation_mode, changes_found = merger.saveTender(jsono, l)
+                if creation_mode == True:
+                    tenders_created += 1
+                    helper.printMessage('INFO', 'w.tenderify', f"◁◁ Created Tender {tender.chrono}")
+                else:
+                    if changes_found == True:
+                        tenders_updated += 1
+                        helper.printMessage('INFO', 'w.tenderify', f"◁◁ Tender {tender.chrono} updated.")
 
-    def tenderify(links=[]):
-        started = timezone.now()        
-        saving_errors = False
-        tenders_created, tenders_updated = 0 , 0
-        links_length = len(links)
-        if links_length > 0:
-            i = 0
-            handled = 0
-            helper.printMessage('INFO', 'w.tenderify', f"▶▶▶ Getting Data for {links_length} links ... ", 2, 0)
-            for l in links:
-                i += 1
-                helper.printMessage('INFO', 'w.tenderify', f"▷▷ Getting Data for link {i:03}/{links_length:03}", 1)
-                jsono = getter.getJson(l, not C.REFRESH_EXISTING)            
-                if jsono:
-                    handled += 1
-                    tender, creation_mode, changes_found = merger.saveTender(jsono, l)
-                    if creation_mode == True:
-                        tenders_created += 1
-                        helper.printMessage('INFO', 'w.tenderify', f"◁◁ Created Tender {tender.chrono}")
-                    else:
-                        if changes_found == True:
-                            tenders_updated += 1
-                            helper.printMessage('INFO', 'w.tenderify', f"◁◁ Tender {tender.chrono} updated.")
+            if handled > 0:
+                if handled % C.BURST_LENGTH == 0:
+                    helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{links_length:03}. Handled { tenders_created + tenders_updated } tenders ({ tenders_created } + {tenders_updated }).", 1)
+                    helper.sleepRandom(20, 45)
+                    handled = 0
+    else:
+        saving_errors = True
+        helper.printMessage('ERROR', 'w.tenderify', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
 
-                if handled > 0:
-                    if handled % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{links_length:03}. Handled { tenders_created + tenders_updated } tenders ({ tenders_created } + {tenders_updated }).", 1)
-                        helper.sleepRandom(20, 45)
-                        handled = 0
+    ############
+    try:
+        machine_info = helper.get_system_info()
+        machine, created = Machine.objects.get_or_create(
+            hostname=machine_info['hostname'],
+            os_family=machine_info['os_family'],
+            processor=machine_info['processor'],
+            defaults={
+                "ip_address": machine_info['ip_address'],
+                "os_version": machine_info['os_version'],
+                "os_release": machine_info['os_release'],
+                "architecture": machine_info['architecture'],
+                "python_version": machine_info['python_version'],
+            }
+        )
+        if created:
+            helper.printMessage('INFO', 'l.getLinks', f'Created Machine info: {machine_info['hostname']}')
         else:
-            saving_errors = True
-            helper.printMessage('ERROR', 'w.tenderify', "◆◆◆◆◆◆◆◆◆◆ Links list was empty ◆◆◆◆◆◆◆◆◆◆", 2)
+            helper.printMessage('INFO', 'l.getLinks', f'Machine info already exists: {machine_info['hostname']}')
 
-        ############
-        try:
-            machine_info = helper.get_system_info()
-            machine, created = Machine.objects.get_or_create(
-                hostname=machine_info['hostname'],
-                os_family=machine_info['os_family'],
-                processor=machine_info['processor'],
-                defaults={
-                    "ip_address": machine_info['ip_address'],
-                    "os_version": machine_info['os_version'],
-                    "os_release": machine_info['os_release'],
-                    "architecture": machine_info['architecture'],
-                    "python_version": machine_info['python_version'],
-                }
+        harvest = Harvest.objects.create(
+                started         = started,
+                finished        = datetime.now(),
+                machine         = machine,
+                links_handled   = links_length,
+                tenders_created = tenders_created,
+                tenders_updated = tenders_updated,
+                # tenders_discarded = 0,
+                # dce_files_downloaded = 0,
+                # extra_files_downloaded = 0,
+                # dce_files_failed = 0,
+                # extra_files_failed = 0,
+                successfull = not saving_errors,
             )
-            if created:
-                helper.printMessage('INFO', 'l.getLinks', f'Created Machine info: {machine_info['hostname']}')
-            else:
-                helper.printMessage('INFO', 'l.getLinks', f'Machine info already exists: {machine_info['hostname']}')
 
-            harvest = Harvest.objects.create(
-                    started         = started,
-                    finished        = timezone.now(),
-                    machine         = machine,
-                    links_handled   = links_length,
-                    tenders_created = tenders_created,
-                    tenders_updated = tenders_updated,
-                    # tenders_discarded = 0,
-                    # dce_files_downloaded = 0,
-                    # extra_files_downloaded = 0,
-                    # dce_files_failed = 0,
-                    # extra_files_failed = 0,
-                    successfull = not saving_errors,
-                )
+        if harvest:
+            helper.printMessage('DEBUG', 'l.getLinks', 'Created Harvest record.')
+        else:
+            helper.printMessage('ERROR', 'l.getLinks', 'Errors occurred while creating Harvest record.')
 
-            if harvest:
-                helper.printMessage('DEBUG', 'l.getLinks', 'Created Harvest record.')
-            else:
-                helper.printMessage('ERROR', 'l.getLinks', 'Errors occurred while creating Harvest record.')
+    except Exception as e:
+        helper.printMessage('ERROR', 'l.getLinks', f'Error while handling Machine info: {str(e)}', 2,2)
 
-        except Exception as e:
-            helper.printMessage('ERROR', 'l.getLinks', f'Error while handling Machine info: {str(e)}', 2,2)
+    ############
+    
+    return tenders_created, tenders_updated, saving_errors
 
-        ############
-        
-        return tenders_created, tenders_updated, saving_errors
-
-    def bdcify():
-        helper.printMessage('===', 'w.bdcify', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
-        bonner.save_bdcs()
+def bdcify(days_since=1, update_mode=True, get_results=True):
+    helper.printMessage('===', 'w.bdcify', f"▶▶▶▶▶ Started Purchase orders ◀◀◀◀◀", 3, 1)
+    bonner.save_bdcs(days_since, update_mode)
+    if get_results is True :
         bonner.save_results()
 
-    def dceify():
-        i = 0
-        files_downloaded, files_failed = 0, 0
-        try:
-            helper.printMessage('INFO', 'w.dceify', "▶▶▶ Getting the list of DCE files to download ...", 1)
-            dceables = downer.getFileables()
-            c = dceables.count()
-            helper.printMessage('INFO', 'w.dceify', f"▶▶▶ Started getting DCE files for { c } items ...", 1)
-            for d in dceables:
-                i += 1
-                helper.printMessage('INFO', 'w.dceify', f"▶▶ Getting DCE files for { i }/{ c } : { d.chrono } ...", 1)
-                getdce = merger.handleDCE(d)
-                if getdce:
-                    files_downloaded += 1
-                    helper.printMessage('INFO', 'w.dceify', f"◀◀ DCE download for { d.chrono } was successfull.")
-                else:
-                    files_failed += 1
-                    helper.printMessage('WARN', 'w.dceify', f"⬢⬢⬢⬢ Something went wrong whith DCE download for { d.chrono }.")
-
-                hceed = files_downloaded + files_failed
-                if hceed > 0:
-                    if hceed % C.BURST_LENGTH == 0:
-                        helper.printMessage('DEBUG', 'w.dceify', f"Sleeping << DCE: { files_downloaded } success + { files_failed } fails = { hceed }. Burst is { C.BURST_LENGTH }.", 1)
-                        helper.printMessage('INFO', 'w.dceify', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
-                        helper.sleepRandom(10, 30)
-        except Exception as xc:
-            helper.printMessage('ERROR', 'w.dceify', f"⬢⬢⬢ Exception while handling DCE files: { xc } ", 1)
-            traceback.print_exc()
-            
-        return files_downloaded, files_failed
-
-    def resultify(back_days=C.PORTAL_RES_PAST_DAYS):
-
-        results_saved, results_searched = 0, 0
-        helper.printMessage('INFO', 'w.resultify', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 0, 0)
-        assa = timezone.now().date()
-        assenn = assa - timedelta(days=back_days)
-
-        tenders = Tender.objects.filter(
-            deadline__date__lte=assa,
-            deadline__date__gte=assenn,
-            openings__isnull=True,
-            has_minutes=False,
-            ).order_by('deadline')
-        count = tenders.count()
-
-        i = 0
-        for tender in tenders:
+def dceify():
+    i = 0
+    files_downloaded, files_failed = 0, 0
+    try:
+        helper.printMessage('INFO', 'w.dceify', "▶▶▶ Getting the list of DCE files to download ...", 1)
+        dceables = downer.getFileables()
+        c = dceables.count()
+        helper.printMessage('INFO', 'w.dceify', f"▶▶▶ Started getting DCE files for { c } items ...", 1)
+        for d in dceables:
             i += 1
-            if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
-
-            helper.printMessage('INFO', 'w.resultify', f"▷▷▷ Getting results for item { i }/{ count }", 1)
-            result = getter.getMinutes(tender.chrono, tender.acronym)
-            if result and result != {}:
-                helper.printMessage('INFO', 'w.resultify', f"◁◁◁ Minutes found for item { i }/{ count }")
-                try:
-                    if merger.mergeResults(result) == 0:
-                        results_saved += 1
-                        helper.printMessage('DEBUG', 'w.resultify', f"\tSaved Minutes for item { i }/{ count }")
-                except Exception as xc : 
-                    helper.printMessage('ERROR', 'w.resultify', f"\tError saving Minutes for item { i }/{ count }")
-                    helper.printMessage('DEBUG', 'w.resultify', f"Received object: \n{ result }\n")
-                    helper.printMessage('DEBUG', 'w.resultify', f"Raised Exception: \n{ xc }\n")
-                    traceback.print_exc()
+            helper.printMessage('INFO', 'w.dceify', f"▶▶ Getting DCE files for { i }/{ c } : { d.chrono } ...", 1)
+            getdce = merger.handleDCE(d)
+            if getdce:
+                files_downloaded += 1
+                helper.printMessage('INFO', 'w.dceify', f"◀◀ DCE download for { d.chrono } was successfull.")
             else:
-                helper.printMessage('INFO', 'w.resultify', f"◀◀◀ No Minutes found for item { i }/{ count }")
+                files_failed += 1
+                helper.printMessage('WARN', 'w.dceify', f"⬢⬢⬢⬢ Something went wrong whith DCE download for { d.chrono }.")
 
-        return results_saved, i
+            hceed = files_downloaded + files_failed
+            if hceed > 0:
+                if hceed % C.BURST_LENGTH == 0:
+                    helper.printMessage('DEBUG', 'w.dceify', f"Sleeping << DCE: { files_downloaded } success + { files_failed } fails = { hceed }. Burst is { C.BURST_LENGTH }.", 1)
+                    helper.printMessage('INFO', 'w.dceify', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
+                    helper.sleepRandom(10, 30)
+    except Exception as xc:
+        helper.printMessage('ERROR', 'w.dceify', f"⬢⬢⬢ Exception while handling DCE files: { xc } ", 1)
+        traceback.print_exc()
+        
+    return files_downloaded, files_failed
 
+def resultify(back_days=C.PORTAL_RES_PAST_DAYS):
+
+    results_saved, results_searched = 0, 0
+    helper.printMessage('INFO', 'w.resultify', f"▶▶▶▶▶ Started handling Tenders Results ◀◀◀◀◀", 0, 0)
+    assa = datetime.now().date()
+    assenn = assa - timedelta(days=back_days)
+
+    tenders = Tender.objects.filter(
+        deadline__date__lte=assa,
+        deadline__date__gte=assenn,
+        openings__isnull=True,
+        has_minutes=False,
+        ).order_by('deadline')
+    count = tenders.count()
+
+    i = 0
+    for tender in tenders:
+        i += 1
+        if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
+
+        helper.printMessage('INFO', 'w.resultify', f"▷▷▷ Getting results for item { i }/{ count }", 1)
+        result = getter.getMinutes(tender.chrono, tender.acronym)
+        if result and result != {}:
+            helper.printMessage('INFO', 'w.resultify', f"◁◁◁ Minutes found for item { i }/{ count }")
+            try:
+                if merger.mergeResults(result) == 0:
+                    results_saved += 1
+                    helper.printMessage('DEBUG', 'w.resultify', f"\tSaved Minutes for item { i }/{ count }")
+            except Exception as xc : 
+                helper.printMessage('ERROR', 'w.resultify', f"\tError saving Minutes for item { i }/{ count }")
+                helper.printMessage('DEBUG', 'w.resultify', f"Received object: \n{ result }\n")
+                helper.printMessage('DEBUG', 'w.resultify', f"Raised Exception: \n{ xc }\n")
+                traceback.print_exc()
+        else:
+            helper.printMessage('INFO', 'w.resultify', f"◀◀◀ No Minutes found for item { i }/{ count }")
+
+    return results_saved, i
+
+
+def do_the_work():
+
+    started_time = datetime.now()
 
     ##### Proudly let the magic happen
     helper.printBanner()
@@ -228,26 +224,13 @@ def do_the_work():
 
     ##### Handle Purchase Orders
     if crawl_bdcs == 'Get':
-        bdcify()
+        bdcify(C.PORTAL_PUB_PAST_DAYS, C.REFRESH_EXISTING, C.GET_RESULTS)
         helper.printMessage('INFO', 'worker', f"◀◀◀ Finished saving PO's data.", 0)
 
     ##### Take care of DCE files
     files_downloaded, files_failed = 0, 0
     if C.SKIP_DCE: helper.printMessage('INFO', 'worker', "◆◆◆◆◆ SKIP_DCE set. Skipping DCE files ◆◆◆◆◆", 1)
     else: files_downloaded, files_failed = dceify()
-
-    # TODO: Consider other "types" of publications, like:
-    """
-        résultats définitifs
-        rapports d'achèvement
-        rapports de présentation
-        décisions de résiliation
-        Annonce de programme previsionnel
-        Annonce de synthèse de rapport d'audit
-        bons de commande attribués
-        marchés attribués
-        conventions et contrats de droit commun
-    """
 
     ##### Get Tenders results:
     results_saved, results_searched = 0, 0
@@ -257,7 +240,7 @@ def do_the_work():
         results_saved, results_searched = resultify()
 
     ##### Keep track of update times
-    finished_time = timezone.now()
+    finished_time = datetime.now()
 
     ##### Show a digest
     work_duration = finished_time - started_time

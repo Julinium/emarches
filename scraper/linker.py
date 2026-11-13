@@ -21,6 +21,29 @@ from scraper import constants as C
 from scraper import helper
 
 
+# TODO: Look at these sites too:
+
+sites = [
+    {
+        "acronym": "PMMP", 
+        "name"   : "Portail Marocains des Marchés Publics", 
+        "index"  : "https://www.marchespublics.gov.ma/index.php", 
+        "tenders": "https://www.marchespublics.gov.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons", 
+    },
+    {
+        "acronym": "ADM", 
+        "name"   : "Autoroutes Du Maroc", 
+        "index"  : "https://achats.adm.co.ma/index.php", 
+        "tenders": "https://achats.adm.co.ma/index.php?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons", 
+    },
+    {
+        "acronym": "ANP", 
+        "name"   : "Agence Nationale des Ports", 
+        "index"  : "https://www.anp.org.ma", 
+        "tenders": "https://www.anp.org.ma/fr/services/appels-offres", 
+    },
+]
+
 
 def fillForm(driver, back_days=C.PORTAL_DDL_PAST_DAYS):
     """

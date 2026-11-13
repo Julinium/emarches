@@ -34,7 +34,7 @@ def getJson(link, skipExisting=False):
     if skipExisting:
         e = Tender.objects.filter(chrono=link_chrono)
         if e.first():
-            helper.printMessage('DEBUG', 'g.getJson', f'Tender {link_chrono} exists and Skipping ON.', 0, 1)
+            helper.printMessage('DEBUG', 'g.getJson', f'Tender {link_chrono} exists and Skipping ON.')
             return None
     
 
@@ -91,6 +91,8 @@ def getJson(link, skipExisting=False):
     soup = bowl.find(class_='card-body')
 
     # lp = "\n\t============================================\n"
+    # helper.printMessage('TRACE', 'g.getJson', f'Status code: {lp}{request_cons.status_code}{lp}', 5, 5)
+    # helper.printMessage('TRACE', 'g.getJson', f'Response text: {lp}{request_cons.text}{lp}', 5, 5)
     # helper.printMessage('TRACE', 'g.getJson', f'soup = bowl.find(class_="card-body"): {lp}{soup}{lp}', 5, 5)
 
     try:

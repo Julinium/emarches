@@ -1501,7 +1501,7 @@ def createLots(input_data, tender):
             created_meetings = Meeting.objects.bulk_create(meetings_to_create, batch_size=999) 
             helper.printMessage('DEBUG', 'm.createLots', f"++++ Created Meetings: {len(created_meetings)}.")
         else:
-            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Samples.")
+            helper.printMessage('DEBUG', 'm.createLots', f"--- Tender has no Meetings.")
 
         if visits_to_create:
             helper.printMessage('DEBUG', 'm.createLots', f"#### Handling Lot Visits ... ")
