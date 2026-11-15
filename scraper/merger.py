@@ -360,11 +360,11 @@ def mergeResults(digest: dict) -> int:
 
     chro = digest.get('chrono', '?')
     acro = digest.get('acronym', '?')    
-    helper.printMessage('INFO', 'm.mergeResults', f"### Started merging results for {chro}&{acro}")
+    helper.printMessage('INFO', 'm.mergeResults', f"### Started merging results for {chro}")
     helper.printMessage('DEBUG', 'm.mergeResults', f"\tReceived result digest {digest}")
     tender = Tender.objects.filter(chrono=chro, acronym=acro).first()
     if not tender: 
-        helper.printMessage('ERROR', 'm.mergeResults', f"### Error: Tender not found for {chro}&{acro}. No result saved", 1)
+        helper.printMessage('ERROR', 'm.mergeResults', f"### Error: Tender not found for {chro}. No result saved", 1)
         return 1
 
     failures_text = digest.get('failures_text', '-')
@@ -399,9 +399,9 @@ def mergeResults(digest: dict) -> int:
             }
         )
     if created: 
-        helper.printMessage('DEBUG', 'm.mergeResults', f"Created results digest for {chro}&{acro}")
+        helper.printMessage('DEBUG', 'm.mergeResults', f"Created results digest for {chro}")
     else: 
-        helper.printMessage('DEBUG', 'm.mergeResults', f"Updated results digest for {chro}&{acro}")
+        helper.printMessage('DEBUG', 'm.mergeResults', f"Updated results digest for {chro}")
 
 
     fi_offers = digest.get('financial_offers', [])

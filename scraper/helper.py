@@ -166,12 +166,11 @@ def getDriver(url=''):
     options = webdriver.ChromeOptions()
     printMessage('DEBUG', 'h.getDriver', f'\tSetting headless mode to {C.HEADLESS_MODE}')
 
-    # Dynamically handle platforms unsupported by Selenium Manager (like FreeBSD)
+    # Handle platforms unsupported by Selenium Manager (like FreeBSD)
     service = None
     if sys.platform.startswith("freebsd"):
         chrome_bin = shutil.which("chrome")
         chromedriver_bin = shutil.which("chromedriver")
-
         if chrome_bin:
             options.binary_location = chrome_bin
         if chromedriver_bin:
@@ -184,7 +183,6 @@ def getDriver(url=''):
     options.add_argument("--window-size=1920,1080")
     printMessage('DEBUG', 'h.getDriver', 'Launching instance of Chromium browser ...\n')
 
-    # Initialize driver, using the custom service only if defined
     if service:
         driver = webdriver.Chrome(service=service, options=options)
     else:
@@ -194,6 +192,14 @@ def getDriver(url=''):
         printMessage('DEBUG', 'h.getDriver', 'Returning a driver with an empty url.\n')
         return driver
     printMessage('DEBUG', 'h.getDriver', f'Loading web address to driver ...')
+
+    # Force a random User Agent to avoid 'HeadlessChrome' string in case '--headless' option is used.
+    rua = getUa()
+    driver.execute_cdp_cmd("Network.setUserAgentOverride", {
+        "userAgent": rua
+    })
+    printMessage('DEBUG', 'h.getDriver', f'Selected UA: {rua}')
+
     try:
         driver.get(url)
         printMessage('DEBUG', 'h.getDriver', 'Chromium driver instance is setup and ready.')
@@ -244,15 +250,17 @@ def printBanner():
 
 
 def getUa():
-    rua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    rua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36"
     if len(C.USER_AGENTS) > 0 : rua = C.USER_AGENTS[random.randint(0, len(C.USER_AGENTS)-1)]
     return rua
 
 
-def sleepRandom(Fm=35, To=65):
+def sleepRandom(Fm=35, To=65, reason=None, level='DEBUG'):
     rint = random.randint(Fm, To)
-    printMessage('DEBUG', 'h.sleepRandom', f'zzzzzzzzzzzz Sleeping for a ({rint}s) while zzzzzzzzzzzz')
-    time.sleep(1)
+    s = f'Sleeping for {rint}s.'
+    if reason: s += f' Reason: {reason}'
+    printMessage(level, 'h.sleepRandom', s)
+    # time.sleep(1)
     time.sleep(rint)
     return 0
 

@@ -175,7 +175,7 @@ def db2Links(back_days=30):
 def getLinks(back_days=30):
 
     started = timezone.now()
-    url = f"{C.SITE_INDEX}?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons"
+    url = f"{C.SITE_INDEX}?page=entreprise.EntrepriseAdvancedSearch&searchAnnCons#2"
     driver = helper.getDriver(url)
     
     links = []
@@ -250,14 +250,11 @@ def getLinks(back_days=30):
             helper.printMessage('TRACE', 'l.getLinks', f'--- Next page {i+1:02}/{pages} not found', 0, 2)
         except TimeoutError: 
             traceback.print_exc()
-            helper.sleepRandom(60, 90)
+            helper.sleepRandom(60, 90, f"Backing off after a Timeout exception.", "ERROR")
         except: 
             next_page_button = None
             helper.printMessage('ERROR', 'l.pg2Links', f'Exception while looking for page {i+1:02}/{pages}', 1, 2)
             traceback.print_exc()
-
-        # if i % 8 == 0:
-        #     helper.sleepRandom(10, 15)
 
     if driver: driver.quit()
     
@@ -298,7 +295,7 @@ def getLinks(back_days=30):
     except Exception as e:
         helper.printMessage('ERROR', 'l.getLinks', f'Error while handling Machine info: {str(e)}', 2,2)
 
-
+    if driver: driver.quit()
     return links
 
 

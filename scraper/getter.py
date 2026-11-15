@@ -34,7 +34,7 @@ def getJson(link, skipExisting=False):
     if skipExisting:
         e = Tender.objects.filter(chrono=link_chrono)
         if e.first():
-            helper.printMessage('DEBUG', 'g.getJson', f'Tender {link_chrono} exists and Skipping ON.')
+            helper.printMessage('DEBUG', 'g.getJson', f'Skipped existing Tender {link_chrono}.')
             return None
     
 
@@ -68,7 +68,7 @@ def getJson(link, skipExisting=False):
             helper.printMessage('WARN', 'g.getJson', f'Request to DCE Header page returned a {dce_head.status_code} status code.')
             if dce_head.status_code == 429:
                 helper.printMessage('WARN', 'g.getJson', f'Too many Requests, said the server: {dce_head.status_code} !')
-                helper.sleepRandom(300, 600)
+                helper.sleepRandom(300, 600, f"Backing off after 429", "ERROR")
     except Exception as x:
         helper.printMessage('WARN', 'g.getJson', f'Exception getting file size at {str(dce_link.replace(C.SITE_INDEX, '[...]'))}: {str(x)}')
         # return None
@@ -80,11 +80,11 @@ def getJson(link, skipExisting=False):
         return None
     helper.printMessage('TRACE', 'g.getJson', f'Getting Tender page : {request_cons}')
     if request_cons.status_code != 200 :
-        helper.sleepRandom(30, 90)
+        helper.sleepRandom(30, 90, f"Backing off after {request_cons.status_code}", "ERROR")
         helper.printMessage('ERROR', 'g.getJson', f'Request to Tender page returned a {request_cons.status_code} status code.')
         if request_cons.status_code == 429:
             helper.printMessage('ERROR', 'g.getJson', f'Too many Requests, said the server: {request_cons.status_code} !')
-            helper.sleepRandom(180, 300)
+            helper.sleepRandom(180, 300, f"Backing off after 429", "ERROR")
         return None
 
     bowl = BeautifulSoup(request_cons.text, 'html.parser')
@@ -368,7 +368,7 @@ def getLots(lots_href):
         helper.printMessage('ERROR', 'g.getLots', f'Request to Lots page returned a {request_lots.status_code} status code.')
         if request_lots.status_code == 429:
             helper.printMessage('ERROR', 'g.getLots', f'Too many Requests, said the server: {request_lots.status_code} !')
-            helper.sleepRandom(300, 600)
+            helper.sleepRandom(300, 600, "Backing off after a 429", "ERROR")
         return None
 
     bowl = BeautifulSoup(request_lots.text, 'html.parser')
@@ -420,8 +420,8 @@ def getLots(lots_href):
             description = description_elem.get_text().strip() if description_elem else NA_PLH
 
             # Estimation
-            div_id  = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_idReferentielZoneTextLot_RepeaterReferentielZoneText_ctl0_panelReferentielZoneText'
-            span_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_idReferentielZoneTextLot_RepeaterReferentielZoneText_ctl0_labelReferentielZoneText'
+            div_id  = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_panelEstimation'
+            span_id = f'ctl0_CONTENU_PAGE_repeaterLots_ctl{i}_estimation'
             estimation_div  = description_elem.find_next_sibling("div", id=div_id)
             estimation_span = estimation_div.find('span', id=span_id)
             estimation = estimation_span.get_text().strip() if estimation_span else NA_PLH
@@ -550,7 +550,7 @@ def getLots(lots_href):
                 }
 
             lots.append(current_lot)
-            i += 1
+            i += 2
     return lots
 
 
@@ -561,7 +561,7 @@ def getMinutes(chro='', acro=''):
     qs_acro = "orgAcronyme"
     digest_link = f"{C.SITE_INDEX}?{qs_chro}={chro}&{ qs_acro }={acro}"
 
-    helper.printMessage('DEBUG', 'g.getMinutes', f'Made digest link for {chro}&{acro}.')
+    helper.printMessage('DEBUG', 'g.getMinutes', f'Made digest link for {chro}.')
 
     rua = helper.getUa()
     rua_label = "Random"
@@ -588,7 +588,7 @@ def getMinutes(chro='', acro=''):
         helper.printMessage('ERROR', 'g.getMinutes', f'Request to Digest page returned a {request_digest.status_code} status code.')
         if request_digest.status_code == 429:
             helper.printMessage('ERROR', 'g.getMinutes', f'Too many Requests, said the server: {request_digest.status_code} !')
-            helper.sleepRandom(300, 900)
+            helper.sleepRandom(300, 600, f"Backing off after {request_digest.status_code}", "ERROR")
         return None
     else:
         helper.printMessage('DEBUG', 'g.getMinutes', 'Digest page returned status code 200')

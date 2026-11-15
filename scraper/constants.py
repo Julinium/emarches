@@ -47,11 +47,11 @@ if args.links: IMPORT_LINKS = args.links.lower() == "import"
 if args.found: REFRESH_EXISTING = args.found.lower() == "refresh"
 if args.dce: SKIP_DCE = args.dce.lower() != "download"
 if args.results: GET_RESULTS = args.results.lower() != "ignore"
-if args.dce: GET_BDCS = args.dce.lower() != "get"
+if args.bdcs: GET_BDCS = args.bdcs.lower() == "get"
 
 
-# HEADLESS_MODE = True # Set true if operating on a system without GUI.
-HEADLESS_MODE = False
+HEADLESS_MODE = True # Set true if operating on a system without GUI.
+# HEADLESS_MODE = False
 
 SITE_ROOT = os.getenv("SITE_ROOT")
 SITE_INDEX = os.getenv("SITE_INDEX")

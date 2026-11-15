@@ -757,11 +757,11 @@ def user_settings(request):
     user_settings = UserSetting.objects.filter(user = user).first()
 
     if request.method == 'POST':
-        if user_settings:
-            if user_settings.tenders_ordering_field == 'published':
-                user_settings.tenders_ordering_field == '-published'
-            elif user_settings.tenders_ordering_field == '-published':
-                user_settings.tenders_ordering_field == 'published'
+        # if user_settings:
+        #     if user_settings.tenders_ordering_field == 'published':
+        #         user_settings.tenders_ordering_field == '-published'
+        #     elif user_settings.tenders_ordering_field == '-published':
+        #         user_settings.tenders_ordering_field == 'published'
 
         form = UserSettingsForm(request.POST, request.FILES, instance=user_settings)
 

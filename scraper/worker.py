@@ -70,8 +70,8 @@ def tenderify(links=[]):
 
             if handled > 0:
                 if handled % C.BURST_LENGTH == 0:
-                    helper.printMessage('DEBUG', 'w.tenderify', f"Burst ({ C.BURST_LENGTH }) at {i:03}/{links_length:03}. Handled { tenders_created + tenders_updated } tenders ({ tenders_created } + {tenders_updated }).", 1)
-                    helper.sleepRandom(20, 45)
+                    helper.printMessage('DEBUG', 'w.tenderify', f"Burst { C.BURST_LENGTH } hit at {i:03}. Handled { tenders_created + tenders_updated } = { tenders_created }C + {tenders_updated }U.", 1)
+                    helper.sleepRandom(20, 45, f"Backing off after a burst")
                     handled = 0
     else:
         saving_errors = True
@@ -154,7 +154,7 @@ def dceify():
                 if hceed % C.BURST_LENGTH == 0:
                     helper.printMessage('DEBUG', 'w.dceify', f"Sleeping << DCE: { files_downloaded } success + { files_failed } fails = { hceed }. Burst is { C.BURST_LENGTH }.", 1)
                     helper.printMessage('INFO', 'w.dceify', "⧎⧎⧎ Sleeping for a while ⧎⧎⧎", 1)
-                    helper.sleepRandom(10, 30)
+                    helper.sleepRandom(10, 30, f"Pausing after a {C.BURST_LENGTH} burst")
     except Exception as xc:
         helper.printMessage('ERROR', 'w.dceify', f"⬢⬢⬢ Exception while handling DCE files: { xc } ", 1)
         traceback.print_exc()
@@ -179,8 +179,9 @@ def resultify(back_days=C.PORTAL_RES_PAST_DAYS):
     i = 0
     for tender in tenders:
         i += 1
-        if i % C.BURST_LENGTH == 0: helper.sleepRandom(30, 35)
-
+        if i % C.BURST_LENGTH == 0: 
+            helper.sleepRandom(30, 35, f"Pausing after a { C.BURST_LENGTH } burst")
+            
         helper.printMessage('INFO', 'w.resultify', f"▷▷▷ Getting results for item { i }/{ count }", 1)
         result = getter.getMinutes(tender.chrono, tender.acronym)
         if result and result != {}:
@@ -212,7 +213,9 @@ def do_the_work():
     files_action  = 'Skip' if C.SKIP_DCE else 'Download'
     results_action = 'Get' if C.GET_RESULTS else 'Skip'
     crawl_bdcs = 'Get' if C.GET_BDCS else 'Skip'
-    helper.printMessage('INFO', 'worker', f"Arguments: Logging: { logging_level }, Links source: { links_source }, Files: { files_action  }, Results: { results_action  }", 0, 0)
+
+    s = f"Arguments: \n\t\tLogging: { logging_level }, \n\t\tLinks source: { links_source }, \n\t\tFiles: { files_action  }, \n\t\tResults: { results_action  }, \n\t\tP.Orders: { crawl_bdcs  }"
+    helper.printMessage('INFO', 'worker', s, 0, 0)
 
     ##### Collect the list of links to handle
     links = linkify()

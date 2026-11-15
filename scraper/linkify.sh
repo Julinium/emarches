@@ -1,0 +1,61 @@
+#!/bin/bash
+
+echo ">>>>>>>>>>>>JOB>STARTED>>>>>>>>>>>>"
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+_now=$(date +"%Y%m%d-%H%M%S")
+_logs_dir="$SCRIPT_DIR/logs"
+_logs_file="$_logs_dir/linkify-$_now.log"
+# _crony_dir="$SCRIPT_DIR/crony"
+# _lock_file="$_crony_dir/.lock"
+
+# if ! [ -d "$_crony_dir" ]; then
+#     mkdir -p $_crony_dir
+# fi
+
+
+# _lock_file_short=".lock"
+
+# if test -e "$_lock_file"; then
+#     echo "Execution prevented by a Lock file: $_lock_file_short"
+# else
+    if ! test -e "$_logs_file"; then
+        mkdir -p $_logs_dir && touch $_logs_file
+    fi
+
+    # echo "Lock file $_lock_file_short was not found." >> "$_logs_file" 2>&1
+    # touch $_lock_file
+    DJANGO_DIR="$SCRIPT_DIR/../"
+
+    echo "Working directory: $DJANGO_DIR" >> "$_logs_file" 2>&1
+
+    cd $DJANGO_DIR
+    echo "Current directory: $(pwd)" >> "$_logs_file" 2>&1
+
+    source $DJANGO_DIR/.venv/bin/activate
+    python -u scraper/tester.py "$@" >> "$_logs_file" 2>&1
+
+    # If operating from a remote machine, transfer files to the server.
+    # This is checked by the existence of _local_file (which is created only on the server, not on remote machines)
+    # _local_file="$_crony_dir/.local"
+    # if ! test -e "$_local_file"; then
+    #     echo "Transferring DCE files ..."  >> "$_logs_file" 2>&1
+    #     bash -ic "rsync-dce" >> "$_logs_file" 2>&1
+    #     echo "Transferring CSV items files ..."  >> "$_logs_file" 2>&1
+    #     bash -ic "rsync-csv" >> "$_logs_file" 2>&1
+    #     echo "Transferring logs files ..." >> "$_logs_file" 2>&1
+    #     bash -ic "rsync-logs" >> "$_logs_file" 2>&1
+    # fi
+
+    # echo "Script finished executing. See logs and system journal for details." >> "$_logs_file" 2>&1
+    # if test -e "$_lock_file"; then
+    #     echo "Script finished. Trying to remove Lock file." >> "$_logs_file" 2>&1
+    #     rm -f -- $_lock_file
+    #     echo "Removed Lock file." >> "$_logs_file" 2>&1
+    # fi
+# fi
+
+echo "<<<<<<<<<JOB<FINISHED<<<<<<<<<"
+
+

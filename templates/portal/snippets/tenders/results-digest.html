@@ -244,7 +244,7 @@
                                             {% progrefy group.amzgaro.lot.estimate selected_bid.amount_a as bid_bar %}
                                             <div class="progress bg-secondary-subtle py-0 mt-1"
                                                     style="height: 0.15rem;">
-                                                <div class="progress-bar bg-secondary" 
+                                                <div class="progress-bar {% if selected_bid.winner %}bg-success{% else %}bg-secondary{% endif %}" 
                                                         role="progressbar" style="width: {{ bid_bar|unlocalize }}%;" 
                                                         aria-valuenow="{{ bid_bar|unlocalize }}" aria-valuemin="0" 
                                                         aria-valuemax="100">

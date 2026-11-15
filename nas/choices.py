@@ -78,14 +78,19 @@ class ItemsPerPage(models.TextChoices):
     IPP_100 = '100', "100"
 
 class OrderingField(models.TextChoices):
-    DEADLINE_ASC  = 'deadline',   _('Deadline') + ' ↗'
-    DEADLINE_DES  = '-deadline',  _('Deadline') + ' ↘'
-    ESTIMATE_ASC  = 'estimate',   _('Estimate') + ' ↗'
-    ESTIMATE_DES  = '-estimate',  _('Estimate') + ' ↘'
-    BOND_ASC      = 'bond',       _('Guarantee') + ' ↗'
-    BOND_DES      = '-bond',      _('Guarantee') + ' ↘'
-    PUBLISHED_ASC = 'published',  _('Published') + ' ↗'
-    PUBLISHED_DES = '-published', _('Published') + ' ↘'
+    DEADLINE_ASC  = 'ddl',   _('Deadline') + ' ↗'
+    DEADLINE_DES  = '-ddl',  _('Deadline') + ' ↘'
+    ESTIMATE_ASC  = 'est',   _('Estimate') + ' ↗'
+    ESTIMATE_DES  = '-est',  _('Estimate') + ' ↘'
+    BOND_ASC      = 'gua',       _('Guarantee') + ' ↗'
+    BOND_DES      = '-gua',      _('Guarantee') + ' ↘'
+    PUBLISHED_ASC = 'pub',  _('Published') + ' ↗'
+    PUBLISHED_DES = '-pub', _('Published') + ' ↘'
+    VIEWS_ASC = 'vws',  _('Views') + ' ↗'
+    VIEWS_DES = '-vws', _('Views') + ' ↘'
+    DOWNLOADS_ASC = 'dnl',  _('Downloads') + ' ↗'
+    DOWNLOADS_DES = '-dnl', _('Downloads') + ' ↘'
+
 
 class PurchaseOrderOrderingField(models.TextChoices):
     DEADLINE_ASC    = 'deadline',     _('Deadline') + ' ↗'

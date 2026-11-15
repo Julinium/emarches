@@ -184,9 +184,9 @@ def getDCE(tender):
     
     if request_query.status_code != 200 : 
         helper.printMessage('ERROR', 'd.getDCE', f'Download query returned Status Code: {request_query.status_code} !')
-        helper.printMessage('TRACE', 'd.getDCE', f'Backing off for a longer while: {C.SLEEP_4XX_MIN}s to {C.SLEEP_4XX_MAX}s')
+        # helper.printMessage('TRACE', 'd.getDCE', f'Backing off for a longer while: {C.SLEEP_4XX_MIN}s to {C.SLEEP_4XX_MAX}s')
         
-        helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
+        helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX, f"Backing off after a {request_query.status_code}", "ERROR")
         return None
     else:
         helper.printMessage('DEBUG', 'd.getDCE', f'Download query returned 200.')
@@ -239,7 +239,7 @@ def getDCE(tender):
 
     if request_form.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Form submission: Response Status Code: {request_form.status_code} !')
-        helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
+        helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX, f"Backing off after a {request_query.status_code}", "ERROR")
         return None
     else: helper.printMessage('DEBUG', 'd.getDCE', f'Form submission: Successful')
 
@@ -254,7 +254,7 @@ def getDCE(tender):
 
     if request_file.status_code != 200 :
         helper.printMessage('ERROR', 'd.getDCE', f'Getting file: Response Status Code: {request_file.status_code} !')
-        helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
+        helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX, f"Backing off after a {request_file.status_code}", "ERROR")
         return None
     else: helper.printMessage('DEBUG', 'd.getDCE', f'Getting file returned Status Code: {request_file.status_code}')
 
@@ -380,7 +380,7 @@ def getExtraFiles(tender=None, extra_files=[]):
 
         if request_file.status_code != 200 :
             helper.printMessage('ERROR', 'd.getExtraFile', f'Getting file: Response Status Code: {request_file.status_code} !')
-            helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX)
+            helper.sleepRandom(C.SLEEP_4XX_MIN, C.SLEEP_4XX_MAX, f"Backing off after a {request_file.status_code}", "ERROR")
             continue
 
         else: helper.printMessage('DEBUG', 'd.getExtraFile', f'Getting file returned Status Code: {request_file.status_code}')
