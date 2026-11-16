@@ -1,0 +1,14 @@
+BBBBBBB BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBB BBBB
+BBBB BBBBBBB
+BBBBB BBBBBBBBBB
+     gettext(u'Authorize') 
+BBBBBBBB BBBBBBBBBB
+BBBBB BBBBBBB
+    BBBBBBB BB
+         gettext(u'Device Denied') 
+    BBBBBBBBBB
+    BBBBBBB B
+         gettext(u'Authorization for your %(client_name)s device has been denied.') SSSSSSSSSSSSS SSS SSSS SSSSSSSSSSSSSSS SSSSSS SSS SSSS SSSSSSS
+    BBBBBBBBBB
+BBBBBBBB

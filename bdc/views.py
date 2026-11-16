@@ -38,7 +38,7 @@ BDC_ITEMS_PER_PAGE = 10
 BDC_FIRST_ARTICLES = 10
 CLIENTS_ITEMS_PER_PAGE = 20
 
-BDC_ORDERING_FIELD = 'deadline'
+BDC_ORDERING_FIELD = 'ddl'
 SHOW_TODAYS_EXPIRED = True
 
 RABAT_TZ = ZoneInfo('Africa/Casablanca')
@@ -223,15 +223,20 @@ def bdc_list(request):
     all_bdcs = PurchaseOrder.objects.all()
     bdcs, filters = filter_bdcs(all_bdcs, query_dict, request.user)
 
-    sort = query_dict['sort']
+    key_map = {
+        "ddl": "-deadline", 
+        "-ddl": "deadline", 
+        "pub": "-published", 
+        "-pub": "published", 
+        "del": "-deliberated", 
+        "-del": "deliberated", 
+        "wam": "-winner_amount", 
+        "-wam": "winner_amount",
+    }
 
-    if sort and sort != '':
-        ordering = [sort]
-        if sort == 'published': ordering = ['-published']
-        if sort == '-published': ordering = ['published']
-    else: ordering = []
-
-    ordering.append('-created')
+    # sorter = query_dict.get("sort", BDC_ORDERING_FIELD)
+    # ordering = [key_map.get(query_dict.get("sort", BDC_ORDERING_FIELD)), "-created", 'id']
+    ordering = [key_map.get(query_dict["sort"], BDC_ORDERING_FIELD), "-created", 'id']
 
     query_dict['filters'] = filters
 

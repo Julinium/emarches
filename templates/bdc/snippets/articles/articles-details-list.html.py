@@ -1,0 +1,69 @@
+BBBB BBBB
+
+XXXX XXXXXXXXXXXXXXXXXXX
+    BBB BBBBBBB BB BBBBBBBBBBBBBBBB
+    XXXX XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXX
+
+        XXXX XXXXXXXXXXXXX
+            XXXXX XXXXXXXXXXXXX
+                XXXXX XXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX
+            XXXXXXX
+            XXXXX XXXXXXXXXXXXX
+                XXXXX XXXXXXXXXXXX XXXXXXXXXXXX gettext(u'Quantity') XXXXXXXX
+                XXXXX XXXXXXXXXXXXXXXXFFFFFFFFFFFFFFFFXXXXXXX
+                BB BBBBBBBBBBB
+                    XXXXX XXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXX
+                    XXXXX XXXXXXXXXXXXXXXXXXXXXXX
+                BBBBB
+            XXXXXXX
+            XXXXX XXXXXXXXXXXXX
+                XXXXX XXXXXXXXXXXX XXXXXXXXXXXX gettext(u'VAT') XXXXXXXX
+                XXXXX XXXXXXXXXFFFFFFFFFFFFFFFFXXXXXXXX
+            XXXXXXX
+        XXXXXX
+
+        XXXX XXXXXXXXXXXXX
+            XXXXX XXXXXXXXXXXXXXXXXXXXXXX
+        XXXXXX
+
+        BB BBBBBBBBBBBBBBBBBBBBBB
+            BB BBB BBBBBBBBBBBBBBBBBBBBBB BB BBBBBBBBBBB
+                BB BBBBBBBBBBBBBBBBBBBBBB BB BBBBBBBBBBBBB
+                    XXXX XXXXXXXXXXXXX XXXXXXXXXX XXXX XXXXXX
+                        XXXX XXXXXXXXX
+                            XX XXXXXXXXX XXXXXXXXXXXXXXXXXX
+                        XXXXXX
+                        XXXX XXXXXXXXXXXX XXXXXX
+                            XXXXX XXXXXXXXXXXX XXXXXX gettext(u'Specifications') XXXXXXXX
+                            XXXXX XXXXXXXXXFFFFFFFFFFF XXXXXXX
+                        XXXXXX
+                    XXXXXX
+                BBBBB
+            BBBBB
+        BBBBB
+        
+        BB BBBBBBBBBBBBBBBBBB
+            BB BBB BBBBBBBBBBBBBBBBBB BB BBBBBBBBBBB
+                BB BBBBBBBBBBBBBBBBBB BB BBBBBBBBBBBBB
+                    BB BBBBBBBBBBBBBBBBBB BB BBBBBBBBBBBBBBBBBBBBBB
+                        XXXX XXXXXXXXXXXXX XXXXXXXXXX XXXX XXXX XXXXXX
+                            XXXX XXXXXXXXX
+                                XX XXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                            XXXXXX
+                            XXXX XXXXXXXXXXXX XXXXXX
+                                XXXXX XXXXXXXXXXXX XXXXXX gettext(u'Warranties') XXXXXXXX
+                                XXXXX XXXXXXXXXFFFFFFFFFFF XXXXXXX
+                            XXXXXX
+                        XXXXXX
+                    BBBBB
+                BBBBB
+            BBBBB
+        BBBBB
+
+    XXXXXX
+    BBBBB
+        XXXX XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXX XXXXXXX gettext(u'No items found') XXXXXX
+    BBBBBB
+XXXXXX
+
+

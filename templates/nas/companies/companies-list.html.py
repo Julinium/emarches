@@ -1,0 +1,67 @@
+BBBBBBB BBBBBBBBBBBBBBBB
+BBBB BBBB BBBB BBBBBB
+BBBB BBBBBBBB
+
+BBBBB BBBBB
+     gettext(u'Companies list') 
+BBBBBBBB BBBBB
+
+
+BBBBB BBBBBBB
+
+    XXXX XXXXXXXXXXXXX XXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXXX XXXXXX
+        XXXX XXXXXXXXX
+            XXXXX XXXXXXXXX XXXXXX gettext(u'Companies list') XXXXXXX
+        XXXXXX
+    XXXXXX
+
+    XXXX XXXXXXXXXXXXXXX XXXXXX
+        XXXXX XXXXXXXXXXXXXXXX
+             
+        XXXXXXX
+        XXXXX XXXXXXXXXXXX XXXXXXXXXXXX gettext(u'Items found') XXXXXXXX
+        BB BBBBBBBBBBBBBBBBBBBBBBBB
+            XXXXX XXXXXXXXXXXX XXXXXXXXXXXX gettext(u'Showing') XXXXXXXX
+            XXXXX XXXXXXXXXXXXXX
+                XX XXXXXXXXX XXXXXXXXXXXXXXXX
+            XXXXXXX
+        BBBBB
+    XXXXXX
+
+    XX XXXXXXBBB BBBBBBBBBBBBBBBBBBBBX XXXXXXXXXX XXXXXXXXXXXXXXXXXXX XXXXXXXX XXXXXXXXX XXXXXXXXXX XXXXXXXXXX gettext(u'New Company') XXXX
+
+    XXXX XXXXXXXXXXXXXXXX XXXX XXXXXX
+        BB BBBBBBBB
+            XXXX XXXXXXXXXXXXXXXXXXX
+                BBB BBBBBBB BB BBBBBBBB
+
+                    BBBBBBBBB BBBBBBBBBBBBBBB
+                        XXXX XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXX
+                            XXXXX XXXXXXXXXXXXXXXX
+                                BB BBBBBBBBBBBBBBB BB BBBB
+                                     gettext(u'My companies') 
+                                BBBB
+                                     gettext(u"Team's companies") 
+                                BBBBB
+                            XXXXXXX
+                        XXXXXX
+                    BBBBBBBBBBBB
+
+                    XXXX XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXXXXXXXX XXXXX
+                        BBBBBBB BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB BBBB BBBBBBBBBBBBBBB
+                    XXXXXX
+                    
+                BBBBBB
+
+            XXXXXX
+            
+            BBBBBBB BBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+        BBBB
+            BBBBBBB BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+        BBBBB
+
+    XXXXXX
+
+BBBBBBBB BBBBBBB
+
+

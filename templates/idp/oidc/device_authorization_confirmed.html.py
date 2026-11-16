@@ -1,0 +1,14 @@
+BBBBBBB BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBB BBBB
+BBBB BBBBBBB
+BBBBB BBBBBBBBBB
+     gettext(u'Authorize') 
+BBBBBBBB BBBBBBBBBB
+BBBBB BBBBBBB
+    BBBBBBB BB
+         gettext(u'Device Authorized') 
+    BBBBBBBBBB
+    BBBBBBB B
+         gettext(u'You successfully authorized your %(client_name)s device.') SSS SSSSSSSSSSSS SSSSSSSSSS SSSS SSSSSSSSSSSSSSS SSSSSSS
+    BBBBBBBBBB
+BBBBBBBB

@@ -340,17 +340,6 @@ def tender_list(request):
     all_tenders = Tender.objects.all()
     tenders, filters = filter_tenders(all_tenders, query_dict, request.user)
 
-    # sort = query_dict["sort"]
-
-    # allowed_keys = [
-    #     "deadline", "-deadline", "estimate", "-estimate", "bond", "-bond", 
-    #     "minutes_end", "-minutes_end", "published", "-published", 
-    #     "views_count", "-views_count", "downloads_count", "-downloads_count", 
-    #     # "favorites_count", "-favorites_count",
-    #     "ddl", "-ddl", "est", "-est", "gua", "-gua",        
-    #     "res", "-res", "pub", "-pub", "vws", "-vws", "dnl","-dnl",        
-    # ]
-
     key_map = {
         "ddl": "-deadline", 
         "-ddl": "deadline", 
@@ -366,43 +355,9 @@ def tender_list(request):
         "-vws": "views_count", 
         "dnl": "-downloads_count", 
         "-dnl": "downloads_count", 
-        # "fav": "-favorites_count", 
-        # "-fav": "favorites_count",
-        # "deadline": "deadline", 
-        # "-deadline": "-deadline", 
-        # "estimate": "-estimate", 
-        # "-estimate": "estimate", 
-        # "bond": "-bond", 
-        # "-bond": "bond",         
-        # "minutes_end": "minutes_end", 
-        # "-minutes_end": "-minutes_end", 
-        # "published": "published", 
-        # "-published": "-published", 
-        # "views_count": "-views_count", 
-        # "-views_count": "views_count", 
-        # "downloads_count": "downloads_count", 
-        # "-downloads_count": "-downloads_count", 
     }
 
     ordering = [key_map.get(query_dict["sort"], TENDERS_ORDERING_FIELD), "-created", 'id']
-
-    # if sort not in allowed_keys: sort = None
-
-    # if sort and sort != "":
-    #     reversed_keys = [
-    #         "published", "-published", "views_count", "-views_count", 
-    #         "downloads_count", "-downloads_count", 
-    #         # "favorites_count", "-favorites_count"
-    #         ]
-    #     if sort in reversed_keys:
-    #         if sort.startswith("-"): sort = sort.lstrip("-")
-    #         else: sort = f"-{sort}"
-    #     ordering = [sort]
-    # else:
-    #     ordering = []
-
-    # ordering.append("-created")
-    # ordering.append("id")
 
     query_dict["filters"] = filters
 

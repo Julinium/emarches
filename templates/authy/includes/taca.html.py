@@ -1,0 +1,5 @@
+BBBB BBBB
+XX XXXXXXXXXXX XXXXXXXXXX XXXXXXX
+     gettext(u'Terms and conditions apply') X 
+    XX XXXXXXXXXXXXXXX XXXXXXBBB BBBBBBBBBBBXXXXXX gettext(u'Read more') XXXX
+XXXX

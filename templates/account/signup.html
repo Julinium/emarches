@@ -28,7 +28,6 @@
             {% slot actions %}
             
                 {% include 'authy/includes/junky.html' %}
-                {% include 'authy/includes/taca.html' %}
 
                 {% element button tags="prominent,signup" type="submit" %}
                     {% trans "Sign Up" %}
@@ -46,4 +45,5 @@
     {% if SOCIALACCOUNT_ENABLED %}
         {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
     {% endif %}
+                {% include 'authy/includes/taca.html' %}
 {% endblock content %}

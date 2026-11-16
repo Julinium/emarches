@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-09 11:45+0100\n"
+"POT-Creation-Date: 2026-11-16 13:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -34,7 +34,7 @@ msgstr ""
 #: templates/bdc/snippets/bdcs/search-form.html:39
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/search-form.html:40
-#: templates/portal/tender-details.html:130
+#: templates/portal/tender-details.html:127
 msgid "Reference"
 msgstr ""
 
@@ -72,7 +72,7 @@ msgstr ""
 
 #: base/models.py:305 templates/portal/snippets/tenders/tender-legend.html:323
 #: templates/portal/snippets/tenders/tender-summary.html:266
-#: templates/portal/tender-details.html:184
+#: templates/portal/tender-details.html:181
 msgid "Variants accepted"
 msgstr ""
 
@@ -114,11 +114,11 @@ msgid "Execution location"
 msgstr ""
 
 #: base/models.py:315 templates/portal/snippets/tenders/search-form.html:131
-#: templates/portal/tender-details.html:150
+#: templates/portal/tender-details.html:147
 msgid "Electronic bidding"
 msgstr ""
 
-#: base/models.py:316 templates/portal/tender-details.html:162
+#: base/models.py:316 templates/portal/tender-details.html:159
 msgid "Electronic signature"
 msgstr ""
 
@@ -186,7 +186,7 @@ msgid "Awarding mode"
 msgstr ""
 
 #: base/models.py:333 templates/portal/snippets/tenders/search-form.html:119
-#: templates/portal/tender-details.html:144
+#: templates/portal/tender-details.html:141
 msgid "Procedure"
 msgstr ""
 
@@ -198,7 +198,7 @@ msgstr ""
 #: templates/insights/bidder-pdf.html:285 templates/portal/domains-list.html:6
 #: templates/portal/domains-list.html:12
 #: templates/portal/snippets/tenders/search-form.html:43
-#: templates/portal/tender-details.html:297
+#: templates/portal/tender-details.html:291
 msgid "Domains of activity"
 msgstr ""
 
@@ -270,9 +270,9 @@ msgstr ""
 msgid "Log in to view"
 msgstr ""
 
-#: base/views.py:78 bdc/views.py:350 bdc/views.py:402 bdc/views.py:420
-#: bdc/views.py:442 bdc/views.py:469 bdc/views.py:472 bdc/views.py:611
-#: bdc/views.py:614 bdc/views.py:635 bdc/views.py:642 bidding/views.py:76
+#: base/views.py:78 bdc/views.py:355 bdc/views.py:407 bdc/views.py:425
+#: bdc/views.py:447 bdc/views.py:474 bdc/views.py:477 bdc/views.py:616
+#: bdc/views.py:619 bdc/views.py:640 bdc/views.py:647 bidding/views.py:76
 #: bidding/views.py:131 bidding/views.py:195 bidding/views.py:2088
 #: bidding/views.py:2126 bidding/views.py:2147 bidding/views.py:2181
 #: nas/views.py:374 nas/views.py:378 nas/views.py:391 nas/views.py:463
@@ -280,13 +280,13 @@ msgstr ""
 #: templates/portal/snippets/lots/qu-ag.html:22
 #: templates/portal/snippets/lots/sa-me-vi.html:22
 #: templates/portal/snippets/tenders/qu-ag.html:36
-#: templates/portal/tender-details.html:275
+#: templates/portal/tender-details.html:269
 msgid "Not found"
 msgstr ""
 
-#: base/views.py:83 base/views.py:87 bdc/views.py:60 bdc/views.py:274
-#: bdc/views.py:340 bdc/views.py:389 bdc/views.py:429 bdc/views.py:482
-#: bdc/views.py:608 bdc/views.py:639 bdc/views.py:663 bidding/views.py:68
+#: base/views.py:83 base/views.py:87 bdc/views.py:60 bdc/views.py:279
+#: bdc/views.py:345 bdc/views.py:394 bdc/views.py:434 bdc/views.py:487
+#: bdc/views.py:613 bdc/views.py:644 bdc/views.py:668 bidding/views.py:68
 #: bidding/views.py:88 bidding/views.py:123 bidding/views.py:143
 #: bidding/views.py:173 bidding/views.py:255 bidding/views.py:350
 #: bidding/views.py:367 bidding/views.py:419 bidding/views.py:468
@@ -400,8 +400,8 @@ msgstr ""
 msgid "Attachement"
 msgstr ""
 
-#: bdc/views.py:393 bdc/views.py:397 bdc/views.py:433 bdc/views.py:437
-#: bdc/views.py:610 bdc/views.py:634 bdc/views.py:659 bidding/views.py:72
+#: bdc/views.py:398 bdc/views.py:402 bdc/views.py:438 bdc/views.py:442
+#: bdc/views.py:615 bdc/views.py:639 bdc/views.py:664 bidding/views.py:72
 #: bidding/views.py:111 bidding/views.py:127 bidding/views.py:177
 #: bidding/views.py:181 bidding/views.py:199 bidding/views.py:206
 #: bidding/views.py:375 bidding/views.py:1640 bidding/views.py:1831
@@ -442,17 +442,17 @@ msgstr ""
 
 #: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:75
 #: templates/portal/snippets/lots/lot-details.html:86
-#: templates/portal/tender-details.html:177
-#: templates/portal/tender-details.html:187
-#: templates/portal/tender-details.html:198
+#: templates/portal/tender-details.html:174
+#: templates/portal/tender-details.html:184
+#: templates/portal/tender-details.html:195
 msgid "Yes"
 msgstr ""
 
 #: bidding/forms.py:40 templates/portal/snippets/lots/lot-details.html:75
 #: templates/portal/snippets/lots/lot-details.html:86
-#: templates/portal/tender-details.html:179
-#: templates/portal/tender-details.html:189
-#: templates/portal/tender-details.html:200
+#: templates/portal/tender-details.html:176
+#: templates/portal/tender-details.html:186
+#: templates/portal/tender-details.html:197
 msgid "No"
 msgstr ""
 
@@ -1225,20 +1225,20 @@ msgstr ""
 msgid "Tender"
 msgstr ""
 
-#: insights/weasy.py:172 nas/choices.py:87 nas/choices.py:88 nas/choices.py:93
-#: nas/choices.py:94 templates/bdc/bdc-details.html:86
+#: insights/weasy.py:172 nas/choices.py:87 nas/choices.py:88 nas/choices.py:98
+#: nas/choices.py:99 templates/bdc/bdc-details.html:86
 #: templates/bdc/snippets/bdcs/menu-sort.html:23
 #: templates/bidding/bid-form.html:64
 #: templates/portal/snippets/tenders/menu-sort.html:35
-#: templates/portal/tender-details.html:133
+#: templates/portal/tender-details.html:130
 msgid "Published"
 msgstr ""
 
-#: insights/weasy.py:174 nas/choices.py:81 nas/choices.py:82 nas/choices.py:91
-#: nas/choices.py:92 templates/bdc/bdc-details.html:73
+#: insights/weasy.py:174 nas/choices.py:81 nas/choices.py:82 nas/choices.py:96
+#: nas/choices.py:97 templates/bdc/bdc-details.html:73
 #: templates/bdc/snippets/bdcs/menu-sort.html:17
 #: templates/portal/snippets/tenders/menu-sort.html:17
-#: templates/portal/tender-details.html:119
+#: templates/portal/tender-details.html:118
 msgid "Deadline"
 msgstr ""
 
@@ -1414,32 +1414,46 @@ msgstr ""
 msgid "Denied"
 msgstr ""
 
-#: nas/choices.py:95 nas/choices.py:96
+#: nas/choices.py:89 nas/choices.py:90
+#: templates/portal/snippets/tenders/menu-sort.html:46
+#: templates/portal/snippets/tenders/tender-summary.html:289
+#: templates/portal/tender-details.html:446
+msgid "Views"
+msgstr ""
+
+#: nas/choices.py:91 nas/choices.py:92
+#: templates/portal/snippets/tenders/menu-sort.html:51
+#: templates/portal/snippets/tenders/tender-summary.html:307
+#: templates/portal/tender-details.html:457
+msgid "Downloads"
+msgstr ""
+
+#: nas/choices.py:100 nas/choices.py:101
 #: templates/bdc/snippets/bdcs/menu-clean.html:43
 #: templates/bdc/snippets/bdcs/menu-sort.html:29
 #: templates/bdc/snippets/bdcs/search-form.html:123
 msgid "Deliberated"
 msgstr ""
 
-#: nas/choices.py:97 nas/choices.py:98 templates/bdc/bdc-details.html:131
-#: templates/bdc/snippets/bdcs/bdc-legend.html:155
-#: templates/bdc/snippets/bdcs/menu-sort.html:35
-msgid "Winner amount"
+#: nas/choices.py:102 nas/choices.py:103
+#: templates/insights/snippets/bidders/bidder-item.html:28
+#: templates/insights/snippets/bidders/digest-card.html:107
+msgid "Awarded amount"
 msgstr ""
 
-#: nas/choices.py:131
+#: nas/choices.py:136
 msgid "eSign Key"
 msgstr ""
 
-#: nas/choices.py:132
+#: nas/choices.py:137
 msgid "Manageriat"
 msgstr ""
 
-#: nas/choices.py:133
+#: nas/choices.py:138
 msgid "Rental"
 msgstr ""
 
-#: nas/choices.py:134 templates/bdc/snippets/menu-bdc.html:50
+#: nas/choices.py:139 templates/bdc/snippets/menu-bdc.html:50
 #: templates/portal/snippets/menu-tenders.html:57
 msgid "Services"
 msgstr ""
@@ -1456,7 +1470,7 @@ msgstr ""
 #: nas/models.py:286 templates/base/includes/footer.html:56
 #: templates/crm/snippets/customers/customer-item.html:76
 #: templates/nas/profile/snippets/user-details.html:29
-#: templates/portal/tender-details.html:345
+#: templates/portal/tender-details.html:339
 msgid "Phone"
 msgstr ""
 
@@ -1633,7 +1647,7 @@ msgstr ""
 #: templates/nas/companies/snippets/company-item.html:119
 #: templates/nas/companies/snippets/company_data.html:45
 #: templates/nas/profile/snippets/user-details.html:17
-#: templates/portal/tender-details.html:350
+#: templates/portal/tender-details.html:344
 msgid "Email"
 msgstr ""
 
@@ -2524,7 +2538,7 @@ msgstr ""
 msgid "Signup"
 msgstr ""
 
-#: templates/account/signup.html:8 templates/account/signup.html:34
+#: templates/account/signup.html:8 templates/account/signup.html:33
 #: templates/account/signup_by_passkey.html:29
 #: templates/authy/snippets/menu-user.html:93
 #: templates/base/snippets/menu-user.html:120
@@ -2537,7 +2551,7 @@ msgstr ""
 msgid "Already have an account? Then please %(link)ssign in%(end_link)s."
 msgstr ""
 
-#: templates/account/signup.html:43
+#: templates/account/signup.html:42
 msgid "Sign up using a passkey"
 msgstr ""
 
@@ -2617,64 +2631,64 @@ msgid ""
 "email address</a>."
 msgstr ""
 
-#: templates/authy/includes/junky.html:8
-msgid "Confirmation message"
-msgstr ""
-
-#: templates/authy/includes/junky.html:17
+#: templates/authy/includes/junky.html:8 templates/authy/includes/junky.html:19
 msgid "Valid email equired"
 msgstr ""
 
-#: templates/authy/includes/junky.html:18
+#: templates/authy/includes/junky.html:9
+msgid "Check your <strong>Spam/Junk</strong>"
+msgstr ""
+
+#: templates/authy/includes/junky.html:20
 msgid "For security reason, we send a confirmation email to your email address"
 msgstr ""
 
-#: templates/authy/includes/junky.html:26
+#: templates/authy/includes/junky.html:28
 #, python-format
 msgid "It's 100%% safe"
 msgstr ""
 
-#: templates/authy/includes/junky.html:27
+#: templates/authy/includes/junky.html:29
 msgid ""
 "We are running our own private email server and we are using the highest "
 "standards of security and privacy"
 msgstr ""
 
-#: templates/authy/includes/junky.html:28
+#: templates/authy/includes/junky.html:30
 msgid ""
 "The giant email providers, especially Google, do not like us and "
 "systematically flag our emails as spam for no valid reason"
 msgstr ""
 
-#: templates/authy/includes/junky.html:36
+#: templates/authy/includes/junky.html:38
 msgid "It may go to Spam/Junk"
 msgstr ""
 
-#: templates/authy/includes/junky.html:37
+#: templates/authy/includes/junky.html:39
 msgid ""
 "If you do not get your confirmation email in 2 minutes after signup, please "
 "check your Spam/Junk folder"
 msgstr ""
 
-#: templates/authy/includes/junky.html:45
+#: templates/authy/includes/junky.html:47
 msgid "You can help us"
 msgstr ""
 
-#: templates/authy/includes/junky.html:46
+#: templates/authy/includes/junky.html:48
 msgid "If you wish, you can help us by flagging our emails as Safe/Not spam"
 msgstr ""
 
-#: templates/authy/includes/junky.html:54
+#: templates/authy/includes/junky.html:56
 #: templates/base/includes/anonymous.html:52
 msgid "Support or information"
 msgstr ""
 
-#: templates/authy/includes/junky.html:55
+#: templates/authy/includes/junky.html:57
 #: templates/base/includes/anonymous.html:53
 msgid "For support or further information, please feel free to contact us."
 msgstr ""
 
-#: templates/authy/includes/junky.html:57
+#: templates/authy/includes/junky.html:59
 #: templates/base/errors/unallowed.html:15
 #: templates/base/includes/anonymous.html:55
 msgid "Contact us"
@@ -3468,14 +3482,12 @@ msgstr ""
 #: templates/bidding/tenders-list.html:101
 #: templates/portal/snippets/tenders/tender-summary.html:88
 #: templates/portal/tender-details.html:59
-#: templates/portal/tender-details.html:516
+#: templates/portal/tender-details.html:510
 msgid "CANCELLED"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:74 templates/bdc/bdc-details.html:114
 #: templates/bdc/snippets/bdcs/bdc-summary.html:66
-#: templates/portal/tender-details.html:120
-#: templates/portal/tender-details.html:223
 msgid "Morocco time"
 msgstr ""
 
@@ -3487,7 +3499,7 @@ msgstr ""
 #: templates/nas/user-settings-edit.html:117
 #: templates/nas/user-settings-edit.html:197
 #: templates/portal/tender-details.html:115
-#: templates/portal/tender-details.html:439
+#: templates/portal/tender-details.html:433
 msgid "days"
 msgstr ""
 
@@ -3496,8 +3508,8 @@ msgstr ""
 #: templates/bdc/snippets/bdcs/bdc-legend.html:9
 #: templates/portal/snippets/tenders/tender-legend.html:8
 #: templates/portal/snippets/tenders/tender-legend.html:12
-#: templates/portal/tender-details.html:428
-#: templates/portal/tender-details.html:433
+#: templates/portal/tender-details.html:422
+#: templates/portal/tender-details.html:427
 msgid "UTC"
 msgstr ""
 
@@ -3506,7 +3518,7 @@ msgstr ""
 #: templates/bdc/snippets/bdcs/bdc-summary.html:45
 #: templates/portal/snippets/tenders/tender-legend.html:92
 #: templates/portal/snippets/tenders/tender-summary.html:50
-#: templates/portal/tender-details.html:139
+#: templates/portal/tender-details.html:136
 msgid "Execution Location"
 msgstr ""
 
@@ -3536,6 +3548,12 @@ msgstr ""
 msgid "UNSUCCESSFUL"
 msgstr ""
 
+#: templates/bdc/bdc-details.html:131
+#: templates/bdc/snippets/bdcs/bdc-legend.html:155
+#: templates/bdc/snippets/bdcs/menu-sort.html:35
+msgid "Winner amount"
+msgstr ""
+
 #: templates/bdc/bdc-details.html:146
 msgid "Awarding"
 msgstr ""
@@ -3555,7 +3573,7 @@ msgid "Export"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:189 templates/bidding/team-recap.html:127
-#: templates/portal/tender-details.html:427
+#: templates/portal/tender-details.html:421
 msgid "Created"
 msgstr ""
 
@@ -3575,7 +3593,7 @@ msgstr ""
 msgid "Purchase Order files"
 msgstr ""
 
-#: templates/bdc/bdc-details.html:224 templates/portal/tender-details.html:540
+#: templates/bdc/bdc-details.html:224 templates/portal/tender-details.html:534
 msgid ""
 "Once you click on an item, your browser or device should handle the download "
 "process."
@@ -3591,8 +3609,8 @@ msgstr ""
 msgid "Files for this PO are not ready, yet."
 msgstr ""
 
-#: templates/bdc/bdc-details.html:238 templates/portal/tender-details.html:276
-#: templates/portal/tender-details.html:568
+#: templates/bdc/bdc-details.html:238 templates/portal/tender-details.html:270
+#: templates/portal/tender-details.html:562
 msgid "Please try again later, or contact us if this problem persists."
 msgstr ""
 
@@ -3604,8 +3622,8 @@ msgstr ""
 #: templates/portal/snippets/lots/lots-details.html:22
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:28
 #: templates/portal/snippets/tenders/tender-simulator-modal.html:170
-#: templates/portal/tender-details.html:582
-#: templates/portal/tender-details.html:612
+#: templates/portal/tender-details.html:576
+#: templates/portal/tender-details.html:606
 msgid "Close"
 msgstr ""
 
@@ -3619,15 +3637,15 @@ msgstr ""
 
 #: templates/bdc/bdc-details.html:282
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:662
-#: templates/portal/tender-details.html:706
+#: templates/portal/tender-details.html:656
+#: templates/portal/tender-details.html:700
 msgid "Operation failed"
 msgstr ""
 
 #: templates/bdc/bdc-details.html:282
 #: templates/bdc/snippets/bdcs/menu-clean.html:121
-#: templates/portal/tender-details.html:662
-#: templates/portal/tender-details.html:706
+#: templates/portal/tender-details.html:656
+#: templates/portal/tender-details.html:700
 msgid "Please refresh the page or try again later"
 msgstr ""
 
@@ -3768,7 +3786,7 @@ msgstr ""
 
 #: templates/bdc/snippets/bdcs/bdc-summary.html:15
 #: templates/portal/snippets/tenders/tender-summary.html:16
-#: templates/portal/tender-details.html:136
+#: templates/portal/tender-details.html:133
 msgid "Main Category"
 msgstr ""
 
@@ -5230,7 +5248,7 @@ msgid "Print"
 msgstr ""
 
 #: templates/insights/bidder-details.html:286
-#: templates/portal/tender-details.html:673
+#: templates/portal/tender-details.html:667
 msgid "URL was copied to clipboard"
 msgstr ""
 
@@ -5309,11 +5327,6 @@ msgstr ""
 #: templates/insights/snippets/bidders/digest-card.html:100
 #: templates/insights/snippets/bidders/pdf/digest-card.html:80
 msgid "Awarded Bids"
-msgstr ""
-
-#: templates/insights/snippets/bidders/bidder-item.html:28
-#: templates/insights/snippets/bidders/digest-card.html:107
-msgid "Awarded amount"
 msgstr ""
 
 #: templates/insights/snippets/bidders/bidder-item.html:48
@@ -6247,32 +6260,32 @@ msgid "Reserved"
 msgstr ""
 
 #: templates/portal/snippets/lots/lot-details.html:96
-#: templates/portal/tender-details.html:213
+#: templates/portal/tender-details.html:210
 msgid "Required Licences"
 msgstr ""
 
 #: templates/portal/snippets/lots/lot-details.html:101
-#: templates/portal/tender-details.html:218
+#: templates/portal/tender-details.html:215
 msgid "Required Qualifications"
 msgstr ""
 
 #: templates/portal/snippets/lots/lot-details.html:106
-#: templates/portal/tender-details.html:225
+#: templates/portal/tender-details.html:220
 msgid "Required Samples"
 msgstr ""
 
 #: templates/portal/snippets/lots/lot-details.html:111
-#: templates/portal/tender-details.html:230
+#: templates/portal/tender-details.html:225
 msgid "Scheduled Meetings"
 msgstr ""
 
 #: templates/portal/snippets/lots/lot-details.html:116
-#: templates/portal/tender-details.html:235
+#: templates/portal/tender-details.html:230
 msgid "Site Survey"
 msgstr ""
 
 #: templates/portal/snippets/lots/lots-details.html:9
-#: templates/portal/tender-details.html:248
+#: templates/portal/tender-details.html:242
 msgid "Lots details"
 msgstr ""
 
@@ -6290,18 +6303,6 @@ msgstr ""
 
 #: templates/portal/snippets/tenders/menu-sort.html:40
 msgid "Minutes finished"
-msgstr ""
-
-#: templates/portal/snippets/tenders/menu-sort.html:46
-#: templates/portal/snippets/tenders/tender-summary.html:289
-#: templates/portal/tender-details.html:452
-msgid "Views"
-msgstr ""
-
-#: templates/portal/snippets/tenders/menu-sort.html:51
-#: templates/portal/snippets/tenders/tender-summary.html:307
-#: templates/portal/tender-details.html:463
-msgid "Downloads"
 msgstr ""
 
 #: templates/portal/snippets/tenders/results-digest.html:9
@@ -6352,14 +6353,14 @@ msgstr ""
 #: templates/portal/snippets/tenders/search-form.html:176
 #: templates/portal/snippets/tenders/search-form.html:206
 #: templates/portal/snippets/tenders/search-form.html:217
-#: templates/portal/tender-details.html:153
-#: templates/portal/tender-details.html:165
+#: templates/portal/tender-details.html:150
+#: templates/portal/tender-details.html:162
 msgid "Required"
 msgstr ""
 
 #: templates/portal/snippets/tenders/search-form.html:135
-#: templates/portal/tender-details.html:155
-#: templates/portal/tender-details.html:167
+#: templates/portal/tender-details.html:152
+#: templates/portal/tender-details.html:164
 msgid "Optional"
 msgstr ""
 
@@ -6514,7 +6515,7 @@ msgstr ""
 
 #: templates/portal/snippets/tenders/tender-legend.html:257
 #: templates/portal/snippets/tenders/tender-summary.html:223
-#: templates/portal/tender-details.html:174
+#: templates/portal/tender-details.html:171
 msgid "Reserved to SMBs, individuals, Unions, ..."
 msgstr ""
 
@@ -6577,7 +6578,7 @@ msgid "Offers count"
 msgstr ""
 
 #: templates/portal/snippets/tenders/tender-summary.html:21
-#: templates/portal/tender-details.html:124
+#: templates/portal/tender-details.html:121
 msgid "Total Estimate"
 msgstr ""
 
@@ -6626,153 +6627,153 @@ msgid "My Bids"
 msgstr ""
 
 #: templates/portal/tender-details.html:95
-#: templates/portal/tender-details.html:265
+#: templates/portal/tender-details.html:259
 msgid "Add Bid"
 msgstr ""
 
-#: templates/portal/tender-details.html:127
+#: templates/portal/tender-details.html:124
 msgid "Total Guarantee"
 msgstr ""
 
-#: templates/portal/tender-details.html:147
+#: templates/portal/tender-details.html:144
 msgid "Awarding Mode"
 msgstr ""
 
-#: templates/portal/tender-details.html:157
-#: templates/portal/tender-details.html:169
+#: templates/portal/tender-details.html:154
+#: templates/portal/tender-details.html:166
 msgid "Not Applicable"
 msgstr ""
 
-#: templates/portal/tender-details.html:195
+#: templates/portal/tender-details.html:192
 msgid "Environmental clauses"
 msgstr ""
 
-#: templates/portal/tender-details.html:207
+#: templates/portal/tender-details.html:204
 msgid "Price of Plans"
 msgstr ""
 
-#: templates/portal/tender-details.html:326
+#: templates/portal/tender-details.html:320
 msgid "Addresses and Contact"
 msgstr ""
 
-#: templates/portal/tender-details.html:332
+#: templates/portal/tender-details.html:326
 msgid "Withdrawal Address"
 msgstr ""
 
-#: templates/portal/tender-details.html:335
+#: templates/portal/tender-details.html:329
 msgid "Bidding Address"
 msgstr ""
 
-#: templates/portal/tender-details.html:338
+#: templates/portal/tender-details.html:332
 msgid "Opening Address"
 msgstr ""
 
-#: templates/portal/tender-details.html:341
+#: templates/portal/tender-details.html:335
 msgid "Person"
 msgstr ""
 
-#: templates/portal/tender-details.html:355
+#: templates/portal/tender-details.html:349
 msgid "Fax"
 msgstr ""
 
-#: templates/portal/tender-details.html:372
+#: templates/portal/tender-details.html:366
 msgid "Changes"
 msgstr ""
 
-#: templates/portal/tender-details.html:373
+#: templates/portal/tender-details.html:367
 msgid "Experimental"
 msgstr ""
 
-#: templates/portal/tender-details.html:379
+#: templates/portal/tender-details.html:373
 msgid "Empty"
 msgstr ""
 
-#: templates/portal/tender-details.html:420
+#: templates/portal/tender-details.html:414
 msgid "Advanced data"
 msgstr ""
 
-#: templates/portal/tender-details.html:434
+#: templates/portal/tender-details.html:428
 msgid "Last updated"
 msgstr ""
 
-#: templates/portal/tender-details.html:438
+#: templates/portal/tender-details.html:432
 msgid "Time on display"
 msgstr ""
 
-#: templates/portal/tender-details.html:442
+#: templates/portal/tender-details.html:436
 msgid "Guarantee ratio"
 msgstr ""
 
-#: templates/portal/tender-details.html:448
+#: templates/portal/tender-details.html:442
 msgid "Database ID"
 msgstr ""
 
-#: templates/portal/tender-details.html:457
+#: templates/portal/tender-details.html:451
 msgid "Latest view since"
 msgstr ""
 
-#: templates/portal/tender-details.html:468
+#: templates/portal/tender-details.html:462
 msgid "Latest download since"
 msgstr ""
 
-#: templates/portal/tender-details.html:492
-#: templates/portal/tender-details.html:504
+#: templates/portal/tender-details.html:486
+#: templates/portal/tender-details.html:498
 msgid "Awarding Minutes"
 msgstr ""
 
-#: templates/portal/tender-details.html:505
+#: templates/portal/tender-details.html:499
 msgid "No Minutes found"
 msgstr ""
 
-#: templates/portal/tender-details.html:535
+#: templates/portal/tender-details.html:529
 msgid "Tender downloads"
 msgstr ""
 
-#: templates/portal/tender-details.html:541
+#: templates/portal/tender-details.html:535
 msgid "DCE Files"
 msgstr ""
 
-#: templates/portal/tender-details.html:552
+#: templates/portal/tender-details.html:546
 msgid "Extra Files"
 msgstr ""
 
-#: templates/portal/tender-details.html:567
+#: templates/portal/tender-details.html:561
 msgid "Files for this Tender are not ready, yet."
 msgstr ""
 
-#: templates/portal/tender-details.html:576
+#: templates/portal/tender-details.html:570
 msgid "Legal Information"
 msgstr ""
 
-#: templates/portal/tender-details.html:593
+#: templates/portal/tender-details.html:587
 msgid "Request Tender files"
 msgstr ""
 
-#: templates/portal/tender-details.html:597
+#: templates/portal/tender-details.html:591
 msgid "Files for this Tender are already queued"
 msgstr ""
 
-#: templates/portal/tender-details.html:599
+#: templates/portal/tender-details.html:593
 msgid "We will make this Tender files available as soon as possible."
 msgstr ""
 
-#: templates/portal/tender-details.html:607
+#: templates/portal/tender-details.html:601
 msgid "Request"
 msgstr ""
 
-#: templates/portal/tender-details.html:640
+#: templates/portal/tender-details.html:634
 msgid "Item added to Favourites"
 msgstr ""
 
-#: templates/portal/tender-details.html:651
+#: templates/portal/tender-details.html:645
 msgid "Item removed from Favourites"
 msgstr ""
 
-#: templates/portal/tender-details.html:684
+#: templates/portal/tender-details.html:678
 msgid "Files request submitted"
 msgstr ""
 
-#: templates/portal/tender-details.html:695
+#: templates/portal/tender-details.html:689
 msgid "Files are already queued for download"
 msgstr ""
 

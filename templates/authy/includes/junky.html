@@ -4,8 +4,10 @@
     <div class="accordion-item shadow">
         <h2 class="accordion-header">
             <button class="accordion-button bg-warning-subtle p-2 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDetails" aria-expanded="false" aria-controls="collapseDetails">
-                <span class=""><i class="bi bi-exclamation-triangle"></i></span>
-                <span class="ms-1 small">{% trans "Confirmation message" %}</span>
+                <span class="me-2"><i class="bi bi-envelope-exclamation-fill"></i></span>
+                <!-- <span class="ms-1 small">{% trans "Valid email equired" %}</span> -->
+                <span class="small">{% blocktrans %}Check your <strong>Spam/Junk</strong>{% endblocktrans %}.</span>
+                
             </button>
         </h2>
         <div id="collapseDetails" class="accordion-collapse collapse hide" data-bs-parent="#accordionJunk">
@@ -53,9 +55,9 @@
                         <div class="ms-2 w-100">
                             <span class="fw-bold">{% trans "Support or information" %}?</span><br>
                             <span class="small">{% trans "For support or further information, please feel free to contact us." %}.</span><br>
-                            <div class=" mt-2">
+                            <!-- <div class=" mt-2">
                                 <a class="btn btn-outline-secondary" target="_blank" href="{% url 'base_home' %}">{% trans "Contact us" %}</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

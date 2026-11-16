@@ -1,0 +1,14 @@
+BBBBBBB BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB
+BBBB BBBB
+BBBB BBBBBBB
+BBBBB BBBBBBBBBB
+     gettext(u'Account Inactive') 
+BBBBBBBB BBBBBBBBBB
+BBBBB BBBBBBB
+    BBBBBBB BB
+         gettext(u'Account Inactive') 
+    BBBBBBBBBB
+    BBBBBBB B
+         gettext(u'This account is inactive.') 
+    BBBBBBBBBB
+BBBBBBBB BBBBBBB

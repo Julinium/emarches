@@ -93,14 +93,14 @@ class OrderingField(models.TextChoices):
 
 
 class PurchaseOrderOrderingField(models.TextChoices):
-    DEADLINE_ASC    = 'deadline',     _('Deadline') + ' ↗'
-    DEADLINE_DES    = '-deadline',    _('Deadline') + ' ↘'
-    PUBLISHED_ASC   = 'published',    _('Published') + ' ↗'
-    PUBLISHED_DES   = '-published',   _('Published') + ' ↘'
-    DELIBERATED_ASC = 'deliberated',  _('Deliberated') + ' ↗'
-    DELIBERATED_DES = '-deliberated', _('Deliberated') + ' ↘'
-    WIN_AMOUNT_ASC  = 'winner_amount', _('Winner amount') + ' ↗'
-    WIN_AMOUNT_DES  = '-winner_amount',_('Winner amount') + ' ↘'
+    DEADLINE_ASC    = 'ddl',     _('Deadline') + ' ↗'
+    DEADLINE_DES    = '-ddl',    _('Deadline') + ' ↘'
+    PUBLISHED_ASC   = 'pub',    _('Published') + ' ↗'
+    PUBLISHED_DES   = '-pub',   _('Published') + ' ↘'
+    DELIBERATED_ASC = 'del',  _('Deliberated') + ' ↗'
+    DELIBERATED_DES = '-del', _('Deliberated') + ' ↘'
+    WIN_AMOUNT_ASC  = 'wam', _('Awarded amount') + ' ↗'
+    WIN_AMOUNT_DES  = '-wam',_('Awarded amount') + ' ↘'
 
 class FullBarDays(models.TextChoices):
     FBD_007 = '7',   "7"

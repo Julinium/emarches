@@ -263,26 +263,26 @@ SOCIALACCOUNT_PROVIDERS = {
         'EMAIL_AUTHENTICATION': True
     },
 
-    'telegram': {
-        'APP': {
-                "client_id": os.getenv("ALLAUTH_TELEGRAM_ID"),
-                "secret": os.getenv("ALLAUTH_TELEGRAM_KEY"),
-        },
-    },
+    # 'telegram': {
+    #     'APP': {
+    #             "client_id": os.getenv("ALLAUTH_TELEGRAM_ID"),
+    #             "secret": os.getenv("ALLAUTH_TELEGRAM_KEY"),
+    #     },
+    # },
 
-    'openid_connect': {
-        'APPS': [
-            {
-                'provider_id': 'linkedin',
-                'name': 'LinkedIn',
-                'client_id': os.getenv("ALLAUTH_LINKEDIN_CLIENT_ID"),
-                'secret': os.getenv("ALLAUTH_LINKEDIN_SECRET"),
-                'settings': {
-                    'server_url': 'https://www.linkedin.com/oauth',
-                },
-            },
-        ],
-    },
+    # 'openid_connect': {
+    #     'APPS': [
+    #         {
+    #             'provider_id': 'linkedin',
+    #             'name': 'LinkedIn',
+    #             'client_id': os.getenv("ALLAUTH_LINKEDIN_CLIENT_ID"),
+    #             'secret': os.getenv("ALLAUTH_LINKEDIN_SECRET"),
+    #             'settings': {
+    #                 'server_url': 'https://www.linkedin.com/oauth',
+    #             },
+    #         },
+    #     ],
+    # },
 }
 
 

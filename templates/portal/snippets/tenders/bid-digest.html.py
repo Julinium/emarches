@@ -1,0 +1,48 @@
+BBBB BBBB BBBB
+BBBB BBBBBBBB BBBBBBBB
+
+
+XXXX XXXXXXXXXXXXXXXXX
+
+    BB BBBBBBBBB
+        XXXX XXXXXXXXXXXXXX XXXXXXXXXXXXXXX
+    BBBBB
+
+    XXXX XXXXXXXXXXXXXXX
+        XXXX XXXXXXXXXXXXXXXXXXXXXX
+            XXXX XXXXXX XXXXXXX 
+                 XXXXXXXXXXXXXXXX XXXXXXX XXXXXXXXXXXXXX XXXXX 
+                 XXXXXXXXXXXXX XXXXX XXXXXXX XXXXXXX
+        XXXXXX
+        XXXX XXXXXXXXXXXXXXXXXX XXXXXX
+            XXXX XXXXXXXXXX XXXXXX
+                XXXX XXXXXXXXXXXXX XXXXXXXX XXXXX
+                    XXXXXXXXXX XXXXXXXXXXXX XXXXXXXXXXXXXXXXXXX
+                    XXXXX
+                        BB BBBBBBBBBBBBBB
+                            XXXXX XXXXXXXXXXXX XXXXXXXXXX XXXXXX gettext(u'DUPLICATED') XXXXXXX
+                        BBBBB
+                        XXXXX XXXXXXXXXXXX XXX XXXXXXXXXXXXX
+                        BB BBBBBBBBBBBBBBBBB B B
+                            XXXXX XXXXXXXXXXXXXX XXXXX XXXXXX gettext(u'Lot')  XXXXXXX
+                        BBBBB
+                    XXXXXX
+                XXXXXX
+                XXXX XXXXXXXXXXXXX XXXXXXXX XXX XXXXXXXXXX
+                    XXXXX
+                        XXXXX XXXXXXXXXXXX XXXXXXXX XXXXX XXXXXXXXXXXX XXXXXXXFFFFFFFFFFFXXXXXXX
+                        XXXXX XXXXXXXXXXXXXXXXXXXXXXX
+                    XXXXXX
+                    BB BBBBBBBBBB
+                        XXXXX
+                            XXXXX XXXXXXXXXXXX XXXXXXXXXXXX
+                        XXXXXX
+                    BBBBB
+                XXXXXX
+            XXXXXX
+        XXXXXX
+    XXXXXX
+
+XXXXXX
+
+
