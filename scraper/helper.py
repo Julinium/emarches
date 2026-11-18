@@ -11,6 +11,7 @@ import subprocess
 import pytz
 import socket
 import platform
+from pathlib import Path
 
 from datetime import datetime, timezone
 from decimal import Decimal, InvalidOperation
@@ -288,7 +289,6 @@ def syncDir(
         target_path = f"{remote_user}@{remote_host}:{remote_dir}"
 
         rsync_cmd = ["rsync", "-avuhP"]
-        # if remove_source: rsync_cmd.extend(["--remove-source-files"])
         rsync_cmd.extend(["-e", f"ssh -p {port}", source_path, target_path])
 
         printMessage('DEBUG', 'h.syncDir', f'Executing rsync command ...')
@@ -301,8 +301,16 @@ def syncDir(
             stderr=subprocess.DEVNULL, 
             timeout=120
             )
-        # result = subprocess.run(rsync_cmd, check=True, text=True)
-        printMessage('INFO', 'h.syncDir', f'Successfully saved DCE files to server.')
+        printMessage('DEBUG', 'h.syncDir', f'Successfully saved DCE files to server.')
+        if remove_source:
+            local_leaf = Path(local_dir).name
+            try:
+                shutil.rmtree(local_dir)
+                printMessage('DEBUG', 'h.syncDir', f'Successfully deleted local dir: {local_leaf}')
+            except OSError as e:
+                printMessage('ERROR', 'h.syncDir', f'Error deleting local dir {local_leaf}: {str(e)}')
+            except Exception as x:
+                printMessage('ERROR', 'h.syncDir', f'Error deleting local dir {local_leaf}: {str(x)}')
 
         if result.stderr: 
             printMessage('WARN', 'h.syncDir', f'{lp}Command error output: \n{result.stderr}{lp}', 3, 3)

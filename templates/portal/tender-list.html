@@ -38,7 +38,6 @@
     </div>
     <div class="mt-4">
 
-        {% include 'base/snippets/wip-pmmp-down.html' %}
         
         {% for tender in page_obj %}
             {% include 'portal/snippets/tenders/tender-summary.html' %}
@@ -46,6 +45,7 @@
     </div>
     
     {% if page_obj %}
+        {% include 'base/snippets/wip-pmmp-down.html' %}
         {% include 'portal/snippets/tenders/tender-legend.html' %}
         {% include 'base/snippets/paginator.html' %}
     {% else %}

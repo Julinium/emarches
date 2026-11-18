@@ -37,7 +37,6 @@
     </div>
     <div class="mt-4">
 
-        {% include 'base/snippets/wip-pmmp-down.html' %}
         
         {% for bdc in page_obj %}
             {% include 'bdc/snippets/bdcs/bdc-summary.html' %}
@@ -45,6 +44,7 @@
     </div>
     
     {% if page_obj %}
+        {% include 'base/snippets/wip-pmmp-down.html' %}
         {% include 'bdc/snippets/bdcs/bdc-legend.html' %}
         {% include 'base/snippets/paginator.html' %}
     {% else %}

@@ -295,11 +295,11 @@ def saveTender(tender_data, link=None):
                         minutes_digest = getMinutes(tender.chrono, tender.acronym)
                         if minutes_digest and minutes_digest != {}:
                             if mergeResults(minutes_digest) == 0:
-                                helper.printMessage('DEBUG', 'm.saveTender', f"+++ Minutes for Tender {tender.chrono} saved successfully.")
+                                helper.printMessage('INFO', 'm.saveTender', f"+++ Minutes for Tender {tender.chrono} saved successfully.")
                             else:
                                 helper.printMessage('ERROR', 'm.saveTender', f"--- Error saving Minutes for Tender {tender.chrono}.")
                         else:
-                            helper.printMessage('WARN', 'm.saveTender', f"--- No Minutes found for Tender {tender.chrono}.")
+                            helper.printMessage('INFO', 'm.saveTender', f"--- No Minutes found for Tender {tender.chrono}.")
                     else:
                         helper.printMessage('DEBUG', 'm.saveTender', f"### Tender {tender.chrono} has no minutes. Skipping ...")
                 else:
@@ -360,8 +360,8 @@ def mergeResults(digest: dict) -> int:
 
     chro = digest.get('chrono', '?')
     acro = digest.get('acronym', '?')    
-    helper.printMessage('INFO', 'm.mergeResults', f"### Started merging results for {chro}")
-    helper.printMessage('DEBUG', 'm.mergeResults', f"\tReceived result digest {digest}")
+    helper.printMessage('DEBUG', 'm.mergeResults', f"### Started merging results for {chro}")
+    helper.printMessage('TRACE', 'm.mergeResults', f"\tReceived result digest {digest}")
     tender = Tender.objects.filter(chrono=chro, acronym=acro).first()
     if not tender: 
         helper.printMessage('ERROR', 'm.mergeResults', f"### Error: Tender not found for {chro}. No result saved", 1)
@@ -635,7 +635,6 @@ def handleDCE(tender: Optional[Tender]) -> Optional[str]:
                 if C.MACHINE == 'remote':
                     helper.printMessage('TRACE', 'm.handleDCE', f"#### Syncing DCE to remote server ... ")
                     media_dce = os.path.join(dce_dir, '..')
-                    # synced = helper.syncDir(media_dce)
                     synced = helper.syncDir(dce_dir, C.REMOTE_MEDIA_ROOT + f"/tenders/dce/{C.DL_PATH_PREFIX}{tender.chrono}")
                 else:
                     synced = True
