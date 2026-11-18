@@ -71,8 +71,12 @@
                             <div class="twolines text-end">
                                 {% if customer.origin %}
                                     <span class="text-dark fw-normal ms-1"
-                                          title="{% trans 'Origin' %}: {{ customer.origin|title }}">                                        
-                                        <i class="bi bi-{{ customer.origin }}"></i>
+                                          title="{% trans 'Origin' %}: {{ customer.origin|title }}">
+                                        {% if not customer.social_provider %}
+                                            <i class="bi bi-at"></i>
+                                        {% else %}
+                                            <i class="bi bi-{{ customer.origin }}"></i>
+                                        {% endif %}
                                     </span>
                                 {% endif %}
 

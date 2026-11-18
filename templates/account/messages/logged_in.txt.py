@@ -1,4 +1,0 @@
-BBBB BBBBBBB
-BBBB BBBB
-BBBBBBBBBBBB BBBB BB BBBB
- gettext(u'Successfully signed in as %(name)s.') SSSSSSSSSSSS SSSSSS SS SS SSSSSSSSS

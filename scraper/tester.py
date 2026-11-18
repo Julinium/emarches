@@ -11,8 +11,8 @@ django.setup()
 
 def main():
     from worker import linkify, dceify, bdcify
-    linkify()
-    # dceify()
+    # linkify()
+    dceify()
     # bdcify()
 
 

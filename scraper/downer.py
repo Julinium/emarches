@@ -58,7 +58,7 @@ def getEmpties(past_days=C.PORTAL_DCE_PAST_DAYS):
     # Return: Tender model QuerySet.
     """
     
-    helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE and deadline up to {past_days} days back ...")
+    helper.printMessage("DEBUG", 'd.getEmpties', f"Getting Tenders with no DCE up to {past_days} days back ...")
     today_date = timezone.now()
     target_date = today_date - timedelta(days=past_days)
     current_tenders = Tender.objects.filter(deadline__gte=target_date)
